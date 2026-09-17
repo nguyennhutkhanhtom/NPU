@@ -1,0 +1,17 @@
+Reading pref.tcl
+
+# 2020.1
+
+# vsim -c -onfinish exit -l tb_scaled_storage.log param.tb_scaled_storage -do "run -all; quit -f" 
+# Start time: 20:20:50 on Sep 16,2026
+# Loading sv_std.std
+# Loading param.tb_scaled_storage
+# Loading param.register
+# Loading param.mem_mapping
+# Loading param.acc_mul
+# run -all
+# SCALED_STORAGE_PASS data=8 reg_ptr=7 mem_ptr=14 matrix_words=2048 accumulator_leaves=512
+# ** Note: $finish    : tb_scaled_storage.sv(40)
+#    Time: 21196 ns  Iteration: 0  Instance: /tb_scaled_storage
+# End time: 20:20:51 on Sep 16,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

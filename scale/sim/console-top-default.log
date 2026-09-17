@@ -1,0 +1,37 @@
+Reading pref.tcl
+
+# 2020.1
+
+# vsim -c -onfinish exit -l top-default.log param.tb_top -do "run -all; quit -f" 
+# Start time: 17:19:54 on Sep 16,2026
+# Loading sv_std.std
+# Loading param.tb_top
+# Loading param.matmulfree
+# Loading param.hazard_detect
+# Loading param.PC
+# Loading param.ins_mem
+# Loading param.fd_reg
+# Loading param.ctrl_unit
+# Loading param.register
+# Loading param.de_reg
+# Loading param.rowwise_op
+# Loading param.mul
+# Loading param.div
+# Loading param.em_reg
+# Loading param.mem_mapping
+# Loading param.ternary_mul
+# Loading param.mw_reg
+# Loading param.sigmoid
+# Loading param.addsub
+# Loading param.exp_row
+# Loading param.acc_mul
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'mem_mapping_inst'.  Expected 18, found 16.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_top/dut/mem_mapping_inst File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/matmulfree.sv Line: 283
+# ** Warning: (vsim-3722) D:/2151097_Nguyen Nhut Khanh/Verilog Source code/matmulfree.sv(283): [TFMPC] - Missing connection for port 'almost_full'.
+# ** Warning: (vsim-3722) D:/2151097_Nguyen Nhut Khanh/Verilog Source code/matmulfree.sv(283): [TFMPC] - Missing connection for port 'almost_empty'.
+# run -all
+# TOP_SMOKE_PASS pc_width=9 word_width=512 ready=1 instr=1fff
+# ** Note: $finish    : tb_top.sv(24)
+#    Time: 140 ns  Iteration: 1  Instance: /tb_top
+# End time: 17:32:27 on Sep 16,2026, Elapsed time: 0:12:33
+# Errors: 0, Warnings: 3

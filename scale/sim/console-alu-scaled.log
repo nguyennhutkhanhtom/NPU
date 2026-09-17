@@ -1,0 +1,20 @@
+Reading pref.tcl
+
+# 2020.1
+
+# vsim -c -onfinish exit -l alu-scaled.log param.tb_scaled_alu -do "run -all; quit -f" 
+# Start time: 20:20:48 on Sep 16,2026
+# Loading sv_std.std
+# Loading param.tb_scaled_alu
+# Loading param.rowwise_op
+# Loading param.mul
+# Loading param.div
+# Loading param.sigmoid
+# Loading param.addsub
+# Loading param.exp_row
+# run -all
+# SCALED_ALU_LEGACY_PASS comparisons=524288
+# ** Note: $finish    : tb_scaled_alu.sv(32)
+#    Time: 16384 ns  Iteration: 0  Instance: /tb_scaled_alu
+# End time: 20:20:49 on Sep 16,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

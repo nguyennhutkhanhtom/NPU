@@ -1,0 +1,51 @@
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+Start time: 20:20:22 on Sep 16,2026
+vlog -sv -work original D:\2151097_Nguyen Nhut Khanh\scale\baseline\acc_mul.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\addsub.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\ctrl_unit.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\de_reg.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\div.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\em_reg.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\exp.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\fd_reg.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\hazard_detect.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\ins_mem.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\matmul_wrap.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\matmulfree.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\mem_burst.v D:\2151097_Nguyen Nhut Khanh\scale\baseline\mem_mapping.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\mw_reg.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\norm.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\PC.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\regfile.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\rowwise_op.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\sigmoid.sv D:\2151097_Nguyen Nhut Khanh\scale\baseline\ternary_mul.sv tb_replay.sv 
+-- Compiling module acc_mul
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\acc_mul.sv(2): (vlog-13314) Defaulting port 'mul_result' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+-- Compiling module addsub
+-- Compiling module ctrl_unit
+-- Compiling module de_reg
+-- Compiling module div
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\div.sv(2): (vlog-13314) Defaulting port 'a' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\div.sv(3): (vlog-13314) Defaulting port 'b' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\div.sv(11): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+-- Compiling module em_reg
+-- Compiling module exp_row
+-- Compiling module fd_reg
+-- Compiling module hazard_detect
+-- Compiling module ins_mem
+-- Compiling module matmul_wrap
+-- Compiling module matmulfree
+-- Compiling module mem_burst
+-- Compiling module mem_mapping
+-- Compiling module mul
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv(2): (vlog-13314) Defaulting port 'a' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv(3): (vlog-13314) Defaulting port 'b' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv(15): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv(19): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv(21): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv(23): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv(24): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv(25): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+-- Compiling module mw_reg
+-- Compiling module norm
+-- Compiling module PC
+-- Compiling module register
+-- Compiling module rowwise_op
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\rowwise_op.sv(4): (vlog-13314) Defaulting port 'a' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\rowwise_op.sv(5): (vlog-13314) Defaulting port 'b' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+-- Compiling module sigmoid
+-- Compiling module ternary_mul
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\ternary_mul.sv(69): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\ternary_mul.sv(70): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\scale\baseline\ternary_mul.sv(71): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+-- Compiling module tb_replay
+
+Top level modules:
+	matmul_wrap
+	mem_burst
+	norm
+	tb_replay
+End time: 20:20:22 on Sep 16,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 17

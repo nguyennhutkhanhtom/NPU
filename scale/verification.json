@@ -1,0 +1,61 @@
+{
+  "scope": "Parameterization only; known functional bugs intentionally retained",
+  "baseline_files_verified": 22,
+  "default_trace": {
+    "cycles": 4096,
+    "sha256": "8ee002f5a30fcdc47d2065891646642ddd6c4bea8922d1189d6ac14cf1513659",
+    "identical": true
+  },
+  "tests": {
+    "alu-scaled.log": {
+      "status": "PASS",
+      "scope": "legacy behavior / widths",
+      "marker": "SCALED_ALU_LEGACY_PASS comparisons=524288"
+    },
+    "tb_scaled_storage.log": {
+      "status": "PASS",
+      "scope": "legacy behavior / widths",
+      "marker": "SCALED_STORAGE_PASS"
+    },
+    "tb_scaled_ddr.log": {
+      "status": "PASS",
+      "scope": "legacy behavior / widths",
+      "marker": "SCALED_DDR_PASS"
+    },
+    "top-default.log": {
+      "status": "PASS",
+      "scope": "reset/HALT smoke only",
+      "marker": "TOP_SMOKE_PASS pc_width=9 word_width=512"
+    },
+    "top-scaled.log": {
+      "status": "PASS",
+      "scope": "reset/HALT smoke only",
+      "marker": "TOP_SMOKE_PASS pc_width=6 word_width=256"
+    }
+  },
+  "rtl_sha256": {
+    "acc_mul.sv": "afb2d213642f311ba987c182e7800f5b693593ac5d8da4186c4135370bfb59af",
+    "addsub.sv": "0c1483c5a452e8034797034093a0c9692a753a0e08e06097134e5cc8ea3d86c2",
+    "ctrl_unit.sv": "ac2fb22eef4e8da2ec3d4b20b3be387d2a1c6e89f60f519c81c1bb811aff5af8",
+    "de_reg.sv": "b788a374b3d5535399fdaa8783941c9687a6bab24929a460932daa5eab58733a",
+    "div.sv": "b05e783dc98d365ba7f3de63e9a5fb37fa43c0cc2a5e323c6500c72b8b66c466",
+    "em_reg.sv": "66112d8dd783cc766528a7e49488d32a62cae82969cacccbd027563ce70708ab",
+    "exp.sv": "d96a79925a58a5933ae757d2a807c3da247d707ef2a4e311b21958f2fe153197",
+    "fd_reg.sv": "e2ba4b559030fd0ea9eda5b2233267362f280415f0b3f3de958fb564b73a11ed",
+    "hazard_detect.sv": "a134c274ef4507b4d4fc1900c5abd1abf7dcc59efd4b8d189a1c017a78c6b578",
+    "ins_mem.sv": "5e6b3a2aff8fd33f42ab65cb8ed8e81a6c86f0e81d013492fd41435e2abf5c47",
+    "matmul_wrap.sv": "f09fa3d3088cd3727b10495c800693122c97275155dc8e7f16108556376ae513",
+    "matmulfree.sv": "156406903246309aa9a9dd36f010171b18214a025cef79289cc4504911cbdfb9",
+    "matmulfree_scaled.sv": "328293802251c39e07b8b33378d95640b222ede4dffa9d42588a602dcc4972ab",
+    "mem_burst.v": "3bec81f690190efe27c2f42a608075583145a92865c1c9f4c275c19f39934e8f",
+    "mem_mapping.sv": "11117b31f4a632226fc599b57028cbfa84ad45fcd2ddadf5c527022a3166f4ee",
+    "mul.sv": "7c03541decf3e02a1953a468f351bf61634e71c8c060580eead3fb0867f7a600",
+    "mw_reg.sv": "efff5153339fa7d27c9df49c8d458b541889a5c63d8014d33b6d2f62b78fbb2f",
+    "norm.sv": "fbeae74c2f49e55187474ef60f8a2e5bda853c1b9fa348f49f5d5be9dccbb2a3",
+    "PC.sv": "cff35b65b4b30984dac608ac6693dfdf95b9d2dd0fdef856b7fb8b41533e334b",
+    "regfile.sv": "ac2566c4345b74becc96c5b34d7beb141a23918e512f8e7e08f23917c6d77e13",
+    "rowwise_op.sv": "b16620371b69be2dd44234aede6210593e11d89d3f8bc5ebdeb0ffc55fd60e52",
+    "sigmoid.sv": "e1fd15aa68314c000a6dc7e92ea101fa0e262ad5120343380df37a1515e923e8",
+    "ternary_mul.sv": "e21f1e14c8bd026f625fe785bc88bf2d690adf3c6b07e2fbc8300b15d5374882"
+  }
+}

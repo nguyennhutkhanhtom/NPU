@@ -1,0 +1,68 @@
+
+=== PDF PAGE 1 ===
+NOVEL MATMUL-FREE COPROCESSOR ARCHITECTURE FOR 
+LARGE LANGUAGE MODEL
+Student: Nguyen Nhut Khanh – ID: 2151097
+Advisor: PhD. Tran Hoang Linh & Mr. Nguyen Tan Hung
+Abstract System overview Conclusions
+This project focuses on designing and
+implementing hardware acceleration
+for Token Generation of large language
+models (LLMs) using a RISC-based
+pipeline structure. The objective is to
+address the computational and
+memory challenges associated with
+traditional matrix multiplication
+operations in LLMs by leveraging
+lightweight MatMul-free architectures.
+The system implements a MatMul-free coprocessor architecture
+based on a 5-stage RISC pipeline (Fetch, Decode, Execute, Memory,
+Write Back) for token generation in large language models (LLMs). It
+integrates ternary quantization (weights in {−1, 0, +1}) to replace costly
+MatMul operations with simple add/subtract logic. Key features include:
+• TMATMUL block for efficient ternary matrix multiplication.
+• Custom instruction set for row-wise vector operations, activations,
+and normalization.
+This thesis demonstrates the
+feasibility of deploying large
+language models without MatMul
+operations using a ternary-
+quantized, RISC-style coprocessor.
+Implemented on an FPGA, the
+design achieves efficient token
+generation with significant
+reductions in latency, power, and
+memory footprint. This work paves
+the way for sustainable, high-
+performance language modeling in
+resource-constrained
+environments.
+Motivation Objectives FPGA Implementation References
+Eliminating MatMul via ternary
+quantization and lightweight
+arithmetic enables efficient, low-
+power token generation on FPGAs,
+supporting real-time AI deployment.
+• Design and implement a fully
+MatMul-free coprocessor using
+ternary quantized weights.
+• Develop a custom RISC-style
+instruction set supporting
+vectorized operations
+• Demonstrate energy and
+memory efficiency gains on
+FPGA compared to traditional
+MatMul-based architectures.
+FPGA tests show 24% LUT
+usage, 3.8% DSP usage at 200
+MHz. Achieved 87.42% faster
+than normal multiplication with
+low power, confirming the
+efficiency of the MatMul-free
+design.
+[1] Rui-Jie Zhu et al. "Scalable MatMul-
+free Language Modeling." 2024.
+[2] Ashish Vaswani et al. "Attention Is
+All You Need." 2017.
+[3] Digilent. "Genesys 2 Reference
+Manual." 2025.

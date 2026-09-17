@@ -1,0 +1,18 @@
+# vsim -c -onfinish exit -l replay-param.log param.tb_replay "+TRACE=trace-param.txt" -do "run -all; quit -f" 
+# Start time: 20:20:35 on Sep 16,2026
+# Loading sv_std.std
+# Loading param.tb_replay
+# Loading param.rowwise_op
+# Loading param.mul
+# Loading param.div
+# Loading param.register
+# Loading param.mem_mapping
+# Loading param.sigmoid
+# Loading param.addsub
+# Loading param.exp_row
+# run -all
+# REPLAY_DONE cycles=4096
+# ** Note: $finish    : tb_replay.sv(44)
+#    Time: 40981 ns  Iteration: 0  Instance: /tb_replay
+# End time: 20:20:47 on Sep 16,2026, Elapsed time: 0:00:12
+# Errors: 0, Warnings: 0

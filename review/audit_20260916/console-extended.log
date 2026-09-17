@@ -1,0 +1,47 @@
+Reading pref.tcl
+
+# 2020.1
+
+# vsim -c -onfinish exit -l simulation-extended.log work.tb_extended -do "run -all; quit -f" 
+# Start time: 15:02:15 on Sep 16,2026
+# Loading sv_std.std
+# Loading work.tb_extended
+# Loading work.rowwise_op
+# Loading work.mul
+# Loading work.div
+# Loading work.acc_mul
+# Loading work.hazard_detect
+# Loading work.ctrl_unit
+# Loading work.mem_mapping
+# Loading work.mem_burst
+# Loading work.sigmoid
+# Loading work.addsub
+# Loading work.exp_row
+# ** Warning: (vsim-3015) [PCDPC] - Port size (1) does not match connection size (32) for port 'overflow'. The port definition is at: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/mul.sv(5).
+#    Time: 0 ps  Iteration: 0  Instance: /tb_extended/alu/mul File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/rowwise_op.sv Line: 52
+# run -all
+# REPRODUCED F06 NORM returns zero for nonzero input
+# REPRODUCED F04 signed division min/-1 wraps
+# REPRODUCED F15 accumulator 32767+1 wraps to negative
+# REPRODUCED F15 512 Q4.12 ones accumulate to zero
+# REPRODUCED F02 SUB carry suppressed
+# REPRODUCED F02 SIG exposes ADD carry
+# REPRODUCED F23 HALT opcode alone does not assert ready
+# REPRODUCED F22 RAW dependency not detected when almost_empty high
+# REPRODUCED F22 second TMATMUL does not set memory hazard
+# REPRODUCED F22 LDV released at read completion before TM write completion
+# REPRODUCED F22 same LDV still asserts WB flush
+# REPRODUCED F22 write hazard excludes STV
+# REPRODUCED F24 unknown opcode enables load/writeback
+# REPRODUCED F09 memory written before tmatmul_write
+# REPRODUCED F11 port1-only request advances disabled port0
+# REPRODUCED F10 live endpoint move leaves read running beyond scaled RAM
+# REPRODUCED F19 ui_clk_sync_rst ignored
+# REPRODUCED F19 calibration loss holds enabled command/address
+# REPRODUCED F16 burst length is not latched
+# REPRODUCED F16 zero write length never completes
+# EXTENDED_SUMMARY reproduced=20 checks=20
+# ** Note: $finish    : tb_extended.sv(110)
+#    Time: 21476 ns  Iteration: 0  Instance: /tb_extended
+# End time: 15:02:17 on Sep 16,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 1

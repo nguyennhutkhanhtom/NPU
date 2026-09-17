@@ -1,0 +1,12 @@
+{
+  "scope": "parameterization_only_preserve_known_functional_bugs",
+  "default": {"data_width":16,"frac_width":12,"reg_depth":1024,"mem_depth":524288,"instr_depth":512,"exp_lut_depth":512},
+  "scaled": {"data_width":8,"frac_width":4,"reg_depth":128,"mem_depth":16384,"instr_depth":64,"exp_lut_depth":512},
+  "architecture": {"lanes":32,"vector_elements":512,"matrix_rows":512,"registers":8,"instruction_width":13},
+  "ddr_leaf": {"MEM_DATA_BITS":256,"ADDR_BITS":14,"LEN_BITS":4,"ADDR_SHIFT":3},
+  "notes": [
+    "Accumulator remains DATA_WIDTH bits: original wrap/overflow bugs are intentionally preserved.",
+    "EXP depth stays 512; with 8-bit input its out-of-range bug is masked by the narrower domain.",
+    "DDR adapter remains separate from the processor core."
+  ]
+}

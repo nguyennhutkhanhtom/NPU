@@ -1,0 +1,20 @@
+# vsim -c -onfinish exit -l replay-original.log original.tb_replay "+TRACE=trace-original.txt" -do "run -all; quit -f" 
+# Start time: 20:20:23 on Sep 16,2026
+# Loading sv_std.std
+# Loading original.tb_replay
+# Loading original.rowwise_op
+# Loading original.mul
+# Loading original.div
+# Loading original.register
+# Loading original.mem_mapping
+# Loading original.sigmoid
+# Loading original.addsub
+# Loading original.exp_row
+# ** Warning: (vsim-3015) [PCDPC] - Port size (1) does not match connection size (32) for port 'overflow'. The port definition is at: D:/2151097_Nguyen Nhut Khanh/scale/baseline/mul.sv(5).
+#    Time: 0 ps  Iteration: 0  Instance: /tb_replay/alu/mul File: D:/2151097_Nguyen Nhut Khanh/scale/baseline/rowwise_op.sv Line: 52
+# run -all
+# REPLAY_DONE cycles=4096
+# ** Note: $finish    : tb_replay.sv(44)
+#    Time: 40981 ns  Iteration: 0  Instance: /tb_replay
+# End time: 20:20:34 on Sep 16,2026, Elapsed time: 0:00:11
+# Errors: 0, Warnings: 1

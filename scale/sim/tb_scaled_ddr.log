@@ -1,0 +1,11 @@
+# vsim -c -onfinish exit -l tb_scaled_ddr.log param.tb_scaled_ddr -do "run -all; quit -f" 
+# Start time: 20:20:52 on Sep 16,2026
+# Loading sv_std.std
+# Loading param.tb_scaled_ddr
+# Loading param.mem_burst
+# run -all
+# SCALED_DDR_PASS data=256 address=14 length=4 legacy_boundary_bugs_retained
+# ** Note: $finish    : tb_scaled_ddr.sv(29)
+#    Time: 496 ns  Iteration: 0  Instance: /tb_scaled_ddr
+# End time: 20:20:52 on Sep 16,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
