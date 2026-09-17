@@ -1,0 +1,10 @@
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+Start time: 00:52:39 on Sep 18,2026
+vlog -sv -work work D:\2151097_Nguyen Nhut Khanh\Verilog Source code\sigmoid.sv D:\2151097_Nguyen Nhut Khanh\review\sigmoid_20260918_retest\tb_sigmoid.sv 
+-- Compiling module sigmoid
+-- Compiling module tb_sigmoid
+
+Top level modules:
+	tb_sigmoid
+End time: 00:52:40 on Sep 18,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0

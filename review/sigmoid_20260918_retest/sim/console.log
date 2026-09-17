@@ -1,0 +1,17 @@
+Reading pref.tcl
+
+# 2020.1
+
+# vsim -c -onfinish exit -l simulation.log work.tb_sigmoid -do "run -all; quit -f" 
+# Start time: 00:52:41 on Sep 18,2026
+# Loading sv_std.std
+# Loading work.tb_sigmoid
+# Loading work.sigmoid
+# run -all
+# STARTUP_BEFORE_FIRST_POSEDGE out=xxxx addr=xxx
+# CLOCK_CHECKS count=208944 errors=0
+# SIGMOID_RETEST_COMPLETE exhaustive=65536 transitions=4112
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/review/sigmoid_20260918_retest/tb_sigmoid.sv(80)
+#    Time: 417889 ns  Iteration: 0  Instance: /tb_sigmoid
+# End time: 00:52:42 on Sep 18,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

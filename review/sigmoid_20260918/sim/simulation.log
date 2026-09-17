@@ -1,0 +1,11 @@
+# vsim -c -onfinish exit -l simulation.log work.tb_sigmoid -do "run -all; quit -f" 
+# Start time: 00:41:42 on Sep 18,2026
+# Loading sv_std.std
+# Loading work.tb_sigmoid
+# Loading work.sigmoid
+# run -all
+# SIGMOID_AUDIT_COMPLETE exhaustive=65536 transitions=4112
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/review/sigmoid_20260918/tb_sigmoid.sv(64)
+#    Time: 69648 ns  Iteration: 0  Instance: /tb_sigmoid
+# End time: 00:41:43 on Sep 18,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
