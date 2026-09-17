@@ -1,0 +1,98 @@
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+Start time: 13:29:19 on Sep 17,2026
+vlog -sv -work functional/sim/work D:\2151097_Nguyen Nhut Khanh\Verilog Source code\acc_mul.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\addsub.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ctrl_unit.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\de_reg.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\em_reg.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\exp.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\fd_reg.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\hazard_detect.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ins_mem.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmul_wrap.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmulfree_scaled.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmulfree.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mem_burst.v D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mem_mapping.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mw_reg.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\PC.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\regfile.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\rowwise_op.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\sigmoid.sv D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv D:\2151097_Nguyen Nhut Khanh\functional\sim\tb_alu.sv D:\2151097_Nguyen Nhut Khanh\functional\sim\tb_control.sv D:\2151097_Nguyen Nhut Khanh\functional\sim\tb_core.sv D:\2151097_Nguyen Nhut Khanh\functional\sim\tb_ddr.sv D:\2151097_Nguyen Nhut Khanh\functional\sim\tb_guards.sv D:\2151097_Nguyen Nhut Khanh\functional\sim\tb_norm.sv D:\2151097_Nguyen Nhut Khanh\functional\sim\tb_storage.sv D:\2151097_Nguyen Nhut Khanh\functional\sim\tb_ternary.sv 
+-- Compiling module acc_mul
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\acc_mul.sv(3): (vlog-13314) Defaulting port 'mul_result' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+-- Compiling module addsub
+-- Compiling module ctrl_unit
+-- Compiling module de_reg
+-- Compiling module div
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(2): (vlog-13314) Defaulting port 'a' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(2): (vlog-13314) Defaulting port 'b' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(15): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(16): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(17): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(18): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(18): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(20): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(21): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(24): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(25): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(26): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(27): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv(28): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+-- Compiling module em_reg
+-- Compiling module exp_row
+-- Compiling module fd_reg
+-- Compiling module hazard_detect
+-- Compiling module ins_mem
+-- Compiling module matmul_wrap
+-- Compiling module matmulfree_scaled
+-- Compiling module matmulfree
+-- Compiling module mem_burst
+-- Compiling module mem_mapping
+-- Compiling module mul
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv(2): (vlog-13314) Defaulting port 'a' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv(2): (vlog-13314) Defaulting port 'b' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv(14): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv(15): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv(16): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv(17): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv(18): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv(19): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+-- Compiling module mw_reg
+-- Compiling module norm
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv(52): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv(53): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv(54): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv(55): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv(56): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv(57): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv(58): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv(59): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv(60): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+-- Compiling module PC
+-- Compiling module register
+-- Compiling module rowwise_op
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\rowwise_op.sv(6): (vlog-13314) Defaulting port 'a' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\rowwise_op.sv(6): (vlog-13314) Defaulting port 'b' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\rowwise_op.sv(8): (vlog-13314) Defaulting port 'norm_result' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+-- Compiling module sigmoid
+-- Compiling module ternary_mul
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(64): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(64): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(65): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(65): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(66): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(68): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(69): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(71): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(72): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(73): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(74): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(81): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(82): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(83): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv(84): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+-- Compiling module tb_alu
+-- Compiling module tb_control
+-- Compiling module tb_core
+-- Compiling module tb_ddr
+-- Compiling module tb_guards
+-- Compiling module tb_norm
+-- Compiling module tb_storage
+-- Compiling module tb_ternary
+
+Top level modules:
+	matmul_wrap
+	matmulfree_scaled
+	tb_alu
+	tb_control
+	tb_core
+	tb_ddr
+	tb_guards
+	tb_norm
+	tb_storage
+	tb_ternary
+End time: 13:29:20 on Sep 17,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 50

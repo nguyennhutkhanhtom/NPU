@@ -1,0 +1,99 @@
+{
+  "scope": "ADD/SUB wrap, unsigned carry/borrow, signed overflow; full source review",
+  "status": "PASS_WITH_KNOWN_DESIGN_BUGS",
+  "generated_utc": "2026-09-17T09:43:03.1570235Z",
+  "tests": {
+    "before-reproduce": {
+      "status": "PASS",
+      "marker": "# REPRO_PASS EXPECT_BUGS=1 bugs=4",
+      "log": "sim/before-reproduce.log"
+    },
+    "baseline-review": {
+      "status": "PASS",
+      "marker": "# EVIDENCE_SUMMARY reproduced=17 checks=17 (bug reproduction, not design PASS)",
+      "log": "sim/baseline-review.log"
+    },
+    "baseline-extended": {
+      "status": "PASS",
+      "marker": "# EXTENDED_SUMMARY reproduced=20 checks=20",
+      "log": "sim/baseline-extended.log"
+    },
+    "after-reproduce": {
+      "status": "PASS",
+      "marker": "# REPRO_PASS EXPECT_BUGS=0 bugs=0",
+      "log": "sim/after-reproduce.log"
+    },
+    "addsub-1": {
+      "status": "PASS",
+      "marker": "# ADDSUB_PASS W=1 checks=136",
+      "log": "sim/addsub-1.log"
+    },
+    "addsub-4": {
+      "status": "PASS",
+      "marker": "# ADDSUB_PASS W=4 checks=640",
+      "log": "sim/addsub-4.log"
+    },
+    "addsub-8": {
+      "status": "PASS",
+      "marker": "# ADDSUB_PASS W=8 checks=131200",
+      "log": "sim/addsub-8.log"
+    },
+    "addsub-16": {
+      "status": "PASS",
+      "marker": "# ADDSUB_PASS W=16 checks=1088704",
+      "log": "sim/addsub-16.log"
+    },
+    "addsub-32": {
+      "status": "PASS",
+      "marker": "# ADDSUB_PASS W=32 checks=40128",
+      "log": "sim/addsub-32.log"
+    },
+    "addsub-64": {
+      "status": "PASS",
+      "marker": "# ADDSUB_PASS W=64 checks=40128",
+      "log": "sim/addsub-64.log"
+    },
+    "rowwise-16": {
+      "status": "PASS",
+      "marker": "# ROWWISE_PASS lane_checks=1307712 flag_checks=40880",
+      "log": "sim/rowwise-16.log"
+    },
+    "scaled-rowwise-probe": {
+      "status": "EXPECTED_FAILURE",
+      "reason": "Legacy MUL/DIV unpacked array ports remain 16-bit",
+      "log": "sim/scaled-rowwise-probe.log"
+    }
+  },
+  "sources": {
+    "Verilog Source code/acc_mul.sv": "6117a60055415f41aee6d1f561d4156a63a71710f0c8a096342854d45d0ff3ec",
+    "Verilog Source code/addsub.sv": "3073c702695caff386e616c25ef0e0de09d95a3098f3b016cb53463108ca8f93",
+    "Verilog Source code/ctrl_unit.sv": "ac2fb22eef4e8da2ec3d4b20b3be387d2a1c6e89f60f519c81c1bb811aff5af8",
+    "Verilog Source code/de_reg.sv": "249dd96e1de6800ff38446b21c852eb7e831c1e47194f23b4562483d00f8b773",
+    "Verilog Source code/div.sv": "094c8b089137806e0edbfacee3d4b862de7bb3a7cb2ca05d05cbc1258669862b",
+    "Verilog Source code/em_reg.sv": "c5d01508545ad45241a780ddfba698ec6cde5a532123b730c956f33ade4edae2",
+    "Verilog Source code/exp.sv": "e0db31f19c9079f56294fbf121ee5e860aafee20a4a01af3f89d616451c8ded8",
+    "Verilog Source code/fd_reg.sv": "10427cee438a20d85ea6a6cef735779141098d7a854ac7e241b9cb207a65efd8",
+    "Verilog Source code/hazard_detect.sv": "a134c274ef4507b4d4fc1900c5abd1abf7dcc59efd4b8d189a1c017a78c6b578",
+    "Verilog Source code/ins_mem.sv": "ab5216c42da2321f939cea478d4b78929b976f31b585d07fb0ec7f9a937392ad",
+    "Verilog Source code/matmul_wrap.sv": "f09fa3d3088cd3727b10495c800693122c97275155dc8e7f16108556376ae513",
+    "Verilog Source code/matmulfree.sv": "8095cbc48941e84b2e035ae6afdec5aea3e91245f8012c7afa5c386d485b0753",
+    "Verilog Source code/mem_burst.v": "27393ec63f14bb6514a389d796b9bd96c942c82dd70304de80c85db0147383dd",
+    "Verilog Source code/mem_mapping.sv": "3917fde8d7d66cc65cdb38ad930c1030404ee8dc2caaec1576a993ae16e014f0",
+    "Verilog Source code/mul.sv": "931bc8aff861f4995e69585a2fbe4e51b7439fafb48bcad6e8d283851efa81c3",
+    "Verilog Source code/mw_reg.sv": "1291807727b0f1298dfdb7b7e7a8a24a613f13d84f309c7fb013f4342e6f61d1",
+    "Verilog Source code/norm.sv": "9774e505712eed2e941ac359f454fedd152362889d2701736ea22c1145ade914",
+    "Verilog Source code/PC.sv": "898db095a24a62d4b89c4999e2a258d0f4ec3b4dde0e1b487a0e04e78f9734a7",
+    "Verilog Source code/regfile.sv": "be082de1cca4991800a6ef026b04f8b8fba7849de3aac87dbc050f1d68e03aec",
+    "Verilog Source code/rowwise_op.sv": "6ac9f75536b431ef2d98fa0373dcd8350b0d91646988485f681bc1ead2ad9b2b",
+    "Verilog Source code/sigmoid.sv": "34ed39b0b75864f19fb31c19798a60f92dd02cbf4f8521833876a30ed2e10b06",
+    "Verilog Source code/ternary_mul.sv": "2eb21fdaf6ce1459e4a1ec023e3463af95c3021fb4a057750afce6ba0d001748",
+    "review/addsub_20260917/tb_addsub.sv": "1ee113b13cfb86b5327fc05d859e12f57b4fdf122ce1c9d2e9c07c3ae1fe581d",
+    "review/addsub_20260917/tb_reproduce.sv": "1617996c27cdeff1baf6de7a03427bc0233d2fc21443d41e46a36b8000266c85",
+    "review/addsub_20260917/tb_rowwise.sv": "2caa8a5a65fc9505d346d0099954fc93a40a452a5f919d00e33b1cfe2a3cfda6",
+    "review/sim/tb_review.sv": "41c4c4ab88ecf024a5842e5142ff05c8e266ec19b914dad8d64deebd6d10c980",
+    "review/audit_20260916/tb_extended.sv": "67daf3af9bbe2f9b30273bcbdcaab4301fdf4630c7a560740e1a9a0f3485d957",
+    "review/audit_20260916/tb_param_probe.sv": "5583217733ad11cfe2be7137b4b1b84b4ec869d6ac756c2000f05c68612957b0",
+    "review/addsub_20260917/run.ps1": "2d99b54cc10e7bc253cf8a322aa145e9ea288f235a11fdbb91b20d44e9cf5b07"
+  },
+  "full_scaled_core_verified": false
+}

@@ -1,0 +1,60 @@
+{
+  "exp_w8_a6": {
+    "entries": 64,
+    "max_error_lsb": 1,
+    "mean_error_lsb": 0.11328125,
+    "overflow_raw_threshold": 34
+  },
+  "exp_w8_a7": {
+    "entries": 128,
+    "max_error_lsb": 1,
+    "mean_error_lsb": 0.05078125,
+    "overflow_raw_threshold": 34
+  },
+  "exp_w8_a8": {
+    "entries": 256,
+    "max_error_lsb": 0,
+    "mean_error_lsb": 0.0,
+    "overflow_raw_threshold": 34
+  },
+  "exp_w16_a7": {
+    "entries": 128,
+    "max_error_lsb": 63,
+    "mean_error_lsb": 2.7237548828125,
+    "overflow_raw_threshold": 8518
+  },
+  "exp_w16_a8": {
+    "entries": 256,
+    "max_error_lsb": 16,
+    "mean_error_lsb": 0.7366485595703125,
+    "overflow_raw_threshold": 8518
+  },
+  "exp_w16_a9": {
+    "entries": 512,
+    "max_error_lsb": 4,
+    "mean_error_lsb": 0.237701416015625,
+    "overflow_raw_threshold": 8518
+  },
+  "exp_w16_a10": {
+    "entries": 1024,
+    "max_error_lsb": 2,
+    "mean_error_lsb": 0.1167449951171875,
+    "overflow_raw_threshold": 8518
+  },
+  "norm_w8": {
+    "vectors": 24,
+    "max_error_lsb": 1,
+    "lut_reachable_entries": 96,
+    "lut_address_width": 7,
+    "coefficient_fraction_width": 12,
+    "interpolation_bits": 6
+  },
+  "norm_w16": {
+    "vectors": 24,
+    "max_error_lsb": 1,
+    "lut_reachable_entries": 384,
+    "lut_address_width": 9,
+    "coefficient_fraction_width": 18,
+    "interpolation_bits": 8
+  }
+}

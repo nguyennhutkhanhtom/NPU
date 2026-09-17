@@ -1,0 +1,49 @@
+Reading pref.tcl
+
+# 2020.1
+
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\review\addsub_20260917\sim\baseline-review.log before_lib.tb_review -do "run -all; quit -f" 
+# Start time: 17:17:15 on Sep 17,2026
+# Loading sv_std.std
+# Loading before_lib.tb_review
+# Loading before_lib.addsub
+# Loading before_lib.mul
+# Loading before_lib.div
+# Loading before_lib.rowwise_op
+# Loading before_lib.exp_row
+# Loading before_lib.mem_mapping
+# Loading before_lib.register
+# Loading before_lib.mem_burst
+# Loading before_lib.sigmoid
+# ** Warning: (vsim-3015) [PCDPC] - Port size (1) does not match connection size (32) for port 'overflow'. The port definition is at: D:/2151097_Nguyen Nhut Khanh/scale/baseline/mul.sv(5).
+#    Time: 0 ps  Iteration: 0  Instance: /tb_review/rowop/mul File: D:/2151097_Nguyen Nhut Khanh/scale/baseline/rowwise_op.sv Line: 52
+# run -all
+# ADD_SUB select=1 a=5 b=3 actual=0008 expected=0002
+# REPRODUCED F01 subtraction precedence
+# MUL_Q4_12 1*1 actual=1100 expected=1000
+# REPRODUCED F03 multiply scale
+# REPRODUCED F04 divide scale (Q4.12 contract)
+# MUL_Q4_12 -1*1 actual=ffff overflow=1
+# REPRODUCED F03 negative false overflow
+# REPRODUCED F02 unrelated MUL overflow on SIG
+# ROWWISE SUB 5-3 actual=0008 expected=0002
+# REPRODUCED F01 SUB opcode selects addition
+# EXP input=0 index=32768 output=xxxx
+# REPRODUCED F05 EXP out-of-range
+# REPRODUCED F04 divide by zero propagates X
+# V_INDEX selector=3 actual=0 expected=384
+# REPRODUCED F07 bank selector aliases
+# REPRODUCED F12 write_finish high while IDLE after reset
+# REPRODUCED F08 last word omitted
+# REPRODUCED F09 pointer advances without write
+# REPRODUCED F10 active read endpoint changes with request
+# SCALED_REG highest selector last word=ffffffffffffffffffffffffffffffff
+# REPRODUCED F09 register continues after w_en deasserted (contract risk)
+# REPRODUCED F17 accepted WDF beat without END
+# REPRODUCED F18 burst address truncation
+# REPRODUCED F16 zero length never completes
+# EVIDENCE_SUMMARY reproduced=17 checks=17 (bug reproduction, not design PASS)
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/review/sim/tb_review.sv(133)
+#    Time: 11036 ns  Iteration: 0  Instance: /tb_review
+# End time: 17:17:17 on Sep 17,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 1

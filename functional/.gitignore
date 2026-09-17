@@ -1,0 +1,6 @@
+sim/work/
+sim/.run.lock
+sim/*.console
+sim/*.wlf
+__pycache__/
+tools/__pycache__/

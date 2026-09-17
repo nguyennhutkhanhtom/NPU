@@ -1,0 +1,61 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dD:/2151097_Nguyen Nhut Khanh/review/addsub_20260917/sim_addsub_only
+vaddsub
+Z1 DXx6 sv_std 3 std 0 22 VYECXdT12H8WgbUP_5Y6:3
+Z2 !s110 1789640306
+!i10b 1
+!s100 [e8O<OPj:4bB_fPN7fEMB3
+Z3 !s11b Dg1SIo80bB@j0V0VzS_@n1
+I6he8=>WAY3l<nYej:B4SN3
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+S1
+R0
+w1789639630
+8..\..\..\Verilog Source code\addsub.sv
+F..\..\..\Verilog Source code\addsub.sv
+!i122 0
+L0 1 20
+Z5 OV;L;2020.1;71
+r1
+!s85 0
+31
+Z6 !s108 1789640306.000000
+!s107 ..\tb_addsub.sv|..\..\..\Verilog Source code\addsub.sv|
+Z7 !s90 -sv|-work|work|..\..\..\Verilog Source code\addsub.sv|..\tb_addsub.sv|
+!i113 1
+Z8 o-sv -work work
+Z9 tCvgOpt 0
+vtb_addsub
+R1
+R2
+!i10b 1
+!s100 F6UoJWKjzJ0^Rb7LY=]PX3
+R3
+I`RACBk1]c`7oTl_mJNY2Q0
+R4
+S1
+R0
+w1789638061
+8..\tb_addsub.sv
+F..\tb_addsub.sv
+!i122 0
+L0 2 66
+R5
+r1
+!s85 0
+31
+R6
+Z10 !s107 ..\tb_addsub.sv|..\..\..\Verilog Source code\addsub.sv|
+R7
+!i113 1
+R8
+R9

@@ -1,0 +1,13 @@
+# vsim -c -onfinish exit -l functional/sim/guard-8-0.log functional/sim/work.tb_guards -do "run -all; quit -f" -gCASE=0 -gW=8 
+# Start time: 13:41:41 on Sep 17,2026
+# Loading sv_std.std
+# Loading functional/sim/work.tb_guards
+# Loading functional/sim/work.mem_mapping
+# run -all
+# ** Fatal: Invalid memory packing/depth/pointer parameters
+#    Time: 0 ps  Scope: tb_guards.memory_guard.bad File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/mem_mapping.sv Line: 34
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/Verilog Source code/mem_mapping.sv(34)
+#    Time: 0 ps  Iteration: 0  Instance: /tb_guards/memory_guard/bad
+# End time: 13:41:42 on Sep 17,2026, Elapsed time: 0:00:01
+# Errors: 1, Warnings: 0
+GUARD_EXPECTED_PASS W=8 CASE=0

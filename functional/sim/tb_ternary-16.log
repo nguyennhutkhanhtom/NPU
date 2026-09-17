@@ -1,0 +1,12 @@
+# vsim -c -onfinish exit -l functional/sim/tb_ternary-16.log functional/sim/work.tb_ternary -do "run -all; quit -f" -gW=16 
+# Start time: 13:34:17 on Sep 17,2026
+# Loading sv_std.std
+# Loading functional/sim/work.tb_ternary
+# Loading functional/sim/work.ternary_mul
+# Loading functional/sim/work.acc_mul
+# run -all
+# TERNARY_PASS W=16 matrices=4 reset=1 independent_bubbles=1
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/functional/sim/tb_ternary.sv(73)
+#    Time: 55860 ns  Iteration: 1  Instance: /tb_ternary
+# End time: 13:36:18 on Sep 17,2026, Elapsed time: 0:02:01
+# Errors: 0, Warnings: 0

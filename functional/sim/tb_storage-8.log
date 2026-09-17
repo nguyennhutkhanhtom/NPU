@@ -1,0 +1,12 @@
+# vsim -c -onfinish exit -l functional/sim/tb_storage-8.log functional/sim/work.tb_storage -do "run -all; quit -f" -gW=8 
+# Start time: 13:29:34 on Sep 17,2026
+# Loading sv_std.std
+# Loading functional/sim/work.tb_storage
+# Loading functional/sim/work.mem_mapping
+# Loading functional/sim/work.register
+# run -all
+# STORAGE_PASS W=8 exact_depth=17408
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/functional/sim/tb_storage.sv(133)
+#    Time: 32840 ns  Iteration: 1  Instance: /tb_storage
+# End time: 13:29:36 on Sep 17,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 0

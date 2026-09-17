@@ -1,5 +1,7 @@
 # Parameterization: giữ nguyên functional behavior hiện có
 
+> **Báo cáo lịch sử — đã được thay thế.** RTL hiện tại có sửa lỗi functional theo yêu cầu mới. Dùng [hướng dẫn hiện tại](../functional/README.md), [cấu hình](config.json) và [kết quả kiểm chứng mới](../functional/verification.json). Nội dung bên dưới mô tả snapshot parameterization cũ; các test legacy không phải tiêu chí pass của RTL hiện tại. `scale/run.ps1` hiện chuyển sang bộ functional test.
+
 Phạm vi theo lựa chọn của người dùng: **chỉ parameterize; giữ nguyên cả các lỗi functional trong báo cáo review**. Bản này không áp `PATCH_PROPOSAL.md`. Các test PASS bên dưới xác nhận width, hành vi lỗi cũ và regression có giới hạn; không khẳng định coprocessor tính đúng thuật toán LLM.
 
 ## Sử dụng

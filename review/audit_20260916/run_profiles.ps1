@@ -3,7 +3,7 @@ $simBin = 'C:\intelFPGA\20.1\modelsim_ase\win32aloem'
 Push-Location $PSScriptRoot
 try {
     # Build first if invoked standalone; creates only review fixtures/libraries.
-    if (!(Test-Path -LiteralPath work)) { & ./run_extended.ps1 }
+    & ./run_extended.ps1  # Always rebuild the preserved baseline, not a stale current-RTL library.
     & "$simBin\vlog.exe" -sv -work work scaled_profiles.sv tb_scaled_leaf.sv tb_param_probe.sv 2>&1 | Tee-Object compile-profiles.log
     if ($LASTEXITCODE -ne 0) { throw 'Profile/testbench compile failed' }
     & "$simBin\vsim.exe" -c -onfinish exit -l scaled-profile.log work.tb_scaled_profiles -do 'run -all; quit -f' 2>&1 | Out-File console-profile.log

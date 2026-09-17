@@ -1,0 +1,2664 @@
+diff --git a/Verilog Source code/PC.sv b/Verilog Source code/PC.sv
+index fbdf79d..73fdc68 100644
+--- a/Verilog Source code/PC.sv	
++++ b/Verilog Source code/PC.sv	
+@@ -1,24 +1,15 @@
+-module PC #(parameter PC_W=9) (
+-    input wire clk,
+-    input wire rst,
+-    input wire stall,
+-    output reg [PC_W-1:0] pc_out
++module PC #(parameter PC_W=9,DEPTH=2**PC_W) (
++    input logic clk,rst,stall,
++    output logic [PC_W-1:0] pc_out,
++    output logic exhausted
+ );
+-
+-    // Internal wires
+-    logic [PC_W-1:0] pc_next;
+-
+-    // Program Counter
++    initial if(DEPTH<1 || PC_W<1 || PC_W>30 || DEPTH>2**PC_W)
++        $fatal(1,"Invalid PC depth/width");
+     always_ff @(posedge clk or negedge rst) begin
+-        if (!rst)
+-            pc_out <= '0;
+-        else if(stall)
+-            pc_out <= pc_next;
++        if(!rst) begin pc_out<='0; exhausted<=0; end
++        else if(stall && !exhausted) begin
++            if(pc_out==PC_W'(DEPTH-1)) exhausted<=1;
++            else pc_out<=pc_out+1'b1;
++        end
+     end
+-
+-    // Next Program Counter
+-    always_comb begin
+-        pc_next = pc_out + PC_W'(1);
+-    end
+-
+ endmodule
+diff --git a/Verilog Source code/acc_mul.sv b/Verilog Source code/acc_mul.sv
+index dc8b901..15dac4f 100644
+--- a/Verilog Source code/acc_mul.sv	
++++ b/Verilog Source code/acc_mul.sv	
+@@ -1,76 +1,14 @@
+-module acc_mul #(parameter DATA_WIDTH=16) (
+-    input logic [DATA_WIDTH-1:0] mul_result [511:0], // 16-bit results for 262144 multiplications
+-    output logic [DATA_WIDTH-1:0] acc_result
++// Nine-level combinational tree, expressed procedurally to avoid 512 tiny instances.
++module acc_mul #(parameter DATA_WIDTH=17,ACC_WIDTH=DATA_WIDTH+9) (
++    input logic [DATA_WIDTH-1:0] mul_result[511:0],
++    output logic signed [ACC_WIDTH-1:0] acc_result
+ );
+-
+-    // Accumulate the results
+-    logic [DATA_WIDTH-1:0] stage_0 [255:0];
+-    logic [DATA_WIDTH-1:0] stage_1 [127:0];
+-    logic [DATA_WIDTH-1:0] stage_2 [63:0];
+-    logic [DATA_WIDTH-1:0] stage_3 [31:0];
+-    logic [DATA_WIDTH-1:0] stage_4 [15:0];
+-    logic [DATA_WIDTH-1:0] stage_5 [7:0];
+-    logic [DATA_WIDTH-1:0] stage_6 [3:0];
+-    logic [DATA_WIDTH-1:0] stage_7 [1:0];
+-
+-    // Stage 0: Pairwise addition
++    logic signed [ACC_WIDTH-1:0] tree[1:1023];
++    initial if(DATA_WIDTH<1 || ACC_WIDTH<DATA_WIDTH+9) $fatal(1,"Accumulator needs nine guard bits");
+     always_comb begin
+-        for (int i = 0; i < 256; i++) begin
+-            stage_0[i] = mul_result[i * 2] + mul_result[i * 2 + 1];
+-        end
+-    end
+-
+-    // Stage 1: Pairwise addition
+-    always_comb begin
+-        for (int i = 0; i < 128; i++) begin
+-            stage_1[i] = stage_0[i * 2] + stage_0[i * 2 + 1];
+-        end
+-    end
+-
+-    // Stage 2: Pairwise addition
+-    always_comb begin
+-        for (int i = 0; i < 64; i++) begin
+-            stage_2[i] = stage_1[i * 2] + stage_1[i * 2 + 1];
+-        end
+-    end
+-
+-    // Stage 3: Pairwise addition
+-    always_comb begin
+-        for (int i = 0; i < 32; i++) begin
+-            stage_3[i] = stage_2[i * 2] + stage_2[i * 2 + 1];
+-        end
+-    end
+-
+-    // Stage 4: Pairwise addition
+-    always_comb begin
+-        for (int i = 0; i < 16; i++) begin
+-            stage_4[i] = stage_3[i * 2] + stage_3[i * 2 + 1];
+-        end
+-    end
+-
+-    // Stage 5: Pairwise addition
+-    always_comb begin
+-        for (int i = 0; i < 8; i++) begin
+-            stage_5[i] = stage_4[i * 2] + stage_4[i * 2 + 1];
+-        end
+-    end
+-
+-    // Stage 6: Pairwise addition
+-    always_comb begin
+-        for (int i = 0; i < 4; i++) begin
+-            stage_6[i] = stage_5[i * 2] + stage_5[i * 2 + 1];
+-        end
+-    end
+-
+-    // Stage 7: Final addition
+-    always_comb begin
+-        for (int i = 0; i < 2; i++) begin
+-            stage_7[i] = stage_6[i * 2] + stage_6[i * 2 + 1];
+-        end
+-    end
+-
+-    // Final result
+-    always_comb begin
+-        acc_result = stage_7[0] + stage_7[1];
++        for(int i=0;i<512;i++)
++            tree[512+i]={{(ACC_WIDTH-DATA_WIDTH){mul_result[i][DATA_WIDTH-1]}},mul_result[i]};
++        for(int i=511;i>=1;i--) tree[i]=tree[2*i]+tree[2*i+1];
++        acc_result=tree[1];
+     end
+ endmodule
+diff --git a/Verilog Source code/addsub.sv b/Verilog Source code/addsub.sv
+index e7d5224..d997151 100644
+--- a/Verilog Source code/addsub.sv	
++++ b/Verilog Source code/addsub.sv	
+@@ -1,14 +1,20 @@
+-module addsub #(parameter DATA_WIDTH=16) (  
+-    input logic [DATA_WIDTH-1:0] a,
+-    input logic [DATA_WIDTH-1:0] b,
+-    input logic       select,
+-    output logic cout, overflow,
++// cout is unsigned carry for ADD and borrow for SUB.
++module addsub #(parameter DATA_WIDTH=16) (
++    input logic [DATA_WIDTH-1:0] a,b,
++    input logic select,
++    output logic cout,overflow,
+     output logic [DATA_WIDTH-1:0] sum
+-    );
+-    logic c;
+-
+-    assign {c, sum} = a + b ^ {DATA_WIDTH{select}} + select;
+-    assign cout = c ^ select;
+-    assign overflow = (a[DATA_WIDTH-1] ^ sum[DATA_WIDTH-1]) & !(a[DATA_WIDTH-1] ^ b[DATA_WIDTH-1] ^ select);
+-    
+-endmodule
+\ No newline at end of file
++);
++    localparam logic [DATA_WIDTH-1:0] MAX_VALUE={1'b0,{(DATA_WIDTH-1){1'b1}}};
++    localparam logic [DATA_WIDTH-1:0] MIN_VALUE={1'b1,{(DATA_WIDTH-1){1'b0}}};
++    logic [DATA_WIDTH:0] wide;
++    logic [DATA_WIDTH-1:0] raw_sum;
++    always_comb begin
++        wide={1'b0,a}+{1'b0,(b^{DATA_WIDTH{select}})}+{{DATA_WIDTH{1'b0}},select};
++        raw_sum=wide[DATA_WIDTH-1:0];
++        cout=wide[DATA_WIDTH]^select;
++        overflow=(a[DATA_WIDTH-1]^raw_sum[DATA_WIDTH-1]) &
++                 ~(a[DATA_WIDTH-1]^b[DATA_WIDTH-1]^select);
++        sum=overflow ? (a[DATA_WIDTH-1] ? MIN_VALUE : MAX_VALUE) : raw_sum;
++    end
++endmodule
+diff --git a/Verilog Source code/ctrl_unit.sv b/Verilog Source code/ctrl_unit.sv
+index 21dd5dd..02443cb 100644
+--- a/Verilog Source code/ctrl_unit.sv	
++++ b/Verilog Source code/ctrl_unit.sv	
+@@ -20,7 +20,7 @@ module ctrl_unit(
+     localparam STV = 4'b1010;
+ 
+     always_comb begin
+-        casex(instr[12-:4])
++        case(instr[12-:4])
+             LDV: begin
+                 reg_wr_en = 1'b1;
+                 reg_rd_en = 1'b0;
+@@ -69,4 +69,4 @@ module ctrl_unit(
+         endcase
+     end
+ 
+-endmodule
+\ No newline at end of file
++endmodule
+diff --git a/Verilog Source code/div.sv b/Verilog Source code/div.sv
+index e33c3df..e64ae0e 100644
+--- a/Verilog Source code/div.sv	
++++ b/Verilog Source code/div.sv	
+@@ -1,17 +1,33 @@
+-module div #(parameter DATA_WIDTH=16) (
+-    input logic [DATA_WIDTH-1:0] a [31:0],
+-    input logic [DATA_WIDTH-1:0] b [31:0],
+-    output logic [DATA_WIDTH-1:0] result [31:0]
++module div #(parameter DATA_WIDTH=16, FRAC_WIDTH=DATA_WIDTH-4) (
++    input logic [DATA_WIDTH-1:0] a[31:0],b[31:0],
++    output logic [DATA_WIDTH-1:0] result[31:0],
++    output logic overflow
+ );
+-
+-    genvar i;
+-    generate
+-        for (i = 0; i < 32; i = i + 1) begin : rowwise_div
+-            always_comb begin
+-                result[i] = $signed(a[i]) / $signed(b[i]);
+-			end
+-//				div_block div(
++    localparam QW=2*DATA_WIDTH+1;
++    localparam logic signed [QW-1:0] MAX_VALUE=QW'((64'd1<<(DATA_WIDTH-1))-1);
++    localparam logic signed [QW-1:0] MIN_VALUE=-QW'(64'd1<<(DATA_WIDTH-1));
++    logic [31:0] flags;
++    initial if(DATA_WIDTH<2 || DATA_WIDTH>32 || FRAC_WIDTH<0 || FRAC_WIDTH>=DATA_WIDTH)
++        $fatal(1,"Invalid DIV format");
++    for(genvar i=0;i<32;i++) begin : lane
++        logic signed [QW-1:0] numerator,denominator,quotient;
++        always_comb begin
++            numerator=QW'($signed(a[i]));
++            numerator=numerator<<<FRAC_WIDTH;
++            denominator=QW'($signed(b[i]));
++            quotient='0; flags[i]=0;
++            if(b[i]=='0) begin
++                flags[i]=1;
++                result[i]=(a[i]=='0) ? '0 :
++                    (a[i][DATA_WIDTH-1] ? MIN_VALUE[DATA_WIDTH-1:0] : MAX_VALUE[DATA_WIDTH-1:0]);
++            end else begin
++                quotient=numerator/denominator;
++                flags[i]=quotient>MAX_VALUE || quotient<MIN_VALUE;
++                if(quotient>MAX_VALUE) result[i]=MAX_VALUE[DATA_WIDTH-1:0];
++                else if(quotient<MIN_VALUE) result[i]=MIN_VALUE[DATA_WIDTH-1:0];
++                else result[i]=quotient[DATA_WIDTH-1:0];
++            end
+         end
+-    endgenerate
+-
+-endmodule
+\ No newline at end of file
++    end
++    assign overflow=|flags;
++endmodule
+diff --git a/Verilog Source code/em_reg.sv b/Verilog Source code/em_reg.sv
+index ec65b63..63ba1f4 100644
+--- a/Verilog Source code/em_reg.sv	
++++ b/Verilog Source code/em_reg.sv	
+@@ -24,7 +24,6 @@ module em_reg #(parameter WORD_W=512, PC_W=9) (
+             mem_wr_en_mw <= 1'b0;
+             mem_rd_en_mw_0 <= 1'b0;
+             mem_rd_en_mw_1 <= 1'b0;
+-            instr_mw <= 13'b0;
+             wb_sel_mw <= 1'b0;
+             pc_mw <= '0;
+         end
+@@ -36,10 +35,9 @@ module em_reg #(parameter WORD_W=512, PC_W=9) (
+             mem_wr_en_mw <= mem_wr_en_em;
+             mem_rd_en_mw_0 <= mem_rd_en_em_0;
+             mem_rd_en_mw_1 <= mem_rd_en_em_1;
+-            instr_mw <= instr_em;
+             wb_sel_mw <= wb_sel_em;
+             pc_mw <= pc_em;
+         end
+     end
+ 
+-endmodule
+\ No newline at end of file
++endmodule
+diff --git a/Verilog Source code/exp.sv b/Verilog Source code/exp.sv
+index 052bfbd..9aef2f1 100644
+--- a/Verilog Source code/exp.sv	
++++ b/Verilog Source code/exp.sv	
+@@ -1,27 +1,28 @@
+-module exp_row #(
+-    parameter DATA_WIDTH=16,
+-    parameter LUT_DEPTH=512,
+-    parameter INIT_FILE="exp_content.mif"
+-) (
++// Full signed-domain table ordered from MIN to MAX.
++module exp_row #(parameter DATA_WIDTH=16,LUT_DEPTH=2**DATA_WIDTH,
++    parameter INIT_FILE=(DATA_WIDTH==8 ? "functional/assets/exp_8.hex" : "functional/assets/exp_16.hex")) (
+     input logic [DATA_WIDTH-1:0] a,
+-    output logic [DATA_WIDTH-1:0] result
++    output logic [DATA_WIDTH-1:0] result,
++    output logic overflow
+ );
+-    
+-    logic [DATA_WIDTH-1:0] mem [0:LUT_DEPTH-1];
+-    logic [DATA_WIDTH-1:0] y;
+-
++    logic [DATA_WIDTH-1:0] mem[0:LUT_DEPTH-1];
++    wire [DATA_WIDTH-1:0] index=a^{1'b1,{(DATA_WIDTH-1){1'b0}}};
+     initial begin
+-        if (INIT_FILE != "") $readmemh(INIT_FILE, mem);
++        if((DATA_WIDTH!=8 && DATA_WIDTH!=16) || LUT_DEPTH!=2**DATA_WIDTH)
++            $fatal(1,"EXP requires a full Q4.4 or Q4.12 signed-domain LUT");
++        // synthesis translate_off
++        if(INIT_FILE!="") begin : check_file
++            integer fd;
++            fd=$fopen(INIT_FILE,"r");
++            if(!fd) $fatal(1,"Missing EXP LUT: %s",INIT_FILE);
++            $fclose(fd);
++        end
++        // synthesis translate_on
++        if(INIT_FILE!="") $readmemh(INIT_FILE,mem);
+     end
+-
+-    always_comb
+-    begin
+-        if($signed(a) >= 0)
+-            y = a + (2**(DATA_WIDTH-1));
+-        else 
+-            y = a - (2**(DATA_WIDTH-1));
+-    end
+-
+-    assign result = mem[y];
+-    
+-endmodule
+\ No newline at end of file
++    assign result=mem[index];
++    // First raw x whose nearest-rounded exp(x)*2^F exceeds signed MAX.
++    // Independently checked by functional/tools/generate.py over the full LUT.
++    localparam logic signed [DATA_WIDTH-1:0] SATURATION_THRESHOLD=DATA_WIDTH'(DATA_WIDTH==8 ? 34 : 8518);
++    assign overflow=$signed(a)>=SATURATION_THRESHOLD;
++endmodule
+diff --git a/Verilog Source code/hazard_detect.sv b/Verilog Source code/hazard_detect.sv
+index 53abd1f..8afcf0a 100644
+--- a/Verilog Source code/hazard_detect.sv	
++++ b/Verilog Source code/hazard_detect.sv	
+@@ -1,82 +1,9 @@
++// Conservative interlock: serialize vector transactions until final write acceptance.
++// Within a transaction, individual beats still flow through the five stages.
+ module hazard_detect(
+-    input logic clk, rst_n,
+-    input logic [12:0] instr_em, instr_mw, instr_fd, instr_de,
+-    input read_finish, write_finish, empty, full, rd_en, wr_en, tmatmul_assert, almost_empty, almost_full,
+-    output logic em_stall, mw_stall, fd_stall, de_stall, pc_stall, flush_wb
++    input logic rst_n,transaction_busy,halted,
++    output logic fetch_enable
+ );
+-    localparam ADD = 4'b0001;
+-    localparam SUB = 4'b0010;
+-    localparam MUL = 4'b0011;
+-    localparam DIV = 4'b0100;
+-    localparam EXP = 4'b0101;
+-    localparam SIG = 4'b0110;
+-    localparam NORM = 4'b0111;
+-    localparam TMATMUL = 4'b1000;
+-    localparam LDV = 4'b1001;
+-    localparam STV = 4'b1010;
+-		
+-	logic hazard_0, hazard_1, hazard_2, hazard_3;
+-    // assign hazard_0 = instr_mw[12-:4] == TMATMUL && (instr_em[12-:4] == LDV || instr_em[12-:4] == TMATMUL) 
+-    //MEMORY HAZARD TMATMUL
+-    // assign hazard_0 = (instr_mw[12-:4] == TMATMUL) && !read_finish;
+-    assign hazard_0 = tmatmul_assert & (instr_em[12-:4] == LDV | instr_em[12-:4] == STV | instr_em[12-:4] == '1) & !read_finish;
+-    //DATA HAZARD
+-    always_comb begin
+-        if(instr_de[12-:4] == STV || instr_de[12-:4] == LDV)
+-            hazard_1 = (!almost_empty && rd_en) || (!almost_full && wr_en );
+-        else
+-            hazard_1 = !almost_empty && rd_en;
+-    end
+-
+-    always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n) begin
+-            hazard_2 <= 1'b0;
+-        end else begin
+-            // Hazard 2 is set when the instruction in the EM stage is a load/store and the write operation is not finished
+-            hazard_2 <= !(write_finish | full) & (&instr_em[12-:4]);
+-        end
+-    end
+-    // always_comb begin
+-    //     hazard_2 = !(write_finish | full) & (&instr_em[12-:4]);
+-    // end
+-
+-    always_comb begin
+-        hazard_3 = &instr_fd[12-:4];
+-    end
+-
+-    always_comb begin
+-        case({hazard_0, hazard_1})
+-            2'b01: begin
+-                pc_stall = 1'b0;
+-                fd_stall = 1'b0;
+-                de_stall = 1'b1;
+-                em_stall = 1'b1;
+-                mw_stall = 1'b1;
+-            end
+-            2'b10, 2'b11: begin
+-                em_stall = 1'b0;
+-                fd_stall = 1'b0;
+-                de_stall = 1'b0;
+-                mw_stall = 1'b1;
+-                pc_stall = 1'b0;
+-            end
+-            default: begin
+-                fd_stall = 1'b1;
+-                de_stall = 1'b1;
+-                em_stall = 1'b1;
+-                mw_stall = 1'b1  & !hazard_2;
+-                pc_stall = 1'b1 & !hazard_3;
+-            end
+-        endcase
+-    end
+-
+-    always_comb begin
+-        if (tmatmul_assert && (instr_em[12-:4] == LDV | instr_em[12-:4] == STV)) begin
+-            flush_wb = 1'b1;
+-        end else begin
+-            flush_wb = 1'b0;
+-        end
+-    end
+-
++    assign fetch_enable=rst_n && !transaction_busy && !halted;
+ endmodule
+ 
+diff --git a/Verilog Source code/ins_mem.sv b/Verilog Source code/ins_mem.sv
+index 1452dcb..bcb7293 100644
+--- a/Verilog Source code/ins_mem.sv	
++++ b/Verilog Source code/ins_mem.sv	
+@@ -1,21 +1,23 @@
+-module ins_mem #(
+-    parameter DEPTH=512,
++module ins_mem #(parameter DEPTH=512,
+     parameter ADDR_W=(DEPTH>1 ? $clog2(DEPTH) : 1),
+-    parameter INIT_FILE="instruction.mem"
+-) (
+-    input logic clk, 
++    parameter INIT_FILE="functional/assets/program_16.bin") (
++    input logic clk,
+     input logic [ADDR_W-1:0] addr,
+     output logic [12:0] instr
+ );
+-
+-    logic [12:0] mem [0:DEPTH-1];
++    logic [12:0] mem[0:DEPTH-1];
+     initial begin
+-        if (INIT_FILE != "") $readmemb(INIT_FILE, mem);
++        if(DEPTH<1 || ADDR_W<1 || ADDR_W>30 || DEPTH>2**ADDR_W)
++            $fatal(1,"Invalid instruction depth/address width");
++        // synthesis translate_off
++        if(INIT_FILE!="") begin : check_file
++            integer fd;
++            fd=$fopen(INIT_FILE,"r");
++            if(!fd) $fatal(1,"Missing program image: %s",INIT_FILE);
++            $fclose(fd);
++        end
++        // synthesis translate_on
++        if(INIT_FILE!="") $readmemb(INIT_FILE,mem);
+     end
+-
+-    initial begin
+-        if (DEPTH < 1 || DEPTH > 2**ADDR_W) $fatal(1,"Invalid instruction depth/address width");
+-    end
+-    assign instr = mem[addr];
+-
+-endmodule
+\ No newline at end of file
++    assign instr=(int'(addr)<DEPTH) ? mem[addr] : 13'h1e00;
++endmodule
+diff --git a/Verilog Source code/matmul_wrap.sv b/Verilog Source code/matmul_wrap.sv
+index c59e58b..48b0eb6 100644
+--- a/Verilog Source code/matmul_wrap.sv	
++++ b/Verilog Source code/matmul_wrap.sv	
+@@ -9,7 +9,8 @@ module matmul_wrap(
+         .rst_n(SW[0]),
+         .ready(LEDG[0]),
+         .overflow_out(LEDG[1]),
+-        .carry_out(LEDG[2])
++        .carry_out(LEDG[2]),
++        .pc_debug(), .instr_debug(), .mem_out_1_debug()
+     );
+ 
+-endmodule
+\ No newline at end of file
++endmodule
+diff --git a/Verilog Source code/matmulfree.sv b/Verilog Source code/matmulfree.sv
+index bf6cf68..aa8d966 100644
+--- a/Verilog Source code/matmulfree.sv	
++++ b/Verilog Source code/matmulfree.sv	
+@@ -1,339 +1,165 @@
+ module matmulfree #(
+-    parameter DATA_WIDTH=16,
+-    parameter FRAC_WIDTH=DATA_WIDTH-4,
+-    parameter REG_DEPTH=1024,
+-    parameter MEM_DEPTH=2**19,
+-    parameter INSTR_DEPTH=512,
++    parameter DATA_WIDTH=16,FRAC_WIDTH=DATA_WIDTH-4,
++    parameter REG_DEPTH=1024,MEM_DEPTH=2**19,INSTR_DEPTH=512,
+     parameter PC_W=(INSTR_DEPTH>1 ? $clog2(INSTR_DEPTH) : 1),
+-    parameter MEM_INIT_FILE="mem_init.mem",
+-    parameter INSTR_INIT_FILE="instruction.mem",
+-    parameter SIG_INIT_FILE="sigContent.mif",
+-    parameter EXP_INIT_FILE="exp_content.mif",
+-    parameter EXP_LUT_DEPTH=512,
+-    parameter WORD_W=DATA_WIDTH*32
++    parameter MEM_INIT_FILE=(DATA_WIDTH==8 ? "functional/assets/memory_8.hex" : "functional/assets/memory_16.hex"),
++    parameter INSTR_INIT_FILE=(DATA_WIDTH==8 ? "functional/assets/program_8.bin" : "functional/assets/program_16.bin"),
++    parameter SIG_INIT_FILE=(DATA_WIDTH==8 ? "functional/assets/sig_8.bin" : "functional/assets/sig_16.bin"),
++    parameter EXP_INIT_FILE=(DATA_WIDTH==8 ? "functional/assets/exp_8.hex" : "functional/assets/exp_16.hex"),
++    parameter EXP_LUT_DEPTH=2**DATA_WIDTH,WORD_W=DATA_WIDTH*32
+ ) (
+-    input  logic rst_n, clk,
+-    output logic ready, overflow_out, carry_out,
++    input logic rst_n,clk,
++    output logic ready,overflow_out,carry_out,
+     output logic [PC_W-1:0] pc_debug,
+     output logic [12:0] instr_debug,
+     output logic [WORD_W-1:0] mem_out_1_debug
+ );
+-    initial begin
+-        if (DATA_WIDTH < 4 || FRAC_WIDTH < 0 || FRAC_WIDTH >= DATA_WIDTH)
+-            $fatal(1,"Invalid fixed-point format");
+-        if (WORD_W != DATA_WIDTH*32) $fatal(1,"WORD_W must equal 32*DATA_WIDTH");
++    typedef enum logic [1:0] {FETCH,ISSUE,RUN,HALTED} phase_t;
++    phase_t phase;
++    logic fetch_enable,pc_advance,pc_exhausted,complete;
++    logic [PC_W-1:0] pc,pc_de,pc_em,pc_mw,pc_wb;
++    logic [12:0] rom_instr,instr_fd,instr_de,instr_em,instr_mw,instr_wb;
++    wire [3:0] opcode=instr_de[12:9];
++    wire issue=phase==ISSUE;
++    wire is_norm=opcode==7;
++    wire is_tm=opcode==8;
++    wire is_load=opcode==9;
++    wire is_store=opcode==10;
++    logic reg_write,reg_read,mem_write,mem_read_0,mem_read_1,wb_select;
++    logic [2:0] alu_select;
++    logic rf_valid,rf_ready,rf_write_ready,rf_done,rf_read_done;
++    logic mem_valid_0,mem_valid_1,mem_ready_0,mem_ready_1,mem_write_ready,mem_done,mem_read_done;
++    logic rf_almost_full,rf_almost_empty,mem_almost_full,mem_almost_empty,mem_port1_done;
++    logic [WORD_W-1:0] rf_a,rf_b,em_a,em_b,mw_a;
++    logic [WORD_W-1:0] mem_a,mem_b,mem_input,alu_word,alu_mw,alu_wb,mem_wb,wb_data;
++    logic [DATA_WIDTH-1:0] a[31:0],b[31:0],alu_result[31:0],norm_lanes[31:0];
++    logic carry,overflow,em_reg_write,em_mem_write,em_mem_read_0,em_mem_read_1,em_wb_select;
++    logic mw_reg_write,mw_mem_write,mw_mem_read_0,mw_mem_read_1,mw_wb_select,wb_reg_write,wb_wb_select;
++    logic [2:0] em_alu_select;
++    logic v_em,v_mw,v_wb,execute_valid,wb_input_valid;
++    logic norm_in_ready,norm_valid,norm_done,norm_overflow;
++    logic [WORD_W-1:0] norm_word,tm_word;
++    logic tm_activation_ready,tm_weights_ready,tm_valid,tm_done,tm_overflow;
++    initial if((DATA_WIDTH!=8 && DATA_WIDTH!=16) || FRAC_WIDTH!=DATA_WIDTH-4 || WORD_W!=32*DATA_WIDTH)
++        $fatal(1,"Core supports Q4.4 and Q4.12 profiles");
++    hazard_detect interlock(.rst_n(rst_n),.transaction_busy(phase!=FETCH),.halted(ready),
++        .fetch_enable(fetch_enable));
++    PC #(.PC_W(PC_W),.DEPTH(INSTR_DEPTH)) PC(
++        .clk(clk),.rst(rst_n),.stall(pc_advance),.pc_out(pc),.exhausted(pc_exhausted));
++    ins_mem #(.DEPTH(INSTR_DEPTH),.ADDR_W(PC_W),.INIT_FILE(INSTR_INIT_FILE)) ins_mem(
++        .clk(clk),.addr(pc),.instr(rom_instr));
++    assign instr_fd=pc_exhausted ? 13'h1e00 : rom_instr;
++    fd_reg #(.WORD_W(WORD_W),.PC_W(PC_W)) fd_reg_inst(
++        .clk(clk),.rst_n(rst_n),.enable(fetch_enable),.instr_fd(instr_fd),.instr_de(instr_de),
++        .pc(pc),.pc_de(pc_de));
++    ctrl_unit ctrl_unit_inst(.instr(instr_de),.reg_wr_en(reg_write),.reg_rd_en(reg_read),
++        .mem_wren(mem_write),.mem_rden_0(mem_read_0),.mem_rden_1(mem_read_1),
++        .alu_op(alu_select),.wb_sel(wb_select));
++    assign rf_ready=!is_norm || norm_in_ready;
++    register #(.DATA_WIDTH(DATA_WIDTH),.MEM_DEPTH(REG_DEPTH)) register_inst(
++        .clk(clk),.rst_n(rst_n),.data_in(wb_data),.r_addr_0(instr_de[2:0]),
++        .r_addr_1(instr_de[5:3]),.w_addr(instr_de[8:6]),
++        .w_en(issue && reg_write),.rd_en(issue && reg_read),
++        .write_valid(v_wb),.read_ready(rf_ready),.write_ready(rf_write_ready),
++        .read_valid(rf_valid),.full(rf_done),.empty(rf_read_done),
++        .almost_full(rf_almost_full),.almost_empty(rf_almost_empty),.data_out_0(rf_a),.data_out_1(rf_b));
++    de_reg #(.WORD_W(WORD_W),.PC_W(PC_W)) de_reg_inst(
++        .clk(clk),.rst_n(rst_n),.enable(rf_valid && rf_ready),
++        .instr_de(instr_de),.reg_out_0_de(rf_a),.reg_out_1_de(rf_b),
++        .reg_wr_en_de(reg_write),.mem_wr_en_de(mem_write),.mem_rd_en_de_0(mem_read_0),
++        .mem_rd_en_de_1(mem_read_1),.alu_op_de(alu_select),.wb_sel_de(wb_select),.pc_de(pc_de),
++        .instr_em(instr_em),.reg_out_0_em(em_a),.reg_out_1_em(em_b),
++        .reg_wr_en_em(em_reg_write),.mem_wr_en_em(em_mem_write),.mem_rd_en_em_0(em_mem_read_0),
++        .mem_rd_en_em_1(em_mem_read_1),.alu_op_em(em_alu_select),.wb_sel_em(em_wb_select),.pc_em(pc_em));
++    for(genvar i=0;i<32;i++) begin : lanes
++        assign a[i]=em_a[i*DATA_WIDTH+:DATA_WIDTH];
++        assign b[i]=em_b[i*DATA_WIDTH+:DATA_WIDTH];
++        assign norm_lanes[i]=norm_word[i*DATA_WIDTH+:DATA_WIDTH];
++        assign alu_word[i*DATA_WIDTH+:DATA_WIDTH]=alu_result[i];
+     end
+-    localparam ADD = 4'b0001;
+-    localparam SUB = 4'b0010;
+-    localparam MUL = 4'b0011;
+-    localparam DIV = 4'b0100;
+-    localparam EXP = 4'b0101;
+-    localparam SIG = 4'b0110;
+-    localparam NORM = 4'b0111;
+-    localparam TMATMUL = 4'b1000;
+-    localparam LDV = 4'b1001;
+-    localparam STV = 4'b1010;
+-    
+-    
+-//    logic clk;
+-    // Pipeline control signals
+-    logic pc_stall, em_stall, mw_stall, fd_stall, de_stall;
+-    logic write_finish, read_finish;
+-    logic reg_wr_en_de, reg_wr_en_wb, reg_rd_en_de;
+-    logic mem_wr_en_de, mem_rd_en_de_0, mem_rd_en_de_1;
+-    logic tmatmul_assert;
+-
+-    // Instruction pipeline registers
+-    logic [12:0] instr_fd, instr_de, instr_em, instr_mw, instr_wb;
+-
+-    // Program Counter and Hazard Detection
+-    logic [PC_W-1:0] pc, pc_de;
+-    logic empty, full, almost_empty, almost_full;
+-    logic flush_wb;
+-	
+-    hazard_detect hazard_detect_inst (
+-        .clk(clk), .rst_n(rst_n),
+-        .instr_fd(instr_fd), .instr_de(instr_de), .instr_em(instr_em), .instr_mw(instr_mw), 
+-        .almost_empty(almost_empty), .almost_full(almost_full), .read_finish(read_finish), .write_finish(write_finish),
+-        .empty(empty), .full(full),
+-        .tmatmul_assert(tmatmul_assert),
+-        .rd_en(reg_rd_en_de), .wr_en(reg_wr_en_de),
+-        .em_stall(em_stall), .mw_stall(mw_stall), .fd_stall(fd_stall),
+-        .de_stall(de_stall), .pc_stall(pc_stall),
+-        .flush_wb(flush_wb)
+-    );
+-
+-    PC #(.PC_W(PC_W)) PC(
+-        .clk(clk), .rst(rst_n),
+-        .pc_out(pc), .stall(pc_stall)
+-    );
+-
+-    // instr[12-:4] is the opcode
+-    // instr[2-0] is the source register 1
+-    // instr[5-3] is the source register 2
+-    // instr[8-6] is the destination register
+-    ins_mem #(.DEPTH(INSTR_DEPTH), .ADDR_W(PC_W), .INIT_FILE(INSTR_INIT_FILE)) ins_mem(
+-        .clk(clk),
+-        .addr(pc),
+-        .instr(instr_fd)
+-    );
+-
+-    fd_reg #(.WORD_W(WORD_W), .PC_W(PC_W)) fd_reg_inst (
+-        .clk(clk), .rst_n(rst_n), .enable(fd_stall),
+-        .instr_fd(instr_fd), .instr_de(instr_de), 
+-        .pc(pc), .pc_de(pc_de)
+-    );
+-
+-    // Decode Stage
+-    
+-    logic [WORD_W-1:0] reg_out_0_de, reg_out_1_de;
+-    logic [2:0] alu_op_de;
+-    logic wb_sel_de;
+-
+-    logic [WORD_W-1:0] reg_out_0_em, reg_out_1_em;
+-    logic reg_wr_en_em, mem_wr_en_em, mem_rd_en_em_0, mem_rd_en_em_1;
+-    logic [2:0] alu_op_em;
+-    logic wb_sel_em;
+-    logic [WORD_W-1:0] wb_data;
+-    logic [PC_W-1:0] pc_em;  
+-    
+-    ctrl_unit ctrl_unit_inst (
+-        .instr(instr_de),
+-        .reg_wr_en(reg_wr_en_de), .reg_rd_en(reg_rd_en_de),
+-        .mem_wren(mem_wr_en_de), .mem_rden_0(mem_rd_en_de_0), .mem_rden_1(mem_rd_en_de_1),
+-        .alu_op(alu_op_de), .wb_sel(wb_sel_de)
+-    );
+-        
+-    register #(.DATA_WIDTH(DATA_WIDTH), .MEM_DEPTH(REG_DEPTH)) register_inst (
+-        .clk(clk), .rst_n(rst_n), .data_in(wb_data), 
+-        .r_addr_0(instr_de[2:0]), .r_addr_1(instr_de[5:3]),
+-        .w_addr(instr_wb[8:6]), .w_en(reg_wr_en_wb), .rd_en(reg_rd_en_de),
+-        .full(full), .empty(empty), .almost_full(almost_full), .almost_empty(almost_empty),
+-        .data_out_0(reg_out_0_de), .data_out_1(reg_out_1_de)
+-    );
+-
+-    de_reg #(.WORD_W(WORD_W), .PC_W(PC_W)) de_reg_inst (
+-        .clk(clk), .rst_n(rst_n), .enable(de_stall),
+-        .instr_de(instr_de), .reg_out_0_de(reg_out_0_de), .reg_out_1_de(reg_out_1_de),
+-        .reg_wr_en_de(reg_wr_en_de), .mem_wr_en_de(mem_wr_en_de),
+-        .mem_rd_en_de_0(mem_rd_en_de_0), .mem_rd_en_de_1(mem_rd_en_de_1),
+-        .alu_op_de(alu_op_de), .wb_sel_de(wb_sel_de), .pc_de(pc_de),
+-        .instr_em(instr_em), .reg_out_0_em(reg_out_0_em), .reg_out_1_em(reg_out_1_em),
+-        .reg_wr_en_em(reg_wr_en_em), .mem_wr_en_em(mem_wr_en_em),
+-        .mem_rd_en_em_0(mem_rd_en_em_0), .mem_rd_en_em_1(mem_rd_en_em_1),
+-        .alu_op_em(alu_op_em), .wb_sel_em(wb_sel_em), .pc_em(pc_em)
+-    );
+-
+-    //execute and memory access
+-    logic [DATA_WIDTH-1:0] alu_in_a[31:0], alu_in_b[31:0], alu_out_array [31:0];
+-    logic carry, overflow;
+-    logic [WORD_W-1:0] alu_out_em;
+-    
+-    logic [WORD_W-1:0] alu_out_mw;
+-    logic [WORD_W-1:0] reg_out_0_mw;
+-    logic reg_wr_en_mw, mem_wr_en_mw, mem_rd_en_mw_0, mem_rd_en_mw_1;
+-    logic wb_sel_mw;
+-    logic [PC_W-1:0] pc_mw;
+-
+-    always_comb begin
+-        for(int i = 0; i < 32; i = i + 1) begin
+-            alu_in_a[i] = reg_out_0_em[DATA_WIDTH*i +: DATA_WIDTH];
+-            alu_in_b[i] = reg_out_1_em[DATA_WIDTH*i +: DATA_WIDTH];
+-        end
+-        // {alu_in_a[31], alu_in_a[30], alu_in_a[29], alu_in_a[28], alu_in_a[27], alu_in_a[26], alu_in_a[25], alu_in_a[24],
+-        //  alu_in_a[23], alu_in_a[22], alu_in_a[21], alu_in_a[20], alu_in_a[19], alu_in_a[18], alu_in_a[17], alu_in_a[16],
+-        //  alu_in_a[15], alu_in_a[14], alu_in_a[13], alu_in_a[12], alu_in_a[11], alu_in_a[10], alu_in_a[9], alu_in_a[8],
+-        //  alu_in_a[7], alu_in_a[6], alu_in_a[5], alu_in_a[4], alu_in_a[3], alu_in_a[2], alu_in_a[1], alu_in_a[0]} = reg_out_0_em;
+-        // {alu_in_b[31], alu_in_b[30], alu_in_b[29], alu_in_b[28], alu_in_b[27], alu_in_b[26], alu_in_b[25], alu_in_b[24],
+-        //  alu_in_b[23], alu_in_b[22], alu_in_b[21], alu_in_b[20], alu_in_b[19], alu_in_b[18], alu_in_b[17], alu_in_b[16],
+-        //  alu_in_b[15], alu_in_b[14], alu_in_b[13], alu_in_b[12], alu_in_b[11], alu_in_b[10], alu_in_b[9], alu_in_b[8],
+-        //  alu_in_b[7], alu_in_b[6], alu_in_b[5], alu_in_b[4], alu_in_b[3], alu_in_b[2], alu_in_b[1], alu_in_b[0]} = reg_out_1_em;
+-    end
+-
+-    rowwise_op #(.DATA_WIDTH(DATA_WIDTH), .FRAC_WIDTH(FRAC_WIDTH), .EXP_LUT_DEPTH(EXP_LUT_DEPTH),
+-        .SIG_INIT_FILE(SIG_INIT_FILE), .EXP_INIT_FILE(EXP_INIT_FILE)) rowwise_op_inst (
+-        .a(alu_in_a), .b(alu_in_b), .alu_out(alu_out_array),
+-        .carry_out(carry), .overflow(overflow), .select(alu_op_em)
+-    );
+-
+-    assign overflow_out = overflow;
+-    assign carry_out = carry;
+-    
+-    always_comb begin
+-        alu_out_em = {alu_out_array[31], alu_out_array[30], alu_out_array[29], alu_out_array[28], alu_out_array[27], alu_out_array[26],
+-                        alu_out_array[25], alu_out_array[24], alu_out_array[23], alu_out_array[22], alu_out_array[21], alu_out_array[20],
+-                        alu_out_array[19], alu_out_array[18], alu_out_array[17], alu_out_array[16], alu_out_array[15], alu_out_array[14],
+-                        alu_out_array[13], alu_out_array[12], alu_out_array[11], alu_out_array[10], alu_out_array[9], alu_out_array[8],
+-                        alu_out_array[7], alu_out_array[6], alu_out_array[5], alu_out_array[4], alu_out_array[3], alu_out_array[2],
+-                        alu_out_array[1], alu_out_array[0]};
+-        // alu_out_em = {alu_out_array[3], alu_out_array[2], alu_out_array[1], alu_out_array[0]};
+-    end
+-
+-    em_reg #(.WORD_W(WORD_W), .PC_W(PC_W)) em_reg_inst (
+-        .clk(clk), .rst_n(rst_n), .enable(em_stall),
+-        .instr_em(instr_em), .alu_out_em(alu_out_em),
+-        .reg_out_0_em(reg_out_0_em), .reg_wr_en_em(reg_wr_en_em),
+-        .mem_wr_en_em(mem_wr_en_em), .mem_rd_en_em_0(mem_rd_en_em_0),
+-        .mem_rd_en_em_1(mem_rd_en_em_1), .wb_sel_em(wb_sel_em), .pc_em(pc_em),
+-        .instr_mw(instr_mw), .alu_out_mw(alu_out_mw),
+-        .reg_out_0_mw(reg_out_0_mw), .reg_wr_en_mw(reg_wr_en_mw),
+-        .mem_wr_en_mw(mem_wr_en_mw), .mem_rd_en_mw_0(mem_rd_en_mw_0),
+-        .mem_rd_en_mw_1(mem_rd_en_mw_1), .wb_sel_mw(wb_sel_mw), .pc_mw(pc_mw)
+-    );
+-
+-    // memmory to write back
+-    logic [WORD_W-1:0] mem_out_0_mw, mem_out_1_mw, mem_in;
+-    logic [WORD_W-1:0] alu_out_wb;
+-    logic [WORD_W-1:0] result;
+-    logic tmatmul_write, fifo_1_empty;
+-    logic [2:0] mem_r_addr_1_reg, mem_r_addr_0_reg, mem_w_addr_reg;
+-    logic mem_wr_en_em_reg, mem_rd_en_em_0_reg, mem_rd_en_em_1_reg;
+-    
+-    //Mux choose memory input
+-    logic [2:0] mem_r_addr_1_in, mem_r_addr_0_in, mem_w_addr_in;
+-    logic mem_wr_en_em_in, mem_rd_en_em_0_in, mem_rd_en_em_1_in;
+-    
+-    logic wb_sel_wb;
+-    logic [WORD_W-1:0] mem_out_wb;
+-    
+-    always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n) begin
+-            mem_wr_en_em_reg <= 1'b0;
+-            mem_rd_en_em_0_reg <= 1'b0;
+-            mem_rd_en_em_1_reg <= 1'b0;
+-            mem_r_addr_0_reg <= 3'b0;
+-            mem_r_addr_1_reg <= 3'b0;
+-            mem_w_addr_reg <= 3'b0;
+-        end
+-        else begin 
+-            mem_wr_en_em_reg <= mem_wr_en_em;
+-            mem_rd_en_em_0_reg <= mem_rd_en_em_0;
+-            mem_rd_en_em_1_reg <= mem_rd_en_em_1;
+-            mem_r_addr_0_reg <= instr_em[2:0];
+-            mem_r_addr_1_reg <= instr_em[5:3];
+-            mem_w_addr_reg <= instr_em[8:6];
+-        end
+-    end
+-
+-    //State machine for TMATMUL assertion
+-    localparam IDLE = 1'b0, RUN = 1'b1;
+-    logic tmatmul_state, next_tmatmul_state;
+-    always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n) begin
+-            tmatmul_state <= IDLE;
+-        end
+-        else begin
+-            tmatmul_state <= next_tmatmul_state;
+-        end
+-    end
+-
+-    always_comb begin
+-        case (tmatmul_state)
+-            IDLE: next_tmatmul_state = (instr_em[12-:4] == TMATMUL) ? RUN : IDLE;
+-            RUN:  next_tmatmul_state = (tmatmul_write) ? IDLE : RUN;
+-            default: next_tmatmul_state = IDLE;
+-        endcase
+-    end
+-
+-    always_comb begin
+-        tmatmul_assert = (tmatmul_state == RUN);
+-    end
+-
+-    // always_ff @(posedge clk or negedge rst_n) begin
+-    //     if (!rst_n) begin
+-    //         tmatmul_assert <= 1'b0;
+-    //     end
+-    //     else begin
+-    //         if(instr_em[12-:4] == TMATMUL) 
+-    //             tmatmul_assert <= 1'b1;
+-    //         else
+-    //             tmatmul_assert <= 1'b0;
+-    //     end
+-    // end  
+-
+-
+-    always_comb begin
+-        if(tmatmul_assert) begin
+-            mem_r_addr_0_in = mem_r_addr_0_reg;
+-            mem_r_addr_1_in = mem_r_addr_1_reg;
+-            mem_w_addr_in = mem_w_addr_reg;
+-            mem_wr_en_em_in = mem_wr_en_em_reg;
+-            mem_rd_en_em_0_in = mem_rd_en_em_0_reg;
+-            mem_rd_en_em_1_in = mem_rd_en_em_1_reg;
+-        end
+-        else begin
+-            mem_r_addr_0_in = instr_mw[2:0];
+-            mem_r_addr_1_in = instr_mw[5:3];
+-            mem_w_addr_in = instr_mw[8:6];
+-            mem_wr_en_em_in = mem_wr_en_mw;
+-            mem_rd_en_em_0_in = mem_rd_en_mw_0;
+-            mem_rd_en_em_1_in = mem_rd_en_mw_1;
+-        end
+-    end
+-        
+-    always_comb begin
+-        mem_in = (tmatmul_assert) ? result : reg_out_0_mw;
+-    end
+-
+-    logic rd_type_mem;
+-    always_comb begin
+-        rd_type_mem = (tmatmul_assert);
+-    end
+-    
+-    mem_mapping #(.DATA_WIDTH(DATA_WIDTH), .MEM_DEPTH(MEM_DEPTH), .INIT_FILE(MEM_INIT_FILE)) mem_mapping_inst (
+-        .clk(clk), .rst_n(rst_n), .data_in(mem_in), .rd_type(rd_type_mem), .tmatmul_write(tmatmul_write),
+-        .r_addr_0(mem_r_addr_0_in), .r_addr_1(mem_r_addr_1_in), .w_addr(mem_w_addr_in),
+-        .w_en(mem_wr_en_em_in), .rd_en_0(mem_rd_en_em_0_in), .rd_en_1(mem_rd_en_em_1_in),
+-        // .r_addr_0(instr_mw[2:0]), .r_addr_1(instr_mw[5:3]), .w_addr(instr_mw[8:6]),
+-        // .w_en(mem_wr_en_mw), .rd_en_0(mem_rd_en_mw_0), .rd_en_1(mem_rd_en_mw_1),
+-        .read_finish(read_finish), .write_finish(write_finish), .fifo_1_empty(fifo_1_empty),
+-        .data_out_0(mem_out_0_mw), .data_out_1(mem_out_1_mw)
+-    );
+-
+-    // // Ternary Multiplication
+-    // logic [15:0] tmatmul_in_a[31:0];
+-    // logic [1:0] tmatmul_in_b[31:0];
+-
+-    // always_comb begin
+-    //     for(int i = 0; i < 32; i = i + 1) begin
+-    //         tmatmul_in_b[i] = mem_out_1_mw[DATA_WIDTH*i +: DATA_WIDTH];
+-    //     end
+-    //     for(int i = 0; i < 32; i = i + 1) begin
+-    //         tmatmul_in_a[i] = mem_out_0_mw[DATA_WIDTH*i +: DATA_WIDTH];
+-    //     end
+-    // end
+-
++    norm #(.DATA_WIDTH(DATA_WIDTH),.FRAC_WIDTH(FRAC_WIDTH)) norm_inst(
++        .clk(clk),.rst_n(rst_n),.start(issue && is_norm),.in_valid(v_em && is_norm),
++        .out_ready(1'b1),.data_in(em_a),.in_ready(norm_in_ready),.out_valid(norm_valid),
++        .done(norm_done),.overflow(norm_overflow),.data_out(norm_word));
++    rowwise_op #(.DATA_WIDTH(DATA_WIDTH),.FRAC_WIDTH(FRAC_WIDTH),.EXP_LUT_DEPTH(EXP_LUT_DEPTH),
++        .SIG_INIT_FILE(SIG_INIT_FILE),.EXP_INIT_FILE(EXP_INIT_FILE)) rowwise_op_inst(
++        .a(a),.b(b),.select(em_alu_select),.norm_result(norm_lanes),.norm_overflow(norm_overflow),
++        .alu_out(alu_result),.carry_out(carry),.overflow(overflow));
++    assign execute_valid=is_norm ? norm_valid : v_em;
++    em_reg #(.WORD_W(WORD_W),.PC_W(PC_W)) em_reg_inst(
++        .clk(clk),.rst_n(rst_n),.enable(execute_valid),
++        .instr_em(instr_em),.alu_out_em(alu_word),.reg_out_0_em(em_a),
++        .reg_wr_en_em(em_reg_write),.mem_wr_en_em(em_mem_write),.mem_rd_en_em_0(em_mem_read_0),
++        .mem_rd_en_em_1(em_mem_read_1),.wb_sel_em(em_wb_select),.pc_em(pc_em),
++        .instr_mw(instr_mw),.alu_out_mw(alu_mw),.reg_out_0_mw(mw_a),
++        .reg_wr_en_mw(mw_reg_write),.mem_wr_en_mw(mw_mem_write),.mem_rd_en_mw_0(mw_mem_read_0),
++        .mem_rd_en_mw_1(mw_mem_read_1),.wb_sel_mw(mw_wb_select),.pc_mw(pc_mw));
++    assign mem_ready_0=is_tm ? tm_weights_ready : 1'b1;
++    assign mem_ready_1=is_tm ? tm_activation_ready : 1'b1;
++    assign mem_input=is_tm ? tm_word : mw_a;
++    mem_mapping #(.DATA_WIDTH(DATA_WIDTH),.MEM_DEPTH(MEM_DEPTH),.INIT_FILE(MEM_INIT_FILE)) mem_mapping_inst(
++        .clk(clk),.rst_n(rst_n),.data_in(mem_input),.rd_type(is_tm),.tmatmul_write(tm_valid),
++        .r_addr_0(instr_de[2:0]),.r_addr_1(instr_de[5:3]),.w_addr(instr_de[8:6]),
++        .w_en(issue && mem_write),.rd_en_0(issue && mem_read_0),.rd_en_1(issue && mem_read_1),
++        .write_valid(is_tm ? tm_valid : (v_mw && is_store)),
++        .read_ready_0(mem_ready_0),.read_ready_1(mem_ready_1),.write_ready(mem_write_ready),
++        .read_valid_0(mem_valid_0),.read_valid_1(mem_valid_1),.read_finish(mem_read_done),
++        .write_finish(mem_done),.fifo_1_empty(mem_port1_done),.data_out_0(mem_a),.data_out_1(mem_b),
++        .almost_full(mem_almost_full),.almost_empty(mem_almost_empty));
+     ternary_mul #(.DATA_WIDTH(DATA_WIDTH)) ternary_mul(
+-        .clk(clk),
+-        .rst_n(rst_n),
+-		.enable(tmatmul_assert),
+-        .matrix_in(mem_out_0_mw),
+-        .ternary_matrix(mem_out_1_mw),
+-        .matrix_out(result),
+-        .read_finish(read_finish),
+-        .tmatmul_write(tmatmul_write)
+-    );
+-    
+-    mw_reg #(.WORD_W(WORD_W), .PC_W(PC_W)) mw_reg_inst (
+-        .clk(clk), .rst_n(rst_n), .flush(flush_wb),
+-        .enable(mw_stall),
+-        .instr_mw(instr_mw), .mem_out_mw_0(mem_out_0_mw),
+-        .alu_out_mw(alu_out_mw), .wb_sel_mw(wb_sel_mw), .pc_mw(pc_mw),
+-        .reg_wr_en_mw(reg_wr_en_mw), .instr_wb(instr_wb),
+-        .mem_out_wb_0(mem_out_wb), .alu_out_wb(alu_out_wb),
+-        .wb_sel_wb(wb_sel_wb), .reg_wr_en_wb(reg_wr_en_wb), .pc_wb(pc_debug)
+-    );
+-
+-    assign wb_data = wb_sel_wb ? mem_out_wb : alu_out_wb;
+-    assign ready = &instr_wb;
+-    assign instr_debug = instr_wb;
++        .clk(clk),.rst_n(rst_n),.enable(issue && is_tm),
++        .matrix_in(mem_b),.ternary_matrix(mem_a),.matrix_valid(mem_valid_1 && is_tm),
++        .ternary_valid(mem_valid_0 && is_tm),.output_ready(mem_write_ready),
++        .matrix_ready(tm_activation_ready),.ternary_ready(tm_weights_ready),
++        .matrix_out(tm_word),.tmatmul_write(tm_valid),.done(tm_done),.overflow(tm_overflow));
++    assign wb_input_valid=is_load ? mem_valid_0 : (v_mw && !is_store);
++    mw_reg #(.WORD_W(WORD_W),.PC_W(PC_W)) mw_reg_inst(
++        .clk(clk),.rst_n(rst_n),.flush(1'b0),.enable(wb_input_valid),
++        .instr_mw(is_load ? instr_de : instr_mw),.mem_out_mw_0(mem_a),.alu_out_mw(alu_mw),
++        .wb_sel_mw(is_load),.pc_mw(is_load ? pc_de : pc_mw),.reg_wr_en_mw(reg_write),
++        .instr_wb(instr_wb),.mem_out_wb_0(mem_wb),.alu_out_wb(alu_wb),
++        .wb_sel_wb(wb_wb_select),.reg_wr_en_wb(wb_reg_write),.pc_wb(pc_wb));
++    assign wb_data=wb_wb_select ? mem_wb : alu_wb;
++    assign complete=phase==RUN && (reg_write ? rf_done : mem_done);
++    assign pc_advance=complete || (issue && opcode==0);
+     always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n) begin
+-            mem_out_1_debug <= '0;
+-        end
+-        else begin
+-            mem_out_1_debug <= mem_out_1_mw;
++        if(!rst_n) begin
++            phase<=FETCH; ready<=0; overflow_out<=0; carry_out<=0;
++            v_em<=0; v_mw<=0; v_wb<=0; pc_debug<='0; instr_debug<='0; mem_out_1_debug<='0;
++        end else begin
++            v_em<=rf_valid && rf_ready;
++            v_mw<=execute_valid;
++            v_wb<=wb_input_valid;
++            if(mem_valid_1 && mem_ready_1) mem_out_1_debug<=mem_b;
++            if(issue) begin overflow_out<=0; carry_out<=0; end
++            else begin
++                if(execute_valid && reg_write) begin
++                    overflow_out<=overflow_out|overflow;
++                    carry_out<=carry_out|carry;
++                end
++                if(tm_valid && mem_write_ready) overflow_out<=overflow_out|tm_overflow;
++            end
++            case(phase)
++                FETCH: if(fetch_enable) phase<=ISSUE;
++                ISSUE: begin
++                    if(opcode==15) begin ready<=1; phase<=HALTED; pc_debug<=pc_de; instr_debug<=instr_de; end
++                    else if(opcode==0) begin phase<=FETCH; pc_debug<=pc_de; instr_debug<=instr_de; end
++                    else if(opcode>=1 && opcode<=10) phase<=RUN;
++                    else begin
++                        phase<=HALTED; ready<=1; overflow_out<=1;
++                        pc_debug<=pc_de; instr_debug<=instr_de;
++                    end
++                end
++                RUN: if(complete) begin phase<=FETCH; pc_debug<=pc_de; instr_debug<=instr_de; end
++                HALTED: begin end
++                default: phase<=FETCH;
++            endcase
++            // synthesis translate_off
++            if(issue && ($isunknown(instr_de) || (opcode>10 && opcode!=15)))
++                $fatal(1,"Invalid instruction at PC %0d: %h",pc_de,instr_de);
++            if(v_wb && !rf_write_ready) $fatal(1,"Register write beat without ready");
++            if(v_mw && is_store && !mem_write_ready) $fatal(1,"Store beat without ready");
++            // synthesis translate_on
+         end
+     end
+-
+ endmodule
+diff --git a/Verilog Source code/matmulfree_scaled.sv b/Verilog Source code/matmulfree_scaled.sv
+index 462422b..73332c7 100644
+--- a/Verilog Source code/matmulfree_scaled.sv	
++++ b/Verilog Source code/matmulfree_scaled.sv	
+@@ -1,22 +1,17 @@
+-// Width-only scaled profile. Known functional bugs are intentionally retained.
+-// Same 5-stage pipeline, 13-bit ISA, 8 registers, 32 lanes, 512-element vectors.
++// Same five-stage datapath, 13-bit ISA, 32 lanes and 512-element vectors.
+ module matmulfree_scaled #(
+-    parameter MEM_INIT_FILE="mem_init_8.mem",
+-    parameter INSTR_INIT_FILE="instruction_64.mem",
+-    parameter SIG_INIT_FILE="sigContent_8.mif",
+-    parameter EXP_INIT_FILE="exp_content_8.mif"
++    parameter MEM_INIT_FILE="functional/assets/memory_8.hex",
++    parameter INSTR_INIT_FILE="functional/assets/program_8.bin",
++    parameter SIG_INIT_FILE="functional/assets/sig_8.bin",
++    parameter EXP_INIT_FILE="functional/assets/exp_8.hex"
+ ) (
+-    input logic rst_n, clk,
+-    output logic ready, overflow_out, carry_out,
++    input logic rst_n,clk,
++    output logic ready,overflow_out,carry_out,
+     output logic [5:0] pc_debug,
+     output logic [12:0] instr_debug,
+     output logic [255:0] mem_out_1_debug
+ );
+-    matmulfree #(
+-        .DATA_WIDTH(8), .FRAC_WIDTH(4),
+-        .REG_DEPTH(128), .MEM_DEPTH(16384), .INSTR_DEPTH(64),
+-        .EXP_LUT_DEPTH(512),
+-        .MEM_INIT_FILE(MEM_INIT_FILE), .INSTR_INIT_FILE(INSTR_INIT_FILE),
+-        .SIG_INIT_FILE(SIG_INIT_FILE), .EXP_INIT_FILE(EXP_INIT_FILE)
+-    ) core (.*);
++    matmulfree #(.DATA_WIDTH(8),.FRAC_WIDTH(4),.REG_DEPTH(128),.MEM_DEPTH(32768),.INSTR_DEPTH(64),
++        .EXP_LUT_DEPTH(256),.MEM_INIT_FILE(MEM_INIT_FILE),.INSTR_INIT_FILE(INSTR_INIT_FILE),
++        .SIG_INIT_FILE(SIG_INIT_FILE),.EXP_INIT_FILE(EXP_INIT_FILE)) core(.*);
+ endmodule
+diff --git a/Verilog Source code/mem_burst.v b/Verilog Source code/mem_burst.v
+index 16964bb..d6a5c34 100644
+--- a/Verilog Source code/mem_burst.v	
++++ b/Verilog Source code/mem_burst.v	
+@@ -1,249 +1,111 @@
+-/*��ģ����ɶ�ddr2 IP�İ�װ���������ģ��ʹ�ã�Ҳ����������ֲ���������ƽ̨����������ļ�����
+-*/
+-module mem_burst
+-#(
+-	parameter MEM_DATA_BITS = 512,
+-	parameter ADDR_BITS = 28,
+-    parameter LEN_BITS = 10,
+-    parameter ADDR_SHIFT = 3
+-)
+-(
+-	input rst,                                   /*��λ*/
+-	input mem_clk,                               /*�ӿ�ʱ��*/
+-	input rd_burst_req,                          /*������*/
+-	input wr_burst_req,                          /*д����*/
+-	input[LEN_BITS-1:0] rd_burst_len,                     /*�����ݳ���*/
+-	input[LEN_BITS-1:0] wr_burst_len,                     /*д���ݳ���*/
+-	input[ADDR_BITS - 1:0] rd_burst_addr,        /*���׵�ַ*/
+-	input[ADDR_BITS - 1:0] wr_burst_addr,        /*д�׵�ַ*/
+-	output rd_burst_data_valid,                  /*����������Ч*/
+-	output wr_burst_data_req,                    /*д�����ź�*/
+-	output[MEM_DATA_BITS - 1:0] rd_burst_data,   /*����������*/
+-	input[MEM_DATA_BITS - 1:0] wr_burst_data,    /*д�������*/
+-	output rd_burst_finish,                      /*�����*/
+-	output wr_burst_finish,                      /*д���*/
+-	output burst_finish,                         /*����д���*/
+-	
+-	///////////////////
+-   output[ADDR_BITS-1:0]                       app_addr,
+-   output[2:0]                                 app_cmd,
+-   output                                      app_en,
+-   output [MEM_DATA_BITS-1:0]                  app_wdf_data,
+-   output                                      app_wdf_end,
+-   output                                      app_wdf_wren,
+-   input [MEM_DATA_BITS-1:0]                   app_rd_data,
+-   input                                       app_rd_data_end,
+-   input                                       app_rd_data_valid,
+-   input                                       app_rdy,
+-   input                                       app_wdf_rdy,
+-   input                                       ui_clk_sync_rst,  
+-   input                                       init_calib_complete
++// Standalone MIG-style adapter: one complete UI word per memory command.
++// Source responds one clock after wr_burst_data_req. Data is buffered before
++// issuing its command, so command backpressure cannot violate MIG data timing.
++module mem_burst #(
++    parameter MEM_DATA_BITS=512,ADDR_BITS=28,LEN_BITS=10,ADDR_SHIFT=3,
++    parameter APP_ADDR_BITS=ADDR_BITS+ADDR_SHIFT
++) (
++    input wire rst,mem_clk,rd_burst_req,wr_burst_req,
++    input wire [LEN_BITS-1:0] rd_burst_len,wr_burst_len,
++    input wire [ADDR_BITS-1:0] rd_burst_addr,wr_burst_addr,
++    output wire rd_burst_data_valid,wr_burst_data_req,
++    output wire [MEM_DATA_BITS-1:0] rd_burst_data,
++    input wire [MEM_DATA_BITS-1:0] wr_burst_data,
++    output wire rd_burst_finish,wr_burst_finish,burst_finish,
++    output logic burst_error,
++    output wire [APP_ADDR_BITS-1:0] app_addr,
++    output wire [2:0] app_cmd,
++    output wire app_en,
++    output wire [MEM_DATA_BITS-1:0] app_wdf_data,
++    output wire app_wdf_end,app_wdf_wren,
++    input wire [MEM_DATA_BITS-1:0] app_rd_data,
++    input wire app_rd_data_end,app_rd_data_valid,app_rdy,app_wdf_rdy,
++    input wire ui_clk_sync_rst,init_calib_complete
+ );
+-
+-	parameter IDLE = 3'd0;
+-	parameter MEM_READ = 3'd1;
+-	parameter MEM_READ_WAIT = 3'd2;
+-	parameter MEM_WRITE  = 3'd3;
+-	parameter MEM_WRITE_WAIT = 3'd4;
+-	parameter READ_END = 3'd5;
+-	parameter WRITE_END = 3'd6;
+-	parameter MEM_WRITE_FIRST_READ = 3'd7;
+-	reg[2:0] state;	
+-	reg[LEN_BITS-1:0] rd_addr_cnt;
+-	reg[LEN_BITS-1:0] rd_data_cnt;
+-	reg[LEN_BITS-1:0] wr_addr_cnt;
+-	reg[LEN_BITS-1:0] wr_data_cnt;
+-
+-	reg[2:0] app_cmd_r;
+-	reg[ADDR_BITS-1:0] app_addr_r;
+-	reg app_en_r;
+-	reg app_wdf_end_r;
+-	reg app_wdf_wren_r;
+-	assign app_cmd = app_cmd_r;
+-	assign app_addr = app_addr_r;
+-	assign app_en = app_en_r;
+-	assign app_wdf_end = app_wdf_end_r;
+-	//assign wr_burst_data_req = wr_burst_data_req_r;
+-	assign app_wdf_data = wr_burst_data;
+-	assign app_wdf_wren = app_wdf_wren_r & app_wdf_rdy;
+-	assign rd_burst_finish = (state == READ_END);
+-	assign wr_burst_finish = (state == WRITE_END);
+-	assign burst_finish = rd_burst_finish | wr_burst_finish;
+-
+-	assign rd_burst_data = app_rd_data;
+-	assign rd_burst_data_valid = app_rd_data_valid;
+-	/* always@(posedge mem_clk or posedge rst)
+-	begin
+-		if(rst)
+-		begin
+-			app_wdf_wren_r <= 1'b0;
+-		end
+-		else
+-			app_wdf_wren_r <= wr_burst_data_req_r;	``
+-	end */
+-
+-	assign wr_burst_data_req = (state == MEM_WRITE) & app_wdf_rdy ;
+-
+-	always@(posedge mem_clk or posedge rst)
+-	begin
+-		if(rst)
+-		begin
+-			app_wdf_wren_r <= 1'b0;
+-		end
+-		else if(app_wdf_rdy)
+-			app_wdf_wren_r <= wr_burst_data_req;
+-	end
+-
+-	always@(posedge mem_clk or posedge rst)
+-	begin
+-		if(rst)
+-		begin
+-			state <= IDLE;
+-			app_cmd_r <= 3'b000;
+-			app_addr_r <= 0;
+-			app_en_r <= 1'b0;
+-			//wr_burst_data_req_r <= 1'b0;
+-			rd_addr_cnt <= 0;
+-			rd_data_cnt <= 0;
+-			wr_addr_cnt <= 0;
+-			wr_data_cnt <= 0;
+-			app_wdf_end_r <= 1'b0;
+-			//app_wdf_wren_r <= 1'b0;
+-		end
+-		else if(init_calib_complete ==  1'b1)
+-		begin
+-			case(state)
+-				IDLE:
+-				begin
+-					if(rd_burst_req)
+-					begin
+-						state <= MEM_READ;
+-						app_cmd_r <= 3'b001;
+-						app_addr_r <= {rd_burst_addr,{ADDR_SHIFT{1'b0}}};
+-						app_en_r <= 1'b1;
+-					end
+-					else if(wr_burst_req)
+-					begin
+-						state <= MEM_WRITE;
+-						app_cmd_r <= 3'b000;
+-						app_addr_r <= {wr_burst_addr,{ADDR_SHIFT{1'b0}}};
+-						app_en_r <= 1'b1;
+-						wr_addr_cnt <= 0;
+-						app_wdf_end_r <= 1'b1;
+-						wr_data_cnt <= 0;
+-					end
+-				end
+-				MEM_READ:
+-				begin
+-					if(app_rdy)
+-					begin
+-						app_addr_r <= app_addr_r + (1 << ADDR_SHIFT);
+-						if(rd_addr_cnt == rd_burst_len - 1)
+-						begin
+-							state <= MEM_READ_WAIT;
+-							rd_addr_cnt <= 0;
+-							app_en_r <= 1'b0;
+-						end
+-						else
+-							rd_addr_cnt <= rd_addr_cnt + 1;
+-					end
+-					
+-					if(app_rd_data_valid)
+-					begin
+-						if(rd_data_cnt == rd_burst_len - 1)
+-						begin
+-							rd_data_cnt <= 0;
+-							state <= READ_END;
+-						end
+-						else
+-						begin
+-							rd_data_cnt <= rd_data_cnt + 1;
+-						end
+-					end
+-				end
+-				MEM_READ_WAIT:
+-				begin
+-					if(app_rd_data_valid)
+-					begin
+-						if(rd_data_cnt == rd_burst_len - 1)
+-						begin
+-							rd_data_cnt <= 0;
+-							state <= READ_END;
+-						end
+-						else
+-						begin
+-							rd_data_cnt <= rd_data_cnt + 1;
+-						end
+-					end
+-				end
+-				MEM_WRITE_FIRST_READ:
+-				begin
+-					app_en_r <= 1'b1;
+-					state <= MEM_WRITE;
+-					wr_addr_cnt <= 0;
+-					//app_wdf_wren_r <= 1'b1;	
+-				end
+-				MEM_WRITE:
+-				begin
+-					if(app_rdy)
+-					begin
+-						app_addr_r <= app_addr_r + (1 << ADDR_SHIFT);
+-						if(wr_addr_cnt == wr_burst_len - 1)
+-						begin
+-							app_wdf_end_r <= 1'b0;
+-							app_en_r <= 1'b0;
+-						end
+-						else
+-						begin
+-							wr_addr_cnt <= wr_addr_cnt + 1;
+-						end
+-					end
+-						
+-					if(wr_burst_data_req)
+-					begin
+-						
+-						if(wr_data_cnt == wr_burst_len - 1)
+-						begin
+-							//app_wdf_wren_r <= 1'b0;	
+-							state <= MEM_WRITE_WAIT;
+-							//wr_burst_data_req_r <= 1'b0;
+-						end
+-						else
+-						begin
+-							//wr_burst_data_req_r <= 1'b1;
+-							wr_data_cnt <= wr_data_cnt + 1;
+-						end
+-					end
+-					
+-				end
+-				READ_END:
+-					state <= IDLE;
+-				MEM_WRITE_WAIT:
+-				begin
+-					if(app_rdy)
+-					begin
+-						app_addr_r <= app_addr_r + (1 << ADDR_SHIFT);
+-						if(wr_addr_cnt == wr_burst_len - 1)
+-						begin
+-							app_wdf_end_r <= 1'b0;
+-							app_en_r <= 1'b0;
+-							if(app_wdf_rdy) 
+-								state <= WRITE_END;
+-						end
+-						else
+-						begin
+-							wr_addr_cnt <= wr_addr_cnt + 1;
+-						end
+-					end
+-					else if(~app_en_r & app_wdf_rdy)
+-						state <= WRITE_END;
+-					
+-				end
+-				WRITE_END:
+-					state <= IDLE;
+-				default:
+-					state <= IDLE;
+-			endcase
+-		end
+-	end
+-endmodule 
+\ No newline at end of file
++    localparam RW=(ADDR_BITS>LEN_BITS ? ADDR_BITS : LEN_BITS)+1;
++    localparam RANGE_W=(RW>APP_ADDR_BITS ? RW : APP_ADDR_BITS)+1;
++    localparam logic [RANGE_W-1:0] MAX_WORD_ADDR=(RANGE_W'(1)<<(APP_ADDR_BITS-ADDR_SHIFT))-1'b1;
++    typedef enum logic [1:0] {IDLE,READ_DATA,WRITE_DATA,FINISH} state_t;
++    typedef enum logic [1:0] {REQUEST_WORD,CAPTURE_WORD,SEND_DATA,SEND_COMMAND} write_phase_t;
++    state_t state;
++    write_phase_t write_phase;
++    logic was_write;
++    logic [LEN_BITS:0] length,cmd_count,data_count;
++    logic [APP_ADDR_BITS-1:0] address;
++    logic [MEM_DATA_BITS-1:0] write_buffer;
++    logic [LEN_BITS-1:0] selected_len;
++    logic [ADDR_BITS-1:0] selected_addr;
++    logic [RANGE_W-1:0] last_word;
++    wire reset_all=rst || ui_clk_sync_rst || !init_calib_complete;
++    wire command_accept=app_en && app_rdy;
++    wire data_accept=app_wdf_wren && app_wdf_rdy;
++    initial if(MEM_DATA_BITS<8 || MEM_DATA_BITS%8!=0 || ADDR_BITS<1 || ADDR_BITS>32 ||
++        LEN_BITS<1 || LEN_BITS>32 || ADDR_SHIFT<0 || APP_ADDR_BITS<=ADDR_SHIFT || APP_ADDR_BITS>63)
++        $fatal(1,"Invalid DDR adapter parameters");
++    always_comb begin
++        selected_len=rd_burst_req ? rd_burst_len : wr_burst_len;
++        selected_addr=rd_burst_req ? rd_burst_addr : wr_burst_addr;
++        last_word=RANGE_W'(selected_addr);
++        if(selected_len!=0) last_word=last_word+RANGE_W'(selected_len)-1'b1;
++    end
++    assign app_addr=address;
++    assign app_cmd=(state==READ_DATA) ? 3'b001 : 3'b000;
++    assign app_en=!reset_all && ((state==READ_DATA && cmd_count<length) ||
++        (state==WRITE_DATA && write_phase==SEND_COMMAND));
++    assign app_wdf_wren=!reset_all && state==WRITE_DATA && write_phase==SEND_DATA;
++    assign app_wdf_end=app_wdf_wren; // Each UI beat completes its own BL8 command.
++    assign app_wdf_data=write_buffer;
++    assign wr_burst_data_req=!reset_all && state==WRITE_DATA && write_phase==REQUEST_WORD;
++    assign rd_burst_data=app_rd_data;
++    assign rd_burst_data_valid=!reset_all && state==READ_DATA && data_count<length && app_rd_data_valid;
++    assign rd_burst_finish=!reset_all && state==FINISH && !was_write;
++    assign wr_burst_finish=!reset_all && state==FINISH && was_write;
++    assign burst_finish=rd_burst_finish || wr_burst_finish;
++    always_ff @(posedge mem_clk or posedge reset_all) begin
++        if(reset_all) begin
++            state<=IDLE; write_phase<=REQUEST_WORD; was_write<=0;
++            length<='0; cmd_count<='0; data_count<='0; address<='0;
++            write_buffer<='0; burst_error<=0;
++        end else begin
++            case(state)
++                IDLE: if(rd_burst_req || wr_burst_req) begin
++                    was_write<=!rd_burst_req;
++                    length<={1'b0,selected_len};
++                    cmd_count<='0; data_count<='0; burst_error<=0;
++                    address<=APP_ADDR_BITS'(selected_addr)<<ADDR_SHIFT;
++                    write_phase<=REQUEST_WORD;
++                    if(selected_len==0) state<=FINISH;
++                    else if(last_word>MAX_WORD_ADDR) begin burst_error<=1; state<=FINISH; end
++                    else state<=rd_burst_req ? READ_DATA : WRITE_DATA;
++                end
++                READ_DATA: begin
++                    if(command_accept) begin
++                        cmd_count<=cmd_count+1'b1;
++                        if(cmd_count+1'b1<length) address<=address+(APP_ADDR_BITS'(1)<<ADDR_SHIFT);
++                    end
++                    if(rd_burst_data_valid) data_count<=data_count+1'b1;
++                    if((cmd_count==length || (command_accept && cmd_count+1'b1==length)) &&
++                       (data_count==length || (rd_burst_data_valid && data_count+1'b1==length)))
++                        state<=FINISH;
++                end
++                WRITE_DATA: case(write_phase)
++                    REQUEST_WORD: write_phase<=CAPTURE_WORD;
++                    CAPTURE_WORD: begin write_buffer<=wr_burst_data; write_phase<=SEND_DATA; end
++                    SEND_DATA: if(data_accept) begin data_count<=data_count+1'b1; write_phase<=SEND_COMMAND; end
++                    SEND_COMMAND: if(command_accept) begin
++                        cmd_count<=cmd_count+1'b1;
++                        if(cmd_count+1'b1==length) state<=FINISH;
++                        else begin address<=address+(APP_ADDR_BITS'(1)<<ADDR_SHIFT); write_phase<=REQUEST_WORD; end
++                    end
++                    default: write_phase<=REQUEST_WORD;
++                endcase
++                FINISH: state<=IDLE;
++                default: state<=IDLE;
++            endcase
++            // synthesis translate_off
++            if(rd_burst_data_valid && !app_rd_data_end)
++                $fatal(1,"Adapter requires one complete UI word per read command");
++            // synthesis translate_on
++        end
++    end
++endmodule
+diff --git a/Verilog Source code/mem_mapping.sv b/Verilog Source code/mem_mapping.sv
+index b0aacb3..166e482 100644
+--- a/Verilog Source code/mem_mapping.sv	
++++ b/Verilog Source code/mem_mapping.sv	
+@@ -1,272 +1,103 @@
++// Vector banks at 0..1023; nonoverlapping ternary matrices start at MATRIX_BASE.
+ module mem_mapping #(
+-    parameter DATA_WIDTH = 16,
+-    parameter MEM_DEPTH  = 2**19,
+-    parameter INIT_FILE="mem_init.mem",
++    parameter DATA_WIDTH=16,MEM_DEPTH=2**19,
++    parameter INIT_FILE=(DATA_WIDTH==8 ? "functional/assets/memory_8.hex" : "functional/assets/memory_16.hex"),
+     parameter PTR_W=(MEM_DEPTH>1 ? $clog2(MEM_DEPTH) : 1),
+-    parameter MATRIX_WORDS=(512*512*2)/(DATA_WIDTH*32)
+-)(
+-    input  logic                           clk, rst_n,
+-    input  logic [DATA_WIDTH*32-1:0]         data_in,
+-    input  logic [2:0]                       r_addr_0, r_addr_1, w_addr,
+-    input  logic                           w_en, rd_en_0, rd_en_1,
+-    input  logic                           rd_type, tmatmul_write,
+-    
+-    output logic                           read_finish, write_finish, fifo_1_empty,
+-    output logic [DATA_WIDTH*32-1:0]         data_out_0,
+-    output logic [DATA_WIDTH*32-1:0]         data_out_1,
+-    output logic                           almost_full, almost_empty
++    parameter MATRIX_WORDS=(512*512*2)/(DATA_WIDTH*32),MATRIX_BASE=1024
++) (
++    input logic clk,rst_n,
++    input logic [DATA_WIDTH*32-1:0] data_in,
++    input logic [2:0] r_addr_0,r_addr_1,w_addr,
++    input logic w_en,rd_en_0,rd_en_1,rd_type,tmatmul_write,
++    input logic write_valid,read_ready_0,read_ready_1,
++    output logic write_ready,read_valid_0,read_valid_1,
++    output logic read_finish,write_finish,fifo_1_empty,
++    output logic [DATA_WIDTH*32-1:0] data_out_0,data_out_1,
++    output logic almost_full,almost_empty
+ );
+-
+-    //----------------------------------------------------------
+-    // Memory Array and Internal Signals
+-    //----------------------------------------------------------
+-    // Memory array initialization
+-    logic [DATA_WIDTH*32-1:0] mem [0:MEM_DEPTH-1];
+-    initial if (INIT_FILE != "") $readmemh(INIT_FILE, mem);
+-
+-    // Preserve the known 7'd128 truncation, endpoint and write-gating bugs.
++    localparam CW=$clog2(MATRIX_WORDS+1);
++    logic [DATA_WIDTH*32-1:0] mem[0:MEM_DEPTH-1];
++    typedef enum logic [1:0] {IDLE,FETCH,RUN} state_t;
++    state_t state_read,state_write;
++    logic [PTR_W-1:0] r_ptr_0,r_ptr_1,w_ptr;
++    logic [CW-1:0] left_0,left_1;
++    logic [4:0] write_left;
++    logic write_type;
++    wire take_0=read_valid_0 && read_ready_0;
++    wire take_1=read_valid_1 && read_ready_1;
++    wire take_write=write_ready && write_valid && (!write_type || tmatmul_write);
+     initial begin
+-        if (DATA_WIDTH<4 || (512*512*2)%(DATA_WIDTH*32)!=0 || MEM_DEPTH<8*MATRIX_WORDS)
+-            $fatal(1,"Invalid matrix packing or insufficient memory depth");
+-        if (PTR_W<$clog2(MEM_DEPTH)) $fatal(1,"Memory PTR_W too small");
+-    end
+-    logic reset_ptr_read, reset_ptr_write;
+-    // Pointer declarations
+-    logic [PTR_W-1:0] w_ptr, r_ptr_0, r_ptr_1;
+-    logic [PTR_W-1:0] w_ptr_next, r_ptr_0_next, r_ptr_1_next;
+-    logic [PTR_W-1:0] w_ptr_end, r_ptr_0_end, r_ptr_1_end;
+-    
+-    // FIFO status signals
+-    logic fifo_full, fifo_empty_0, fifo_empty_1;
+-    logic [PTR_W-1:0] v_index;
+-    
+-    // Address decode signals
+-    logic [PTR_W-1:0] r_addr_0_decode, r_addr_1_decode, w_addr_decode;
+-
+-
+-    //----------------------------------------------------------
+-    // Address Decoding
+-    //----------------------------------------------------------
+-    // For port 0, decode based on rd_type.
+-    always_comb begin
+-        if (rd_type) begin
+-            case(r_addr_0)
+-                3'd0: r_addr_0_decode = 19'd0;
+-                3'd1: r_addr_0_decode = PTR_W'(1*MATRIX_WORDS);
+-                3'd2: r_addr_0_decode = PTR_W'(2*MATRIX_WORDS);
+-                3'd3: r_addr_0_decode = PTR_W'(3*MATRIX_WORDS);
+-                3'd4: r_addr_0_decode = PTR_W'(4*MATRIX_WORDS);
+-                3'd5: r_addr_0_decode = PTR_W'(5*MATRIX_WORDS);
+-                3'd6: r_addr_0_decode = PTR_W'(6*MATRIX_WORDS);
+-                3'd7: r_addr_0_decode = PTR_W'(7*MATRIX_WORDS);
+-                default: r_addr_0_decode = 19'd0;
+-            endcase
+-        end else begin
+-            case(r_addr_0)
+-                3'd0: r_addr_0_decode = 19'd0 + v_index;
+-                3'd1: r_addr_0_decode = 19'd16 + v_index;
+-                3'd2: r_addr_0_decode = 19'd32 + v_index;
+-                3'd3: r_addr_0_decode = 19'd48 + v_index;
+-                3'd4: r_addr_0_decode = 19'd64 + v_index;
+-                3'd5: r_addr_0_decode = 19'd80 + v_index;
+-                3'd6: r_addr_0_decode = 19'd96 + v_index;
+-                3'd7: r_addr_0_decode = 19'd112 + v_index;
+-                default: r_addr_0_decode = 19'd0;
+-            endcase
+-        end
+-    end
+-
+-    // For port 1: fixed decode offsets
+-    always_comb begin
+-        if(rd_type) begin
+-            v_index = '0;
+-        end else begin
+-            v_index = r_addr_1[2:0] * 7'd128;
++        if(DATA_WIDTH<4 || (512*512*2)%(DATA_WIDTH*32)!=0 ||
++           MATRIX_WORDS!=(512*512*2)/(DATA_WIDTH*32) || MATRIX_BASE<1024 ||
++           MEM_DEPTH<1024+8*MATRIX_WORDS || MATRIX_BASE>MEM_DEPTH-8*MATRIX_WORDS ||
++           PTR_W<$clog2(MEM_DEPTH) || PTR_W>30)
++            $fatal(1,"Invalid memory packing/depth/pointer parameters");
++        // synthesis translate_off
++        if(INIT_FILE!="") begin : check_file
++            integer fd;
++            fd=$fopen(INIT_FILE,"r");
++            if(!fd) $fatal(1,"Missing RAM image: %s",INIT_FILE);
++            $fclose(fd);
+         end
+-    end
+-
+-    always_comb begin
+-        case(r_addr_1)
+-            3'd0: r_addr_1_decode = PTR_W'(MATRIX_WORDS+0);
+-            3'd1: r_addr_1_decode = PTR_W'(MATRIX_WORDS+16);
+-            3'd2: r_addr_1_decode = PTR_W'(MATRIX_WORDS+32);
+-            3'd3: r_addr_1_decode = PTR_W'(MATRIX_WORDS+48);
+-            3'd4: r_addr_1_decode = PTR_W'(MATRIX_WORDS+64);
+-            3'd5: r_addr_1_decode = PTR_W'(MATRIX_WORDS+80);
+-            3'd6: r_addr_1_decode = PTR_W'(MATRIX_WORDS+96);
+-            3'd7: r_addr_1_decode = PTR_W'(MATRIX_WORDS+112);
+-            default: r_addr_1_decode = 19'd0;
+-        endcase
+-    end
+-
+-    // Write port decode
+-    always_comb begin
+-        case(w_addr)
+-            3'd0: w_addr_decode = 19'd0 + v_index;
+-            3'd1: w_addr_decode = 19'd16 + v_index;
+-            3'd2: w_addr_decode = 19'd32 + v_index;
+-            3'd3: w_addr_decode = 19'd48 + v_index;
+-            3'd4: w_addr_decode = 19'd64 + v_index;
+-            3'd5: w_addr_decode = 19'd80 + v_index;
+-            3'd6: w_addr_decode = 19'd96 + v_index;
+-            3'd7: w_addr_decode = 19'd112 + v_index;
+-            default: w_addr_decode = 19'd0;
+-        endcase
+-    end
+-
+-    // Calculate pointer endpoint values
+-    always_comb begin
+-        r_ptr_0_end = rd_type ? (r_addr_0_decode + PTR_W'(MATRIX_WORDS-1))
+-                              : (r_addr_0_decode + 19'd15);
+-        r_ptr_1_end = r_addr_1_decode + 19'd15;
+-        
+-    end
+-
+-
+-    //----------------------------------------------------------
+-    // State Machines for FIFO Read and Write
+-    //----------------------------------------------------------
+-    // Define states for READ FSM
+-    localparam IDLE_READ  = 2'b00,
+-               FETCH_READ = 2'b01,
+-               RUN_READ   = 2'b10;
+-    logic [1:0] state_read, next_state_read;
+-    // Generate a reset signal for read pointers when in idle
+-    assign reset_ptr_read = (state_read == IDLE_READ) ? 1'b0 : 1'b1;
+-
+-    // READ state machine
+-    always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n)
+-            state_read <= IDLE_READ;
+-        else
+-            state_read <= next_state_read;
+-    end
+-
+-    always_comb begin
+-        case (state_read)
+-            IDLE_READ:  next_state_read = (rd_en_0 || rd_en_1) ? FETCH_READ : IDLE_READ;
+-            FETCH_READ: next_state_read = RUN_READ;
+-            RUN_READ:   next_state_read = (fifo_empty_0) ? IDLE_READ : RUN_READ;
+-            default:    next_state_read = IDLE_READ;
+-        endcase
+-    end
+-
+-    // Define states for WRITE FSM
+-    localparam IDLE_WRITE  = 2'b00,
+-               FETCH_WRITE = 2'b01,
+-               RUN_WRITE   = 2'b10;
+-    logic [1:0] state_write, next_state_write;
+-    assign reset_ptr_write = (state_write == IDLE_WRITE) ? 1'b0 : 1'b1;
+-
+-    // WRITE state machine
++        // synthesis translate_on
++        if(INIT_FILE!="") $readmemh(INIT_FILE,mem);
++    end
++    assign read_valid_0=rst_n && state_read==RUN && left_0!=0;
++    assign read_valid_1=rst_n && state_read==RUN && left_1!=0;
++    assign write_ready=rst_n && state_write==RUN;
++    assign data_out_0=read_valid_0 ? mem[r_ptr_0] : '0;
++    assign data_out_1=read_valid_1 ? mem[r_ptr_1] : '0;
++    assign almost_empty=state_read==RUN && left_0<=4 && left_1<=4;
++    assign almost_full=write_ready && write_left<=4;
+     always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n)
+-            state_write <= IDLE_WRITE;
+-        else
+-            state_write <= next_state_write;
+-    end
+-
+-    logic wr_state_change;
+-    always_comb begin
+-        if(rd_type)
+-            wr_state_change = fifo_full & read_finish;
+-        else
+-            wr_state_change = fifo_full;
+-    end
+-
+-    always_comb begin
+-        case (state_write)
+-            IDLE_WRITE:  next_state_write = (w_en) ? FETCH_WRITE : IDLE_WRITE;
+-            FETCH_WRITE: next_state_write = RUN_WRITE;
+-            RUN_WRITE:   next_state_write = (wr_state_change) ? IDLE_WRITE : RUN_WRITE;
+-            default:     next_state_write = IDLE_WRITE;
+-        endcase
+-    end
+-
+-    always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n) begin
+-            w_ptr_end <= '0;
+-        end
+-        else if (state_write == FETCH_WRITE) begin
+-            w_ptr_end = w_addr_decode + 19'd15;
++        if(!rst_n) begin
++            state_read<=IDLE; state_write<=IDLE;
++            r_ptr_0<='0; r_ptr_1<='0; w_ptr<='0;
++            left_0<='0; left_1<='0; write_left<='0; write_type<=0;
++            read_finish<=0; write_finish<=0; fifo_1_empty<=0;
++        end else begin
++            read_finish<=0; write_finish<=0; fifo_1_empty<=0;
++            case(state_read)
++                IDLE: if(rd_en_0 || rd_en_1) begin
++                    r_ptr_0<=rd_type ? PTR_W'(MATRIX_BASE)+PTR_W'(r_addr_0)*PTR_W'(MATRIX_WORDS) :
++                        PTR_W'(r_addr_1)*PTR_W'(128)+PTR_W'(r_addr_0)*PTR_W'(16);
++                    r_ptr_1<=PTR_W'(r_addr_1)*PTR_W'(16);
++                    left_0<=rd_en_0 ? (rd_type ? CW'(MATRIX_WORDS) : CW'(16)) : '0;
++                    left_1<=rd_en_1 ? CW'(16) : '0;
++                    state_read<=FETCH;
++                end
++                FETCH: state_read<=RUN;
++                RUN: begin
++                    if(take_0) begin
++                        left_0<=left_0-1'b1;
++                        if(left_0>1) r_ptr_0<=r_ptr_0+1'b1;
++                    end
++                    if(take_1) begin
++                        left_1<=left_1-1'b1;
++                        if(left_1>1) r_ptr_1<=r_ptr_1+1'b1;
++                        else fifo_1_empty<=1;
++                    end
++                    if((left_0==0 || (left_0==1 && take_0)) &&
++                       (left_1==0 || (left_1==1 && take_1))) begin
++                        state_read<=IDLE; read_finish<=1;
++                    end
++                end
++                default: state_read<=IDLE;
++            endcase
++            case(state_write)
++                IDLE: if(w_en) begin
++                    w_ptr<=(rd_type ? PTR_W'(0) : PTR_W'(r_addr_1)*PTR_W'(128))+
++                           PTR_W'(w_addr)*PTR_W'(16);
++                    write_type<=rd_type; write_left<=16; state_write<=FETCH;
++                end
++                FETCH: state_write<=RUN;
++                RUN: if(take_write) begin
++                    if(write_left==1) begin state_write<=IDLE; write_left<=0; write_finish<=1; end
++                    else begin w_ptr<=w_ptr+1'b1; write_left<=write_left-1'b1; end
++                end
++                default: state_write<=IDLE;
++            endcase
+         end
+     end
+-
+-
+-    //----------------------------------------------------------
+-    // Pointer and Memory Update Logic
+-    //----------------------------------------------------------
+-    logic w_ptr_enable;
+-    //Write pointer enable
+-    assign w_ptr_enable = (state_write == RUN_WRITE) && !fifo_full && (!rd_type || tmatmul_write);
+-
+-    // Write pointer update
+-    always_ff @(posedge clk or negedge reset_ptr_write) begin
+-        if (!reset_ptr_write)
+-            w_ptr <= '0;
+-        else if (state_write == FETCH_WRITE)
+-            w_ptr <= w_addr_decode;
+-        else if (w_ptr_enable)
+-            w_ptr <= w_ptr_next;
+-    end
+-
+-    // Write data into memory
+-    always_ff @(posedge clk) begin
+-        if (w_en && !fifo_full && (state_write == RUN_WRITE))
+-            mem[w_ptr] <= data_in;
+-    end
+-
+-    // Increment the write pointer
+-    assign w_ptr_next = w_ptr + 3'b01;
+-
+-
+-    // Read port 0: Pointer update and output assignment
+-    always_ff @(posedge clk or negedge reset_ptr_read) begin
+-        if (!reset_ptr_read)
+-            r_ptr_0 <= '0;
+-        else if (state_read == FETCH_READ)
+-            r_ptr_0 <= r_addr_0_decode;
+-        else if (!fifo_empty_0 && (state_read == RUN_READ))
+-            r_ptr_0 <= r_ptr_0_next;
+-    end
+-
+-    assign r_ptr_0_next = r_ptr_0 + 3'b01;
+-    assign data_out_0   = mem[r_ptr_0];
+-
+-    // Read port 1: Pointer update and output assignment
+-    always_ff @(posedge clk or negedge reset_ptr_read) begin
+-        if (!reset_ptr_read)
+-            r_ptr_1 <= '0;
+-        else if (state_read == FETCH_READ | fifo_empty_1)
+-            r_ptr_1 <= r_addr_1_decode;
+-        else if (!fifo_empty_0 && (state_read == RUN_READ))
+-            r_ptr_1 <= r_ptr_1_next;
+-    end
+-
+-    assign r_ptr_1_next = r_ptr_1 + 3'b01;
+-    assign data_out_1   = mem[r_ptr_1];
+-
+-
+-    //----------------------------------------------------------
+-    // Status Signals and Finishing Flags
+-    //----------------------------------------------------------
+-    // FIFO full/empty flags based on pointer endpoints
+-    assign fifo_full     = (w_ptr == w_ptr_end);
+-    assign fifo_empty_0  = (r_ptr_0 == r_ptr_0_end);
+-    assign fifo_empty_1  = (r_ptr_1 == r_ptr_1_end);
+-    assign fifo_1_empty  = fifo_empty_1;
+-
+-    // Almost full and almost empty signals
+-    always_comb begin
+-        almost_full  = (w_ptr == (w_addr_decode + 10'd12));
+-        if (rd_type)
+-            almost_empty = (r_ptr_0 == (r_addr_0_decode + PTR_W'(MATRIX_WORDS-4)));
+-        else
+-            almost_empty = (r_ptr_0 == (r_addr_0_decode + 10'd12));
+-    end
+-
+-    // Read and write finish flags
+-    assign read_finish  = fifo_empty_0;
+-    assign write_finish = fifo_full;
+-
++    always_ff @(posedge clk) if(take_write) mem[w_ptr]<=data_in;
+ endmodule
+diff --git a/Verilog Source code/mul.sv b/Verilog Source code/mul.sv
+index 509f62b..cdca9e9 100644
+--- a/Verilog Source code/mul.sv	
++++ b/Verilog Source code/mul.sv	
+@@ -1,55 +1,23 @@
+ module mul #(parameter DATA_WIDTH=16, FRAC_WIDTH=DATA_WIDTH-4) (
+-    input logic [DATA_WIDTH-1:0] a [31:0],
+-    input logic [DATA_WIDTH-1:0] b [31:0],
+-    output logic [DATA_WIDTH-1:0] result [31:0],
++    input logic [DATA_WIDTH-1:0] a[31:0],b[31:0],
++    output logic [DATA_WIDTH-1:0] result[31:0],
+     output logic overflow
+ );
+-    
+-    logic [2*DATA_WIDTH-1:0] mul_result [31:0];
+-    logic [31:0] overflow_tmp ;
+-    // Legacy Q4.F bit selection and overflow logic, intentionally NOT corrected.
+-    // Only widths change: default Q4.12 -> scaled Q4.4.
+-    initial begin
+-        if (DATA_WIDTH<5 || FRAC_WIDTH!=DATA_WIDTH-4)
+-            $fatal(1,"Legacy multiply parameterization requires Q4.F, F>=1");
+-    end
+-    // The result has 4 bit integer and FRAC_WIDTH fractional bits
+-    genvar i; 
+-    generate 
+-        for (i = 0; i < 32; i = i + 1) begin : rowwise_mul
+-            always_comb begin
+-                mul_result[i] = $signed(a[i]) * $signed(b[i]);
+-            end
+-				
+-				always_comb begin
+-					overflow_tmp[i] = |mul_result[i][2*DATA_WIDTH-2:2*FRAC_WIDTH+3];
+-					if(overflow_tmp[i])
+-						result[i] = {DATA_WIDTH{|mul_result[i][2*DATA_WIDTH-2:2*FRAC_WIDTH+3]}};
+-					else begin
+-						result[i][DATA_WIDTH-2:FRAC_WIDTH] = mul_result[i][2*FRAC_WIDTH+2:2*FRAC_WIDTH];
+-						result[i][DATA_WIDTH-1] = mul_result[i][2*DATA_WIDTH-1];
+-						result[i][FRAC_WIDTH-1:0] = mul_result[i][2*FRAC_WIDTH+3 -: FRAC_WIDTH];
+-					end
+-				end
++    localparam logic signed [2*DATA_WIDTH-1:0] MAX_VALUE=(2*DATA_WIDTH)'((64'd1<<(DATA_WIDTH-1))-1);
++    localparam logic signed [2*DATA_WIDTH-1:0] MIN_VALUE=-(2*DATA_WIDTH)'(64'd1<<(DATA_WIDTH-1));
++    logic [31:0] flags;
++    initial if(DATA_WIDTH<2 || DATA_WIDTH>32 || FRAC_WIDTH<0 || FRAC_WIDTH>=DATA_WIDTH)
++        $fatal(1,"Invalid MUL format");
++    for(genvar i=0;i<32;i++) begin : lane
++        logic signed [2*DATA_WIDTH-1:0] product,scaled;
++        always_comb begin
++            product=$signed(a[i])*$signed(b[i]);
++            scaled=product>>>FRAC_WIDTH;
++            flags[i]=scaled>MAX_VALUE || scaled<MIN_VALUE;
++            if(scaled>MAX_VALUE) result[i]=MAX_VALUE[DATA_WIDTH-1:0];
++            else if(scaled<MIN_VALUE) result[i]=MIN_VALUE[DATA_WIDTH-1:0];
++            else result[i]=scaled[DATA_WIDTH-1:0];
+         end
+-    endgenerate
+-
+-    assign overflow = |overflow_tmp;
+-
+-    // always_comb begin
+-    //     mul_result = $signed(a) * $signed(b);
+-    // end
+-    
+-    // // Rounding the result to 4Q12
+-    // always_comb begin
+-    //     overflow = |mul_result[2*DATA_WIDTH-2:2*FRAC_WIDTH+3];
+-    //     if(|mul_result[2*DATA_WIDTH-2:2*FRAC_WIDTH+3])
+-    //         result = 16{mul_result[30]};
+-    //     else begin
+-    //         result[14:12] = mul_result[26:24];
+-    //         result[15] = mul_result[31];
+-    //         result[11:0] = mul_result[27:16];
+-    //     end
+-    // end
+-
+-endmodule
+\ No newline at end of file
++    end
++    assign overflow=|flags;
++endmodule
+diff --git a/Verilog Source code/norm.sv b/Verilog Source code/norm.sv
+index 40d0d30..8fa06ce 100644
+--- a/Verilog Source code/norm.sv	
++++ b/Verilog Source code/norm.sv	
+@@ -1,24 +1,92 @@
+-module norm #(parameter inWidth=16, dataWidth=16, parameter INIT_FILE="norm.mif") (
+-    input   [inWidth-1:0]   x,
+-    output  [dataWidth-1:0]  out
+-    );
+-    
+-    reg [dataWidth-1:0] mem [2**inWidth-1:0];
+-    reg [inWidth-1:0] y;
+-	
+-	initial
+-	begin
+-		if (INIT_FILE != "") $readmemb(INIT_FILE,mem);
+-	end
+-    
+-    always_comb
+-    begin
+-        if($signed(x) >= 0)
+-            y = x + (2**(inWidth-1));
+-        else 
+-            y = x - (2**(inWidth-1));
++// Vector-wide RMS with F guard fractional bits in the square root.
++// Epsilon is measured in raw input squared units, not Q4.F units.
++module norm #(parameter DATA_WIDTH=16,FRAC_WIDTH=DATA_WIDTH-4,
++    parameter EPSILON_RAW_SQ=1,WORD_W=DATA_WIDTH*32) (
++    input logic clk,rst_n,start,in_valid,out_ready,
++    input logic [WORD_W-1:0] data_in,
++    output logic in_ready,out_valid,done,overflow,
++    output logic [WORD_W-1:0] data_out
++);
++    localparam SUM_W=2*DATA_WIDTH+9;
++    localparam RAD_W=2*((SUM_W+2*FRAC_WIDTH+1)/2),ROOT_W=RAD_W/2;
++    localparam NUM_W=DATA_WIDTH+2*FRAC_WIDTH+2;
++    localparam logic signed [NUM_W-1:0] MAX_VALUE=NUM_W'((64'd1<<(DATA_WIDTH-1))-1);
++    localparam logic signed [NUM_W-1:0] MIN_VALUE=-NUM_W'(64'd1<<(DATA_WIDTH-1));
++    typedef enum logic [1:0] {IDLE,CAPTURE,ROOT,OUTPUT_DATA} state_t;
++    state_t state;
++    logic [WORD_W-1:0] buffer[0:15];
++    logic [3:0] read_ptr,write_ptr;
++    logic [SUM_W-1:0] sum_squares,beat_squares;
++    logic [ROOT_W-1:0] denominator;
++    logic [RAD_W-1:0] radicand;
++    logic [31:0] flags;
++    function automatic [ROOT_W-1:0] isqrt(input logic [RAD_W-1:0] value);
++        logic [ROOT_W-1:0] root,trial;
++        logic [RAD_W-1:0] square;
++        begin
++            root='0;
++            for(int k=ROOT_W-1;k>=0;k--) begin
++                trial=root|(ROOT_W'(1)<<k);
++                square=trial*trial;
++                if(square<=value) root=trial;
++            end
++            isqrt=root;
++        end
++    endfunction
++    always_comb begin : statistics
++        logic signed [DATA_WIDTH-1:0] sample;
++        logic signed [2*DATA_WIDTH-1:0] square;
++        beat_squares='0; sample='0; square='0;
++        for(int lane=0;lane<32;lane++) begin
++            sample=$signed(data_in[lane*DATA_WIDTH+:DATA_WIDTH]);
++            square=sample*sample;
++            beat_squares=beat_squares+SUM_W'($unsigned(square));
++        end
++        radicand=RAD_W'((sum_squares>>9)+SUM_W'(EPSILON_RAW_SQ))<<(2*FRAC_WIDTH);
++    end
++    assign in_ready=state==CAPTURE;
++    assign out_valid=state==OUTPUT_DATA;
++    for(genvar lane=0;lane<32;lane++) begin : normalize_lane
++        logic signed [NUM_W-1:0] numerator,quotient,divisor;
++        always_comb begin
++            numerator=NUM_W'($signed(buffer[write_ptr][lane*DATA_WIDTH+:DATA_WIDTH]));
++            numerator=numerator<<<(2*FRAC_WIDTH);
++            divisor=NUM_W'($unsigned(denominator));
++            quotient='0;
++            if(divisor!=0) quotient=numerator/divisor;
++            flags[lane]=quotient>MAX_VALUE || quotient<MIN_VALUE;
++            if(quotient>MAX_VALUE) data_out[lane*DATA_WIDTH+:DATA_WIDTH]=MAX_VALUE[DATA_WIDTH-1:0];
++            else if(quotient<MIN_VALUE) data_out[lane*DATA_WIDTH+:DATA_WIDTH]=MIN_VALUE[DATA_WIDTH-1:0];
++            else data_out[lane*DATA_WIDTH+:DATA_WIDTH]=quotient[DATA_WIDTH-1:0];
++        end
++    end
++    assign overflow=out_valid && |flags;
++    initial if(DATA_WIDTH<4 || DATA_WIDTH>16 || FRAC_WIDTH<0 || FRAC_WIDTH>=DATA_WIDTH ||
++        EPSILON_RAW_SQ<1 || EPSILON_RAW_SQ>(64'd1<<(2*DATA_WIDTH-2)) ||
++        WORD_W!=DATA_WIDTH*32) $fatal(1,"Invalid RMS parameters");
++    always_ff @(posedge clk or negedge rst_n) begin
++        if(!rst_n) begin
++            state<=IDLE; read_ptr<='0; write_ptr<='0;
++            sum_squares<='0; denominator<='0; done<=0;
++        end else begin
++            done<=0;
++            case(state)
++                IDLE: if(start) begin
++                    state<=CAPTURE; read_ptr<='0; write_ptr<='0; sum_squares<='0;
++                end
++                CAPTURE: if(in_valid) begin
++                    buffer[read_ptr]<=data_in;
++                    sum_squares<=sum_squares+beat_squares;
++                    if(read_ptr==15) state<=ROOT;
++                    else read_ptr<=read_ptr+1'b1;
++                end
++                ROOT: begin denominator<=isqrt(radicand); state<=OUTPUT_DATA; end
++                OUTPUT_DATA: if(out_ready) begin
++                    if(write_ptr==15) begin state<=IDLE; done<=1; end
++                    else write_ptr<=write_ptr+1'b1;
++                end
++                default: state<=IDLE;
++            endcase
++        end
+     end
+-    
+-    assign out = mem[y];
+-    
+ endmodule
+diff --git a/Verilog Source code/regfile.sv b/Verilog Source code/regfile.sv
+index 0ef0376..dba4206 100644
+--- a/Verilog Source code/regfile.sv	
++++ b/Verilog Source code/regfile.sv	
+@@ -1,236 +1,64 @@
+-module register #(
+-    parameter DATA_WIDTH = 16,
+-    parameter ADDR_WIDTH = 3,
+-	 parameter MEM_DEPTH = 1024,
+-    parameter PTR_W=(MEM_DEPTH>1 ? $clog2(MEM_DEPTH) : 1)
+-)(
+-    input logic clk, rst_n,
+-    input logic [DATA_WIDTH*32-1:0]  data_in,
+-    input logic [ADDR_WIDTH-1:0] r_addr_0, r_addr_1, w_addr,
+-    input logic w_en, rd_en,
+-    // input logic mul_type,
+-    
+-    output logic full, empty,
+-    output logic [DATA_WIDTH*32-1:0] data_out_0,
+-    output logic [DATA_WIDTH*32-1:0] data_out_1,
+-    output logic almost_full, almost_empty
++// Dual-read/single-write, 16-word vector transactions.
++module register #(parameter DATA_WIDTH=16,ADDR_WIDTH=3,MEM_DEPTH=1024,
++    parameter PTR_W=(MEM_DEPTH>1 ? $clog2(MEM_DEPTH) : 1)) (
++    input logic clk,rst_n,
++    input logic [DATA_WIDTH*32-1:0] data_in,
++    input logic [ADDR_WIDTH-1:0] r_addr_0,r_addr_1,w_addr,
++    input logic w_en,rd_en,write_valid,read_ready,
++    output logic write_ready,read_valid,full,empty,
++    output logic [DATA_WIDTH*32-1:0] data_out_0,data_out_1,
++    output logic almost_full,almost_empty
+ );
+-
+-    // Width guards only. Original decode/FSM/stream semantics are retained.
++    logic [DATA_WIDTH*32-1:0] mem[0:MEM_DEPTH-1];
++    typedef enum logic [1:0] {IDLE,FETCH,RUN} state_t;
++    state_t state_read,state_write;
++    logic [PTR_W-1:0] r_ptr_0,r_ptr_1,w_ptr;
++    logic [4:0] read_left,write_left;
+     initial begin
+-        if (DATA_WIDTH<1 || ADDR_WIDTH<1 || MEM_DEPTH<16*(2**ADDR_WIDTH))
++        if(DATA_WIDTH<1 || ADDR_WIDTH<1 || ADDR_WIDTH>16 || MEM_DEPTH<16*(2**ADDR_WIDTH))
+             $fatal(1,"Register depth must cover all selectors");
+-        if (PTR_W<$clog2(MEM_DEPTH)) $fatal(1,"Register PTR_W too small");
++        if(PTR_W<$clog2(MEM_DEPTH) || PTR_W>30) $fatal(1,"Invalid register pointer width");
+     end
+-    // Internal parameters and signals
+-
+-    logic [DATA_WIDTH*32-1:0] mem [0:MEM_DEPTH-1];
+-    logic [PTR_W-1:0] w_ptr, r_ptr_0, r_ptr_1;
+-    logic fifo_full, fifo_empty_0, fifo_empty_1;
+-
+-    logic [PTR_W-1:0] r_ptr_0_end, r_ptr_1_end, w_ptr_end;
+-    logic [PTR_W-1:0] w_ptr_next, r_ptr_0_next, r_ptr_1_next;
+-
+-    logic [PTR_W-1:0] r_addr_0_decode, r_addr_1_decode, w_addr_decode;
+-    // Address decode
+-    logic [1:0] state_write, next_state_write;
+-    parameter IDLE_WRITE = 2'b00, FETCH_WRITE= 2'b01, RUN_WRITE = 2'b10;
+-
+-    logic [1:0] state_read, next_state_read;
+-    parameter IDLE_READ = 2'b00, FETCH_READ= 2'b01, RUN_READ = 2'b10;
+-
+-    always_comb begin: read_0_decode
+-        case(r_addr_0)
+-            0: r_addr_0_decode = 0;
+-            1: r_addr_0_decode = 16;
+-            2: r_addr_0_decode = 32;
+-            3: r_addr_0_decode = 48;
+-            4: r_addr_0_decode = 64;
+-            5: r_addr_0_decode = 80;
+-            6: r_addr_0_decode = 96;
+-            7: r_addr_0_decode = 112;
+-        endcase
+-    end
+-
+-    always_comb begin: read_1_decode
+-        case(r_addr_1)
+-            0: r_addr_1_decode = 0;
+-            1: r_addr_1_decode = 16;
+-            2: r_addr_1_decode = 32;
+-            3: r_addr_1_decode = 48;
+-            4: r_addr_1_decode = 64;
+-            5: r_addr_1_decode = 80;
+-            6: r_addr_1_decode = 96;
+-            7: r_addr_1_decode = 112;
+-        endcase
+-    end
+-
+-    always_comb begin: write_decode
+-        case(w_addr)
+-            0: w_addr_decode = 0;
+-            1: w_addr_decode = 16;
+-            2: w_addr_decode = 32;
+-            3: w_addr_decode = 48;
+-            4: w_addr_decode = 64;
+-            5: w_addr_decode = 80;
+-            6: w_addr_decode = 96;
+-            7: w_addr_decode = 112;
+-        endcase
+-    end
+-
+-    // always_comb begin
+-    //     r_ptr_0_end = r_addr_0_decode + 10'd15;
+-    //     r_ptr_1_end = r_addr_1_decode + 10'd15;
+-    // end
+-
+-    always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n) begin
+-            r_ptr_0_end <= '0;
+-            r_ptr_1_end <= '0;
+-        end else if(state_read == FETCH_READ) begin
+-            r_ptr_0_end <= r_addr_0_decode + 10'd15;
+-            r_ptr_1_end <= r_addr_1_decode + 10'd15;
+-        end
+-    end
+-    
+-    always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n) begin
+-            w_ptr_end <= '0;
+-        end else if(state_write == FETCH_WRITE) begin
+-            w_ptr_end <= w_addr_decode + 10'd15;
+-        end
+-    end
+-
+-    // stage machine for FIFO READ
+-    
+-    logic reset_ptr_read;
+-    assign reset_ptr_read = ~(state_read == IDLE_READ);
+-
+-    always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n)
+-            state_read <= IDLE_READ;
+-        else
+-            state_read <= next_state_read;
+-    end
+-
+-    always_comb begin
+-        case(state_read)
+-            IDLE_READ: begin
+-                if(rd_en)
+-                    next_state_read = FETCH_READ;
+-                else
+-                    next_state_read = IDLE_READ;
+-            end
+-            FETCH_READ: begin
+-                next_state_read = RUN_READ;
+-            end
+-            RUN_READ: begin
+-                if(fifo_empty_0)
+-                    next_state_read = IDLE_READ;
+-                else
+-                    next_state_read = RUN_READ;
+-            end
+-        endcase
+-    end
+-
+-    // state machine for FIFO WRITE
+-    
+-    logic reset_ptr_write;
+-    assign reset_ptr_write = ~(state_write == IDLE_WRITE);
+-
++    assign read_valid=rst_n && state_read==RUN;
++    assign write_ready=rst_n && state_write==RUN;
++    assign data_out_0=read_valid ? mem[r_ptr_0] : '0;
++    assign data_out_1=read_valid ? mem[r_ptr_1] : '0;
++    assign almost_empty=read_valid && read_left<=4;
++    assign almost_full=write_ready && write_left<=4;
+     always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n)
+-            state_write <= IDLE_WRITE;
+-        else
+-            state_write <= next_state_write;
+-    end
+-
+-    always_comb begin
+-        case(state_write)
+-            IDLE_WRITE: begin
+-                if(w_en)
+-                    next_state_write = FETCH_WRITE;
+-                else
+-                    next_state_write = IDLE_WRITE;
+-            end
+-            FETCH_WRITE: begin
+-                next_state_write = RUN_WRITE;
+-            end
+-            RUN_WRITE: begin
+-                if(fifo_full)
+-                    next_state_write = IDLE_WRITE;
+-                else
+-                    next_state_write = RUN_WRITE;
+-            end
+-        endcase
+-    end
+-
+-    // Write logic
+-    always_ff @(posedge clk or negedge reset_ptr_write) begin
+-        if (!reset_ptr_write)
+-            w_ptr <= '0;
+-        else begin
+-            if(state_write == FETCH_WRITE)
+-                w_ptr <= w_addr_decode;
+-            else if (!fifo_full && state_write == RUN_WRITE) begin
+-                w_ptr <= w_ptr_next;
+-            end
+-        end
+-    end
+-
+-    always_ff @(posedge clk) begin
+-        if (state_write == RUN_WRITE) begin
+-            mem[w_ptr] <= data_in;
+-        end
+-    end
+-
+-    assign w_ptr_next = w_ptr + 3'b01;
+-
+-    // Read logic for port 0
+-    always_ff @(posedge clk or negedge reset_ptr_read) begin
+-        if (!reset_ptr_read)
+-            r_ptr_0 <= '0;
+-        else begin
+-            if(state_read == FETCH_READ) begin
+-                r_ptr_0 <= r_addr_0_decode;
+-            end
+-            else if (!fifo_empty_0 && state_read == RUN_READ) begin
+-                r_ptr_0 <= r_ptr_0_next;
+-            end
+-        end
+-    end
+-
+-    assign r_ptr_0_next = r_ptr_0 + 3'b01;
+-    assign data_out_0 = mem[r_ptr_0];
+-
+-    // Read logic for port 1
+-    always_ff @(posedge clk or negedge reset_ptr_read) begin
+-        if (!reset_ptr_read)
+-            r_ptr_1 <= '0;
+-        else begin
+-            if(state_read == FETCH_READ) 
+-                r_ptr_1 <= r_addr_1_decode;
+-            else if (!fifo_empty_1 && state_read == RUN_READ) begin
+-                r_ptr_1 <= r_ptr_1_next;
+-            end
++        if(!rst_n) begin
++            state_read<=IDLE; state_write<=IDLE; r_ptr_0<='0; r_ptr_1<='0; w_ptr<='0;
++            read_left<='0; write_left<='0; full<=0; empty<=0;
++        end else begin
++            full<=0; empty<=0;
++            case(state_read)
++                IDLE: if(rd_en) begin
++                    r_ptr_0<=PTR_W'(r_addr_0)*PTR_W'(16);
++                    r_ptr_1<=PTR_W'(r_addr_1)*PTR_W'(16);
++                    read_left<=16; state_read<=FETCH;
++                end
++                FETCH: state_read<=RUN;
++                RUN: if(read_ready) begin
++                    if(read_left==1) begin state_read<=IDLE; read_left<=0; empty<=1; end
++                    else begin
++                        read_left<=read_left-1'b1;
++                        r_ptr_0<=r_ptr_0+1'b1; r_ptr_1<=r_ptr_1+1'b1;
++                    end
++                end
++                default: state_read<=IDLE;
++            endcase
++            case(state_write)
++                IDLE: if(w_en) begin
++                    w_ptr<=PTR_W'(w_addr)*PTR_W'(16); write_left<=16; state_write<=FETCH;
++                end
++                FETCH: state_write<=RUN;
++                RUN: if(write_valid) begin
++                    if(write_left==1) begin state_write<=IDLE; write_left<=0; full<=1; end
++                    else begin write_left<=write_left-1'b1; w_ptr<=w_ptr+1'b1; end
++                end
++                default: state_write<=IDLE;
++            endcase
+         end
+     end
+-
+-    assign r_ptr_1_next = r_ptr_1 + 3'b01;
+-    assign data_out_1 = mem[r_ptr_1];
+-
+-    // FIFO status signals
+-    assign fifo_full = (w_ptr == w_ptr_end);
+-    assign fifo_empty_0 = (r_ptr_0 == r_ptr_0_end);
+-    assign fifo_empty_1 = (r_ptr_1 == r_ptr_1_end);
+-
+-    // Almost full and empty signals
+-    assign almost_full = (w_ptr == (w_addr_decode + 10'd12));
+-    assign almost_empty = (r_ptr_0 == (r_addr_0_decode + 10'd12));
+-    // Read finish signal
+-    assign empty = fifo_empty_0;
+-    
+-    //write finish signal
+-    assign full = fifo_full;
+-
++    always_ff @(posedge clk) if(write_ready && write_valid) mem[w_ptr]<=data_in;
+ endmodule
+diff --git a/Verilog Source code/rowwise_op.sv b/Verilog Source code/rowwise_op.sv
+index 3bf4bda..39104eb 100644
+--- a/Verilog Source code/rowwise_op.sv	
++++ b/Verilog Source code/rowwise_op.sv	
+@@ -1,100 +1,42 @@
+ module rowwise_op #(
+-    parameter DATA_WIDTH = 16,
+-    parameter FRAC_WIDTH = DATA_WIDTH-4,
+-    parameter EXP_LUT_DEPTH = 512,
+-    parameter SIG_INIT_FILE="sigContent.mif",
+-    parameter EXP_INIT_FILE="exp_content.mif"
+-)(
+-    input logic  [DATA_WIDTH-1:0] a[31:0],
+-    input logic  [DATA_WIDTH-1:0] b[31:0],
+-    input logic  [2:0]            select,
++    parameter DATA_WIDTH=16,FRAC_WIDTH=DATA_WIDTH-4,EXP_LUT_DEPTH=2**DATA_WIDTH,
++    parameter SIG_INIT_FILE=(DATA_WIDTH==8 ? "functional/assets/sig_8.bin" : "functional/assets/sig_16.bin"),
++    parameter EXP_INIT_FILE=(DATA_WIDTH==8 ? "functional/assets/exp_8.hex" : "functional/assets/exp_16.hex")
++) (
++    input logic [DATA_WIDTH-1:0] a[31:0],b[31:0],
++    input logic [2:0] select,
++    input logic [DATA_WIDTH-1:0] norm_result[31:0],
++    input logic norm_overflow,
+     output logic [DATA_WIDTH-1:0] alu_out[31:0],
+-    output logic carry_out, overflow
++    output logic carry_out,overflow
+ );
+-
+-    localparam ADD = 3'b001;
+-    localparam SUB = 3'b010;
+-    localparam MUL = 3'b011;
+-    localparam DIV = 3'b100;
+-    localparam EXP = 3'b101;
+-    localparam SIG = 3'b110;
+-    localparam NORM = 3'b111;
+-        
+-    genvar i;
+-
+-    logic [DATA_WIDTH-1:0] sig_out [31:0];
+-    generate
+-        for (i = 0; i < 32; i = i + 1) begin : rowwise_sig
+-            sigmoid #(.inWidth(DATA_WIDTH), .dataWidth(DATA_WIDTH), .INIT_FILE(SIG_INIT_FILE)) sig (
+-                .x(a[i]),
+-                .out(sig_out[i])
+-            );
+-        end
+-    endgenerate
+-   
+-    logic [DATA_WIDTH-1:0] sum [31:0];
+-    logic [31:0] cout, v_flag;
+-    generate
+-        for (i = 0; i < 32; i = i + 1) begin : rowwise_addsub
+-            addsub #(.DATA_WIDTH(DATA_WIDTH)) rowwise_addsub (
+-                .a(a[i]),
+-                .b(b[i]),
+-                .select(select[0]),
+-                .sum(sum[i]),
+-                .cout(cout[i]),
+-                .overflow(v_flag[i])
+-            );
+-        end
+-    endgenerate
+-
+-    logic add_overflow;
+-    assign carry_out = |cout & !(select[2] ^ select[1]);
+-    assign add_overflow = |v_flag & !(select[2] ^ select[1]);
+-
+-    logic [DATA_WIDTH-1:0] mul_out [31:0];
+-    // mul already reduces per-lane flags to one bit. Preserve the same flag logic.
+-    logic mul_overflow;
+-    mul #(.DATA_WIDTH(DATA_WIDTH), .FRAC_WIDTH(FRAC_WIDTH)) mul (
+-        .a(a),
+-        .b(b),
+-        .result(mul_out),
+-        .overflow(mul_overflow)
+-    );
+-
+-    logic [DATA_WIDTH-1:0] div_out [31:0];
+-    div #(.DATA_WIDTH(DATA_WIDTH)) div (
+-         .a(a),
+-         .b(b),
+-         .result(div_out)
+-    );
+-
+-    logic [DATA_WIDTH-1:0] exp_out [31:0];
+-    logic [31:0] exp_overflow;
+-    generate
+-        for (i = 0; i < 32; i = i + 1) begin : rowwise_exp
+-            exp_row #(.DATA_WIDTH(DATA_WIDTH), .LUT_DEPTH(EXP_LUT_DEPTH), .INIT_FILE(EXP_INIT_FILE)) exp_block (
+-                .a(a[i]),
+-                .result(exp_out[i])
+-            );
+-        end
+-    endgenerate
+-
+-    assign overflow = add_overflow | (|mul_overflow);
+-
++    logic [DATA_WIDTH-1:0] sums[31:0],products[31:0],quotients[31:0];
++    logic [DATA_WIDTH-1:0] exponentials[31:0],sigmoids[31:0];
++    logic [31:0] carries,add_flags,exp_flags;
++    logic mul_flag,div_flag;
++    for(genvar i=0;i<32;i++) begin : lane
++        addsub #(.DATA_WIDTH(DATA_WIDTH)) adder (
++            .a(a[i]),.b(b[i]),.select(select==3'd2),.sum(sums[i]),.cout(carries[i]),.overflow(add_flags[i]));
++        exp_row #(.DATA_WIDTH(DATA_WIDTH),.LUT_DEPTH(EXP_LUT_DEPTH),.INIT_FILE(EXP_INIT_FILE))
++            exponential(.a(a[i]),.result(exponentials[i]),.overflow(exp_flags[i]));
++        sigmoid #(.inWidth(DATA_WIDTH),.dataWidth(DATA_WIDTH),.INIT_FILE(SIG_INIT_FILE))
++            sigmoid_inst(.x(a[i]),.out(sigmoids[i]));
++    end
++    mul #(.DATA_WIDTH(DATA_WIDTH),.FRAC_WIDTH(FRAC_WIDTH)) multiplier
++        (.a(a),.b(b),.result(products),.overflow(mul_flag));
++    div #(.DATA_WIDTH(DATA_WIDTH),.FRAC_WIDTH(FRAC_WIDTH)) divider
++        (.a(a),.b(b),.result(quotients),.overflow(div_flag));
+     always_comb begin
++        carry_out=0; overflow=0;
++        for(int i=0;i<32;i++) alu_out[i]='0;
+         case(select)
+-            ADD: alu_out = sum;
+-            SUB: alu_out = sum;
+-            MUL: alu_out = mul_out;
+-            DIV: alu_out = div_out;
+-            EXP: alu_out = exp_out;
+-            SIG: alu_out = sig_out;
+-            default: begin
+-                for (int i = 0; i < 32; i = i + 1) begin
+-                    alu_out[i] = '0;
+-                end
+-			end
++            3'd1,3'd2: begin alu_out=sums; carry_out=|carries; overflow=|add_flags; end
++            3'd3: begin alu_out=products; overflow=mul_flag; end
++            3'd4: begin alu_out=quotients; overflow=div_flag; end
++            3'd5: begin alu_out=exponentials; overflow=|exp_flags; end
++            3'd6: alu_out=sigmoids;
++            3'd7: begin alu_out=norm_result; overflow=norm_overflow; end
++            default: begin end
+         endcase
+     end
+-
+ endmodule
+diff --git a/Verilog Source code/sigmoid.sv b/Verilog Source code/sigmoid.sv
+index 1306585..aa476b6 100644
+--- a/Verilog Source code/sigmoid.sv	
++++ b/Verilog Source code/sigmoid.sv	
+@@ -1,24 +1,22 @@
+-module sigmoid #(parameter inWidth=16, dataWidth=16, parameter INIT_FILE="sigContent.mif") (
+-    input   [inWidth-1:0]   x,
+-    output  [dataWidth-1:0]  out
+-    );
+-    
+-    reg [dataWidth-1:0] mem [2**inWidth-1:0];
+-    reg [inWidth-1:0] y;
+-	
+-	initial
+-	begin
+-		if (INIT_FILE != "") $readmemb(INIT_FILE,mem);
+-	end
+-    
+-    always_comb
+-    begin
+-        if($signed(x) >= 0)
+-            y = x + (2**(inWidth-1));
+-        else 
+-            y = x - (2**(inWidth-1));
++module sigmoid #(parameter inWidth=16,dataWidth=16,
++    parameter INIT_FILE=(inWidth==8 ? "functional/assets/sig_8.bin" : "functional/assets/sig_16.bin")) (
++    input logic [inWidth-1:0] x,
++    output logic [dataWidth-1:0] out
++);
++    logic [dataWidth-1:0] mem[0:2**inWidth-1];
++    wire [inWidth-1:0] index=x^{1'b1,{(inWidth-1){1'b0}}};
++    initial begin
++        if((inWidth!=8 && inWidth!=16) || dataWidth!=inWidth)
++            $fatal(1,"SIG supports matching Q4.4 or Q4.12 input/output widths");
++        // synthesis translate_off
++        if(INIT_FILE!="") begin : check_file
++            integer fd;
++            fd=$fopen(INIT_FILE,"r");
++            if(!fd) $fatal(1,"Missing SIG LUT: %s",INIT_FILE);
++            $fclose(fd);
++        end
++        // synthesis translate_on
++        if(INIT_FILE!="") $readmemb(INIT_FILE,mem);
+     end
+-    
+-    assign out = mem[y];
+-    
++    assign out=mem[index];
+ endmodule
+diff --git a/Verilog Source code/ternary_mul.sv b/Verilog Source code/ternary_mul.sv
+index 3fb11d3..511997b 100644
+--- a/Verilog Source code/ternary_mul.sv	
++++ b/Verilog Source code/ternary_mul.sv	
+@@ -1,152 +1,94 @@
+-//Ternary Matrix Multiplication
+ module ternary_mul #(
+-    parameter DATA_WIDTH=16,
+-    parameter WORD_W=DATA_WIDTH*32,
+-    parameter TERNARY_PER_WORD=WORD_W/2,
++    parameter DATA_WIDTH=16,WORD_W=DATA_WIDTH*32,TERNARY_PER_WORD=WORD_W/2,
+     parameter MATRIX_WORDS=(512*512)/TERNARY_PER_WORD,
+-    parameter MATRIX_PTR_W=(MATRIX_WORDS>1 ? $clog2(MATRIX_WORDS) : 1)
++    parameter MATRIX_PTR_W=(MATRIX_WORDS>1 ? $clog2(MATRIX_WORDS) : 1),
++    parameter ACC_WIDTH=DATA_WIDTH+10
+ ) (
+-    input clk, rst_n, enable,
+-    input logic [WORD_W-1:0] matrix_in,
+-    input logic [WORD_W-1:0] ternary_matrix,
++    input logic clk,rst_n,enable,
++    input logic [WORD_W-1:0] matrix_in,ternary_matrix,
++    input logic matrix_valid,ternary_valid,output_ready,
++    output logic matrix_ready,ternary_ready,
+     output logic [WORD_W-1:0] matrix_out,
+-    input logic read_finish,
+-    output logic tmatmul_write
++    output logic tmatmul_write,done,overflow
+ );
+-    logic [WORD_W-1:0] tmatrix [MATRIX_WORDS-1:0];
+-    logic [WORD_W-1:0] matrix_x [15:0];
+-
+-    // Preserve original indexing/capture/write lifecycle defects (F13/F14/F26).
+-    initial begin
+-        if (DATA_WIDTH<4 || WORD_W!=DATA_WIDTH*32 || (512*512)%TERNARY_PER_WORD!=0 ||
+-            MATRIX_WORDS!=(512*512)/TERNARY_PER_WORD || 2**MATRIX_PTR_W!=MATRIX_WORDS)
+-            $fatal(1,"Unsupported ternary packing; require power-of-two frame words");
+-    end
+-    // pointer for ternary matrix and matrix in
+-    logic [MATRIX_PTR_W-1:0] tmat_ptr;
+-    logic [3:0] mat_ptr;
+-    
+-    // assign the input matrix and ternary matrix to the arrays
++    localparam TERM_W=DATA_WIDTH+1;
++    localparam logic signed [ACC_WIDTH-1:0] MAX_VALUE=ACC_WIDTH'((64'd1<<(DATA_WIDTH-1))-1);
++    localparam logic signed [ACC_WIDTH-1:0] MIN_VALUE=-ACC_WIDTH'(64'd1<<(DATA_WIDTH-1));
++    typedef enum logic [1:0] {IDLE,CAPTURE,OUTPUT_DATA} state_t;
++    state_t state;
++    logic [WORD_W-1:0] tmatrix[0:MATRIX_WORDS-1],matrix_x[0:15];
++    logic [MATRIX_PTR_W:0] tmat_count;
++    logic [4:0] mat_count;
++    logic [3:0] write_ptr;
++    logic [DATA_WIDTH-1:0] matrix_result[0:511];
++    logic [511:0] row_overflow;
++    initial if(DATA_WIDTH<4 || DATA_WIDTH>16 || WORD_W!=32*DATA_WIDTH ||
++        TERNARY_PER_WORD!=WORD_W/2 || (512*512)%TERNARY_PER_WORD!=0 ||
++        MATRIX_WORDS!=(512*512)/TERNARY_PER_WORD || MATRIX_PTR_W<$clog2(MATRIX_WORDS) ||
++        ACC_WIDTH<DATA_WIDTH+10) $fatal(1,"Invalid ternary parameters");
++    assign matrix_ready=rst_n && state==CAPTURE && mat_count<16;
++    assign ternary_ready=rst_n && state==CAPTURE && tmat_count<MATRIX_WORDS;
++    assign tmatmul_write=rst_n && state==OUTPUT_DATA;
+     always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n) begin
+-            for (int i = 0; i < MATRIX_WORDS; i = i + 1) begin
+-                tmatrix[i] <= '0;
+-            end
+-            for (int j = 0; j < 16; j = j + 1) begin
+-                matrix_x[j] <= '0;
+-            end
+-        end
+-        else if (enable) begin
+-            tmatrix[tmat_ptr] <= ternary_matrix;
+-            matrix_x[mat_ptr] <= matrix_in;
++        if(!rst_n) begin state<=IDLE; tmat_count<='0; mat_count<='0; write_ptr<='0; done<=0; end
++        else begin
++            done<=0;
++            case(state)
++                IDLE: if(enable) begin
++                    state<=CAPTURE; tmat_count<='0; mat_count<='0; write_ptr<='0;
++                end
++                CAPTURE: begin
++                    if(matrix_valid && matrix_ready) mat_count<=mat_count+1'b1;
++                    if(ternary_valid && ternary_ready) tmat_count<=tmat_count+1'b1;
++                    if(mat_count==16 && tmat_count==MATRIX_WORDS) state<=OUTPUT_DATA;
++                end
++                OUTPUT_DATA: if(output_ready) begin
++                    if(write_ptr==15) begin done<=1; state<=IDLE; end
++                    else write_ptr<=write_ptr+1'b1;
++                end
++                default: state<=IDLE;
++            endcase
+         end
+     end
+-
+-    // pointer update logic
+-    always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n) begin
+-            tmat_ptr <= '0;
+-            mat_ptr <= '0;
+-        end
+-        else if (enable) begin
+-            tmat_ptr <= tmat_ptr + 1;
+-            mat_ptr <= mat_ptr + 1;
+-        end
++    always_ff @(posedge clk) begin
++        if(matrix_valid && matrix_ready) matrix_x[mat_count[3:0]]<=matrix_in;
++        if(ternary_valid && ternary_ready) tmatrix[tmat_count[MATRIX_PTR_W-1:0]]<=ternary_matrix;
+     end
+-    
+-    //assign tmatrix and matrix_in to the arrays for easy access
+-    logic [1:0] tmatrix_data [262143:0];
+-    logic [DATA_WIDTH-1:0] matrix_in_data [511:0];
+-    genvar i, j;
+-
+-    generate
+-        for (i = 0; i < MATRIX_WORDS; i = i + 1) begin : tmatrix_assign
+-            for (j = 0; j < TERNARY_PER_WORD; j = j + 1) begin
+-                assign tmatrix_data[i * (2*TERNARY_PER_WORD) + j] = tmatrix[i][j * 2 +: 2];
+-            end
+-        end
+-        for (i = 0; i < 512; i = i + 1) begin : matrix_in_assign
+-            assign matrix_in_data[i] = matrix_x[i / 32][(i % 32) * DATA_WIDTH +: DATA_WIDTH];
+-        end
+-    endgenerate
+-
+-    // Ternary matrix multiplication logic
+-    genvar row, col;
+-    logic [DATA_WIDTH-1:0] mul_result [262143:0]; // 262144 results for 512x512 multiplication
+-    generate
+-        for (row = 0; row < 512; row = row + 1) begin : row_loop
+-            for (col = 0; col < 512; col = col + 1) begin : col_loop
+-                always_comb begin : ternary_mul_logic
+-                    case (tmatrix_data[row * 512 + col])
+-                        2'b01: mul_result[row * 512 + col] = matrix_in_data[col];
+-                        2'b11: mul_result[row * 512 + col] = -matrix_in_data[col];
+-                        default: mul_result[row * 512 + col] = '0;
++    // Every row is computed in parallel; the reduction topology remains nine levels.
++    for(genvar row=0;row<512;row++) begin : row_loop
++        logic [TERM_W-1:0] terms[511:0];
++        logic signed [ACC_WIDTH-1:0] total;
++        always_comb begin : products
++            logic [1:0] weight;
++            logic signed [TERM_W-1:0] sample;
++            weight='0; sample='0;
++            for(int col=0;col<512;col++) begin
++                terms[col]='0;
++                if(state==OUTPUT_DATA) begin
++                    weight=tmatrix[(row*512+col)/TERNARY_PER_WORD][((row*512+col)%TERNARY_PER_WORD)*2+:2];
++                    sample=TERM_W'($signed(matrix_x[col/32][(col%32)*DATA_WIDTH+:DATA_WIDTH]));
++                    case(weight)
++                        2'b00: terms[col]='0;
++                        2'b01: terms[col]=sample;
++                        2'b11: terms[col]=-sample;
++                        default: terms[col]='x;
+                     endcase
+                 end
+             end
+         end
+-    endgenerate
+-
+-
+-    // Accumulate the results
+-    logic [DATA_WIDTH-1:0] matrix_result [511:0];
+-
+-    generate
+-        for(j = 0; j < 512; j = j + 1) begin
+-            acc_mul #(.DATA_WIDTH(DATA_WIDTH)) acc_inst (
+-                .mul_result(mul_result[j * 512 +: 512]),
+-                .acc_result(matrix_result[j])
+-            );
+-        end
+-    endgenerate
+-
+-    // Output the final result
+-
+-    // update pointer for writing the result
+-    logic write_enable;
+-    logic [3:0] write_ptr;
+-    always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n) begin
+-            write_enable <= 1'b0;
+-        end
+-        else if (read_finish) begin
+-            write_enable <= 1'b1;
+-        end
+-        else if(|write_ptr) begin
+-            write_enable <= 1'b0;
++        acc_mul #(.DATA_WIDTH(TERM_W),.ACC_WIDTH(ACC_WIDTH)) sum(.mul_result(terms),.acc_result(total));
++        always_comb begin
++            row_overflow[row]=total>MAX_VALUE || total<MIN_VALUE;
++            if(total>MAX_VALUE) matrix_result[row]=MAX_VALUE[DATA_WIDTH-1:0];
++            else if(total<MIN_VALUE) matrix_result[row]=MIN_VALUE[DATA_WIDTH-1:0];
++            else matrix_result[row]=total[DATA_WIDTH-1:0];
+         end
+-
+     end
+-
+-    
+-    always_ff @(posedge clk or negedge rst_n) begin
+-        if (!rst_n) begin
+-            write_ptr <= '0;
+-        end
+-        else if (write_enable) begin
+-            write_ptr <= write_ptr + 1;
++    always_comb begin
++        matrix_out='0; overflow=0;
++        if(tmatmul_write) for(int lane=0;lane<32;lane++) begin
++            matrix_out[lane*DATA_WIDTH+:DATA_WIDTH]=matrix_result[int'(write_ptr)*32+lane];
++            overflow=overflow|row_overflow[int'(write_ptr)*32+lane];
+         end
+     end
+-
+-    // Assign the result to the output matrix
+-    assign matrix_out = {matrix_result[0 + write_ptr*32], matrix_result[1 + write_ptr*32], 
+-                         matrix_result[2 + write_ptr*32], matrix_result[3 + write_ptr*32],
+-                         matrix_result[4 + write_ptr*32], matrix_result[5 + write_ptr*32],
+-                         matrix_result[6 + write_ptr*32], matrix_result[7 + write_ptr*32],
+-                         matrix_result[8 + write_ptr*32], matrix_result[9 + write_ptr*32],
+-                         matrix_result[10 + write_ptr*32], matrix_result[11 + write_ptr*32],
+-                         matrix_result[12 + write_ptr*32], matrix_result[13 + write_ptr*32],
+-                         matrix_result[14 + write_ptr*32], matrix_result[15 + write_ptr*32],
+-                         matrix_result[16 + write_ptr*32], matrix_result[17 + write_ptr*32],
+-                         matrix_result[18 + write_ptr*32], matrix_result[19 + write_ptr*32],
+-                            matrix_result[20 + write_ptr*32], matrix_result[21 + write_ptr*32],
+-                            matrix_result[22 + write_ptr*32], matrix_result[23 + write_ptr*32],
+-                            matrix_result[24 + write_ptr*32], matrix_result[25 + write_ptr*32],
+-                            matrix_result[26 + write_ptr*32], matrix_result[27 + write_ptr*32],
+-                            matrix_result[28 + write_ptr*32], matrix_result[29 + write_ptr*32],
+-                            matrix_result[30 + write_ptr*32], matrix_result[31 + write_ptr*32]};
+-
+-    //signal for writing the result
+-    assign tmatmul_write = write_enable;
+-
+ endmodule

@@ -1,0 +1,13 @@
+# vsim -c -onfinish exit -l functional/sim/guard-8-1.log functional/sim/work.tb_guards -do "run -all; quit -f" -gCASE=1 -gW=8 
+# Start time: 13:41:44 on Sep 17,2026
+# Loading sv_std.std
+# Loading functional/sim/work.tb_guards
+# Loading functional/sim/work.exp_row
+# run -all
+# ** Fatal: EXP requires a full Q4.4 or Q4.12 signed-domain LUT
+#    Time: 0 ps  Scope: tb_guards.exp_guard.bad File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/exp.sv Line: 12
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/Verilog Source code/exp.sv(12)
+#    Time: 0 ps  Iteration: 0  Instance: /tb_guards/exp_guard/bad
+# End time: 13:41:45 on Sep 17,2026, Elapsed time: 0:00:01
+# Errors: 1, Warnings: 0
+GUARD_EXPECTED_PASS W=8 CASE=1

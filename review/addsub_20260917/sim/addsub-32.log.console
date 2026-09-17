@@ -1,0 +1,15 @@
+Reading pref.tcl
+
+# 2020.1
+
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\review\addsub_20260917\sim\addsub-32.log after_lib.tb_addsub -do "run -all; quit -f" -gW=32 
+# Start time: 17:17:38 on Sep 17,2026
+# Loading sv_std.std
+# Loading after_lib.tb_addsub
+# Loading after_lib.addsub
+# run -all
+# ADDSUB_PASS W=32 checks=40128
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/review/addsub_20260917/tb_addsub.sv(64)
+#    Time: 40128 ns  Iteration: 0  Instance: /tb_addsub
+# End time: 17:17:38 on Sep 17,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0

@@ -1,0 +1,787 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dD:/2151097_Nguyen Nhut Khanh
+vacc_mul
+Z1 DXx6 sv_std 3 std 0 22 VYECXdT12H8WgbUP_5Y6:3
+Z2 !s110 1789641797
+!i10b 1
+!s100 Wh;<N@2lXZb3bI6B`FS9i1
+Z3 !s11b Dg1SIo80bB@j0V0VzS_@n1
+I3_<7CnG=kZDXCi9_bCne]3
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+S1
+R0
+w1748798121
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\acc_mul.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\acc_mul.sv
+!i122 4
+L0 1 76
+Z5 OV;L;2020.1;71
+r1
+!s85 0
+31
+Z6 !s108 1789641797.000000
+!s107 D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_norm.sv|D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_exp.sv|D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_dispatch.sv|D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_core_nonlinear.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\sigmoid.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\serial_unsigned_mul.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\rowwise_op.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\regfile.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\PC.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\nonlinear_luts.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\nonlinear_dispatch.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mw_reg.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mem_mapping.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mem_burst.v|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmulfree.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmul_wrap.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\lut_interp.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ins_mem.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\hazard_detect.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\fd_reg.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\exp.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\em_reg.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\de_reg.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ctrl_unit.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\addsub.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\acc_mul.sv|
+Z7 !s90 -sv|-work|nonlinear/sim/work|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\acc_mul.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\addsub.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ctrl_unit.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\de_reg.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\em_reg.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\exp.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\fd_reg.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\hazard_detect.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ins_mem.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\lut_interp.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmul_wrap.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmulfree.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mem_burst.v|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mem_mapping.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mw_reg.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\nonlinear_dispatch.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\nonlinear_luts.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\PC.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\regfile.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\rowwise_op.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\serial_unsigned_mul.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\sigmoid.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv|D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_core_nonlinear.sv|D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_dispatch.sv|D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_exp.sv|D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_norm.sv|
+!i113 1
+Z8 o-sv -work nonlinear/sim/work
+Z9 tCvgOpt 0
+vaddsub
+R1
+R2
+!i10b 1
+!s100 [e8O<OPj:4bB_fPN7fEMB3
+R3
+IDQT=De?XzRZ9hXoPF:i;n3
+R4
+S1
+R0
+w1789639630
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\addsub.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\addsub.sv
+!i122 4
+L0 1 20
+R5
+r1
+!s85 0
+31
+R6
+Z10 !s107 D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_norm.sv|D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_exp.sv|D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_dispatch.sv|D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_core_nonlinear.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\sigmoid.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\serial_unsigned_mul.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\rowwise_op.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\regfile.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\PC.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\nonlinear_luts.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\nonlinear_dispatch.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mw_reg.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mem_mapping.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mem_burst.v|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmulfree.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmul_wrap.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\lut_interp.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ins_mem.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\hazard_detect.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\fd_reg.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\exp.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\em_reg.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\de_reg.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ctrl_unit.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\addsub.sv|D:\2151097_Nguyen Nhut Khanh\Verilog Source code\acc_mul.sv|
+R7
+!i113 1
+R8
+R9
+vctrl_unit
+R1
+R2
+!i10b 1
+!s100 Boo9cjKXOoVWAY@iWCe=g1
+R3
+IXI@>4j;BGilgb2dFd0=e33
+R4
+S1
+R0
+w1744518007
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ctrl_unit.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\ctrl_unit.sv
+!i122 4
+L0 1 72
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vde_reg
+R1
+R2
+!i10b 1
+!s100 MGDKahV1V5RKUQ:a0Q3Rz0
+R3
+IF8WSHM<5@oNP`A:[WD;<S2
+R4
+S1
+R0
+w1743045476
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\de_reg.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\de_reg.sv
+!i122 4
+Z11 L0 1 46
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vdiv
+R1
+R2
+!i10b 1
+!s100 JFzhZ0O3z_X^=zfOEg_2a2
+R3
+ITC297n_<a=9><E=aZo4_V1
+R4
+S1
+R0
+w1743045543
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\div.sv
+!i122 4
+L0 1 17
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vem_reg
+R1
+R2
+!i10b 1
+!s100 ]n3C7@aT^9W2f8;N=2Oj73
+R3
+I]NgX=V^AYe<ofB2CHSk:c1
+R4
+S1
+R0
+w1743045557
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\em_reg.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\em_reg.sv
+!i122 4
+L0 1 45
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vexp_lut
+R1
+Z12 !s110 1789641798
+!i10b 1
+!s100 O;OOJ]YI5DEm;iN3`L4Wg2
+R3
+I^<OXg@72Z?j9MSY[c=9]J2
+R4
+S1
+R0
+Z13 w1789641797
+Z14 8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\nonlinear_luts.sv
+Z15 FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\nonlinear_luts.sv
+!i122 4
+L0 2 1431
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vexp_row
+R1
+R2
+!i10b 1
+!s100 =4lO=X1jUalUMeo:<>2dB2
+R3
+I:o<<d^f2FjBAISA:hnT`Q1
+R4
+S1
+R0
+Z16 w1789641075
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\exp.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\exp.sv
+!i122 4
+L0 2 42
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vfd_reg
+R1
+R2
+!i10b 1
+!s100 F<G1ZHK=YPUHZMI<RoePe2
+R3
+IAXLhQ_RQnH__JQ0:WDn2i2
+R4
+S1
+R0
+w1742056135
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\fd_reg.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\fd_reg.sv
+!i122 4
+L0 1 21
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vhazard_detect
+R1
+R2
+!i10b 1
+!s100 V][iafIizJO_XLi^iNH_42
+R3
+IHlD92bPj[2>UoN9_JOQcY1
+R4
+S1
+R0
+w1748919784
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\hazard_detect.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\hazard_detect.sv
+!i122 4
+L0 1 81
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vins_mem
+R1
+R2
+!i10b 1
+!s100 Ph9?=UkelHK0zh5@0mf0[0
+R3
+I:VjKzh>O7i<UlGUQM7Z3R2
+R4
+S1
+R0
+w1741581610
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ins_mem.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\ins_mem.sv
+!i122 4
+L0 1 14
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vlut_interp
+R1
+R2
+!i10b 1
+!s100 24K7ohWmo@g:UJCjF10XT1
+R3
+IgjW8dZJ`VZWLeAOJBV;aT3
+R4
+S1
+R0
+w1789641074
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\lut_interp.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\lut_interp.sv
+!i122 4
+L0 3 19
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vmatmul_wrap
+R1
+R2
+!i10b 1
+!s100 CD=oC_CMP`TV4YL6zUfDj0
+R3
+IInQVdo7<^;bjKmSgTECGn3
+R4
+S1
+R0
+w1739449167
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmul_wrap.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmul_wrap.sv
+!i122 4
+L0 1 15
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vmatmulfree
+R1
+R2
+!i10b 1
+!s100 VoQbcZCzRmBTJS=`FWm@z2
+R3
+I5QCFOmdOdCPEGec5JlkDK2
+R4
+S1
+R0
+w1789641646
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmulfree.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\matmulfree.sv
+!i122 4
+L0 1 342
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vmem_burst
+R1
+R2
+!i10b 1
+!s100 g<<90z>Qb`5SAfZVL:Uez0
+R3
+I@H3DN02HBdSzIVUZbOcPC1
+R4
+S1
+R0
+w1745236179
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mem_burst.v
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\mem_burst.v
+!i122 4
+L0 3 245
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vmem_mapping
+R1
+R2
+!i10b 1
+!s100 6]T5QZ3M9nLJQC6N>]Rm33
+R3
+IYgK1WYJ56OV0m[]771<MA3
+R4
+S1
+R0
+w1789641529
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mem_mapping.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\mem_mapping.sv
+!i122 4
+L0 1 265
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vmul
+R1
+R2
+!i10b 1
+!s100 MFAZf5Tj9nH<5I>h2XcGh1
+R3
+IRYe3kSYo5_@amQ10lkg:Y2
+R4
+S1
+R0
+w1744250051
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\mul.sv
+!i122 4
+L0 1 49
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vmw_reg
+R1
+R2
+!i10b 1
+!s100 fm2M2ZfA?G_b>MONzNUe=1
+R3
+Ij<NM3B9oXehkN8RMPZo<Q2
+R4
+S1
+R0
+w1744704770
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\mw_reg.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\mw_reg.sv
+!i122 4
+R11
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vnonlinear_dispatch
+R1
+R2
+!i10b 1
+!s100 2`;WGTG;ZF1B7^UoeoW132
+R3
+IYfiNgWZd1<Pg;HC3S]De[0
+R4
+S1
+R0
+w1789641619
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\nonlinear_dispatch.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\nonlinear_dispatch.sv
+!i122 4
+L0 3 74
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vnorm
+R1
+R12
+!i10b 1
+!s100 T1]RD<^Zd01W>^35^g54[0
+R3
+I1d:DRBU8_oU2T4Jo3DgMi3
+R4
+S1
+R0
+Z17 w1789641205
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\norm.sv
+!i122 4
+L0 5 159
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vPC
+R1
+R12
+!i10b 1
+!s100 :GX1P[mcHdkdl>7HzL`WI2
+R3
+I_nV=<Z;o`VlOcID6]bPh93
+R4
+S1
+R0
+w1741317598
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\PC.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\PC.sv
+!i122 4
+Z18 L0 1 24
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+n@p@c
+vregister
+R1
+R12
+!i10b 1
+!s100 0nX2V9U:N_fX8L;Z=ia061
+R3
+Ic8Jc[ZXH95<?9fQ34^TM^2
+R4
+S1
+R0
+w1789641528
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\regfile.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\regfile.sv
+!i122 4
+L0 1 241
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vrowwise_op
+R1
+R12
+!i10b 1
+!s100 mjfXJMLA_AXURbE>cblO_0
+R3
+IUij=ZQXmo0KDU^86gO[N30
+R4
+S1
+R0
+R17
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\rowwise_op.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\rowwise_op.sv
+!i122 4
+L0 1 109
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vrsqrt_lut
+R1
+R12
+!i10b 1
+!s100 NGEaMj7>BOTS1UzFD@hSG2
+R3
+Ij3XB7[OhDYSZ=g<HA;=Ue3
+R4
+S1
+R0
+R13
+R14
+R15
+!i122 4
+L0 1434 501
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vserial_unsigned_mul
+R1
+R12
+!i10b 1
+!s100 S>8n1^Uh[ST`eJ<=IeczJ1
+R3
+IIn1fPbJ67D?AgPmQIU3AQ2
+R4
+S1
+R0
+R16
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\serial_unsigned_mul.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\serial_unsigned_mul.sv
+!i122 4
+L0 2 28
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vsigmoid
+R1
+R12
+!i10b 1
+!s100 WekdFlD:EQJb@zXd8]]j?0
+R3
+IGDZcgXYBJVC?@3`cOc9o52
+R4
+S1
+R0
+w1741585924
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\sigmoid.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\sigmoid.sv
+!i122 4
+R18
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vtb_core_nonlinear
+R1
+R12
+!i10b 1
+!s100 KUDQz?F4fbhnNK=Ak=R043
+R3
+I3R]52k2CnP0hmR@C3=zjj3
+R4
+S1
+R0
+w1789641760
+8D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_core_nonlinear.sv
+FD:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_core_nonlinear.sv
+!i122 4
+L0 2 46
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vtb_dispatch
+R1
+R12
+!i10b 1
+!s100 BDEUzngN;zz?eAT=[=O]n0
+R3
+I5P]bQ7QJ9Xb>]a2o@]Kmk0
+R4
+S1
+R0
+w1789641795
+8D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_dispatch.sv
+FD:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_dispatch.sv
+!i122 4
+L0 2 65
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vtb_exp
+R1
+R12
+!i10b 1
+!s100 g1YDh;_UN;R04CWP0`Xz]0
+R3
+I7I?Y33AT8@8^]mkS[9_D13
+R4
+S1
+R0
+Z19 w1789641312
+8D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_exp.sv
+FD:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_exp.sv
+!i122 4
+L0 2 23
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vtb_norm
+R1
+R12
+!i10b 1
+!s100 8:n[F@<3@2kVbSz5A<b7J0
+R3
+IZCjgTBi;HeX9kk_oc;WHK1
+R4
+S1
+R0
+R19
+8D:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_norm.sv
+FD:\2151097_Nguyen Nhut Khanh\nonlinear\sim\tb_norm.sv
+!i122 4
+L0 2 73
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9
+vternary_mul
+R1
+R12
+!i10b 1
+!s100 @mCfC3;N`=@Z:Uj_A@4bG2
+R3
+InMk]oKEDYFO<aeXY4cBo32
+R4
+S1
+R0
+w1748876482
+8D:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv
+FD:\2151097_Nguyen Nhut Khanh\Verilog Source code\ternary_mul.sv
+!i122 4
+L0 2 139
+R5
+r1
+!s85 0
+31
+R6
+R10
+R7
+!i113 1
+R8
+R9

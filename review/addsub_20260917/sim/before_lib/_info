@@ -1,0 +1,688 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dD:/2151097_Nguyen Nhut Khanh/review/addsub_20260917/sim
+vacc_mul
+Z1 DXx6 sv_std 3 std 0 22 VYECXdT12H8WgbUP_5Y6:3
+Z2 !s110 1789640230
+!i10b 1
+!s100 Wh;<N@2lXZb3bI6B`FS9i1
+Z3 !s11b Dg1SIo80bB@j0V0VzS_@n1
+I;H:XZ7IzY1h1Be]`4;g>h2
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+S1
+R0
+w1748798121
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\acc_mul.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\acc_mul.sv
+!i122 3
+L0 1 76
+Z5 OV;L;2020.1;71
+r1
+!s85 0
+31
+Z6 !s108 1789640230.000000
+!s107 D:\2151097_Nguyen Nhut Khanh\review\sim/scaled_config.svh|D:\2151097_Nguyen Nhut Khanh\review\audit_20260916\tb_param_probe.sv|D:\2151097_Nguyen Nhut Khanh\review\audit_20260916\tb_extended.sv|D:\2151097_Nguyen Nhut Khanh\review\sim\tb_review.sv|D:\2151097_Nguyen Nhut Khanh\review\addsub_20260917\tb_reproduce.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\ternary_mul.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\sigmoid.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\rowwise_op.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\regfile.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\PC.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\norm.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\mw_reg.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\mem_mapping.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\mem_burst.v|D:\2151097_Nguyen Nhut Khanh\scale\baseline\matmulfree.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\matmul_wrap.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\ins_mem.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\hazard_detect.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\fd_reg.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\exp.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\em_reg.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\div.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\de_reg.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\ctrl_unit.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\addsub.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\acc_mul.sv|
+Z7 !s90 -sv|-work|before_lib|+incdir+D:\2151097_Nguyen Nhut Khanh\review\sim|D:\2151097_Nguyen Nhut Khanh\scale\baseline\acc_mul.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\addsub.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\ctrl_unit.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\de_reg.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\div.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\em_reg.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\exp.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\fd_reg.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\hazard_detect.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\ins_mem.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\matmul_wrap.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\matmulfree.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\mem_burst.v|D:\2151097_Nguyen Nhut Khanh\scale\baseline\mem_mapping.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\mw_reg.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\norm.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\PC.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\regfile.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\rowwise_op.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\sigmoid.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\ternary_mul.sv|D:\2151097_Nguyen Nhut Khanh\review\addsub_20260917\tb_reproduce.sv|D:\2151097_Nguyen Nhut Khanh\review\sim\tb_review.sv|D:\2151097_Nguyen Nhut Khanh\review\audit_20260916\tb_extended.sv|D:\2151097_Nguyen Nhut Khanh\review\audit_20260916\tb_param_probe.sv|
+!i113 1
+Z8 o-sv -work before_lib
+Z9 !s92 -sv -work before_lib {+incdir+D:\2151097_Nguyen Nhut Khanh\review\sim}
+Z10 tCvgOpt 0
+vaddsub
+R1
+R2
+!i10b 1
+!s100 KTCD`Dnbl0S>jd^5@_Eh`1
+R3
+IcAL9B6RkCb:EWSkj:[Ui21
+R4
+S1
+R0
+w1739892497
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\addsub.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\addsub.sv
+!i122 3
+Z11 L0 1 14
+R5
+r1
+!s85 0
+31
+R6
+Z12 !s107 D:\2151097_Nguyen Nhut Khanh\review\sim/scaled_config.svh|D:\2151097_Nguyen Nhut Khanh\review\audit_20260916\tb_param_probe.sv|D:\2151097_Nguyen Nhut Khanh\review\audit_20260916\tb_extended.sv|D:\2151097_Nguyen Nhut Khanh\review\sim\tb_review.sv|D:\2151097_Nguyen Nhut Khanh\review\addsub_20260917\tb_reproduce.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\ternary_mul.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\sigmoid.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\rowwise_op.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\regfile.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\PC.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\norm.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\mw_reg.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\mem_mapping.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\mem_burst.v|D:\2151097_Nguyen Nhut Khanh\scale\baseline\matmulfree.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\matmul_wrap.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\ins_mem.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\hazard_detect.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\fd_reg.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\exp.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\em_reg.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\div.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\de_reg.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\ctrl_unit.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\addsub.sv|D:\2151097_Nguyen Nhut Khanh\scale\baseline\acc_mul.sv|
+R7
+!i113 1
+R8
+R9
+R10
+vctrl_unit
+R1
+R2
+!i10b 1
+!s100 Boo9cjKXOoVWAY@iWCe=g1
+R3
+I63VC:^bbAA?N_3^I5?B=N0
+R4
+S1
+R0
+w1744518007
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\ctrl_unit.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\ctrl_unit.sv
+!i122 3
+L0 1 72
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vde_reg
+R1
+R2
+!i10b 1
+!s100 MGDKahV1V5RKUQ:a0Q3Rz0
+R3
+IO9Hkj^nofDeAkni<S19lR1
+R4
+S1
+R0
+w1743045476
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\de_reg.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\de_reg.sv
+!i122 3
+Z13 L0 1 46
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vdiv
+R1
+R2
+!i10b 1
+!s100 JFzhZ0O3z_X^=zfOEg_2a2
+R3
+IeIQZR]`kdcnFWA47bRGOa1
+R4
+S1
+R0
+w1743045543
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\div.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\div.sv
+!i122 3
+L0 1 17
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vem_reg
+R1
+R2
+!i10b 1
+!s100 ]n3C7@aT^9W2f8;N=2Oj73
+R3
+I[b]26k55lFSUnPm1^48aK2
+R4
+S1
+R0
+w1743045557
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\em_reg.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\em_reg.sv
+!i122 3
+L0 1 45
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vexp_row
+R1
+R2
+!i10b 1
+!s100 z9]cn<ci=0^PXWkWBa<=k2
+R3
+I;IC[M8:gYjCVhN2Wi0D?S3
+R4
+S1
+R0
+w1735112987
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\exp.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\exp.sv
+!i122 3
+L0 1 23
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vfd_reg
+R1
+R2
+!i10b 1
+!s100 F<G1ZHK=YPUHZMI<RoePe2
+R3
+I:]TOXG^BlPM_af_FROL:T0
+R4
+S1
+R0
+w1742056135
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\fd_reg.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\fd_reg.sv
+!i122 3
+L0 1 21
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vhazard_detect
+R1
+R2
+!i10b 1
+!s100 V][iafIizJO_XLi^iNH_42
+R3
+I=6>T@3^>i0@7oHBh;`TBz0
+R4
+S1
+R0
+w1748919784
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\hazard_detect.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\hazard_detect.sv
+!i122 3
+L0 1 81
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vins_mem
+R1
+R2
+!i10b 1
+!s100 Ph9?=UkelHK0zh5@0mf0[0
+R3
+I5UldE9i``b22[h]n8z;SD3
+R4
+S1
+R0
+w1741581610
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\ins_mem.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\ins_mem.sv
+!i122 3
+R11
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vmatmul_wrap
+R1
+R2
+!i10b 1
+!s100 CD=oC_CMP`TV4YL6zUfDj0
+R3
+I]l7Qa@IR_nM`USXBW7KS<3
+R4
+S1
+R0
+w1739449167
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\matmul_wrap.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\matmul_wrap.sv
+!i122 3
+L0 1 15
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vmatmulfree
+R1
+R2
+!i10b 1
+!s100 1mWD>n^]V_WJ0bjmfW`Q@1
+R3
+I[4z^L6LT?E520]o3og>G>3
+R4
+S1
+R0
+w1748919744
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\matmulfree.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\matmulfree.sv
+!i122 3
+L0 1 320
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vmem_burst
+R1
+R2
+!i10b 1
+!s100 g<<90z>Qb`5SAfZVL:Uez0
+R3
+I<DF4ZhogOKM8]NTLh<=4S2
+R4
+S1
+R0
+w1745236179
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\mem_burst.v
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\mem_burst.v
+!i122 3
+L0 3 245
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vmem_mapping
+R1
+R2
+!i10b 1
+!s100 TJO]O6[^5C=mX[>zFCVi13
+R3
+IdabASClnoT0YOmzio2je[2
+R4
+S1
+R0
+w1748791794
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\mem_mapping.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\mem_mapping.sv
+!i122 3
+L0 1 262
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vmul
+R1
+R2
+!i10b 1
+!s100 MFAZf5Tj9nH<5I>h2XcGh1
+R3
+I@EVO=n6G:TEL]F@HBN=kC1
+R4
+S1
+R0
+w1744250051
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\mul.sv
+!i122 3
+L0 1 49
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vmw_reg
+R1
+R2
+!i10b 1
+!s100 fm2M2ZfA?G_b>MONzNUe=1
+R3
+I5M;FXeWPk:AcZi6D];P@S1
+R4
+S1
+R0
+w1744704770
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\mw_reg.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\mw_reg.sv
+!i122 3
+R13
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vnorm
+R1
+R2
+!i10b 1
+!s100 I6oa7K;iJcgCL<ENEM:]Z1
+R3
+IBcWI<f?Ez;0h`CjTK=G>F1
+R4
+S1
+R0
+w1746501926
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\norm.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\norm.sv
+!i122 3
+Z14 L0 1 24
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vPC
+R1
+R2
+!i10b 1
+!s100 :GX1P[mcHdkdl>7HzL`WI2
+R3
+IbKjR0@D]53@jKeZ9aa4=E2
+R4
+S1
+R0
+w1741317598
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\PC.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\PC.sv
+!i122 3
+R14
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+n@p@c
+vregister
+R1
+R2
+!i10b 1
+!s100 BHgI8gc;_RXzNInFfd@EF3
+R3
+IdOJ995FbP:Bmnb44feOzS3
+R4
+S1
+R0
+w1744799952
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\regfile.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\regfile.sv
+!i122 3
+L0 1 229
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vrowwise_op
+R1
+R2
+!i10b 1
+!s100 DVS9OfRC9n05n10<4ZMW`1
+R3
+IcdR:81k=jAnEmm7gNKg1c3
+R4
+S1
+R0
+w1749473681
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\rowwise_op.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\rowwise_op.sv
+!i122 3
+L0 1 95
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vsigmoid
+R1
+R2
+!i10b 1
+!s100 WekdFlD:EQJb@zXd8]]j?0
+R3
+I4c4K1iiU@C?Gn1lfJ1Ka23
+R4
+S1
+R0
+w1741585924
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\sigmoid.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\sigmoid.sv
+!i122 3
+R14
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vtb_extended
+R1
+R2
+!i10b 1
+!s100 9YbA?BU5dikWonUh6VRXn1
+R3
+IC[JK75`[:]gCi3S4bKX4_0
+R4
+S1
+R0
+w1789545715
+8D:\2151097_Nguyen Nhut Khanh\review\audit_20260916\tb_extended.sv
+FD:\2151097_Nguyen Nhut Khanh\review\audit_20260916\tb_extended.sv
+!i122 3
+L0 2 112
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vtb_param_probe
+R1
+R2
+!i10b 1
+!s100 Qn0MblmH^3B]N;`PG7PN42
+R3
+IQ[3];z7c@DBUPzEDFXBi]3
+R4
+S1
+R0
+w1789545716
+8D:\2151097_Nguyen Nhut Khanh\review\audit_20260916\tb_param_probe.sv
+FD:\2151097_Nguyen Nhut Khanh\review\audit_20260916\tb_param_probe.sv
+!i122 3
+L0 1 11
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vtb_reproduce
+R1
+R2
+!i10b 1
+!s100 9oO]:84?[2]fN9blIF[i[0
+R3
+IYmczYgeDKEii@;PAgazBb0
+R4
+S1
+R0
+w1789638132
+8D:\2151097_Nguyen Nhut Khanh\review\addsub_20260917\tb_reproduce.sv
+FD:\2151097_Nguyen Nhut Khanh\review\addsub_20260917\tb_reproduce.sv
+!i122 3
+L0 2 33
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vtb_review
+R1
+R2
+!i10b 1
+!s100 ^m9>H:VOnmCenQMf[z3RL1
+R3
+IPPB9OQDMoni[:8`MAFBXN1
+R4
+S1
+R0
+w1789542000
+8D:\2151097_Nguyen Nhut Khanh\review\sim\tb_review.sv
+FD:\2151097_Nguyen Nhut Khanh\review\sim\tb_review.sv
+!i122 3
+L0 3 134
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10
+vternary_mul
+R1
+R2
+!i10b 1
+!s100 @mCfC3;N`=@Z:Uj_A@4bG2
+R3
+ITWFZ6FX_<fPGaWBIS=9:23
+R4
+S1
+R0
+w1748876482
+8D:\2151097_Nguyen Nhut Khanh\scale\baseline\ternary_mul.sv
+FD:\2151097_Nguyen Nhut Khanh\scale\baseline\ternary_mul.sv
+!i122 3
+L0 2 139
+R5
+r1
+!s85 0
+31
+R6
+R12
+R7
+!i113 1
+R8
+R9
+R10

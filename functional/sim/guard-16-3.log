@@ -1,0 +1,13 @@
+# vsim -c -onfinish exit -l functional/sim/guard-16-3.log functional/sim/work.tb_guards -do "run -all; quit -f" -gCASE=3 -gW=16 
+# Start time: 13:42:11 on Sep 17,2026
+# Loading sv_std.std
+# Loading functional/sim/work.tb_guards
+# Loading functional/sim/work.register
+# run -all
+# ** Fatal: Invalid register pointer width
+#    Time: 0 ps  Scope: tb_guards.register_guard.bad File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/regfile.sv Line: 20
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/Verilog Source code/regfile.sv(20)
+#    Time: 0 ps  Iteration: 0  Instance: /tb_guards/register_guard/bad
+# End time: 13:42:11 on Sep 17,2026, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+GUARD_EXPECTED_PASS W=16 CASE=3

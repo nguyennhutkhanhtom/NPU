@@ -1,4 +1,4 @@
-"""Deterministic index/packing proofs derived from supplied RTL; not RTL simulation."""
+"""Historical proofs for scale/baseline before repairs; not current RTL simulation."""
 import json
 from pathlib import Path
 

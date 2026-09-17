@@ -1,0 +1,15 @@
+Reading pref.tcl
+
+# 2020.1
+
+# vsim -c -onfinish exit -l addsub-16.log work.tb_addsub -do "run -all; quit -f" -gW=16 
+# Start time: 17:18:35 on Sep 17,2026
+# Loading sv_std.std
+# Loading work.tb_addsub
+# Loading work.addsub
+# run -all
+# ADDSUB_PASS W=16 checks=1088704
+# ** Note: $finish    : ../tb_addsub.sv(64)
+#    Time: 1088704 ns  Iteration: 0  Instance: /tb_addsub
+# End time: 17:18:41 on Sep 17,2026, Elapsed time: 0:00:06
+# Errors: 0, Warnings: 0

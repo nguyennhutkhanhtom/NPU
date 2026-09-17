@@ -1,4 +1,6 @@
 {
+  "record_type": "historical_parameterization_snapshot",
+  "superseded_by": "../functional/verification.json",
   "scope": "Parameterization only; known functional bugs intentionally retained",
   "baseline_files_verified": 22,
   "default_trace": {

@@ -1,0 +1,21 @@
+Reading pref.tcl
+
+# 2020.1
+
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\review\addsub_20260917\sim\rowwise-16.log after_lib.tb_rowwise -do "run -all; quit -f" 
+# Start time: 17:17:42 on Sep 17,2026
+# Loading sv_std.std
+# Loading after_lib.tb_rowwise
+# Loading after_lib.ctrl_unit
+# Loading after_lib.rowwise_op
+# Loading after_lib.mul
+# Loading after_lib.div
+# Loading after_lib.sigmoid
+# Loading after_lib.addsub
+# Loading after_lib.exp_row
+# run -all
+# ROWWISE_PASS lane_checks=1307712 flag_checks=40880
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/review/addsub_20260917/tb_rowwise.sv(84)
+#    Time: 40880 ns  Iteration: 0  Instance: /tb_rowwise
+# End time: 17:17:48 on Sep 17,2026, Elapsed time: 0:00:06
+# Errors: 0, Warnings: 0

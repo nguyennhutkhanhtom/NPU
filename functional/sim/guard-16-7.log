@@ -1,0 +1,13 @@
+# vsim -c -onfinish exit -l functional/sim/guard-16-7.log functional/sim/work.tb_guards -do "run -all; quit -f" -gCASE=7 -gW=16 
+# Start time: 13:42:19 on Sep 17,2026
+# Loading sv_std.std
+# Loading functional/sim/work.tb_guards
+# Loading functional/sim/work.PC
+# run -all
+# ** Fatal: Invalid PC depth/width
+#    Time: 0 ps  Scope: tb_guards.pc_guard.bad File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/PC.sv Line: 7
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/Verilog Source code/PC.sv(7)
+#    Time: 0 ps  Iteration: 0  Instance: /tb_guards/pc_guard/bad
+# End time: 13:42:19 on Sep 17,2026, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+GUARD_EXPECTED_PASS W=16 CASE=7

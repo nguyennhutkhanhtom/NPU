@@ -1,0 +1,11 @@
+# vsim -c -onfinish exit -l addsub-4.log work.tb_addsub -do "run -all; quit -f" -gW=4 
+# Start time: 17:18:30 on Sep 17,2026
+# Loading sv_std.std
+# Loading work.tb_addsub
+# Loading work.addsub
+# run -all
+# ADDSUB_PASS W=4 checks=640
+# ** Note: $finish    : ../tb_addsub.sv(64)
+#    Time: 640 ns  Iteration: 0  Instance: /tb_addsub
+# End time: 17:18:31 on Sep 17,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
