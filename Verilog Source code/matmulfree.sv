@@ -1,4 +1,6 @@
-module matmulfree(
+module matmulfree #(
+    parameter NORM_LUT_FILE = "data/normContent.mif"
+) (
     input  logic rst_n, clk,
     output logic ready, overflow_out, carry_out,
     output logic [8:0] pc_debug,
@@ -24,6 +26,14 @@ module matmulfree(
     logic reg_wr_en_de, reg_wr_en_wb, reg_rd_en_de;
     logic mem_wr_en_de, mem_rd_en_de_0, mem_rd_en_de_1;
     logic tmatmul_assert;
+    logic tmatmul_start, tmatmul_done, tmatmul_overflow;
+    logic matrix_valid, ternary_valid, matrix_ready, ternary_ready, tmatmul_ready;
+    wire norm_hold, norm_advance, norm_own, norm_write, norm_done, norm_overflow;
+    wire register_stream_busy, register_read_last, memory_busy, norm_pipeline_idle;
+    wire [9:0] norm_read_address, norm_write_address;
+    wire [511:0] norm_read_data, norm_write_data;
+    wire [12:0] norm_instruction;
+    wire [8:0] norm_pc, pc_wb;
 
     // Instruction pipeline registers
     logic [12:0] instr_fd, instr_de, instr_em, instr_mw, instr_wb;
@@ -40,6 +50,8 @@ module matmulfree(
         .empty(empty), .full(full),
         .tmatmul_assert(tmatmul_assert),
         .rd_en(reg_rd_en_de), .wr_en(reg_wr_en_de),
+        .register_read_last(register_read_last),
+        .transactions_busy(register_stream_busy || memory_busy || tmatmul_assert),
         .em_stall(em_stall), .mw_stall(mw_stall), .fd_stall(fd_stall),
         .de_stall(de_stall), .pc_stall(pc_stall),
         .flush_wb(flush_wb)
@@ -47,7 +59,7 @@ module matmulfree(
 
     PC PC(
         .clk(clk), .rst(rst_n),
-        .pc_out(pc), .stall(pc_stall)
+        .pc_out(pc), .stall(norm_hold ? norm_advance : pc_stall)
     );
 
     // instr[12-:4] is the opcode
@@ -62,7 +74,7 @@ module matmulfree(
 
     fd_reg fd_reg_inst (
         .clk(clk), .rst_n(rst_n), .enable(fd_stall),
-        .instr_fd(instr_fd), .instr_de(instr_de), 
+        .instr_fd(norm_hold ? 13'b0 : instr_fd), .instr_de(instr_de),
         .pc(pc), .pc_de(pc_de)
     );
 
@@ -91,7 +103,26 @@ module matmulfree(
         .r_addr_0(instr_de[2:0]), .r_addr_1(instr_de[5:3]),
         .w_addr(instr_wb[8:6]), .w_en(reg_wr_en_wb), .rd_en(reg_rd_en_de),
         .full(full), .empty(empty), .almost_full(almost_full), .almost_empty(almost_empty),
-        .data_out_0(reg_out_0_de), .data_out_1(reg_out_1_de)
+        .data_out_0(reg_out_0_de), .data_out_1(reg_out_1_de),
+        .norm_access(norm_own), .norm_write(norm_write),
+        .norm_read_address(norm_read_address), .norm_write_address(norm_write_address),
+        .norm_write_data(norm_write_data), .norm_read_data(norm_read_data),
+        .stream_busy(register_stream_busy), .stream_read_last(register_read_last)
+    );
+
+    // Hold fetch at NORM and inject NOPs as the previous instruction drains.
+    // Register and memory streaming FSMs can outlive their pipeline strobes.
+    assign norm_pipeline_idle = (instr_de == 0 && instr_em == 0 &&
+        instr_mw == 0 && instr_wb == 0) && !register_stream_busy && !memory_busy &&
+        !tmatmul_assert && !tmatmul_start;
+    norm_dispatch #(.LUT_FILE(NORM_LUT_FILE)) norm_dispatch_inst (
+        .clk(clk), .rst_n(rst_n), .instruction(instr_fd), .instruction_pc(pc),
+        .pipeline_idle(norm_pipeline_idle), .hold_front(norm_hold),
+        .advance_pc(norm_advance), .own_register(norm_own),
+        .read_address(norm_read_address), .write_address(norm_write_address),
+        .read_data(norm_read_data), .write_data(norm_write_data),
+        .write_enable(norm_write), .done(norm_done), .overflow(norm_overflow),
+        .active_instruction(norm_instruction), .active_pc(norm_pc)
     );
 
     de_reg de_reg_inst (
@@ -137,8 +168,9 @@ module matmulfree(
         .carry_out(carry), .overflow(overflow), .select(alu_op_em)
     );
 
-    assign overflow_out = overflow;
-    assign carry_out = carry;
+    assign overflow_out = (norm_own || norm_done) ? norm_overflow :
+                          (tmatmul_assert ? tmatmul_overflow : overflow);
+    assign carry_out = (norm_own || norm_done) ? 1'b0 : carry;
     
     always_comb begin
         alu_out_em = {alu_out_array[31], alu_out_array[30], alu_out_array[29], alu_out_array[28], alu_out_array[27], alu_out_array[26],
@@ -186,7 +218,7 @@ module matmulfree(
             mem_r_addr_1_reg <= 3'b0;
             mem_w_addr_reg <= 3'b0;
         end
-        else begin 
+        else if (!tmatmul_assert) begin
             mem_wr_en_em_reg <= mem_wr_en_em;
             mem_rd_en_em_0_reg <= mem_rd_en_em_0;
             mem_rd_en_em_1_reg <= mem_rd_en_em_1;
@@ -211,7 +243,7 @@ module matmulfree(
     always_comb begin
         case (tmatmul_state)
             IDLE: next_tmatmul_state = (instr_em[12-:4] == TMATMUL) ? RUN : IDLE;
-            RUN:  next_tmatmul_state = (tmatmul_write) ? IDLE : RUN;
+            RUN:  next_tmatmul_state = (tmatmul_done) ? IDLE : RUN;
             default: next_tmatmul_state = IDLE;
         endcase
     end
@@ -219,6 +251,7 @@ module matmulfree(
     always_comb begin
         tmatmul_assert = (tmatmul_state == RUN);
     end
+    assign tmatmul_start = (tmatmul_state == IDLE) && (instr_em[12-:4] == TMATMUL);
 
     // always_ff @(posedge clk or negedge rst_n) begin
     //     if (!rst_n) begin
@@ -268,6 +301,10 @@ module matmulfree(
         // .r_addr_0(instr_mw[2:0]), .r_addr_1(instr_mw[5:3]), .w_addr(instr_mw[8:6]),
         // .w_en(mem_wr_en_mw), .rd_en_0(mem_rd_en_mw_0), .rd_en_1(mem_rd_en_mw_1),
         .read_finish(read_finish), .write_finish(write_finish), .fifo_1_empty(fifo_1_empty),
+        .matrix_ready(matrix_ready), .ternary_ready(ternary_ready),
+        .matrix_valid(matrix_valid), .ternary_valid(ternary_valid), .tmatmul_ready(tmatmul_ready),
+        .transaction_busy(memory_busy),
+        .almost_full(), .almost_empty(),
         .data_out_0(mem_out_0_mw), .data_out_1(mem_out_1_mw)
     );
 
@@ -287,11 +324,13 @@ module matmulfree(
     ternary_mul ternary_mul(
         .clk(clk),
         .rst_n(rst_n),
-		.enable(tmatmul_assert),
-        .matrix_in(mem_out_0_mw),
-        .ternary_matrix(mem_out_1_mw),
+        .enable(tmatmul_start),
+        .matrix_in(mem_out_1_mw),
+        .ternary_matrix(mem_out_0_mw),
         .matrix_out(result),
-        .read_finish(read_finish),
+        .matrix_valid(matrix_valid), .ternary_valid(ternary_valid),
+        .matrix_ready(matrix_ready), .ternary_ready(ternary_ready),
+        .output_ready(tmatmul_ready), .busy(), .done(tmatmul_done), .overflow(tmatmul_overflow),
         .tmatmul_write(tmatmul_write)
     );
     
@@ -302,12 +341,14 @@ module matmulfree(
         .alu_out_mw(alu_out_mw), .wb_sel_mw(wb_sel_mw), .pc_mw(pc_mw),
         .reg_wr_en_mw(reg_wr_en_mw), .instr_wb(instr_wb),
         .mem_out_wb_0(mem_out_wb), .alu_out_wb(alu_out_wb),
-        .wb_sel_wb(wb_sel_wb), .reg_wr_en_wb(reg_wr_en_wb), .pc_wb(pc_debug)
+        .wb_sel_wb(wb_sel_wb), .reg_wr_en_wb(reg_wr_en_wb), .pc_wb(pc_wb)
     );
 
     assign wb_data = wb_sel_wb ? mem_out_wb : alu_out_wb;
-    assign ready = &instr_wb;
-    assign instr_debug = instr_wb;
+    assign ready = (&instr_wb) && !tmatmul_assert && !tmatmul_start && !norm_hold &&
+                   !register_stream_busy && !memory_busy;
+    assign instr_debug = (norm_own || norm_done) ? norm_instruction : instr_wb;
+    assign pc_debug = (norm_own || norm_done) ? norm_pc : pc_wb;
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             mem_out_1_debug <= '0;

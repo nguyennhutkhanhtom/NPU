@@ -35,7 +35,7 @@ module rowwise_op #(
             addsub rowwise_addsub (
                 .a(a[i]),
                 .b(b[i]),
-                .select(select[0]),
+                .select(select == SUB),
                 .sum(sum[i]),
                 .cout(cout[i]),
                 .overflow(v_flag[i])
@@ -44,11 +44,11 @@ module rowwise_op #(
     endgenerate
 
     logic add_overflow;
-    assign carry_out = |cout & !(select[2] ^ select[1]);
-    assign add_overflow = |v_flag & !(select[2] ^ select[1]);
+    assign carry_out = (select == ADD || select == SUB) && (|cout);
+    assign add_overflow = (select == ADD || select == SUB) && (|v_flag);
 
     logic [DATA_WIDTH-1:0] mul_out [31:0];
-    logic [31:0] mul_overflow;
+    logic mul_overflow;
     mul mul (
         .a(a),
         .b(b),
@@ -74,7 +74,7 @@ module rowwise_op #(
         end
     endgenerate
 
-    assign overflow = add_overflow | (|mul_overflow);
+    assign overflow = add_overflow | ((select == MUL) && mul_overflow);
 
     always_comb begin
         case(select)
@@ -84,6 +84,8 @@ module rowwise_op #(
             DIV: alu_out = div_out;
             EXP: alu_out = exp_out;
             SIG: alu_out = sig_out;
+            // NORM is multicycle and is dispatched by matmulfree before decode.
+            // It cannot return a combinational result through this ALU.
             default: begin
                 for (int i = 0; i < 32; i = i + 1) begin
                     alu_out[i] = 16'b0;

@@ -1,0 +1,8 @@
+warning: in the working copy of 'Verilog Source code/acc_mul.sv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Verilog Source code/hazard_detect.sv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Verilog Source code/matmulfree.sv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Verilog Source code/mem_mapping.sv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Verilog Source code/norm.sv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Verilog Source code/regfile.sv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Verilog Source code/rowwise_op.sv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Verilog Source code/ternary_mul.sv', LF will be replaced by CRLF the next time Git touches it

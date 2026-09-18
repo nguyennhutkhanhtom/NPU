@@ -12,7 +12,13 @@ module register #(
     output logic full, empty,
     output logic [DATA_WIDTH*32-1:0] data_out_0,
     output logic [DATA_WIDTH*32-1:0] data_out_1,
-    output logic almost_full, almost_empty
+    output logic almost_full, almost_empty,
+    // Exclusive word access for NORM, granted only after streaming ports drain.
+    input tri0 norm_access, norm_write,
+    input logic [$clog2(MEM_DEPTH)-1:0] norm_read_address, norm_write_address,
+    input logic [DATA_WIDTH*32-1:0] norm_write_data,
+    output wire [DATA_WIDTH*32-1:0] norm_read_data,
+    output wire stream_busy, stream_read_last
 );
 
     // Internal parameters and signals
@@ -31,6 +37,10 @@ module register #(
 
     logic [1:0] state_read, next_state_read;
     parameter IDLE_READ = 2'b00, FETCH_READ= 2'b01, RUN_READ = 2'b10;
+
+    assign stream_busy = (state_read != IDLE_READ) || (state_write != IDLE_WRITE);
+    assign stream_read_last = (state_read == RUN_READ) && fifo_empty_0;
+    assign norm_read_data = data_out_0;
 
     always_comb begin: read_0_decode
         case(r_addr_0)
@@ -109,7 +119,7 @@ module register #(
     always_comb begin
         case(state_read)
             IDLE_READ: begin
-                if(rd_en)
+                if(rd_en && !norm_access)
                     next_state_read = FETCH_READ;
                 else
                     next_state_read = IDLE_READ;
@@ -141,7 +151,7 @@ module register #(
     always_comb begin
         case(state_write)
             IDLE_WRITE: begin
-                if(w_en)
+                if(w_en && !norm_access)
                     next_state_write = FETCH_WRITE;
                 else
                     next_state_write = IDLE_WRITE;
@@ -172,7 +182,9 @@ module register #(
     end
 
     always_ff @(posedge clk) begin
-        if (state_write == RUN_WRITE) begin
+        if (rst_n && norm_access && norm_write)
+            mem[norm_write_address] <= norm_write_data;
+        else if (state_write == RUN_WRITE) begin
             mem[w_ptr] <= data_in;
         end
     end
@@ -194,7 +206,7 @@ module register #(
     end
 
     assign r_ptr_0_next = r_ptr_0 + 3'b01;
-    assign data_out_0 = mem[r_ptr_0];
+    assign data_out_0 = mem[norm_access ? norm_read_address : r_ptr_0];
 
     // Read logic for port 1
     always_ff @(posedge clk or negedge reset_ptr_read) begin

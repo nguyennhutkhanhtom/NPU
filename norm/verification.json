@@ -1,0 +1,85 @@
+{
+  "status": "PASS",
+  "utc": "2026-09-18T08:17:48.7965350Z",
+  "tests": {
+    "rom": {
+      "status": "PASS",
+      "marker": "# NORM_ROM_PASS inputs=65536 entries=1024 hold_checks=65536",
+      "log": "sim/rom.log"
+    },
+    "unit": {
+      "status": "PASS",
+      "marker": "# NORM_UNIT_PASS vectors=3797 lanes=121504 reset_phases=2 busy_start=ignored",
+      "log": "sim/unit.log"
+    },
+    "core": {
+      "status": "PASS",
+      "marker": "# NORM_CORE_PASS instructions=5 writes=80 in_place=1 consecutive=1 add_dependency=1 reset=1 tm_frames=0 cycles=440",
+      "log": "sim/core.log"
+    },
+    "core-tmatmul": {
+      "status": "PASS",
+      "marker": "# NORM_CORE_PASS instructions=5 writes=80 in_place=1 consecutive=1 add_dependency=1 reset=0 tm_frames=2 cycles=23075",
+      "log": "sim/core-tmatmul.log"
+    },
+    "memory": {
+      "status": "PASS",
+      "marker": "# NORM_MEMORY_PASS load_norm_store_reload_norm=1 writes=32 cycles=229",
+      "log": "sim/memory.log"
+    },
+    "legacy-tmatmul": {
+      "status": "PASS",
+      "marker": "# CORE_PASS frames=3 writes=48 back_to_back=1 in_place=1 halt_drained=1 cycles=33919",
+      "log": "sim/legacy-tmatmul.log"
+    },
+    "legacy-rowwise": {
+      "status": "PASS",
+      "marker": "# ROWWISE_PASS lane_checks=1307712 flag_checks=40880",
+      "log": "sim/legacy-rowwise.log"
+    },
+    "missing-lut": {
+      "status": "PASS",
+      "scope": "Expected fatal for missing ROM file"
+    }
+  },
+  "sources": {
+    "Verilog Source code/acc_mul.sv": "5911db933021586df97fb37e0be5777ca2e8c863785454b3a83bc2879f0fceaa",
+    "Verilog Source code/addsub.sv": "b3e4afd6b8ed1bd1fdc55d8cb0da170bff65be5f94b08ad5c14ac13fe4716244",
+    "Verilog Source code/ctrl_unit.sv": "ac2fb22eef4e8da2ec3d4b20b3be387d2a1c6e89f60f519c81c1bb811aff5af8",
+    "Verilog Source code/de_reg.sv": "249dd96e1de6800ff38446b21c852eb7e831c1e47194f23b4562483d00f8b773",
+    "Verilog Source code/div.sv": "094c8b089137806e0edbfacee3d4b862de7bb3a7cb2ca05d05cbc1258669862b",
+    "Verilog Source code/em_reg.sv": "c5d01508545ad45241a780ddfba698ec6cde5a532123b730c956f33ade4edae2",
+    "Verilog Source code/exp.sv": "e0db31f19c9079f56294fbf121ee5e860aafee20a4a01af3f89d616451c8ded8",
+    "Verilog Source code/fd_reg.sv": "10427cee438a20d85ea6a6cef735779141098d7a854ac7e241b9cb207a65efd8",
+    "Verilog Source code/hazard_detect.sv": "39dd788b7e3805db5424574e8dd96fb2ac9a07ec038a8bdbd029e135dadd66e5",
+    "Verilog Source code/ins_mem.sv": "ab5216c42da2321f939cea478d4b78929b976f31b585d07fb0ec7f9a937392ad",
+    "Verilog Source code/lut_interp.sv": "23ba1b9829737350e66f68215c42c0cc18245fba92b8223e8cb4ce6eec9ac8c7",
+    "Verilog Source code/matmul_wrap.sv": "f09fa3d3088cd3727b10495c800693122c97275155dc8e7f16108556376ae513",
+    "Verilog Source code/matmulfree.sv": "4c114e9b33e01e2e445d4a0ad41b746b37825bfcddad51ef744a51057468f607",
+    "Verilog Source code/mem_burst.v": "27393ec63f14bb6514a389d796b9bd96c942c82dd70304de80c85db0147383dd",
+    "Verilog Source code/mem_mapping.sv": "0f03e8c0a9b9058f70b3a6866630cb40ce3da379938833de98371bfc16df6081",
+    "Verilog Source code/mul.sv": "931bc8aff861f4995e69585a2fbe4e51b7439fafb48bcad6e8d283851efa81c3",
+    "Verilog Source code/mw_reg.sv": "1291807727b0f1298dfdb7b7e7a8a24a613f13d84f309c7fb013f4342e6f61d1",
+    "Verilog Source code/nonlinear_dispatch.sv": "34f1c1e7a206a1e7ef03c9979b16323e3b7f6d80ecc65dea8a24a8e6c8e1b906",
+    "Verilog Source code/nonlinear_luts.sv": "723c945e91be67d4971c080c56a34f28fd6f8db2c641187e666c7317eba2bb4d",
+    "Verilog Source code/norm_dispatch.sv": "c39effdad8e38a5d7e66b9f7efdda6517ca40748f0b3dde84629a8c69d7dff00",
+    "Verilog Source code/norm.sv": "ff7bbadda4aa1602a08f41bdc391e677d0eb52ddf23e1f49d7c970ce0a469072",
+    "Verilog Source code/PC.sv": "898db095a24a62d4b89c4999e2a258d0f4ec3b4dde0e1b487a0e04e78f9734a7",
+    "Verilog Source code/regfile.sv": "6d3645501afa59de77a17186a6ac95c31f0db99f8d8549ed11bb859d8531ae65",
+    "Verilog Source code/rowwise_op.sv": "2b34377376d3c605eca1a8211e97771354331061dd253fe92d1449daf1176efe",
+    "Verilog Source code/serial_unsigned_mul.sv": "e4569537592c32c078fc99f927eb883de298b05035fd41bf08b63d7cb701d857",
+    "Verilog Source code/sigmoid.sv": "ffbde81581f5f89ba08b97a75fa268d17ee6ea5677e0d0cd9e492e621980f88d",
+    "Verilog Source code/ternary_mul.sv": "061a80482e90195f1b098cf6c00daecac2ccb8d4fcd4e7d42e0832a94b6adaf7",
+    "norm/tests/tb_norm_core.sv": "a5a6fffd5b2cbe295b83e479d66897678730e463ff3fb948e3b23da4f14e0b4d",
+    "norm/tests/tb_norm_memory.sv": "6a171f1e603e34d0f7b71ecff9c5f465da11e75e6115290937c10e5367fc3a11",
+    "norm/tests/tb_norm_unit.sv": "fb106a864def94e968b4b5f2ebd1a6701d709d856e4fc16254a880dabe4a9058",
+    "tmatmul/sim/tb_core.sv": "e436fee94f81066412ce48dc171a94aa488bb07b2949a4f01f86b388b763b046",
+    "review/addsub_20260917/tb_rowwise.sv": "2caa8a5a65fc9505d346d0099954fc93a40a452a5f919d00e33b1cfe2a3cfda6",
+    "norm/run.ps1": "18c7776713f23526e8543e2977477db796095a434f7df2c68486423e38a6a874",
+    "norm/generate_tests.py": "624d13786fed48c3ff33d840d65f201fe7d2256842989ca34f7dd596def89e0f",
+    "python/generate_norm_lut.py": "95a9603947038e24f1cd35b7271d8fd673ac140517e0e733d92e4956b54db5d5",
+    "data/normContent.mif": "09aaf03d67306b8e763c54da48e6d536248992779226d93af07d8617382c3a36"
+  },
+  "scope": "32-lane Q4.12 RMSNorm, per-word ISA integration, ModelSim RTL simulation",
+  "synthesis_run": false
+}

@@ -1,0 +1,10 @@
+sim/work/
+sim/before_work/
+sim/.run.lock
+sim/*.console
+sim/*.hex
+sim/*.mif
+sim/*.mem
+sim/data/
+sim/fixtures.svh
+sim/trace*

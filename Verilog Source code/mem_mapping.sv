@@ -1,6 +1,7 @@
 module mem_mapping #(
     parameter DATA_WIDTH = 16,
-    parameter MEM_DEPTH  = 2**19
+    parameter MEM_DEPTH  = 2**19,
+    parameter INIT_FILE = "mem_init.mem"
 )(
     input  logic                           clk, rst_n,
     input  logic [DATA_WIDTH*32-1:0]         data_in,
@@ -11,7 +12,10 @@ module mem_mapping #(
     output logic                           read_finish, write_finish, fifo_1_empty,
     output logic [DATA_WIDTH*32-1:0]         data_out_0,
     output logic [DATA_WIDTH*32-1:0]         data_out_1,
-    output logic                           almost_full, almost_empty
+    output logic                           almost_full, almost_empty,
+    input logic                            matrix_ready, ternary_ready,
+    output logic                           matrix_valid, ternary_valid, tmatmul_ready,
+    output wire                            transaction_busy
 );
 
     //----------------------------------------------------------
@@ -19,7 +23,99 @@ module mem_mapping #(
     //----------------------------------------------------------
     // Memory array initialization
     logic [DATA_WIDTH*32-1:0] mem [0:MEM_DEPTH-1];
-    initial $readmemh("mem_init.mem", mem);
+    // synthesis translate_off
+    initial begin
+        if (INIT_FILE != "") $readmemh(INIT_FILE, mem);
+    end
+    // synthesis translate_on
+
+    // TMATMUL owns the memory ports for one complete transaction. Port 0
+    // streams row-major weights; port 1 streams the activation vector.
+    // The independent read buffers retain data through engine backpressure.
+    localparam int TM_MATRIX_WORDS = (512*512 + DATA_WIDTH*16-1)/(DATA_WIDTH*16);
+    localparam int TM_PTR_WIDTH = (MEM_DEPTH > 1) ? $clog2(MEM_DEPTH) : 1;
+    localparam int TM_COUNT_WIDTH = $clog2(TM_MATRIX_WORDS+1);
+    logic tm_active, tm_seen, tm_read_finish, tm_write_finish;
+    logic [TM_PTR_WIDTH-1:0] tm_weight_ptr, tm_matrix_ptr, tm_write_ptr;
+    logic [TM_COUNT_WIDTH-1:0] tm_weight_count;
+    logic [4:0] tm_matrix_count, tm_write_count;
+    logic [DATA_WIDTH*32-1:0] tm_weights, tm_matrix;
+
+    assign tmatmul_ready = tm_active && tm_write_count < 16;
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            tm_active <= 1'b0;
+            tm_seen <= 1'b0;
+            tm_read_finish <= 1'b0;
+            tm_write_finish <= 1'b0;
+            ternary_valid <= 1'b0;
+            matrix_valid <= 1'b0;
+            tm_weight_ptr <= '0;
+            tm_matrix_ptr <= '0;
+            tm_write_ptr <= '0;
+            tm_weight_count <= '0;
+            tm_matrix_count <= '0;
+            tm_write_count <= '0;
+        end
+        else begin
+            tm_write_finish <= 1'b0;
+            if (!rd_type) tm_seen <= 1'b0;
+            if (rd_type && !tm_seen) begin
+                tm_active <= 1'b1;
+                tm_seen <= 1'b1;
+                tm_read_finish <= 1'b0;
+                ternary_valid <= 1'b0;
+                matrix_valid <= 1'b0;
+                tm_weight_ptr <= TM_PTR_WIDTH'(1024 + int'(r_addr_0)*TM_MATRIX_WORDS);
+                tm_matrix_ptr <= TM_PTR_WIDTH'(int'(r_addr_1)*16);
+                tm_write_ptr <= TM_PTR_WIDTH'(int'(w_addr)*16);
+                tm_weight_count <= '0;
+                tm_matrix_count <= '0;
+                tm_write_count <= '0;
+            end
+            else if (tm_active) begin
+                if (!ternary_valid || ternary_ready) begin
+                    ternary_valid <= tm_weight_count < TM_MATRIX_WORDS;
+                    if (tm_weight_count < TM_MATRIX_WORDS) begin
+                        tm_weight_ptr <= tm_weight_ptr + 1'b1;
+                        tm_weight_count <= tm_weight_count + 1'b1;
+                    end
+                end
+                if (!matrix_valid || matrix_ready) begin
+                    matrix_valid <= tm_matrix_count < 16;
+                    if (tm_matrix_count < 16) begin
+                        tm_matrix_ptr <= tm_matrix_ptr + 1'b1;
+                        tm_matrix_count <= tm_matrix_count + 1'b1;
+                    end
+                end
+                if (tm_weight_count == TM_MATRIX_WORDS && (!ternary_valid || ternary_ready) &&
+                    tm_matrix_count == 16 && (!matrix_valid || matrix_ready))
+                    tm_read_finish <= 1'b1;
+                if (tmatmul_write && tmatmul_ready) begin
+                    tm_write_ptr <= tm_write_ptr + 1'b1;
+                    tm_write_count <= tm_write_count + 1'b1;
+                    if (tm_write_count == 15) begin
+                        tm_active <= 1'b0;
+                        tm_write_finish <= 1'b1;
+                    end
+                end
+            end
+        end
+    end
+    always_ff @(posedge clk) begin
+        if (tm_active && (!ternary_valid || ternary_ready) && tm_weight_count < TM_MATRIX_WORDS)
+            tm_weights <= mem[tm_weight_ptr];
+        if (tm_active && (!matrix_valid || matrix_ready) && tm_matrix_count < 16)
+            tm_matrix <= mem[tm_matrix_ptr];
+    end
+
+    // synthesis translate_off
+    always @(posedge clk) begin
+        if (rst_n && rd_type && !tm_seen &&
+            (1024 + (int'(r_addr_0)+1)*TM_MATRIX_WORDS > MEM_DEPTH || DATA_WIDTH < 1))
+            $fatal(1, "TMATMUL memory range exceeds MEM_DEPTH");
+    end
+    // synthesis translate_on
 
     // Pointer declarations
     logic [18:0] w_ptr, r_ptr_0, r_ptr_1;
@@ -128,6 +224,8 @@ module mem_mapping #(
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             state_read <= IDLE_READ;
+        else if (rd_type)
+            state_read <= IDLE_READ;
         else
             state_read <= next_state_read;
     end
@@ -146,11 +244,15 @@ module mem_mapping #(
                FETCH_WRITE = 2'b01,
                RUN_WRITE   = 2'b10;
     logic [1:0] state_write, next_state_write;
+    assign transaction_busy = tm_active || (state_read != IDLE_READ) ||
+                              (state_write != IDLE_WRITE);
     assign reset_ptr_write = (state_write == IDLE_WRITE) ? 1'b0 : 1'b1;
 
     // WRITE state machine
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
+            state_write <= IDLE_WRITE;
+        else if (rd_type)
             state_write <= IDLE_WRITE;
         else
             state_write <= next_state_write;
@@ -202,7 +304,11 @@ module mem_mapping #(
 
     // Write data into memory
     always_ff @(posedge clk) begin
-        if (w_en && !fifo_full && (state_write == RUN_WRITE))
+        if (rst_n && tmatmul_write && tmatmul_ready)
+            mem[tm_write_ptr] <= data_in;
+        // RUN_WRITE includes the final word at w_ptr_end. The FSM exits on
+        // this edge; excluding fifo_full here silently loses stored lane 480+.
+        else if (!rd_type && !tm_active && w_en && (state_write == RUN_WRITE))
             mem[w_ptr] <= data_in;
     end
 
@@ -221,7 +327,7 @@ module mem_mapping #(
     end
 
     assign r_ptr_0_next = r_ptr_0 + 3'b01;
-    assign data_out_0   = mem[r_ptr_0];
+    assign data_out_0   = rd_type ? tm_weights : mem[r_ptr_0];
 
     // Read port 1: Pointer update and output assignment
     always_ff @(posedge clk or negedge reset_ptr_read) begin
@@ -234,7 +340,7 @@ module mem_mapping #(
     end
 
     assign r_ptr_1_next = r_ptr_1 + 3'b01;
-    assign data_out_1   = mem[r_ptr_1];
+    assign data_out_1   = rd_type ? tm_matrix : mem[r_ptr_1];
 
 
     //----------------------------------------------------------
@@ -256,7 +362,7 @@ module mem_mapping #(
     end
 
     // Read and write finish flags
-    assign read_finish  = fifo_empty_0;
-    assign write_finish = fifo_full;
+    assign read_finish  = rd_type ? tm_read_finish : fifo_empty_0;
+    assign write_finish = rd_type ? tm_write_finish : fifo_full;
 
 endmodule

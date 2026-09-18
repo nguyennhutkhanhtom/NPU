@@ -1,0 +1,12 @@
+# vsim -c -onfinish exit -l unit.log work.tb_norm_unit -do "run -all; quit -f" 
+# Start time: 15:17:24 on Sep 18,2026
+# Loading sv_std.std
+# Loading work.tb_norm_unit
+# Loading work.norm
+# Loading work.Norm_Square_ROM
+# run -all
+# NORM_UNIT_PASS vectors=3797 lanes=121504 reset_phases=2 busy_start=ignored
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/norm/tests/tb_norm_unit.sv(68)
+#    Time: 114116 ns  Iteration: 0  Instance: /tb_norm_unit
+# End time: 15:17:25 on Sep 18,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
