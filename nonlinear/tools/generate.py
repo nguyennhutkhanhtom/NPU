@@ -50,7 +50,6 @@ for a,c in [(7,12),(9,18)]:
         lines += [f"{a}'d{i}: lookup={{{c+1}'d{v},{c+1}'d{v-n}}};"]
     lines += ["default: lookup='0;",'endcase','endfunction','assign {base,delta}=lookup(addr);','end']
 lines += ['endgenerate','endmodule','']
-(ROOT/'Verilog Source code/nonlinear_luts.sv').write_text('\n'.join(lines),encoding='utf-8')
 def norm_model(v,w,a,c,ib,eps=1):
     f=w-4;mean=sum(x*x for x in v)//len(v)+eps;k=(mean.bit_length()-1)//2
     scaled=(mean<<(a-2+ib))>>(2*k);addr=scaled>>ib;frac=scaled&((1<<ib)-1)

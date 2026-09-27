@@ -1,0 +1,23 @@
+# Select control/commit signals only; do not log the large memory arrays.
+log sim:/tb_parallel/clk
+log sim:/tb_parallel/rst_n
+log sim:/tb_parallel/ready
+log sim:/tb_parallel/overlap_words
+log sim:/tb_parallel/dut/pc
+log sim:/tb_parallel/dut/instr_fd
+log sim:/tb_parallel/dut/instr_de
+log sim:/tb_parallel/dut/instr_em
+log sim:/tb_parallel/dut/instr_mw
+log sim:/tb_parallel/dut/instr_wb
+log sim:/tb_parallel/dut/tmatmul_start
+log sim:/tb_parallel/dut/tmatmul_assert
+log sim:/tb_parallel/dut/tmatmul_done
+log sim:/tb_parallel/dut/read_finish
+log sim:/tb_parallel/dut/tmatmul_write
+log sim:/tb_parallel/dut/tmatmul_ready
+log sim:/tb_parallel/dut/decode_bubble
+log sim:/tb_parallel/dut/reg_wr_en_wb
+log sim:/tb_parallel/dut/wb_data
+log sim:/tb_parallel/dut/result
+log sim:/tb_parallel/dut/register_inst/state_write
+log sim:/tb_parallel/dut/register_inst/w_ptr

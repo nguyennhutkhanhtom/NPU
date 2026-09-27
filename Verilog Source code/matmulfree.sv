@@ -1,5 +1,5 @@
 module matmulfree #(
-    parameter NORM_LUT_FILE = "data/normContent.mif"
+    parameter NORM_LUT_FILE = "normContent.mif"
 ) (
     input  logic rst_n, clk,
     output logic ready, overflow_out, carry_out,
@@ -41,20 +41,20 @@ module matmulfree #(
     // Program Counter and Hazard Detection
     logic [8:0] pc, pc_de;
     logic empty, full, almost_empty, almost_full;
-    logic flush_wb;
+    logic flush_wb, decode_bubble;
 	
     hazard_detect hazard_detect_inst (
         .clk(clk), .rst_n(rst_n),
         .instr_fd(instr_fd), .instr_de(instr_de), .instr_em(instr_em), .instr_mw(instr_mw), 
         .almost_empty(almost_empty), .almost_full(almost_full), .read_finish(read_finish), .write_finish(write_finish),
         .empty(empty), .full(full),
-        .tmatmul_assert(tmatmul_assert),
+        .tmatmul_assert(tmatmul_assert || tmatmul_start),
         .rd_en(reg_rd_en_de), .wr_en(reg_wr_en_de),
         .register_read_last(register_read_last),
         .transactions_busy(register_stream_busy || memory_busy || tmatmul_assert),
         .em_stall(em_stall), .mw_stall(mw_stall), .fd_stall(fd_stall),
         .de_stall(de_stall), .pc_stall(pc_stall),
-        .flush_wb(flush_wb)
+        .flush_wb(flush_wb), .decode_bubble(decode_bubble)
     );
 
     PC PC(
@@ -101,7 +101,8 @@ module matmulfree #(
     register register_inst (
         .clk(clk), .rst_n(rst_n), .data_in(wb_data), 
         .r_addr_0(instr_de[2:0]), .r_addr_1(instr_de[5:3]),
-        .w_addr(instr_wb[8:6]), .w_en(reg_wr_en_wb), .rd_en(reg_rd_en_de),
+        .w_addr(instr_wb[8:6]), .w_en(reg_wr_en_wb),
+        .rd_en(reg_rd_en_de && !decode_bubble),
         .full(full), .empty(empty), .almost_full(almost_full), .almost_empty(almost_empty),
         .data_out_0(reg_out_0_de), .data_out_1(reg_out_1_de),
         .norm_access(norm_own), .norm_write(norm_write),
@@ -127,10 +128,14 @@ module matmulfree #(
 
     de_reg de_reg_inst (
         .clk(clk), .rst_n(rst_n), .enable(de_stall),
-        .instr_de(instr_de), .reg_out_0_de(reg_out_0_de), .reg_out_1_de(reg_out_1_de),
-        .reg_wr_en_de(reg_wr_en_de), .mem_wr_en_de(mem_wr_en_de),
-        .mem_rd_en_de_0(mem_rd_en_de_0), .mem_rd_en_de_1(mem_rd_en_de_1),
-        .alu_op_de(alu_op_de), .wb_sel_de(wb_sel_de), .pc_de(pc_de),
+        .instr_de(decode_bubble ? 13'b0 : instr_de),
+        .reg_out_0_de(reg_out_0_de), .reg_out_1_de(reg_out_1_de),
+        .reg_wr_en_de(reg_wr_en_de && !decode_bubble),
+        .mem_wr_en_de(mem_wr_en_de && !decode_bubble),
+        .mem_rd_en_de_0(mem_rd_en_de_0 && !decode_bubble),
+        .mem_rd_en_de_1(mem_rd_en_de_1 && !decode_bubble),
+        .alu_op_de(decode_bubble ? 3'b0 : alu_op_de),
+        .wb_sel_de(wb_sel_de), .pc_de(pc_de),
         .instr_em(instr_em), .reg_out_0_em(reg_out_0_em), .reg_out_1_em(reg_out_1_em),
         .reg_wr_en_em(reg_wr_en_em), .mem_wr_en_em(mem_wr_en_em),
         .mem_rd_en_em_0(mem_rd_en_em_0), .mem_rd_en_em_1(mem_rd_en_em_1),

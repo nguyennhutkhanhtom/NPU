@@ -55,7 +55,7 @@ The `acc_mul` input array remains descending. Its defaults are DATA_WIDTH=16, NU
 
 ## Processor/memory integration
 
-`mem_mapping.sv` adds a dedicated TMATMUL transaction path with independently buffered, synchronous reads and accepted-beat counters. It latches the matrix, activation and destination selectors, handles the final read/write beats, and does not restart a held request. The processor retains the following instruction until the final result is accepted, including back-to-back TMATMUL and HALT.
+`mem_mapping.sv` adds a dedicated TMATMUL transaction path with independently buffered, synchronous reads and accepted-beat counters. It latches the matrix, activation and destination selectors, handles the final read/write beats, and does not restart a held request. The processor now allows register-only ALU instructions to run while TMATMUL owns memory. LDV/STV, another TMATMUL and HALT wait at decode until the complete TM transaction finishes; older ALU operations drain through writeback. NORM retains its existing drain barrier. See `../parallel/README.md` and `../parallel/run.ps1` for the overlap regression and recorded waveforms.
 
 For TMATMUL, instruction `[2:0]` selects weights, `[5:3]` selects the activation vector, and `[8:6]` selects the destination. Activations and destinations occupy vector bank 0, starting at `selector*16`. Matrix storage starts at `1024 + selector*MATRIX_WORDS`, avoiding vector/matrix overlap. A 16-bit full matrix uses 1024 words, an 8-bit matrix uses 2048 words; memory images using the original overlapping addresses must be relocated. `mem_mapping` port 0 supplies weights, port 1 supplies activations.
 

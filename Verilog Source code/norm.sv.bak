@@ -31,7 +31,7 @@
  * The sign-bit flip is equivalent to the original +/- 512 remapping.
  * ------------------------------------------------------------------------- */
 module Norm_Square_ROM #(
-    parameter LUT_FILE = "normContent.mif"
+    parameter LUT_FILE = "data/normContent.mif"
 ) (
     input  logic        clk,
     input  logic        en,
@@ -90,7 +90,7 @@ endmodule
  * done pulses for one cycle when out[] is updated.
  * ------------------------------------------------------------------------- */
 module norm #(
-    parameter LUT_FILE = "normContent.mif"
+    parameter LUT_FILE = "data/normContent.mif"
 ) (
     input  logic        clk,
     input  logic        rst_n,
