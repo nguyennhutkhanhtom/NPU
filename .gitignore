@@ -1,0 +1,12 @@
+# Local-only folders. Keep their contents on this computer, not in GitHub.
+/data/
+/functional/
+/nonlinear/
+/norm/
+/parallel/
+/python/
+/research/
+/review/
+/scale/
+/tmatmul/
+/work/

@@ -1,9 +1,0 @@
-Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
-Start time: 17:18:57 on Sep 16,2026
-vlog -sv -work param tb_top.sv tb_replay.sv tb_scaled_alu.sv 
--- Compiling module tb_top
-** Error (suppressible): tb_top.sv(17): (vlog-2388) 'instr' already declared in this scope (tb_top) at tb_top.sv(15).
--- Compiling module tb_replay
--- Compiling module tb_scaled_alu
-End time: 17:18:57 on Sep 16,2026, Elapsed time: 0:00:00
-Errors: 1, Warnings: 0
