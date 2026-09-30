@@ -1,20 +1,17 @@
-module addsub #(
-    parameter int DATA_WIDTH = 16
-)(
-    input  logic [DATA_WIDTH-1:0] a,
-    input  logic [DATA_WIDTH-1:0] b,
-    input  logic                  select,
-    output logic                  cout,
-    output logic                  overflow,
-    output logic [DATA_WIDTH-1:0] sum
+module addsub (
+    input logic signed [15:0] a,
+    input logic signed [15:0] b,
+    input logic sub,
+    output logic signed [16:0] wide,
+    output logic signed [15:0] result,
+    output logic overflow
 );
-
-    logic c;
-
-    assign {c, sum} = {1'b0, a} + {1'b0, (b ^ {DATA_WIDTH{select}})} + select;
-
-    assign cout = c ^ select;
-
-    assign overflow = (a[DATA_WIDTH-1] ^ sum[DATA_WIDTH-1]) & ~(a[DATA_WIDTH-1] ^ b[DATA_WIDTH-1] ^ select);
-
+    import npu_pkg::*;
+    logic signed [16:0] b_ext;
+    always_comb begin
+        b_ext = {b[15], b};
+        wide = {a[15], a} + (sub ? - b_ext : b_ext);
+        overflow = wide[16] ^ wide[15];
+        result = sat_s16({{47{wide[16]}}, wide});
+    end
 endmodule

@@ -1,353 +1,532 @@
-/*
- * RMSNorm unit for the project's 16-bit signed Q4.12 datapath.
- *
- * Paper-oriented implementation:
- *   Stage 1: latch the original 32-element vector and square every element
- *            with a lookup table.
- *   Stage 2: reduce the squared values with a balanced divide-and-conquer
- *            averaging tree and calculate RMS.
- *   Stage 3: divide every original element by the RMS.
- *
- * External format:
- *   x[i]   : signed Q4.12, 16 bits
- *   out[i] : signed Q4.12, 16 bits
- *
- * Square LUT:
- *   input  : signed Q4.6, x[i][15:6], 10 bits
- *   output : unsigned fixed point, 19 bits, 12 fractional bits
- *
- * IMPORTANT:
- *   normContent.mif must contain 1024 lines of 19-bit binary data generated
- *   by generate_norm_lut.py.
- */
-
-
-/* -------------------------------------------------------------------------
- * Square ROM
- *
- * This has the same address-remapping idea as Sig_ROM:
- *   signed Q4.6 -> offset ROM address 0..1023
- *
- * The sign-bit flip is equivalent to the original +/- 512 remapping.
- * ------------------------------------------------------------------------- */
-module Norm_Square_ROM #(
-    parameter LUT_FILE = "normContent.mif"
-) (
-    input  logic        clk,
-    input  logic        en,
-    input  logic [15:0] x,       // signed Q4.12
-    output logic [18:0] out      // unsigned, 12 fractional bits
+module isqrt_u64 (
+    input logic clk,
+    input logic rst_n,
+    input logic start,
+    input logic [63:0] radicand,
+    output logic busy,
+    output logic done,
+    output logic [31:0] root
 );
-
-    logic [18:0] mem [0:1023];
-
-    logic signed [9:0] x_lut;    // signed Q4.6
-    logic        [9:0] addr;
-
-    // synthesis translate_off
-    initial begin : check_lut
-        integer fd;
-        fd = $fopen(LUT_FILE, "r");
-        if (fd == 0) $fatal(1, "Missing NORM square LUT: %s", LUT_FILE);
-        else $fclose(fd);
-    end
-    // synthesis translate_on
-    initial $readmemb(LUT_FILE, mem);
-
-    // Q4.12 -> Q4.6.
-    // This preserves sign + integer bits and the 6 MSB fractional bits.
-    assign x_lut = $signed(x[15:6]);
-
-    // Signed two's-complement ordering -> monotonically increasing ROM addr:
-    // -8.0      ->   0
-    //  0.0      -> 512
-    // +7.984375 -> 1023
-    always_ff @(posedge clk) begin
-        if (en)
-            addr <= {~x_lut[9], x_lut[8:0]};
-    end
-
-    assign out = mem[addr];
-
-endmodule
-
-
-/* -------------------------------------------------------------------------
- * 32-element RMSNorm
- *
- * Formula implemented:
- *
- *           x_i
- * y_i = --------------
- *        sqrt(mean(x^2))
- *
- * The fixed-point resolution is not sufficient to represent the tiny
- * epsilon used in floating-point software. A zero-RMS vector is therefore
- * handled explicitly and produces an all-zero output. This also applies to
- * nonzero samples in [0, 63] raw: all become zero after Q4.6 truncation.
- *
- * start is accepted only in IDLE.
- * done pulses for one cycle when out[] is updated.
- * ------------------------------------------------------------------------- */
-module norm #(
-    parameter LUT_FILE = "normContent.mif"
-) (
-    input  logic        clk,
-    input  logic        rst_n,
-    input  logic        start,
-
-    input  logic [15:0] x   [31:0],  // signed Q4.12
-    output logic [15:0] out [31:0],  // signed Q4.12
-
-    output logic        busy,
-    output logic        done,
-    output logic        overflow // OR of saturated lanes; valid with done
-);
-
-    typedef enum logic [1:0] {
-        IDLE,
-        RMS_STAGE,
-        DIV_STAGE
-    } state_t;
-
-    state_t state;
-
-    logic [15:0] x_buf [31:0];
-
-    logic [18:0] square [31:0];
-    logic          square_en;
-
-    /*
-     * Balanced reduction tree.
-     *
-     * Each square[] value has 12 fractional bits.
-     *
-     * Instead of right-shifting after every pairwise average (which would
-     * repeatedly discard LSBs), the tree keeps the extra precision by
-     * increasing the interpreted fractional-bit count by one at each level:
-     *
-     *   square : 19 bits, frac=12
-     *   level1 : 20 bits, frac=13  -> mean of 2
-     *   level2 : 21 bits, frac=14  -> mean of 4
-     *   level3 : 22 bits, frac=15  -> mean of 8
-     *   level4 : 23 bits, frac=16  -> mean of 16
-     *   level5 : 24 bits, frac=17  -> mean of 32
-     *
-     * Numerically, level5 is the sum of the original raw square values,
-     * but because its binary point has moved by 5 places it represents the
-     * exact divide-by-32 mean without a large final divider and without
-     * intermediate rounding loss.
-     */
-    logic [19:0] avg_l1 [15:0];
-    logic [20:0] avg_l2 [7:0];
-    logic [21:0] avg_l3 [3:0];
-    logic [22:0] avg_l4 [1:0];
-    logic [23:0] mean_sq_q17;
-
-    logic [31:0] sqrt_radicand;
-    logic [15:0] rms_comb;
-    logic [15:0] rms_reg;        // unsigned RMS with 12 fractional bits
-
-    genvar g;
-
-    assign square_en = rst_n && (state == IDLE) && start;
-
-    generate
-        for (g = 0; g < 32; g = g + 1) begin : gen_square_rom
-            Norm_Square_ROM #(.LUT_FILE(LUT_FILE)) square_rom (
-                .clk (clk),
-                .en  (square_en),
-                .x   (x[g]),
-                .out (square[g])
-            );
-        end
-    endgenerate
-
-    generate
-        for (g = 0; g < 16; g = g + 1) begin : gen_avg_l1
-            assign avg_l1[g] =
-                {1'b0, square[2*g]} +
-                {1'b0, square[2*g+1]};
-        end
-
-        for (g = 0; g < 8; g = g + 1) begin : gen_avg_l2
-            assign avg_l2[g] =
-                {1'b0, avg_l1[2*g]} +
-                {1'b0, avg_l1[2*g+1]};
-        end
-
-        for (g = 0; g < 4; g = g + 1) begin : gen_avg_l3
-            assign avg_l3[g] =
-                {1'b0, avg_l2[2*g]} +
-                {1'b0, avg_l2[2*g+1]};
-        end
-
-        for (g = 0; g < 2; g = g + 1) begin : gen_avg_l4
-            assign avg_l4[g] =
-                {1'b0, avg_l3[2*g]} +
-                {1'b0, avg_l3[2*g+1]};
-        end
-    endgenerate
-
-    assign mean_sq_q17 =
-        {1'b0, avg_l4[0]} +
-        {1'b0, avg_l4[1]};
-
-    /*
-     * mean_sq_q17 represents mean(x^2) with 17 fractional bits.
-     *
-     * We need RMS represented with 12 fractional bits:
-     *
-     *   rms_raw = sqrt(mean(x^2)) * 2^12
-     *
-     * Since:
-     *   mean_sq_q17 = mean(x^2) * 2^17
-     *
-     * then:
-     *   rms_raw^2 = mean_sq_q17 * 2^(24-17)
-     *             = mean_sq_q17 << 7
-     */
-    assign sqrt_radicand = {1'b0, mean_sq_q17, 7'b0};
-
-    /*
-     * Unsigned integer square root.
-     * Fixed 16-iteration restoring algorithm; synthesizable.
-     */
-    function automatic logic [15:0] isqrt_u32(input logic [31:0] value);
-        logic [31:0] op;
-        logic [31:0] res;
-        logic [31:0] one;
-        integer k;
-        begin
-            op  = value;
-            res = 32'd0;
-
-            // Highest power of four that fits in 32 bits: 2^30.
-            one = 32'h4000_0000;
-
-            for (k = 0; k < 16; k = k + 1) begin
-                if (op >= (res + one)) begin
-                    op  = op - (res + one);
-                    res = (res >> 1) + one;
-                end
-                else begin
-                    res = res >> 1;
-                end
-
-                one = one >> 2;
-            end
-
-            isqrt_u32 = res[15:0];
-        end
-    endfunction
-
-    assign rms_comb = isqrt_u32(sqrt_radicand);
-
-    /*
-     * Q4.12 normalization:
-     *
-     * x_real   = x_raw   / 2^12
-     * rms_real = rms_raw / 2^12
-     *
-     * y_raw = (x_real / rms_real) * 2^12
-     *       = (x_raw << 12) / rms_raw
-     */
-    // Return {saturated, Q4.12 result}; division truncates toward zero.
-    function automatic logic [16:0] normalize_q4_12(
-        input logic [15:0] sample_bits,
-        input logic [15:0] rms_raw
-    );
-        logic signed [31:0] sample_ext;
-        logic signed [31:0] numerator;
-        logic signed [31:0] quotient;
-        logic signed [16:0] denominator;
-        begin
-            if (rms_raw == 16'd0) begin
-                // Explicit zero-vector protection.
-                normalize_q4_12 = 16'd0;
-            end
-            else begin
-                sample_ext  = {{16{sample_bits[15]}}, sample_bits};
-                numerator   = sample_ext <<< 12;
-                denominator = $signed({1'b0, rms_raw});
-                quotient    = numerator / denominator;
-
-                // Saturate to signed Q4.12 range.
-                if (quotient > 32'sd32767)
-                    normalize_q4_12 = {1'b1, 16'h7FFF};
-                else if (quotient < -32'sd32768)
-                    normalize_q4_12 = {1'b1, 16'h8000};
-                else
-                    normalize_q4_12 = {1'b0, quotient[15:0]};
-            end
-        end
-    endfunction
-
-    assign busy = (state != IDLE);
-
-    wire [16:0] normalized [31:0];
-    wire [31:0] saturated;
-    generate
-        for (g = 0; g < 32; g = g + 1) begin : gen_normalize
-            assign normalized[g] = normalize_q4_12(x_buf[g], rms_reg);
-            assign saturated[g] = normalized[g][16];
-        end
-    endgenerate
-
-    integer i;
+    logic [63:0] op, res, one;
+    logic [5:0] count;
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            state   <= IDLE;
-            done    <= 1'b0;
-            overflow <= 1'b0;
-            rms_reg <= 16'd0;
-
-            for (i = 0; i < 32; i = i + 1) begin
-                x_buf[i] <= 16'd0;
-                out[i]   <= 16'd0;
+            busy <= 0;
+            done <= 0;
+            root <= '0;
+            op <= '0;
+            res <= '0;
+            one <= '0;
+            count <= '0;
+        end else begin
+            done <= 1'b0;
+            if (start && !busy) begin
+                op <= radicand;
+                res <= 0;
+                one <= 64'h4000_0000_0000_0000; // 2^62, highest power of 4 in U64
+                count <= 6'd32;
+                busy <= 1'b1;
+            end else if (busy) begin
+                if (op >= res + one) begin
+                    op <= op - (res + one);
+                    res <= (res >> 1) + one;
+                end else begin
+                    res <= res >> 1;
+                end
+                one <= one >> 2;
+                count <= count - 1'b1;
+                if (count == 1) begin
+                    busy <= 1'b0;
+                    done <= 1'b1;
+                    if (op >= res + one)
+                        root <= 32'((res >> 1) + one);
+                    else
+                    root <= 32'(res >> 1);
+                end
             end
         end
-        else begin
+    end
+endmodule
+
+// Full-vector integer RMSNorm + activation quantization.
+// X: S16 with per-tensor scale. z scratch: S24/F16 stored sign-extended in S32 slots.
+// q: S8, RNE and clamp [-128,127]. K is 1..512.
+module norm (
+    input logic clk,
+    input logic rst_n,
+    input logic start,
+    input logic [7:0] x_base,
+    input logic [7:0] z_base,
+    input logic [7:0] q_base,
+    input logic [9:0] k_len,
+    input logic [63:0] epsilon_raw32,
+    input logic [23:0] delta_raw,
+
+    output logic ws_rd_en,
+    output logic [7:0] ws_rd_addr,
+    input logic [255:0] ws_rd_data,
+    input logic ws_rd_valid,
+    output logic ws_wr_en,
+    output logic [7:0] ws_wr_addr,
+    output logic [255:0] ws_wr_data,
+
+    output logic busy,
+    output logic done,
+    output logic overflow,
+    output logic format_error,
+    output logic [23:0] quant_d,
+    output logic [23:0] norm_m,
+    output logic [5:0] norm_r,
+    output logic [23:0] quant_m,
+    output logic [5:0] quant_r
+);
+    import npu_pkg::*;
+
+    typedef enum logic [5:0] {
+    IDLE,
+    P1_REQ, P1_WAIT, P1_PROC,
+    DIV_MEAN_START, DIV_MEAN_WAIT,
+    DIV_FRAC_START, DIV_FRAC_WAIT,
+    SQRT_START, SQRT_WAIT,
+    CNORM_PREP, CNORM_DIV_START, CNORM_DIV_WAIT,
+    P2_REQ, P2_WAIT, P2_PROC, P2_WRITE,
+    CQUANT_PREP, CQUANT_DIV_START, CQUANT_DIV_WAIT,
+    P3_REQ, P3_WAIT, P3_PROC, P3_WRITE,
+    FINISH
+    } state_t;
+    state_t state;
+
+    logic [7:0] input_base_q, scratch_base_q, output_base_q;
+    logic [9:0] vector_length_q;
+    logic [63:0] epsilon_q;
+    logic [23:0] delta_q;
+    logic [7:0] word_index;
+    logic [3:0] lane;
+    logic [255:0] read_buf;
+    logic [39:0] sum_sq;
+    logic [63:0] mean_q, mean_rem;
+    logic [63:0] v_raw;
+    logic [64:0] mean_with_epsilon;
+    logic [31:0] rms_r;
+    logic [23:0] absmax;
+    logic [255:0] pack_buf;
+    logic [5:0] pack_count;
+    logic [7:0] write_word;
+
+    // scalar divider shared by normalization coefficient generation
+    logic div_start, div_busy, div_done, div_zero;
+    logic [63:0] div_num, div_q;
+    logic [31:0] div_den, div_rem;
+    div #(.NUM_W(64),
+        .DEN_W(32)) u_div(
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(div_start),
+        .numerator(div_num),
+        .denominator(div_den),
+        .busy(div_busy),
+        .done(div_done),
+        .div_zero(div_zero),
+        .quotient(div_q),
+        .remainder(div_rem)
+    );
+
+    logic sqrt_start, sqrt_busy, sqrt_done;
+    logic [31:0] sqrt_root;
+    isqrt_u64 u_sqrt(.clk(clk),
+        .rst_n(rst_n),
+        .start(sqrt_start),
+        .radicand(v_raw),
+        .busy(sqrt_busy),
+        .done(sqrt_done),
+        .root(sqrt_root));
+
+    logic signed [15:0] x0, x1;
+    logic signed [31:0] x0_sq, x1_sq;
+    logic [39:0] pair_sq;
+    logic [10:0] idx0, idx1;
+    always_comb begin
+        x0 = read_buf[lane * 16 +: 16];
+        x1 = read_buf[(lane + 1) * 16 +: 16];
+        x0_sq = $signed(x0) * $signed(x0);
+        x1_sq = $signed(x1) * $signed(x1);
+        idx0 = 11'({word_index, 4'b0} + lane);
+        idx1 = idx0 + 1'b1;
+        pair_sq = 0;
+        if (idx0 < vector_length_q) pair_sq = pair_sq + $unsigned(x0_sq);
+        if (idx1 < vector_length_q) pair_sq = pair_sq + $unsigned(x1_sq);
+    end
+
+    // Dynamic coefficient shift choices. Larger r improves precision while M remains U24.
+    function automatic [5:0] choose_norm_r(input logic [31:0] den);
+        integer msb;
+        begin
+            msb = 0;
+            for (integer i = 31;i >= 0;i = i - 1)
+                if (den[i] && msb == 0) msb = i;
+            if (msb <= 9) choose_norm_r = 0;
+            else if (msb - 9 > 31) choose_norm_r = 31;
+            else choose_norm_r = 6'(msb - 9);
+        end
+    endfunction
+
+    function automatic [5:0] choose_quant_r(input logic [23:0] den);
+        logic [63:0] limit;
+        logic [63:0] num;
+        logic found;
+        begin
+            limit = den * 24'hff_ffff;
+            choose_quant_r = 0;
+            found = 1'b0;
+            for (integer r = 47;r >= 0;r = r - 1) begin
+                num = 64'h0000_0000_0000_007f << r;
+                if (!found && num <= limit) begin
+                    choose_quant_r = r[5:0];
+                    found = 1'b1;
+                end
+            end
+        end
+    endfunction
+
+    logic [5:0] norm_r_sel, quant_r_sel;
+    logic [63:0] norm_num, quant_num;
+    always_comb begin
+        mean_with_epsilon = ({1'b0, mean_q} << 32) + {1'b0, div_q} + {1'b0, epsilon_q};
+        norm_r_sel = choose_norm_r(rms_r);
+        norm_num = 64'h1 << (32 + norm_r_sel);
+        quant_r_sel = choose_quant_r((absmax > delta_q) ? absmax : delta_q);
+        quant_num = 64'h0000_0000_0000_007f << quant_r_sel;
+    end
+
+    logic signed [39:0] z_prod0, z_prod1;
+    logic signed [63:0] z_round0, z_round1;
+    logic signed [23:0] z0, z1;
+    logic [23:0] absz0, absz1;
+    always_comb begin
+        z_prod0 = $signed(x0) * $signed({1'b0, norm_m});
+        z_prod1 = $signed(x1) * $signed({1'b0, norm_m});
+        z_round0 = rne_shift64({{24{z_prod0[39]}}, z_prod0}, norm_r);
+        z_round1 = rne_shift64({{24{z_prod1[39]}}, z_prod1}, norm_r);
+        if (z_round0 > 64'sh0000_0000_007f_ffff) z0 = 24'sh7f_ffff;
+        else if (z_round0 < - 64'sh0000_0000_0080_0000) z0 = 24'sh80_0000;
+        else z0 = z_round0[23:0];
+        if (z_round1 > 64'sh0000_0000_007f_ffff) z1 = 24'sh7f_ffff;
+        else if (z_round1 < - 64'sh0000_0000_0080_0000) z1 = 24'sh80_0000;
+        else z1 = z_round1[23:0];
+        absz0 = z0[23] ? $unsigned( - $signed(z0)) : z0;
+        absz1 = z1[23] ? $unsigned( - $signed(z1)) : z1;
+    end
+
+    logic signed [23:0] zr0, zr1;
+    logic signed [47:0] qprod0, qprod1;
+    logic signed [63:0] qround0, qround1;
+    logic signed [7:0] q0, q1;
+    always_comb begin
+        zr0 = read_buf[lane * 32 +: 24];
+        zr1 = read_buf[(lane + 1) * 32 +: 24];
+        qprod0 = $signed(zr0) * $signed({1'b0, quant_m});
+        qprod1 = $signed(zr1) * $signed({1'b0, quant_m});
+        qround0 = rne_shift64({{16{qprod0[47]}}, qprod0}, quant_r);
+        qround1 = rne_shift64({{16{qprod1[47]}}, qprod1}, quant_r);
+        if (qround0 > 64'sh0000_0000_0000_007f) q0 = 8'sh7f;
+        else if (qround0 < - 64'sh0000_0000_0000_0080) q0 = 8'sh80;
+        else q0 = qround0[7:0];
+        if (qround1 > 64'sh0000_0000_0000_007f) q1 = 8'sh7f;
+        else if (qround1 < - 64'sh0000_0000_0000_0080) q1 = 8'sh80;
+        else q1 = qround1[7:0];
+    end
+
+    always_comb begin
+        ws_rd_en = 1'b0;
+        ws_rd_addr = '0;
+        ws_wr_en = 1'b0;
+        ws_wr_addr = '0;
+        ws_wr_data = pack_buf;
+        div_start = 1'b0;
+        div_num = '0;
+        div_den = '0;
+        sqrt_start = 1'b0;
+        case (state)
+            P1_REQ : begin
+                ws_rd_en = 1'b1;
+                ws_rd_addr = input_base_q + word_index;
+            end
+            DIV_MEAN_START : begin
+                div_start = 1'b1;
+                div_num = {{24{1'b0}}, sum_sq};
+                div_den = {22'h0, vector_length_q};
+            end
+            DIV_FRAC_START : begin
+                div_start = 1'b1;
+                div_num = mean_rem << 32;
+                div_den = {22'h0, vector_length_q};
+            end
+            SQRT_START : sqrt_start = 1'b1;
+            CNORM_DIV_START : begin
+                div_start = 1'b1;
+                div_num = norm_num;
+                div_den = rms_r;
+            end
+            P2_REQ : begin
+                ws_rd_en = 1'b1;
+                ws_rd_addr = input_base_q + word_index;
+            end
+            P2_WRITE : begin
+                ws_wr_en = 1'b1;
+                ws_wr_addr = scratch_base_q + write_word;
+                ws_wr_data = pack_buf;
+            end
+            CQUANT_DIV_START : begin
+                div_start = 1'b1;
+                div_num = quant_num;
+                div_den = {8'h00, ((absmax > delta_q) ? absmax : delta_q)};
+            end
+            P3_REQ : begin
+                ws_rd_en = 1'b1;
+                ws_rd_addr = scratch_base_q + word_index;
+            end
+            P3_WRITE : begin
+                ws_wr_en = 1'b1;
+                ws_wr_addr = output_base_q + write_word;
+                ws_wr_data = pack_buf;
+            end
+            default : ;
+        endcase
+    end
+
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            state <= IDLE;
+            busy <= 0;
+            done <= 0;
+            overflow <= 0;
+            format_error <= 0;
+            quant_d <= 0;
+            input_base_q <= 0;
+            scratch_base_q <= 0;
+            output_base_q <= 0;
+            vector_length_q <= 0;
+            epsilon_q <= 0;
+            delta_q <= 1;
+            word_index <= 0;
+            lane <= 0;
+            read_buf <= 0;
+            sum_sq <= 0;
+            mean_q <= 0;
+            mean_rem <= 0;
+            v_raw <= 0;
+            rms_r <= 0;
+            absmax <= 0;
+            pack_buf <= 0;
+            pack_count <= 0;
+            write_word <= 0;
+            norm_m <= 0;
+            norm_r <= 0;
+            quant_m <= 0;
+            quant_r <= 0;
+        end else begin
             done <= 1'b0;
-
             case (state)
-                IDLE: begin
-                    if (start) begin
-                        overflow <= 1'b0;
-                        // Stage 1:
-                        // Preserve the original full Q4.12 vector while the
-                        // square ROMs register their Q4.6 addresses.
-                        for (i = 0; i < 32; i = i + 1)
-                            x_buf[i] <= x[i];
-
-                        state <= RMS_STAGE;
+                IDLE : if (start) begin
+                    busy <= 1;
+                    overflow <= 0;
+                    format_error <= 0;
+                    quant_d <= 0;
+                    norm_m <= 0;
+                    norm_r <= 0;
+                    quant_m <= 0;
+                    quant_r <= 0;
+                    input_base_q <= x_base;
+                    scratch_base_q <= z_base;
+                    output_base_q <= q_base;
+                    vector_length_q <= k_len;
+                    epsilon_q <= epsilon_raw32;
+                    delta_q <= delta_raw;
+                    word_index <= 0;
+                    lane <= 0;
+                    sum_sq <= 0;
+                    state <= P1_REQ;
+                    if (k_len == 0 || k_len > K_MAX || delta_raw == 0 ||
+                        int'(x_base) + (int'(k_len) + 15) / 16 > 256 ||
+                        int'(z_base) + (int'(k_len) + 7) / 8 > 256 ||
+                        int'(q_base) + (int'(k_len) + 31) / 32 > 256 ||
+                        ranges_overlap(int'(x_base), (int'(k_len) + 15) / 16, int'(z_base), (int'(k_len) + 7) / 8) ||
+                        ranges_overlap(int'(q_base), (int'(k_len) + 31) / 32, int'(z_base), (int'(k_len) + 7) / 8)) begin
+                        format_error <= 1;
+                        state <= FINISH;
                     end
                 end
-
-                RMS_STAGE: begin
-                    // Stage 2:
-                    // square[] is now valid. The balanced tree computes the
-                    // mean-square and this register captures sqrt(mean-square).
-                    rms_reg <= rms_comb;
-                    state   <= DIV_STAGE;
+                P1_REQ : state <= P1_WAIT;
+                P1_WAIT : if (ws_rd_valid) begin
+                    read_buf <= ws_rd_data;
+                    lane <= 0;
+                    state <= P1_PROC;
                 end
-
-                DIV_STAGE: begin
-                    // Stage 3:
-                    // Normalize the original Q4.12 samples.
-                    for (i = 0; i < 32; i = i + 1)
-                        out[i] <= normalized[i][15:0];
-
-                    overflow <= |saturated;
-                    done  <= 1'b1;
+                P1_PROC : begin
+                    sum_sq <= sum_sq + pair_sq;
+                    if (lane == 14 || idx1 >= vector_length_q - 1) begin
+                        if (({word_index, 4'b0} + 16) >= vector_length_q) state <= DIV_MEAN_START;
+                        else begin
+                            word_index <= word_index + 1'b1;
+                            state <= P1_REQ;
+                        end
+                    end else lane <= lane + 4'd2;
+                end
+                DIV_MEAN_START : state <= DIV_MEAN_WAIT;
+                DIV_MEAN_WAIT : if (div_done) begin
+                    mean_q <= div_q;
+                    mean_rem <= div_rem;
+                    state <= DIV_FRAC_START;
+                end
+                DIV_FRAC_START : state <= DIV_FRAC_WAIT;
+                DIV_FRAC_WAIT : if (div_done) begin
+                    v_raw <= mean_with_epsilon[63:0];
+                    state <= SQRT_START;
+                    if (mean_with_epsilon[64]) begin
+                        overflow <= 1;
+                        format_error <= 1;
+                        state <= FINISH;
+                    end
+                end
+                SQRT_START : state <= SQRT_WAIT;
+                SQRT_WAIT : if (sqrt_done) begin
+                    rms_r <= sqrt_root;
+                    state <= CNORM_PREP;
+                end
+                CNORM_PREP : begin
+                    if (sum_sq == 0) begin
+                        norm_m <= 0;
+                        norm_r <= 0;
+                        absmax <= 0;
+                        word_index <= 0;
+                        lane <= 0;
+                        pack_buf <= 0;
+                        pack_count <= 0;
+                        write_word <= 0;
+                        state <= P2_REQ;
+                    end
+                    else begin
+                        norm_r <= norm_r_sel;
+                        state <= CNORM_DIV_START;
+                    end
+                end
+                CNORM_DIV_START : state <= CNORM_DIV_WAIT;
+                CNORM_DIV_WAIT : if (div_done) begin
+                    norm_m <= div_q[23:0] + (({1'b0, div_rem} * 2 > rms_r) || (({1'b0, div_rem} * 2 == rms_r) && div_q[0]));
+                    word_index <= 0;
+                    lane <= 0;
+                    pack_buf <= 0;
+                    pack_count <= 0;
+                    write_word <= 0;
+                    absmax <= 0;
+                    state <= P2_REQ;
+                end
+                P2_REQ : state <= P2_WAIT;
+                P2_WAIT : if (ws_rd_valid) begin
+                    read_buf <= ws_rd_data;
+                    lane <= 0;
+                    state <= P2_PROC;
+                end
+                P2_PROC : begin
+                    if ((idx0 < vector_length_q && (z_round0 > 64'sh0000_0000_007f_ffff || z_round0 < - 64'sh0000_0000_0080_0000)) ||
+                        (idx1 < vector_length_q && (z_round1 > 64'sh0000_0000_007f_ffff || z_round1 < - 64'sh0000_0000_0080_0000))) overflow <= 1;
+                    if (idx0 < vector_length_q) begin
+                        pack_buf[pack_count * 32 +: 32] <= {{8{z0[23]}}, z0};
+                        if (absz0 > absmax) absmax <= absz0;
+                    end
+                    if (idx1 < vector_length_q) begin
+                        pack_buf[(pack_count + 1) * 32 +: 32] <= {{8{z1[23]}}, z1};
+                        if (absz1 > absmax && absz1 > absz0) absmax <= absz1;
+                    end
+                    if (pack_count >= 6 || idx1 >= vector_length_q - 1) begin
+                        state <= P2_WRITE;
+                    end else begin
+                        pack_count <= pack_count + 6'd2;
+                        lane <= lane + 4'd2;
+                    end
+                end
+                P2_WRITE : begin
+                    write_word <= write_word + 1'b1;
+                    pack_buf <= 0;
+                    pack_count <= 0;
+                    if (idx1 >= vector_length_q - 1) state <= CQUANT_PREP;
+                    else if (lane == 14) begin
+                        word_index <= word_index + 1'b1;
+                        lane <= 0;
+                        state <= P2_REQ;
+                    end
+                    else begin
+                        lane <= lane + 4'd2;
+                        state <= P2_PROC;
+                    end
+                end
+                CQUANT_PREP : begin
+                    quant_d <= (absmax > delta_q) ? absmax : delta_q;
+                    quant_r <= quant_r_sel;
+                    if ((absmax == 0) && (delta_q == 0)) begin
+                        quant_m <= 0;
+                        word_index <= 0;
+                        lane <= 0;
+                        pack_buf <= 0;
+                        pack_count <= 0;
+                        write_word <= 0;
+                        state <= P3_REQ;
+                    end
+                    else state <= CQUANT_DIV_START;
+                end
+                CQUANT_DIV_START : state <= CQUANT_DIV_WAIT;
+                CQUANT_DIV_WAIT : if (div_done) begin
+                    quant_m <= div_q[23:0] + (({1'b0, div_rem} * 2 > ((absmax > delta_q) ? absmax : delta_q)) || (({1'b0, div_rem} * 2 == ((absmax > delta_q) ? absmax : delta_q)) && div_q[0]));
+                    word_index <= 0;
+                    lane <= 0;
+                    pack_buf <= 0;
+                    pack_count <= 0;
+                    write_word <= 0;
+                    state <= P3_REQ;
+                end
+                P3_REQ : state <= P3_WAIT;
+                P3_WAIT : if (ws_rd_valid) begin
+                    read_buf <= ws_rd_data;
+                    lane <= 0;
+                    state <= P3_PROC;
+                end
+                P3_PROC : begin
+                    if (({word_index, 3'b0} + lane) < vector_length_q) pack_buf[pack_count * 8 +: 8] <= q0;
+                    if (({word_index, 3'b0} + lane + 1) < vector_length_q) pack_buf[(pack_count + 1) * 8 +: 8] <= q1;
+                    if (pack_count >= 30 || ({word_index, 3'b0} + lane + 1) >= vector_length_q - 1) state <= P3_WRITE;
+                    else if (lane == 6) begin
+                        word_index <= word_index + 1'b1;
+                        lane <= 0;
+                        pack_count <= pack_count + 6'd2;
+                        state <= P3_REQ;
+                    end
+                    else begin
+                        lane <= lane + 4'd2;
+                        pack_count <= pack_count + 6'd2;
+                    end
+                end
+                P3_WRITE : begin
+                    write_word <= write_word + 1'b1;
+                    pack_buf <= 0;
+                    pack_count <= 0;
+                    if (({word_index, 3'b0} + lane + 1) >= vector_length_q - 1) state <= FINISH;
+                    else if (lane == 6) begin
+                        word_index <= word_index + 1'b1;
+                        lane <= 0;
+                        state <= P3_REQ;
+                    end
+                    else begin
+                        lane <= lane + 4'd2;
+                        state <= P3_PROC;
+                    end
+                end
+                FINISH : begin
+                    busy <= 0;
+                    done <= 1;
                     state <= IDLE;
                 end
-
-                default: begin
-                    state <= IDLE;
-                end
+                default : state <= IDLE;
             endcase
         end
     end
-
 endmodule

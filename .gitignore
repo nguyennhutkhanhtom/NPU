@@ -11,3 +11,16 @@
 /tmatmul/
 /tests/
 /work/
+
+# Duplicate ASIC v2 source package; maintained in /Verilog Source code/.
+/npu_asic_v2/
+/npu_asic_v2.zip
+
+# Local Quartus project, temporary files and generated build caches.
+/quartus/
+/tmp/
+/quartus/db/
+/quartus/incremental_db/
+/quartus/output_files/
+/quartus/*.qws
+/Verilog Source code/*.bak

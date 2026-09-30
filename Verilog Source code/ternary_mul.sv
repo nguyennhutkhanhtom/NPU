@@ -1,279 +1,246 @@
-//Ternary Matrix Multiplication
-module ternary_mul #(
-    parameter int DATA_WIDTH = 16,
-    parameter int LANES = 32,
-    parameter int MATRIX_ROWS = 512,
-    parameter int MATRIX_COLS = 512,
-    parameter int DOT_LANES = 32,
-    parameter int REDUCE_GROUP = 8,
-    parameter int ACC_WIDTH = DATA_WIDTH + $clog2(MATRIX_COLS) + 1,
-    parameter bit SATURATE = 1'b0
-)(
-    input logic clk, rst_n, enable,
-    input logic [DATA_WIDTH*LANES-1:0] matrix_in,
-    input logic [DATA_WIDTH*LANES-1:0] ternary_matrix,
-    output logic [DATA_WIDTH*LANES-1:0] matrix_out,
-    output logic tmatmul_write,
-    input logic matrix_valid, ternary_valid, output_ready,
-    output logic matrix_ready, ternary_ready,
-    output logic busy, done, overflow
+module ternary_mul (
+    input logic clk,
+    input logic rst_n,
+    input logic start,
+    input npu_pkg::ws_desc_t q_desc,
+    input npu_pkg::ws_desc_t out_desc,
+    input npu_pkg::mat_desc_t mat_desc,
+
+    output logic ws_rd_en,
+    output logic [7:0] ws_rd_addr,
+    input logic [255:0] ws_rd_data,
+    input logic ws_rd_valid,
+    output logic ws_wr_en,
+    output logic [7:0] ws_wr_addr,
+    output logic [255:0] ws_wr_data,
+
+    output logic param_rd_en,
+    output logic [9:0] param_rd_addr,
+    input logic [255:0] param_rd_data,
+    input logic param_rd_valid,
+
+    output logic busy,
+    output logic done,
+    output logic overflow,
+    output logic format_error
 );
-    localparam int WORD_WIDTH = DATA_WIDTH * LANES;
-    localparam int VECTOR_WORDS = MATRIX_COLS / LANES;
-    localparam int WEIGHT_LANES = WORD_WIDTH / 2;
-    localparam int WEIGHT_WORDS = (MATRIX_ROWS*MATRIX_COLS + WEIGHT_LANES-1) / WEIGHT_LANES;
-    localparam int WEIGHT_CHUNKS = WEIGHT_LANES / DOT_LANES;
-    localparam int ROW_CHUNKS = MATRIX_COLS / DOT_LANES;
-    localparam int GROUPS = (DOT_LANES + REDUCE_GROUP-1) / REDUCE_GROUP;
-    localparam int MAT_PTR_WIDTH = (VECTOR_WORDS > 1) ? $clog2(VECTOR_WORDS) : 1;
-    localparam int WEIGHT_PTR_WIDTH = (WEIGHT_WORDS > 1) ? $clog2(WEIGHT_WORDS) : 1;
-    localparam int CHUNK_PTR_WIDTH = (WEIGHT_CHUNKS > 1) ? $clog2(WEIGHT_CHUNKS) : 1;
-    localparam int COL_PTR_WIDTH = (ROW_CHUNKS > 1) ? $clog2(ROW_CHUNKS) : 1;
-    localparam int ROW_PTR_WIDTH = (MATRIX_ROWS > 1) ? $clog2(MATRIX_ROWS) : 1;
-    localparam int LANE_PTR_WIDTH = (LANES > 1) ? $clog2(LANES) : 1;
+    import npu_pkg::*;
+    typedef enum logic [3:0] {IDLE, REQ_CHUNK, WAIT_CHUNK, ACCUM, REQ_BIAS, WAIT_BIAS, SCALE, WRITE, FINISH} state_t;
+    state_t state;
 
-    // Only the activation vector and one weight word are buffered. No reset
-    // on data storage: valid bits prevent stale data after an aborted frame.
-    logic [WORD_WIDTH-1:0] matrix_x [VECTOR_WORDS-1:0];
-    logic [WORD_WIDTH-1:0] weight_buffer;
-    logic [MAT_PTR_WIDTH-1:0] mat_ptr;
-    logic [WEIGHT_PTR_WIDTH-1:0] weight_ptr;
-    logic [CHUNK_PTR_WIDTH-1:0] weight_chunk;
-    logic [COL_PTR_WIDTH-1:0] col_ptr;
-    logic [ROW_PTR_WIDTH-1:0] row_ptr;
-    logic [LANE_PTR_WIDTH-1:0] lane_ptr;
-    logic matrix_loaded, weights_loaded, weight_valid, row_wait;
-    logic issue, first_chunk, last_chunk;
-    logic read_valid, product_valid, group_valid, reduce_valid, total_valid, result_valid;
-    logic [3:0] first_pipe, last_pipe;
-    logic [DATA_WIDTH-1:0] activation [DOT_LANES-1:0];
-    logic [1:0] weight [DOT_LANES-1:0];
-    logic [DATA_WIDTH:0] mul_result [DOT_LANES-1:0];
-    logic [ACC_WIDTH-1:0] group_next [GROUPS*2-1:0];
-    logic [ACC_WIDTH-1:0] group_result [GROUPS*2-1:0];
-    logic [ACC_WIDTH-1:0] reduce_sum_next, reduce_carry_next;
-    logic [ACC_WIDTH-1:0] reduce_sum, reduce_carry;
-    logic [ACC_WIDTH-1:0] acc_input [3:0];
-    logic [ACC_WIDTH-1:0] acc_sum_next, acc_carry_next, acc_sum, acc_carry;
-    logic signed [ACC_WIDTH-1:0] row_result;
-    logic [WORD_WIDTH-1:0] packed_result;
-    logic packed_overflow, row_overflow;
-    logic [DATA_WIDTH-1:0] row_output;
+    ws_desc_t input_desc_q, output_desc_q;
+    mat_desc_t matrix_desc_q;
+    logic [9:0] output_row_q, input_chunk_q;
+    logic [9:0] chunks_per_row;
+    logic [9:0] weight_words_per_row;
+    logic [255:0] q_word, w_word;
+    logic got_q, got_w;
+    logic signed [17:0] accumulator_q;
+    logic signed [8:0] terms [0:31];
+    logic signed [17:0] partial;
+    logic [7:0] weight_bit_base;
+    logic reserved_weight;
 
-    assign matrix_ready = busy && !matrix_loaded;
-    assign issue = busy && matrix_loaded && weight_valid && !row_wait && !tmatmul_write;
-    assign first_chunk = (col_ptr == 0);
-    assign last_chunk = (col_ptr == COL_PTR_WIDTH'(ROW_CHUNKS-1));
-    assign ternary_ready = busy && !weights_loaded &&
-                           (!weight_valid || (issue && weight_chunk == CHUNK_PTR_WIDTH'(WEIGHT_CHUNKS-1)));
+    logic signed [31:0] bias;
+    logic signed [31:0] y32;
+    logic signed [15:0] y16;
+    logic scale_ov;
+    postscale u_scale(.acc(accumulator_q),
+        .scale_m(matrix_desc_q.scale_m),
+        .scale_r(matrix_desc_q.scale_r),
+        .bias(bias),
+        .output_s32(matrix_desc_q.output_s32),
+        .y_s32(y32),
+        .y_s16(y16),
+        .overflow(scale_ov));
 
-    // Stage 0: registered activation read and weight selection.
-    // Stage 1: ternary sign/zero selection. Extend BEFORE negating signed MIN.
-    genvar i, j;
-    generate
-        for (i = 0; i < DOT_LANES; i = i + 1) begin : product_loop
-            always_ff @(posedge clk) begin
-                if (issue) begin
-                    activation[i] <= matrix_x[col_ptr / (LANES/DOT_LANES)]
-                        [((col_ptr % (LANES/DOT_LANES))*DOT_LANES+i)*DATA_WIDTH +: DATA_WIDTH];
-                    weight[i] <= weight_buffer[i*2 +: 2];
-                end
-                if (read_valid) begin
-                    case (weight[i])
-                        2'b01: mul_result[i] <= {activation[i][DATA_WIDTH-1], activation[i]};
-                        2'b11: mul_result[i] <= -$signed({activation[i][DATA_WIDTH-1], activation[i]});
-                        default: mul_result[i] <= '0; // 00 and reserved 10
-                    endcase
-                end
-            end
-        end
-        // Stage 2: local reductions, retaining both carry-save words.
-        for (i = 0; i < GROUPS; i = i + 1) begin : group_loop
-            logic [DATA_WIDTH:0] terms [REDUCE_GROUP-1:0];
-            for (j = 0; j < REDUCE_GROUP; j = j + 1) begin : terms_assign
-                if (i*REDUCE_GROUP+j < DOT_LANES)
-                    assign terms[j] = mul_result[i*REDUCE_GROUP+j];
-                else
-                    assign terms[j] = '0;
-            end
-            acc_mul #(.DATA_WIDTH(DATA_WIDTH+1), .NUM_INPUTS(REDUCE_GROUP), .ACC_WIDTH(ACC_WIDTH)) acc_inst (
-                .mul_result(terms), .acc_result(),
-                .acc_sum(group_next[i*2]), .acc_carry(group_next[i*2+1])
-            );
-        end
-    endgenerate
+    logic [255:0] pack_buf;
+    logic [4:0] pack_count;
+    logic [7:0] out_word;
 
-    // Stage 3: merge the local reductions. No intermediate binary addition.
-    acc_mul #(.DATA_WIDTH(ACC_WIDTH), .NUM_INPUTS(GROUPS*2), .ACC_WIDTH(ACC_WIDTH)) reduce_inst (
-        .mul_result(group_result), .acc_result(),
-        .acc_sum(reduce_sum_next), .acc_carry(reduce_carry_next)
-    );
-
-    // Stage 4: two compressor levels in the feedback path.
-    assign acc_input[0] = first_pipe[3] ? '0 : acc_sum;
-    assign acc_input[1] = first_pipe[3] ? '0 : acc_carry;
-    assign acc_input[2] = reduce_sum;
-    assign acc_input[3] = reduce_carry;
-    acc_mul #(.DATA_WIDTH(ACC_WIDTH), .NUM_INPUTS(4), .ACC_WIDTH(ACC_WIDTH)) accumulate_inst (
-        .mul_result(acc_input), .acc_result(),
-        .acc_sum(acc_sum_next), .acc_carry(acc_carry_next)
-    );
-
-    always_ff @(posedge clk) begin
-        if (matrix_valid && matrix_ready)
-            matrix_x[mat_ptr] <= matrix_in;
-        if (ternary_valid && ternary_ready)
-            weight_buffer <= ternary_matrix;
-        else if (issue)
-            weight_buffer <= weight_buffer >> (DOT_LANES*2);
-        if (product_valid) begin
-            for (int k = 0; k < GROUPS*2; k = k + 1)
-                group_result[k] <= group_next[k];
-        end
-        if (group_valid) begin
-            reduce_sum <= reduce_sum_next;
-            reduce_carry <= reduce_carry_next;
-        end
-        if (reduce_valid) begin
-            acc_sum <= acc_sum_next;
-            acc_carry <= acc_carry_next;
-        end
-        // Stage 5: one carry-propagating addition per completed row.
-        if (total_valid)
-            row_result <= $signed(acc_sum + acc_carry);
-    end
-
-    // Stage 6: quantize once, after the complete dot product. Lane 0 is LSB.
-    assign row_overflow = row_result[ACC_WIDTH-1:DATA_WIDTH-1] !=
-                          {(ACC_WIDTH-DATA_WIDTH+1){row_result[DATA_WIDTH-1]}};
     always_comb begin
-        row_output = row_result[DATA_WIDTH-1:0];
-        if (SATURATE && row_overflow)
-            row_output = row_result[ACC_WIDTH-1] ? {1'b1, {(DATA_WIDTH-1){1'b0}}} :
-                                                               {1'b0, {(DATA_WIDTH-1){1'b1}}};
+        weight_bit_base = {input_chunk_q[1:0], 6'b0};
+        reserved_weight = 0;
+        for (int i = 0;i < 32;i = i + 1) begin
+            logic signed [7:0] a;
+            logic [1:0] w;
+            a = q_word[i * 8 +: 8];
+            w = w_word[weight_bit_base + i * 2 +: 2];
+            if ((input_chunk_q * 32 + i) >= matrix_desc_q.k_len) terms[i] = 9'sh000;
+            else begin
+                if (w == 2'b10) reserved_weight = 1;
+                case (w)
+                    2'b01 : terms[i] = {a[7], a};
+                    2'b11 : terms[i] = - $signed({a[7], a});
+                    default : terms[i] = 9'sh000; // 00=0, 10 reserved -> 0
+                endcase
+            end
+        end
+    end
+    acc_mul #(.TERM_W(9),
+        .NUM_INPUTS(32),
+        .ACC_W(18)) u_reduce(.term(terms),
+        .sum(partial));
+
+    always_comb begin
+        ws_rd_en = 0;
+        ws_rd_addr = '0;
+        ws_wr_en = 0;
+        ws_wr_addr = '0;
+        ws_wr_data = pack_buf;
+        param_rd_en = 0;
+        param_rd_addr = '0;
+        if (state == REQ_CHUNK) begin
+            ws_rd_en = 1;
+            ws_rd_addr = input_desc_q.base_word + input_chunk_q[7:0];
+            param_rd_en = (input_chunk_q[1:0] == 0);
+            param_rd_addr = matrix_desc_q.weight_base + output_row_q * weight_words_per_row + (input_chunk_q >> 2);
+        end else if (state == REQ_BIAS) begin
+            param_rd_en = 1;
+            param_rd_addr = matrix_desc_q.bias_base + (output_row_q >> 3);
+        end else if (state == WRITE) begin
+            ws_wr_en = 1;
+            ws_wr_addr = output_desc_q.base_word + out_word;
+            ws_wr_data = pack_buf;
+        end
     end
 
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            busy <= 1'b0;
-            done <= 1'b0;
-            tmatmul_write <= 1'b0;
-            overflow <= 1'b0;
-            matrix_loaded <= 1'b0;
-            weights_loaded <= 1'b0;
-            weight_valid <= 1'b0;
-            row_wait <= 1'b0;
-            mat_ptr <= '0;
-            weight_ptr <= '0;
-            weight_chunk <= '0;
-            col_ptr <= '0;
-            row_ptr <= '0;
-            lane_ptr <= '0;
-            read_valid <= 1'b0;
-            product_valid <= 1'b0;
-            group_valid <= 1'b0;
-            reduce_valid <= 1'b0;
-            total_valid <= 1'b0;
-            result_valid <= 1'b0;
-            first_pipe <= '0;
-            last_pipe <= '0;
-            packed_result <= '0;
-            packed_overflow <= 1'b0;
-        end
-        else begin
-            done <= 1'b0;
-            read_valid <= issue;
-            product_valid <= read_valid;
-            group_valid <= product_valid;
-            reduce_valid <= group_valid;
-            total_valid <= reduce_valid && last_pipe[3];
-            result_valid <= total_valid;
-            first_pipe <= {first_pipe[2:0], first_chunk};
-            last_pipe <= {last_pipe[2:0], last_chunk};
-            if (enable && !busy) begin
-                busy <= 1'b1;
-                matrix_loaded <= 1'b0;
-                weights_loaded <= 1'b0;
-                weight_valid <= 1'b0;
-                mat_ptr <= '0;
-                weight_ptr <= '0;
-                weight_chunk <= '0;
-                col_ptr <= '0;
-                row_ptr <= '0;
-                lane_ptr <= '0;
-                row_wait <= 1'b0;
-                packed_result <= '0;
-                packed_overflow <= 1'b0;
-                overflow <= 1'b0;
-            end
-            if (matrix_valid && matrix_ready) begin
-                if (mat_ptr == MAT_PTR_WIDTH'(VECTOR_WORDS-1))
-                    matrix_loaded <= 1'b1;
-                else
-                    mat_ptr <= mat_ptr + 1'b1;
-            end
-            if (issue) begin
-                if (weight_chunk == CHUNK_PTR_WIDTH'(WEIGHT_CHUNKS-1)) begin
-                    weight_chunk <= '0;
-                    weight_valid <= 1'b0;
+            state <= IDLE;
+            busy <= 0;
+            done <= 0;
+            overflow <= 0;
+            format_error <= 0;
+            input_desc_q <= '0;
+            output_desc_q <= '0;
+            matrix_desc_q <= '0;
+            output_row_q <= 0;
+            input_chunk_q <= 0;
+            chunks_per_row <= 0;
+            weight_words_per_row <= 0;
+            q_word <= 0;
+            w_word <= 0;
+            got_q <= 0;
+            got_w <= 0;
+            accumulator_q <= 0;
+            bias <= 0;
+            pack_buf <= 0;
+            pack_count <= 0;
+            out_word <= 0;
+        end else begin
+            done <= 0;
+            case (state)
+                IDLE : if (start) begin
+                    busy <= 1;
+                    overflow <= 0;
+                    format_error <= 0;
+                    input_desc_q <= q_desc;
+                    output_desc_q <= out_desc;
+                    matrix_desc_q <= mat_desc;
+                    output_row_q <= 0;
+                    input_chunk_q <= 0;
+                    accumulator_q <= 0;
+                    chunks_per_row <= 10'((mat_desc.k_len + 31) >> 5);
+                    weight_words_per_row <= 10'((mat_desc.k_len + 127) >> 7);
+                    pack_buf <= 0;
+                    pack_count <= 0;
+                    out_word <= 0;
+                    got_q <= 0;
+                    got_w <= 0;
+                    state <= REQ_CHUNK;
+                    if (!ws_valid(q_desc) || !ws_valid(out_desc) || q_desc.fmt != FMT_S8 ||
+                        out_desc.fmt != (mat_desc.output_s32 ? FMT_S32 : FMT_S16) ||
+                        mat_desc.k_len == 0 || mat_desc.k_len > K_MAX || mat_desc.n_rows == 0 ||
+                        q_desc.length != mat_desc.k_len || out_desc.length != mat_desc.n_rows ||
+                        mat_desc.scale_r > 47 ||
+                        int'(mat_desc.weight_base) + int'(mat_desc.n_rows) * ((int'(mat_desc.k_len) + 127) / 128) > 1024 ||
+                        (!mat_desc.reserved[1] && int'(mat_desc.bias_base) + (int'(mat_desc.n_rows) + 7) / 8 > 1024) ||
+                        ranges_overlap(int'(q_desc.base_word), ws_words(q_desc), int'(out_desc.base_word), ws_words(out_desc))) begin
+                        format_error <= 1;
+                        state <= FINISH;
+                    end
                 end
-                else
-                    weight_chunk <= weight_chunk + 1'b1;
-                if (last_chunk) begin
-                    col_ptr <= '0;
-                    row_wait <= 1'b1;
+                REQ_CHUNK : begin
+                    got_q <= 0;
+                    got_w <= (input_chunk_q[1:0] != 0);
+                    state <= WAIT_CHUNK;
                 end
-                else
-                    col_ptr <= col_ptr + 1'b1;
-            end
-            if (ternary_valid && ternary_ready) begin
-                weight_valid <= 1'b1;
-                if (weight_ptr == WEIGHT_PTR_WIDTH'(WEIGHT_WORDS-1))
-                    weights_loaded <= 1'b1;
-                else
-                    weight_ptr <= weight_ptr + 1'b1;
-            end
-            if (result_valid) begin
-                packed_result[lane_ptr*DATA_WIDTH +: DATA_WIDTH] <= row_output;
-                packed_overflow <= packed_overflow | row_overflow;
-                if (lane_ptr == LANE_PTR_WIDTH'(LANES-1) || row_ptr == ROW_PTR_WIDTH'(MATRIX_ROWS-1)) begin
-                    tmatmul_write <= 1'b1;
-                    overflow <= packed_overflow | row_overflow;
+                WAIT_CHUNK : begin
+                    if (ws_rd_valid) begin
+                        q_word <= ws_rd_data;
+                        got_q <= 1;
+                    end
+                    if (param_rd_valid) begin
+                        w_word <= param_rd_data;
+                        got_w <= 1;
+                    end
+                    if ((got_q || ws_rd_valid) && (got_w || param_rd_valid)) state <= ACCUM;
                 end
-                else begin
-                    lane_ptr <= lane_ptr + 1'b1;
-                    row_ptr <= row_ptr + 1'b1;
-                    row_wait <= 1'b0;
+                ACCUM : begin
+                    if (input_chunk_q + 1 >= chunks_per_row) begin
+                        accumulator_q <= accumulator_q + partial;
+                        input_chunk_q <= 0;
+                        if (matrix_desc_q.reserved[1]) begin
+                            bias <= 0;
+                            state <= SCALE;
+                        end
+                        else state <= REQ_BIAS;
+                    end else begin
+                        accumulator_q <= accumulator_q + partial;
+                        input_chunk_q <= input_chunk_q + 1'b1;
+                        state <= REQ_CHUNK;
+                    end
+                    if (reserved_weight) begin
+                        format_error <= 1;
+                        state <= FINISH;
+                    end
                 end
-            end
-            if (tmatmul_write && output_ready) begin
-                tmatmul_write <= 1'b0;
-                packed_result <= '0;
-                packed_overflow <= 1'b0;
-                overflow <= 1'b0;
-                lane_ptr <= '0;
-                if (row_ptr == ROW_PTR_WIDTH'(MATRIX_ROWS-1)) begin
-                    busy <= 1'b0;
-                    done <= 1'b1;
-                    weight_valid <= 1'b0;
+                REQ_BIAS : state <= WAIT_BIAS;
+                WAIT_BIAS : if (param_rd_valid) begin
+                    bias <= param_rd_data[(output_row_q[2:0] * 32) +: 32];
+                    state <= SCALE;
                 end
-                else begin
-                    row_ptr <= row_ptr + 1'b1;
-                    row_wait <= 1'b0;
+                SCALE : begin
+                    overflow <= overflow | scale_ov;
+                    if (matrix_desc_q.output_s32) begin
+                        pack_buf[pack_count * 32 +: 32] <= y32;
+                        if (pack_count == 7 || output_row_q + 1 >= matrix_desc_q.n_rows) state <= WRITE;
+                        else begin
+                            pack_count <= pack_count + 1'b1;
+                            output_row_q <= output_row_q + 1'b1;
+                            accumulator_q <= 0;
+                            state <= REQ_CHUNK;
+                        end
+                    end else begin
+                        pack_buf[pack_count * 16 +: 16] <= y16;
+                        if (pack_count == 15 || output_row_q + 1 >= matrix_desc_q.n_rows) state <= WRITE;
+                        else begin
+                            pack_count <= pack_count + 1'b1;
+                            output_row_q <= output_row_q + 1'b1;
+                            accumulator_q <= 0;
+                            state <= REQ_CHUNK;
+                        end
+                    end
                 end
-            end
+                WRITE : begin
+                    pack_buf <= 0;
+                    pack_count <= 0;
+                    out_word <= out_word + 1'b1;
+                    if (output_row_q + 1 >= matrix_desc_q.n_rows) state <= FINISH;
+                    else begin
+                        output_row_q <= output_row_q + 1'b1;
+                        accumulator_q <= 0;
+                        state <= REQ_CHUNK;
+                    end
+                end
+                FINISH : begin
+                    busy <= 0;
+                    done <= 1;
+                    state <= IDLE;
+                end
+                default : state <= IDLE;
+            endcase
         end
     end
-    assign matrix_out = packed_result;
-
-    // synthesis translate_off
-    initial begin
-        if (DATA_WIDTH < 1 || LANES < 1 || MATRIX_ROWS < 1 || MATRIX_COLS < 1 ||
-            DOT_LANES < 1 || DOT_LANES > LANES || REDUCE_GROUP < 1 ||
-            MATRIX_COLS % LANES != 0 || LANES % DOT_LANES != 0 ||
-            WORD_WIDTH % 2 != 0 || WEIGHT_LANES % DOT_LANES != 0 ||
-            ACC_WIDTH < DATA_WIDTH + $clog2(MATRIX_COLS) + 1)
-            $fatal(1, "Invalid ternary matrix parameters");
-    end
-    // synthesis translate_on
 endmodule

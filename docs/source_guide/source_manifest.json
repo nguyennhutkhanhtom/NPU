@@ -1,0 +1,252 @@
+{
+  "snapshot_date": "2026-09-29",
+  "files": [
+    {
+      "file": "matmulfree.sv",
+      "path": "Verilog Source code/matmulfree.sv",
+      "sha256": "5eaa62693ee9c4efaf35caf7993c0ad779a956e3cfdab28929f0a35ac3b063a9",
+      "lines": 475,
+      "groups": 15,
+      "document": "blocks/matmulfree.sv.md"
+    },
+    {
+      "file": "npu_pkg.sv",
+      "path": "Verilog Source code/npu_pkg.sv",
+      "sha256": "6c5c78b766028f558107b75a6aca8df65ade8c0d301d949f0fda1a49bc849fdb",
+      "lines": 117,
+      "groups": 6,
+      "document": "blocks/npu_pkg.sv.md"
+    },
+    {
+      "file": "norm.sv",
+      "path": "Verilog Source code/norm.sv",
+      "sha256": "bc22ac01770f53ed3994bf1232864ce2aff1a0b963665f0f3c1346b66d46b06a",
+      "lines": 536,
+      "groups": 17,
+      "document": "blocks/norm.sv.md"
+    },
+    {
+      "file": "ternary_mul.sv",
+      "path": "Verilog Source code/ternary_mul.sv",
+      "sha256": "f21f0400ea0e3fcd3174602cdd0ec1c6b89e4b2e3f020dacd1a7c6734e6733c3",
+      "lines": 246,
+      "groups": 9,
+      "document": "blocks/ternary_mul.sv.md"
+    },
+    {
+      "file": "rowwise_op.sv",
+      "path": "Verilog Source code/rowwise_op.sv",
+      "sha256": "65996893e6570ee34571c6d1ce7f8b4d3ab1d0792da49239d752f99553b7e9a3",
+      "lines": 194,
+      "groups": 9,
+      "document": "blocks/rowwise_op.sv.md"
+    },
+    {
+      "file": "rowwise_dispatch.sv",
+      "path": "Verilog Source code/rowwise_dispatch.sv",
+      "sha256": "6ba91575a2308df739ccff8aec593d907e66996d6c4f2b536485c930b38fc208",
+      "lines": 166,
+      "groups": 8,
+      "document": "blocks/rowwise_dispatch.sv.md"
+    },
+    {
+      "file": "scale_compose.sv",
+      "path": "Verilog Source code/scale_compose.sv",
+      "sha256": "39511461e0d88f0075f07981090e64f9a40572c66cc66d3d597c237d93ccc986",
+      "lines": 118,
+      "groups": 6,
+      "document": "blocks/scale_compose.sv.md"
+    },
+    {
+      "file": "sigmoid.sv",
+      "path": "Verilog Source code/sigmoid.sv",
+      "sha256": "f34d409a788828da1a76e2fa65b80d5ee9a00332bb16781be234dfd2021b43a3",
+      "lines": 117,
+      "groups": 4,
+      "document": "blocks/sigmoid.sv.md"
+    },
+    {
+      "file": "sram_256_wrapper.sv",
+      "path": "Verilog Source code/sram_256_wrapper.sv",
+      "sha256": "5d732588e5b4e775127a8346cbb9c5302413c156060f4d5ff99a81da16758acd",
+      "lines": 80,
+      "groups": 5,
+      "document": "blocks/sram_256_wrapper.sv.md"
+    },
+    {
+      "file": "descriptor_file.sv",
+      "path": "Verilog Source code/descriptor_file.sv",
+      "sha256": "192d5c622186b585ab162869f9885053cd23f453e569f3b8925f4513603516c4",
+      "lines": 62,
+      "groups": 3,
+      "document": "blocks/descriptor_file.sv.md"
+    },
+    {
+      "file": "div.sv",
+      "path": "Verilog Source code/div.sv",
+      "sha256": "7f8337151670cf23884a5705c2e8c9de35d6b122cdbc0a3515555f90ba6f0a4d",
+      "lines": 68,
+      "groups": 4,
+      "document": "blocks/div.sv.md"
+    },
+    {
+      "file": "acc_mul.sv",
+      "path": "Verilog Source code/acc_mul.sv",
+      "sha256": "ba8eab6bcc06296d5c69b9c973f54a2e7f81dc73915528b1171b7cf1e94f8860",
+      "lines": 19,
+      "groups": 2,
+      "document": "blocks/acc_mul.sv.md"
+    },
+    {
+      "file": "postscale.sv",
+      "path": "Verilog Source code/postscale.sv",
+      "sha256": "462922989c54f4b4346d27cd05d5cdf342bb56a882c0cb8325ef035c36c7452a",
+      "lines": 24,
+      "groups": 2,
+      "document": "blocks/postscale.sv.md"
+    },
+    {
+      "file": "norm_dispatch.sv",
+      "path": "Verilog Source code/norm_dispatch.sv",
+      "sha256": "6965caffc6bcacb55ec2607734e732e1bfa589e4480fd654ba6d6f8ffd71e911",
+      "lines": 70,
+      "groups": 3,
+      "document": "blocks/norm_dispatch.sv.md"
+    },
+    {
+      "file": "regfile.sv",
+      "path": "Verilog Source code/regfile.sv",
+      "sha256": "913463c2d691dd5362fbad83753059615a4664085fcc74a18e4ddb8262c098bd",
+      "lines": 38,
+      "groups": 2,
+      "document": "blocks/regfile.sv.md"
+    },
+    {
+      "file": "mem_mapping.sv",
+      "path": "Verilog Source code/mem_mapping.sv",
+      "sha256": "bb319d2241831086bff39358cf30abe7fd28b0a6f86c85b31d5ba9e1d2e361e5",
+      "lines": 38,
+      "groups": 2,
+      "document": "blocks/mem_mapping.sv.md"
+    },
+    {
+      "file": "PC.sv",
+      "path": "Verilog Source code/PC.sv",
+      "sha256": "395d6552fd3875bb94e8252e1641378394d40f913c82bb7881e9b55e5e32586e",
+      "lines": 14,
+      "groups": 2,
+      "document": "blocks/PC.sv.md"
+    },
+    {
+      "file": "ins_mem.sv",
+      "path": "Verilog Source code/ins_mem.sv",
+      "sha256": "f0731fbb4f9afede319f07e24a137243a99f328d67efe79d47b5b636c63eb496",
+      "lines": 17,
+      "groups": 2,
+      "document": "blocks/ins_mem.sv.md"
+    },
+    {
+      "file": "matmul_wrap.sv",
+      "path": "Verilog Source code/matmul_wrap.sv",
+      "sha256": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+      "lines": 29,
+      "groups": 2,
+      "document": "blocks/matmul_wrap.sv.md"
+    },
+    {
+      "file": "addsub.sv",
+      "path": "Verilog Source code/addsub.sv",
+      "sha256": "14484f9f2777b2662cfa8538ab92149d0e7f80be1012d21fc0906d8ea45d3b98",
+      "lines": 17,
+      "groups": 2,
+      "document": "blocks/addsub.sv.md"
+    },
+    {
+      "file": "mul.sv",
+      "path": "Verilog Source code/mul.sv",
+      "sha256": "63bb267b9cc884ee766f94a0fda1039cb5ed61bb6f6002bfa356a3f6423bcbac",
+      "lines": 22,
+      "groups": 2,
+      "document": "blocks/mul.sv.md"
+    },
+    {
+      "file": "fd_reg.sv",
+      "path": "Verilog Source code/fd_reg.sv",
+      "sha256": "75de20e3fb5abe35246fc7f003a6159ce7f78a38b80e6a26d795881b56811565",
+      "lines": 12,
+      "groups": 1,
+      "document": "blocks/fd_reg.sv.md"
+    },
+    {
+      "file": "de_reg.sv",
+      "path": "Verilog Source code/de_reg.sv",
+      "sha256": "dbb7c23f6bda7e1f5b435bd34fbb4cdca9ef63f6af3a9b535cf4030f7f3dd50d",
+      "lines": 16,
+      "groups": 1,
+      "document": "blocks/de_reg.sv.md"
+    },
+    {
+      "file": "em_reg.sv",
+      "path": "Verilog Source code/em_reg.sv",
+      "sha256": "5e57748e00ff223653210e970a6a8e6d95ba124fc023c6b92b368daa692cb9ee",
+      "lines": 10,
+      "groups": 1,
+      "document": "blocks/em_reg.sv.md"
+    },
+    {
+      "file": "mw_reg.sv",
+      "path": "Verilog Source code/mw_reg.sv",
+      "sha256": "8f27a55bda16912be3fb069bd6cf09abaf740a186c9b2503171158bb59109960",
+      "lines": 10,
+      "groups": 1,
+      "document": "blocks/mw_reg.sv.md"
+    },
+    {
+      "file": "ctrl_unit.sv",
+      "path": "Verilog Source code/ctrl_unit.sv",
+      "sha256": "b4daf5e7d1b059306d11a907e2512c917d60ec46c4dd68267a1190ed1f579968",
+      "lines": 23,
+      "groups": 2,
+      "document": "blocks/ctrl_unit.sv.md"
+    },
+    {
+      "file": "hazard_detect.sv",
+      "path": "Verilog Source code/hazard_detect.sv",
+      "sha256": "83e4434faa221906913debcd24e6a6db7366f15fe4d3e7ed37f06ec9f31991b5",
+      "lines": 12,
+      "groups": 1,
+      "document": "blocks/hazard_detect.sv.md"
+    },
+    {
+      "file": "exp.sv",
+      "path": "Verilog Source code/exp.sv",
+      "sha256": "d94cf43353c33633ec7a30fbf3def2e0841a669492ec876d660c446ef7d11529",
+      "lines": 8,
+      "groups": 1,
+      "document": "blocks/exp.sv.md"
+    },
+    {
+      "file": "mem_burst.v",
+      "path": "Verilog Source code/mem_burst.v",
+      "sha256": "c021cde39b0541fb8b19bc97765b19ab5667b83e591a9c2f4f4f4c4e52bafc75",
+      "lines": 247,
+      "groups": 7,
+      "document": "blocks/mem_burst.v.md"
+    },
+    {
+      "file": "sigmoid_lut.svh",
+      "path": "Verilog Source code/sigmoid_lut.svh",
+      "sha256": "4c1fcc096cb49c985a296a470eebd86b1bb3cd66930c7cd1d7d6f2ef8f0b4bf3",
+      "lines": 262,
+      "document": "blocks/sigmoid_lut.svh.md"
+    },
+    {
+      "file": "sigmoid_257.mem",
+      "path": "Verilog Source code/sigmoid_257.mem",
+      "sha256": "d876d5e723837e33b5b7bfa70a38b22cb8954b48878030c6e383f8444a02f1b0",
+      "lines": 257,
+      "document": "blocks/sigmoid_257.mem.md"
+    }
+  ],
+  "cleanup_date": "2026-09-30"
+}

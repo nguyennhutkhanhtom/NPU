@@ -2,7 +2,7 @@
 */
 module mem_burst
 #(
-	parameter MEM_DATA_BITS = 512,
+	parameter MEM_DATA_BITS = 256,
 	parameter ADDR_BITS = 28
 )
 (
@@ -38,14 +38,14 @@ module mem_burst
    input                                       init_calib_complete
 );
 
-	parameter IDLE = 3'd0;
-	parameter MEM_READ = 3'd1;
-	parameter MEM_READ_WAIT = 3'd2;
-	parameter MEM_WRITE  = 3'd3;
-	parameter MEM_WRITE_WAIT = 3'd4;
-	parameter READ_END = 3'd5;
-	parameter WRITE_END = 3'd6;
-	parameter MEM_WRITE_FIRST_READ = 3'd7;
+	localparam IDLE = 3'h0;
+	localparam MEM_READ = 3'h1;
+	localparam MEM_READ_WAIT = 3'h2;
+	localparam MEM_WRITE  = 3'h3;
+	localparam MEM_WRITE_WAIT = 3'h4;
+	localparam READ_END = 3'h5;
+	localparam WRITE_END = 3'h6;
+	localparam MEM_WRITE_FIRST_READ = 3'h7;
 	reg[2:0] state;	
 	reg[9:0] rd_addr_cnt;
 	reg[9:0] rd_data_cnt;
@@ -117,14 +117,14 @@ module mem_burst
 					begin
 						state <= MEM_READ;
 						app_cmd_r <= 3'b001;
-						app_addr_r <= {rd_burst_addr,3'd0};
+						app_addr_r <= {rd_burst_addr,3'b000};
 						app_en_r <= 1'b1;
 					end
 					else if(wr_burst_req)
 					begin
 						state <= MEM_WRITE;
 						app_cmd_r <= 3'b000;
-						app_addr_r <= {wr_burst_addr,3'd0};
+						app_addr_r <= {wr_burst_addr,3'b000};
 						app_en_r <= 1'b1;
 						wr_addr_cnt <= 0;
 						app_wdf_end_r <= 1'b1;
@@ -244,4 +244,4 @@ module mem_burst
 			endcase
 		end
 	end
-endmodule 
+endmodule

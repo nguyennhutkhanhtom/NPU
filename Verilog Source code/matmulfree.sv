@@ -1,366 +1,480 @@
-module matmulfree #(
-    parameter NORM_LUT_FILE = "normContent.mif"
-) (
-    input  logic rst_n, clk,
-    output logic ready, overflow_out, carry_out,
+module matmulfree #(parameter string SIG_LUT_FILE = "") (
+    input logic clk,
+    input logic rst_n,
+
+    // Simple 32-bit host window.
+    input logic host_en,
+    input logic host_we,
+    input logic [31:0] host_addr,
+    input logic [31:0] host_wdata,
+    output logic [31:0] host_rdata,
+    output logic host_ready,
+
+    output logic running,
+    output logic ready,
+    output logic error,
+    output logic overflow_out,
     output logic [8:0] pc_debug,
-    output logic [12:0] instr_debug,
-    output logic [511:0] mem_out_1_debug
+    output logic [12:0] instr_debug
 );
-    localparam ADD = 4'b0001;
-    localparam SUB = 4'b0010;
-    localparam MUL = 4'b0011;
-    localparam DIV = 4'b0100;
-    localparam EXP = 4'b0101;
-    localparam SIG = 4'b0110;
-    localparam NORM = 4'b0111;
-    localparam TMATMUL = 4'b1000;
-    localparam LDV = 4'b1001;
-    localparam STV = 4'b1010;
-    
-    
-//    logic clk;
-    // Pipeline control signals
-    logic pc_stall, em_stall, mw_stall, fd_stall, de_stall;
-    logic write_finish, read_finish;
-    logic reg_wr_en_de, reg_wr_en_wb, reg_rd_en_de;
-    logic mem_wr_en_de, mem_rd_en_de_0, mem_rd_en_de_1;
-    logic tmatmul_assert;
-    logic tmatmul_start, tmatmul_done, tmatmul_overflow;
-    logic matrix_valid, ternary_valid, matrix_ready, ternary_ready, tmatmul_ready;
-    wire norm_hold, norm_advance, norm_own, norm_write, norm_done, norm_overflow;
-    wire register_stream_busy, register_read_last, memory_busy, norm_pipeline_idle;
-    wire [9:0] norm_read_address, norm_write_address;
-    wire [511:0] norm_read_data, norm_write_data;
-    wire [12:0] norm_instruction;
-    wire [8:0] norm_pc, pc_wb;
+    import npu_pkg::*;
 
-    // Instruction pipeline registers
-    logic [12:0] instr_fd, instr_de, instr_em, instr_mw, instr_wb;
+    localparam logic [3:0] ADD = 4'h1, SUB = 4'h2, MUL = 4'h3, DIV_OP = 4'h4, EXP_OP = 4'h5,
+    SIG = 4'h6, NORM_OP = 4'h7, TMATMUL = 4'h8, LDV = 4'h9, STV = 4'ha, REC = 4'hb, RELU = 4'hc, HALT = 4'hf;
 
-    // Program Counter and Hazard Detection
-    logic [8:0] pc, pc_de;
-    logic empty, full, almost_empty, almost_full;
-    logic flush_wb, decode_bubble;
-	
-    hazard_detect hazard_detect_inst (
-        .clk(clk), .rst_n(rst_n),
-        .instr_fd(instr_fd), .instr_de(instr_de), .instr_em(instr_em), .instr_mw(instr_mw), 
-        .almost_empty(almost_empty), .almost_full(almost_full), .read_finish(read_finish), .write_finish(write_finish),
-        .empty(empty), .full(full),
-        .tmatmul_assert(tmatmul_assert || tmatmul_start),
-        .rd_en(reg_rd_en_de), .wr_en(reg_wr_en_de),
-        .register_read_last(register_read_last),
-        .transactions_busy(register_stream_busy || memory_busy || tmatmul_assert),
-        .em_stall(em_stall), .mw_stall(mw_stall), .fd_stall(fd_stall),
-        .de_stall(de_stall), .pc_stall(pc_stall),
-        .flush_wb(flush_wb), .decode_bubble(decode_bubble)
-    );
+    // ---------------- Host decode ----------------
+    logic host_param, host_ws, host_desc, host_imem, host_ctrl;
+    assign host_param = host_en && host_addr[31:15] == 17'h0 && host_addr[1:0] == 2'b00;
+    assign host_ws = host_en && host_addr[31:13] == 19'h8 && host_addr[1:0] == 0;
+    assign host_desc = host_en && host_addr[31:9] == 23'h100 && host_addr[7] == 0 && host_addr[1:0] == 0 &&
+    (host_addr[8] ? host_addr[3:2] < 3 : host_addr[3:2] == 0);
+    assign host_imem = host_en && host_addr[31:11] == 21'h60 && host_addr[1:0] == 0;
+    assign host_ctrl = host_en && host_addr[31:8] == 24'h000400 && host_addr[1:0] == 0 &&
+    (host_addr[7:2] == 0 || host_addr[7:2] == 1 ||
+        (host_addr[7:2] >= 4 && host_addr[7:2] <= 10));
+    logic ws_host_rvalid, p_host_rvalid;
+    assign host_ready = (host_ctrl && (!host_we || !running)) ||
+    (!running && (host_desc || host_imem ||
+        (host_param && (host_we || p_host_rvalid)) ||
+        (host_ws && (host_we || ws_host_rvalid))));
 
-    PC PC(
-        .clk(clk), .rst(rst_n),
-        .pc_out(pc), .stall(norm_hold ? norm_advance : pc_stall)
-    );
+    logic start_pulse;
+    logic [7:0] scratch_z_base;
+    logic [63:0] epsilon_raw32;
+    logic [23:0] delta_raw;
 
-    // instr[12-:4] is the opcode
-    // instr[2-0] is the source register 1
-    // instr[5-3] is the source register 2
-    // instr[8-6] is the destination register
-    ins_mem ins_mem(
-        .clk(clk),
+    // ---------------- Program ----------------
+    logic [8:0] pc;
+    logic pc_clear, pc_advance;
+    logic [12:0] instr_fetch, instr_q, instr_host;
+    PC u_pc(.clk(clk),
+        .rst_n(rst_n),
+        .clear(pc_clear),
+        .advance(pc_advance),
+        .pc_out(pc));
+    ins_mem u_imem(.clk(clk),
         .addr(pc),
-        .instr(instr_fd)
+        .instr(instr_fetch),
+        .host_we(host_imem && host_we && !running),
+        .host_addr(host_addr[10:2]),
+        .host_instr(host_wdata[12:0]),
+        .host_rinstr(instr_host));
+
+    // ---------------- Descriptors ----------------
+    ws_desc_t d_src0, d_src1, d_dst;
+    mat_desc_t d_mat, effective_mat;
+    logic desc_host_matrix;
+    logic [2:0] desc_host_id;
+    logic [1:0] desc_host_word;
+    logic [31:0] desc_host_rdata;
+    assign desc_host_matrix = host_addr[8];
+    assign desc_host_id = host_addr[6:4];
+    assign desc_host_word = host_addr[3:2];
+    descriptor_file u_desc(
+        .clk(clk),
+        .rst_n(rst_n),
+        .host_we(host_desc && host_we && !running),
+        .host_id(desc_host_id),
+        .host_is_matrix(desc_host_matrix),
+        .host_word_sel(desc_host_word),
+        .host_wdata(host_wdata),
+        .host_rdata(desc_host_rdata),
+        .ws_id0(instr_q[2:0]),
+        .ws_id1(instr_q[5:3]),
+        .ws_id2(instr_q[8:6]),
+        .ws_desc0(d_src0),
+        .ws_desc1(d_src1),
+        .ws_desc2(d_dst),
+        .mat_id(instr_q[5:3]),
+        .mat_desc(d_mat)
     );
 
-    fd_reg fd_reg_inst (
-        .clk(clk), .rst_n(rst_n), .enable(fd_stall),
-        .instr_fd(norm_hold ? 13'b0 : instr_fd), .instr_de(instr_de),
-        .pc(pc), .pc_de(pc_de)
+    // ---------------- Workspace SRAM + arbitration ----------------
+    logic ws_rd_en, ws_wr_en, ws_rd_valid;
+    logic [7:0] ws_rd_addr, ws_wr_addr;
+    logic [255:0] ws_rd_data, ws_wr_data;
+    logic [31:0] ws_host_rdata;
+    register u_ws(
+        .clk(clk),
+        .rst_n(rst_n),
+        .rd_en(ws_rd_en),
+        .rd_addr(ws_rd_addr),
+        .rd_data(ws_rd_data),
+        .rd_valid(ws_rd_valid),
+        .wr_en(ws_wr_en),
+        .wr_addr(ws_wr_addr),
+        .wr_data(ws_wr_data),
+        .host_en(host_ws && !running),
+        .host_we(host_we),
+        .host_addr(host_addr[12:2]),
+        .host_wdata(host_wdata),
+        .host_rdata(ws_host_rdata),
+        .host_rvalid(ws_host_rvalid)
     );
 
-    // Decode Stage
-    
-    logic [511:0] reg_out_0_de, reg_out_1_de;
-    logic [2:0] alu_op_de;
-    logic wb_sel_de;
-
-    logic [511:0] reg_out_0_em, reg_out_1_em;
-    logic reg_wr_en_em, mem_wr_en_em, mem_rd_en_em_0, mem_rd_en_em_1;
-    logic [2:0] alu_op_em;
-    logic wb_sel_em;
-    logic [511:0] wb_data;
-    logic [8:0] pc_em;  
-    
-    ctrl_unit ctrl_unit_inst (
-        .instr(instr_de),
-        .reg_wr_en(reg_wr_en_de), .reg_rd_en(reg_rd_en_de),
-        .mem_wren(mem_wr_en_de), .mem_rden_0(mem_rd_en_de_0), .mem_rden_1(mem_rd_en_de_1),
-        .alu_op(alu_op_de), .wb_sel(wb_sel_de)
-    );
-        
-    register register_inst (
-        .clk(clk), .rst_n(rst_n), .data_in(wb_data), 
-        .r_addr_0(instr_de[2:0]), .r_addr_1(instr_de[5:3]),
-        .w_addr(instr_wb[8:6]), .w_en(reg_wr_en_wb),
-        .rd_en(reg_rd_en_de && !decode_bubble),
-        .full(full), .empty(empty), .almost_full(almost_full), .almost_empty(almost_empty),
-        .data_out_0(reg_out_0_de), .data_out_1(reg_out_1_de),
-        .norm_access(norm_own), .norm_write(norm_write),
-        .norm_read_address(norm_read_address), .norm_write_address(norm_write_address),
-        .norm_write_data(norm_write_data), .norm_read_data(norm_read_data),
-        .stream_busy(register_stream_busy), .stream_read_last(register_read_last)
+    // ---------------- Parameter SRAM ----------------
+    logic p_rd_en, p_rd_valid;
+    logic [9:0] p_rd_addr;
+    logic [255:0] p_rd_data;
+    logic [31:0] p_host_rdata;
+    mem_mapping u_param(
+        .clk(clk),
+        .rst_n(rst_n),
+        .rd_en(p_rd_en),
+        .rd_addr(p_rd_addr),
+        .rd_data(p_rd_data),
+        .rd_valid(p_rd_valid),
+        .wr_en(1'b0),
+        .wr_addr('0),
+        .wr_data('0),
+        .host_en(host_param && !running),
+        .host_we(host_we),
+        .host_addr(host_addr[14:2]),
+        .host_wdata(host_wdata),
+        .host_rdata(p_host_rdata),
+        .host_rvalid(p_host_rvalid)
     );
 
-    // Hold fetch at NORM and inject NOPs as the previous instruction drains.
-    // Register and memory streaming FSMs can outlive their pipeline strobes.
-    assign norm_pipeline_idle = (instr_de == 0 && instr_em == 0 &&
-        instr_mw == 0 && instr_wb == 0) && !register_stream_busy && !memory_busy &&
-        !tmatmul_assert && !tmatmul_start;
-    norm_dispatch #(.LUT_FILE(NORM_LUT_FILE)) norm_dispatch_inst (
-        .clk(clk), .rst_n(rst_n), .instruction(instr_fd), .instruction_pc(pc),
-        .pipeline_idle(norm_pipeline_idle), .hold_front(norm_hold),
-        .advance_pc(norm_advance), .own_register(norm_own),
-        .read_address(norm_read_address), .write_address(norm_write_address),
-        .read_data(norm_read_data), .write_data(norm_write_data),
-        .write_enable(norm_write), .done(norm_done), .overflow(norm_overflow),
-        .active_instruction(norm_instruction), .active_pc(norm_pc)
+    // ---------------- Row-wise vector unit ----------------
+    logic row_start, row_busy, row_done, row_ov, row_fmt_err;
+    logic row_rd_en, row_wr_en;
+    logic [7:0] row_rd_addr, row_wr_addr;
+    logic [255:0] row_wr_data;
+    rowwise_dispatch #(.SIG_LUT_FILE(SIG_LUT_FILE)) u_row(
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(row_start),
+        .op(instr_q[12:9]),
+        .a_desc(d_src0),
+        .b_desc(d_src1),
+        .dst_desc(d_dst),
+        .ws_rd_en(row_rd_en),
+        .ws_rd_addr(row_rd_addr),
+        .ws_rd_data(ws_rd_data),
+        .ws_rd_valid(ws_rd_valid),
+        .ws_wr_en(row_wr_en),
+        .ws_wr_addr(row_wr_addr),
+        .ws_wr_data(row_wr_data),
+        .busy(row_busy),
+        .done(row_done),
+        .overflow(row_ov),
+        .format_error(row_fmt_err)
     );
 
-    de_reg de_reg_inst (
-        .clk(clk), .rst_n(rst_n), .enable(de_stall),
-        .instr_de(decode_bubble ? 13'b0 : instr_de),
-        .reg_out_0_de(reg_out_0_de), .reg_out_1_de(reg_out_1_de),
-        .reg_wr_en_de(reg_wr_en_de && !decode_bubble),
-        .mem_wr_en_de(mem_wr_en_de && !decode_bubble),
-        .mem_rd_en_de_0(mem_rd_en_de_0 && !decode_bubble),
-        .mem_rd_en_de_1(mem_rd_en_de_1 && !decode_bubble),
-        .alu_op_de(decode_bubble ? 3'b0 : alu_op_de),
-        .wb_sel_de(wb_sel_de), .pc_de(pc_de),
-        .instr_em(instr_em), .reg_out_0_em(reg_out_0_em), .reg_out_1_em(reg_out_1_em),
-        .reg_wr_en_em(reg_wr_en_em), .mem_wr_en_em(mem_wr_en_em),
-        .mem_rd_en_em_0(mem_rd_en_em_0), .mem_rd_en_em_1(mem_rd_en_em_1),
-        .alu_op_em(alu_op_em), .wb_sel_em(wb_sel_em), .pc_em(pc_em)
+    // ---------------- NORM + QUANT ----------------
+    logic norm_start, norm_busy, norm_done, norm_ov, norm_error;
+    logic [23:0] quant_d;
+    logic norm_rd_en, norm_wr_en;
+    logic [7:0] norm_rd_addr, norm_wr_addr;
+    logic [255:0] norm_wr_data;
+    logic [23:0] norm_m, quant_m;
+    logic [5:0] norm_r, quant_r;
+    norm_dispatch u_norm(
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(norm_start),
+        .src_desc(d_src0),
+        .dst_desc(d_dst),
+        .scratch_z_base(scratch_z_base),
+        .epsilon_raw32(epsilon_raw32),
+        .delta_raw(delta_raw),
+        .ws_rd_en(norm_rd_en),
+        .ws_rd_addr(norm_rd_addr),
+        .ws_rd_data(ws_rd_data),
+        .ws_rd_valid(ws_rd_valid),
+        .ws_wr_en(norm_wr_en),
+        .ws_wr_addr(norm_wr_addr),
+        .ws_wr_data(norm_wr_data),
+        .busy(norm_busy),
+        .done(norm_done),
+        .overflow(norm_ov),
+        .format_error(norm_error),
+        .quant_d(quant_d),
+        .norm_m(norm_m),
+        .norm_r(norm_r),
+        .quant_m(quant_m),
+        .quant_r(quant_r)
     );
 
-    //execute and memory access
-    logic [15:0] alu_in_a[31:0], alu_in_b[31:0], alu_out_array [31:0];
-    logic carry, overflow;
-    logic [511:0] alu_out_em;
-    
-    logic [511:0] alu_out_mw;
-    logic [511:0] reg_out_0_mw;
-    logic reg_wr_en_mw, mem_wr_en_mw, mem_rd_en_mw_0, mem_rd_en_mw_1;
-    logic wb_sel_mw;
-    logic [8:0] pc_mw;
-
-    always_comb begin
-        for(int i = 0; i < 32; i = i + 1) begin
-            alu_in_a[i] = reg_out_0_em[16*i +: 16];
-            alu_in_b[i] = reg_out_1_em[16*i +: 16];
-        end
-        // {alu_in_a[31], alu_in_a[30], alu_in_a[29], alu_in_a[28], alu_in_a[27], alu_in_a[26], alu_in_a[25], alu_in_a[24],
-        //  alu_in_a[23], alu_in_a[22], alu_in_a[21], alu_in_a[20], alu_in_a[19], alu_in_a[18], alu_in_a[17], alu_in_a[16],
-        //  alu_in_a[15], alu_in_a[14], alu_in_a[13], alu_in_a[12], alu_in_a[11], alu_in_a[10], alu_in_a[9], alu_in_a[8],
-        //  alu_in_a[7], alu_in_a[6], alu_in_a[5], alu_in_a[4], alu_in_a[3], alu_in_a[2], alu_in_a[1], alu_in_a[0]} = reg_out_0_em;
-        // {alu_in_b[31], alu_in_b[30], alu_in_b[29], alu_in_b[28], alu_in_b[27], alu_in_b[26], alu_in_b[25], alu_in_b[24],
-        //  alu_in_b[23], alu_in_b[22], alu_in_b[21], alu_in_b[20], alu_in_b[19], alu_in_b[18], alu_in_b[17], alu_in_b[16],
-        //  alu_in_b[15], alu_in_b[14], alu_in_b[13], alu_in_b[12], alu_in_b[11], alu_in_b[10], alu_in_b[9], alu_in_b[8],
-        //  alu_in_b[7], alu_in_b[6], alu_in_b[5], alu_in_b[4], alu_in_b[3], alu_in_b[2], alu_in_b[1], alu_in_b[0]} = reg_out_1_em;
-    end
-
-    rowwise_op rowwise_op_inst (
-        .a(alu_in_a), .b(alu_in_b), .alu_out(alu_out_array),
-        .carry_out(carry), .overflow(overflow), .select(alu_op_em)
+    // ---------------- Ternary core ----------------
+    logic tm_start, tm_busy, tm_done, tm_ov, tm_error;
+    logic tm_rd_en, tm_wr_en;
+    logic [7:0] tm_rd_addr, tm_wr_addr;
+    logic [255:0] tm_wr_data;
+    logic tm_p_rd_en;
+    logic [9:0] tm_p_rd_addr;
+    ternary_mul u_tm(
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(tm_start),
+        .q_desc(d_src0),
+        .out_desc(d_dst),
+        .mat_desc(effective_mat),
+        .ws_rd_en(tm_rd_en),
+        .ws_rd_addr(tm_rd_addr),
+        .ws_rd_data(ws_rd_data),
+        .ws_rd_valid(ws_rd_valid),
+        .ws_wr_en(tm_wr_en),
+        .ws_wr_addr(tm_wr_addr),
+        .ws_wr_data(tm_wr_data),
+        .param_rd_en(tm_p_rd_en),
+        .param_rd_addr(tm_p_rd_addr),
+        .param_rd_data(p_rd_data),
+        .param_rd_valid(p_rd_valid),
+        .busy(tm_busy),
+        .done(tm_done),
+        .overflow(tm_ov),
+        .format_error(tm_error)
     );
+    assign p_rd_en = tm_p_rd_en;
+    assign p_rd_addr = tm_p_rd_addr;
 
-    assign overflow_out = (norm_own || norm_done) ? norm_overflow :
-                          (tmatmul_assert ? tmatmul_overflow : overflow);
-    assign carry_out = (norm_own || norm_done) ? 1'b0 : carry;
-    
-    always_comb begin
-        alu_out_em = {alu_out_array[31], alu_out_array[30], alu_out_array[29], alu_out_array[28], alu_out_array[27], alu_out_array[26],
-                        alu_out_array[25], alu_out_array[24], alu_out_array[23], alu_out_array[22], alu_out_array[21], alu_out_array[20],
-                        alu_out_array[19], alu_out_array[18], alu_out_array[17], alu_out_array[16], alu_out_array[15], alu_out_array[14],
-                        alu_out_array[13], alu_out_array[12], alu_out_array[11], alu_out_array[10], alu_out_array[9], alu_out_array[8],
-                        alu_out_array[7], alu_out_array[6], alu_out_array[5], alu_out_array[4], alu_out_array[3], alu_out_array[2],
-                        alu_out_array[1], alu_out_array[0]};
-        // alu_out_em = {alu_out_array[3], alu_out_array[2], alu_out_array[1], alu_out_array[0]};
-    end
+    // Runtime q scales are attached to the descriptor and exact memory extent.
+    logic [23:0] q_d[0:7];
+    logic [7:0] q_base[0:7];
+    logic [9:0] q_length[0:7];
+    logic [7:0] q_valid;
+    logic compose_busy, compose_done, compose_error;
+    logic [23:0] composed_m;
+    logic [5:0] composed_r;
+    typedef enum logic [3:0] {S_IDLE, S_FETCH, S_START, S_WAIT, S_ADVANCE, S_HALT,
+    S_COMPOSE_START, S_COMPOSE_WAIT, S_TM_START} sched_t;
+    sched_t sched;
+    logic [1:0] active_unit; // 1=row, 2=norm, 3=tm
+    scale_compose u_compose(.clk(clk),
+        .rst_n(rst_n),
+        .start(sched == S_COMPOSE_START),
+        .factor_m(effective_mat.scale_m),
+        .factor_r(effective_mat.scale_r),
+        .quant_d(q_d[instr_q[2:0]]),
+        .busy(compose_busy),
+        .done(compose_done),
+        .format_error(compose_error),
+        .result_m(composed_m),
+        .result_r(composed_r));
 
-    em_reg em_reg_inst (
-        .clk(clk), .rst_n(rst_n), .enable(em_stall),
-        .instr_em(instr_em), .alu_out_em(alu_out_em),
-        .reg_out_0_em(reg_out_0_em), .reg_wr_en_em(reg_wr_en_em),
-        .mem_wr_en_em(mem_wr_en_em), .mem_rd_en_em_0(mem_rd_en_em_0),
-        .mem_rd_en_em_1(mem_rd_en_em_1), .wb_sel_em(wb_sel_em), .pc_em(pc_em),
-        .instr_mw(instr_mw), .alu_out_mw(alu_out_mw),
-        .reg_out_0_mw(reg_out_0_mw), .reg_wr_en_mw(reg_wr_en_mw),
-        .mem_wr_en_mw(mem_wr_en_mw), .mem_rd_en_mw_0(mem_rd_en_mw_0),
-        .mem_rd_en_mw_1(mem_rd_en_mw_1), .wb_sel_mw(wb_sel_mw), .pc_mw(pc_mw)
-    );
-
-    // memmory to write back
-    logic [511:0] mem_out_0_mw, mem_out_1_mw, mem_in;
-    logic [511:0] alu_out_wb;
-    logic [511:0] result;
-    logic tmatmul_write, fifo_1_empty;
-    logic [2:0] mem_r_addr_1_reg, mem_r_addr_0_reg, mem_w_addr_reg;
-    logic mem_wr_en_em_reg, mem_rd_en_em_0_reg, mem_rd_en_em_1_reg;
-    
-    //Mux choose memory input
-    logic [2:0] mem_r_addr_1_in, mem_r_addr_0_in, mem_w_addr_in;
-    logic mem_wr_en_em_in, mem_rd_en_em_0_in, mem_rd_en_em_1_in;
-    
-    logic wb_sel_wb;
-    logic [511:0] mem_out_wb;
-    
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            mem_wr_en_em_reg <= 1'b0;
-            mem_rd_en_em_0_reg <= 1'b0;
-            mem_rd_en_em_1_reg <= 1'b0;
-            mem_r_addr_0_reg <= 3'b0;
-            mem_r_addr_1_reg <= 3'b0;
-            mem_w_addr_reg <= 3'b0;
-        end
-        else if (!tmatmul_assert) begin
-            mem_wr_en_em_reg <= mem_wr_en_em;
-            mem_rd_en_em_0_reg <= mem_rd_en_em_0;
-            mem_rd_en_em_1_reg <= mem_rd_en_em_1;
-            mem_r_addr_0_reg <= instr_em[2:0];
-            mem_r_addr_1_reg <= instr_em[5:3];
-            mem_w_addr_reg <= instr_em[8:6];
-        end
-    end
-
-    //State machine for TMATMUL assertion
-    localparam IDLE = 1'b0, RUN = 1'b1;
-    logic tmatmul_state, next_tmatmul_state;
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            tmatmul_state <= IDLE;
-        end
-        else begin
-            tmatmul_state <= next_tmatmul_state;
+            q_valid <= 0;
+            for (integer i = 0;i < 8;i = i + 1) begin
+                q_d[i] <= 0;
+                q_base[i] <= 0;
+                q_length[i] <= 0;
+            end
+        end else begin
+            for (integer i = 0;i < 8;i = i + 1) begin
+                if (ws_wr_en && int'(ws_wr_addr) >= int'(q_base[i]) &&
+                    int'(ws_wr_addr) < int'(q_base[i]) + (int'(q_length[i]) + 31) / 32) q_valid[i] <= 0;
+                if (host_ws && host_we && !running && int'(host_addr[12:5]) >= int'(q_base[i]) &&
+                    int'(host_addr[12:5]) < int'(q_base[i]) + (int'(q_length[i]) + 31) / 32) q_valid[i] <= 0;
+            end
+            if (host_desc && host_we && !running) q_valid <= 0;
+            if (sched == S_WAIT && active_unit == 2 && norm_done && !norm_error && !norm_ov) begin
+                q_d[instr_q[8:6]] <= quant_d;
+                q_valid[instr_q[8:6]] <= 1;
+                q_base[instr_q[8:6]] <= d_dst.base_word;
+                q_length[instr_q[8:6]] <= d_dst.length;
+            end
         end
     end
 
     always_comb begin
-        case (tmatmul_state)
-            IDLE: next_tmatmul_state = (instr_em[12-:4] == TMATMUL) ? RUN : IDLE;
-            RUN:  next_tmatmul_state = (tmatmul_done) ? IDLE : RUN;
-            default: next_tmatmul_state = IDLE;
+        row_start = 0;
+        norm_start = 0;
+        tm_start = 0;
+        pc_clear = (start_pulse && !running);
+        pc_advance = 0;
+        if (sched == S_START) begin
+            case (instr_q[12:9])
+                ADD, SUB, MUL, SIG, REC, RELU : row_start = 1;
+                NORM_OP : norm_start = 1;
+                default : ;
+            endcase
+        end
+        if (sched == S_TM_START) tm_start = 1;
+        if (sched == S_ADVANCE && pc != 9'h1ff) pc_advance = 1;
+    end
+
+    always_comb begin
+        ws_rd_en = 0;
+        ws_rd_addr = 0;
+        ws_wr_en = 0;
+        ws_wr_addr = 0;
+        ws_wr_data = 0;
+        case (active_unit)
+            2'h1 : begin
+                ws_rd_en = row_rd_en;
+                ws_rd_addr = row_rd_addr;
+                ws_wr_en = row_wr_en;
+                ws_wr_addr = row_wr_addr;
+                ws_wr_data = row_wr_data;
+            end
+            2'h2 : begin
+                ws_rd_en = norm_rd_en;
+                ws_rd_addr = norm_rd_addr;
+                ws_wr_en = norm_wr_en;
+                ws_wr_addr = norm_wr_addr;
+                ws_wr_data = norm_wr_data;
+            end
+            2'h3 : begin
+                ws_rd_en = tm_rd_en;
+                ws_rd_addr = tm_rd_addr;
+                ws_wr_en = tm_wr_en;
+                ws_wr_addr = tm_wr_addr;
+                ws_wr_data = tm_wr_data;
+            end
+            default : ;
         endcase
     end
 
-    always_comb begin
-        tmatmul_assert = (tmatmul_state == RUN);
-    end
-    assign tmatmul_start = (tmatmul_state == IDLE) && (instr_em[12-:4] == TMATMUL);
-
-    // always_ff @(posedge clk or negedge rst_n) begin
-    //     if (!rst_n) begin
-    //         tmatmul_assert <= 1'b0;
-    //     end
-    //     else begin
-    //         if(instr_em[12-:4] == TMATMUL) 
-    //             tmatmul_assert <= 1'b1;
-    //         else
-    //             tmatmul_assert <= 1'b0;
-    //     end
-    // end  
-
-
-    always_comb begin
-        if(tmatmul_assert) begin
-            mem_r_addr_0_in = mem_r_addr_0_reg;
-            mem_r_addr_1_in = mem_r_addr_1_reg;
-            mem_w_addr_in = mem_w_addr_reg;
-            mem_wr_en_em_in = mem_wr_en_em_reg;
-            mem_rd_en_em_0_in = mem_rd_en_em_0_reg;
-            mem_rd_en_em_1_in = mem_rd_en_em_1_reg;
-        end
-        else begin
-            mem_r_addr_0_in = instr_mw[2:0];
-            mem_r_addr_1_in = instr_mw[5:3];
-            mem_w_addr_in = instr_mw[8:6];
-            mem_wr_en_em_in = mem_wr_en_mw;
-            mem_rd_en_em_0_in = mem_rd_en_mw_0;
-            mem_rd_en_em_1_in = mem_rd_en_mw_1;
-        end
-    end
-        
-    always_comb begin
-        mem_in = (tmatmul_assert) ? result : reg_out_0_mw;
-    end
-
-    logic rd_type_mem;
-    always_comb begin
-        rd_type_mem = (tmatmul_assert);
-    end
-    
-    mem_mapping mem_mapping_inst (
-        .clk(clk), .rst_n(rst_n), .data_in(mem_in), .rd_type(rd_type_mem), .tmatmul_write(tmatmul_write),
-        .r_addr_0(mem_r_addr_0_in), .r_addr_1(mem_r_addr_1_in), .w_addr(mem_w_addr_in),
-        .w_en(mem_wr_en_em_in), .rd_en_0(mem_rd_en_em_0_in), .rd_en_1(mem_rd_en_em_1_in),
-        // .r_addr_0(instr_mw[2:0]), .r_addr_1(instr_mw[5:3]), .w_addr(instr_mw[8:6]),
-        // .w_en(mem_wr_en_mw), .rd_en_0(mem_rd_en_mw_0), .rd_en_1(mem_rd_en_mw_1),
-        .read_finish(read_finish), .write_finish(write_finish), .fifo_1_empty(fifo_1_empty),
-        .matrix_ready(matrix_ready), .ternary_ready(ternary_ready),
-        .matrix_valid(matrix_valid), .ternary_valid(ternary_valid), .tmatmul_ready(tmatmul_ready),
-        .transaction_busy(memory_busy),
-        .almost_full(), .almost_empty(),
-        .data_out_0(mem_out_0_mw), .data_out_1(mem_out_1_mw)
-    );
-
-    // // Ternary Multiplication
-    // logic [15:0] tmatmul_in_a[31:0];
-    // logic [1:0] tmatmul_in_b[31:0];
-
-    // always_comb begin
-    //     for(int i = 0; i < 32; i = i + 1) begin
-    //         tmatmul_in_b[i] = mem_out_1_mw[16*i +: 16];
-    //     end
-    //     for(int i = 0; i < 32; i = i + 1) begin
-    //         tmatmul_in_a[i] = mem_out_0_mw[16*i +: 16];
-    //     end
-    // end
-
-    ternary_mul ternary_mul(
-        .clk(clk),
-        .rst_n(rst_n),
-        .enable(tmatmul_start),
-        .matrix_in(mem_out_1_mw),
-        .ternary_matrix(mem_out_0_mw),
-        .matrix_out(result),
-        .matrix_valid(matrix_valid), .ternary_valid(ternary_valid),
-        .matrix_ready(matrix_ready), .ternary_ready(ternary_ready),
-        .output_ready(tmatmul_ready), .busy(), .done(tmatmul_done), .overflow(tmatmul_overflow),
-        .tmatmul_write(tmatmul_write)
-    );
-    
-    mw_reg mw_reg_inst (
-        .clk(clk), .rst_n(rst_n), .flush(flush_wb),
-        .enable(mw_stall),
-        .instr_mw(instr_mw), .mem_out_mw_0(mem_out_0_mw),
-        .alu_out_mw(alu_out_mw), .wb_sel_mw(wb_sel_mw), .pc_mw(pc_mw),
-        .reg_wr_en_mw(reg_wr_en_mw), .instr_wb(instr_wb),
-        .mem_out_wb_0(mem_out_wb), .alu_out_wb(alu_out_wb),
-        .wb_sel_wb(wb_sel_wb), .reg_wr_en_wb(reg_wr_en_wb), .pc_wb(pc_wb)
-    );
-
-    assign wb_data = wb_sel_wb ? mem_out_wb : alu_out_wb;
-    assign ready = (&instr_wb) && !tmatmul_assert && !tmatmul_start && !norm_hold &&
-                   !register_stream_busy && !memory_busy;
-    assign instr_debug = (norm_own || norm_done) ? norm_instruction : instr_wb;
-    assign pc_debug = (norm_own || norm_done) ? norm_pc : pc_wb;
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            mem_out_1_debug <= '0;
-        end
-        else begin
-            mem_out_1_debug <= mem_out_1_mw;
+            sched <= S_IDLE;
+            instr_q <= 0;
+            active_unit <= 0;
+            running <= 0;
+            ready <= 1;
+            error <= 0;
+            overflow_out <= 0;
+            effective_mat <= '0;
+        end else begin
+            if (start_pulse && !running) begin
+                running <= 1;
+                ready <= 0;
+                error <= 0;
+                overflow_out <= 0;
+                sched <= S_FETCH;
+                active_unit <= 0;
+            end
+            case (sched)
+                S_IDLE : ;
+                S_FETCH : begin
+                    instr_q <= instr_fetch;
+                    sched <= S_START;
+                end
+                S_START : begin
+                    case (instr_q[12:9])
+                        ADD, SUB, MUL, SIG, REC, RELU : begin
+                            active_unit <= 1;
+                            sched <= S_WAIT;
+                        end
+                        NORM_OP : begin
+                            active_unit <= 2;
+                            sched <= S_WAIT;
+                        end
+                        TMATMUL : begin
+                            effective_mat <= d_mat;
+                            if (d_mat.reserved[0]) begin
+                                if (!q_valid[instr_q[2:0]] || q_base[instr_q[2:0]] != d_src0.base_word ||
+                                    q_length[instr_q[2:0]] != d_src0.length) begin
+                                    error <= 1;
+                                    sched <= S_HALT;
+                                end
+                                else sched <= S_COMPOSE_START;
+                            end else if (q_valid[instr_q[2:0]]) begin
+                                // NORM-generated q must consume its runtime scale.
+                                error <= 1;
+                                sched <= S_HALT;
+                            end else sched <= S_TM_START;
+                        end
+                        HALT : sched <= S_HALT;
+                        4'h0 : sched <= S_ADVANCE;
+                        default : begin
+                            error <= 1;
+                            sched <= S_HALT;
+                        end
+                    endcase
+                end
+                S_WAIT : begin
+                    if ((active_unit == 1 && row_done) || (active_unit == 2 && norm_done) || (active_unit == 3 && tm_done)) begin
+                        if (active_unit == 1) begin
+                            overflow_out <= overflow_out | row_ov;
+                            error <= error | row_fmt_err;
+                        end
+                        if (active_unit == 2) begin
+                            overflow_out <= overflow_out | norm_ov;
+                            error <= error | norm_error;
+                        end
+                        if (active_unit == 3) begin
+                            overflow_out <= overflow_out | tm_ov;
+                            error <= error | tm_error;
+                        end
+                        active_unit <= 0;
+                        sched <= S_ADVANCE;
+                        if ((active_unit == 1 && row_fmt_err) || (active_unit == 2 && (norm_error || norm_ov)) ||
+                            (active_unit == 3 && tm_error)) sched <= S_HALT;
+                    end
+                end
+                S_COMPOSE_START : sched <= S_COMPOSE_WAIT;
+                S_COMPOSE_WAIT : if (compose_done) begin
+                    if (compose_error) begin
+                        error <= 1;
+                        sched <= S_HALT;
+                    end
+                    else begin
+                        effective_mat.scale_m <= composed_m;
+                        effective_mat.scale_r <= composed_r;
+                        sched <= S_TM_START;
+                    end
+                end
+                S_TM_START : begin
+                    active_unit <= 3;
+                    sched <= S_WAIT;
+                end
+                S_ADVANCE : if (pc == 9'h1ff) begin
+                    error <= 1;
+                    sched <= S_HALT;
+                end else sched <= S_FETCH;
+                S_HALT : begin
+                    running <= 0;
+                    ready <= 1;
+                    sched <= S_IDLE;
+                end
+                default : sched <= S_IDLE;
+            endcase
         end
     end
 
+    assign pc_debug = pc;
+    assign instr_debug = instr_q;
+
+    always_comb begin
+        host_rdata = 32'h0000_0000;
+        if (host_param) host_rdata = p_host_rdata;
+        else if (host_ws) host_rdata = ws_host_rdata;
+        else if (host_desc) host_rdata = desc_host_rdata;
+        else if (host_imem) host_rdata = {19'h0, instr_host};
+        else if (host_ctrl) begin
+            case (host_addr[7:2])
+                6'h00 : host_rdata = {28'h0, error, overflow_out, ready, running};
+                6'h01 : host_rdata = {23'h0, pc};
+                6'h04 : host_rdata = {24'h00_0000, scratch_z_base};
+                6'h05 : host_rdata = epsilon_raw32[31:0];
+                6'h06 : host_rdata = epsilon_raw32[63:32];
+                6'h07 : host_rdata = {8'h00, delta_raw};
+                6'h08 : host_rdata = {2'h0, quant_r, quant_m};
+                6'h09 : host_rdata = {2'h0, norm_r, norm_m};
+                6'h0a : host_rdata = {8'h00, quant_d};
+                default : host_rdata = 0;
+            endcase
+        end
+    end
+
+    assign start_pulse = host_ctrl && host_we && (host_addr[7:2] == 0) && host_wdata[0];
+
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            scratch_z_base <= 8'h80;
+            epsilon_raw32 <= 0;
+            delta_raw <= 24'h00_0001;
+        end else if (host_ctrl && host_we && !running) begin
+            case (host_addr[7:2])
+                6'h04 : scratch_z_base <= host_wdata[7:0];
+                6'h05 : epsilon_raw32[31:0] <= host_wdata;
+                6'h06 : epsilon_raw32[63:32] <= host_wdata;
+                6'h07 : delta_raw <= host_wdata[23:0];
+                default : ;
+            endcase
+        end
+    end
 endmodule
