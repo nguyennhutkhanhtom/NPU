@@ -57,36 +57,26 @@ package npu_pkg;
         else sat_s32 = x[31:0];
     endfunction
 
-    // Round-to-nearest-even signed arithmetic right shift.
-    // shift=0 returns x unchanged. Intended for shift <= 47.
+    // Round-to-nearest-even signed arithmetic right shift, including shift=0.
+    // Arithmetic shift gives floor(x/2^shift); discarded bits encode its remainder.
     function automatic logic signed [63:0] rne_shift64(
             input logic signed [63:0] x,
             input logic [5:0] shift
         );
-        logic sign;
-        logic [63:0] mag;
-        logic [63:0] q;
+        logic signed [63:0] q;
+        logic [63:0] discarded;
         logic guard;
         logic sticky;
-        logic lsb;
         logic inc;
         begin
-            // Assign every temporary for shift=0 as well. Older Quartus
-            // versions otherwise expose unassigned package-function locals.
-            sign = x[63];
-            mag = sign ? $unsigned( - x) : $unsigned(x);
-            q = mag >> shift;
-            guard = 1'b0;
-            sticky = 1'b0;
-            lsb = q[0];
-            inc = 1'b0;
-            if (shift != 0) begin
-                guard = mag[shift - 1];
-                sticky = (shift > 1) ? | (mag & ((64'h1 << (shift - 1)) - 1)) : 1'b0;
-                inc = guard & (sticky | lsb);
-            end
-            q = q + inc;
-            rne_shift64 = sign ? - $signed(q) : $signed(q);
+            // A 7-bit shift amount represents 64: shift=0 discards no bits.
+            // This avoids magnitude/sign negators and a variable subtract-one mask.
+            q = x >>> shift;
+            discarded = $unsigned(x) << (7'd64 - {1'b0, shift});
+            guard = discarded[63];
+            sticky = |discarded[62:0];
+            inc = guard && (sticky || q[0]);
+            rne_shift64 = q + $signed({63'h0, inc});
         end
     endfunction
 

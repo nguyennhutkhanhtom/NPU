@@ -1,4 +1,4 @@
-module rowwise_dispatch #(parameter string SIG_LUT_FILE = "") (
+module rowwise_dispatch (
     input logic clk, rst_n, start,
     input logic [3:0] op,
     input npu_pkg::ws_desc_t a_desc, b_desc, dst_desc,
@@ -49,7 +49,7 @@ module rowwise_dispatch #(parameter string SIG_LUT_FILE = "") (
             ranges_overlap(int'(a_desc.base_word), ws_words(a_desc), int'(dst_desc.base_word), ws_words(dst_desc))) invalid = 1;
         valid_elems = (int'(source_a_desc_q.length) - int'(word_index_q) * 16 >= 16) ? 5'd16 : 5'(int'(source_a_desc_q.length) - int'(word_index_q) * 16);
     end
-    rowwise_op #(.SIG_LUT_FILE(SIG_LUT_FILE)) u_alu(
+    rowwise_op u_alu(
         .clk(clk),
         .rst_n(rst_n),
         .start(state == START_ALU),

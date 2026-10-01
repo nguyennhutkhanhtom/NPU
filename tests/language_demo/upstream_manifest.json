@@ -1,0 +1,71 @@
+{
+  "model_revision": "8bb40dbf501bbad4a12a11c5697e5ad239744539",
+  "source_revision": "4bb4ca58421f62652f6804aa4164f5be992779e2",
+  "model_files": [
+    ".gitattributes",
+    "README.md",
+    "config.json",
+    "eval.json",
+    "meta.json",
+    "metrics.csv",
+    "model.safetensors",
+    "model.tpack",
+    "seed0/config.json",
+    "seed0/eval.json",
+    "seed0/meta.json",
+    "seed0/metrics.csv",
+    "seed0/model.safetensors",
+    "seed0/model.tpack",
+    "tokenizer.json"
+  ],
+  "files": {
+    "config.json": {
+      "sha256": "f66ba387304b4edd32eefd3e667590b9a635992f0499bd74a039ee9c1e93c448",
+      "bytes": 389
+    },
+    "meta.json": {
+      "sha256": "3fe460bb1c0fbebd508026e0610724ec85a45e469293ecb19e839c18c49f8597",
+      "bytes": 414
+    },
+    "model.safetensors": {
+      "sha256": "cfa114a8e411c25e89f8b507cb5886785f89132352743f26cd23a7cbaab863ae",
+      "bytes": 2758256
+    },
+    "nanofable/__init__.py": {
+      "sha256": "654e1391808b8ba9b5d939db85dded12328bead094710ba196d3c2b25ed7903e",
+      "bytes": 88
+    },
+    "nanofable/bitlinear.py": {
+      "sha256": "47189144c2d3fb92f7470dbaba98421eedf2c16d41a39a9e351fbffee1694968",
+      "bytes": 1790
+    },
+    "nanofable/config.py": {
+      "sha256": "a8ffdee8e8070b6c9901f773334fdec6e6200634c47cf4cd695eeb945ce13e35",
+      "bytes": 1245
+    },
+    "nanofable/generate.py": {
+      "sha256": "aa28b5b04df9d7f789c91136b2d749d1debc03880d1a633e9be4f2381b7c6bff",
+      "bytes": 1862
+    },
+    "nanofable/model.py": {
+      "sha256": "9e61d9a8e8719f1064a8db1f1b23cb260db3ba4df70175cf13ca1ea61ecb8b16",
+      "bytes": 4163
+    },
+    "nanofable/rope.py": {
+      "sha256": "91cfbaa85257e68e681f386925946e57837c76e58ebd911c28b062ec28b1679f",
+      "bytes": 1211
+    },
+    "nanofable/tokenizer.py": {
+      "sha256": "5097ba58c0afdfe08bcb150a6fad3a23da34ab5e51cae08ceb9b6956301de8cd",
+      "bytes": 1617
+    },
+    "README.md": {
+      "sha256": "2983dd9f79611cbf9126259c0f5bf12ca4e2d92dfc0470454e2810f21b80eae8",
+      "bytes": 5022
+    },
+    "tokenizer.json": {
+      "sha256": "d616056d52334935ce1e6534dedf55b253d74cc02a62a273e959c85d1809fc30",
+      "bytes": 265483
+    }
+  }
+}

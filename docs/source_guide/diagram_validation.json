@@ -1,0 +1,448 @@
+{
+  "verified_date": "2026-10-01",
+  "mermaid_version": "11.17.2",
+  "scope": "Mermaid parse and render of every diagram in docs Markdown and the repository README. This records diagram evidence only; RTL regression and synthesis evidence are recorded separately.",
+  "diagrams": [
+    {
+      "file": "docs/demos/candidates.md",
+      "ordinal": 0,
+      "source_sha256": "099774894302fac63a7b699f48fd3a8953fc578cc88dc0f30f1c5e344e81a9a6",
+      "width": 1984,
+      "height": 232,
+      "nodes": 9,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/demos/language.md",
+      "ordinal": 0,
+      "source_sha256": "178e369e07cf12b96490241074b7de7c62509ab5b822b7a5807f856ec82322b9",
+      "width": 1688,
+      "height": 224,
+      "nodes": 7,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/design/architecture.md",
+      "ordinal": 0,
+      "source_sha256": "87261bd9ddc2e9df30efdd48096b3f88c9aa8468e90a8f4d0e074f0ad010af0b",
+      "width": 2607,
+      "height": 438,
+      "nodes": 10,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/acc_mul.sv.md",
+      "ordinal": 0,
+      "source_sha256": "0c38f8eee8facf8129134215476a2b94b4fadb571a80c2842f45bd899e899b8d",
+      "width": 1145,
+      "height": 242,
+      "nodes": 4,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/acc_mul.sv.md",
+      "ordinal": 1,
+      "source_sha256": "182916e32ebf84a3ac4ac4e312f50f765b8cfa3f7e3c75c9ddb7855d0b26168a",
+      "width": 503,
+      "height": 688,
+      "nodes": 6,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/addsub.sv.md",
+      "ordinal": 0,
+      "source_sha256": "c59b3173072d7d666961d0291728c6230af9bfb50a26e3e2a55b7fd1ee728c34",
+      "width": 1127,
+      "height": 258,
+      "nodes": 10,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/ctrl_unit.sv.md",
+      "ordinal": 0,
+      "source_sha256": "32ba4a96c9f24386be6752b8e14ce6b3b35c2c3de397d25b26b3a812961e46a4",
+      "width": 672,
+      "height": 415,
+      "nodes": 8,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/de_reg.sv.md",
+      "ordinal": 0,
+      "source_sha256": "ac2c1090da0df1a472d8562aeaf5f6e6dad31d57355a84c3e7c805bff67ef99f",
+      "width": 880,
+      "height": 282,
+      "nodes": 5,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/descriptor_file.sv.md",
+      "ordinal": 0,
+      "source_sha256": "7de8b12e5268fdc048129b221adecdf4e73140b00a5b8304f854922095ff163a",
+      "width": 1369,
+      "height": 715,
+      "nodes": 12,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/div.sv.md",
+      "ordinal": 0,
+      "source_sha256": "c3babb3d5ef79da07195583e932bf025da38772838e2285ed88253167c4df757",
+      "width": 1430,
+      "height": 904,
+      "nodes": 10,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/div.sv.md",
+      "ordinal": 1,
+      "source_sha256": "b68fe6d625ce2a4cd64b80de08f0b879bb1659a8d57fed71df0213e484b1f20e",
+      "width": 1011,
+      "height": 670,
+      "nodes": 8,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/em_reg.sv.md",
+      "ordinal": 0,
+      "source_sha256": "3699ffc3975f593013b286a10f630b956d7bdece918b2a6827f6ffe1ae1dda6d",
+      "width": 880,
+      "height": 306,
+      "nodes": 5,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/exp.sv.md",
+      "ordinal": 0,
+      "source_sha256": "5cc14bd3b310215f80790ebc0be6af9f513c08548924ff27d3feb307455945d9",
+      "width": 447,
+      "height": 200,
+      "nodes": 3,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/fd_reg.sv.md",
+      "ordinal": 0,
+      "source_sha256": "9f7562ae2130ddbfb899c0d50f5ccab37aeacb73b809a8f1392ca204a1d72430",
+      "width": 873,
+      "height": 258,
+      "nodes": 5,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/hazard_detect.sv.md",
+      "ordinal": 0,
+      "source_sha256": "941e985177cb3da4e2d9359f6d024072a448703add1a885cbfbfbc42c9245ce2",
+      "width": 970,
+      "height": 246,
+      "nodes": 8,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/ins_mem.sv.md",
+      "ordinal": 0,
+      "source_sha256": "e410b493f50c0573afa229e3dc542c33ca374ea12a389a8518d49e188c6f5135",
+      "width": 1316,
+      "height": 1084,
+      "nodes": 8,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/matmul_wrap.sv.md",
+      "ordinal": 0,
+      "source_sha256": "b9d5087dfe8351cfe031e2aeb15534f88027bbda2baf8e7ea08f7e35aa22a3d6",
+      "width": 704,
+      "height": 248,
+      "nodes": 6,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/matmulfree.sv.md",
+      "ordinal": 0,
+      "source_sha256": "83353ca9e46b5cc747d89e4689df0eec72aa7a6cfdf7e027018a011a5bebc4af",
+      "width": 2831,
+      "height": 2473,
+      "nodes": 14,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/matmulfree.sv.md",
+      "ordinal": 1,
+      "source_sha256": "54d96572ff9ee73754856529e7385a17f3fc28bb010934166ce07e2343dd1548",
+      "width": 1799,
+      "height": 1318,
+      "nodes": 11,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/mem_burst.v.md",
+      "ordinal": 0,
+      "source_sha256": "28c8398ea901b9f332f049b21b4b6c66ccea384cf577cdd26a7107fdfec84f53",
+      "width": 1549,
+      "height": 898,
+      "nodes": 7,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/mem_burst.v.md",
+      "ordinal": 1,
+      "source_sha256": "5f6dd12ce449d7b6a165ea64eef13e954b9bc5645e7728b45d30df03dcce9e5e",
+      "width": 1378,
+      "height": 454,
+      "nodes": 9,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/mem_mapping.sv.md",
+      "ordinal": 0,
+      "source_sha256": "32285283e3cfa9411aa0bbc869c85ccb3ba84c626395c126ce77c7a0b36d9e69",
+      "width": 1142,
+      "height": 353,
+      "nodes": 4,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/mul.sv.md",
+      "ordinal": 0,
+      "source_sha256": "5b85c4a901ae80e13f033c68da291fd54c8390d033b0e77d615f8669dc9752a1",
+      "width": 733,
+      "height": 742,
+      "nodes": 13,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/mw_reg.sv.md",
+      "ordinal": 0,
+      "source_sha256": "20d600a30793bb8361f133f01354d542158302da90abd75dbfb17b006a9a205b",
+      "width": 880,
+      "height": 282,
+      "nodes": 5,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/norm_dispatch.sv.md",
+      "ordinal": 0,
+      "source_sha256": "39e11d2afc8c3ffd2a30e9d1e113b4bfd42608e3c9978c0d3a695f359ef33f0c",
+      "width": 1352,
+      "height": 832,
+      "nodes": 9,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/norm.sv.md",
+      "ordinal": 0,
+      "source_sha256": "a5303ca7394fb592de985449793e9486216520b1a2d14516618a83604602ac49",
+      "width": 1470,
+      "height": 1576,
+      "nodes": 14,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/norm.sv.md",
+      "ordinal": 1,
+      "source_sha256": "3190f7c2c217fe41766990a792cdf01464958588d62ab486ff9fab7d05a6a43e",
+      "width": 1235,
+      "height": 1072,
+      "nodes": 13,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/norm.sv.md",
+      "ordinal": 2,
+      "source_sha256": "1e00bb9757d84e7b9844aa96c71328f10cae2c513a99f36bde0e1a26cdc22fc3",
+      "width": 587,
+      "height": 814,
+      "nodes": 8,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/norm.sv.md",
+      "ordinal": 3,
+      "source_sha256": "06373f9e6b1ed924a0a3c57e8fb660f73a4fad077d0a4bbfdb2b9abf70494b93",
+      "width": 897,
+      "height": 622,
+      "nodes": 10,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/norm.sv.md",
+      "ordinal": 4,
+      "source_sha256": "c999a00818474e6c6071092d507fd774b0248f14268a1fddfa96f008a069b2cd",
+      "width": 801,
+      "height": 862,
+      "nodes": 8,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/npu_pkg.sv.md",
+      "ordinal": 0,
+      "source_sha256": "0b6e095d91f3294bbbea8f4f0461af15caedd9ce26ef767d6b9d4b69e7a9162f",
+      "width": 1262,
+      "height": 356,
+      "nodes": 6,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/npu_pkg.sv.md",
+      "ordinal": 1,
+      "source_sha256": "382383bc9e5ecc18cea1504d05540302f311357be6a5078225ef9de4594e5a78",
+      "width": 505,
+      "height": 594,
+      "nodes": 7,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/PC.sv.md",
+      "ordinal": 0,
+      "source_sha256": "9902fbe5b668a387e818b3d27ceabc3c24902e5c0a9563e25653703735221556",
+      "width": 565,
+      "height": 430,
+      "nodes": 7,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/postscale.sv.md",
+      "ordinal": 0,
+      "source_sha256": "c55964e3600f9e4b1cafccefca0a0a154450115e95e938bfc6cae20551418cf0",
+      "width": 810,
+      "height": 694,
+      "nodes": 15,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/postscale.sv.md",
+      "ordinal": 1,
+      "source_sha256": "54c04da9b302a0fd8e090160fedb41cdfdc2c6a03fbfd0db2cecc971ca9dd1ee",
+      "width": 894,
+      "height": 646,
+      "nodes": 14,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/regfile.sv.md",
+      "ordinal": 0,
+      "source_sha256": "07a7d857a05637503a662f70491f5b3b1d159ab67f31c298d516c44d946db860",
+      "width": 1147,
+      "height": 346,
+      "nodes": 4,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/rowwise_dispatch.sv.md",
+      "ordinal": 0,
+      "source_sha256": "917d49a29cad7d538a18f15c6df12c4b786dfe9f578dbfa642b91d7d9b945e51",
+      "width": 1207,
+      "height": 1144,
+      "nodes": 9,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/rowwise_dispatch.sv.md",
+      "ordinal": 1,
+      "source_sha256": "f58f2a7f110fedccdef13e50e805f98c443f8fa06b486a53f0f676d9098893b9",
+      "width": 1144,
+      "height": 742,
+      "nodes": 7,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/rowwise_op.sv.md",
+      "ordinal": 0,
+      "source_sha256": "7e7b5a03255be4abfc8fa9040bdb283e8568e53295d762ac0208c8e332f7df19",
+      "width": 1458,
+      "height": 1678,
+      "nodes": 16,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/rowwise_op.sv.md",
+      "ordinal": 1,
+      "source_sha256": "4aca3cbb7ff530ffb001727c7333f5151c650604195296baca468a4f6f784fdd",
+      "width": 911,
+      "height": 1354,
+      "nodes": 14,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/scale_compose.sv.md",
+      "ordinal": 0,
+      "source_sha256": "97c9fc304b74fabdb54e8be17fdbe2f60e28573fbbf11fe7e768ae341d947077",
+      "width": 1383,
+      "height": 1264,
+      "nodes": 14,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/scale_compose.sv.md",
+      "ordinal": 1,
+      "source_sha256": "cd6a986e8e6fd1eae3361d61d0da7a94a018903fa2e29ea9bf2f89dc78b727e7",
+      "width": 1230,
+      "height": 982,
+      "nodes": 10,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/sigmoid.sv.md",
+      "ordinal": 0,
+      "source_sha256": "75b21d91ac739e6643b3bdd0eae527217ddff6095778a8cfb80e1cd36ed69788",
+      "width": 894,
+      "height": 1210,
+      "nodes": 11,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/sigmoid.sv.md",
+      "ordinal": 1,
+      "source_sha256": "fcfc00b85d65c26949c4752afb08c3265b18512f2c356a1f93df644f7f2987a4",
+      "width": 640,
+      "height": 1360,
+      "nodes": 12,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/sram_256_wrapper.sv.md",
+      "ordinal": 0,
+      "source_sha256": "aced8f5fbd92b69a41c981dfe3e3874ff3cbe2ff662ba5e2dca4d196585fb3de",
+      "width": 1577,
+      "height": 1518,
+      "nodes": 10,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/sram_256_wrapper.sv.md",
+      "ordinal": 1,
+      "source_sha256": "eaa7d5a4da6e05a6497e057d40c26966a8be4190c65057eac1cad9eb0c57a330",
+      "width": 1577,
+      "height": 456,
+      "nodes": 13,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/ternary_mul.sv.md",
+      "ordinal": 0,
+      "source_sha256": "e2df6c31fa35cf651b543e5c464fd7df97a65050fe2e7f5e500f5cc7680bd69f",
+      "width": 1649,
+      "height": 1384,
+      "nodes": 16,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/ternary_mul.sv.md",
+      "ordinal": 1,
+      "source_sha256": "f90825898d8c3d338320935e82cb8f2a3d76ba4dbf697bbd17b6f891085f6857",
+      "width": 963,
+      "height": 838,
+      "nodes": 11,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/README.md",
+      "ordinal": 0,
+      "source_sha256": "83353ca9e46b5cc747d89e4689df0eec72aa7a6cfdf7e027018a011a5bebc4af",
+      "width": 2831,
+      "height": 2473,
+      "nodes": 14,
+      "status": "rendered"
+    }
+  ]
+}

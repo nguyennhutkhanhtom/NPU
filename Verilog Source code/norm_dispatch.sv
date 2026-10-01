@@ -27,7 +27,7 @@ module norm_dispatch (
     output logic [5:0] quant_r
 );
     import npu_pkg::*;
-    logic invalid, rejected, core_busy, core_done, core_error;
+    logic invalid, rejected, core_busy, core_done, core_error, core_overflow;
     always_comb begin
         invalid = !ws_valid(src_desc) || !ws_valid(dst_desc) ||
         src_desc.fmt != FMT_S16 || dst_desc.fmt != FMT_S8 ||
@@ -40,6 +40,8 @@ module norm_dispatch (
     assign busy = core_busy;
     assign done = core_done || rejected;
     assign format_error = core_error || rejected;
+    // A rejected invocation never starts the core and has no arithmetic overflow.
+    assign overflow = core_overflow && !rejected;
     norm u_norm(
         .clk(clk),
         .rst_n(rst_n),
@@ -59,7 +61,7 @@ module norm_dispatch (
         .ws_wr_data(ws_wr_data),
         .busy(core_busy),
         .done(core_done),
-        .overflow(overflow),
+        .overflow(core_overflow),
         .format_error(core_error),
         .quant_d(quant_d),
         .norm_m(norm_m),

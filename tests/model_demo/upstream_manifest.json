@@ -1,0 +1,56 @@
+{
+  "commit": "0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f",
+  "downloaded_utc": "2026-10-01T01:40:24.7110975Z",
+  "files": [
+    {
+      "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/models.py",
+      "sha256": "fab6fe8a72082411a88e8eb45a1c00ce7f44cb046ea731aee6c4d90737a79fdb",
+      "path": "models.py",
+      "local": "models.py",
+      "bytes": 12286
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/BitNetMCU.py",
+      "sha256": "a5f44a72bf5518a03a9d91da73e6aa6df1de924bc1c170f3095e8c1c629ccaa7",
+      "path": "BitNetMCU.py",
+      "local": "BitNetMCU.py",
+      "bytes": 32592
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/BitNetMCU_MNIST_test_data.h",
+      "sha256": "174d37e67fc8fd6414a00eee4838b7e3af5459c0eeab7f93893a8f424f63c99f",
+      "path": "BitNetMCU_MNIST_test_data.h",
+      "local": "BitNetMCU_MNIST_test_data.h",
+      "bytes": 15890
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/test_inference.py",
+      "sha256": "eec580cb0d21dc646d9a4c0feb9cf33773821c6701845ce905219a38b9552fd4",
+      "path": "test_inference.py",
+      "local": "test_inference.py",
+      "bytes": 6714
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/trainingparameters.yaml",
+      "sha256": "905547a6b32965554ded492990956cd7d4501b0a64663509284766d90ae0bc45",
+      "path": "trainingparameters.yaml",
+      "local": "trainingparameters.yaml",
+      "bytes": 4336
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/readme.md",
+      "sha256": "7922b30316e18fc06ca91ad425dae1866b9b15863010715466de9714d51c38a6",
+      "path": "readme.md",
+      "local": "readme.md",
+      "bytes": 5927
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/modeldata/a11_Opt12k_cos_Aug_BitMnist_PerTensor_Binary_RMS_width160_160_160_lr0.001_decay0.1_stepsize10_bs128_epochs60.pth",
+      "sha256": "cd1573f0bfd7f4b1bc734601d98c9df122a2a8fedf41066f4ba9bd17ac4af289",
+      "path": "modeldata/a11_Opt12k_cos_Aug_BitMnist_PerTensor_Binary_RMS_width160_160_160_lr0.001_decay0.1_stepsize10_bs128_epochs60.pth",
+      "local": "a11_Opt12k_cos_Aug_BitMnist_PerTensor_Binary_RMS_width160_160_160_lr0.001_decay0.1_stepsize10_bs128_epochs60.pth",
+      "bytes": 377853
+    }
+  ],
+  "repository": "https://github.com/cpldcpu/BitNetMCU"
+}

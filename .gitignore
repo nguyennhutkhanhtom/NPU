@@ -9,7 +9,6 @@
 /review/
 /scale/
 /tmatmul/
-/tests/
 /work/
 
 # Duplicate ASIC v2 source package; maintained in /Verilog Source code/.
@@ -17,10 +16,50 @@
 /npu_asic_v2.zip
 
 # Local Quartus project, temporary files and generated build caches.
-/quartus/
+/quartus/*
+!/quartus/matmul_free.qpf
+!/quartus/matmul_free.qsf
 /tmp/
 /quartus/db/
 /quartus/incremental_db/
 /quartus/output_files/
 /quartus/*.qws
 /Verilog Source code/*.bak
+
+# Publish the reproducible test entry points and compact evidence.
+/tests/*
+!/tests/README.md
+!/tests/run.ps1
+!/tests/reference.py
+!/tests/tb_all.sv
+!/tests/check_synthesis.tcl
+!/tests/results.json
+!/tests/model_demo/
+!/tests/language_demo/
+/tests/model_demo/*
+!/tests/model_demo/*.py
+!/tests/model_demo/*.ps1
+!/tests/model_demo/*.sv
+!/tests/model_demo/README.md
+!/tests/model_demo/*.json
+!/tests/model_demo/*.mem
+!/tests/model_demo/parameter.bin
+!/tests/model_demo/host_vectors.txt
+/tests/language_demo/*
+!/tests/language_demo/export_demo.py
+!/tests/language_demo/fetch_assets.py
+!/tests/language_demo/finalize.py
+!/tests/language_demo/run.ps1
+!/tests/language_demo/setup.ps1
+!/tests/language_demo/tb_language_demo.sv
+!/tests/language_demo/README.md
+!/tests/language_demo/upstream_manifest.json
+!/tests/language_demo/results.json
+!/tests/language_demo/requirements.txt
+
+# Scoped third-party dependencies, downloaded upstream assets and build output.
+**/__pycache__/
+**/*.pyc
+**/node_modules/
+/tools/docs/.npm-cache/
+/tools/docs/output/

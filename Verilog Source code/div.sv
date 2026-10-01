@@ -25,7 +25,7 @@ module div #(
 
     always_comb begin
         rem_shift = {rem_work[DEN_W - 1 : 0], q_work[NUM_W - 1]};
-        q_next = {q_work[NUM_W - 2 : 0], 1'b0};
+        q_next = q_work << 1;
         if (rem_shift >= {1'b0, den_reg}) begin
             rem_shift = rem_shift - {1'b0, den_reg};
             q_next[0] = 1'b1;
@@ -43,7 +43,7 @@ module div #(
                 div_zero <= (denominator == 0);
                 if (denominator == 0) begin
                     quotient <= '1;
-                    remainder <= numerator[DEN_W - 1 : 0];
+                    remainder <= DEN_W'(numerator);
                     done <= 1'b1;
                 end else begin
                     busy <= 1'b1;

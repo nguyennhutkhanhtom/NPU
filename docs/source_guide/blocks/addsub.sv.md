@@ -1,6 +1,6 @@
 # addsub.sv — Helper cộng/trừ có saturation
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Helper — không instantiate trong top hiện tại.
 

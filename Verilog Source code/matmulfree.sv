@@ -1,4 +1,4 @@
-module matmulfree #(parameter string SIG_LUT_FILE = "") (
+module matmulfree (
     input logic clk,
     input logic rst_n,
 
@@ -33,8 +33,9 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
     (host_addr[7:2] == 0 || host_addr[7:2] == 1 ||
         (host_addr[7:2] >= 4 && host_addr[7:2] <= 10));
     logic ws_host_rvalid, p_host_rvalid;
+    logic instr_fetch_en, instr_fetch_valid, instr_host_valid;
     assign host_ready = (host_ctrl && (!host_we || !running)) ||
-    (!running && (host_desc || host_imem ||
+    (!running && (host_desc || (host_imem && (host_we || instr_host_valid)) ||
         (host_param && (host_we || p_host_rvalid)) ||
         (host_ws && (host_we || ws_host_rvalid))));
 
@@ -53,12 +54,17 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
         .advance(pc_advance),
         .pc_out(pc));
     ins_mem u_imem(.clk(clk),
+        .rst_n(rst_n),
+        .fetch_en(instr_fetch_en),
         .addr(pc),
         .instr(instr_fetch),
+        .instr_valid(instr_fetch_valid),
+        .host_en(host_imem && !running),
         .host_we(host_imem && host_we && !running),
         .host_addr(host_addr[10:2]),
         .host_instr(host_wdata[12:0]),
-        .host_rinstr(instr_host));
+        .host_rinstr(instr_host),
+        .host_rvalid(instr_host_valid));
 
     // ---------------- Descriptors ----------------
     ws_desc_t d_src0, d_src1, d_dst;
@@ -140,7 +146,7 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
     logic row_rd_en, row_wr_en;
     logic [7:0] row_rd_addr, row_wr_addr;
     logic [255:0] row_wr_data;
-    rowwise_dispatch #(.SIG_LUT_FILE(SIG_LUT_FILE)) u_row(
+    rowwise_dispatch u_row(
         .clk(clk),
         .rst_n(rst_n),
         .start(row_start),
@@ -234,19 +240,37 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
     logic [7:0] q_base[0:7];
     logic [9:0] q_length[0:7];
     logic [7:0] q_valid;
+    logic input_has_runtime_scale;
+    logic [23:0] selected_quant_d;
     logic compose_busy, compose_done, compose_error;
     logic [23:0] composed_m;
     logic [5:0] composed_r;
     typedef enum logic [3:0] {S_IDLE, S_FETCH, S_START, S_WAIT, S_ADVANCE, S_HALT,
     S_COMPOSE_START, S_COMPOSE_WAIT, S_TM_START} sched_t;
     sched_t sched;
+    assign instr_fetch_en = running && sched == S_FETCH;
     logic [1:0] active_unit; // 1=row, 2=norm, 3=tm
+    assign selected_quant_d = q_valid[instr_q[2:0]] ? q_d[instr_q[2:0]] : 24'h0;
+
+    // Scale provenance belongs to the generated q memory extent. A descriptor
+    // alias must not bypass the requirement to compose its runtime scale.
+    always_comb begin
+        input_has_runtime_scale = 1'b0;
+        for (integer i = 0; i < 8; i = i + 1) begin
+            if (q_valid[i]) begin
+                if (ranges_overlap(int'(d_src0.base_word), ws_words(d_src0),
+                    int'(q_base[i]), (int'(q_length[i]) + 31) / 32))
+                    input_has_runtime_scale = 1'b1;
+            end
+        end
+    end
+
     scale_compose u_compose(.clk(clk),
         .rst_n(rst_n),
         .start(sched == S_COMPOSE_START),
         .factor_m(effective_mat.scale_m),
         .factor_r(effective_mat.scale_r),
-        .quant_d(q_d[instr_q[2:0]]),
+        .quant_d(selected_quant_d),
         .busy(compose_busy),
         .done(compose_done),
         .format_error(compose_error),
@@ -256,27 +280,37 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             q_valid <= 0;
-            for (integer i = 0;i < 8;i = i + 1) begin
-                q_d[i] <= 0;
-                q_base[i] <= 0;
-                q_length[i] <= 0;
-            end
         end else begin
             for (integer i = 0;i < 8;i = i + 1) begin
-                if (ws_wr_en && int'(ws_wr_addr) >= int'(q_base[i]) &&
-                    int'(ws_wr_addr) < int'(q_base[i]) + (int'(q_length[i]) + 31) / 32) q_valid[i] <= 0;
-                if (host_ws && host_we && !running && int'(host_addr[12:5]) >= int'(q_base[i]) &&
-                    int'(host_addr[12:5]) < int'(q_base[i]) + (int'(q_length[i]) + 31) / 32) q_valid[i] <= 0;
+                if (q_valid[i]) begin
+                    if (ws_wr_en && int'(ws_wr_addr) >= int'(q_base[i]) &&
+                        int'(ws_wr_addr) < int'(q_base[i]) + (int'(q_length[i]) + 31) / 32) q_valid[i] <= 0;
+                    if (host_ws && host_we && !running && int'(host_addr[12:5]) >= int'(q_base[i]) &&
+                        int'(host_addr[12:5]) < int'(q_base[i]) + (int'(q_length[i]) + 31) / 32) q_valid[i] <= 0;
+                end
             end
             if (host_desc && host_we && !running) q_valid <= 0;
-            if (sched == S_WAIT && active_unit == 2 && norm_done && !norm_error && !norm_ov) begin
-                q_d[instr_q[8:6]] <= quant_d;
+            if (sched == S_WAIT && active_unit == 2 && norm_done && !norm_error && !norm_ov)
                 q_valid[instr_q[8:6]] <= 1;
-                q_base[instr_q[8:6]] <= d_dst.base_word;
-                q_length[instr_q[8:6]] <= d_dst.length;
+        end
+    end
+
+    // Payload tuples are consumed only while their resettable valid bit is set.
+    // Successful NORM completion writes the full tuple before making it valid.
+    // Constant slot indices describe independent registers with parallel reads.
+    genvar slot;
+    generate
+    for (slot = 0; slot < 8; slot = slot + 1) begin : g_quant_metadata
+        always_ff @(posedge clk) begin
+            if (rst_n && sched == S_WAIT && active_unit == 2 && norm_done &&
+                !norm_error && !norm_ov && instr_q[8:6] == 3'(slot)) begin
+                q_d[slot] <= quant_d;
+                q_base[slot] <= d_dst.base_word;
+                q_length[slot] <= d_dst.length;
             end
         end
     end
+    endgenerate
 
     always_comb begin
         row_start = 0;
@@ -348,7 +382,7 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
             end
             case (sched)
                 S_IDLE : ;
-                S_FETCH : begin
+                S_FETCH : if (instr_fetch_valid) begin
                     instr_q <= instr_fetch;
                     sched <= S_START;
                 end
@@ -365,13 +399,16 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
                         TMATMUL : begin
                             effective_mat <= d_mat;
                             if (d_mat.reserved[0]) begin
-                                if (!q_valid[instr_q[2:0]] || q_base[instr_q[2:0]] != d_src0.base_word ||
-                                    q_length[instr_q[2:0]] != d_src0.length) begin
+                                if (!q_valid[instr_q[2:0]]) begin
+                                    error <= 1;
+                                    sched <= S_HALT;
+                                end else if (q_base[instr_q[2:0]] != d_src0.base_word ||
+                                             q_length[instr_q[2:0]] != d_src0.length) begin
                                     error <= 1;
                                     sched <= S_HALT;
                                 end
                                 else sched <= S_COMPOSE_START;
-                            end else if (q_valid[instr_q[2:0]]) begin
+                            end else if (input_has_runtime_scale) begin
                                 // NORM-generated q must consume its runtime scale.
                                 error <= 1;
                                 sched <= S_HALT;

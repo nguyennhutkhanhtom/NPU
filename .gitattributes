@@ -1,0 +1,23 @@
+# Keep raw source/asset hashes identical after checkout on every platform.
+.gitignore text eol=lf
+.gitattributes text eol=lf
+*.sv text eol=lf
+*.v text eol=lf
+*.svh text eol=lf
+*.mem text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.ps1 text eol=lf
+*.json text eol=lf
+*.tcl text eol=lf
+*.qpf text eol=lf
+*.qsf text eol=lf
+*.cjs text eol=lf
+*.rpt text eol=lf
+*.summary text eol=lf
+*.txt text eol=lf
+*.bin binary
+*.png binary
+*.pdf binary
+*.pptx binary
+*.zip binary

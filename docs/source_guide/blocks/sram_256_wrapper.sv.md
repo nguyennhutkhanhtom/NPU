@@ -1,64 +1,72 @@
-# sram_256_wrapper.sv — Ranh giới giữa RTL và SRAM macro
+# sram_256_wrapper.sv — SRAM đồng bộ với mask 32 bit
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
-**Trạng thái:** Đang dùng — chung cho hai SRAM.
+**Trạng thái:** Đang dùng — chung cho parameter và workspace.
 
-**Source:** [sram_256_wrapper.sv](<../../../Verilog%20Source%20code/sram_256_wrapper.sv>). **Số dòng:** 80. **SHA-256:** `5d732588e5b4e775127a8346cbb9c5302413c156060f4d5ff99a81da16758acd`.
+**Source:** [sram_256_wrapper.sv](<../../../Verilog%20Source%20code/sram_256_wrapper.sv>). **Số dòng:** 104. **SHA-256:** `80d77f1ad41fda47969ca686807db5f069b81667b4fc5f613ff476264da8d10b`.
 
 ## Khối này làm gì?
 
-Mảng memory có word 256 bit và depth=2^ADDR_W. Host thao tác một lane 32 bit, compute thao tác cả word. Đây là behavioral model có ranh giới rõ để thay bằng adapter macro; chưa chứng minh ánh xạ vào SRAM macro cụ thể.
+Compute đọc/ghi word 256 bit; host đọc/ghi một lane 32 bit. `ADDR_W=8` tạo workspace 8 KiB, `ADDR_W=10` tạo parameter 32 KiB. Tám bank 32 bit dùng cùng địa chỉ đọc đồng bộ và write-enable riêng theo mask. RTL có một implementation cho simulation và synthesis, không có define hoặc thuộc tính của hãng FPGA. Đây là model bộ nhớ để thay bằng adapter SRAM của PDK theo cùng interface.
 
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    C["Compute port<br/>256-bit data + read/write address"]
-    H["Host port<br/>32-bit data + word/lane address"]
-    subgraph SRAM["sram_256_wrapper — memory implementation boundary"]
-        WM@{ shape: trap-t, label: "Write arbiter + data/mask selector<br/>Một đường ghi · mask 8 × 32 bit" }
-        MEM@{ shape: rect, label: "Memory array<hr/>2^ADDR_W × 256 bit<hr/>Không reset nội dung" }
-        RD["Compute read address / pending storage<br/>Read data + valid output storage"]
-        HR@{ shape: trap-t, label: "Host word / lane read selector<br/>Đọc tổ hợp 32 bit" }
+    C["Compute port<br/>rd_en / rd_addr · write 256 bit"]
+    H["Host port<br/>host_en / host_we / row + lane · 32 bit"]
+    subgraph SRAM["sram_256_wrapper"]
+        WM@{ shape: trap-t, label: "Write address/data mux<br/>Host write ưu tiên · mask 8 lane" }
+        RM@{ shape: trap-t, label: "Shared read address mux<br/>Host hoặc compute" }
+        REQ["Request registers<br/>address / lane / host / pending"]
+        MEM@{ shape: rect, label: "8 bank RAM, mỗi bank DEPTH × 32 bit<hr/>Whole-word write + synchronous read<hr/>Không reset nội dung" }
+        DATA["read_row_q 256 bit<br/>Register dữ liệu không asynchronous reset"]
+        TAG["Response registers<br/>address / lane / host / valid"]
+        LANE@{ shape: trap-t, label: "Host lane mux<br/>256 → 32 bit" }
+        MATCH["Kiểm tra request hiện tại<br/>Hai bộ tag khớp row + lane<br/>Host read đang được giữ" ]
     end
-    C -->|"Write data / address / enable"| WM
-    H -->|"Write data / lane mask"| WM
-    WM --> MEM
-    C -.->|"Read address / enable"| RD
-    RD -.->|"Array address"| MEM
-    MEM -->|"Word 256 bit"| RD
-    RD -->|"rd_data / rd_valid"| C
-    H -.->|"Read address"| HR
-    MEM --> HR
-    HR -->|"host_rdata"| H
+    C -->|"Write data"| WM
+    H -->|"Write data"| WM
+    WM -->|"Address / data / write_mask mỗi bank"| MEM
+    C -.->|"Read request"| RM
+    H -.->|"Read request"| RM
+    RM -.-> REQ
+    REQ -.->|"Address / read enable"| MEM
+    MEM --> DATA
+    REQ -.-> TAG
+    DATA -->|"rd_data 256 bit"| C
+    TAG -.->|"rd_valid khi response là compute"| C
+    DATA --> LANE
+    TAG -.->|"response_lane_q"| LANE
+    LANE -->|"host_rdata 32 bit"| H
+    H -.-> MATCH
+    REQ -.-> MATCH
+    TAG -.-> MATCH
+    MATCH -.->|"host_rvalid → host_ready tại top"| H
 ```
 
-MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ ra; decoder/demux dùng hình thang ngược lại, mở rộng về phía nhiều ngõ ra. Hình chữ nhật có các vạch ngang biểu diễn bộ nhớ hoặc bank descriptor. Các hình chữ nhật thường là datapath, thanh ghi đơn hoặc giao diện. Nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.
+Nét liền biểu diễn dữ liệu; nét đứt biểu diễn địa chỉ, enable và valid. Hộp RAM mô tả storage logic, không quy định SRAM macro hoặc block RAM vật lý. Reset chỉ xóa control/tag; dữ liệu chỉ được dùng khi valid.
 
 ## Cách hoạt động chi tiết
 
-Một mux tạo write_address/data/mask. Host write có ưu tiên trong mux, nhưng top phải bảo đảm host và compute không đồng thời truy cập. SRAM data không reset; chỉ read-control và read-output reset. Tại cạnh nhận rd_en, chốt địa chỉ; cạnh kế tiếp khi read_pending_q=1, xuất data/valid. Consumer synchronous thấy kết quả ở cạnh lấy mẫu tiếp theo. Host read là combinational và cần bridge khi thay macro synchronous.
-
-1. Compute đọc/ghi word 256 bit. Host dùng địa chỉ word 32 bit; ba bit thấp chọn lane và các bit cao chọn word.
-2. Write mux ưu tiên host khi host write. Host data được nhân bản tám lane nhưng mask one-hot chỉ cập nhật lane được chọn.
-3. Mảng memory không reset hoặc initialize. Reset chỉ xóa control read/output; host phải nạp dữ liệu cần thiết.
-4. Compute read là request/response: chốt address và pending, sau đó trả data cùng `rd_valid`. Consumer phải chờ valid.
-5. Host read hiện là tổ hợp; SRAM macro đồng bộ cần bridge. Assertion simulation bắt truy cập host và compute chồng nhau.
+1. Top bảo đảm host và compute không truy cập đồng thời. Host write chọn một lane 32 bit; compute write chọn cả tám lane.
+2. Cạnh lên đầu tiên chốt read request, địa chỉ, client và lane. Cạnh lên tiếp theo đọc word vào `read_row_q` và chuyển tag/valid sang response. Hai client dùng cùng hợp đồng hai cạnh lên.
+3. Compute tiêu thụ word 256 bit khi `rd_valid=1`. Host giữ `host_en=1`, `host_we=0` và địa chỉ đến khi `host_rvalid=1`, rồi top acknowledge qua `host_ready`.
+4. Host valid yêu cầu current request, request tag và response tag cùng row/lane và client. Đổi địa chỉ, write hoặc idle làm response cũ mất hiệu lực; đọc lại cùng địa chỉ sau write vẫn phải chờ.
+5. RAM và register dữ liệu đọc không asynchronous reset và không có vòng initialize. Reset chỉ xóa tag/control. Host phải nạp dữ liệu trước khi đọc; dữ liệu khi valid=0 không được sử dụng.
+6. Khi thay storage bằng SRAM macro, adapter phải giữ mask 32 bit, hợp đồng read/valid, arbitration và reset control. Chính sách read/write cùng địa chỉ phải được xử lý nếu hệ thống mới cho phép overlap; top hiện tại dùng các pha đọc và ghi riêng.
 
 ## Các nhóm logic trong source
 
-Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
+Các đoạn dưới đây bao phủ nguyên văn toàn bộ source hiện tại, theo thứ tự dòng.
 
+### [Dòng 1–25: Giao diện và cổng ghi nội bộ](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L1>)
 
-### [Dòng 1–28: Giao diện và memory](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L1>)
-
-<!-- source-range:1:28 -->
+<!-- source-range:1:25 -->
 ```systemverilog
-// Behavioral memory boundary for replacement by a foundry SRAM adapter.
-// Compute reads retain the existing two-cycle request/response contract.
-// Host reads are asynchronous in this model; a synchronous macro needs a host bridge.
+// Generic synchronous memory boundary for replacement by a foundry SRAM adapter.
+// Host and compute reads share the same two-cycle request/response contract.
 module sram_256_wrapper #(
     parameter int ADDR_W = 8
 ) (
@@ -75,30 +83,24 @@ module sram_256_wrapper #(
     input logic host_we,
     input logic [ADDR_W + 2 : 0] host_addr,
     input logic [31:0] host_wdata,
-    output logic [31:0] host_rdata
+    output logic [31:0] host_rdata,
+    output logic host_rvalid
 );
     localparam int DEPTH = 1 << ADDR_W;
-    logic [255:0] memory [0 : DEPTH - 1];
-    logic [ADDR_W - 1 : 0] read_address_q;
-    logic read_pending_q;
     logic [ADDR_W - 1 : 0] write_address;
     logic [255:0] write_data;
     logic [7:0] write_mask;
 ```
 
-**Mục đích.** ADDR_W=8 cho workspace, =10 cho parameter. Host address ở đây là chỉ số word 32, không còn là byte address.
+**Mục đích.** Công bố hai client và kích thước word; address host là chỉ số word 32 bit, gồm row và ba bit lane.
 
-**Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
+**Tín hiệu chính.** `ADDR_W`, `DEPTH`, `rd_en/rd_addr/rd_data/rd_valid`, `wr_en/wr_addr/wr_data`, `host_en/host_we/host_addr/host_wdata/host_rdata/host_rvalid`. Ba tín hiệu `write_address`, `write_data`, `write_mask` nối write mux với các bank.
 
-**Tín hiệu và dữ liệu chính.** `rd_en`: request đọc của compute; `rd_addr`: địa chỉ word cần đọc; `rd_data`: word dữ liệu đọc ra; `rd_valid`: response đọc hợp lệ; `wr_en`: cho phép ghi compute; `wr_addr`: địa chỉ word cần ghi; và 12 tín hiệu phụ khác trong đoạn code.
+### [Dòng 26–39: Mux địa chỉ và mask ghi](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L26>)
 
-
-### [Dòng 29–42: Host read và write mux](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L29>)
-
-<!-- source-range:29:42 -->
+<!-- source-range:26:39 -->
 ```systemverilog
 
-    assign host_rdata = memory[host_addr[ADDR_W + 2 : 3]][host_addr[2:0] * 32 +: 32];
 
     // One masked write port. Top-level arbitration makes the clients exclusive.
     always_comb begin
@@ -111,107 +113,125 @@ module sram_256_wrapper #(
             write_mask = 8'b1 << host_addr[2:0];
         end
     end
+
 ```
 
-**Mục đích.** Ba bit thấp host_addr chọn một trong tám lane 32; các bit cao chọn word 256.
+**Cách hoạt động.** Default chọn compute write, mask là tám bản sao `wr_en`. Host write chọn row từ `host_addr[ADDR_W+2:3]`, lặp dữ liệu 32 bit sang tám lane và bật một bit mask từ `host_addr[2:0]`. Mỗi bank chỉ nhận dữ liệu khi bit mask tương ứng bằng 1. Các default được gán đầy đủ trong `always_comb`, không tạo latch.
 
-**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch. Có continuous assignment: biểu thức luôn lái tín hiệu đích, không cần start hoặc cạnh clock.
+### [Dòng 40–57: Dữ liệu đọc và kiểm tra response](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L40>)
 
-**Tín hiệu và dữ liệu chính.** `host_rdata`: data 32 trả về host; `memory`: array dữ liệu SRAM word 256; `host_addr`: địa chỉ phía host; `write_address`: địa chỉ ghi sau arbitration; `wr_addr`: địa chỉ word cần ghi; `write_data`: data 256 sau arbitration; và 6 tín hiệu phụ khác trong đoạn code.
-
-
-### [Dòng 43–53: Ghi memory](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L43>)
-
-<!-- source-range:43:53 -->
+<!-- source-range:40:57 -->
 ```systemverilog
 
-    // Memory data has no asynchronous reset, clear loop or initialization.
-    always_ff @(posedge clk) begin
-        if (rst_n) begin
-            for (int lane = 0; lane < 8; lane ++ ) begin
-                if (write_mask[lane]) begin
-                    memory[write_address][lane * 32 +: 32] <= write_data[lane * 32 +: 32];
-                end
-            end
+    // Top-level arbitration makes host and compute accesses exclusive.
+    // One synchronous read port serves both clients with tagged responses.
+    logic read_pending_q, read_host_q, response_host_q, read_valid_q;
+    logic [ADDR_W - 1 : 0] shared_read_address_q;
+    logic [ADDR_W - 1 : 0] response_address_q;
+    logic [2:0] read_lane_q, response_lane_q;
+    logic [255:0] read_row_q;
+
+    assign rd_data = read_row_q;
+    assign rd_valid = read_valid_q && !response_host_q;
+    assign host_rdata = read_row_q[response_lane_q * 32 +: 32];
+    // Both pipeline stages must belong to the current held request. A write
+    // or idle cycle invalidates an earlier response, including the same address.
+    assign host_rvalid = host_en && !host_we && read_valid_q && response_host_q &&
+        read_pending_q && read_host_q &&
+        {shared_read_address_q, read_lane_q} == host_addr &&
+        {response_address_q, response_lane_q} == host_addr;
+```
+
+**Cách hoạt động.** `read_row_q` lái compute data; response lane chọn host data 32 bit. Compute valid chọn response không phải host. Host valid còn kiểm tra enable/read hiện tại và cả hai bộ tag cùng row/lane, ngăn nhận data cũ sau một request khác.
+
+**Tín hiệu chính.** `read_pending_q/read_host_q`, `shared_read_address_q/read_lane_q`, `read_valid_q/response_host_q`, `response_address_q/response_lane_q`, `read_row_q`.
+
+### [Dòng 58–74: Tám bank đọc đồng bộ và ghi nguyên word](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L58>)
+
+<!-- source-range:58:74 -->
+```systemverilog
+
+    // Eight independent 32-bit banks implement the lane mask with a write
+    // enable per bank. Each bank has one whole-word write and synchronous read.
+    // Neither the memory nor its output register has an asynchronous reset.
+    genvar lane;
+    generate
+    for (lane = 0; lane < 8; lane = lane + 1) begin : g_ram_lane
+        logic [31:0] memory [0 : DEPTH - 1];
+        always_ff @(posedge clk) begin
+            if (rst_n && write_mask[lane])
+                memory[write_address] <= write_data[lane * 32 +: 32];
+            if (read_pending_q)
+                read_row_q[lane * 32 +: 32] <= memory[shared_read_address_q];
         end
     end
+    endgenerate
+
 ```
 
-**Mục đích.** Không có reset loop trên array. Mask8 cho phép chỉ cập nhật lane host yêu cầu.
+**Cách hoạt động.** `generate` tạo tám bank độc lập khi elaboration; index lane là hằng. Mỗi bank ghi toàn word 32 bit với enable riêng và chốt một slice của `read_row_q` từ địa chỉ đọc chung. RAM và read data register chỉ dùng `posedge clk`, giúp storage có thể ánh xạ bằng flow synthesis tương ứng.
 
-**Cách phần code hoạt động.** Có logic tuần tự: register/FSM chỉ cập nhật tại cạnh clock; nonblocking assignment đọc giá trị cũ ở vế phải rồi chốt đồng thời.
+**Điểm cần đọc kỹ.** `rst_n` chỉ gate write trong memory process. Nó không xóa memory hoặc data output; reset control phía dưới loại bỏ valid cũ.
 
-**Tín hiệu và dữ liệu chính.** `lane`: vị trí phần tử trong word; `write_mask`: mask 8 chọn lane 32 cần ghi; `memory`: array dữ liệu SRAM word 256; `write_address`: địa chỉ ghi sau arbitration; `write_data`: data 256 sau arbitration.
+### [Dòng 75–104: Request, response tag và reset control](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L75>)
 
-
-### [Dòng 54–71: Compute read](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L54>)
-
-<!-- source-range:54:71 -->
+<!-- source-range:75:104 -->
 ```systemverilog
-
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            rd_valid <= 1'b0;
             read_pending_q <= 1'b0;
-            read_address_q <= '0;
-            rd_data <= '0;
+            read_host_q <= 1'b0;
+            response_host_q <= 1'b0;
+            read_valid_q <= 1'b0;
+            shared_read_address_q <= '0;
+            response_address_q <= '0;
+            read_lane_q <= '0;
+            response_lane_q <= '0;
         end else begin
-            rd_valid <= read_pending_q;
-            read_pending_q <= rd_en;
-            if (rd_en) begin
-                read_address_q <= rd_addr;
-            end
-            if (read_pending_q) begin
-                rd_data <= memory[read_address_q];
+            read_valid_q <= read_pending_q;
+            response_host_q <= read_host_q;
+            response_lane_q <= read_lane_q;
+            response_address_q <= shared_read_address_q;
+
+            read_pending_q <= rd_en || (host_en && !host_we);
+            if (host_en && !host_we) begin
+                shared_read_address_q <= host_addr[ADDR_W + 2 : 3];
+                read_host_q <= 1'b1;
+                read_lane_q <= host_addr[2:0];
+            end else if (rd_en) begin
+                shared_read_address_q <= rd_addr;
+                read_host_q <= 1'b0;
+                read_lane_q <= '0;
             end
         end
     end
+
+endmodule
 ```
 
-**Mục đích.** Pipeline request/response dựa trên read_pending_q và read_address_q; đọc không phụ thuộc giá trị rd_addr mới khi trả kết quả cũ.
-
-**Cách phần code hoạt động.** Có logic tuần tự: register/FSM chỉ cập nhật tại cạnh clock; nonblocking assignment đọc giá trị cũ ở vế phải rồi chốt đồng thời.
-
-**Tín hiệu và dữ liệu chính.** `rd_valid`: response đọc hợp lệ; `read_pending_q`: có request đọc đang chờ response; `read_address_q`: địa chỉ SRAM đã chốt; `rd_data`: word dữ liệu đọc ra; `rd_en`: request đọc của compute; `rd_addr`: địa chỉ word cần đọc; và 1 tín hiệu phụ khác trong đoạn code.
-
-**Điểm cần đọc kỹ.** Tên gọi “hai chu kỳ” trong tài liệu là hợp đồng request/response nhìn từ client đồng bộ: request được chốt trước, sau đó data/valid mới được quan sát ở response. Không được dùng `rd_data` ngay tại chu kỳ phát `rd_en`.
+**Cách hoạt động.** Reset xóa pending/valid và tag. Mỗi cạnh chuyển request tag sang response, đồng thời chốt request host read hoặc compute read mới. Khi không có read, pending về zero. Host có ưu tiên trong mux nhưng caller phải bảo đảm arbitration theo hợp đồng; ưu tiên này không hỗ trợ hai giao dịch đồng thời.
 
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
 flowchart LR
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    REQ["Compute read request<br/>rd_en / rd_addr"] -.-> ADDR["Read-address storage"]
-    REQ -.-> VALID["Read-pending + valid storage"]
-    ADDR -.-> MEM@{ shape: rect, label: "Memory array read address<hr/>Addressable storage" }
-    MEM --> DATA["Read-data storage<br/>256 bit"]
-    VALID -.->|"Capture enable"| DATA
-    DATA --> OUT["Compute response<br/>rd_data / rd_valid"]
-    VALID -.-> OUT
-    RESET["clk / rst_n"] -.-> ADDR
-    RESET -.-> VALID
-    RESET -.-> DATA
+    IN["Host / compute read request"] -.-> REQ["Request address / lane / host / pending FF"]
+    REQ -.-> RAM@{ shape: rect, label: "8 RAM bank × 32 bit<hr/>DEPTH word mỗi bank" }
+    RAM --> DATA["read_row_q 256 bit"]
+    REQ -.-> TAG["Response address / lane / host / valid FF"]
+    DATA --> HM@{ shape: trap-t, label: "Host lane mux<br/>256 → 32 bit" }
+    TAG -.-> HM
+    HM --> H["host_rdata"]
+    IN -.-> VALID["Current read + hai tag khớp"]
+    REQ -.-> VALID
+    TAG -.-> VALID
+    VALID -.-> HV["host_rvalid"]
+    TAG -.-> CV["rd_valid: response không phải host"]
+    DATA --> C["rd_data"]
+    RESET["rst_n: reset control/tag"] -.-> REQ
+    RESET -.-> TAG
+    CLK["clk"] -.-> DATA
 ```
 
-
-### [Dòng 72–80: Assertion simulation](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L72>)
-
-<!-- source-range:72:80 -->
-```systemverilog
-
-`ifndef SYNTHESIS
-    always @(posedge clk) begin
-        if (rst_n && host_en && (rd_en || wr_en || read_pending_q)) begin
-            $error("Host and compute memory transactions must not overlap");
-        end
-    end
-`endif
-endmodule
-```
-
-**Mục đích.** Báo lỗi nếu host chồng giao dịch compute, kể cả read đang pending. Assertion không tạo phần cứng trong SYNTHESIS.
-
-**Cách phần code hoạt động.** Có logic tuần tự: register/FSM chỉ cập nhật tại cạnh clock; nonblocking assignment đọc giá trị cũ ở vế phải rồi chốt đồng thời.
-
-**Tín hiệu và dữ liệu chính.** `host_en`: host đang yêu cầu truy cập; `rd_en`: request đọc của compute; `wr_en`: cho phép ghi compute; `read_pending_q`: có request đọc đang chờ response; `error`: cờ lỗi của lượt chạy; `memory`: array dữ liệu SRAM word 256.
+`read_row_q` chỉ có clock và capture enable. Tag/valid bảo đảm client không tiêu thụ dữ liệu chưa hợp lệ.
 

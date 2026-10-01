@@ -1,6 +1,5 @@
-// Behavioral memory boundary for replacement by a foundry SRAM adapter.
-// Compute reads retain the existing two-cycle request/response contract.
-// Quartus uses synchronous host reads; other builds retain asynchronous reads.
+// Generic synchronous memory boundary for replacement by a foundry SRAM adapter.
+// Host and compute reads share the same two-cycle request/response contract.
 module sram_256_wrapper #(
     parameter int ADDR_W = 8
 ) (
@@ -21,19 +20,10 @@ module sram_256_wrapper #(
     output logic host_rvalid
 );
     localparam int DEPTH = 1 << ADDR_W;
-`ifndef QUARTUS_SYNTHESIS
-    logic [255:0] memory [0 : DEPTH - 1];
-    logic [ADDR_W - 1 : 0] read_address_q;
-    logic read_pending_q;
-`endif
     logic [ADDR_W - 1 : 0] write_address;
     logic [255:0] write_data;
     logic [7:0] write_mask;
 
-`ifndef QUARTUS_SYNTHESIS
-    assign host_rdata = memory[host_addr[ADDR_W + 2 : 3]][host_addr[2:0] * 32 +: 32];
-    assign host_rvalid = host_en && !host_we;
-`endif
 
     // One masked write port. Top-level arbitration makes the clients exclusive.
     always_comb begin
@@ -47,24 +37,9 @@ module sram_256_wrapper #(
         end
     end
 
-`ifndef QUARTUS_SYNTHESIS
-    // Memory data has no asynchronous reset, clear loop or initialization.
-    always_ff @(posedge clk) begin
-        if (rst_n) begin
-            for (int lane = 0; lane < 8; lane ++ ) begin
-                if (write_mask[lane]) begin
-                    memory[write_address][lane * 32 +: 32] <= write_data[lane * 32 +: 32];
-                end
-            end
-        end
-    end
-`endif
 
-`ifdef QUARTUS_SYNTHESIS
-    // Host accesses are mutually exclusive with compute accesses at the top
-    // level.  Multiplex both clients onto one synchronous read port so Quartus
-    // can infer simple dual-port block RAM instead of expanding the array into
-    // registers and a very large asynchronous read mux.
+    // Top-level arbitration makes host and compute accesses exclusive.
+    // One synchronous read port serves both clients with tagged responses.
     logic read_pending_q, read_host_q, response_host_q, read_valid_q;
     logic [ADDR_W - 1 : 0] shared_read_address_q;
     logic [ADDR_W - 1 : 0] response_address_q;
@@ -87,7 +62,7 @@ module sram_256_wrapper #(
     genvar lane;
     generate
     for (lane = 0; lane < 8; lane = lane + 1) begin : g_ram_lane
-        (* ramstyle = "M10K" *) logic [31:0] memory [0 : DEPTH - 1];
+        logic [31:0] memory [0 : DEPTH - 1];
         always_ff @(posedge clk) begin
             if (rst_n && write_mask[lane])
                 memory[write_address] <= write_data[lane * 32 +: 32];
@@ -125,31 +100,5 @@ module sram_256_wrapper #(
             end
         end
     end
-`else
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            rd_valid <= 1'b0;
-            read_pending_q <= 1'b0;
-            read_address_q <= '0;
-            rd_data <= '0;
-        end else begin
-            rd_valid <= read_pending_q;
-            read_pending_q <= rd_en;
-            if (rd_en) begin
-                read_address_q <= rd_addr;
-            end
-            if (read_pending_q) begin
-                rd_data <= memory[read_address_q];
-            end
-        end
-    end
-`endif
 
-`ifndef SYNTHESIS
-    always @(posedge clk) begin
-        if (rst_n && host_en && (rd_en || wr_en || read_pending_q)) begin
-            $error("Host and compute memory transactions must not overlap");
-        end
-    end
-`endif
 endmodule

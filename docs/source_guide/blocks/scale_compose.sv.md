@@ -1,10 +1,10 @@
 # scale_compose.sv — Ghép scale động của q vào postscale
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — trước TMATMUL dynamic_q.
 
-**Source:** [scale_compose.sv](<../../../Verilog%20Source%20code/scale_compose.sv>). **Số dòng:** 118. **SHA-256:** `39511461e0d88f0075f07981090e64f9a40572c66cc66d3d597c237d93ccc986`.
+**Source:** [scale_compose.sv](<../../../Verilog%20Source%20code/scale_compose.sv>). **Số dòng:** 144. **SHA-256:** `b2f2bdcb88656ff43d92f5e91ed4dbc12ee60c560e09ea6425cd9e92639e1868`.
 
 ## Khối này làm gì?
 
@@ -18,28 +18,35 @@ flowchart TB
     IN["factor_m U24 · quant_d U24 · factor_r U6"]
     subgraph SC["scale_compose"]
         PROD["M × D multiplier<br/>numerator_base U48"]
-        CTRL["Coefficient controller<br/>Candidate-r counter + validity checks"]
-        SHIFT["Numerator / denominator shift network<br/>Base denominator 127 × 65536"]
-        DIV["div instance<br/>Unsigned 64 / 64"]
-        ROUND["RNE quotient<br/>Remainder compare + increment"]
-        CHECK["U24 range / zero / overflow checks"]
+        CAND["Candidate-r storage U6<br/>Largest representable r first"]
+        CTRL["Coefficient controller<br/>Reject / decrement / launch"]
+        SHIFT["Numerator U48 / denominator U25<br/>Candidate minus factor_r shift network"]
+        FIT["Exact RNE U24 fit comparator<br/>Strict threshold + shift-overflow check"]
+        LIMIT["Constant U47 threshold<br/>0x7EFF_FFC0_8000"]
+        DIV["div instance U48 / U25<br/>At most one launch · 48 arithmetic steps"]
+        ROUND["RNE quotient<br/>Twice remainder U26 · rounded U49"]
+        CHECK["Underflow / zero-divisor / range checks"]
         OUT["Result coefficient storage<br/>M U24 + r U6"]
     end
     IN --> PROD
     IN -.-> CTRL
     START["start"] -.-> CTRL
     PROD --> SHIFT
-    CTRL -.->|"candidate − factor_r"| SHIFT
+    CAND -.-> SHIFT
+    SHIFT --> FIT
+    LIMIT --> FIT
+    FIT -.-> CTRL
+    CTRL -.->|"Load / decrement"| CAND
     SHIFT --> DIV
-    SHIFT -.->|"Shift overflow"| CHECK
+    CTRL -.->|"Start only after fit"| DIV
     DIV --> ROUND
     SHIFT -->|"Denominator"| ROUND
-    ROUND --> OUT
+    DIV -.->|"done / div_zero"| CTRL
     ROUND --> CHECK
     CHECK -.-> CTRL
-    CTRL -.->|"start"| DIV
-    DIV -.->|"done / div_zero"| CTRL
-    CTRL -.->|"r / output enable"| OUT
+    ROUND --> OUT
+    CAND --> OUT
+    CTRL -.->|"Output enable"| OUT
     OUT --> RESULT["result_m / result_r"]
     CTRL -.-> STATUS["busy / done / format_error"]
 ```
@@ -48,22 +55,24 @@ MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ
 
 ## Cách hoạt động chi tiết
 
-Bắt đầu candidate r=47. Nếu tử số bị tràn hoặc M sau chia quá lớn, giảm r rồi thử lại. Divider 64/64 trả quotient/remainder; RNE quyết định M. Hệ số không biểu diễn được, D=0 hoặc r sai làm format_error; factor_m=0 là trường hợp zero hợp lệ.
+Bắt đầu candidate r=47. PREP dùng overflow check và threshold RNE chính xác để giảm r trước khi chia. Một candidate vừa miền mới launch divider U48/U25; tối đa một phép chia 48 bước cho input hợp lệ. RNE quotient/remainder tạo M. Hệ số không biểu diễn được, D=0 hoặc r sai làm format_error; factor_m=0 là zero hợp lệ.
 
 1. `factor_m/factor_r` mô tả scale weight/output, còn D mô tả scale activation do NORM tạo. Tích M×D được giữ trong U48.
 2. Mẫu cơ sở `0x007F_0000` bằng `0x7F×0x1_0000`. Candidate r quyết định dịch tử hay mẫu để biểu diễn hệ số thành M/2^r.
-3. Khối thử từ r=47 để ưu tiên precision. Shift tràn U64 làm giảm candidate trước khi chạy divider.
-4. Quotient được RNE bằng remainder. M quá lớn làm giảm r và thử lại; M bằng zero là underflow khi factor khác zero.
+3. Khối thử từ r=47 để ưu tiên precision. Shift tràn U48 hoặc coefficient không fit làm giảm candidate ngay tại PREP, chưa chạy divider.
+4. Với mẫu cơ sở d=0x007F_0000, RNE(n/d)≤0xFFFFFF khi và chỉ khi n<(2^24−1/2)×d. Limit U47 là 0x7EFF_FFC0_8000; đúng n=limit là tie với số lẻ 0xFFFFFF nên làm tròn lên 0x1000000 và bị loại. Shift −1 dùng 2×limit; shift≤−2 mọi tích U24×U24 đều fit. Candidate hợp lệ đầu tiên vì thế chỉ cần một division.
 5. Tìm được M U24 thì trả result M/r; D bằng zero, r sai hoặc hết candidate gây format error.
+
+**Quy ước RTL.** Numerator/quotient U48, denominator/remainder U25, twice_rem U26 và rounded U49 giữ carry của RNE. Candidate được chọn từ trên xuống; mọi launch có shift≥−2, nên denominator≤4×0x007F_0000 vừa U25. Guard shift<−2 báo lỗi trước launch. PREP và divider đều dùng các độ rộng đã chứng minh, không giữ barrel shifter U64 không cần thiết.
 
 ## Các nhóm logic trong source
 
 Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
 
 
-### [Dòng 1–20: Giao diện và thanh ghi](<../../../Verilog%20Source%20code/scale_compose.sv#L1>)
+### [Dòng 1–25: Giao diện và thanh ghi](<../../../Verilog%20Source%20code/scale_compose.sv#L1>)
 
-<!-- source-range:1:20 -->
+<!-- source-range:1:25 -->
 ```systemverilog
 // Compose postscale from the runtime NORM+QUANT scale:
 // C = factor_m * quant_d / (127*65536 * 2^factor_r).
@@ -80,56 +89,72 @@ module scale_compose (
     state_t state;
     logic [47:0] numerator_base;
     logic [5:0] base_r, candidate;
-    logic [63:0] numerator, denominator, quotient, remainder;
+    logic [47:0] numerator;
+    logic [24:0] denominator;
+    logic [47:0] quotient;
+    logic [24:0] remainder;
     logic div_busy, div_done, div_zero;
-    logic [64:0] rounded, twice_rem;
+    logic [48:0] rounded;
+    logic [25:0] twice_rem;
+    logic round_up;
     integer shift;
     logic shift_overflow;
 ```
 
-**Mục đích.** Tử số cơ sở là U48 từ hai U24; phép chia và shift thực hiện trong U64.
+**Mục đích.** Tử số cơ sở, shift numerator và quotient là U48; mẫu/remainder U25; rounded U49 và twice_rem U26 giữ carry trước range check.
 
 **Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
 
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `factor_m`: M phần weight/output scale; `quant_d`: D=max(absmax,delta); `factor_r`: r phần weight/output scale; `busy`: khối đang xử lý; `done`: xung báo hoàn tất; và 18 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 21–37: Chuẩn bị phép chia](<../../../Verilog%20Source%20code/scale_compose.sv#L21>)
+### [Dòng 26–51: Chuẩn bị phép chia](<../../../Verilog%20Source%20code/scale_compose.sv#L26>)
 
-<!-- source-range:21:37 -->
+<!-- source-range:26:51 -->
 ```systemverilog
+    logic coefficient_fits;
+    // U24 max is odd: the half-way value rounds up to 2^24, which is invalid.
+    // RNE(n/d) fits iff n < (2^24 - 1/2)*d. For d=127*65536 this is U47.
+    localparam logic [46:0] COEFFICIENT_LIMIT = 47'h7eff_ffc0_8000;
     always_comb begin
         shift = int'(candidate) - int'(base_r);
-        numerator = {16'h0000, numerator_base};
-        denominator = 64'h0000_0000_007f_0000;
+        numerator = numerator_base;
+        denominator = 25'h07f_0000;
         shift_overflow = 0;
         if (shift >= 0) begin
-            shift_overflow = numerator > (64'hffff_ffff_ffff_ffff >> shift);
-            numerator = numerator << shift;
+            shift_overflow = numerator > (48'hffff_ffff_ffff >> $unsigned(shift));
+            numerator = numerator << $unsigned(shift);
         end else begin
-            shift_overflow = denominator > (64'hffff_ffff_ffff_ffff >> ( - shift));
-            denominator = denominator << ( - shift);
+            shift_overflow = denominator > (25'h1ff_ffff >> $unsigned( - shift));
+            denominator = denominator << $unsigned( - shift);
         end
+        // Reject overlarge coefficients before spending 48 divider cycles.
+        // For shift <= -2, even the largest U24*U24 product is below 4*limit.
+        coefficient_fits = 1'b1;
+        if (shift >= 0) coefficient_fits = numerator < {1'b0, COEFFICIENT_LIMIT};
+        else if (shift == -1) coefficient_fits = numerator_base < {COEFFICIENT_LIMIT, 1'b0};
         twice_rem = {1'b0, remainder} << 1;
-        rounded = {1'b0, quotient} +
-        ((twice_rem > {1'b0, denominator}) ||
-            ((twice_rem == {1'b0, denominator}) && quotient[0]));
+        round_up = (twice_rem > {1'b0, denominator}) ||
+            ((twice_rem == {1'b0, denominator}) && quotient[0]);
+        rounded = {1'b0, quotient} + {48'h0000_0000_0000, round_up};
     end
 ```
 
-**Mục đích.** Shift candidate−base_r dương đưa vào tử, âm đưa vào mẫu. Hằng `0x007F_0000` bằng `0x7F×0x1_0000`. Kiểm tra overflow trước shift.
+**Mục đích.** Shift candidate−base_r dương đưa vào tử U48, âm đưa vào mẫu U25. Hằng `0x007F_0000` bằng `0x7F×0x1_0000`; `COEFFICIENT_LIMIT` U47 mô tả chính xác biên RNE U24. Kiểm tra overflow trước shift và fit trước division, gồm tie ở M_max+1/2.
 
 **Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
 
 **Tín hiệu và dữ liệu chính.** `shift`: độ dịch để biểu diễn scale; ý nghĩa dấu theo hàm đang dùng; `candidate`: ứng viên; ở REC là C, ở scale_compose là shift đang thử; `base_r`: r gốc đã chốt; `numerator`: tử số phép chia; `numerator_base`: tích U48 factor_m×D đã chốt; `denominator`: mẫu số phép chia; và 5 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 38–49: Divider riêng](<../../../Verilog%20Source%20code/scale_compose.sv#L38>)
+### [Dòng 52–65: Divider riêng](<../../../Verilog%20Source%20code/scale_compose.sv#L52>)
 
-<!-- source-range:38:49 -->
+<!-- source-range:52:65 -->
 ```systemverilog
-    div #(.NUM_W(64),
-        .DEN_W(64)) u_div(
+    // Every launch has shift >= -2. A fitting positive shift gives n < limit;
+    // a negative shift leaves the U48 product unchanged and d <= 127*65536*4.
+    div #(.NUM_W(48),
+        .DEN_W(25)) u_div(
         .clk(clk),
         .rst_n(rst_n),
         .start(state == DIV_START),
@@ -142,16 +167,16 @@ module scale_compose (
         .remainder(remainder));
 ```
 
-**Mục đích.** Một instance 64/64, start chỉ ở DIV_START.
+**Mục đích.** Một instance U48/U25, start chỉ ở DIV_START và một phép chia cần 48 bước. PREP bảo đảm numerator và denominator vừa hai cổng, không launch shift<−2.
 
 **Cách phần code hoạt động.** Có instance module con; named-port ở nhóm này xác định chính xác đường control/data giữa hai cấp hierarchy.
 
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `state`: trạng thái FSM của khối; `numerator`: tử số phép chia; `denominator`: mẫu số phép chia; `busy`: khối đang xử lý; `div_busy`: divider đang chạy; và 5 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 50–78: Reset và nhận hệ số](<../../../Verilog%20Source%20code/scale_compose.sv#L50>)
+### [Dòng 66–94: Reset và nhận hệ số](<../../../Verilog%20Source%20code/scale_compose.sv#L66>)
 
-<!-- source-range:50:78 -->
+<!-- source-range:66:94 -->
 ```systemverilog
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -191,17 +216,27 @@ module scale_compose (
 **Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `busy`: khối đang xử lý; `done`: xung báo hoàn tất; `format_error`: cờ format/metadata không hợp lệ; `numerator_base`: tích U48 factor_m×D đã chốt; `base_r`: r gốc đã chốt; và 7 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 79–108: Thử hệ số](<../../../Verilog%20Source%20code/scale_compose.sv#L79>)
+### [Dòng 95–134: Thử hệ số](<../../../Verilog%20Source%20code/scale_compose.sv#L95>)
 
-<!-- source-range:79:108 -->
+<!-- source-range:95:134 -->
 ```systemverilog
                 PREP : begin
-                    if (shift_overflow) begin
+                    // Starting shift is nonnegative, and shift=-2 always fits.
+                    // Guard the narrowed divider interface if that invariant is violated.
+                    if (shift < -2) begin
+                        format_error <= 1;
+                        state <= FINISH;
+                    end else if (shift_overflow) begin
                         if (shift < 0 || candidate == 0) begin
                             format_error <= 1;
                             state <= FINISH;
                         end
                         else candidate <= candidate - 1'b1;
+                    end else if (!coefficient_fits) begin
+                        if (candidate == 0) begin
+                            format_error <= 1;
+                            state <= FINISH;
+                        end else candidate <= candidate - 1'b1;
                     end else state <= DIV_START;
                 end
                 DIV_START : state <= DIV_WAIT;
@@ -210,7 +245,7 @@ module scale_compose (
                         format_error <= 1;
                         state <= FINISH;
                     end
-                    else if (rounded > 65'h00ff_ffff) begin
+                    else if (rounded > 49'h00ff_ffff) begin
                         if (candidate == 0) begin
                             format_error <= 1;
                             state <= FINISH;
@@ -227,40 +262,42 @@ module scale_compose (
                 end
 ```
 
-**Mục đích.** RNE thương bằng twice_rem; giảm candidate nếu M vượt 0xffffff, reject nếu underflow về 0 hoặc không còn r phù hợp.
+**Mục đích.** PREP giảm candidate khi shift overflow hoặc threshold cho thấy coefficient vượt U24; chỉ candidate fit mới chạy divider. DIV_WAIT RNE thương bằng twice_rem, reject underflow về 0; nhánh rounded>0xFFFFFF là kiểm tra phòng vệ và không xảy ra với threshold đúng trên input hợp lệ.
 
 **Cách phần code hoạt động.** Các câu lệnh thuộc cùng một nhánh/pha xử lý và phải được đọc liền nhau; tách riêng từng dòng sẽ làm mất quan hệ điều kiện và dữ liệu.
 
-**Tín hiệu và dữ liệu chính.** `shift_overflow`: shift sẽ vượt U64; `shift`: độ dịch để biểu diễn scale; ý nghĩa dấu theo hàm đang dùng; `candidate`: ứng viên; ở REC là C, ở scale_compose là shift đang thử; `format_error`: cờ format/metadata không hợp lệ; `state`: trạng thái FSM của khối; `div_done`: divider đã xong; và 4 tín hiệu phụ khác trong đoạn code.
+**Tín hiệu và dữ liệu chính.** `shift_overflow`: shift sẽ vượt U48 numerator hoặc U25 denominator; `shift`: độ dịch để biểu diễn scale; ý nghĩa dấu theo hàm đang dùng; `candidate`: ứng viên; ở REC là C, ở scale_compose là shift đang thử; `format_error`: cờ format/metadata không hợp lệ; `state`: trạng thái FSM của khối; `div_done`: divider đã xong; và 4 tín hiệu phụ khác trong đoạn code.
 
-**Điểm cần đọc kỹ.** Giảm candidate r làm hệ số M nhỏ dần để vừa U24. Thuật toán không cắt các bit cao của M vì thao tác đó sẽ làm sai scale mà không báo lỗi.
+**Điểm cần đọc kỹ.** Giảm candidate r làm hệ số M nhỏ dần để vừa U24. Threshold dùng dấu < nghiêm ngặt vì U24_max lẻ: tie phải làm tròn lên giá trị không vừa U24. Mọi candidate vượt biên bị loại trước division, nên trường hợp hợp lệ chạy tối đa một division thay vì thử nhiều thương rộng rồi bỏ.
 
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
 flowchart TB
 %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    BASE["numerator_base U48 + base_r"] --> SHIFT["U64 numerator / denominator shift network"]
+    BASE["numerator_base U48 + base_r"] --> SHIFT["Numerator shift U48<br/>Denominator shift U25"]
     CAND["Candidate-r counter U6"] -.-> SHIFT
-    SHIFT --> DIV["div 64/64"]
-    DIV --> ROUND["RNE quotient adder<br/>Remainder / denominator comparator"]
-    SHIFT -->|"Denominator"| ROUND
-    ROUND --> FIT["Coefficient range detectors<br/>M exceeds U24 / M is zero"]
-    SHIFT -.->|"Shift overflow"| CTRL["Coefficient controller"]
-    FIT -.-> CTRL
-    DIV -.->|"done / div_zero"| CTRL
+    SHIFT --> FIT["Exact RNE U24 fit threshold<br/>Strict comparison at M_max + 1/2"]
+    LIMIT["U47 constant<br/>0x7EFF_FFC0_8000"] --> FIT
+    SHIFT -.->|"Shift overflow / shift below -2"| CTRL["Coefficient controller"]
+    FIT -.->|"Reject candidate before division"| CTRL
     CTRL -.->|"Load / decrement"| CAND
-    CTRL -.->|"start"| DIV
-    ROUND --> OUT["Result M/r storage"]
+    SHIFT --> DIV["div U48/U25<br/>One launch at most · 48 steps"]
+    CTRL -.->|"Start only for fitting candidate"| DIV
+    DIV --> ROUND["RNE quotient<br/>Twice remainder U26 / denominator compare<br/>Rounded U49"]
+    SHIFT -->|"Denominator"| ROUND
+    DIV -.->|"done / div_zero"| CTRL
+    ROUND -.->|"Zero / defensive range check"| CTRL
+    ROUND --> OUT["Result M U24 / r U6 storage"]
     CAND --> OUT
     CTRL -.->|"Output enable"| OUT
     CTRL -.-> STATUS["done / format_error"]
 ```
 
 
-### [Dòng 109–118: Trả kết quả](<../../../Verilog%20Source%20code/scale_compose.sv#L109>)
+### [Dòng 135–144: Trả kết quả](<../../../Verilog%20Source%20code/scale_compose.sv#L135>)
 
-<!-- source-range:109:118 -->
+<!-- source-range:135:144 -->
 ```systemverilog
                 FINISH : begin
                     busy <= 0;

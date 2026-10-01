@@ -1,10 +1,10 @@
 # ternary_mul.sv — 32 PE ternary và vòng lặp dot product
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — TMATMUL.
 
-**Source:** [ternary_mul.sv](<../../../Verilog%20Source%20code/ternary_mul.sv>). **Số dòng:** 246. **SHA-256:** `f21f0400ea0e3fcd3174602cdd0ec1c6b89e4b2e3f020dacd1a7c6734e6733c3`.
+**Source:** [ternary_mul.sv](<../../../Verilog%20Source%20code/ternary_mul.sv>). **Số dòng:** 266. **SHA-256:** `0593ecc70787ee9746c6c26e7d8507c0f2e5ab05f14b1226e5efc81d052bca45`.
 
 ## Khối này làm gì?
 
@@ -19,7 +19,7 @@ flowchart TB
     WS["Workspace port<br/>256-bit read/write"]
     PM["Parameter read port<br/>256-bit weight / bias"]
     subgraph CORE["ternary_mul"]
-        CTRL["Descriptor checks + controller<br/>Row/chunk counters + address generators"]
+        CTRL["Descriptor checks + controller<br/>Row/chunk counters + weight row pointer"]
         QB["Activation buffer<br/>32 × S8"]
         WB["Weight buffer 256 bit"]
         WSEL@{ shape: trap-t, label: "32-weight slice selector" }
@@ -68,14 +68,16 @@ MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ
 5. Sau chunk cuối, core đọc bias hoặc dùng zero, chạy postscale, pack kết quả và ghi khi word đầy.
 6. Các output row được xử lý lần lượt; 32 PE tăng tốc chiều K chứ không tạo 32 output đồng thời.
 
+**Tối ưu 01/10.** `weight_words_per_row` U3 chứa stride 1..4. Pointer `weight_row_addr_q` U10 bắt đầu tại weight_base và tăng stride mỗi khi chuyển row, kể cả đường flush output. Địa chỉ weight là pointer + (chunk>>2), thay phép nhân row×stride. Bounds dùng shift/add cho extent n_rows×stride với trung gian U12, trước khi chấp nhận descriptor; không wrap nếu extent vượt SRAM. K≤512, tail mask và chu kỳ datapath giữ nguyên. Test bao phủ K=257/384/385, stride 1..4, base khác zero, vùng kết thúc đúng 1024 và cấu hình vượt một word.
+
 ## Các nhóm logic trong source
 
 Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
 
 
-### [Dòng 1–59: Giao diện và register](<../../../Verilog%20Source%20code/ternary_mul.sv#L1>)
+### [Dòng 1–61: Giao diện và register](<../../../Verilog%20Source%20code/ternary_mul.sv#L1>)
 
-<!-- source-range:1:59 -->
+<!-- source-range:1:61 -->
 ```systemverilog
 module ternary_mul (
     input logic clk,
@@ -111,7 +113,9 @@ module ternary_mul (
     mat_desc_t matrix_desc_q;
     logic [9:0] output_row_q, input_chunk_q;
     logic [9:0] chunks_per_row;
-    logic [9:0] weight_words_per_row;
+    logic [2:0] weight_words_per_row, weight_stride_next;
+    logic [11:0] weight_extent;
+    logic [9:0] weight_row_addr_q;
     logic [255:0] q_word, w_word;
     logic got_q, got_w;
     logic signed [17:0] accumulator_q;
@@ -145,10 +149,23 @@ module ternary_mul (
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `q_desc`: metadata nguồn activation S8; `out_desc`: metadata output TMATMUL; `mat_desc`: metadata ma trận và postscale; `ws_rd_en`: request đọc workspace; `ws_rd_addr`: địa chỉ đọc workspace; và 43 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 60–83: Ternary PE và cây cộng](<../../../Verilog%20Source%20code/ternary_mul.sv#L60>)
+### [Dòng 62–98: Ternary PE và cây cộng](<../../../Verilog%20Source%20code/ternary_mul.sv#L62>)
 
-<!-- source-range:60:83 -->
+<!-- source-range:62:98 -->
 ```systemverilog
+
+    // Validated K is 1..512, so each row occupies one to four weight words.
+    // Shift/add bounds checking and a row pointer avoid two address multipliers.
+    always_comb begin
+        weight_stride_next = 3'((int'(mat_desc.k_len) + 127) / 128);
+        case (weight_stride_next)
+            3'd1 : weight_extent = {2'b0, mat_desc.n_rows};
+            3'd2 : weight_extent = {1'b0, mat_desc.n_rows, 1'b0};
+            3'd3 : weight_extent = {1'b0, mat_desc.n_rows, 1'b0} + {2'b0, mat_desc.n_rows};
+            3'd4 : weight_extent = {mat_desc.n_rows, 2'b0};
+            default : weight_extent = '0; // Invalid K is rejected before any read.
+        endcase
+    end
 
     always_comb begin
         weight_bit_base = {input_chunk_q[1:0], 6'b0};
@@ -203,9 +220,9 @@ flowchart TB
 ```
 
 
-### [Dòng 84–107: Địa chỉ SRAM](<../../../Verilog%20Source%20code/ternary_mul.sv#L84>)
+### [Dòng 99–122: Địa chỉ SRAM](<../../../Verilog%20Source%20code/ternary_mul.sv#L99>)
 
-<!-- source-range:84:107 -->
+<!-- source-range:99:122 -->
 ```systemverilog
 
     always_comb begin
@@ -220,7 +237,7 @@ flowchart TB
             ws_rd_en = 1;
             ws_rd_addr = input_desc_q.base_word + input_chunk_q[7:0];
             param_rd_en = (input_chunk_q[1:0] == 0);
-            param_rd_addr = matrix_desc_q.weight_base + output_row_q * weight_words_per_row + (input_chunk_q >> 2);
+            param_rd_addr = weight_row_addr_q + (input_chunk_q >> 2);
         end else if (state == REQ_BIAS) begin
             param_rd_en = 1;
             param_rd_addr = matrix_desc_q.bias_base + (output_row_q >> 3);
@@ -240,9 +257,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `ws_rd_en`: request đọc workspace; `ws_rd_addr`: địa chỉ đọc workspace; `ws_wr_en`: cho phép ghi workspace; `ws_wr_addr`: địa chỉ ghi workspace; `ws_wr_data`: word 256 ghi workspace; `pack_buf`: buffer pack output trước khi ghi SRAM; và 13 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 108–133: Reset](<../../../Verilog%20Source%20code/ternary_mul.sv#L108>)
+### [Dòng 123–149: Reset](<../../../Verilog%20Source%20code/ternary_mul.sv#L123>)
 
-<!-- source-range:108:133 -->
+<!-- source-range:123:149 -->
 ```systemverilog
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -258,6 +275,7 @@ flowchart TB
             input_chunk_q <= 0;
             chunks_per_row <= 0;
             weight_words_per_row <= 0;
+            weight_row_addr_q <= 0;
             q_word <= 0;
             w_word <= 0;
             got_q <= 0;
@@ -279,9 +297,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `busy`: khối đang xử lý; `done`: xung báo hoàn tất; `overflow`: cờ kết quả vượt miền số; `format_error`: cờ format/metadata không hợp lệ; `input_desc_q`: descriptor q đã chốt; và 15 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 134–163: Chốt lệnh và validate](<../../../Verilog%20Source%20code/ternary_mul.sv#L134>)
+### [Dòng 150–180: Chốt lệnh và validate](<../../../Verilog%20Source%20code/ternary_mul.sv#L150>)
 
-<!-- source-range:134:163 -->
+<!-- source-range:150:180 -->
 ```systemverilog
                 IDLE : if (start) begin
                     busy <= 1;
@@ -293,8 +311,9 @@ flowchart TB
                     output_row_q <= 0;
                     input_chunk_q <= 0;
                     accumulator_q <= 0;
-                    chunks_per_row <= (mat_desc.k_len + 31) >> 5;
-                    weight_words_per_row <= (mat_desc.k_len + 127) >> 7;
+                    chunks_per_row <= 10'((mat_desc.k_len + 31) >> 5);
+                    weight_words_per_row <= weight_stride_next;
+                    weight_row_addr_q <= mat_desc.weight_base;
                     pack_buf <= 0;
                     pack_count <= 0;
                     out_word <= 0;
@@ -306,7 +325,7 @@ flowchart TB
                         mat_desc.k_len == 0 || mat_desc.k_len > K_MAX || mat_desc.n_rows == 0 ||
                         q_desc.length != mat_desc.k_len || out_desc.length != mat_desc.n_rows ||
                         mat_desc.scale_r > 47 ||
-                        int'(mat_desc.weight_base) + int'(mat_desc.n_rows) * ((int'(mat_desc.k_len) + 127) / 128) > 1024 ||
+                        int'(mat_desc.weight_base) + int'(weight_extent) > 1024 ||
                         (!mat_desc.reserved[1] && int'(mat_desc.bias_base) + (int'(mat_desc.n_rows) + 7) / 8 > 1024) ||
                         ranges_overlap(int'(q_desc.base_word), ws_words(q_desc), int'(out_desc.base_word), ws_words(out_desc))) begin
                         format_error <= 1;
@@ -322,9 +341,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `busy`: khối đang xử lý; `overflow`: cờ kết quả vượt miền số; `format_error`: cờ format/metadata không hợp lệ; `input_desc_q`: descriptor q đã chốt; `q_desc`: metadata nguồn activation S8; và 24 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 164–179: Nhận q và weight](<../../../Verilog%20Source%20code/ternary_mul.sv#L164>)
+### [Dòng 181–196: Nhận q và weight](<../../../Verilog%20Source%20code/ternary_mul.sv#L181>)
 
-<!-- source-range:164:179 -->
+<!-- source-range:181:196 -->
 ```systemverilog
                 REQ_CHUNK : begin
                     got_q <= 0;
@@ -351,9 +370,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `got_q`: đã nhận word activation; `got_w`: đã có word weight cho chunk; `input_chunk_q`: chunk 32 activation trong hàng hiện tại; `state`: trạng thái FSM của khối; `ws_rd_valid`: workspace trả dữ liệu hợp lệ; `q_word`: buffer32 activation S8; và 4 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 180–203: Accumulate và bias](<../../../Verilog%20Source%20code/ternary_mul.sv#L180>)
+### [Dòng 197–220: Accumulate và bias](<../../../Verilog%20Source%20code/ternary_mul.sv#L197>)
 
-<!-- source-range:180:203 -->
+<!-- source-range:197:220 -->
 ```systemverilog
                 ACCUM : begin
                     if (input_chunk_q + 1 >= chunks_per_row) begin
@@ -388,9 +407,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `input_chunk_q`: chunk 32 activation trong hàng hiện tại; `chunks_per_row`: ceil(K/32), số bước accumulate một hàng; `accumulator_q`: tổng tích lũy S18 của hàng; `partial`: tổng 32 term của chunk; `matrix_desc_q`: matrix descriptor đã chốt; `reserved`: bit để dành hoặc flag mở rộng theo loại descriptor; và 7 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 204–225: Rescale và pack](<../../../Verilog%20Source%20code/ternary_mul.sv#L204>)
+### [Dòng 221–244: Rescale và pack](<../../../Verilog%20Source%20code/ternary_mul.sv#L221>)
 
-<!-- source-range:204:225 -->
+<!-- source-range:221:244 -->
 ```systemverilog
                 SCALE : begin
                     overflow <= overflow | scale_ov;
@@ -400,6 +419,7 @@ flowchart TB
                         else begin
                             pack_count <= pack_count + 1'b1;
                             output_row_q <= output_row_q + 1'b1;
+                            weight_row_addr_q <= weight_row_addr_q + {7'h00, weight_words_per_row};
                             accumulator_q <= 0;
                             state <= REQ_CHUNK;
                         end
@@ -409,6 +429,7 @@ flowchart TB
                         else begin
                             pack_count <= pack_count + 1'b1;
                             output_row_q <= output_row_q + 1'b1;
+                            weight_row_addr_q <= weight_row_addr_q + {7'h00, weight_words_per_row};
                             accumulator_q <= 0;
                             state <= REQ_CHUNK;
                         end
@@ -423,9 +444,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `overflow`: cờ kết quả vượt miền số; `scale_ov`: overflow của postscale; `matrix_desc_q`: matrix descriptor đã chốt; `output_s32`: chọn format output S32 thay vì S16; `pack_buf`: buffer pack output trước khi ghi SRAM; `pack_count`: số/vị trí phần tử đang pack; và 6 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 226–246: Write và finish](<../../../Verilog%20Source%20code/ternary_mul.sv#L226>)
+### [Dòng 245–266: Write và finish](<../../../Verilog%20Source%20code/ternary_mul.sv#L245>)
 
-<!-- source-range:226:246 -->
+<!-- source-range:245:266 -->
 ```systemverilog
                 WRITE : begin
                     pack_buf <= 0;
@@ -434,6 +455,7 @@ flowchart TB
                     if (output_row_q + 1 >= matrix_desc_q.n_rows) state <= FINISH;
                     else begin
                         output_row_q <= output_row_q + 1'b1;
+                        weight_row_addr_q <= weight_row_addr_q + {7'h00, weight_words_per_row};
                         accumulator_q <= 0;
                         state <= REQ_CHUNK;
                     end

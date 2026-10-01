@@ -1,6 +1,6 @@
 # exp.sv — EXP stub
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Legacy — không phải exp có thể sử dụng.
 

@@ -1,14 +1,14 @@
 # div.sv — Divider unsigned tuần tự
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — scalar nội bộ.
 
-**Source:** [div.sv](<../../../Verilog%20Source%20code/div.sv>). **Số dòng:** 68. **SHA-256:** `7f8337151670cf23884a5705c2e8c9de35d6b122cdbc0a3515555f90ba6f0a4d`.
+**Source:** [div.sv](<../../../Verilog%20Source%20code/div.sv>). **Số dòng:** 68. **SHA-256:** `c2c7e524ecc7219f8a3792eca7957626991e2127a4c7f0fa31d4df272f321f54`.
 
 ## Khối này làm gì?
 
-Đây là divider unsigned kiểu restoring, không phải vector DIV instruction. Mỗi bước dịch một bit của numerator sang remainder, thử trừ denominator và sinh một bit quotient. NUM_W=64 trong hai instance hiện tại; DEN_W=32 ở norm và 64 ở scale_compose.
+Đây là divider unsigned kiểu restoring, không phải vector DIV instruction. Mỗi bước dịch một bit của numerator sang remainder, thử trừ denominator và sinh một bit quotient. Các instance NORM dùng NUM_W=55/DEN_W=32; scale_compose dùng NUM_W=48/DEN_W=25. Parameter mặc định 64/32 được giữ cho helper generic và verification.
 
 ## Sơ đồ kiến trúc tổng quan
 
@@ -43,13 +43,15 @@ MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ
 
 ## Cách hoạt động chi tiết
 
-Start khi rảnh chốt numerator/denominator. Mỗi cycle busy tiến một bit, sau NUM_W bước trả quotient/remainder và done. Chia0 trả quotient toàn1, remainder lấy bit thấp của numerator, div_zero=1; caller phải xử lý cờ lỗi, không dùng đó như kết quả toán học hợp lệ.
+Start khi rảnh chốt numerator/denominator. Mỗi cycle busy tiến một bit, sau NUM_W bước trả quotient/remainder và done. Chia0 trả quotient toàn1, remainder nhận numerator cast về DEN_W bit, div_zero=1; caller phải xử lý cờ lỗi, không dùng đó như kết quả toán học hợp lệ.
 
 1. Divider là unsigned; phép signed phải xử lý dấu/magnitude ở caller. Start chỉ được nhận khi không busy.
 2. `q_work` ban đầu chứa numerator. Mỗi chu kỳ, một bit được kéo sang `rem_shift`.
 3. Nếu remainder đủ lớn, phần cứng trừ denominator và đặt quotient bit mới bằng 1; ngược lại bit mới bằng 0.
 4. Sau NUM_W bước, quotient và remainder cuối được chốt cùng pulse done.
 5. Chia zero kết thúc ngay với `div_zero=1`; quotient toàn 1 chỉ là quy ước phần cứng, không phải thương hợp lệ.
+
+**Quy ước RTL.** Counter khởi tạo bằng `CW'(NUM_W)` để chỉ rõ độ rộng chứa số bước; vòng lặp làm việc với NUM_W bit numerator. Remainder của chia zero dùng `DEN_W'(numerator)`, tránh part-select vượt range khi denominator rộng hơn numerator. Divider vẫn trả quotient/remainder bằng thuật toán tuần tự; divide-by-zero và giao tiếp start/busy/done không đổi.
 
 ## Các nhóm logic trong source
 
@@ -100,7 +102,7 @@ module div #(
 
     always_comb begin
         rem_shift = {rem_work[DEN_W - 1 : 0], q_work[NUM_W - 1]};
-        q_next = {q_work[NUM_W - 2 : 0], 1'b0};
+        q_next = q_work << 1;
         if (rem_shift >= {1'b0, den_reg}) begin
             rem_shift = rem_shift - {1'b0, den_reg};
             q_next[0] = 1'b1;
@@ -153,14 +155,14 @@ flowchart TB
                 div_zero <= (denominator == 0);
                 if (denominator == 0) begin
                     quotient <= '1;
-                    remainder <= numerator[DEN_W - 1 : 0];
+                    remainder <= DEN_W'(numerator);
                     done <= 1'b1;
                 end else begin
                     busy <= 1'b1;
                     q_work <= numerator;
                     rem_work <= '0;
                     den_reg <= denominator;
-                    count <= NUM_W;
+                    count <= CW'(NUM_W);
                 end
 ```
 

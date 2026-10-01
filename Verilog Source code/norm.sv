@@ -7,41 +7,52 @@ module isqrt_u64 (
     output logic done,
     output logic [31:0] root
 );
-    logic [63:0] op, res, one;
+    logic [63:0] radicand_work;
+    logic [31:0] root_work, root_next;
+    logic [33:0] remainder_work, remainder_next, remainder_shift, trial;
+    logic [34:0] difference;
     logic [5:0] count;
+    always_comb begin
+        // Before iteration 32, root_work < 2^31 and remainder_work <=
+        // 2*root_work. Two new radicand bits therefore fit in U34.
+        remainder_shift = {remainder_work[31:0], radicand_work[63:62]};
+        trial = {root_work, 2'b01}; // 4*root_work + 1
+        difference = {1'b0, remainder_shift} - {1'b0, trial};
+        // The extra subtraction bit is the borrow flag; share one subtractor
+        // for the trial comparison and accepted remainder update.
+        root_next = {root_work[30:0], 1'b0};
+        remainder_next = remainder_shift;
+        if (!difference[34]) begin
+            root_next[0] = 1'b1;
+            remainder_next = difference[33:0];
+        end
+    end
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             busy <= 0;
             done <= 0;
             root <= '0;
-            op <= '0;
-            res <= '0;
-            one <= '0;
+            radicand_work <= '0;
+            root_work <= '0;
+            remainder_work <= '0;
             count <= '0;
         end else begin
             done <= 1'b0;
             if (start && !busy) begin
-                op <= radicand;
-                res <= 0;
-                one <= 64'h4000_0000_0000_0000; // 2^62, highest power of 4 in U64
+                radicand_work <= radicand;
+                root_work <= '0;
+                remainder_work <= '0;
                 count <= 6'd32;
                 busy <= 1'b1;
             end else if (busy) begin
-                if (op >= res + one) begin
-                    op <= op - (res + one);
-                    res <= (res >> 1) + one;
-                end else begin
-                    res <= res >> 1;
-                end
-                one <= one >> 2;
+                radicand_work <= radicand_work << 2;
+                root_work <= root_next;
+                remainder_work <= remainder_next;
                 count <= count - 1'b1;
                 if (count == 1) begin
                     busy <= 1'b0;
                     done <= 1'b1;
-                    if (op >= res + one)
-                        root <= 32'((res >> 1) + one);
-                    else
-                    root <= 32'(res >> 1);
+                    root <= root_next;
                 end
             end
         end
@@ -113,11 +124,14 @@ module norm (
     logic [5:0] pack_count;
     logic [7:0] write_word;
 
-    // scalar divider shared by normalization coefficient generation
+    // Shared numerator width: sum_sq uses 40 bits; mean remainder shifted
+    // by 32 uses at most 41; quant numerator uses at most 48; norm numerator
+    // is 2^(32+r), with r <= 22 for a U32 RMS, so bit 54 is the maximum.
+    localparam int DIV_NUM_W = 55;
     logic div_start, div_busy, div_done, div_zero;
-    logic [63:0] div_num, div_q;
+    logic [DIV_NUM_W - 1:0] div_num, div_q;
     logic [31:0] div_den, div_rem;
-    div #(.NUM_W(64),
+    div #(.NUM_W(DIV_NUM_W),
         .DEN_W(32)) u_div(
         .clk(clk),
         .rst_n(rst_n),
@@ -145,11 +159,54 @@ module norm (
     logic signed [31:0] x0_sq, x1_sq;
     logic [39:0] pair_sq;
     logic [10:0] idx0, idx1;
+    logic signed [23:0] zr0, zr1;
+    logic signed [24:0] multiply_a [0:1], multiply_b [0:1];
+    logic signed [47:0] arithmetic_product [0:1];
+    logic signed [63:0] arithmetic_rounded [0:1];
+    logic [5:0] arithmetic_shift;
     always_comb begin
         x0 = read_buf[lane * 16 +: 16];
         x1 = read_buf[(lane + 1) * 16 +: 16];
-        x0_sq = $signed(x0) * $signed(x0);
-        x1_sq = $signed(x1) * $signed(x1);
+        zr0 = read_buf[lane * 32 +: 24];
+        zr1 = read_buf[(lane + 1) * 32 +: 24];
+        // The three passes are exclusive: two multipliers and two RNE paths
+        // serve square, normalization and quantization without extra cycles.
+        multiply_a[0] = '0;
+        multiply_a[1] = '0;
+        multiply_b[0] = '0;
+        multiply_b[1] = '0;
+        arithmetic_shift = '0;
+        case (state)
+            P1_PROC : begin
+                multiply_a[0] = {{9{x0[15]}}, x0};
+                multiply_a[1] = {{9{x1[15]}}, x1};
+                multiply_b[0] = multiply_a[0];
+                multiply_b[1] = multiply_a[1];
+            end
+            P2_PROC : begin
+                multiply_a[0] = {{9{x0[15]}}, x0};
+                multiply_a[1] = {{9{x1[15]}}, x1};
+                multiply_b[0] = $signed({1'b0, norm_m});
+                multiply_b[1] = $signed({1'b0, norm_m});
+                arithmetic_shift = norm_r;
+            end
+            P3_PROC : begin
+                multiply_a[0] = {zr0[23], zr0};
+                multiply_a[1] = {zr1[23], zr1};
+                multiply_b[0] = $signed({1'b0, quant_m});
+                multiply_b[1] = $signed({1'b0, quant_m});
+                arithmetic_shift = quant_r;
+            end
+            default : ;
+        endcase
+        for (integer j = 0; j < 2; j = j + 1) begin
+            // S24 * U24 fits S48; the extra operand bit preserves U24's sign.
+            arithmetic_product[j] = multiply_a[j] * multiply_b[j];
+            arithmetic_rounded[j] = rne_shift64(
+                {{16{arithmetic_product[j][47]}}, arithmetic_product[j]}, arithmetic_shift);
+        end
+        x0_sq = arithmetic_product[0][31:0];
+        x1_sq = arithmetic_product[1][31:0];
         idx0 = 11'({word_index, 4'b0} + lane);
         idx1 = idx0 + 1'b1;
         pair_sq = 0;
@@ -189,24 +246,21 @@ module norm (
     endfunction
 
     logic [5:0] norm_r_sel, quant_r_sel;
-    logic [63:0] norm_num, quant_num;
+    logic [DIV_NUM_W - 1:0] norm_num, quant_num;
     always_comb begin
-        mean_with_epsilon = ({1'b0, mean_q} << 32) + {1'b0, div_q} + {1'b0, epsilon_q};
+        mean_with_epsilon = ({1'b0, mean_q} << 32) + {10'h000, div_q} + {1'b0, epsilon_q};
         norm_r_sel = choose_norm_r(rms_r);
-        norm_num = 64'h1 << (32 + norm_r_sel);
+        norm_num = 55'h1 << (32 + norm_r_sel);
         quant_r_sel = choose_quant_r((absmax > delta_q) ? absmax : delta_q);
-        quant_num = 64'h0000_0000_0000_007f << quant_r_sel;
+        quant_num = 55'h7f << quant_r_sel;
     end
 
-    logic signed [39:0] z_prod0, z_prod1;
     logic signed [63:0] z_round0, z_round1;
     logic signed [23:0] z0, z1;
     logic [23:0] absz0, absz1;
     always_comb begin
-        z_prod0 = $signed(x0) * $signed({1'b0, norm_m});
-        z_prod1 = $signed(x1) * $signed({1'b0, norm_m});
-        z_round0 = rne_shift64({{24{z_prod0[39]}}, z_prod0}, norm_r);
-        z_round1 = rne_shift64({{24{z_prod1[39]}}, z_prod1}, norm_r);
+        z_round0 = arithmetic_rounded[0];
+        z_round1 = arithmetic_rounded[1];
         if (z_round0 > 64'sh0000_0000_007f_ffff) z0 = 24'sh7f_ffff;
         else if (z_round0 < - 64'sh0000_0000_0080_0000) z0 = 24'sh80_0000;
         else z0 = z_round0[23:0];
@@ -217,17 +271,11 @@ module norm (
         absz1 = z1[23] ? $unsigned( - $signed(z1)) : z1;
     end
 
-    logic signed [23:0] zr0, zr1;
-    logic signed [47:0] qprod0, qprod1;
     logic signed [63:0] qround0, qround1;
     logic signed [7:0] q0, q1;
     always_comb begin
-        zr0 = read_buf[lane * 32 +: 24];
-        zr1 = read_buf[(lane + 1) * 32 +: 24];
-        qprod0 = $signed(zr0) * $signed({1'b0, quant_m});
-        qprod1 = $signed(zr1) * $signed({1'b0, quant_m});
-        qround0 = rne_shift64({{16{qprod0[47]}}, qprod0}, quant_r);
-        qround1 = rne_shift64({{16{qprod1[47]}}, qprod1}, quant_r);
+        qround0 = arithmetic_rounded[0];
+        qround1 = arithmetic_rounded[1];
         if (qround0 > 64'sh0000_0000_0000_007f) q0 = 8'sh7f;
         else if (qround0 < - 64'sh0000_0000_0000_0080) q0 = 8'sh80;
         else q0 = qround0[7:0];
@@ -253,12 +301,12 @@ module norm (
             end
             DIV_MEAN_START : begin
                 div_start = 1'b1;
-                div_num = {{24{1'b0}}, sum_sq};
+                div_num = {{15{1'b0}}, sum_sq};
                 div_den = {22'h0, vector_length_q};
             end
             DIV_FRAC_START : begin
                 div_start = 1'b1;
-                div_num = mean_rem << 32;
+                div_num = DIV_NUM_W'(mean_rem) << 32;
                 div_den = {22'h0, vector_length_q};
             end
             SQRT_START : sqrt_start = 1'b1;
@@ -374,7 +422,7 @@ module norm (
                 end
                 DIV_MEAN_START : state <= DIV_MEAN_WAIT;
                 DIV_MEAN_WAIT : if (div_done) begin
-                    mean_q <= div_q;
+                    mean_q <= {{9{1'b0}}, div_q};
                     mean_rem <= div_rem;
                     state <= DIV_FRAC_START;
                 end

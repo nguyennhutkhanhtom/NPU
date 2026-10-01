@@ -1,10 +1,10 @@
 # mem_burst.v — Adapter burst cho memory ngoài kiểu FPGA
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Legacy — không instantiate trong ASIC core hiện tại.
 
-**Source:** [mem_burst.v](<../../../Verilog%20Source%20code/mem_burst.v>). **Số dòng:** 247. **SHA-256:** `c021cde39b0541fb8b19bc97765b19ab5667b83e591a9c2f4f4f4c4e52bafc75`.
+**Source:** [mem_burst.v](<../../../Verilog%20Source%20code/mem_burst.v>). **Số dòng:** 247. **SHA-256:** `bd2467f0fe9ed199d522a674f89c72dadcbc2f19752fbc0bdb35397135cc9f2f`.
 
 ## Khối này làm gì?
 
@@ -55,6 +55,8 @@ Chờ init_calib_complete, chọn read hoặc write từ IDLE (read ưu tiên). 
 3. Write tách `app_rdy` cho command và `app_wdf_rdy` cho data; upstream nhận `wr_burst_data_req`.
 4. State WAIT giữ giao dịch đến khi đủ beat, sau đó phát finish và về IDLE.
 5. Đây là adapter FPGA cũ, không phải DDR PHY/controller và không nối vào core hiện tại; address/handshake phải xác nhận lại nếu tái sử dụng.
+
+**Quy ước RTL.** State constants dùng `localparam` để cố định mã FSM, không phải cấu hình caller được phép override. Module này vẫn là legacy độc lập, không nằm trong hierarchy NPU hiện tại.
 
 ## Các nhóm logic trong source
 
@@ -118,14 +120,14 @@ module mem_burst
 <!-- source-range:40:82 -->
 ```systemverilog
 
-	parameter IDLE = 3'h0;
-	parameter MEM_READ = 3'h1;
-	parameter MEM_READ_WAIT = 3'h2;
-	parameter MEM_WRITE  = 3'h3;
-	parameter MEM_WRITE_WAIT = 3'h4;
-	parameter READ_END = 3'h5;
-	parameter WRITE_END = 3'h6;
-	parameter MEM_WRITE_FIRST_READ = 3'h7;
+	localparam IDLE = 3'h0;
+	localparam MEM_READ = 3'h1;
+	localparam MEM_READ_WAIT = 3'h2;
+	localparam MEM_WRITE  = 3'h3;
+	localparam MEM_WRITE_WAIT = 3'h4;
+	localparam READ_END = 3'h5;
+	localparam WRITE_END = 3'h6;
+	localparam MEM_WRITE_FIRST_READ = 3'h7;
 	reg[2:0] state;	
 	reg[9:0] rd_addr_cnt;
 	reg[9:0] rd_data_cnt;

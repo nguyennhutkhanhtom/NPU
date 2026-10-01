@@ -3,7 +3,7 @@
   "authorization": "User requested deletion of unnecessary folders/tests and preservation of important main-source information.",
   "main_source": "Verilog Source code",
   "active_tests": "tests/tb_all.sv",
-  "preservation": "All research/review Markdown, JSON, documentation tools, scripts, patch records and images are retained byte-for-byte in docs/history.zip. Current documents also live under docs/.",
+  "preservation": "All research/review Markdown, JSON, documentation tools, scripts, patch records and images are retained byte-for-byte in docs/history/history.zip. Current documents also live under docs/.",
   "archive_sha256": "6d7e6b88f8d28863fc03b47593b3c4d9c0a60653f910ef7289315b6310d5f9fb",
   "archive_checks": "PASS: every preserved entry matches its original SHA-256",
   "counts": {
@@ -2124,5 +2124,7 @@
       "bytes": 29,
       "disposition": "generated_simulation_or_review_artifact"
     }
-  ]
+  ],
+  "archive_path": "docs/history/history.zip",
+  "documentation_reorganized_on": "2026-10-01"
 }

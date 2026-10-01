@@ -1,10 +1,10 @@
 # npu_pkg.sv — Kiểu dữ liệu, saturation và rounding
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — package chung.
 
-**Source:** [npu_pkg.sv](<../../../Verilog%20Source%20code/npu_pkg.sv>). **Số dòng:** 117. **SHA-256:** `6c5c78b766028f558107b75a6aca8df65ade8c0d301d949f0fda1a49bc849fdb`.
+**Source:** [npu_pkg.sv](<../../../Verilog%20Source%20code/npu_pkg.sv>). **Số dòng:** 110. **SHA-256:** `1061016c51092f4f9269fc99392c30bc1bd2117103ef5f49474a296f5077a343`.
 
 ## Khối này làm gì?
 
@@ -35,13 +35,15 @@ MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ
 
 ## Cách hoạt động chi tiết
 
-`sat_s16/sat_s32` clamp về miền biểu diễn. `rne_shift64` tách sign và magnitude, xác định guard/sticky/LSB rồi làm tròn ties-to-even. `scale_shift64` dùng RNE khi chia cho 2^shift, hoặc shift trái khi phải tăng scale raw. Các hàm kiểm tra workspace tính số word bằng phép chia làm tròn lên.
+`sat_s16/sat_s32` clamp về miền biểu diễn. `rne_shift64` dịch phải số có dấu để tạo thương floor, rồi dùng guard/sticky/LSB quyết định cộng một; kết quả là ties-to-even cho cả số dương và âm. `scale_shift64` dùng RNE khi chia cho 2^shift, hoặc shift trái khi phải tăng scale raw. Các hàm kiểm tra workspace tính số word bằng phép chia làm tròn lên.
 
 1. Các parameter xác định biên thiết kế: word 256 bit, 32 ternary lane, hai vector lane và K tối đa 512. Một số module vẫn có literal theo cấu hình này, nên đổi package chưa đủ để tái cấu hình toàn chip.
 2. Workspace descriptor mô tả địa chỉ, length, format và F_t. Matrix descriptor mô tả weight, bias, K, số hàng và postscale.
-3. `rne_shift64` làm tròn trên magnitude rồi khôi phục dấu. Guard, sticky và LSB xử lý chính xác trường hợp nằm giữa hai số.
+3. `rne_shift64` bắt đầu từ `q = x >>> shift`. Các bit bị bỏ biểu diễn phần dư không âm so với thương floor; guard/sticky và parity của q quyết định tăng thương để chọn số gần nhất, ties-to-even.
 4. `sat_s16/sat_s32` clamp sau số học S64, tránh wrap-around khi lấy bit thấp.
 5. `ws_words`, `ws_valid` và `ranges_overlap` là lớp kiểm tra memory được nhiều execution unit dùng chung.
+
+**Tối ưu 01/10.** RNE bỏ hai mạch đổi dấu magnitude và mask dạng `(1<<shift)-1`. Dịch trái raw input với shift amount 7 bit `64-shift` đưa phần dư lên MSB để lấy guard/sticky. Khi shift=0, phép dịch 64 bit cho zero, nên increment=0. Mọi biến được gán trên mọi path, giúp logic tổ hợp có định nghĩa đầy đủ. Regression đối chiếu 37.189 trường hợp với phép chia/phần dư độc lập, gồm S64 min/max và mọi shift 0..63.
 
 ## Các nhóm logic trong source
 
@@ -143,38 +145,31 @@ package npu_pkg;
 **Tín hiệu và dữ liệu chính.** `x`: giá trị đầu vào hàm số học.
 
 
-### [Dòng 59–89: RNE](<../../../Verilog%20Source%20code/npu_pkg.sv#L59>)
+### [Dòng 59–82: RNE](<../../../Verilog%20Source%20code/npu_pkg.sv#L59>)
 
-<!-- source-range:59:89 -->
+<!-- source-range:59:82 -->
 ```systemverilog
 
-    // Round-to-nearest-even signed arithmetic right shift.
-    // shift=0 returns x unchanged. Intended for shift <= 47.
+    // Round-to-nearest-even signed arithmetic right shift, including shift=0.
+    // Arithmetic shift gives floor(x/2^shift); discarded bits encode its remainder.
     function automatic logic signed [63:0] rne_shift64(
             input logic signed [63:0] x,
             input logic [5:0] shift
         );
-        logic sign;
-        logic [63:0] mag;
-        logic [63:0] q;
+        logic signed [63:0] q;
+        logic [63:0] discarded;
         logic guard;
         logic sticky;
-        logic lsb;
         logic inc;
         begin
-            if (shift == 0) begin
-                rne_shift64 = x;
-            end else begin
-                sign = x[63];
-                mag = sign ? $unsigned( - x) : $unsigned(x);
-                q = mag >> shift;
-                guard = mag[shift - 1];
-                sticky = (shift > 1) ? | (mag & ((64'h1 << (shift - 1)) - 1)) : 1'b0;
-                lsb = q[0];
-                inc = guard & (sticky | lsb);
-                q = q + inc;
-                rne_shift64 = sign ? - $signed(q) : $signed(q);
-            end
+            // A 7-bit shift amount represents 64: shift=0 discards no bits.
+            // This avoids magnitude/sign negators and a variable subtract-one mask.
+            q = x >>> shift;
+            discarded = $unsigned(x) << (7'd64 - {1'b0, shift});
+            guard = discarded[63];
+            sticky = |discarded[62:0];
+            inc = guard && (sticky || q[0]);
+            rne_shift64 = q + $signed({63'h0, inc});
         end
     endfunction
 
@@ -184,35 +179,29 @@ package npu_pkg;
 
 **Cách phần code hoạt động.** Có function tổ hợp dùng lại tại nơi gọi; function không giữ trạng thái qua các chu kỳ.
 
-**Tín hiệu và dữ liệu chính.** `x`: giá trị đầu vào hàm số học; `shift`: độ dịch để biểu diễn scale; ý nghĩa dấu theo hàm đang dùng; `sign`: bit dấu của input; `mag`: magnitude unsigned của input; `q`: magnitude sau shift; `guard`: bit ngay dưới phần giữ lại; và 3 tín hiệu phụ khác trong đoạn code.
+**Tín hiệu và dữ liệu chính.** `x`: input S64; `shift`: số bit chia 0..63; `q`: thương floor S64; `discarded`: các bit phần dư được đưa lên MSB; `guard`: bit phần dư cao nhất; `sticky`: OR các bit phần dư thấp hơn; `inc`: guard && (sticky || q[0]).
 
-**Điểm cần đọc kỹ.** Điểm khó của nhóm này là RNE cho số âm. Code không dịch trực tiếp số âm rồi cộng guard; nó làm tròn magnitude unsigned trước, sau đó mới khôi phục dấu để kết quả đối xứng quanh zero.
+**Điểm cần đọc kỹ.** Dịch phải arithmetic tạo floor ngay cả với số âm: −3/2 có q=−2 và phần dư 1. Tie giữ −2 vì q chẵn; −5/2 có q=−3 lẻ nên cộng một thành −2. Cách này tránh lấy abs(S64 min) trong datapath.
 
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    X["x signed S64"] --> MAG["Sign / magnitude combinational logic"]
-    R["shift U6"] -.-> SH["Unsigned right shifter"]
-    MAG --> SH
-    MAG --> BITS["Guard / sticky bit extraction"]
+    X["x signed S64"] --> SH["Arithmetic right shift<br/>q = floor(x / 2^shift)"]
+    R["shift U6"] -.-> SH
+    X --> BITS["Unsigned left shift by 64-shift<br/>7-bit shift amount<br/>guard=MSB · sticky=OR lower bits"]
     R -.-> BITS
-    SH --> INC["Magnitude incrementer"]
-    SH -->|"Quotient LSB"| ROUND["RNE decision logic<br/>guard AND sticky-or-LSB"]
+    SH -->|"q LSB"| ROUND["Increment decision<br/>guard AND sticky-or-q-LSB"]
     BITS --> ROUND
-    ROUND -.-> INC
-    INC --> SIGN@{ shape: trap-t, label: "Sign restoration + shift-zero bypass selector" }
-    MAG -.->|"Sign"| SIGN
-    X -->|"Unshifted bypass"| SIGN
-    R -.-> SIGN
-    SIGN --> OUT["Rounded signed S64<br/>Combinational logic at each caller"]
+    SH --> ADD["Signed q + increment"]
+    ROUND -.-> ADD
+    ADD --> OUT["RNE signed S64<br/>shift=0: output=input"]
 ```
 
 
-### [Dòng 90–98: Đổi scale](<../../../Verilog%20Source%20code/npu_pkg.sv#L90>)
+### [Dòng 83–91: Đổi scale](<../../../Verilog%20Source%20code/npu_pkg.sv#L83>)
 
-<!-- source-range:90:98 -->
+<!-- source-range:83:91 -->
 ```systemverilog
     // Shift is positive for division, negative for multiplication by a power of two.
     // Callers constrain left shifts to <=24 and operands to at most 33 signed bits.
@@ -220,7 +209,7 @@ flowchart TB
             input logic signed [63:0] x, input integer shift
         );
         if (shift >= 0) scale_shift64 = rne_shift64(x, shift[5:0]);
-        else scale_shift64 = x <<< ( - shift);
+        else scale_shift64 = x <<< $unsigned( - shift);
     endfunction
 
 ```
@@ -232,9 +221,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `x`: giá trị đầu vào hàm số học; `shift`: độ dịch để biểu diễn scale; ý nghĩa dấu theo hàm đang dùng.
 
 
-### [Dòng 99–117: Kiểm tra memory](<../../../Verilog%20Source%20code/npu_pkg.sv#L99>)
+### [Dòng 92–110: Kiểm tra memory](<../../../Verilog%20Source%20code/npu_pkg.sv#L92>)
 
-<!-- source-range:99:117 -->
+<!-- source-range:92:110 -->
 ```systemverilog
     function automatic integer ws_words(input ws_desc_t d);
         case (d.fmt)

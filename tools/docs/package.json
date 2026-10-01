@@ -1,0 +1,16 @@
+{
+  "name": "npu-document-diagrams",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Render and validate repository Mermaid documentation",
+  "scripts": {
+    "render": "node render.cjs"
+  },
+  "dependencies": {
+    "mermaid": "11.17.2",
+    "playwright": "1.62.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

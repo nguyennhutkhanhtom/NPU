@@ -1,93 +1,152 @@
-# ins_mem.sv — Instruction memory do host nạp
+# ins_mem.sv — Instruction RAM và fetch/host valid
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng.
 
-**Source:** [ins_mem.sv](<../../../Verilog%20Source%20code/ins_mem.sv>). **Số dòng:** 17. **SHA-256:** `f0731fbb4f9afede319f07e24a137243a99f328d67efe79d47b5b636c63eb496`.
+**Source:** [ins_mem.sv](<../../../Verilog%20Source%20code/ins_mem.sv>). **Số dòng:** 61. **SHA-256:** `d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123`.
 
 ## Khối này làm gì?
 
-Mảng512×13 bit có fetch read và host read combinational, host write synchronous. Không có chương trình mặc định và không reset memory. Cần nạp HALT trước khi start.
+Memory 512×13 bit do host nạp, không reset hoặc initialize nội dung. Một cổng đọc đồng bộ dùng chung cho fetch và host có tag/valid; top chặn host khi running và scheduler chờ `instr_valid`. Simulation và synthesis dùng cùng RTL và cùng latency, không phụ thuộc define hoặc thuộc tính memory của hãng. Reset chỉ xóa control/tag; host phải nạp chương trình hợp lệ và HALT trước khi start.
 
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    H["Host instruction write<br/>host_addr 9 bit · host_instr 13 bit"]
+%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 45}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
+    H["Host: en / we / addr / write instruction"]
+    F["Scheduler: fetch_en / PC"]
     subgraph IM["ins_mem"]
-        WRITE["Synchronous write port"]
-        MEM@{ shape: rect, label: "Instruction memory array<hr/>512 × 13 bit" }
-        READ@{ shape: trap-t, label: "Program read selector<br/>Combinational" }
-        HR@{ shape: trap-t, label: "Host read selector<br/>Combinational" }
+        MUX@{ shape: trap-t, label: "Shared read address selector<br/>Host read or fetch" }
+        REQ["Request registers<br/>address / client / pending"]
+        RAM@{ shape: rect, label: "Instruction memory<hr/>512 × 13 bit<hr/>Synchronous read / host write" }
+        DATA["Read data register 13 bit<br/>No asynchronous reset"]
+        RESP["Response registers<br/>address / client / valid"]
+        MATCH["Current request + two tags match<br/>Client / address / read enabled"]
     end
-    H --> WRITE
-    WE["clk / host_we"] -.-> WRITE
-    WRITE --> MEM
-    MEM --> READ
-    MEM --> HR
-    PC["addr / PC 9 bit"] -.-> READ
-    HA["host_addr 9 bit"] -.-> HR
-    READ --> I["instr 13 bit → scheduler"]
-    HR --> R["host_rinstr 13 bit"]
+    H -.-> MUX
+    F -.-> MUX
+    MUX -.-> REQ
+    REQ -.-> RAM
+    H -->|"Write"| RAM
+    RAM --> DATA
+    REQ -.-> RESP
+    H -.-> MATCH
+    F -.-> MATCH
+    REQ -.-> MATCH
+    RESP -.-> MATCH
+    DATA -->|"instr 13 bit"| F
+    DATA -->|"host_rinstr 13 bit"| H
+    MATCH -.->|"instr_valid"| F
+    MATCH -.->|"host_rvalid → host_ready"| H
 ```
 
-MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ ra; decoder/demux dùng hình thang ngược lại, mở rộng về phía nhiều ngõ ra. Hình chữ nhật có các vạch ngang biểu diễn bộ nhớ hoặc bank descriptor. Các hình chữ nhật thường là datapath, thanh ghi đơn hoặc giao diện. Nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.
+Nét liền là dữ liệu, nét đứt là điều khiển và địa chỉ. Memory và read data register không có reset bất đồng bộ. Sơ đồ mô tả storage logic, không quy định macro vật lý.
 
 ## Cách hoạt động chi tiết
 
-PC trực tiếp chọn mem[addr]. Host nạp host_instr tại host_addr khi host_we. Top chặn host write lúc running. Khi đưa vào ASIC, cần chọn implementation cho hai đường read này hoặc bridge tương ứng.
-
-1. Memory chứa 512 instruction 13 bit, không reset hay initialize nên host phải nạp chương trình và HALT.
-2. Fetch read là tổ hợp theo PC; scheduler chốt instruction vào `instr_q`.
-3. Host có read tổ hợp để kiểm tra và write synchronous tại cạnh clock.
-4. Hai đường read của behavioral model cần được xem lại khi ánh xạ sang ROM/SRAM macro ASIC.
+1. Host write tại cạnh lên khi rst_n, host_en và host_we. Top chỉ chấp nhận khi core idle.
+2. Một request read ổn định qua hai cạnh lên: cạnh đầu chốt address/client, cạnh thứ hai chốt RAM data và response tag. Valid chỉ lên khi request hiện tại, request tag và response tag cùng địa chỉ/client.
+3. Fetch valid chỉ có khi fetch_en đang giữ. Scheduler ở S_FETCH đến khi valid rồi chốt instr_q ở cạnh tiếp theo. Fetch dùng cùng hai cạnh lên của hợp đồng bộ nhớ trong mọi build.
+4. Host read giữ en, we=0 và address đến host_ready. Write, idle hoặc đổi client làm response cũ mất hiệu lực; đọc lại cùng địa chỉ sau write vẫn phải chờ.
+5. Memory và read data register không reset; reset xóa tag/control nên response trước reset mất hiệu lực. Không được dùng data khi valid=0.
+6. Test độc lập kiểm tra toàn bộ 512 địa chỉ, chuyển client, overwrite/re-read, restart cùng PC và reset không xóa contents. Test top đi đến PC=511, restart và lỗi khi chương trình cố đi qua PC cuối.
 
 ## Các nhóm logic trong source
 
-Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
+Các đoạn dưới đây bao phủ nguyên văn toàn bộ source hiện tại, theo thứ tự dòng.
 
+### [Dòng 1–19: Giao diện, memory và tag registers](<../../../Verilog%20Source%20code/ins_mem.sv#L1>)
 
-### [Dòng 1–10: Giao diện và mảng](<../../../Verilog%20Source%20code/ins_mem.sv#L1>)
-
-<!-- source-range:1:10 -->
+<!-- source-range:1:19 -->
 ```systemverilog
-module ins_mem(
+module ins_mem (
     input logic clk,
+    input logic rst_n,
+    input logic fetch_en,
     input logic [8:0] addr,
     output logic [12:0] instr,
+    output logic instr_valid,
+    input logic host_en,
     input logic host_we,
     input logic [8:0] host_addr,
     input logic [12:0] host_instr,
-    output logic [12:0] host_rinstr
+    output logic [12:0] host_rinstr,
+    output logic host_rvalid
 );
+
     logic [12:0] mem [0:511];
+    logic [12:0] read_data_q;
+    logic [8:0] read_address_q, response_address_q;
+    logic read_pending_q, read_host_q, response_host_q, read_valid_q;
 ```
 
-**Mục đích.** Địa chỉ9 bit, data instruction13 bit; dung lượng logic832 byte.
+**Mục đích.** Địa chỉ U9 chọn một trong 512 instruction 13 bit. Hai client có enable/valid riêng nhưng chia sẻ memory và read data register. Tag chứa địa chỉ/client để response chỉ acknowledge đúng request hiện tại.
 
-**Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
+### [Dòng 20–28: Host write và đọc memory đồng bộ](<../../../Verilog%20Source%20code/ins_mem.sv#L20>)
 
-**Tín hiệu và dữ liệu chính.** `addr`: địa chỉ fetch instruction; `instr`: instruction đọc từ program; `host_we`: host chọn ghi thay vì đọc; `host_addr`: địa chỉ phía host; `host_instr`: instruction13 bit host ghi; `host_rinstr`: instruction13 bit trả host; và 1 tín hiệu phụ khác trong đoạn code.
-
-
-### [Dòng 11–17: Đọc/ghi](<../../../Verilog%20Source%20code/ins_mem.sv#L11>)
-
-<!-- source-range:11:17 -->
+<!-- source-range:20:28 -->
 ```systemverilog
-    assign instr = mem[addr];
-    assign host_rinstr = mem[host_addr];
+
+    // Host and fetch share one synchronous read port. Neither RAM nor its
+    // output register has an asynchronous reset or initialization loop.
     always_ff @(posedge clk) begin
-        if (host_we)
+        if (rst_n && host_en && host_we)
             mem[host_addr] <= host_instr;
+        if (read_pending_q)
+            read_data_q <= mem[read_address_q];
+    end
+```
+
+**Cách hoạt động.** Host write được chốt tại cạnh lên khi reset đã nhả và request write hợp lệ. Read dùng địa chỉ chốt ở cạnh trước; `read_pending_q` bật capture dữ liệu. Memory không initialize hoặc reset, read data register không asynchronous reset.
+
+### [Dòng 29–37: Dữ liệu chung và valid theo client](<../../../Verilog%20Source%20code/ins_mem.sv#L29>)
+
+<!-- source-range:29:37 -->
+```systemverilog
+
+    assign instr = read_data_q;
+    assign host_rinstr = read_data_q;
+    assign instr_valid = fetch_en && read_valid_q && !response_host_q &&
+        read_pending_q && !read_host_q &&
+        read_address_q == addr && response_address_q == addr;
+    assign host_rvalid = host_en && !host_we && read_valid_q && response_host_q &&
+        read_pending_q && read_host_q &&
+        read_address_q == host_addr && response_address_q == host_addr;
+```
+
+**Cách hoạt động.** Cùng `read_data_q` lái cả output instruction. Valid chọn client phù hợp và yêu cầu hai tag cùng địa chỉ hiện tại. Fetch valid còn yêu cầu `fetch_en`; host valid yêu cầu read đang giữ. Data có thể còn giá trị cũ nhưng không được tiêu thụ khi valid=0.
+
+### [Dòng 38–61: Chốt request, chuyển response và reset](<../../../Verilog%20Source%20code/ins_mem.sv#L38>)
+
+<!-- source-range:38:61 -->
+```systemverilog
+
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            read_address_q <= '0;
+            response_address_q <= '0;
+            read_pending_q <= 1'b0;
+            read_host_q <= 1'b0;
+            response_host_q <= 1'b0;
+            read_valid_q <= 1'b0;
+        end else begin
+            read_valid_q <= read_pending_q;
+            response_host_q <= read_host_q;
+            response_address_q <= read_address_q;
+            read_pending_q <= fetch_en || (host_en && !host_we);
+            if (host_en && !host_we) begin
+                read_address_q <= host_addr;
+                read_host_q <= 1'b1;
+            end else if (fetch_en) begin
+                read_address_q <= addr;
+                read_host_q <= 1'b0;
+            end
+        end
     end
 endmodule
 ```
 
-**Mục đích.** Read tổ hợp; write tại posedge clk. Không suy ra latency của SRAM macro từ model này.
-
-**Cách phần code hoạt động.** Có logic tuần tự: register/FSM chỉ cập nhật tại cạnh clock; nonblocking assignment đọc giá trị cũ ở vế phải rồi chốt đồng thời. Có continuous assignment: biểu thức luôn lái tín hiệu đích, không cần start hoặc cạnh clock.
-
-**Tín hiệu và dữ liệu chính.** `instr`: instruction đọc từ program; `mem`: array instruction512×13 bit; `addr`: địa chỉ fetch instruction; `host_rinstr`: instruction13 bit trả host; `host_addr`: địa chỉ phía host; `host_we`: host chọn ghi thay vì đọc; và 1 tín hiệu phụ khác trong đoạn code.
+**Cách hoạt động.** Reset chỉ xóa control/tag. Cạnh lên chuyển request tag sang response và lấy request host read hoặc fetch mới. Khi request đổi địa chỉ hoặc client, response cũ không khớp nên phải đợi đủ hai cạnh lên. Top giữ host và fetch loại trừ nhau; priority host trong mux không tạo một cổng đọc thứ hai.
 

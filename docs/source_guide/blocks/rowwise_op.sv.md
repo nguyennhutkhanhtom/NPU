@@ -1,10 +1,10 @@
 # rowwise_op.sv — ALU vector nhỏ và cập nhật state
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — datapath rowwise.
 
-**Source:** [rowwise_op.sv](<../../../Verilog%20Source%20code/rowwise_op.sv>). **Số dòng:** 194. **SHA-256:** `65996893e6570ee34571c6d1ce7f8b4d3ab1d0792da49239d752f99553b7e9a3`.
+**Source:** [rowwise_op.sv](<../../../Verilog%20Source%20code/rowwise_op.sv>). **Số dòng:** 193. **SHA-256:** `a3f17f1e9c346841f76b31f39eda799818a139b98a2a7059778f1336d3c4ad46`.
 
 ## Khối này làm gì?
 
@@ -20,32 +20,36 @@ flowchart TB
         CTRL["Opcode controller + element index<br/>Input / format checks"]
         BUF["Operand buffers"]
         LANE@{ shape: trap-t, label: "Lane selectors" }
-        AS["Cộng/trừ và ReLU logic"]
+        AS["ADD/SUB extended arithmetic<br/>ReLU clamp negative to zero"]
         OMUX@{ shape: trap-t, label: "Multiplier operand mux" }
-        MUL["Hai bộ nhân unsigned 16 × 16<br/>Khôi phục dấu · dùng chung MUL và REC"]
-        REC["REC sum S33<br/>RNE 15 + saturation S16"]
-        SCALE["Đổi scale + RNE<br/>Saturation S16 / U16"]
-        SIG["sigmoid instance<br/>ROM 257 mẫu + nội suy"]
-        RES@{ shape: trap-t, label: "Result selector" }
+        MUL["Two unsigned 16 × 16 multipliers<br/>Sign correction · shared MUL and REC"]
+        REC["REC adder S33<br/>Sum two products of one state element"]
+        RMUX@{ shape: trap-t, label: "Two raw-value selectors<hr/>ADD/SUB · MUL · ReLU<hr/>REC sum on lane 0" }
+        SCALE["Two shared scale / RNE paths<br/>REC shift=15 · rescale others<br/>Saturation S16 / U16"]
+        SIG["sigmoid instance<br/>ROM + interpolation"]
+        RES@{ shape: trap-t, label: "Result / write-lane selector<hr/>REC lane 0 · SIG one element" }
         RBUF["Result buffer 256 bit"]
     end
     IN --> BUF
     IN -.-> CTRL
     OP["start / select"] -.-> CTRL
     BUF --> LANE
-    CTRL -.->|"Chọn lane / opcode"| LANE
+    CTRL -.->|"Select lane / opcode"| LANE
     CTRL -.-> OMUX
     LANE --> AS
     LANE --> OMUX
     LANE --> SIG
     OMUX --> MUL
-    AS --> SCALE
-    MUL -->|"MUL products"| SCALE
-    MUL -->|"Hai tích REC"| REC
+    MUL -->|"MUL products"| RMUX
+    MUL -->|"Two REC products"| REC
+    AS --> RMUX
+    REC -->|"Combined S33 sum"| RMUX
+    CTRL -.-> RMUX
+    RMUX --> SCALE
+    CTRL -.->|"Common shift"| SCALE
     SCALE --> RES
-    REC --> RES
     SIG --> RES
-    CTRL -.->|"Chọn kết quả / vị trí ghi"| RES
+    CTRL -.->|"Result / write position"| RES
     RES --> RBUF
     RBUF --> OUT["result_word 256 bit"]
     CTRL -.-> STATUS["busy / done / overflow / format_error"]
@@ -55,14 +59,16 @@ MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ
 
 ## Cách hoạt động chi tiết
 
-Đường tổ hợp tạo result_buffer_next từ buffer hiện tại. Phần sequential chốt kết quả, tiến element_index và trả done. Sign/magnitude cho phép cùng multiplier unsigned xử lý S16 và gate có raw=0x8000. REC cộng hai tích trước RNE15; tail không hữu ích giữ zero trong output.
+Đường tổ hợp tạo result_buffer_next từ buffer hiện tại. Phần sequential chốt kết quả, tiến element_index và trả done. Sign/magnitude cho phép cùng multiplier unsigned xử lý S16 và gate có raw=0x8000. Hai raw-value mux đưa ADD/SUB, MUL, ReLU hoặc tổng REC vào đúng hai đường scale/RNE dùng chung; REC chỉ dùng lane 0 với shift 15. Tail không hữu ích giữ zero trong output.
 
 1. Start chốt word, F_t, unsigned flag và số phần tử hợp lệ, tách giao dịch nhiều chu kỳ khỏi thay đổi bên ngoài.
 2. ADD/SUB tính trong S17 rồi đổi scale. MUL có F sản phẩm bằng tổng F của hai nguồn.
 3. Hai multiplier xử lý hai lane MUL. Với REC, chúng xử lý H×F và C×(0x8000−F) của một lane.
-4. REC cộng hai tích trong S33 rồi RNE một lần tại bit 15; làm tròn riêng từng tích sẽ sai ở các trường hợp nửa đơn vị.
+4. REC cộng hai tích trong S33 rồi đưa toàn tổng vào lane 0 của đường scale/RNE chung, shift=15; không còn một đường RNE riêng cho REC. Làm tròn riêng từng tích sẽ sai ở các trường hợp nửa đơn vị.
 5. SIG dùng một instance sigmoid nên chạy từng phần tử. RELU đưa số âm về zero trước khi rescale.
 6. Buffer, cờ và index được cập nhật mỗi bước; hết `valid_elems` thì trả nguyên word và pulse done.
+
+**Quy ước RTL.** Magnitude 16 bit và bước element index `5'd1`/`5'd2` được ghi rõ. Hai multiplier dùng chung cho MUL/REC; hai đường scale/RNE dùng chung cho ADD/SUB/MUL/RELU/REC. ReLU đưa phần âm về zero trước rescale; REC chỉ ghi một state sau khi cộng hai tích và RNE một lần.
 
 ## Các nhóm logic trong source
 
@@ -73,7 +79,7 @@ Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòn
 
 <!-- source-range:1:34 -->
 ```systemverilog
-module rowwise_op #(parameter string SIG_LUT_FILE = "") (
+module rowwise_op (
     input logic clk, rst_n, start,
     input logic [3:0] select,
     input logic [255:0] a_word, b_word, c_word,
@@ -98,7 +104,7 @@ module rowwise_op #(parameter string SIG_LUT_FILE = "") (
     logic signed [15:0] sig_x;
     assign sig_x = source_a_q[element_index_q * 16 +: 16];
     assign sig_start = busy && operation_q == OP_SIG && !sig_busy && !sig_done;
-    sigmoid #(.LUT_FILE(SIG_LUT_FILE)) u_sig(
+    sigmoid u_sig(
         .clk(clk),
         .rst_n(rst_n),
         .start(sig_start),
@@ -136,16 +142,16 @@ module rowwise_op #(parameter string SIG_LUT_FILE = "") (
     integer result_shift;
 ```
 
-**Mục đích.** Lane mở rộng S17 phân biệt unsigned gate với S16 âm. Hai product S32, recurrent_sum S33.
+**Mục đích.** Lane mở rộng S17 phân biệt unsigned gate với S16 âm. Hai product S32, recurrent_sum S33; hai raw_value/scaled S64 là input/output của đường scale/RNE chung, không tạo thêm một đường riêng cho REC hoặc ReLU.
 
 **Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
 
 **Tín hiệu và dữ liệu chính.** `lane_overflow`: cờ overflow của bước lane hiện tại; `lane_format_error`: cờ gate/format sai ở bước lane hiện tại; `lane_a`: hai lane A mở rộng17 bit; `lane_b`: hai lane B mở rộng17 bit; `multiply_a`: hai operand A của multiplier dùng chung; `multiply_b`: hai operand B của multiplier dùng chung; và 13 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 49–57: Mặc định tổ hợp](<../../../Verilog%20Source%20code/rowwise_op.sv#L49>)
+### [Dòng 49–58: Mặc định tổ hợp](<../../../Verilog%20Source%20code/rowwise_op.sv#L49>)
 
-<!-- source-range:49:57 -->
+<!-- source-range:49:58 -->
 ```systemverilog
     always_comb begin
         result_buffer_next = result_buffer_q;
@@ -155,19 +161,20 @@ module rowwise_op #(parameter string SIG_LUT_FILE = "") (
         old_state = state_word_q[element_index_q * 16 +: 16];
         gate = source_b_q[element_index_q * 16 +: 16];
         complement = 16'h8000 - gate;
-        result_shift = (operation_q == OP_MUL ? int'(source_a_frac_q) + int'(source_b_frac_q) : int'(source_a_frac_q)) - int'(destination_frac_q);
+        result_shift = (operation_q == OP_REC) ? 15 :
+        (operation_q == OP_MUL ? int'(source_a_frac_q) + int'(source_b_frac_q) : int'(source_a_frac_q)) - int'(destination_frac_q);
 ```
 
-**Mục đích.** Giữ buffer cũ, xóa cờ lane và tính shift từ scale nguồn/đích. REC dùng complement 0x8000−gate.
+**Mục đích.** Giữ buffer cũ, xóa cờ lane và tính một result_shift cho cả hai lane: REC cố định 15, MUL dùng F_A+F_B−F_dst, ADD/SUB/ReLU dùng F_A−F_dst. REC dùng complement 0x8000−gate.
 
 **Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
 
 **Tín hiệu và dữ liệu chính.** `result_buffer_next`: giá trị kế tiếp của buffer kết quả; `result_buffer_q`: buffer kết quả đang xây; `lane_overflow`: cờ overflow của bước lane hiện tại; `lane_format_error`: cờ gate/format sai ở bước lane hiện tại; `candidate`: ứng viên; ở REC là C, ở scale_compose là shift đang thử; `source_a_q`: word nguồn A đã chốt; và 11 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 58–81: Hai multiplier dùng chung](<../../../Verilog%20Source%20code/rowwise_op.sv#L58>)
+### [Dòng 59–81: Hai multiplier dùng chung](<../../../Verilog%20Source%20code/rowwise_op.sv#L59>)
 
-<!-- source-range:58:81 -->
+<!-- source-range:59:81 -->
 ```systemverilog
         for (integer j = 0;j < 2;j = j + 1) begin
             lane_a[j] = source_a_unsigned_q ? $signed({1'b0, source_a_q[(element_index_q + j) * 16 +: 16]}) : $signed(source_a_q[(element_index_q + j) * 16 +: 16]);
@@ -182,17 +189,16 @@ module rowwise_op #(parameter string SIG_LUT_FILE = "") (
                 multiply_a[j] = (j == 0) ? {old_state[15], old_state} : {candidate[15], candidate};
                 multiply_b[j] = (j == 0) ? $signed({1'b0, gate}) : $signed({1'b0, complement});
             end
-            magnitude_a[j] = multiply_a[j][16] ? - multiply_a[j] : multiply_a[j];
-            magnitude_b[j] = multiply_b[j][16] ? - multiply_b[j] : multiply_b[j];
+            // The magnitude of an S16 or valid U16/F15 operand fits in 16 bits.
+            magnitude_a[j] = 16'(multiply_a[j][16] ? - multiply_a[j] : multiply_a[j]);
+            magnitude_b[j] = 16'(multiply_b[j][16] ? - multiply_b[j] : multiply_b[j]);
             magnitude_product[j] = magnitude_a[j] * magnitude_b[j];
             product[j] = (multiply_a[j][16] ^ multiply_b[j][16]) ?
              - $signed(magnitude_product[j]) : $signed(magnitude_product[j]);
-            case (operation_q)
-                OP_ADD : raw_value[j] = 64'(lane_a[j]) + 64'(lane_b[j]);
-                OP_SUB : raw_value[j] = 64'(lane_a[j]) - 64'(lane_b[j]);
-                default : raw_value[j] = {{32{product[j][31]}}, product[j]};
-            endcase
-            scaled[j] = scale_shift64(raw_value[j], result_shift);
+        end
+        recurrent_sum = {product[0][31], product[0]} + {product[1][31], product[1]};
+        // Every operation uses the same two scale/round paths. REC supplies
+        // its combined S33 sum to lane 0, so its two products round only once.
 ```
 
 **Mục đích.** MUL đưa hai cặp A/B; REC đưa H×F và C×(1−F). Operand isolation đưa multiplier về 0 khi không cần. Sau nhân magnitude, khôi phục sign.
@@ -208,7 +214,7 @@ module rowwise_op #(parameter string SIG_LUT_FILE = "") (
 ```mermaid
 flowchart TB
 %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    MULIN["Two pairs of MUL lane operands"] --> MUX@{ shape: trap-t, label: "Operand selection + magnitude/sign logic<br/>MUL or REC" }
+    MULIN["Two pairs of MUL lane operands"] --> MUX@{ shape: trap-t, label: "Operand selection + magnitude/sign logic<hr/>MUL or REC" }
     RECIN["Old state H · candidate C · gate F"] --> MUX
     RECIN --> COMP["Gate complement subtractor<br/>0x8000 − F"]
     COMP --> MUX
@@ -217,21 +223,34 @@ flowchart TB
     MUX --> M1["Shared unsigned multiplier 1<br/>16 × 16"]
     M0 --> SIGN["Product sign-correction logic"]
     M1 --> SIGN
-    SIGN --> MS["MUL rescale / RNE / saturation paths"]
     SIGN --> SUM["REC adder S33<br/>Two products of one state element"]
-    SUM --> RS["REC RNE 15 + saturation S16"]
-    MS --> OUT@{ shape: trap-t, label: "Result selector / buffer" }
-    RS --> OUT
+    SIGN --> RMUX@{ shape: trap-t, label: "Two raw-value muxes<hr/>MUL products or REC sum on lane 0" }
+    SUM --> RMUX
+    OTHER["ADD/SUB extended result<br/>ReLU max(A,0)"] --> RMUX
+    OP -.-> RMUX
+    RMUX --> SCALE["Two shared scale / RNE paths<br/>REC fixed shift 15"]
+    SCALE --> SAT["S16 / U16 saturation and write selection<br/>REC writes only lane 0"]
+    SAT --> OUT["Result buffer"]
 ```
 
 
-### [Dòng 82–99: Rounding và saturation](<../../../Verilog%20Source%20code/rowwise_op.sv#L82>)
+### [Dòng 82–109: Hai đường scale/RNE và saturation](<../../../Verilog%20Source%20code/rowwise_op.sv#L82>)
 
-<!-- source-range:82:99 -->
+<!-- source-range:82:109 -->
 ```systemverilog
+        for (integer j = 0; j < 2; j = j + 1) begin
+            case (operation_q)
+                OP_ADD : raw_value[j] = 64'(lane_a[j]) + 64'(lane_b[j]);
+                OP_SUB : raw_value[j] = 64'(lane_a[j]) - 64'(lane_b[j]);
+                OP_RELU : raw_value[j] = lane_a[j] < 0 ? 64'sh0 : 64'(lane_a[j]);
+                OP_REC : raw_value[j] = (j == 0) ? {{31{recurrent_sum[32]}}, recurrent_sum} : 64'sh0;
+                default : raw_value[j] = {{32{product[j][31]}}, product[j]};
+            endcase
+            scaled[j] = scale_shift64(raw_value[j], result_shift);
             if (element_index_q + j < element_count_q) begin
-                if ((source_a_unsigned_q && lane_a[j] > 17'sh0_8000) || (source_b_unsigned_q && lane_b[j] > 17'sh0_8000)) lane_format_error = 1;
-                if (destination_unsigned_q) begin
+                if (operation_q != OP_RELU &&
+                    ((source_a_unsigned_q && lane_a[j] > 17'sh0_8000) || (source_b_unsigned_q && lane_b[j] > 17'sh0_8000))) lane_format_error = 1;
+                if (destination_unsigned_q && operation_q != OP_RELU) begin
                     if (scaled[j] < 0) begin
                         result_buffer_next[(element_index_q + j) * 16 +: 16] = 0;
                         lane_overflow = 1;
@@ -249,33 +268,22 @@ flowchart TB
         end
 ```
 
-**Mục đích.** Chỉ lane hữu ích mới cập nhật output/error. Gate bị giới hạn raw 0x0000…0x8000; signed output clamp S16.
+**Mục đích.** Hai raw-value mux chọn ADD/SUB, product MUL, max(A,0) của ReLU hoặc tổng REC ở lane 0 rồi gọi scale_shift64 chung. Chỉ lane hữu ích cập nhật output/error. Gate bị giới hạn raw 0x0000…0x8000; signed output clamp S16.
 
 **Cách phần code hoạt động.** Các câu lệnh thuộc cùng một nhánh/pha xử lý và phải được đọc liền nhau; tách riêng từng dòng sẽ làm mất quan hệ điều kiện và dữ liệu.
 
 **Tín hiệu và dữ liệu chính.** `element_index_q`: vị trí phần tử đang tính; `element_count_q`: số phần tử hữu ích; `source_a_unsigned_q`: A được diễn giải unsigned; `lane_a`: hai lane A mở rộng17 bit; `source_b_unsigned_q`: B được diễn giải unsigned; `lane_b`: hai lane B mở rộng17 bit; và 5 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 100–122: SIG, RELU và REC](<../../../Verilog%20Source%20code/rowwise_op.sv#L100>)
+### [Dòng 110–121: Ghi kết quả SIG và REC](<../../../Verilog%20Source%20code/rowwise_op.sv#L110>)
 
-<!-- source-range:100:122 -->
+<!-- source-range:110:121 -->
 ```systemverilog
         if (operation_q == OP_SIG) begin
             result_buffer_next = result_buffer_q;
             result_buffer_next[element_index_q * 16 +: 16] = sig_y;
         end
-        if (operation_q == OP_RELU) begin
-            result_buffer_next = result_buffer_q;
-            lane_overflow = 0;
-            lane_format_error = 0;
-            for (integer j = 0;j < 2;j = j + 1) if (element_index_q + j < element_count_q) begin
-                scaled[j] = scale_shift64(lane_a[j] < 0 ? 64'sh0000_0000_0000_0000 : 64'(lane_a[j]), int'(source_a_frac_q) - int'(destination_frac_q));
-                result_buffer_next[(element_index_q + j) * 16 +: 16] = sat_s16(scaled[j]);
-                if (scaled[j] > 64'sh0000_0000_0000_7fff) lane_overflow = 1;
-            end
-        end
-        recurrent_sum = {product[0][31], product[0]} + {product[1][31], product[1]};
-        recurrent_value = rne_shift64({{31{recurrent_sum[32]}}, recurrent_sum}, 6'd15);
+        recurrent_value = scaled[0];
         if (operation_q == OP_REC) begin
             result_buffer_next = result_buffer_q;
             result_buffer_next[element_index_q * 16 +: 16] = sat_s16(recurrent_value);
@@ -285,16 +293,16 @@ flowchart TB
     end
 ```
 
-**Mục đích.** Các operation đặc biệt ghi đè đường kết quả chung. REC dùng một RNE sau tổng S33, tránh sai số làm tròn hai lần.
+**Mục đích.** SIG ghi sample từ sigmoid; REC lấy scaled[0] từ đường RNE chung, khôi phục buffer cũ và chỉ ghi state ở element_index. ReLU đã được xử lý tại raw-value mux, không có một vòng rescale thứ hai. REC giữ kiểm tra gate và overflow riêng cho một state.
 
 **Cách phần code hoạt động.** Các câu lệnh thuộc cùng một nhánh/pha xử lý và phải được đọc liền nhau; tách riêng từng dòng sẽ làm mất quan hệ điều kiện và dữ liệu.
 
 **Tín hiệu và dữ liệu chính.** `operation_q`: opcode đã chốt; `result_buffer_next`: giá trị kế tiếp của buffer kết quả; `result_buffer_q`: buffer kết quả đang xây; `element_index_q`: vị trí phần tử đang tính; `sig_y`: gate U16/F15 nhận từ sigmoid; `lane_overflow`: cờ overflow của bước lane hiện tại; và 10 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 123–144: Reset](<../../../Verilog%20Source%20code/rowwise_op.sv#L123>)
+### [Dòng 122–143: Reset](<../../../Verilog%20Source%20code/rowwise_op.sv#L122>)
 
-<!-- source-range:123:144 -->
+<!-- source-range:122:143 -->
 ```systemverilog
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -327,9 +335,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `busy`: khối đang xử lý; `done`: xung báo hoàn tất; `overflow`: cờ kết quả vượt miền số; `format_error`: cờ format/metadata không hợp lệ; `result_word`: word 256 output rowwise; `source_a_q`: word nguồn A đã chốt; và 12 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 145–168: Chốt input và validate](<../../../Verilog%20Source%20code/rowwise_op.sv#L145>)
+### [Dòng 144–167: Chốt input và validate](<../../../Verilog%20Source%20code/rowwise_op.sv#L144>)
 
-<!-- source-range:145:168 -->
+<!-- source-range:144:167 -->
 ```systemverilog
             if (start && !busy) begin
                 source_a_q <= a_word;
@@ -364,9 +372,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `busy`: khối đang xử lý; `source_a_q`: word nguồn A đã chốt; `a_word`: word A; `source_b_q`: word nguồn B đã chốt; `b_word`: word B; và 21 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 169–194: Chạy từng lane](<../../../Verilog%20Source%20code/rowwise_op.sv#L169>)
+### [Dòng 168–193: Chạy từng lane](<../../../Verilog%20Source%20code/rowwise_op.sv#L168>)
 
-<!-- source-range:169:194 -->
+<!-- source-range:168:193 -->
 ```systemverilog
             end else if (busy) begin
                 if (operation_q == OP_SIG) begin
@@ -388,7 +396,7 @@ flowchart TB
                         busy <= 0;
                         done <= 1;
                     end
-                    else element_index_q <= element_index_q + (operation_q == OP_REC ? 1 : 2);
+                    else element_index_q <= element_index_q + (operation_q == OP_REC ? 5'd1 : 5'd2);
                 end
             end
         end

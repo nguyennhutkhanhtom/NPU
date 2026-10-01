@@ -1,8 +1,28 @@
 # NPU ASIC hiện tại hoạt động như thế nào?
 
-**Bản đối chiếu RTL ngày 29/09/2026.** Tài liệu giải thích source trong `Verilog Source code`, sau đợt tích hợp và refactor ASIC. Bản sao `npu_asic_v2` đã được loại bỏ; tài liệu này chỉ đối chiếu source chính.
+[Project](../../README.md) → [Tài liệu](../README.md) → **Hierarchy và luồng dữ liệu**
 
-**Lưu ý sau cleanup 30/09/2026:** source chính đã được sửa thêm để xử lý warnings và suy luận SRAM/descriptor của Quartus. Vì vậy một số code trích dẫn và số dòng trong snapshot này không còn khớp file hiện tại; `validate.py` sẽ báo các khác biệt đó. Dùng [README source chính](<../../Verilog Source code/README.md>) và [các thay đổi Quartus](../quartus_warnings.md) cho interface hiện hành. Không dùng manifest snapshot để thay thế hash regression trong `tests/results.json`.
+<details>
+<summary>Mục lục trang</summary>
+
+- [Cách đọc](#cách-đọc)
+- [1. Ba điều cần nắm trước](#1-ba-điều-cần-nắm-trước)
+- [2. Sơ đồ kiến trúc tổng quan đang chạy](#2-sơ-đồ-kiến-trúc-tổng-quan-đang-chạy)
+- [3. Format số và ý nghĩa từng độ rộng](#3-format-số-và-ý-nghĩa-từng-độ-rộng)
+- [4. Từ host start đến HALT](#4-từ-host-start-đến-halt)
+- [5. NORM + QUANT: tại sao phải đi qua vector ba lượt?](#5-norm--quant-tại-sao-phải-đi-qua-vector-ba-lượt)
+- [6. TMATMUL: 32 PE cùng làm một dot product](#6-tmatmul-32-pe-cùng-làm-một-dot-product)
+- [7. Rowwise, sigmoid và state của model](#7-rowwise-sigmoid-và-state-của-model)
+- [8. Khác gì so với thesis của bạn?](#8-khác-gì-so-với-thesis-của-bạn)
+- [9. Tín hiệu nên xem trên waveform](#9-tín-hiệu-nên-xem-trên-waveform)
+- [10. Đọc cú pháp RTL mà không nhầm với code phần mềm](#10-đọc-cú-pháp-rtl-mà-không-nhầm-với-code-phần-mềm)
+- [11. Phạm vi kiểm chứng của tài liệu](#11-phạm-vi-kiểm-chứng-của-tài-liệu)
+
+</details>
+
+**Bản đối chiếu RTL độc lập tool cập nhật ngày 01/10/2026.** Tài liệu giải thích source trong `Verilog Source code`, sau đợt tích hợp và refactor ASIC. Bản sao `npu_asic_v2` đã được loại bỏ; tài liệu này chỉ đối chiếu source chính.
+
+**Đã đồng bộ với source hiện tại:** code trích dẫn, số dòng, SHA-256 và sơ đồ NORM/RNE/ternary/instruction/SRAM/descriptor/host. [Rà soát design ngày 01/10](../reviews/design_review.md) ghi thay đổi và số liệu trước/sau. [README source chính](<../design/interfaces.md>) quy định interface; [báo cáo Quartus](../verification/README.md) lưu kết quả Analysis & Synthesis. Manifest tài liệu và hash regression trong `tests/results.json` có mục đích kiểm tra khác nhau.
 
 NPU này là bộ xử lý vector nhỏ dành cho **inference với ternary weight**. Host nạp dữ liệu và chương trình; NPU thực hiện lần lượt các lệnh NORM, TMATMUL và các phép tính theo phần tử, rồi trả kết quả qua memory. Nó chưa phải một hệ thống chatbot độc lập.
 
@@ -34,28 +54,28 @@ flowchart TB
 %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
     HOST["Host 32 bit"]
     subgraph NPU["NPU — matmulfree.sv"]
-        IF["Host interface<br/>Address decoder + control/status"]
+        IF["Host interface<br/>Address decoder + control/status<br/>SRAM / instruction host_ready từ read valid"]
         subgraph CTRL["Điều khiển và cấu hình"]
             PC["PC.sv<br/>Program counter 9 bit"]
             IM@{ shape: rect, label: "ins_mem.sv<hr/>Instruction memory 512 × 13 bit" }
             SCH["Scheduler single-issue<br/>Opcode decode + điều phối engine"]
-            DESC@{ shape: rect, label: "descriptor_file.sv<hr/>8 workspace × 32 bit<hr/>8 matrix × 96 bit" }
-            SCALE["Runtime q metadata + effective_mat<br/>scale_compose.sv + div 64/64<br/>Scale tĩnh hoặc ghép scale động"]
+            DESC@{ shape: rect, label: "descriptor_file.sv<hr/>8 workspace × 32-bit FF<hr/>8 matrix × 3 word × 32-bit FF" }
+            SCALE["Runtime q metadata + effective_mat<br/>scale_compose.sv + div 48/25<br/>Scale tĩnh hoặc ghép scale động<br/>Guard overlap với q có metadata"]
         end
         subgraph ENG["Các engine tính toán"]
             ROW["Row-wise vector engine<br/>rowwise_dispatch + rowwise_op<br/>ADD / SUB / MUL / REC / RELU<br/>sigmoid: ROM + nội suy"]
-            NORM["NORM + QUANT engine<br/>norm_dispatch + norm<br/>isqrt_u64 + div 64/32<br/>S16 → scratch S24/F16 → S8"]
+            NORM["NORM + QUANT engine<br/>norm_dispatch + norm<br/>isqrt_u64 + div 55/32<br/>S16 → scratch S24/F16 → S8"]
             TM["Ternary matmul engine<br/>ternary_mul · 32 lane chọn dấu/zero<br/>acc_mul + accumulator S18<br/>postscale + bias → S16/S32"]
         end
         REQMUX@{ shape: trap-t, label: "Workspace request mux<br/>Chọn request/write theo active_unit" }
         RSPDEC@{ shape: trap-b, label: "Workspace response demux<br/>Phân phối read data/valid tới active engine" }
-        WS@{ shape: rect, label: "Workspace SRAM 8 KiB<hr/>regfile.sv: register<hr/>sram_256_wrapper ADDR_W=8<hr/>256 × 256 bit" }
-        PM@{ shape: rect, label: "Parameter SRAM 32 KiB<hr/>mem_mapping.sv<hr/>sram_256_wrapper ADDR_W=10<hr/>1024 × 256 bit · weight + bias" }
+        WS@{ shape: rect, label: "Workspace SRAM 8 KiB<hr/>regfile.sv: register<hr/>sram_256_wrapper ADDR_W=8<hr/>256 × 256 bit<hr/>8 bank × 32 bit" }
+        PM@{ shape: rect, label: "Parameter SRAM 32 KiB<hr/>mem_mapping.sv<hr/>sram_256_wrapper ADDR_W=10<hr/>1024 × 256 bit · weight + bias<hr/>8 bank × 32 bit" }
         IF <-->|"Nạp/đọc chương trình, descriptor, control/status"| CTRL
-        IF <-->|"Host 32 bit"| WS
-        IF <-->|"Host 32 bit"| PM
+        IF <-->|"Host 32 bit · read valid/ready"| WS
+        IF <-->|"Host 32 bit · read valid/ready"| PM
         PC -->|"Address"| IM
-        IM -->|"Instruction"| SCH
+        IM -->|"Instruction + valid"| SCH
         SCH -.->|"clear / advance"| PC
         SCH -.->|"Descriptor IDs"| DESC
         DESC -.->|"Tensor metadata"| ENG
@@ -100,7 +120,9 @@ Các đường đến workspace đi qua mux trong `matmulfree`. `active_unit` ch
 
 Các con số trên là số bit dữ liệu logic; không bao gồm control register, buffer, decoder, ECC, padding của macro hay diện tích vật lý. Tổng SRAM dữ liệu là 40 KiB. Một word 256 bit chứa 32 phần tử S8, 16 phần tử S16/U16, 8 phần tử S32 hoặc 128 ternary weight 2 bit.
 
-`sram_256_wrapper` chưa phải SRAM macro của foundry. Mảng memory không có reset/clear toàn bộ. Cổng compute có read request và read response; host read hiện là asynchronous. Khi thay bằng synchronous SRAM macro, cần adapter và host bridge giữ đúng handshake.
+`sram_256_wrapper` dùng tám bank 32 bit và một cổng đọc đồng bộ chung cho host/compute. RAM và register dữ liệu đọc không asynchronous reset; reset chỉ xóa control/tag. Simulation và synthesis dùng cùng implementation, không có define hoặc thuộc tính của hãng FPGA. Binding SRAM ASIC cần adapter PDK giữ hợp đồng đọc/valid và mask ghi; cấu trúc bank logic không quy định macro vật lý.
+
+**Hợp đồng đọc host.** Giữ `host_en=1`, `host_we=0` và địa chỉ ổn định qua hai cạnh lên đến khi `host_ready=1`. Top dùng `p_host_rvalid` hoặc `ws_host_rvalid` để acknowledge read đúng row/lane; write hoặc idle ngắt request cũ, nên đọc lại cùng địa chỉ sau ghi vẫn phải chờ. Instruction read cũng dùng cùng hai cạnh lên và valid; descriptor và control/status đọc tổ hợp. Xem [chi tiết SRAM](blocks/sram_256_wrapper.sv.md).
 
 ## 3. Format số và ý nghĩa từng độ rộng
 
@@ -118,10 +140,10 @@ Các con số trên là số bit dữ liệu logic; không bao gồm control reg
 | Bình phương trong NORM | Tín hiệu S32, giá trị luôn không âm | Bình phương input S16 |
 | Tổng bình phương | U40 | Tối đa `512×0x8000²=2^39` |
 | Mean-square và epsilon đã quy đổi | U64; phép cộng kiểm tra bằng U65 | Tránh mất phần lẻ sớm và phát hiện tràn |
-| Căn mean-square | U32 | Kết quả integer square root của giá trị U64 |
+| Căn mean-square | U32; remainder U34, trial subtract U35 | Căn nguyên của U64, 32 bước lấy từng cặp bit |
 | Scratch z | S24/F16, sign-extend trong ô S32 | Có phần lẻ cho bước QUANT; mỗi SRAM word chứa 8 z |
 | Tích z × hệ số QUANT | S48 | Rounding trước khi clamp về S8 |
-| Nội suy sigmoid | Fraction U24, tích U40 | Giữ tọa độ LUT của input S16 với F_t=0…24 |
+| Nội suy sigmoid | Tọa độ S45, fraction U24, slope U10, tích U34 | Giữ đủ miền S16/F_t=0…24 và slope lớn nhất 512 của LUT |
 
 **RNE** là round-to-nearest-even: làm tròn đến số nguyên gần nhất; nếu nằm chính giữa thì chọn số chẵn. Ví dụ 2,5 → 2; 3,5 → 4; −2,5 → −2. **Saturation** giới hạn kết quả tại biên format, thay vì để số dương lớn bị wrap thành số âm.
 
@@ -162,7 +184,7 @@ K và số output của một lệnh tối đa 512, nhưng còn phải vừa mem
 
 1. **Host nạp** weight, bias, input, initial state, descriptor và chương trình có HALT. Memory không tự chứa dữ liệu hợp lệ sau reset.
 2. **Host start** bằng write bit 0 tại `0x00040000`. Core xóa trạng thái lỗi của lần chạy trước và đưa PC về 0.
-3. **S_FETCH** chốt instruction 13 bit vào `instr_q`.
+3. **S_FETCH** chờ `instr_fetch_valid` rồi chốt instruction 13 bit vào `instr_q`. Instruction memory đọc đồng bộ và dùng cùng latency trong mọi build.
 4. **S_START** giải mã opcode và chọn unit. Với TMATMUL dùng scale động, core kiểm tra metadata q rồi chạy `scale_compose` trước.
 5. **S_WAIT** giữ instruction hiện tại và chờ unit báo `done`. Unit tự đọc SRAM, tính toán và ghi output.
 6. **S_ADVANCE** tăng PC. Không có instruction kế tiếp chạy chồng lên instruction đang tính.
@@ -203,7 +225,7 @@ V = (Q << 32) + floor((rem << 32)/K) + epsilon_raw32
 R = floor(sqrt(V))
 ```
 
-Hai bình phương được cộng vào `sum_sq` mỗi bước P1_PROC. Phần tử padding ngoài K không tham gia tổng. `div` tuần tự tính thương và phần dư; `isqrt_u64` tính căn trong 32 bước lặp.
+Hai bình phương được cộng vào `sum_sq` mỗi bước P1_PROC. Phần tử padding ngoài K không tham gia tổng. Divider chung U55/U32 tính thương/phần dư trong 55 bước cho mỗi phép chia. Tử số lớn nhất là bit 54 của `2^(32+r_norm)` với r_norm≤22; mọi phép chia mean-square, phần lẻ và QUANT đều vừa miền này. `isqrt_u64` lấy hai bit radicand mỗi bước, dùng remainder U34 và một phép trừ U35 để vừa so sánh trial vừa cập nhật remainder; sau 32 bước trả root U32.
 
 V giữ 32 bit phần lẻ so với mean-square tính theo raw input; vì vậy R xấp xỉ RMS raw nhân 65536. Khối tiếp theo chọn M_norm/r_norm sao cho `M_norm/2^r_norm ≈ 2^32/R`.
 
@@ -230,7 +252,7 @@ scale_q = D / (0x7F × 0x1_0000)
 
 Một word output chứa 32 q. Việc giữ D là bắt buộc: q=64 có thể mang giá trị thực khác nhau giữa hai vector nếu D khác nhau. Chỉ truyền 8 bit q rồi bỏ D sẽ làm TMATMUL sai scale.
 
-`matmulfree` lưu D theo descriptor output, kèm base/length. Ghi đè vùng q làm mất hiệu lực metadata. Host viết descriptor sẽ xóa cache scale, nên cần nạp descriptor trước khi chạy chuỗi NORM → TMATMUL.
+`matmulfree` lưu D theo descriptor output, kèm base/length. Tám tuple D/base/length có tổng 336 bit payload không async reset; chỉ tám bit `q_valid` reset về 0. Mọi nơi đọc tuple đều được guard bằng valid, và NORM hoàn tất thành công ghi đủ tuple cùng lúc đặt valid. Ghi đè vùng q làm mất hiệu lực metadata. Host viết descriptor sẽ xóa cache scale, nên cần nạp descriptor trước khi chạy chuỗi NORM → TMATMUL.
 
 Epsilon là control register dùng chung. Nếu các NORM cần epsilon đã quy đổi khác nhau, host phải chia thành các lượt chạy và cập nhật giữa các lượt, hoặc kiến trúc cần mở rộng metadata. Không nên mô tả bản hiện tại là tự cấu hình epsilon riêng cho mọi layer.
 
@@ -259,7 +281,9 @@ Nếu q do NORM tạo, dynamic_q=1 và M/r trong descriptor biểu diễn `s_wei
 C_effective ≈ (M_descriptor / 2^r_descriptor) × D/(0x7F×0x1_0000)
 ```
 
-Khối tìm cặp M_effective U24/r_effective phù hợp, rồi gửi descriptor hiệu dụng cho TMATMUL. Đây là phép chuẩn bị hệ số theo tensor, không phải phép chia cho từng PE. Có một divider riêng trong scale_compose và một divider trong norm; hai khối chưa dùng chung một instance vật lý.
+Khối chọn r từ 47 xuống bằng threshold RNE chính xác trước khi chia, rồi chạy tối đa một phép chia U48/U25 trong 48 bước để tạo M_effective U24/r_effective. Hệ số vượt miền, D=0 hoặc underflow về M=0 báo lỗi. Đây là phép chuẩn bị hệ số theo tensor, không phải phép chia cho từng PE. Có một divider riêng trong scale_compose và divider U55/U32 trong norm; hai khối chưa dùng chung một instance vật lý.
+
+TMATMUL tĩnh bị từ chối nếu extent input overlap bất kỳ vùng q nào còn metadata NORM hợp lệ, kể cả khi dùng descriptor ID khác hoặc chỉ một phần vùng đó. TMATMUL động phải chọn đúng ID đã lưu metadata và khớp chính xác base/length. Guard nằm trước khi start ternary, nên các lỗi metadata này không ghi output.
 
 ### 32 PE có nghĩa 32 MAC mỗi clock không?
 
@@ -275,7 +299,7 @@ ADD/SUB giữ một bit mở rộng trước khi đổi scale. MUL dùng hai ph�
 new_H = sat_S16(RNE((F_raw × old_H + (0x8000−F_raw) × C) / 0x8000))
 ```
 
-F là gate U16/F15; H và C phải cùng scale. Hai tích được cộng ở S33 rồi chỉ làm tròn một lần. Ví dụ H=C=`0x0001` raw và F_raw=`0x4000`: kết quả đúng là `0x0001` raw. Nếu làm tròn riêng hai tích 0,5 theo RNE rồi cộng, kết quả sẽ thành 0; đó không phải hành vi REC hiện tại.
+F là gate U16/F15; H và C phải cùng scale. Hai tích được cộng ở S33 rồi đưa vào lane 0 của hai đường scale/RNE dùng chung với ADD/SUB/MUL/RELU, shift cố định 15; lane 1 không ghi state REC. Chỉ làm tròn tổng một lần. Ví dụ H=C=`0x0001` raw và F_raw=`0x4000`: kết quả đúng là `0x0001` raw. Nếu làm tròn riêng hai tích 0,5 theo RNE rồi cộng, kết quả sẽ thành 0; đó không phải hành vi REC hiện tại.
 
 ### Sigmoid dùng LUT như thế nào?
 
@@ -285,11 +309,11 @@ ROM có 257 mẫu, tại `x_i=−8+i/16`, i=0…256. Mẫu được lượng t�
 LUT[i] = RNE(0x8000 / (1 + exp(−x_i)))
 ```
 
-Đây là công thức **tạo bảng trước khi chạy**, không phải phần cứng tính exp khi inference. ROM ở `sigmoid_lut.svh` là bảng case hằng. `sigmoid_257.mem` chứa cùng mẫu dạng hex để kiểm tra simulation. File `sigContent.mif` thuộc đường cũ, không được core mới đọc.
+Đây là công thức **tạo bảng trước khi chạy**, không phải phần cứng tính exp khi inference. ROM ở `sigmoid_lut.svh` là bảng case hằng. `sigmoid_257.mem` chứa cùng mẫu dạng hex để kiểm tra simulation. LUT `sigContent.mif` của thiết kế cũ đã được loại khỏi source chính; chỉ còn trong tài liệu lịch sử.
 
-Với x nằm giữa hai mẫu, core đọc y0 và y1 qua một địa chỉ ROM dùng lần lượt, rồi nội suy. x=0 cho raw=`0x4000`, tức gate=0,5. Ngoài miền [−8,8], core dùng mẫu biên `0x000B` và `0x7FF5`; không trả chính xác `0x0000`/`0x8000` ở hai biên này.
+Với x nằm giữa hai mẫu, core đọc y0 và y1 qua một địa chỉ ROM dùng lần lượt, rồi nội suy. Tọa độ S45 giữ toàn miền input; slope `y1−y0` là U10 vì bảng đơn điệu và chênh mẫu lớn nhất 512, tích slope×fraction U24 vừa U34. RNE vẫn áp dụng vào toàn tổng nội suy để giữ parity đúng khi tie. x=0 cho raw=`0x4000`, tức gate=0,5. Ngoài miền [−8,8], core dùng mẫu biên `0x000B` và `0x7FF5`; không trả chính xác `0x0000`/`0x8000` ở hai biên này.
 
-Nhánh `SYNTHESIS` không dùng `$readmemh`. Nhánh simulation cho phép file ngoài nhưng kiểm tra đủ 257 mẫu và đúng từng giá trị. ROM hằng vẫn cần synthesis để biết mapping; không được mặc định coi đây đã là ROM macro.
+RTL dùng case table hằng cho cả simulation và synthesis, không có file loader, parameter đường dẫn LUT hoặc nhánh theo tool. Generator/test đối chiếu hai asset LUT và báo lỗi nếu thiếu/hỏng. ROM logic vẫn cần flow synthesis đích để biết mapping vật lý; nó chưa phải một ROM macro đã được binding.
 
 ### Một lượt inference theo kiểu MLGRU nhỏ
 
@@ -299,7 +323,7 @@ Muốn thành demo sinh câu, còn cần model đã train phù hợp, tokenizer 
 
 ## 8. Khác gì so với thesis của bạn?
 
-Nguồn so sánh là [DTUT-242-13.pdf](../../DTUT-242-13.pdf), chương 4 và phần testcase chương 5. “Trang thesis” dưới đây là số in ở chân trang; số trang PDF lớn hơn 11. Ví dụ Figure 4 ở trang thesis 31, tương ứng trang PDF 42. Bảng phân biệt **mô tả trong thesis** với **hành vi RTL hiện tại**, không lấy kết quả đo của thiết kế cũ gán cho thiết kế mới.
+Nguồn so sánh là [DTUT-242-13.pdf](../history/references/DTUT-242-13.pdf), chương 4 và phần testcase chương 5. “Trang thesis” dưới đây là số in ở chân trang; số trang PDF lớn hơn 11. Ví dụ Figure 4 ở trang thesis 31, tương ứng trang PDF 42. Bảng phân biệt **mô tả trong thesis** với **hành vi RTL hiện tại**, không lấy kết quả đo của thiết kế cũ gán cho thiết kế mới.
 
 | Nội dung | Thiết kế mô tả trong thesis | RTL ASIC hiện tại | Hệ quả |
 |---|---|---|---|
@@ -339,7 +363,7 @@ Thesis ưu tiên cấu trúc processor có pipeline và song song cho testcase v
 | SRAM có dữ liệu hợp lệ chưa | ws_rd_en, ws_rd_addr, ws_rd_valid, ws_rd_data |
 | TMATMUL đang tính phần nào | output_row_q, input_chunk_q, partial, accumulator_q |
 | NORM sai ở lượt nào | state, sum_sq, v_raw, rms_r, absmax, quant_d |
-| Scale có đi theo q không | q_valid, q_d, composed_m, composed_r |
+| Scale có đi theo q không | q_valid, q_d, input_has_runtime_scale, selected_quant_d, composed_m, composed_r |
 | Gate/state có bị sai format không | format_error, gate, recurrent_sum, recurrent_value |
 | Kết quả bị clamp hay chương trình bị lỗi | overflow_out và error, đọc riêng từng cờ |
 
@@ -367,8 +391,19 @@ Ví dụ hai dòng `q_word <= ws_rd_data; state <= ACCUM;` cùng chạy tại m�
 
 ## 11. Phạm vi kiểm chứng của tài liệu
 
-Tài liệu đã đối chiếu 29 file `.sv/.v`, bảng ROM `.svh`, hai file dữ liệu LUT và các trang thesis nêu trên. `.bak` là backup, không dùng làm định nghĩa hành vi hiện tại. Phụ lục vẫn giải thích các helper và module legacy để người đọc không nhầm “có file” với “được instantiate trong top”.
+Tài liệu đối chiếu 29 file `.sv/.v` và hai file LUT hiện hành (`sigmoid_lut.svh`, `sigmoid_257.mem`). Mỗi trang RTL trích nguyên văn source theo nhóm logic, lưu số dòng và SHA-256. Các helper và module legacy có trang riêng; có file không có nghĩa khối được instantiate trong top hiện tại. Các PDF/PPT thesis/paper gốc giữ làm tài liệu lịch sử.
 
-Lần rà soát cuối ngày 30/09/2026 xác nhận đủ **46 sơ đồ kiến trúc/quan hệ RTL** (1 tổng quan NPU, 29 toàn khối, 16 sơ đồ phần cứng theo nhóm) và **122 nhóm logic**, bao phủ nguyên văn 2.805 dòng RTL. Hai bảng LUT hiện hành chứa cùng 257 mẫu và được giải thích riêng vì đây là dữ liệu tra cứu, không phải code điều khiển. Manifest sau cleanup giữ 31 file của source chính. Số liên kết và SHA-256 được kiểm tra lại bởi `validate.py`. Kết quả kiểm tra được lưu trong [validation.json](validation.json). Các hình được cập nhật ngày 30/09/2026 theo cấu trúc phần cứng; package biểu diễn phụ thuộc định nghĩa, còn module legacy chỉ xuất hiện độc lập trong trang riêng.
+Manifest hiện bao phủ **31 file nguồn**, **123 nhóm logic**. **2.986 dòng RTL** và **519 dòng chú giải LUT**. Bộ chú giải có **46 sơ đồ** (1 tổng quan NPU, 29 toàn khối, 16 theo nhóm); render evidence cũng bao phủ các sơ đồ trong toàn bộ tài liệu thiết kế và demo. Số lượng hiện hành được ghi trong [diagram_validation.json](diagram_validation.json). [validation.json](validation.json) và [diagram_validation.json](diagram_validation.json) lưu kết quả validator/render gắn với hash hiện tại; chạy lại `python docs/source_guide/validate.py` sau khi sửa source hoặc sơ đồ.
 
-Đợt chuẩn hóa literal hexadecimal chỉ đổi cách viết hằng số, không đổi bit pattern hay thuật toán. Regression V2 ngày 30/09/2026 đã pass 146 ca host, 105 ca division, 105 ca square root, 5 ca RNE, 6 biên coefficient, 393.216 ca nội suy sigmoid và cả nhánh compile có define `SYNTHESIS`. Đây là bằng chứng chức năng trong phạm vi test, không phải kết quả synthesis/PPA hoặc inference end-to-end của một model cụ thể. Các giới hạn SRAM macro, host bridge và exporter nêu ở trên vẫn còn áp dụng.
+Regression RTL thống nhất ngày 01/10/2026 lúc 11:23:43 pass **9 mục**, compile **0 error, 0 warning**: kiểm tra asset ROM; **168 ca host/23.827 commands** (NORM 43, ternary 65, rowwise 57, host/PC 3); 106 division, **4.301 sqrt**, 37.189 RNE, **900 coefficient cases** với tối đa 99 clock quan sát; 5 divider profiles; **12.720 postscale checks**; 1.027 instruction memory checks; **1.638.400 sigmoid inputs trên toàn bộ 25 F_t=0…24**; 3.242 addsub, 4.452 mul, 5 accumulator profiles; 47 SRAM checks. Các ca mới kiểm tra rejected NORM sau overflow không reset, static TM qua descriptor alias/subrange, reset metadata và restart, divider có NUM_W=1 hoặc DEN_W>NUM_W, busy/start protocol và reset giữa giao dịch. Testbench kiểm tra arbitration và generator/test từ chối hai asset thiếu, hai asset hỏng. RTL không có assertion hoặc file I/O; các kiểm tra này nằm trong verification. Hash/result ở [tests/results.json](../../tests/results.json); chạy lại bằng `./tests/run.ps1 -Block All`, không cần macro hoặc chế độ build riêng.
+
+Quartus Analysis & Synthesis demo ngày 01/10/2026 lúc 11:24:04 pass **0 error, 0 warning**: **6.497 registers**, **11.798 ALUT**, **8.005 ALM ước tính**, 334.336 bit block RAM, 7 DSP. So với snapshot portable trước lượt review này: 6.712→6.497 registers và 8.441→8.005 ALM ước tính; RAM/DSP không đổi. Đây là compile minh họa khả năng tổng hợp RTL; số liệu FPGA không phải ràng buộc kiến trúc hoặc PPA ASIC. Chưa chạy Fitter/STA. Xem [report và warnings](../verification/README.md), [rà soát toàn design](../reviews/design_review.md).
+
+RTL và verification dùng cùng hành vi bộ nhớ/ROM. [Demo checkpoint Binary-MNIST160](../demos/mnist.md) đã chạy end-to-end trên 10 ảnh mẫu, đối chiếu 40 lượt tầng và hai lần chương trình toàn graph; không thay RTL. Chưa có binding SRAM PDK, PPA ASIC hoặc accuracy toàn MNIST/model ngôn ngữ. Sharing multiplier toàn chip và exporter cho các graph khác vẫn cần triển khai.
+
+
+[Demo MNIST](../demos/mnist.md) chạy graph trên RTL; [NanoFable](../demos/language.md) chạy generation trên CPU và replay 168 linear ternary thực trên RTL. Mỗi báo cáo ghi reference, source/asset hashes và giới hạn riêng.
+
+---
+
+[Đọc tiếp: từng module RTL](blocks/README.md) · [Verification](../verification/README.md) · [Về mục lục tài liệu](../README.md)

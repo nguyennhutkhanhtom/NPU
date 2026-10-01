@@ -1,0 +1,190 @@
+{
+  "status": "PASS",
+  "verified_utc": "2026-10-01T04:23:43.9694077Z",
+  "block": "All",
+  "rtl": "D:\\2151097_Nguyen Nhut Khanh\\Verilog Source code",
+  "vectors": {
+    "host_cases": 168,
+    "host_commands": 23827,
+    "host_groups": {
+      "Norm": 43,
+      "Ternary": 65,
+      "Rowwise": 57,
+      "HostDecode": 3
+    },
+    "sigmoid_cases": 1638400,
+    "sigmoid_formats": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24
+    ]
+  },
+  "tests": {
+    "rom-validation": {
+      "status": "PASS",
+      "marker": "ROM_VALIDATION_PASS: missing_assets=2 corrupt_assets=2",
+      "log": "sim/reference.log"
+    },
+    "host": {
+      "status": "PASS",
+      "marker": "# HOST_PASS cases=168",
+      "log": "sim/host.log"
+    },
+    "scalar": {
+      "status": "PASS",
+      "marker": "# SCALAR_PASS division=106 sqrt=4301 RNE=37189 coefficients=900 compose_max_clocks=99 protocol=reset_and_busy_start",
+      "log": "sim/scalar.log"
+    },
+    "divprofiles": {
+      "status": "PASS",
+      "marker": "# DIVPROFILES_PASS profiles=5",
+      "log": "sim/divprofiles.log"
+    },
+    "postscale": {
+      "status": "PASS",
+      "marker": "# POSTSCALE_PASS checks=12720",
+      "log": "sim/postscale.log"
+    },
+    "sigmoid": {
+      "status": "PASS",
+      "marker": "# SIGMOID_PASS cases=1638400 formats=25 protocol_checks=2",
+      "log": "sim/sigmoid.log"
+    },
+    "arithmetic": {
+      "status": "PASS",
+      "marker": "# ARITHMETIC_PASS block=all addsub=3242 mul=4452 accumulator_profiles=5",
+      "log": "sim/arithmetic.log"
+    },
+    "imem": {
+      "status": "PASS",
+      "marker": "# IMEM_PASS checks=1027",
+      "log": "sim/imem.log"
+    },
+    "sram": {
+      "status": "PASS",
+      "marker": "# SRAM_PASS checks=47",
+      "log": "sim/sram.log"
+    }
+  },
+  "rtl_sources": {
+    "acc_mul.sv": "ba8eab6bcc06296d5c69b9c973f54a2e7f81dc73915528b1171b7cf1e94f8860",
+    "addsub.sv": "14484f9f2777b2662cfa8538ab92149d0e7f80be1012d21fc0906d8ea45d3b98",
+    "ctrl_unit.sv": "b4daf5e7d1b059306d11a907e2512c917d60ec46c4dd68267a1190ed1f579968",
+    "de_reg.sv": "dbb7c23f6bda7e1f5b435bd34fbb4cdca9ef63f6af3a9b535cf4030f7f3dd50d",
+    "descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+    "div.sv": "c2c7e524ecc7219f8a3792eca7957626991e2127a4c7f0fa31d4df272f321f54",
+    "em_reg.sv": "5e57748e00ff223653210e970a6a8e6d95ba124fc023c6b92b368daa692cb9ee",
+    "exp.sv": "d94cf43353c33633ec7a30fbf3def2e0841a669492ec876d660c446ef7d11529",
+    "fd_reg.sv": "75de20e3fb5abe35246fc7f003a6159ce7f78a38b80e6a26d795881b56811565",
+    "hazard_detect.sv": "83e4434faa221906913debcd24e6a6db7366f15fe4d3e7ed37f06ec9f31991b5",
+    "ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+    "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+    "matmulfree.sv": "3a785e7285519557a973fc8597449c56d0ffdc8bf0b62ca6bbdbdfaf6d132bcc",
+    "mem_burst.v": "bd2467f0fe9ed199d522a674f89c72dadcbc2f19752fbc0bdb35397135cc9f2f",
+    "mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+    "mul.sv": "63bb267b9cc884ee766f94a0fda1039cb5ed61bb6f6002bfa356a3f6423bcbac",
+    "mw_reg.sv": "8f27a55bda16912be3fb069bd6cf09abaf740a186c9b2503171158bb59109960",
+    "norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+    "norm.sv": "03e8f34433b60a8f81509c38fbe4467cf0ef1fd363a4e2a7d41212463f2a2d1b",
+    "npu_pkg.sv": "1061016c51092f4f9269fc99392c30bc1bd2117103ef5f49474a296f5077a343",
+    "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+    "postscale.sv": "462922989c54f4b4346d27cd05d5cdf342bb56a882c0cb8325ef035c36c7452a",
+    "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+    "rowwise_dispatch.sv": "4fb73e52c6fc0afe70277b9e1d5a8817cbac0d1465e691d8801581c5444d1ae2",
+    "rowwise_op.sv": "a3f17f1e9c346841f76b31f39eda799818a139b98a2a7059778f1336d3c4ad46",
+    "scale_compose.sv": "b2f2bdcb88656ff43d92f5e91ed4dbc12ee60c560e09ea6425cd9e92639e1868",
+    "sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
+    "sigmoid_lut.svh": "3d4fc0b37d284c4f7b3a4cd2587acfaf3e35dc33b2209550d7f97ef8555e0094",
+    "sigmoid.sv": "8001c3d582b072de2146d085fbb4363350a6f876dfa4d9195bc54d3d52f944c9",
+    "sram_256_wrapper.sv": "80d77f1ad41fda47969ca686807db5f069b81667b4fc5f613ff476264da8d10b",
+    "ternary_mul.sv": "0593ecc70787ee9746c6c26e7d8507c0f2e5ab05f14b1226e5efc81d052bca45"
+  },
+  "test_sources": {
+    "tb_all.sv": "34df513a31f08ca354c02235652c03fa9a1a48a1e6a7ee8ac810ff04fa8d828d",
+    "reference.py": "fa136fb3a5bf9bb1e925fb350084eb969210d89dfad00a0af36706bb0740ef99",
+    "run.ps1": "03aec55756389733eb5ae2728ac8a54f4bc3b11fc9d918df9ef4be43f4a9f27d"
+  },
+  "synthesis_demo": {
+    "status": "PASS",
+    "completed_local": "2026-10-01T11:24:04+07:00",
+    "tool": "Quartus Lite 18.1 quartus_map",
+    "project": "matmul_free",
+    "purpose": "Demo of synthesizability of portable ASIC-oriented RTL, without source selection macros or vendor primitives/attributes.",
+    "errors": 0,
+    "warnings": 0,
+    "registers": 6497,
+    "combinational_aluts": 11798,
+    "block_memory_bits": 334336,
+    "dsp_blocks": 7,
+    "logic_cells": 17369,
+    "estimated_alms": 8005,
+    "report_sha256": "ef8214c4531557ece8a096daa30bb5def20c9dff1d8e9cf6fd8f662e56eaf888",
+    "raw_report_sha256": "e5aac21778b5c9407c2e85b216b51de15d330e1e0e2cd4a73d113c91f09a1ec3",
+    "summary_sha256": "8ccfb3b635e91444a090d0d43daa18a1fc911847e4d7d3b213127cc8cf20d176",
+    "rtl_sources": {
+      "acc_mul.sv": "ba8eab6bcc06296d5c69b9c973f54a2e7f81dc73915528b1171b7cf1e94f8860",
+      "addsub.sv": "14484f9f2777b2662cfa8538ab92149d0e7f80be1012d21fc0906d8ea45d3b98",
+      "ctrl_unit.sv": "b4daf5e7d1b059306d11a907e2512c917d60ec46c4dd68267a1190ed1f579968",
+      "de_reg.sv": "dbb7c23f6bda7e1f5b435bd34fbb4cdca9ef63f6af3a9b535cf4030f7f3dd50d",
+      "descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+      "div.sv": "c2c7e524ecc7219f8a3792eca7957626991e2127a4c7f0fa31d4df272f321f54",
+      "em_reg.sv": "5e57748e00ff223653210e970a6a8e6d95ba124fc023c6b92b368daa692cb9ee",
+      "exp.sv": "d94cf43353c33633ec7a30fbf3def2e0841a669492ec876d660c446ef7d11529",
+      "fd_reg.sv": "75de20e3fb5abe35246fc7f003a6159ce7f78a38b80e6a26d795881b56811565",
+      "hazard_detect.sv": "83e4434faa221906913debcd24e6a6db7366f15fe4d3e7ed37f06ec9f31991b5",
+      "ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+      "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+      "matmulfree.sv": "3a785e7285519557a973fc8597449c56d0ffdc8bf0b62ca6bbdbdfaf6d132bcc",
+      "mem_burst.v": "bd2467f0fe9ed199d522a674f89c72dadcbc2f19752fbc0bdb35397135cc9f2f",
+      "mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+      "mul.sv": "63bb267b9cc884ee766f94a0fda1039cb5ed61bb6f6002bfa356a3f6423bcbac",
+      "mw_reg.sv": "8f27a55bda16912be3fb069bd6cf09abaf740a186c9b2503171158bb59109960",
+      "norm.sv": "03e8f34433b60a8f81509c38fbe4467cf0ef1fd363a4e2a7d41212463f2a2d1b",
+      "norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+      "npu_pkg.sv": "1061016c51092f4f9269fc99392c30bc1bd2117103ef5f49474a296f5077a343",
+      "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+      "postscale.sv": "462922989c54f4b4346d27cd05d5cdf342bb56a882c0cb8325ef035c36c7452a",
+      "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+      "rowwise_dispatch.sv": "4fb73e52c6fc0afe70277b9e1d5a8817cbac0d1465e691d8801581c5444d1ae2",
+      "rowwise_op.sv": "a3f17f1e9c346841f76b31f39eda799818a139b98a2a7059778f1336d3c4ad46",
+      "scale_compose.sv": "b2f2bdcb88656ff43d92f5e91ed4dbc12ee60c560e09ea6425cd9e92639e1868",
+      "sigmoid.sv": "8001c3d582b072de2146d085fbb4363350a6f876dfa4d9195bc54d3d52f944c9",
+      "sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
+      "sigmoid_lut.svh": "3d4fc0b37d284c4f7b3a4cd2587acfaf3e35dc33b2209550d7f97ef8555e0094",
+      "sram_256_wrapper.sv": "80d77f1ad41fda47969ca686807db5f069b81667b4fc5f613ff476264da8d10b",
+      "ternary_mul.sv": "0593ecc70787ee9746c6c26e7d8507c0f2e5ab05f14b1226e5efc81d052bca45"
+    },
+    "portable_rtl_audit": {
+      "files_checked": 30,
+      "forbidden_constructs": []
+    },
+    "reports": {
+      "synthesis": "quartus_synthesis.rpt",
+      "summary": "quartus_synthesis.summary"
+    },
+    "archive_note": "Archived text has LF line endings and trailing whitespace removed; raw report is generated locally.",
+    "reproduce": "From quartus/: quartus_map matmul_free --read_settings_files=on --write_settings_files=off"
+  }
+}

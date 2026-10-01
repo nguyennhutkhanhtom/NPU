@@ -1,6 +1,6 @@
 # matmul_wrap.sv — Wrapper clock/reset/LED
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng nếu chọn board top.
 

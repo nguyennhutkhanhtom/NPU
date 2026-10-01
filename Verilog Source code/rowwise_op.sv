@@ -1,4 +1,4 @@
-module rowwise_op #(parameter string SIG_LUT_FILE = "") (
+module rowwise_op (
     input logic clk, rst_n, start,
     input logic [3:0] select,
     input logic [255:0] a_word, b_word, c_word,
@@ -23,7 +23,7 @@ module rowwise_op #(parameter string SIG_LUT_FILE = "") (
     logic signed [15:0] sig_x;
     assign sig_x = source_a_q[element_index_q * 16 +: 16];
     assign sig_start = busy && operation_q == OP_SIG && !sig_busy && !sig_done;
-    sigmoid #(.LUT_FILE(SIG_LUT_FILE)) u_sig(
+    sigmoid u_sig(
         .clk(clk),
         .rst_n(rst_n),
         .start(sig_start),
@@ -54,7 +54,8 @@ module rowwise_op #(parameter string SIG_LUT_FILE = "") (
         old_state = state_word_q[element_index_q * 16 +: 16];
         gate = source_b_q[element_index_q * 16 +: 16];
         complement = 16'h8000 - gate;
-        result_shift = (operation_q == OP_MUL ? int'(source_a_frac_q) + int'(source_b_frac_q) : int'(source_a_frac_q)) - int'(destination_frac_q);
+        result_shift = (operation_q == OP_REC) ? 15 :
+        (operation_q == OP_MUL ? int'(source_a_frac_q) + int'(source_b_frac_q) : int'(source_a_frac_q)) - int'(destination_frac_q);
         for (integer j = 0;j < 2;j = j + 1) begin
             lane_a[j] = source_a_unsigned_q ? $signed({1'b0, source_a_q[(element_index_q + j) * 16 +: 16]}) : $signed(source_a_q[(element_index_q + j) * 16 +: 16]);
             lane_b[j] = source_b_unsigned_q ? $signed({1'b0, source_b_q[(element_index_q + j) * 16 +: 16]}) : $signed(source_b_q[(element_index_q + j) * 16 +: 16]);
@@ -74,15 +75,23 @@ module rowwise_op #(parameter string SIG_LUT_FILE = "") (
             magnitude_product[j] = magnitude_a[j] * magnitude_b[j];
             product[j] = (multiply_a[j][16] ^ multiply_b[j][16]) ?
              - $signed(magnitude_product[j]) : $signed(magnitude_product[j]);
+        end
+        recurrent_sum = {product[0][31], product[0]} + {product[1][31], product[1]};
+        // Every operation uses the same two scale/round paths. REC supplies
+        // its combined S33 sum to lane 0, so its two products round only once.
+        for (integer j = 0; j < 2; j = j + 1) begin
             case (operation_q)
                 OP_ADD : raw_value[j] = 64'(lane_a[j]) + 64'(lane_b[j]);
                 OP_SUB : raw_value[j] = 64'(lane_a[j]) - 64'(lane_b[j]);
+                OP_RELU : raw_value[j] = lane_a[j] < 0 ? 64'sh0 : 64'(lane_a[j]);
+                OP_REC : raw_value[j] = (j == 0) ? {{31{recurrent_sum[32]}}, recurrent_sum} : 64'sh0;
                 default : raw_value[j] = {{32{product[j][31]}}, product[j]};
             endcase
             scaled[j] = scale_shift64(raw_value[j], result_shift);
             if (element_index_q + j < element_count_q) begin
-                if ((source_a_unsigned_q && lane_a[j] > 17'sh0_8000) || (source_b_unsigned_q && lane_b[j] > 17'sh0_8000)) lane_format_error = 1;
-                if (destination_unsigned_q) begin
+                if (operation_q != OP_RELU &&
+                    ((source_a_unsigned_q && lane_a[j] > 17'sh0_8000) || (source_b_unsigned_q && lane_b[j] > 17'sh0_8000))) lane_format_error = 1;
+                if (destination_unsigned_q && operation_q != OP_RELU) begin
                     if (scaled[j] < 0) begin
                         result_buffer_next[(element_index_q + j) * 16 +: 16] = 0;
                         lane_overflow = 1;
@@ -102,18 +111,7 @@ module rowwise_op #(parameter string SIG_LUT_FILE = "") (
             result_buffer_next = result_buffer_q;
             result_buffer_next[element_index_q * 16 +: 16] = sig_y;
         end
-        if (operation_q == OP_RELU) begin
-            result_buffer_next = result_buffer_q;
-            lane_overflow = 0;
-            lane_format_error = 0;
-            for (integer j = 0;j < 2;j = j + 1) if (element_index_q + j < element_count_q) begin
-                scaled[j] = scale_shift64(lane_a[j] < 0 ? 64'sh0000_0000_0000_0000 : 64'(lane_a[j]), int'(source_a_frac_q) - int'(destination_frac_q));
-                result_buffer_next[(element_index_q + j) * 16 +: 16] = sat_s16(scaled[j]);
-                if (scaled[j] > 64'sh0000_0000_0000_7fff) lane_overflow = 1;
-            end
-        end
-        recurrent_sum = {product[0][31], product[0]} + {product[1][31], product[1]};
-        recurrent_value = rne_shift64({{31{recurrent_sum[32]}}, recurrent_sum}, 6'd15);
+        recurrent_value = scaled[0];
         if (operation_q == OP_REC) begin
             result_buffer_next = result_buffer_q;
             result_buffer_next[element_index_q * 16 +: 16] = sat_s16(recurrent_value);

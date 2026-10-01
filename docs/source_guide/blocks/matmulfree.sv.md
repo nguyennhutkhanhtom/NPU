@@ -1,10 +1,10 @@
 # matmulfree.sv — Top-level: điều phối toàn NPU
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — core chính.
 
-**Source:** [matmulfree.sv](<../../../Verilog%20Source%20code/matmulfree.sv>). **Số dòng:** 475. **SHA-256:** `5eaa62693ee9c4efaf35caf7993c0ad779a956e3cfdab28929f0a35ac3b063a9`.
+**Source:** [matmulfree.sv](<../../../Verilog%20Source%20code/matmulfree.sv>). **Số dòng:** 517. **SHA-256:** `3a785e7285519557a973fc8597449c56d0ffdc8bf0b62ca6bbdbdfaf6d132bcc`.
 
 ## Khối này làm gì?
 
@@ -19,28 +19,28 @@ flowchart TB
 %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
     HOST["Host 32 bit"]
     subgraph NPU["NPU — matmulfree.sv"]
-        IF["Host interface<br/>Address decoder + control/status"]
+        IF["Host interface<br/>Address decoder + control/status<br/>SRAM / instruction host_ready từ read valid"]
         subgraph CTRL["Điều khiển và cấu hình"]
             PC["PC.sv<br/>Program counter 9 bit"]
             IM@{ shape: rect, label: "ins_mem.sv<hr/>Instruction memory 512 × 13 bit" }
             SCH["Scheduler single-issue<br/>Opcode decode + điều phối engine"]
-            DESC@{ shape: rect, label: "descriptor_file.sv<hr/>8 workspace × 32 bit<hr/>8 matrix × 96 bit" }
-            SCALE["Runtime q metadata + effective_mat<br/>scale_compose.sv + div 64/64<br/>Scale tĩnh hoặc ghép scale động"]
+            DESC@{ shape: rect, label: "descriptor_file.sv<hr/>8 workspace × 32-bit FF<hr/>8 matrix × 3 word × 32-bit FF" }
+            SCALE["Runtime q metadata + effective_mat<br/>scale_compose.sv + div 48/25<br/>Scale tĩnh hoặc ghép scale động<br/>Guard overlap với q có metadata"]
         end
         subgraph ENG["Các engine tính toán"]
             ROW["Row-wise vector engine<br/>rowwise_dispatch + rowwise_op<br/>ADD / SUB / MUL / REC / RELU<br/>sigmoid: ROM + nội suy"]
-            NORM["NORM + QUANT engine<br/>norm_dispatch + norm<br/>isqrt_u64 + div 64/32<br/>S16 → scratch S24/F16 → S8"]
+            NORM["NORM + QUANT engine<br/>norm_dispatch + norm<br/>isqrt_u64 + div 55/32<br/>S16 → scratch S24/F16 → S8"]
             TM["Ternary matmul engine<br/>ternary_mul · 32 lane chọn dấu/zero<br/>acc_mul + accumulator S18<br/>postscale + bias → S16/S32"]
         end
         REQMUX@{ shape: trap-t, label: "Workspace request mux<br/>Chọn request/write theo active_unit" }
         RSPDEC@{ shape: trap-b, label: "Workspace response demux<br/>Phân phối read data/valid tới active engine" }
-        WS@{ shape: rect, label: "Workspace SRAM 8 KiB<hr/>regfile.sv: register<hr/>sram_256_wrapper ADDR_W=8<hr/>256 × 256 bit" }
-        PM@{ shape: rect, label: "Parameter SRAM 32 KiB<hr/>mem_mapping.sv<hr/>sram_256_wrapper ADDR_W=10<hr/>1024 × 256 bit · weight + bias" }
+        WS@{ shape: rect, label: "Workspace SRAM 8 KiB<hr/>regfile.sv: register<hr/>sram_256_wrapper ADDR_W=8<hr/>256 × 256 bit<hr/>8 bank × 32 bit" }
+        PM@{ shape: rect, label: "Parameter SRAM 32 KiB<hr/>mem_mapping.sv<hr/>sram_256_wrapper ADDR_W=10<hr/>1024 × 256 bit · weight + bias<hr/>8 bank × 32 bit" }
         IF <-->|"Nạp/đọc chương trình, descriptor, control/status"| CTRL
-        IF <-->|"Host 32 bit"| WS
-        IF <-->|"Host 32 bit"| PM
+        IF <-->|"Host 32 bit · read valid/ready"| WS
+        IF <-->|"Host 32 bit · read valid/ready"| PM
         PC -->|"Address"| IM
-        IM -->|"Instruction"| SCH
+        IM -->|"Instruction + valid"| SCH
         SCH -.->|"clear / advance"| PC
         SCH -.->|"Descriptor IDs"| DESC
         DESC -.->|"Tensor metadata"| ENG
@@ -74,14 +74,16 @@ MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ
 
 `start → S_FETCH → S_START → S_WAIT → S_ADVANCE`. TMATMUL dùng scale động đi qua `S_COMPOSE_START/WAIT` trước `S_TM_START`. HALT hoặc lỗi dẫn đến `S_HALT`, đưa ready lên 1. Overflow được giữ đến lần start kế tiếp; error và overflow là hai trạng thái khác nhau.
 
-Cache q không chỉ giữ D: còn giữ base và length để scale gắn đúng tensor. Bất kỳ ghi đè vùng q nào cũng làm metadata cũ mất hiệu lực.
+Cache q giữ D, base và length để scale gắn đúng tensor. Bất kỳ ghi đè vùng q nào cũng làm metadata cũ mất hiệu lực. Static TM kiểm tra overlap với mọi entry q hợp lệ, nên descriptor alias không thể bỏ qua scale động. Dynamic TM yêu cầu đúng ID và exact base/length.
 
 1. Khi idle, host nạp parameter, workspace, descriptor và instruction. `host_ready` chỉ xác nhận địa chỉ hợp lệ được chấp nhận; nó không kiểm tra nội dung model.
-2. Start đưa PC về 0, xóa cờ của lần chạy trước và chuyển scheduler sang FETCH. Instruction được chốt vào `instr_q`, nên opcode và các descriptor ID ổn định suốt lệnh nhiều chu kỳ.
+2. Start đưa PC về 0, xóa cờ của lần chạy trước và chuyển scheduler sang FETCH. Scheduler giữ fetch request và chờ `instr_fetch_valid`; instruction được chốt vào `instr_q`, nên opcode và các descriptor ID ổn định suốt lệnh nhiều chu kỳ.
 3. S_START chọn execution unit. NORM và rowwise đi thẳng tới WAIT. TMATMUL có thể phải chạy `scale_compose` trước nếu q mang scale động từ NORM.
 4. `active_unit` điều khiển mux workspace. Chỉ rowwise, norm hoặc ternary được nối với SRAM ở một thời điểm.
 5. Khi unit báo done, top gom overflow/error. Lệnh hợp lệ làm PC tăng; lỗi hoặc HALT đưa core về ready.
-6. Cache `q_d/q_base/q_length/q_valid` buộc D đi cùng đúng tensor. Ghi đè q hoặc sửa descriptor làm cache mất hiệu lực.
+6. Cache `q_d/q_base/q_length/q_valid` buộc D đi cùng đúng tensor. Ghi đè q hoặc sửa descriptor làm cache mất hiệu lực. Chỉ `q_valid` có reset; 336 bit tuple được ghi trọn khi NORM hoàn thành thành công qua tám process generate với index hằng và được đọc sau valid guard.
+
+**Quy ước RTL.** SRAM và instruction host read chỉ được acknowledge khi valid từ wrapper; giữ enable, read và địa chỉ đến ready. Memory read cần hai cạnh lên ở cả simulation và synthesis. Không dùng response cũ sau đổi địa chỉ, write hoặc idle. Top vẫn chặn host memory khi running; control/status read được phép.
 
 ## Các nhóm logic trong source
 
@@ -92,7 +94,7 @@ Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòn
 
 <!-- source-range:1:24 -->
 ```systemverilog
-module matmulfree #(parameter string SIG_LUT_FILE = "") (
+module matmulfree (
     input logic clk,
     input logic rst_n,
 
@@ -125,9 +127,9 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
 **Tín hiệu và dữ liệu chính.** `host_en`: host đang yêu cầu truy cập; `host_we`: host chọn ghi thay vì đọc; `host_addr`: địa chỉ phía host; `host_wdata`: data 32 host muốn ghi; `host_rdata`: data 32 trả về host; `host_ready`: giao dịch host được chấp nhận; và 6 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 25–42: Giải mã host](<../../../Verilog%20Source%20code/matmulfree.sv#L25>)
+### [Dòng 25–46: Giải mã host](<../../../Verilog%20Source%20code/matmulfree.sv#L25>)
 
-<!-- source-range:25:42 -->
+<!-- source-range:25:46 -->
 ```systemverilog
     // ---------------- Host decode ----------------
     logic host_param, host_ws, host_desc, host_imem, host_ctrl;
@@ -139,8 +141,12 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
     assign host_ctrl = host_en && host_addr[31:8] == 24'h000400 && host_addr[1:0] == 0 &&
     (host_addr[7:2] == 0 || host_addr[7:2] == 1 ||
         (host_addr[7:2] >= 4 && host_addr[7:2] <= 10));
-    assign host_ready = (host_param || host_ws || host_desc || host_imem || host_ctrl) &&
-    (!running || (host_ctrl && !host_we));
+    logic ws_host_rvalid, p_host_rvalid;
+    logic instr_fetch_en, instr_fetch_valid, instr_host_valid;
+    assign host_ready = (host_ctrl && (!host_we || !running)) ||
+    (!running && (host_desc || (host_imem && (host_we || instr_host_valid)) ||
+        (host_param && (host_we || p_host_rvalid)) ||
+        (host_ws && (host_we || ws_host_rvalid))));
 
     logic start_pulse;
     logic [7:0] scratch_z_base;
@@ -156,9 +162,9 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
 **Tín hiệu và dữ liệu chính.** `host_param`: địa chỉ host thuộc parameter SRAM; `host_ws`: địa chỉ host thuộc workspace; `host_desc`: địa chỉ host thuộc descriptor window; `host_imem`: địa chỉ host thuộc instruction memory; `host_ctrl`: địa chỉ host thuộc control window; `host_en`: host đang yêu cầu truy cập; và 7 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 43–59: Program counter và instruction memory](<../../../Verilog%20Source%20code/matmulfree.sv#L43>)
+### [Dòng 47–68: Program counter và instruction memory](<../../../Verilog%20Source%20code/matmulfree.sv#L47>)
 
-<!-- source-range:43:59 -->
+<!-- source-range:47:68 -->
 ```systemverilog
     // ---------------- Program ----------------
     logic [8:0] pc;
@@ -170,12 +176,17 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
         .advance(pc_advance),
         .pc_out(pc));
     ins_mem u_imem(.clk(clk),
+        .rst_n(rst_n),
+        .fetch_en(instr_fetch_en),
         .addr(pc),
         .instr(instr_fetch),
+        .instr_valid(instr_fetch_valid),
+        .host_en(host_imem && !running),
         .host_we(host_imem && host_we && !running),
         .host_addr(host_addr[10:2]),
         .host_instr(host_wdata[12:0]),
-        .host_rinstr(instr_host));
+        .host_rinstr(instr_host),
+        .host_rvalid(instr_host_valid));
 
 ```
 
@@ -186,9 +197,9 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
 **Tín hiệu và dữ liệu chính.** `pc`: địa chỉ instruction hiện tại; `pc_clear`: đưa PC về 0; `pc_advance`: cho PC tiến1; `instr_fetch`: instruction đọc tại PC; `instr_q`: instruction13 bit đang thực thi; `clear`: đưa PC về 0; và 11 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 60–88: Descriptor](<../../../Verilog%20Source%20code/matmulfree.sv#L60>)
+### [Dòng 69–97: Descriptor](<../../../Verilog%20Source%20code/matmulfree.sv#L69>)
 
-<!-- source-range:60:88 -->
+<!-- source-range:69:97 -->
 ```systemverilog
     // ---------------- Descriptors ----------------
     ws_desc_t d_src0, d_src1, d_dst;
@@ -228,9 +239,9 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
 **Tín hiệu và dữ liệu chính.** `d_src0`: descriptor source0 đang được instruction chọn; `d_src1`: descriptor source1 đang được instruction chọn; `d_dst`: descriptor destination đang được chọn; `d_mat`: matrix descriptor gốc; `effective_mat`: matrix descriptor với hệ số postscale hiệu dụng; `desc_host_matrix`: host đang chọn matrix descriptor; và 20 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 89–132: Hai SRAM](<../../../Verilog%20Source%20code/matmulfree.sv#L89>)
+### [Dòng 98–143: Hai SRAM](<../../../Verilog%20Source%20code/matmulfree.sv#L98>)
 
-<!-- source-range:89:132 -->
+<!-- source-range:98:143 -->
 ```systemverilog
     // ---------------- Workspace SRAM + arbitration ----------------
     logic ws_rd_en, ws_wr_en, ws_rd_valid;
@@ -251,7 +262,8 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
         .host_we(host_we),
         .host_addr(host_addr[12:2]),
         .host_wdata(host_wdata),
-        .host_rdata(ws_host_rdata)
+        .host_rdata(ws_host_rdata),
+        .host_rvalid(ws_host_rvalid)
     );
 
     // ---------------- Parameter SRAM ----------------
@@ -273,7 +285,8 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
         .host_we(host_we),
         .host_addr(host_addr[14:2]),
         .host_wdata(host_wdata),
-        .host_rdata(p_host_rdata)
+        .host_rdata(p_host_rdata),
+        .host_rvalid(p_host_rvalid)
     );
 
 ```
@@ -285,16 +298,16 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
 **Tín hiệu và dữ liệu chính.** `ws_rd_en`: request đọc workspace; `ws_wr_en`: cho phép ghi workspace; `ws_rd_valid`: workspace trả dữ liệu hợp lệ; `ws_rd_addr`: địa chỉ đọc workspace; `ws_wr_addr`: địa chỉ ghi workspace; `ws_rd_data`: word 256 trả từ workspace; và 16 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 133–158: Rowwise unit](<../../../Verilog%20Source%20code/matmulfree.sv#L133>)
+### [Dòng 144–169: Rowwise unit](<../../../Verilog%20Source%20code/matmulfree.sv#L144>)
 
-<!-- source-range:133:158 -->
+<!-- source-range:144:169 -->
 ```systemverilog
     // ---------------- Row-wise vector unit ----------------
     logic row_start, row_busy, row_done, row_ov, row_fmt_err;
     logic row_rd_en, row_wr_en;
     logic [7:0] row_rd_addr, row_wr_addr;
     logic [255:0] row_wr_data;
-    rowwise_dispatch #(.SIG_LUT_FILE(SIG_LUT_FILE)) u_row(
+    rowwise_dispatch u_row(
         .clk(clk),
         .rst_n(rst_n),
         .start(row_start),
@@ -324,9 +337,9 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `op`: operand hoặc opcode, theo giao diện module; `instr_q`: instruction13 bit đang thực thi; `a_desc`: metadata nguồn A; `d_src0`: descriptor source0 đang được instruction chọn; `b_desc`: metadata nguồn B; và 14 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 159–193: NORM + QUANT](<../../../Verilog%20Source%20code/matmulfree.sv#L159>)
+### [Dòng 170–204: NORM + QUANT](<../../../Verilog%20Source%20code/matmulfree.sv#L170>)
 
-<!-- source-range:159:193 -->
+<!-- source-range:170:204 -->
 ```systemverilog
     // ---------------- NORM + QUANT ----------------
     logic norm_start, norm_busy, norm_done, norm_ov, norm_error;
@@ -372,9 +385,9 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
 **Tín hiệu và dữ liệu chính.** `quant_d`: D=max(absmax,delta); `norm_m`: multiplier U24 của RMSNorm; `quant_m`: multiplier U24 của QUANT; `norm_r`: shift của RMSNorm; `quant_r`: shift của QUANT; `start`: yêu cầu bắt đầu giao dịch; và 18 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 194–226: Ternary unit](<../../../Verilog%20Source%20code/matmulfree.sv#L194>)
+### [Dòng 205–237: Ternary unit](<../../../Verilog%20Source%20code/matmulfree.sv#L205>)
 
-<!-- source-range:194:226 -->
+<!-- source-range:205:237 -->
 ```systemverilog
     // ---------------- Ternary core ----------------
     logic tm_start, tm_busy, tm_done, tm_ov, tm_error;
@@ -418,28 +431,46 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `q_desc`: metadata nguồn activation S8; `d_src0`: descriptor source0 đang được instruction chọn; `out_desc`: metadata output TMATMUL; `d_dst`: descriptor destination đang được chọn; `mat_desc`: metadata ma trận và postscale; và 16 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 227–250: Scale động](<../../../Verilog%20Source%20code/matmulfree.sv#L227>)
+### [Dòng 238–279: Scale động](<../../../Verilog%20Source%20code/matmulfree.sv#L238>)
 
-<!-- source-range:227:250 -->
+<!-- source-range:238:279 -->
 ```systemverilog
     // Runtime q scales are attached to the descriptor and exact memory extent.
     logic [23:0] q_d[0:7];
     logic [7:0] q_base[0:7];
     logic [9:0] q_length[0:7];
     logic [7:0] q_valid;
+    logic input_has_runtime_scale;
+    logic [23:0] selected_quant_d;
     logic compose_busy, compose_done, compose_error;
     logic [23:0] composed_m;
     logic [5:0] composed_r;
     typedef enum logic [3:0] {S_IDLE, S_FETCH, S_START, S_WAIT, S_ADVANCE, S_HALT,
     S_COMPOSE_START, S_COMPOSE_WAIT, S_TM_START} sched_t;
     sched_t sched;
+    assign instr_fetch_en = running && sched == S_FETCH;
     logic [1:0] active_unit; // 1=row, 2=norm, 3=tm
+    assign selected_quant_d = q_valid[instr_q[2:0]] ? q_d[instr_q[2:0]] : 24'h0;
+
+    // Scale provenance belongs to the generated q memory extent. A descriptor
+    // alias must not bypass the requirement to compose its runtime scale.
+    always_comb begin
+        input_has_runtime_scale = 1'b0;
+        for (integer i = 0; i < 8; i = i + 1) begin
+            if (q_valid[i]) begin
+                if (ranges_overlap(int'(d_src0.base_word), ws_words(d_src0),
+                    int'(q_base[i]), (int'(q_length[i]) + 31) / 32))
+                    input_has_runtime_scale = 1'b1;
+            end
+        end
+    end
+
     scale_compose u_compose(.clk(clk),
         .rst_n(rst_n),
         .start(sched == S_COMPOSE_START),
         .factor_m(effective_mat.scale_m),
         .factor_r(effective_mat.scale_r),
-        .quant_d(q_d[instr_q[2:0]]),
+        .quant_d(selected_quant_d),
         .busy(compose_busy),
         .done(compose_done),
         .format_error(compose_error),
@@ -448,54 +479,64 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
 
 ```
 
-**Mục đích.** Mỗi workspace descriptor có cache D. scale_compose nhận hệ số weight/output và D của nguồn q.
+**Mục đích.** Mỗi workspace descriptor có cache D/base/length. `selected_quant_d` bằng 0 khi entry chưa valid; `input_has_runtime_scale` quét overlap input với mọi extent q valid để chặn static TM qua descriptor alias. scale_compose nhận hệ số weight/output và D hợp lệ của nguồn q.
 
 **Cách phần code hoạt động.** Có instance module con; named-port ở nhóm này xác định chính xác đường control/data giữa hai cấp hierarchy.
 
 **Tín hiệu và dữ liệu chính.** `q_d`: D gắn với từng descriptor q; `q_base`: base SRAM mà cache q mô tả; `q_length`: length mà cache q mô tả; `q_valid`: bitmask hiệu lực scale q; `composed_m`: M hiệu dụng từ scale_compose; `composed_r`: r hiệu dụng từ scale_compose; và 15 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 251–275: Hiệu lực metadata](<../../../Verilog%20Source%20code/matmulfree.sv#L251>)
+### [Dòng 280–314: Hiệu lực metadata](<../../../Verilog%20Source%20code/matmulfree.sv#L280>)
 
-<!-- source-range:251:275 -->
+<!-- source-range:280:314 -->
 ```systemverilog
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             q_valid <= 0;
-            for (integer i = 0;i < 8;i = i + 1) begin
-                q_d[i] <= 0;
-                q_base[i] <= 0;
-                q_length[i] <= 0;
-            end
         end else begin
             for (integer i = 0;i < 8;i = i + 1) begin
-                if (ws_wr_en && int'(ws_wr_addr) >= int'(q_base[i]) &&
-                    int'(ws_wr_addr) < int'(q_base[i]) + (int'(q_length[i]) + 31) / 32) q_valid[i] <= 0;
-                if (host_ws && host_we && !running && int'(host_addr[12:5]) >= int'(q_base[i]) &&
-                    int'(host_addr[12:5]) < int'(q_base[i]) + (int'(q_length[i]) + 31) / 32) q_valid[i] <= 0;
+                if (q_valid[i]) begin
+                    if (ws_wr_en && int'(ws_wr_addr) >= int'(q_base[i]) &&
+                        int'(ws_wr_addr) < int'(q_base[i]) + (int'(q_length[i]) + 31) / 32) q_valid[i] <= 0;
+                    if (host_ws && host_we && !running && int'(host_addr[12:5]) >= int'(q_base[i]) &&
+                        int'(host_addr[12:5]) < int'(q_base[i]) + (int'(q_length[i]) + 31) / 32) q_valid[i] <= 0;
+                end
             end
             if (host_desc && host_we && !running) q_valid <= 0;
-            if (sched == S_WAIT && active_unit == 2 && norm_done && !norm_error && !norm_ov) begin
-                q_d[instr_q[8:6]] <= quant_d;
+            if (sched == S_WAIT && active_unit == 2 && norm_done && !norm_error && !norm_ov)
                 q_valid[instr_q[8:6]] <= 1;
-                q_base[instr_q[8:6]] <= d_dst.base_word;
-                q_length[instr_q[8:6]] <= d_dst.length;
-            end
         end
     end
 
+    // Payload tuples are consumed only while their resettable valid bit is set.
+    // Successful NORM completion writes the full tuple before making it valid.
+    // Constant slot indices describe independent registers with parallel reads.
+    genvar slot;
+    generate
+    for (slot = 0; slot < 8; slot = slot + 1) begin : g_quant_metadata
+        always_ff @(posedge clk) begin
+            if (rst_n && sched == S_WAIT && active_unit == 2 && norm_done &&
+                !norm_error && !norm_ov && instr_q[8:6] == 3'(slot)) begin
+                q_d[slot] <= quant_d;
+                q_base[slot] <= d_dst.base_word;
+                q_length[slot] <= d_dst.length;
+            end
+        end
+    end
+    endgenerate
+
 ```
 
-**Mục đích.** Ghi tensor làm vô hiệu scale cũ. NORM hoàn thành thành công mới gắn D mới vào descriptor đích.
+**Mục đích.** Ghi tensor làm vô hiệu scale cũ. Chỉ `q_valid` dùng reset; 336 bit D/base/length payload dùng tám clock-only process generate với index hằng, ghi đủ tuple khi NORM hoàn thành thành công cùng cạnh đặt valid. Các phép so sánh extent chỉ chạy khi q_valid=1, nên payload chưa khởi tạo không ảnh hưởng control.
 
 **Cách phần code hoạt động.** Có logic tuần tự: register/FSM chỉ cập nhật tại cạnh clock; nonblocking assignment đọc giá trị cũ ở vế phải rồi chốt đồng thời.
 
 **Tín hiệu và dữ liệu chính.** `q_valid`: bitmask hiệu lực scale q; `q_d`: D gắn với từng descriptor q; `q_base`: base SRAM mà cache q mô tả; `q_length`: length mà cache q mô tả; `ws_wr_en`: cho phép ghi workspace; `ws_wr_addr`: địa chỉ ghi workspace; và 12 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 276–292: Phát start và điều khiển PC](<../../../Verilog%20Source%20code/matmulfree.sv#L276>)
+### [Dòng 315–331: Phát start và điều khiển PC](<../../../Verilog%20Source%20code/matmulfree.sv#L315>)
 
-<!-- source-range:276:292 -->
+<!-- source-range:315:331 -->
 ```systemverilog
     always_comb begin
         row_start = 0;
@@ -523,9 +564,9 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
 **Tín hiệu và dữ liệu chính.** `pc_clear`: đưa PC về 0; `running`: core đang thực thi chương trình; `pc_advance`: cho PC tiến1; `sched`: trạng thái scheduler; `instr_q`: instruction13 bit đang thực thi; `pc`: địa chỉ instruction hiện tại.
 
 
-### [Dòng 293–324: Mux workspace](<../../../Verilog%20Source%20code/matmulfree.sv#L293>)
+### [Dòng 332–363: Mux workspace](<../../../Verilog%20Source%20code/matmulfree.sv#L332>)
 
-<!-- source-range:293:324 -->
+<!-- source-range:332:363 -->
 ```systemverilog
     always_comb begin
         ws_rd_en = 0;
@@ -568,9 +609,9 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
 **Tín hiệu và dữ liệu chính.** `ws_rd_en`: request đọc workspace; `ws_rd_addr`: địa chỉ đọc workspace; `ws_wr_en`: cho phép ghi workspace; `ws_wr_addr`: địa chỉ ghi workspace; `ws_wr_data`: word 256 ghi workspace; `active_unit`: unit được cấp cổng workspace.
 
 
-### [Dòng 325–432: Scheduler](<../../../Verilog%20Source%20code/matmulfree.sv#L325>)
+### [Dòng 364–474: Scheduler](<../../../Verilog%20Source%20code/matmulfree.sv#L364>)
 
-<!-- source-range:325:432 -->
+<!-- source-range:364:474 -->
 ```systemverilog
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -593,7 +634,7 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
             end
             case (sched)
                 S_IDLE : ;
-                S_FETCH : begin
+                S_FETCH : if (instr_fetch_valid) begin
                     instr_q <= instr_fetch;
                     sched <= S_START;
                 end
@@ -610,13 +651,16 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
                         TMATMUL : begin
                             effective_mat <= d_mat;
                             if (d_mat.reserved[0]) begin
-                                if (!q_valid[instr_q[2:0]] || q_base[instr_q[2:0]] != d_src0.base_word ||
-                                    q_length[instr_q[2:0]] != d_src0.length) begin
+                                if (!q_valid[instr_q[2:0]]) begin
+                                    error <= 1;
+                                    sched <= S_HALT;
+                                end else if (q_base[instr_q[2:0]] != d_src0.base_word ||
+                                             q_length[instr_q[2:0]] != d_src0.length) begin
                                     error <= 1;
                                     sched <= S_HALT;
                                 end
                                 else sched <= S_COMPOSE_START;
-                            end else if (q_valid[instr_q[2:0]]) begin
+                            end else if (input_has_runtime_scale) begin
                                 // NORM-generated q must consume its runtime scale.
                                 error <= 1;
                                 sched <= S_HALT;
@@ -682,7 +726,7 @@ module matmulfree #(parameter string SIG_LUT_FILE = "") (
 
 ```
 
-**Mục đích.** Bắt đầu lượt chạy, chốt instruction, kiểm tra scale q, đợi done, gom lỗi và dừng ở HALT. Các phép gán trong một clock dùng giá trị cũ ở vế phải.
+**Mục đích.** Bắt đầu lượt chạy, chốt instruction, kiểm tra scale q, đợi done, gom lỗi và dừng ở HALT. Dynamic TM cần valid rồi mới đọc tuple để so khớp ID/base/length; static TM bị reject khi input overlap bất kỳ q extent valid. Cả hai guard đều trước S_TM_START, nên không ghi output khi reject. Các phép gán trong một clock dùng giá trị cũ ở vế phải.
 
 **Cách phần code hoạt động.** Có logic tuần tự: register/FSM chỉ cập nhật tại cạnh clock; nonblocking assignment đọc giá trị cũ ở vế phải rồi chốt đồng thời.
 
@@ -699,7 +743,7 @@ flowchart TB
         DECODE["Instruction storage + opcode decode"]
         SCH["Single-issue scheduler"]
         STATUS["Completion/error aggregation<br/>running / ready / sticky error / overflow"]
-        QMETA@{ shape: rect, label: "Runtime q metadata bank<hr/>D / base / length / valid" }
+        QMETA@{ shape: rect, label: "Runtime q metadata bank<hr/>336-bit payload without async reset<hr/>8 resettable valid bits" }
         ESEL@{ shape: trap-t, label: "Static/dynamic coefficient selector" }
         EFF["Effective matrix descriptor storage"]
     end
@@ -716,8 +760,8 @@ flowchart TB
     STATUS -.-> SCH
     ENGINE -->|"NORM quant_d"| QMETA
     WR["Workspace write address / host descriptor write"] -.->|"Invalidate"| QMETA
-    QMETA -->|"D"| COMP
-    QMETA -.->|"Valid / extent"| SCH
+    QMETA -->|"D masked to zero while invalid"| COMP
+    QMETA -.->|"Valid / extent · alias-overlap guard"| SCH
     ESEL --> EFF
     EFF -->|"Descriptor M/r"| COMP
     SCH -.->|"Compose start"| COMP
@@ -727,9 +771,9 @@ flowchart TB
 ```
 
 
-### [Dòng 433–457: Host đọc status](<../../../Verilog%20Source%20code/matmulfree.sv#L433>)
+### [Dòng 475–499: Host đọc status](<../../../Verilog%20Source%20code/matmulfree.sv#L475>)
 
-<!-- source-range:433:457 -->
+<!-- source-range:475:499 -->
 ```systemverilog
     assign pc_debug = pc;
     assign instr_debug = instr_q;
@@ -765,9 +809,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `pc_debug`: PC đưa ra debug; `pc`: địa chỉ instruction hiện tại; `instr_debug`: instruction đang thực thi đưa ra debug; `instr_q`: instruction13 bit đang thực thi; `host_rdata`: data 32 trả về host; `host_param`: địa chỉ host thuộc parameter SRAM; và 17 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 458–475: Host ghi cấu hình](<../../../Verilog%20Source%20code/matmulfree.sv#L458>)
+### [Dòng 500–517: Host ghi cấu hình](<../../../Verilog%20Source%20code/matmulfree.sv#L500>)
 
-<!-- source-range:458:475 -->
+<!-- source-range:500:517 -->
 ```systemverilog
     assign start_pulse = host_ctrl && host_we && (host_addr[7:2] == 0) && host_wdata[0];
 

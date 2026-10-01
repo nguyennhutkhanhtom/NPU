@@ -1,10 +1,10 @@
 # PC.sv — Program counter
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng.
 
-**Source:** [PC.sv](<../../../Verilog%20Source%20code/PC.sv>). **Số dòng:** 14. **SHA-256:** `395d6552fd3875bb94e8252e1641378394d40f913c82bb7881e9b55e5e32586e`.
+**Source:** [PC.sv](<../../../Verilog%20Source%20code/PC.sv>). **Số dòng:** 16. **SHA-256:** `b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd`.
 
 ## Khối này làm gì?
 
@@ -36,6 +36,8 @@ Reset active-low asynchronous. Clear là điều kiện synchronous tại cạnh
 3. Advance tăng PC sau khi instruction hoàn tất. Không có control thì flip-flop giữ giá trị.
 4. Phép cộng 9 bit có thể wrap, nhưng top chặn advance tại PC 0x1FF (511).
 
+**Quy ước RTL.** Nhánh `if (!rst_n)` chỉ reset asynchronous; `else if (clear)` là clear synchronous riêng, ưu tiên hơn advance. Không gộp clear vào điều kiện reset bất đồng bộ.
+
 ## Các nhóm logic trong source
 
 Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
@@ -61,12 +63,14 @@ module PC(
 **Tín hiệu và dữ liệu chính.** `clear`: đưa PC về 0; `advance`: tăng PC lên instruction kế tiếp; `pc_out`: register PC9 bit.
 
 
-### [Dòng 8–14: Register PC](<../../../Verilog%20Source%20code/PC.sv#L8>)
+### [Dòng 8–16: Register PC](<../../../Verilog%20Source%20code/PC.sv#L8>)
 
-<!-- source-range:8:14 -->
+<!-- source-range:8:16 -->
 ```systemverilog
     always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n || clear)
+        if (!rst_n)
+            pc_out <= 9'h000;
+        else if (clear)
             pc_out <= 9'h000;
         else if (advance)
             pc_out <= pc_out + 9'h001;

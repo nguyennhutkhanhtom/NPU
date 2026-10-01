@@ -1,10 +1,10 @@
 # mem_mapping.sv — Wrapper SRAM 32 KiB
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng.
 
-**Source:** [mem_mapping.sv](<../../../Verilog%20Source%20code/mem_mapping.sv>). **Số dòng:** 38. **SHA-256:** `bb319d2241831086bff39358cf30abe7fd28b0a6f86c85b31d5ba9e1d2e361e5`.
+**Source:** [mem_mapping.sv](<../../../Verilog%20Source%20code/mem_mapping.sv>). **Số dòng:** 40. **SHA-256:** `d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492`.
 
 ## Khối này làm gì?
 
@@ -19,14 +19,14 @@ flowchart LR
     H["Host port<br/>Data 32 bit · word-index 13 bit"]
     subgraph WRAP["mem_mapping"]
         subgraph SRAM["sram_256_wrapper · ADDR_W=10"]
-            PORT["Masked write / compute read / host lane select"]
-            MEM@{ shape: rect, label: "Parameter memory array<hr/>1024 × 256 bit = 32 KiB" }
+            PORT["Masked write / shared synchronous read<br/>Host lane select + host_rvalid"]
+            MEM@{ shape: rect, label: "Parameter memory array<hr/>1024 × 256 bit<hr/>8 bank × 32 bit<hr/>32 KiB" }
             PORT <--> MEM
         end
     end
     C -.->|"Read request"| PORT
     PORT -->|"Read data / valid"| C
-    H <-->|"32-bit lane access"| PORT
+    H <-->|"32-bit lane access + host_rvalid"| PORT
 ```
 
 MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ ra; decoder/demux dùng hình thang ngược lại, mở rộng về phía nhiều ngõ ra. Hình chữ nhật có các vạch ngang biểu diễn bộ nhớ hoặc bank descriptor. Các hình chữ nhật thường là datapath, thanh ghi đơn hoặc giao diện. Nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU. Sơ đồ đặt wrapper trong kết nối hiện tại của matmulfree: compute chỉ đọc. Cổng ghi compute vẫn có trong module nhưng bị nối hằng 0 tại top.
@@ -40,14 +40,16 @@ Compute đọc/ghi word 256; host chọn một slice32. Wrapper không thêm FSM
 3. Tín hiệu nối trực tiếp vào wrapper chung; module không còn mapping FIFO/vector kiểu thesis.
 4. Adapter SRAM macro phải giữ read-valid contract mà ternary core đang chờ.
 
+**Quy ước RTL.** Wrapper nối `host_rvalid` từ SRAM lên top. Host giữ read/address đến ready sau hai cạnh lên; top dùng valid để tránh nhận data cũ. Memory có tám bank 32 bit, write-enable riêng từng lane. Wrapper chỉ nối cổng, không thêm register hoặc đổi latency. Simulation và synthesis dùng cùng hợp đồng memory. Xem [implementation và sơ đồ SRAM](sram_256_wrapper.sv.md).
+
 ## Các nhóm logic trong source
 
 Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
 
 
-### [Dòng 1–20: Hai giao diện](<../../../Verilog%20Source%20code/mem_mapping.sv#L1>)
+### [Dòng 1–21: Hai giao diện](<../../../Verilog%20Source%20code/mem_mapping.sv#L1>)
 
-<!-- source-range:1:20 -->
+<!-- source-range:1:21 -->
 ```systemverilog
 module mem_mapping (
     input logic clk,
@@ -67,7 +69,8 @@ module mem_mapping (
     input logic host_we,
     input logic [12:0] host_addr,
     input logic [31:0] host_wdata,
-    output logic [31:0] host_rdata
+    output logic [31:0] host_rdata,
+    output logic host_rvalid
 );
 ```
 
@@ -78,9 +81,9 @@ module mem_mapping (
 **Tín hiệu và dữ liệu chính.** `rd_en`: request đọc của compute; `rd_addr`: địa chỉ word cần đọc; `rd_data`: word dữ liệu đọc ra; `rd_valid`: response đọc hợp lệ; `wr_en`: cho phép ghi compute; `wr_addr`: địa chỉ word cần ghi; và 6 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 21–38: Instance SRAM](<../../../Verilog%20Source%20code/mem_mapping.sv#L21>)
+### [Dòng 22–40: Instance SRAM](<../../../Verilog%20Source%20code/mem_mapping.sv#L22>)
 
-<!-- source-range:21:38 -->
+<!-- source-range:22:40 -->
 ```systemverilog
     // Shared implementation keeps host packing and read latency consistent.
     sram_256_wrapper #(.ADDR_W(10)) u_sram (
@@ -97,7 +100,8 @@ module mem_mapping (
         .host_we(host_we),
         .host_addr(host_addr),
         .host_wdata(host_wdata),
-        .host_rdata(host_rdata)
+        .host_rdata(host_rdata),
+        .host_rvalid(host_rvalid)
     );
 endmodule
 ```

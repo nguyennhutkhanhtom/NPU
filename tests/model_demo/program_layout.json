@@ -1,0 +1,84 @@
+{
+  "instruction_count_including_halt": 12,
+  "engine_operations": 11,
+  "words": [
+    3648,
+    4225,
+    6274,
+    3842,
+    4300,
+    6339,
+    3843,
+    4244,
+    6274,
+    3842,
+    4444,
+    7680
+  ],
+  "host_instruction_bytes": 48,
+  "physical_instruction_bits": 156,
+  "workspace_descriptors": {
+    "00020000": 4198400,
+    "00020010": 1614807040,
+    "00020020": 539497600,
+    "00020030": 1076368512,
+    "00020040": 1613234176,
+    "00020050": 1342355456
+  },
+  "matrix_descriptor_words": {
+    "00020100": 1140850691,
+    "00020104": 2698371795,
+    "00020108": 1024,
+    "00020110": 1073741827,
+    "00020114": 2694396422,
+    "00020118": 1342177920,
+    "00020120": 1140850691,
+    "00020124": 2700755702,
+    "00020128": 2684355200,
+    "00020130": 637534211,
+    "00020134": 176514126,
+    "00020138": 4026532480
+  },
+  "buffer_layout": [
+    {
+      "name": "input_s16",
+      "base_word": 0,
+      "reserved_words": 16,
+      "reserved_bytes": 512
+    },
+    {
+      "name": "hidden_a_s16",
+      "base_word": 32,
+      "reserved_words": 10,
+      "reserved_bytes": 320
+    },
+    {
+      "name": "hidden_b_s16",
+      "base_word": 64,
+      "reserved_words": 10,
+      "reserved_bytes": 320
+    },
+    {
+      "name": "logits_s32",
+      "base_word": 80,
+      "reserved_words": 2,
+      "reserved_bytes": 64
+    },
+    {
+      "name": "q_s8",
+      "base_word": 96,
+      "reserved_words": 8,
+      "reserved_bytes": 256
+    },
+    {
+      "name": "z_s32",
+      "base_word": 128,
+      "reserved_words": 32,
+      "reserved_bytes": 1024
+    }
+  ],
+  "workspace_reserved_payload_bytes": 2496,
+  "workspace_high_water_bytes": 5120,
+  "parameter_weight_bytes": 31360,
+  "parameter_image_bytes": 32768
+}

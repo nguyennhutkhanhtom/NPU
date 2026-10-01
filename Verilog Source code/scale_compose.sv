@@ -13,30 +13,46 @@ module scale_compose (
     state_t state;
     logic [47:0] numerator_base;
     logic [5:0] base_r, candidate;
-    logic [63:0] numerator, denominator, quotient, remainder;
+    logic [47:0] numerator;
+    logic [24:0] denominator;
+    logic [47:0] quotient;
+    logic [24:0] remainder;
     logic div_busy, div_done, div_zero;
-    logic [64:0] rounded, twice_rem;
+    logic [48:0] rounded;
+    logic [25:0] twice_rem;
+    logic round_up;
     integer shift;
     logic shift_overflow;
+    logic coefficient_fits;
+    // U24 max is odd: the half-way value rounds up to 2^24, which is invalid.
+    // RNE(n/d) fits iff n < (2^24 - 1/2)*d. For d=127*65536 this is U47.
+    localparam logic [46:0] COEFFICIENT_LIMIT = 47'h7eff_ffc0_8000;
     always_comb begin
         shift = int'(candidate) - int'(base_r);
-        numerator = {16'h0000, numerator_base};
-        denominator = 64'h0000_0000_007f_0000;
+        numerator = numerator_base;
+        denominator = 25'h07f_0000;
         shift_overflow = 0;
         if (shift >= 0) begin
-            shift_overflow = numerator > (64'hffff_ffff_ffff_ffff >> $unsigned(shift));
+            shift_overflow = numerator > (48'hffff_ffff_ffff >> $unsigned(shift));
             numerator = numerator << $unsigned(shift);
         end else begin
-            shift_overflow = denominator > (64'hffff_ffff_ffff_ffff >> $unsigned( - shift));
+            shift_overflow = denominator > (25'h1ff_ffff >> $unsigned( - shift));
             denominator = denominator << $unsigned( - shift);
         end
+        // Reject overlarge coefficients before spending 48 divider cycles.
+        // For shift <= -2, even the largest U24*U24 product is below 4*limit.
+        coefficient_fits = 1'b1;
+        if (shift >= 0) coefficient_fits = numerator < {1'b0, COEFFICIENT_LIMIT};
+        else if (shift == -1) coefficient_fits = numerator_base < {COEFFICIENT_LIMIT, 1'b0};
         twice_rem = {1'b0, remainder} << 1;
-        rounded = {1'b0, quotient} +
-        ((twice_rem > {1'b0, denominator}) ||
-            ((twice_rem == {1'b0, denominator}) && quotient[0]));
+        round_up = (twice_rem > {1'b0, denominator}) ||
+            ((twice_rem == {1'b0, denominator}) && quotient[0]);
+        rounded = {1'b0, quotient} + {48'h0000_0000_0000, round_up};
     end
-    div #(.NUM_W(64),
-        .DEN_W(64)) u_div(
+    // Every launch has shift >= -2. A fitting positive shift gives n < limit;
+    // a negative shift leaves the U48 product unchanged and d <= 127*65536*4.
+    div #(.NUM_W(48),
+        .DEN_W(25)) u_div(
         .clk(clk),
         .rst_n(rst_n),
         .start(state == DIV_START),
@@ -77,12 +93,22 @@ module scale_compose (
                     else state <= PREP;
                 end
                 PREP : begin
-                    if (shift_overflow) begin
+                    // Starting shift is nonnegative, and shift=-2 always fits.
+                    // Guard the narrowed divider interface if that invariant is violated.
+                    if (shift < -2) begin
+                        format_error <= 1;
+                        state <= FINISH;
+                    end else if (shift_overflow) begin
                         if (shift < 0 || candidate == 0) begin
                             format_error <= 1;
                             state <= FINISH;
                         end
                         else candidate <= candidate - 1'b1;
+                    end else if (!coefficient_fits) begin
+                        if (candidate == 0) begin
+                            format_error <= 1;
+                            state <= FINISH;
+                        end else candidate <= candidate - 1'b1;
                     end else state <= DIV_START;
                 end
                 DIV_START : state <= DIV_WAIT;
@@ -91,7 +117,7 @@ module scale_compose (
                         format_error <= 1;
                         state <= FINISH;
                     end
-                    else if (rounded > 65'h00ff_ffff) begin
+                    else if (rounded > 49'h00ff_ffff) begin
                         if (candidate == 0) begin
                             format_error <= 1;
                             state <= FINISH;

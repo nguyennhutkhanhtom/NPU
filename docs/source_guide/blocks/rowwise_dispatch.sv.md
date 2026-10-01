@@ -1,10 +1,10 @@
 # rowwise_dispatch.sv — Đọc tensor, gọi ALU và ghi output
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — điều phối rowwise.
 
-**Source:** [rowwise_dispatch.sv](<../../../Verilog%20Source%20code/rowwise_dispatch.sv>). **Số dòng:** 166. **SHA-256:** `6ba91575a2308df739ccff8aec593d907e66996d6c4f2b536485c930b38fc208`.
+**Source:** [rowwise_dispatch.sv](<../../../Verilog%20Source%20code/rowwise_dispatch.sv>). **Số dòng:** 166. **SHA-256:** `4fb73e52c6fc0afe70277b9e1d5a8817cbac0d1465e691d8801581c5444d1ae2`.
 
 ## Khối này làm gì?
 
@@ -53,6 +53,8 @@ MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ
 4. START_ALU phát xung một chu kỳ; WAIT_ALU giữ input đến `alu_done`. Format error ngăn ghi word lỗi.
 5. WRITE ghi một word 256 bit rồi tăng word index. `valid_elems` bảo đảm tail của word cuối không trở thành dữ liệu thật.
 
+**Quy ước RTL.** Số phần tử hữu ích của word được cast 5 bit, word count cast 8 bit. Tail vẫn bị mask và output padding zero; không đổi descriptor/ALU contract.
+
 ## Các nhóm logic trong source
 
 Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
@@ -62,7 +64,7 @@ Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòn
 
 <!-- source-range:1:22 -->
 ```systemverilog
-module rowwise_dispatch #(parameter string SIG_LUT_FILE = "") (
+module rowwise_dispatch (
     input logic clk, rst_n, start,
     input logic [3:0] op,
     input npu_pkg::ws_desc_t a_desc, b_desc, dst_desc,
@@ -124,7 +126,7 @@ module rowwise_dispatch #(parameter string SIG_LUT_FILE = "") (
         if (dst_desc.fmt == FMT_U16 && dst_desc.frac_bits != 15) invalid = 1;
         if (a_desc.base_word != dst_desc.base_word &&
             ranges_overlap(int'(a_desc.base_word), ws_words(a_desc), int'(dst_desc.base_word), ws_words(dst_desc))) invalid = 1;
-        valid_elems = (int'(source_a_desc_q.length) - int'(word_index_q) * 16 >= 16) ? 16 : int'(source_a_desc_q.length) - int'(word_index_q) * 16;
+        valid_elems = (int'(source_a_desc_q.length) - int'(word_index_q) * 16 >= 16) ? 5'd16 : 5'(int'(source_a_desc_q.length) - int'(word_index_q) * 16);
     end
 ```
 
@@ -139,7 +141,7 @@ module rowwise_dispatch #(parameter string SIG_LUT_FILE = "") (
 
 <!-- source-range:52:71 -->
 ```systemverilog
-    rowwise_op #(.SIG_LUT_FILE(SIG_LUT_FILE)) u_alu(
+    rowwise_op u_alu(
         .clk(clk),
         .rst_n(rst_n),
         .start(state == START_ALU),
@@ -246,7 +248,7 @@ module rowwise_dispatch #(parameter string SIG_LUT_FILE = "") (
                     destination_desc_q <= dst_desc;
                     operation_q <= op;
                     word_index_q <= 0;
-                    word_count_q <= (int'(a_desc.length) + 15) / 16;
+                    word_count_q <= 8'((int'(a_desc.length) + 15) / 16);
                     busy <= 1;
                     overflow <= 0;
                     format_error <= invalid;

@@ -1,12 +1,12 @@
 # sigmoid_lut.svh — ROM sigmoid hằng trong RTL
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
-**Source:** [sigmoid_lut.svh](<../../../Verilog%20Source%20code/sigmoid_lut.svh>). **SHA-256:** `4c1fcc096cb49c985a296a470eebd86b1bb3cd66930c7cd1d7d6f2ef8f0b4bf3`.
+**Source:** [sigmoid_lut.svh](<../../../Verilog%20Source%20code/sigmoid_lut.svh>). **Số dòng:** 262. **SHA-256:** `3d4fc0b37d284c4f7b3a4cd2587acfaf3e35dc33b2209550d7f97ef8555e0094`.
 
 ## Cách sử dụng
 
-Cùng 257 mẫu tại x=−8+i/16, raw=RNE(0x8000/(1+exp(−x))). Raw lưu 16 bit và có scale 2^−15. Công thức exp chỉ dùng lúc tạo bảng. ROM mới không dùng sigContent.mif. Mỗi dòng dữ liệu bên dưới được giải thích bằng index, tọa độ x và giá trị gate thực.
+Cùng 257 mẫu tại x=−8+i/16, raw=RNE(0x8000/(1+exp(−x))). Raw lưu 16 bit và có scale 2^−15. Công thức exp chỉ dùng lúc tạo bảng. `sigmoid_lut.svh` là ROM hằng dùng trong RTL; `sigmoid_257.mem` là bản hex để generator/test đối chiếu. Không load file hex trong datapath. ROM hiện tại không dùng sigContent.mif. Mỗi dòng dữ liệu bên dưới được giải thích bằng index, tọa độ x và giá trị gate thực.
 
 | Dòng | Code/dữ liệu gốc | Giải thích |
 |---:|---|---|

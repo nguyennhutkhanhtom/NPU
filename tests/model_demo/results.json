@@ -1,0 +1,548 @@
+{
+  "status": "PASS",
+  "verified_utc": "2026-10-01T04:23:28+00:00",
+  "compile_errors": 0,
+  "compile_warnings": 0,
+  "simulation_errors": 0,
+  "simulation_warnings": 0,
+  "rtl_sources": {
+    "acc_mul.sv": "ba8eab6bcc06296d5c69b9c973f54a2e7f81dc73915528b1171b7cf1e94f8860",
+    "addsub.sv": "14484f9f2777b2662cfa8538ab92149d0e7f80be1012d21fc0906d8ea45d3b98",
+    "ctrl_unit.sv": "b4daf5e7d1b059306d11a907e2512c917d60ec46c4dd68267a1190ed1f579968",
+    "de_reg.sv": "dbb7c23f6bda7e1f5b435bd34fbb4cdca9ef63f6af3a9b535cf4030f7f3dd50d",
+    "descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+    "div.sv": "c2c7e524ecc7219f8a3792eca7957626991e2127a4c7f0fa31d4df272f321f54",
+    "em_reg.sv": "5e57748e00ff223653210e970a6a8e6d95ba124fc023c6b92b368daa692cb9ee",
+    "exp.sv": "d94cf43353c33633ec7a30fbf3def2e0841a669492ec876d660c446ef7d11529",
+    "fd_reg.sv": "75de20e3fb5abe35246fc7f003a6159ce7f78a38b80e6a26d795881b56811565",
+    "hazard_detect.sv": "83e4434faa221906913debcd24e6a6db7366f15fe4d3e7ed37f06ec9f31991b5",
+    "ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+    "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+    "matmulfree.sv": "3a785e7285519557a973fc8597449c56d0ffdc8bf0b62ca6bbdbdfaf6d132bcc",
+    "mem_burst.v": "bd2467f0fe9ed199d522a674f89c72dadcbc2f19752fbc0bdb35397135cc9f2f",
+    "mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+    "mul.sv": "63bb267b9cc884ee766f94a0fda1039cb5ed61bb6f6002bfa356a3f6423bcbac",
+    "mw_reg.sv": "8f27a55bda16912be3fb069bd6cf09abaf740a186c9b2503171158bb59109960",
+    "norm.sv": "03e8f34433b60a8f81509c38fbe4467cf0ef1fd363a4e2a7d41212463f2a2d1b",
+    "norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+    "npu_pkg.sv": "1061016c51092f4f9269fc99392c30bc1bd2117103ef5f49474a296f5077a343",
+    "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+    "postscale.sv": "462922989c54f4b4346d27cd05d5cdf342bb56a882c0cb8325ef035c36c7452a",
+    "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+    "rowwise_dispatch.sv": "4fb73e52c6fc0afe70277b9e1d5a8817cbac0d1465e691d8801581c5444d1ae2",
+    "rowwise_op.sv": "a3f17f1e9c346841f76b31f39eda799818a139b98a2a7059778f1336d3c4ad46",
+    "scale_compose.sv": "b2f2bdcb88656ff43d92f5e91ed4dbc12ee60c560e09ea6425cd9e92639e1868",
+    "sigmoid.sv": "8001c3d582b072de2146d085fbb4363350a6f876dfa4d9195bc54d3d52f944c9",
+    "sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
+    "sigmoid_lut.svh": "3d4fc0b37d284c4f7b3a4cd2587acfaf3e35dc33b2209550d7f97ef8555e0094",
+    "sram_256_wrapper.sv": "80d77f1ad41fda47969ca686807db5f069b81667b4fc5f613ff476264da8d10b",
+    "ternary_mul.sv": "0593ecc70787ee9746c6c26e7d8507c0f2e5ab05f14b1226e5efc81d052bca45"
+  },
+  "demo_assets": {
+    "compile.log": "2b5e5dbb377d6d9215513ebd8856c953ed201825346b54ae8850fe273b884f5c",
+    "cpu_reference.json": "9d72da1cef3525e7d29f06e53064765b4cb968185d966856508b1f346f816464",
+    "export_demo.py": "eac9965fbbdc07d755f2eba6f7c20a0dcfd2f18dbbf0c3672acc1cb8abbf0519",
+    "fetch_assets.py": "911438edc50f8148298171f747a8eb609cbb579a05e71af9c884bf494afef398",
+    "finalize.py": "aa67123e48ce00a594831a2c08114a8f810eced2dffa4718fa539ab258973f0f",
+    "host_vectors.txt": "bb3d4c79395b856f0ae43da4192c4f7cf9c4dd22dc8e05f5d9b7b09687609733",
+    "model_demo.log": "cfd1aa70ec058b2f715f812e00b02b5c63ef8d150d723246e7393cabcc50c4a3",
+    "parameter.bin": "25b2543559e6f36ca530f0ef63813edff10485f9078ca0540c7819d9672f109d",
+    "parameter.mem": "99f6838d74221e2a790d7e407c33dff67f3e00cac0d10cf0c053a0d969f8195e",
+    "program.mem": "3796d282eee93eef7839565cee1b28866771e53d08617100230d52c552c4298e",
+    "program_layout.json": "d5d97c8abbce3c0f23a1fbacdd0fdc69c41fce11d31533d38f3028c3f98c285a",
+    "run.ps1": "a443e694ab4e464d5628d0dfd21f3992cbfdedd3cee1c75f2d0196c853350e82",
+    "samples_predictions.png": "d160ec6daa536890e1310cb59aea7df3f06cae6fca757ebf5197a1ab60a84a78",
+    "setup.ps1": "f639ebb1072d9cb40123f2135ae27b6fa8993e0eb6652feff6a9872c17990428",
+    "tb_model_demo.sv": "8cb6bd77f82fca6c29f6364a174aebe376bec0b252735132230af0d5aac0da81",
+    "workspace_input_0.mem": "aacb7787fd395a458df19535bc3f4f41f663ca5196b21184927e4816acef6bfe",
+    "workspace_input_1.mem": "a80b0e3c4c105602a35b05c903b9ebc402f621d6870b3443076b48e9a314f523",
+    "workspace_input_2.mem": "9f7c22926c37b383144fc720ed3faf1af9921efb6530c62547c3ccc948772282",
+    "workspace_input_3.mem": "ed58c940c154733525ad31208f456a72e6b5244b90fdce5d92235757aedb400c",
+    "workspace_input_4.mem": "72b5806d700c9d8fd5f5861d593907d8186dcb2cf56db4c7840d0cda2dcbf4c8",
+    "workspace_input_5.mem": "4e77266f767fd86e918785c165365ef97ef7a1a4d86c8b1958debe11f9520fb2",
+    "workspace_input_6.mem": "960a15c14c2a93d2712fadbc88293c18cb0deba00689fb8e89ef6d4bd881749e",
+    "workspace_input_7.mem": "911df367b19a9393f69159927c0fdf3a3517723ea71847b07ad9e504733899d5",
+    "workspace_input_8.mem": "b5336c0d368673679bac3b6d615c7403b9eec4544bdf848fd478f4491bdffb67",
+    "workspace_input_9.mem": "ace8f7b11d9174448d8eb530ab6c85fb3494c5780d4b6777cb1b062782048bfe"
+  },
+  "upstream": {
+    "commit": "0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f",
+    "downloaded_utc": "2026-10-01T01:40:24.7110975Z",
+    "files": [
+      {
+        "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/models.py",
+        "sha256": "fab6fe8a72082411a88e8eb45a1c00ce7f44cb046ea731aee6c4d90737a79fdb",
+        "path": "models.py",
+        "local": "models.py",
+        "bytes": 12286
+      },
+      {
+        "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/BitNetMCU.py",
+        "sha256": "a5f44a72bf5518a03a9d91da73e6aa6df1de924bc1c170f3095e8c1c629ccaa7",
+        "path": "BitNetMCU.py",
+        "local": "BitNetMCU.py",
+        "bytes": 32592
+      },
+      {
+        "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/BitNetMCU_MNIST_test_data.h",
+        "sha256": "174d37e67fc8fd6414a00eee4838b7e3af5459c0eeab7f93893a8f424f63c99f",
+        "path": "BitNetMCU_MNIST_test_data.h",
+        "local": "BitNetMCU_MNIST_test_data.h",
+        "bytes": 15890
+      },
+      {
+        "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/test_inference.py",
+        "sha256": "eec580cb0d21dc646d9a4c0feb9cf33773821c6701845ce905219a38b9552fd4",
+        "path": "test_inference.py",
+        "local": "test_inference.py",
+        "bytes": 6714
+      },
+      {
+        "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/trainingparameters.yaml",
+        "sha256": "905547a6b32965554ded492990956cd7d4501b0a64663509284766d90ae0bc45",
+        "path": "trainingparameters.yaml",
+        "local": "trainingparameters.yaml",
+        "bytes": 4336
+      },
+      {
+        "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/readme.md",
+        "sha256": "7922b30316e18fc06ca91ad425dae1866b9b15863010715466de9714d51c38a6",
+        "path": "readme.md",
+        "local": "readme.md",
+        "bytes": 5927
+      },
+      {
+        "url": "https://raw.githubusercontent.com/cpldcpu/BitNetMCU/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/modeldata/a11_Opt12k_cos_Aug_BitMnist_PerTensor_Binary_RMS_width160_160_160_lr0.001_decay0.1_stepsize10_bs128_epochs60.pth",
+        "sha256": "cd1573f0bfd7f4b1bc734601d98c9df122a2a8fedf41066f4ba9bd17ac4af289",
+        "path": "modeldata/a11_Opt12k_cos_Aug_BitMnist_PerTensor_Binary_RMS_width160_160_160_lr0.001_decay0.1_stepsize10_bs128_epochs60.pth",
+        "local": "a11_Opt12k_cos_Aug_BitMnist_PerTensor_Binary_RMS_width160_160_160_lr0.001_decay0.1_stepsize10_bs128_epochs60.pth",
+        "bytes": 377853
+      }
+    ],
+    "repository": "https://github.com/cpldcpu/BitNetMCU"
+  },
+  "checkpoint_history": {
+    "checkpoint_commit": "1e06ef3b3c028aac516dc7ad7607cfe61af31320",
+    "history": {
+      "sha": "1e06ef3b3c028aac516dc7ad7607cfe61af31320",
+      "date": "2024-04-15T10:30:09Z",
+      "message": "reference models"
+    }
+  },
+  "checkpoint_sha256": "cd1573f0bfd7f4b1bc734601d98c9df122a2a8fedf41066f4ba9bd17ac4af289",
+  "checkpoint_graph_source_url": "https://github.com/cpldcpu/BitNetMCU/blob/1e06ef3b3c028aac516dc7ad7607cfe61af31320/BitNetMCU.py",
+  "historical_source_hashes": {
+    "historical_BitNetMCU.py": "7df26fc7ef6be83eddbd432463f52fccdab2f2853e6adf3f7ab5234bd00e6e4a",
+    "historical_test_inference.py": "d99c767d06cfa5e9df09d00c9d62894d67b16ed3b6216d626c91812814f6750a",
+    "historical_training.py": "979081c7b5776e65ceb39c5fa3ccb3b31c1abb33ab404ca6cdfbae15168a5ebb"
+  },
+  "tools": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "numpy": "2.3.5",
+    "simulator_compile_header": "Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020",
+    "scoped_python_packages": {
+      "filelock": "4.0.7",
+      "fsspec": "2026.9.0",
+      "Jinja2": "3.1.6",
+      "MarkupSafe": "3.0.3",
+      "mpmath": "1.3.0",
+      "networkx": "3.7",
+      "sympy": "1.13.1",
+      "torch": "2.5.1+cpu"
+    }
+  },
+  "commands": 22492,
+  "host_checks": 12402,
+  "sample_checks_including_repeats": 12,
+  "runs": [
+    {
+      "sample": 0,
+      "layer": 0,
+      "active_cycles": 6416
+    },
+    {
+      "sample": 0,
+      "layer": 1,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 0,
+      "layer": 2,
+      "active_cycles": 4265
+    },
+    {
+      "sample": 0,
+      "layer": 3,
+      "active_cycles": 967
+    },
+    {
+      "sample": 1,
+      "layer": 0,
+      "active_cycles": 6416
+    },
+    {
+      "sample": 1,
+      "layer": 1,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 1,
+      "layer": 2,
+      "active_cycles": 4265
+    },
+    {
+      "sample": 1,
+      "layer": 3,
+      "active_cycles": 968
+    },
+    {
+      "sample": 2,
+      "layer": 0,
+      "active_cycles": 6416
+    },
+    {
+      "sample": 2,
+      "layer": 1,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 2,
+      "layer": 2,
+      "active_cycles": 4265
+    },
+    {
+      "sample": 2,
+      "layer": 3,
+      "active_cycles": 968
+    },
+    {
+      "sample": 3,
+      "layer": 0,
+      "active_cycles": 6416
+    },
+    {
+      "sample": 3,
+      "layer": 1,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 3,
+      "layer": 2,
+      "active_cycles": 4265
+    },
+    {
+      "sample": 3,
+      "layer": 3,
+      "active_cycles": 968
+    },
+    {
+      "sample": 4,
+      "layer": 0,
+      "active_cycles": 6416
+    },
+    {
+      "sample": 4,
+      "layer": 1,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 4,
+      "layer": 2,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 4,
+      "layer": 3,
+      "active_cycles": 968
+    },
+    {
+      "sample": 5,
+      "layer": 0,
+      "active_cycles": 6416
+    },
+    {
+      "sample": 5,
+      "layer": 1,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 5,
+      "layer": 2,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 5,
+      "layer": 3,
+      "active_cycles": 968
+    },
+    {
+      "sample": 6,
+      "layer": 0,
+      "active_cycles": 6416
+    },
+    {
+      "sample": 6,
+      "layer": 1,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 6,
+      "layer": 2,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 6,
+      "layer": 3,
+      "active_cycles": 968
+    },
+    {
+      "sample": 7,
+      "layer": 0,
+      "active_cycles": 6416
+    },
+    {
+      "sample": 7,
+      "layer": 1,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 7,
+      "layer": 2,
+      "active_cycles": 4265
+    },
+    {
+      "sample": 7,
+      "layer": 3,
+      "active_cycles": 968
+    },
+    {
+      "sample": 8,
+      "layer": 0,
+      "active_cycles": 6416
+    },
+    {
+      "sample": 8,
+      "layer": 1,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 8,
+      "layer": 2,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 8,
+      "layer": 3,
+      "active_cycles": 968
+    },
+    {
+      "sample": 9,
+      "layer": 0,
+      "active_cycles": 6416
+    },
+    {
+      "sample": 9,
+      "layer": 1,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 9,
+      "layer": 2,
+      "active_cycles": 4266
+    },
+    {
+      "sample": 9,
+      "layer": 3,
+      "active_cycles": 968
+    },
+    {
+      "sample": 10,
+      "layer": 4,
+      "active_cycles": 15899
+    },
+    {
+      "sample": 10,
+      "layer": 5,
+      "active_cycles": 15899
+    }
+  ],
+  "predictions": [
+    {
+      "sample": 0,
+      "label": 3,
+      "cpu_prediction": 3,
+      "rtl_prediction": 3
+    },
+    {
+      "sample": 1,
+      "label": 2,
+      "cpu_prediction": 2,
+      "rtl_prediction": 2
+    },
+    {
+      "sample": 2,
+      "label": 0,
+      "cpu_prediction": 0,
+      "rtl_prediction": 0
+    },
+    {
+      "sample": 3,
+      "label": 9,
+      "cpu_prediction": 9,
+      "rtl_prediction": 9
+    },
+    {
+      "sample": 4,
+      "label": 0,
+      "cpu_prediction": 0,
+      "rtl_prediction": 0
+    },
+    {
+      "sample": 5,
+      "label": 6,
+      "cpu_prediction": 6,
+      "rtl_prediction": 6
+    },
+    {
+      "sample": 6,
+      "label": 9,
+      "cpu_prediction": 9,
+      "rtl_prediction": 9
+    },
+    {
+      "sample": 7,
+      "label": 2,
+      "cpu_prediction": 2,
+      "rtl_prediction": 2
+    },
+    {
+      "sample": 8,
+      "label": 7,
+      "cpu_prediction": 7,
+      "rtl_prediction": 7
+    },
+    {
+      "sample": 9,
+      "label": 7,
+      "cpu_prediction": 7,
+      "rtl_prediction": 7
+    },
+    {
+      "sample": 10,
+      "label": 3,
+      "cpu_prediction": 3,
+      "rtl_prediction": 3
+    },
+    {
+      "sample": 10,
+      "label": 3,
+      "cpu_prediction": 3,
+      "rtl_prediction": 3
+    }
+  ],
+  "unique_samples": 10,
+  "original_cpu_correct": 10,
+  "export_integer_correct": 10,
+  "rtl_correct": 10,
+  "intermediate_layers_checked": 40,
+  "whole_graph_runs": 2,
+  "whole_graph_active_cycles": [
+    15899,
+    15899
+  ],
+  "program_layout": {
+    "instruction_count_including_halt": 12,
+    "engine_operations": 11,
+    "words": [
+      3648,
+      4225,
+      6274,
+      3842,
+      4300,
+      6339,
+      3843,
+      4244,
+      6274,
+      3842,
+      4444,
+      7680
+    ],
+    "host_instruction_bytes": 48,
+    "physical_instruction_bits": 156,
+    "workspace_descriptors": {
+      "00020000": 4198400,
+      "00020010": 1614807040,
+      "00020020": 539497600,
+      "00020030": 1076368512,
+      "00020040": 1613234176,
+      "00020050": 1342355456
+    },
+    "matrix_descriptor_words": {
+      "00020100": 1140850691,
+      "00020104": 2698371795,
+      "00020108": 1024,
+      "00020110": 1073741827,
+      "00020114": 2694396422,
+      "00020118": 1342177920,
+      "00020120": 1140850691,
+      "00020124": 2700755702,
+      "00020128": 2684355200,
+      "00020130": 637534211,
+      "00020134": 176514126,
+      "00020138": 4026532480
+    },
+    "buffer_layout": [
+      {
+        "name": "input_s16",
+        "base_word": 0,
+        "reserved_words": 16,
+        "reserved_bytes": 512
+      },
+      {
+        "name": "hidden_a_s16",
+        "base_word": 32,
+        "reserved_words": 10,
+        "reserved_bytes": 320
+      },
+      {
+        "name": "hidden_b_s16",
+        "base_word": 64,
+        "reserved_words": 10,
+        "reserved_bytes": 320
+      },
+      {
+        "name": "logits_s32",
+        "base_word": 80,
+        "reserved_words": 2,
+        "reserved_bytes": 64
+      },
+      {
+        "name": "q_s8",
+        "base_word": 96,
+        "reserved_words": 8,
+        "reserved_bytes": 256
+      },
+      {
+        "name": "z_s32",
+        "base_word": 128,
+        "reserved_words": 32,
+        "reserved_bytes": 1024
+      }
+    ],
+    "workspace_reserved_payload_bytes": 2496,
+    "workspace_high_water_bytes": 5120,
+    "parameter_weight_bytes": 31360,
+    "parameter_image_bytes": 32768
+  },
+  "weight_load_host_writes": 8192,
+  "input_load_host_writes": 1408,
+  "loading_note": "Loading write counts are separate from active program cycles; staged observational host reads are excluded from active cycles.",
+  "accuracy_scope": "Ten supplied labelled MNIST examples only; no full dataset accuracy claim.",
+  "semantic_notes": [
+    "Binary codes are canonical CPU float32 sign(w-mean(w)); one fc3 weight maps to zero.",
+    "Learned meanabs weight magnitude is preserved in fixed-point factors and runtime composition.",
+    "Original CPU graph outputs are float32; RTL is bit-exact to independent exported integer reference.",
+    "2496 bytes is reserved buffer payload, not a measured dynamic liveness peak.",
+    "Simulation clock and cycle counts are not ASIC timing or PPA measurements."
+  ]
+}

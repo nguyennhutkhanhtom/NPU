@@ -32,7 +32,9 @@ module ternary_mul (
     mat_desc_t matrix_desc_q;
     logic [9:0] output_row_q, input_chunk_q;
     logic [9:0] chunks_per_row;
-    logic [9:0] weight_words_per_row;
+    logic [2:0] weight_words_per_row, weight_stride_next;
+    logic [11:0] weight_extent;
+    logic [9:0] weight_row_addr_q;
     logic [255:0] q_word, w_word;
     logic got_q, got_w;
     logic signed [17:0] accumulator_q;
@@ -57,6 +59,19 @@ module ternary_mul (
     logic [255:0] pack_buf;
     logic [4:0] pack_count;
     logic [7:0] out_word;
+
+    // Validated K is 1..512, so each row occupies one to four weight words.
+    // Shift/add bounds checking and a row pointer avoid two address multipliers.
+    always_comb begin
+        weight_stride_next = 3'((int'(mat_desc.k_len) + 127) / 128);
+        case (weight_stride_next)
+            3'd1 : weight_extent = {2'b0, mat_desc.n_rows};
+            3'd2 : weight_extent = {1'b0, mat_desc.n_rows, 1'b0};
+            3'd3 : weight_extent = {1'b0, mat_desc.n_rows, 1'b0} + {2'b0, mat_desc.n_rows};
+            3'd4 : weight_extent = {mat_desc.n_rows, 2'b0};
+            default : weight_extent = '0; // Invalid K is rejected before any read.
+        endcase
+    end
 
     always_comb begin
         weight_bit_base = {input_chunk_q[1:0], 6'b0};
@@ -94,7 +109,7 @@ module ternary_mul (
             ws_rd_en = 1;
             ws_rd_addr = input_desc_q.base_word + input_chunk_q[7:0];
             param_rd_en = (input_chunk_q[1:0] == 0);
-            param_rd_addr = matrix_desc_q.weight_base + output_row_q * weight_words_per_row + (input_chunk_q >> 2);
+            param_rd_addr = weight_row_addr_q + (input_chunk_q >> 2);
         end else if (state == REQ_BIAS) begin
             param_rd_en = 1;
             param_rd_addr = matrix_desc_q.bias_base + (output_row_q >> 3);
@@ -119,6 +134,7 @@ module ternary_mul (
             input_chunk_q <= 0;
             chunks_per_row <= 0;
             weight_words_per_row <= 0;
+            weight_row_addr_q <= 0;
             q_word <= 0;
             w_word <= 0;
             got_q <= 0;
@@ -142,7 +158,8 @@ module ternary_mul (
                     input_chunk_q <= 0;
                     accumulator_q <= 0;
                     chunks_per_row <= 10'((mat_desc.k_len + 31) >> 5);
-                    weight_words_per_row <= 10'((mat_desc.k_len + 127) >> 7);
+                    weight_words_per_row <= weight_stride_next;
+                    weight_row_addr_q <= mat_desc.weight_base;
                     pack_buf <= 0;
                     pack_count <= 0;
                     out_word <= 0;
@@ -154,7 +171,7 @@ module ternary_mul (
                         mat_desc.k_len == 0 || mat_desc.k_len > K_MAX || mat_desc.n_rows == 0 ||
                         q_desc.length != mat_desc.k_len || out_desc.length != mat_desc.n_rows ||
                         mat_desc.scale_r > 47 ||
-                        int'(mat_desc.weight_base) + int'(mat_desc.n_rows) * ((int'(mat_desc.k_len) + 127) / 128) > 1024 ||
+                        int'(mat_desc.weight_base) + int'(weight_extent) > 1024 ||
                         (!mat_desc.reserved[1] && int'(mat_desc.bias_base) + (int'(mat_desc.n_rows) + 7) / 8 > 1024) ||
                         ranges_overlap(int'(q_desc.base_word), ws_words(q_desc), int'(out_desc.base_word), ws_words(out_desc))) begin
                         format_error <= 1;
@@ -209,6 +226,7 @@ module ternary_mul (
                         else begin
                             pack_count <= pack_count + 1'b1;
                             output_row_q <= output_row_q + 1'b1;
+                            weight_row_addr_q <= weight_row_addr_q + {7'h00, weight_words_per_row};
                             accumulator_q <= 0;
                             state <= REQ_CHUNK;
                         end
@@ -218,6 +236,7 @@ module ternary_mul (
                         else begin
                             pack_count <= pack_count + 1'b1;
                             output_row_q <= output_row_q + 1'b1;
+                            weight_row_addr_q <= weight_row_addr_q + {7'h00, weight_words_per_row};
                             accumulator_q <= 0;
                             state <= REQ_CHUNK;
                         end
@@ -230,6 +249,7 @@ module ternary_mul (
                     if (output_row_q + 1 >= matrix_desc_q.n_rows) state <= FINISH;
                     else begin
                         output_row_q <= output_row_q + 1'b1;
+                        weight_row_addr_q <= weight_row_addr_q + {7'h00, weight_words_per_row};
                         accumulator_q <= 0;
                         state <= REQ_CHUNK;
                     end

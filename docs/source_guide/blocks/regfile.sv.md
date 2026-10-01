@@ -1,10 +1,10 @@
 # regfile.sv — Wrapper SRAM 8 KiB
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng.
 
-**Source:** [regfile.sv](<../../../Verilog%20Source%20code/regfile.sv>). **Số dòng:** 38. **SHA-256:** `913463c2d691dd5362fbad83753059615a4664085fcc74a18e4ddb8262c098bd`.
+**Source:** [regfile.sv](<../../../Verilog%20Source%20code/regfile.sv>). **Số dòng:** 40. **SHA-256:** `8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef`.
 
 ## Khối này làm gì?
 
@@ -19,13 +19,13 @@ flowchart LR
     H["Host/debug port<br/>Data 32 bit · word-index 11 bit"]
     subgraph WRAP["regfile.sv — module register"]
         subgraph SRAM["sram_256_wrapper · ADDR_W=8"]
-            PORT["Masked write / compute read / host lane select"]
-            MEM@{ shape: rect, label: "Workspace memory array<hr/>256 × 256 bit = 8 KiB" }
+            PORT["Masked write / shared synchronous read<br/>Host lane select + host_rvalid"]
+            MEM@{ shape: rect, label: "Workspace memory array<hr/>256 × 256 bit<hr/>8 bank × 32 bit<hr/>8 KiB" }
             PORT <--> MEM
         end
     end
     C <-->|"Read/write + valid"| PORT
-    H <-->|"32-bit lane access"| PORT
+    H <-->|"32-bit lane access + host_rvalid"| PORT
 ```
 
 MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ ra; decoder/demux dùng hình thang ngược lại, mở rộng về phía nhiều ngõ ra. Hình chữ nhật có các vạch ngang biểu diễn bộ nhớ hoặc bank descriptor. Các hình chữ nhật thường là datapath, thanh ghi đơn hoặc giao diện. Nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.
@@ -39,14 +39,16 @@ Compute đọc/ghi word 256; host chọn một slice32. Wrapper không thêm FSM
 3. Port được nối thẳng vào `sram_256_wrapper`; wrapper không thêm storage, latency hoặc arbitration.
 4. Timing read, mask write và quy tắc không overlap do implementation chung quyết định.
 
+**Quy ước RTL.** Wrapper nối `host_rvalid` từ SRAM lên top. Host giữ read/address đến ready sau hai cạnh lên; top dùng valid để tránh nhận data cũ. Memory có tám bank 32 bit, write-enable riêng từng lane. Wrapper chỉ nối cổng, không thêm register hoặc đổi latency. Simulation và synthesis dùng cùng hợp đồng memory. Xem [implementation và sơ đồ SRAM](sram_256_wrapper.sv.md).
+
 ## Các nhóm logic trong source
 
 Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
 
 
-### [Dòng 1–20: Hai giao diện](<../../../Verilog%20Source%20code/regfile.sv#L1>)
+### [Dòng 1–21: Hai giao diện](<../../../Verilog%20Source%20code/regfile.sv#L1>)
 
-<!-- source-range:1:20 -->
+<!-- source-range:1:21 -->
 ```systemverilog
 module register (
     input logic clk,
@@ -66,7 +68,8 @@ module register (
     input logic host_we,
     input logic [10:0] host_addr,
     input logic [31:0] host_wdata,
-    output logic [31:0] host_rdata
+    output logic [31:0] host_rdata,
+    output logic host_rvalid
 );
 ```
 
@@ -77,9 +80,9 @@ module register (
 **Tín hiệu và dữ liệu chính.** `rd_en`: request đọc của compute; `rd_addr`: địa chỉ word cần đọc; `rd_data`: word dữ liệu đọc ra; `rd_valid`: response đọc hợp lệ; `wr_en`: cho phép ghi compute; `wr_addr`: địa chỉ word cần ghi; và 6 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 21–38: Instance SRAM](<../../../Verilog%20Source%20code/regfile.sv#L21>)
+### [Dòng 22–40: Instance SRAM](<../../../Verilog%20Source%20code/regfile.sv#L22>)
 
-<!-- source-range:21:38 -->
+<!-- source-range:22:40 -->
 ```systemverilog
     // Shared implementation keeps host packing and read latency consistent.
     sram_256_wrapper #(.ADDR_W(8)) u_sram (
@@ -96,7 +99,8 @@ module register (
         .host_we(host_we),
         .host_addr(host_addr),
         .host_wdata(host_wdata),
-        .host_rdata(host_rdata)
+        .host_rdata(host_rdata),
+        .host_rvalid(host_rvalid)
     );
 endmodule
 ```

@@ -1,10 +1,10 @@
 # descriptor_file.sv — Bảng mô tả tensor và ma trận
 
-[Về mục lục](README.md) · [Về tổng quan](../README.md)
+[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng.
 
-**Source:** [descriptor_file.sv](<../../../Verilog%20Source%20code/descriptor_file.sv>). **Số dòng:** 62. **SHA-256:** `192d5c622186b585ab162869f9885053cd23f453e569f3b8925f4513603516c4`.
+**Source:** [descriptor_file.sv](<../../../Verilog%20Source%20code/descriptor_file.sv>). **Số dòng:** 70. **SHA-256:** `7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618`.
 
 ## Khối này làm gì?
 
@@ -17,13 +17,15 @@ flowchart TB
 %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
     H["Host 32-bit read/write<br/>ID · matrix select · word select"]
     subgraph DF["descriptor_file"]
-        WD@{ shape: trap-b, label: "Host write decoder<br/>Workspace enable / matrix slice enable" }
-        W@{ shape: rect, label: "Workspace descriptor bank<hr/>8 × 32 bit" }
-        M@{ shape: rect, label: "Matrix descriptor bank<hr/>8 × 96 bit" }
+        WD@{ shape: trap-b, label: "Host write decoder<br/>Enable riêng từng entry / word 32 bit" }
+        W@{ shape: rect, label: "Workspace descriptor bank<hr/>8 × 32-bit FF = 256 bit" }
+        M@{ shape: rect, label: "Matrix descriptor bank<hr/>8 entry × 3 word × 32-bit FF = 768 bit" }
         RM@{ shape: trap-t, label: "Host read selector<br/>Workspace word / matrix 32-bit slice" }
         WR["Ba cổng đọc descriptor tổ hợp"]
         MR["Một cổng đọc descriptor tổ hợp"]
     end
+    CLK["clk / rst_n: reset đủ 1.024 FF"] -.-> W
+    CLK -.-> M
     H --> WD
     WD --> W
     WD --> M
@@ -51,12 +53,14 @@ Host chọn loại bằng host_is_matrix, ID bằng host_id. Workspace ghi một
 4. Host write workspace thay toàn bộ descriptor; matrix write chỉ thay slice được chọn, nên phải nạp đủ ba word trước start.
 5. File không validate nội dung; từng execution unit kiểm tra descriptor theo phép toán của nó.
 
+
+Descriptor được biểu diễn bằng 1.024 bit thanh ghi với reset và đọc tổ hợp. Matrix có layout 96 bit; implementation dùng ba thanh ghi 32 bit cho mỗi entry, ghi nguyên word với index hằng từ generate. Đọc slice bằng index thay đổi là mux tổ hợp.
+
 ## Các nhóm logic trong source
 
-Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
+Các đoạn dưới đây bao phủ nguyên văn toàn bộ source hiện tại, theo thứ tự dòng.
 
-
-### [Dòng 1–22: Giao diện và mảng](<../../../Verilog%20Source%20code/descriptor_file.sv#L1>)
+### [Dòng 1–22: Giao diện và descriptor arrays](<../../../Verilog%20Source%20code/descriptor_file.sv#L1>)
 
 <!-- source-range:1:22 -->
 ```systemverilog
@@ -84,14 +88,15 @@ module descriptor_file (
     mat_desc_t md [0:7];
 ```
 
-**Mục đích.** ws chứa metadata activation/state, md chứa metadata weight/bias/scale.
+**Mục đích.** Tám workspace descriptor 32 bit và tám matrix descriptor 96 bit.
 
-**Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
+**Cách phần code hoạt động.** Kiểu packed giữ nguyên layout host/ISA. Các port workspace đọc source0/source1/destination; matrix đọc qua mat_id.
 
-**Tín hiệu và dữ liệu chính.** `host_we`: host chọn ghi thay vì đọc; `host_id`: ID descriptor0…7; `host_is_matrix`: chọn matrix thay vì workspace descriptor; `host_word_sel`: chọn slice32 của matrix descriptor; `host_wdata`: data 32 host muốn ghi; `host_rdata`: data 32 trả về host; và 8 tín hiệu phụ khác trong đoạn code.
+**Tín hiệu và dữ liệu chính.** `ws[0:7]`, `md[0:7]`, `ws_desc_t`, `mat_desc_t`, các host và compute IDs.
 
 
-### [Dòng 23–40: Đọc](<../../../Verilog%20Source%20code/descriptor_file.sv#L23>)
+
+### [Dòng 23–40: Đọc descriptor tổ hợp](<../../../Verilog%20Source%20code/descriptor_file.sv#L23>)
 
 <!-- source-range:23:40 -->
 ```systemverilog
@@ -115,44 +120,54 @@ module descriptor_file (
     end
 ```
 
-**Mục đích.** Chọn descriptor bằng ID hoặc slice32 cho host; word_sel ngoài 0…2 trả 0.
+**Mục đích.** Chọn entry và word host mà không thêm latency.
 
-**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch. Có continuous assignment: biểu thức luôn lái tín hiệu đích, không cần start hoặc cạnh clock.
+**Cách phần code hoạt động.** Continuous assignment chọn descriptor compute theo ID. Host mux workspace hoặc một trong ba slice matrix; word_sel ngoài 0..2 trả zero.
 
-**Tín hiệu và dữ liệu chính.** `ws_desc0`: descriptor source0 đọc ra; `ws_id0`: ID descriptor source0; `ws_desc1`: descriptor source1 đọc ra; `ws_id1`: ID descriptor source1; `ws_desc2`: descriptor destination đọc ra; `ws_id2`: ID descriptor destination; và 6 tín hiệu phụ khác trong đoạn code.
+**Tín hiệu và dữ liệu chính.** `ws_id0/1/2`, `mat_id`, `host_id`, `host_word_sel`, `host_rdata`.
 
 
-### [Dòng 41–62: Reset và ghi](<../../../Verilog%20Source%20code/descriptor_file.sv#L41>)
 
-<!-- source-range:41:62 -->
+### [Dòng 41–70: Generate FF và ghi nguyên word](<../../../Verilog%20Source%20code/descriptor_file.sv#L41>)
+
+<!-- source-range:41:70 -->
 ```systemverilog
 
-    integer i;
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            for (i = 0;i < 8;i = i + 1) begin
-                ws[i] <= '0;
-                md[i] <= '0;
-            end
-        end else if (host_we) begin
-            if (!host_is_matrix)
-                ws[host_id] <= ws_desc_t'(host_wdata);
-            else begin
-                case (host_word_sel)
-                    2'h0 : md[host_id][31:0] <= host_wdata;
-                    2'h1 : md[host_id][63:32] <= host_wdata;
-                    2'h2 : md[host_id][95:64] <= host_wdata;
-                    default : ;
-                endcase
+    // Constant array indexes and whole-word writes avoid Quartus 18.1
+    // treating partial writes to a dynamically indexed packed struct as latches.
+    genvar entry, word_index;
+    generate
+    for (entry = 0; entry < 8; entry = entry + 1) begin : g_descriptor
+        logic [95:0] matrix_bits;
+        assign md[entry] = mat_desc_t'(matrix_bits);
+
+        always_ff @(posedge clk or negedge rst_n) begin
+            if (!rst_n)
+                ws[entry] <= '0;
+            else if (host_we && !host_is_matrix && host_id == 3'(entry))
+                ws[entry] <= ws_desc_t'(host_wdata);
+        end
+
+        for (word_index = 0; word_index < 3; word_index = word_index + 1) begin : g_word
+            logic [31:0] word_q;
+            assign matrix_bits[word_index * 32 +: 32] = word_q;
+            always_ff @(posedge clk or negedge rst_n) begin
+                if (!rst_n)
+                    word_q <= '0;
+                else if (host_we && host_is_matrix && host_id == 3'(entry) &&
+                         host_word_sel == 2'(word_index))
+                    word_q <= host_wdata;
             end
         end
     end
+    endgenerate
 endmodule
 ```
 
-**Mục đích.** Reset đủ 8 entry. Host write chỉ sửa loại/word được chọn.
+**Mục đích.** Mô tả bank thanh ghi bằng whole-word write và index hằng; mỗi entry có reset rõ ràng và word-enable riêng.
 
-**Cách phần code hoạt động.** Có logic tuần tự: register/FSM chỉ cập nhật tại cạnh clock; nonblocking assignment đọc giá trị cũ ở vế phải rồi chốt đồng thời.
+**Cách phần code hoạt động.** Generate ngoài tạo tám entry workspace với write-enable riêng. Generate trong tạo ba word_q 32 bit mỗi matrix. Mỗi process clock chỉ ghi nguyên word; constant slices ghép matrix_bits rồi cast thành mat_desc_t. Reset active-low xóa đủ 256 + 768 bit metadata.
 
-**Tín hiệu và dữ liệu chính.** `host_we`: host chọn ghi thay vì đọc; `host_is_matrix`: chọn matrix thay vì workspace descriptor; `host_id`: ID descriptor0…7; `host_wdata`: data 32 host muốn ghi; `host_word_sel`: chọn slice32 của matrix descriptor.
+**Tín hiệu và dữ liệu chính.** `g_descriptor`, `g_word`, `word_q`, `matrix_bits`, `host_id == 3'(entry)`, `host_word_sel == 2'(word_index)`.
 
+**Điểm cần đọc kỹ.** `genvar` được khai báo trước vòng lặp và có `generate/endgenerate` rõ ràng theo cú pháp generate SystemVerilog. Các entry được tạo song song khi elaboration; vòng generate không chạy qua tám entry trong tám clock. Host vẫn phải ghi đủ ba matrix word trước khi start.
