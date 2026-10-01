@@ -74,13 +74,11 @@ Tổng 28 tensor chiếm **212.992 byte**, bằng 6,5 lần SRAM parameter 32 Ki
 
 Để chạy toàn model trên ASIC cần giải quyết memory/streaming và các operator còn thiếu; [model candidates](candidates.md) ghi tính tương thích với core hiện tại. Số chu kỳ mô phỏng không xác nhận clock, STA hoặc PPA ASIC.
 
-## Chạy lại
+## Application hiện tại và bằng chứng lịch sử
 
-```powershell
-./tests/language_demo/setup.ps1
-./tests/language_demo/run.ps1
-```
-
-[Hướng dẫn runner](../../tests/language_demo/README.md) mô tả Python, CPU dependency, ModelSim, `-Python`/`-SimBin` và cách replay fixture. Setup tải asset đã pin, kiểm tra SHA-256 và cài dependency vào thư mục `packages` của demo. Script, manifest và kết quả nhẹ được quản lý trong Git; checkpoint, activation/reference chi tiết, dependency và build/log tạo local.
+Runner hybrid cũ đã được loại bỏ. [Asset setup](../../tests/language_demo/README.md)
+giữ checkpoint/tokenizer đã pin; mọi lượt sinh token mới dùng [full RTL runner có gate](../../tests/full_rtl/README.md).
+Kết quả CPU/hybrid ở trên chỉ mô tả snapshot lịch sử, không chứng minh demo RTL toàn graph.
+Các script cũ có thể lấy lại từ commit `d9ed7921d42731a198f565785a8ae79b20c7c79e`.
 
 [Regression core](../verification/README.md) · [Demo MNIST toàn graph](mnist.md) · [ISA và host](../design/interfaces.md) · [Về mục lục demo](README.md)

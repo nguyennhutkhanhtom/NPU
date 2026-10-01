@@ -52,12 +52,8 @@
 !/tests/model_demo/parameter.bin
 !/tests/model_demo/host_vectors.txt
 /tests/language_demo/*
-!/tests/language_demo/export_demo.py
 !/tests/language_demo/fetch_assets.py
-!/tests/language_demo/finalize.py
-!/tests/language_demo/run.ps1
 !/tests/language_demo/setup.ps1
-!/tests/language_demo/tb_language_demo.sv
 !/tests/language_demo/README.md
 !/tests/language_demo/upstream_manifest.json
 !/tests/language_demo/results.json

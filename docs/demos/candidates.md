@@ -119,7 +119,7 @@ flowchart LR
 - So kết quả ở từng tầng hoặc từng bước thời gian với reference model số nguyên. Đặt lại state giữa hai chuỗi đầu vào độc lập.
 - Đo số chu kỳ cho cả nạp dữ liệu, NORM + QUANT và xử lý vector; ghi nhận mức sử dụng SRAM cao nhất và số lần bão hòa. Số PE không đủ để suy ra latency hoặc điện năng.
 
-**Trạng thái hiện tại:** [demo Binary-MNIST160](mnist.md) đã hoàn tất, dùng checkpoint có sẵn và 10 ảnh S8 của upstream; không train lại. PyTorch 2.5.1+cpu được cài riêng trong `tests/model_demo/packages`, không sửa Python chung. Chạy lại bằng `./tests/model_demo/run.ps1` trong workspace local. [NanoFable](language.md) đã chạy CPU 3 prompt × 32 token, deterministic repeat và RTL 168 lượt linear thực, compile/sim 0 error/0 warning. Chạy lại bằng `./tests/language_demo/run.ps1`. Chưa chạy toàn bộ MNIST, Seq64, Char32 hoặc toàn graph NanoFable trên NPU.
+**Trạng thái hiện tại:** [demo Binary-MNIST160](mnist.md) đã hoàn tất, dùng checkpoint có sẵn và 10 ảnh S8 của upstream; không train lại. PyTorch 2.5.1+cpu được cài riêng trong `tests/model_demo/packages`, không sửa Python chung. Runner legacy đã được loại bỏ; giữ report/provenance để tra cứu. [NanoFable](language.md) đã chạy CPU 3 prompt × 32 token, deterministic repeat và RTL 168 lượt linear thực, compile/sim 0 error/0 warning. Mọi lượt mới dùng full RTL runner có hardware gate. Chưa chạy toàn bộ MNIST, Seq64, Char32 hoặc toàn graph NanoFable trên NPU.
 
 ---
 

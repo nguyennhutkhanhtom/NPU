@@ -45,15 +45,15 @@ Host chỉ nạp weight, input, descriptor và instruction; không ghi các giá
 
 Parameter image đầy đủ gồm 1.024 word, điền zero vào phần dư; upload dùng 8.192 host write 32 bit. Số chu kỳ inference ở trên tách khỏi nạp/đọc qua host. Bias không chiếm SRAM vì checkpoint không có bias; descriptor và scale runtime nằm trong các thanh ghi core.
 
-## Chạy lại từ bản clone
+## Bằng chứng lịch sử
 
-```powershell
-./tests/model_demo/run.ps1
-```
-
-[README demo](../../tests/model_demo/README.md) mô tả môi trường và cách chạy. [results.json](../../tests/model_demo/results.json) ghi checkpoint, tool version, source/asset hashes, predictions, checks và cycles. Các image [parameter.mem](../../tests/model_demo/parameter.mem), [parameter.bin](../../tests/model_demo/parameter.bin), [program.mem](../../tests/model_demo/program.mem) và [program_layout.json](../../tests/model_demo/program_layout.json) đủ để xem cách nạp và bố trí bộ nhớ; `workspace_input_*.mem` chứa từng input. [cpu_reference.json](../../tests/model_demo/cpu_reference.json) lưu intermediates CPU và số nguyên.
-
-Runner, exporter, metadata CPU, results và memory/program images nhẹ nằm trong repository. [Hướng dẫn demo](../../tests/model_demo/README.md) mô tả cách tải checkpoint/upstream đã pin, kiểm tra SHA-256 và cài dependency riêng trong thư mục demo. Runtime/packages, checkpoint tải về, log và cache được tạo local. Demo này chưa gồm toàn bộ MNIST, binding SRAM PDK hoặc PPA/STA ASIC; [demo ngôn ngữ](language.md) có phạm vi riêng.
+[README snapshot](../../tests/model_demo/README.md) ghi việc loại bỏ runner/exporter/testbench
+legacy. [results.json](../../tests/model_demo/results.json) giữ checkpoint, tool version,
+source/asset hashes, predictions, checks và cycles. Các image
+[parameter.mem](../../tests/model_demo/parameter.mem), [program.mem](../../tests/model_demo/program.mem),
+[program_layout.json](../../tests/model_demo/program_layout.json) và
+[cpu_reference.json](../../tests/model_demo/cpu_reference.json) giữ layout/reference để tra cứu.
+Đây là demo legacy, không phải gate hay application của full `llm_soc`.
 
 ---
 

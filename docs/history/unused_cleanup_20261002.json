@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-02",
+  "authorization": "User requested removal of unused legacy files/helpers",
+  "recoverable_git_commit": "d9ed7921d42731a198f565785a8ae79b20c7c79e",
+  "preserved": "All immutable timing tags, functional evidence, provenance, regression, active RTL and full-RTL application remain",
+  "files": [
+    {
+      "path": "tools/llm/one_hot_control.py",
+      "sha256": "badf99f228a8bc642cf90f3007b2127a3d8684c6b2f0b171427bd38d481dee30",
+      "bytes": 2962,
+      "reason": "Completed one-time migration; no caller"
+    },
+    {
+      "path": "tests/language_demo/export_demo.py",
+      "sha256": "28a9056db6c28d09853eeae10069075d0eebc1924a57dfcc3e84b4ec75e39b08",
+      "bytes": 11978,
+      "reason": "Retired legacy application; full RTL uses independently gated runner"
+    },
+    {
+      "path": "tests/language_demo/finalize.py",
+      "sha256": "7502eca4ed68d484bc0b2b5e1042cdfab9c0e3272fb58a50ae6b39774fb779fa",
+      "bytes": 4015,
+      "reason": "Retired legacy application; full RTL uses independently gated runner"
+    },
+    {
+      "path": "tests/language_demo/run.ps1",
+      "sha256": "13e68daa02cafad957d4918235d3e0eda3ac29b74253aabafb8c962d9bb898be",
+      "bytes": 3537,
+      "reason": "Retired legacy application; full RTL uses independently gated runner"
+    },
+    {
+      "path": "tests/language_demo/tb_language_demo.sv",
+      "sha256": "a80ed7e8e4a31762627b1580375aae90659382ec53c55583a7a7a9ebc0913586",
+      "bytes": 3013,
+      "reason": "Retired legacy application; full RTL uses independently gated runner"
+    },
+    {
+      "path": "tests/model_demo/export_demo.py",
+      "sha256": "eac9965fbbdc07d755f2eba6f7c20a0dcfd2f18dbbf0c3672acc1cb8abbf0519",
+      "bytes": 15067,
+      "reason": "Retired legacy application; full RTL uses independently gated runner"
+    },
+    {
+      "path": "tests/model_demo/finalize.py",
+      "sha256": "aa67123e48ce00a594831a2c08114a8f810eced2dffa4718fa539ab258973f0f",
+      "bytes": 8585,
+      "reason": "Retired legacy application; full RTL uses independently gated runner"
+    },
+    {
+      "path": "tests/model_demo/fetch_assets.py",
+      "sha256": "911438edc50f8148298171f747a8eb609cbb579a05e71af9c884bf494afef398",
+      "bytes": 3018,
+      "reason": "Retired legacy application; full RTL uses independently gated runner"
+    },
+    {
+      "path": "tests/model_demo/setup.ps1",
+      "sha256": "f639ebb1072d9cb40123f2135ae27b6fa8993e0eb6652feff6a9872c17990428",
+      "bytes": 1540,
+      "reason": "Retired legacy application; full RTL uses independently gated runner"
+    },
+    {
+      "path": "tests/model_demo/run.ps1",
+      "sha256": "a443e694ab4e464d5628d0dfd21f3992cbfdedd3cee1c75f2d0196c853350e82",
+      "bytes": 3262,
+      "reason": "Retired legacy application; full RTL uses independently gated runner"
+    },
+    {
+      "path": "tests/model_demo/tb_model_demo.sv",
+      "sha256": "8cb6bd77f82fca6c29f6364a174aebe376bec0b252735132230af0d5aac0da81",
+      "bytes": 3822,
+      "reason": "Retired legacy application; full RTL uses independently gated runner"
+    }
+  ]
+}

@@ -10,16 +10,16 @@ Các trang dưới đây nối checkpoint và graph với format/memory của co
 | [NanoFable-1M-ternary](language.md) | CPU: 3 prompt × 32 token, deterministic repeat; RTL: 168 lượt linear, 33.792 output S32 bit-exact |
 | [Model candidates](candidates.md) | Tính tương thích operator, K, memory và các cấu hình mở rộng |
 
-## Chạy lại
+## Application hiện tại
 
-```powershell
-./tests/model_demo/run.ps1
-./tests/language_demo/run.ps1
-```
+Mọi application ngôn ngữ mới dùng [full RTL runner](../../tests/full_rtl/README.md)
+sau khi source hiện tại đạt synthesis, fitting, timing ≥100 MHz ở mọi corner và
+sáu nhóm unit test. [NanoFable asset setup](../../tests/language_demo/README.md) tải
+checkpoint/tokenizer đã pin; không thực thi model.
 
-[Runner MNIST](../../tests/model_demo/README.md) và [runner ngôn ngữ](../../tests/language_demo/README.md) mô tả dependency và asset đã pin. Các script, fixture nhẹ và results manifest được quản lý trên GitHub; checkpoint/runtime/packages được tải hoặc tạo local. Mỗi báo cáo demo ghi nguồn, checksum và lệnh chạy của riêng model đó.
-
-NanoFable sinh văn bản toàn graph trên CPU. RTL chỉ replay các linear ternary với activation thực được ghi lại; affine RMSNorm, RoPE, attention, gating và output head vẫn ở CPU. [Báo cáo ngôn ngữ](language.md) ghi phạm vi, streaming SRAM, checksum và kết quả riêng.
+Runner MNIST và hybrid NanoFable cũ đã được loại bỏ. Các bảng/report ở trên giữ
+kết quả lịch sử, với CPU generation và linear-only RTL được phân biệt rõ.
+[Cleanup manifest](../history/unused_cleanup_20261002.json) ghi file/hash và commit phục hồi.
 
 ## Đọc trước khi export model mới
 
