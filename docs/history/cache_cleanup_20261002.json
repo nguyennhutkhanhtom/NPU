@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-02",
+  "authorization": "User requested unused legacy/helper removal",
+  "preserved": "Current Quartus/full RTL build caches, immutable evidence, NanoFable checkpoint/tokenizer/packages, historical result/provenance and compact fixtures",
+  "directories": [
+    {
+      "path": "tests/model_demo/packages",
+      "resolved_path": "D:\\2151097_Nguyen Nhut Khanh\\tests\\model_demo\\packages",
+      "files": 17446,
+      "bytes": 1282112712,
+      "git_tracked_files": 0,
+      "reparse_points": 0,
+      "reason": "Unused retired demo dependency/compilation/weight-image cache; current full RTL assets and evidence retained"
+    },
+    {
+      "path": "tests/model_demo/work",
+      "resolved_path": "D:\\2151097_Nguyen Nhut Khanh\\tests\\model_demo\\work",
+      "files": 6,
+      "bytes": 3190202,
+      "git_tracked_files": 0,
+      "reparse_points": 0,
+      "reason": "Unused retired demo dependency/compilation/weight-image cache; current full RTL assets and evidence retained"
+    },
+    {
+      "path": "tests/model_demo/upstream",
+      "resolved_path": "D:\\2151097_Nguyen Nhut Khanh\\tests\\model_demo\\upstream",
+      "files": 11,
+      "bytes": 512724,
+      "git_tracked_files": 0,
+      "reparse_points": 0,
+      "reason": "Unused retired demo dependency/compilation/weight-image cache; current full RTL assets and evidence retained"
+    },
+    {
+      "path": "tests/model_demo/__pycache__",
+      "resolved_path": "D:\\2151097_Nguyen Nhut Khanh\\tests\\model_demo\\__pycache__",
+      "files": 2,
+      "bytes": 22664,
+      "git_tracked_files": 0,
+      "reparse_points": 0,
+      "reason": "Unused retired demo dependency/compilation/weight-image cache; current full RTL assets and evidence retained"
+    },
+    {
+      "path": "tests/language_demo/work",
+      "resolved_path": "D:\\2151097_Nguyen Nhut Khanh\\tests\\language_demo\\work",
+      "files": 6,
+      "bytes": 3173754,
+      "git_tracked_files": 0,
+      "reparse_points": 0,
+      "reason": "Unused retired demo dependency/compilation/weight-image cache; current full RTL assets and evidence retained"
+    },
+    {
+      "path": "tests/language_demo/images",
+      "resolved_path": "D:\\2151097_Nguyen Nhut Khanh\\tests\\language_demo\\images",
+      "files": 28,
+      "bytes": 432640,
+      "git_tracked_files": 0,
+      "reparse_points": 0,
+      "reason": "Unused retired demo dependency/compilation/weight-image cache; current full RTL assets and evidence retained"
+    }
+  ],
+  "bytes_freed": 1289444696
+}
