@@ -1,0 +1,5 @@
+{
+  "status": "FAIL",
+  "reason": "QSF parser rejects foreach;3maperrors; explicit assignments used in next tag",
+  "recorded_utc": "2026-10-01T19:08:06.1650784Z"
+}

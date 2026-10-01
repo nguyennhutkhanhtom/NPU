@@ -28,9 +28,9 @@ $library=Join-Path $build 'work'
 if($LASTEXITCODE -ne 0) {throw 'Cannot create unit test library'}
 & "$SimBin/vlog.exe" -sv -svinputport=var -work $library "+incdir+$rtl" -f $list -l (Join-Path $build 'compile.log') *> (Join-Path $build 'compile.console')
 if($LASTEXITCODE -ne 0) {Get-Content (Join-Path $build 'compile.log') -Tail 15;throw 'Unit compile failed'}
-foreach($top in @('tb_llm_math','tb_llm_ram','tb_llm_protocol','tb_llm_selection','tb_llm_operators','tb_llm_graph')) {
+foreach($top in @('tb_quartus_memory','tb_llm_math','tb_llm_ram','tb_llm_protocol','tb_llm_selection','tb_llm_operators','tb_llm_graph')) {
     $log=Join-Path $build "$top.log"
-    & "$SimBin/vsim.exe" -c -onfinish exit -L $library -lib $library -l $log $top -do 'run -all; quit -f' *> "$log.console"
+    & "$SimBin/vsim.exe" -c -onfinish exit -L altera_mf_ver -L $library -lib $library -l $log $top -do 'run -all; quit -f' *> "$log.console"
     if($LASTEXITCODE -ne 0 -or !(Select-String -LiteralPath $log -Pattern '_PASS' -Quiet) -or (Select-String -LiteralPath $log -Pattern '^# \*\* (Fatal|Error)' -Quiet)) {
         Get-Content -LiteralPath $log -Tail 15;throw "Unit simulation failed: $top"
     }

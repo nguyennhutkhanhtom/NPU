@@ -6,7 +6,8 @@ module tb_llm_operators;
     logic host_ready,running,ready,error,overflow_out;
     logic [8:0] pc_debug;
     logic [12:0] instr_debug;
-    llm_soc dut(.*);
+    // Fixture seeding uses the ASIC behavioral SRAM model; numeric RTL is shared.
+    llm_soc #(.USE_QUARTUS_MEMORY(0)) dut(.*);
     always #5 clk=~clk;
     logic seed_v=0,seed_p=0,seed_k=0;
     logic [11:0] seed_addr=0,observe_k=0;
@@ -20,14 +21,14 @@ module tb_llm_operators;
     generate
     for(bank=0;bank<32;bank++) begin : g_fixture
         always @(posedge clk) begin
-            if(seed_v) dut.u_vectors.g_bank[bank].u_storage.g_tile[0].u_tile.memory[seed_addr[6:0]] <= seed_vector[bank*24+:24];
+            if(seed_v) dut.u_vectors.g_bank[bank].u_storage.g_model.g_tile[0].u_tile.memory[seed_addr[6:0]] <= seed_vector[bank*24+:24];
         end
-        assign observed_v[bank]=dut.u_vectors.g_bank[bank].u_storage.g_tile[0].u_tile.memory[observe_v];
+        assign observed_v[bank]=dut.u_vectors.g_bank[bank].u_storage.g_model.g_tile[0].u_tile.memory[observe_v];
         for(tile=0;tile<4;tile++) begin : g_cache_tile
             always @(posedge clk)
                 if(seed_k && seed_addr[11:10]==tile)
-                    dut.u_cache.g_bank[bank].u_storage.g_tile[tile].u_tile.memory[seed_addr[9:0]] <= seed_vector[bank*24+:24];
-            assign observed_k_tile[bank][tile]=dut.u_cache.g_bank[bank].u_storage.g_tile[tile].u_tile.memory[observe_k[9:0]];
+                    dut.u_cache.g_bank[bank].u_storage.g_model.g_tile[tile].u_tile.memory[seed_addr[9:0]] <= seed_vector[bank*24+:24];
+            assign observed_k_tile[bank][tile]=dut.u_cache.g_bank[bank].u_storage.g_model.g_tile[tile].u_tile.memory[observe_k[9:0]];
         end
         assign observed_k[bank]=observed_k_tile[bank][observe_k[11:10]];
     end
@@ -35,7 +36,7 @@ module tb_llm_operators;
         for(tile=0;tile<24;tile++) begin : g_parameter_tile
             always @(posedge clk)
                 if(seed_p && seed_parameter_addr[14:10]==tile)
-                    dut.u_parameters.g_ram_lane[bank].u_storage.g_tile[tile].u_tile.memory[seed_parameter_addr[9:0]] <= seed_parameter[bank*32+:32];
+                    dut.u_parameters.g_ram_lane[bank].u_storage.g_model.g_tile[tile].u_tile.memory[seed_parameter_addr[9:0]] <= seed_parameter[bank*32+:32];
         end
     end
     endgenerate

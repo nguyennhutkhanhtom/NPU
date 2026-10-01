@@ -2,6 +2,10 @@
 
 [Project](../../README.md) → [Tài liệu](../README.md) → **ISA và host**
 
+Trang này mô tả ISA/host của core instruction-driven legacy. Host map và
+parameter/config/prompt contract của top hiện tại `llm_soc` nằm tại
+[full RTL language graph](full_rtl_language.md).
+
 <details>
 <summary>Mục lục trang</summary>
 

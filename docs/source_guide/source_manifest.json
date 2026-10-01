@@ -60,8 +60,8 @@
     {
       "file": "sigmoid.sv",
       "path": "Verilog Source code/sigmoid.sv",
-      "sha256": "8001c3d582b072de2146d085fbb4363350a6f876dfa4d9195bc54d3d52f944c9",
-      "lines": 90,
+      "sha256": "76a443665caa32e2bc61cf0dc3e330e39f25444deac28ff42b01793791e16348",
+      "lines": 102,
       "groups": 3,
       "document": "blocks/sigmoid.sv.md"
     },
@@ -262,8 +262,8 @@
       "file": "llm_bank_ram.sv",
       "path": "Verilog Source code/llm_bank_ram.sv",
       "document": "blocks/llm_bank_ram.sv.md",
-      "sha256": "43f096bf29a7c9452e0d75a786d80c1e51be8f7d3419873122c2665cf8944b76",
-      "lines": 49
+      "sha256": "bc44a55ec28b6e2a361e714638055345ad1a657c4c63f6c59c5f296bcc8735d5",
+      "lines": 74
     },
     {
       "file": "llm_exp_lut.svh",
@@ -300,8 +300,32 @@
       "file": "llm_soc.sv",
       "path": "Verilog Source code/llm_soc.sv",
       "document": "blocks/llm_soc.sv.md",
-      "sha256": "ff0dcec791e0a9541150ca57e3821978db85a631329ad6d0b06f12d3377d5a00",
-      "lines": 906
+      "sha256": "70e7444fe5ce22d5dfbd4a45c83c5dd9eb7eb30b7180daed474195878b7e277f",
+      "lines": 962
+    },
+    {
+      "groups": 4,
+      "file": "llm_parameter_ram.sv",
+      "path": "Verilog Source code/llm_parameter_ram.sv",
+      "document": "blocks/llm_parameter_ram.sv.md",
+      "sha256": "3c17e9823f3c0cf6dd926efd2e1fb9b85a0180e27137541a43b1f415251499c4",
+      "lines": 87
+    },
+    {
+      "groups": 3,
+      "file": "pipelined_word_ram.sv",
+      "path": "Verilog Source code/pipelined_word_ram.sv",
+      "document": "blocks/pipelined_word_ram.sv.md",
+      "sha256": "671e4627b8c4fa5af0235cdca60aa9f49857e3b1758d57124ce3134ed3470f37",
+      "lines": 110
+    },
+    {
+      "groups": 3,
+      "file": "quartus_word_ram.sv",
+      "path": "Verilog Source code/quartus_word_ram.sv",
+      "document": "blocks/quartus_word_ram.sv.md",
+      "sha256": "c38b8642bfb143f71bf89902b767844086f0894a16db11ebc0abe98131709a0b",
+      "lines": 39
     }
   ],
   "cleanup_date": "2026-09-30",

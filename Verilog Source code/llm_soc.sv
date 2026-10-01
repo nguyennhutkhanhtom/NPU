@@ -1,6 +1,6 @@
 // Autonomous fixed-point NanoFable inference. The host loads parameters and
 // prompt IDs; this controller owns prefill, attention, head and decode.
-module llm_soc (
+module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     input logic clk, rst_n, host_en, host_we,
     input logic [31:0] host_addr, host_wdata,
     output logic [31:0] host_rdata,
@@ -15,7 +15,7 @@ module llm_soc (
         G_UP, G_SILU, G_GMUL, G_DOWN, G_MADD, G_NEXT, G_FNORM, G_HEAD,
         G_ADVANCE, G_DONE} graph_t;
     graph_t graph;
-    localparam int OP_COUNT = 93;
+    localparam int OP_COUNT = 96;
     localparam int O_IDLE_IDX = 0;
     localparam int O_P_REQ_IDX = 1;
     localparam int O_P_WAIT_IDX = 2;
@@ -109,6 +109,9 @@ module llm_soc (
     localparam int S_ROUND_IDX = 90;
     localparam int S_CLAMP_IDX = 91;
     localparam int SC_MULTIPLY_IDX = 92;
+    localparam int SG_CLAMP_IDX = 93;
+    localparam int SG_GROUP_IDX = 94;
+    localparam int SG_PICK_IDX = 95;
     typedef enum logic [OP_COUNT - 1:0] {
         O_IDLE = OP_COUNT'(1) << O_IDLE_IDX,
         O_P_REQ = OP_COUNT'(1) << O_P_REQ_IDX,
@@ -202,7 +205,10 @@ module llm_soc (
         B_CLAMP = OP_COUNT'(1) << B_CLAMP_IDX,
         S_ROUND = OP_COUNT'(1) << S_ROUND_IDX,
         S_CLAMP = OP_COUNT'(1) << S_CLAMP_IDX,
-        SC_MULTIPLY = OP_COUNT'(1) << SC_MULTIPLY_IDX
+        SC_MULTIPLY = OP_COUNT'(1) << SC_MULTIPLY_IDX,
+        SG_CLAMP = OP_COUNT'(1) << SG_CLAMP_IDX,
+        SG_GROUP = OP_COUNT'(1) << SG_GROUP_IDX,
+        SG_PICK = OP_COUNT'(1) << SG_PICK_IDX
     } op_t;
     op_t op, return_p, return_v, return_k, return_m, return_w, return_scalar;
     logic op_done, launch, core_running, op_fault_q;
@@ -238,7 +244,7 @@ module llm_soc (
     logic signed [63:0] scalar_product_q, scalar_round_q;
     logic signed [38:0] scalar_a_q;
     logic signed [24:0] scalar_b_q;
-    logic signed [23:0] scalar_lane_q;
+    logic signed [23:0] scalar_group_q [0:7];
     logic signed [63:0] lane_raw_q [0:31], lane_round_q [0:31];
     logic [63:0] square_sum_q, root_input_q;
     // epsilon >=42950 makes root>=207, so rounded 2^32/root fits U25.
@@ -263,17 +269,22 @@ module llm_soc (
     // host_en for at least one clock before issuing another transaction.
     typedef enum logic [2:0] {H_IDLE, H_EXEC, H_READ, H_WAIT, H_DONE} host_t;
     host_t host_state;
+    logic [31:0] host_payload_q;
     logic [31:0] host_address_q, host_data_q;
     logic host_write_q, host_parameter_q;
     logic [14:0] p_address_q;
     logic p_read, p_valid, p_host_valid;
     logic [255:0] p_data;
     logic [31:0] p_host_data;
-    sram_256_wrapper #(.ADDR_W(15), .DEPTH(PARAM_ROWS)) u_parameters(
+    llm_parameter_ram #(.ADDR_W(15), .DEPTH(PARAM_ROWS),
+        .USE_QUARTUS_MEMORY(USE_QUARTUS_MEMORY)) u_parameters(
         .clk(clk), .rst_n(rst_n), .rd_en(p_read), .rd_addr(p_address_q),
-        .rd_data(p_data), .rd_valid(p_valid), .wr_en(1'b0), .wr_addr('0), .wr_data('0),
-        .host_en(host_en && !core_running && host_parameter_q &&
-            ((host_state == H_EXEC && host_write_q) || host_state == H_READ || host_state == H_WAIT)),
+        .rd_data(p_data), .rd_valid(p_valid),
+        .host_active(host_en && !core_running && host_parameter_q),
+        .host_write_req(host_en && !core_running && host_parameter_q &&
+            host_state == H_EXEC && host_write_q),
+        .host_read_req(host_en && !core_running && host_parameter_q &&
+            (host_state == H_READ || host_state == H_WAIT) && !host_write_q),
         .host_we(host_write_q), .host_addr(host_address_q[19:2]),
         .host_wdata(host_data_q), .host_rdata(p_host_data), .host_rvalid(p_host_valid));
     assign p_read = op[O_P_REQ_IDX];
@@ -281,7 +292,7 @@ module llm_soc (
         if (!rst_n) begin
             host_state <= H_IDLE;
             host_ready <= 0;
-            host_rdata <= 0;
+            host_payload_q <= 0;
             launch <= 0;
             prompt_count_q <= 0;
             max_new_q <= 96;
@@ -304,7 +315,7 @@ module llm_soc (
                     host_state <= H_EXEC;
                 end
                 H_EXEC : begin
-                    host_rdata <= 0;
+                    host_payload_q <= 0;
                     if (host_address_q[1:0] != 0) host_state <= H_DONE;
                     else if (host_write_q) begin
                         if (!core_running) begin
@@ -321,39 +332,49 @@ module llm_soc (
                                     default : ;
                                 endcase
                         end
-                        host_state <= H_DONE;
+                        host_state <= host_parameter_q && !core_running ? H_WAIT : H_DONE;
                     end else if (host_parameter_q && !core_running) host_state <= H_READ;
                     else begin
                         if (host_address_q == 32'h00400000)
-                            host_rdata <= {20'h0, generated_q, overflow_out, error, ready, running};
+                            host_payload_q <= {20'h0, generated_q, overflow_out, error, ready, running};
                         else if (host_address_q[31:9] == 23'h1000 && !core_running)
-                            host_rdata <= {20'h0, output_memory[host_address_q[8:2]]};
+                            host_payload_q <= {20'h0, output_memory[host_address_q[8:2]]};
                         host_state <= H_DONE;
                     end
                 end
                 H_READ : host_state <= H_WAIT;
-                H_WAIT : if (p_host_valid) begin host_rdata <= p_host_data; host_state <= H_DONE; end
+                H_WAIT : if (p_host_valid) begin
+                    if (!host_write_q) host_payload_q <= p_host_data;
+                    host_state <= H_DONE;
+                end
                 H_DONE : host_ready <= 1;
                 default : host_state <= H_IDLE;
             endcase
         end
     end
 
-    logic v_read, v_valid;
+    // H_DONE already follows payload capture. This unconditional public
+    // register has valid data on the same edge as host_ready, with a simple D
+    // input rather than simultaneous synchronous clear/load output controls.
+    always_ff @(posedge clk or negedge rst_n)
+        if (!rst_n) host_rdata <= 0;
+        else host_rdata <= host_payload_q;
+
+    logic v_read, v_valid, v_write_busy;
     logic [6:0] v_address_q;
     logic [767:0] v_data;
-    llm_bank_ram #(.ROWS(96), .ADDR_W(7)) u_vectors(
+    llm_bank_ram #(.ROWS(96), .ADDR_W(7), .USE_QUARTUS_MEMORY(USE_QUARTUS_MEMORY)) u_vectors(
         .clk(clk), .rst_n(rst_n), .rd_en(v_read), .rd_addr(v_address_q),
-        .rd_data(v_data), .rd_valid(v_valid), .wr_addr(write_vector_addr_q),
+        .rd_data(v_data), .rd_valid(v_valid), .wr_busy(v_write_busy), .wr_addr(write_vector_addr_q),
         .wr_mask(op[O_WRITE_IDX] ? write_vector_mask_q : 32'h0), .wr_data(write_vector_q));
     assign v_read = op[O_V_REQ_IDX];
-    logic k_read, k_valid;
+    logic k_read, k_valid, k_write_busy;
     logic [11:0] k_address_q, k_write_address_q;
     logic [767:0] k_data;
     // Address = layer*1024 + position*8 + K/V*4 + head.
-    llm_bank_ram u_cache(
+    llm_bank_ram #(.USE_QUARTUS_MEMORY(USE_QUARTUS_MEMORY)) u_cache(
         .clk(clk), .rst_n(rst_n), .rd_en(k_read), .rd_addr(k_address_q),
-        .rd_data(k_data), .rd_valid(k_valid), .wr_addr(k_write_address_q),
+        .rd_data(k_data), .rd_valid(k_valid), .wr_busy(k_write_busy), .wr_addr(k_write_address_q),
         .wr_mask(op[C_STORE_IDX] ? 32'hffffffff : 32'h0), .wr_data(vector_q));
     assign k_read = op[O_K_REQ_IDX];
 
@@ -384,6 +405,8 @@ module llm_soc (
         (twice_remainder == {1'b0, div_denominator_q} && div_quotient[0]);
     logic sig_busy, sig_done;
     logic signed [15:0] sig_x_q;
+    logic signed [15:0] sigmoid_inputs_q [0:31];
+    logic signed [15:0] sigmoid_pick_q [0:3];
     logic [15:0] sig_y;
     logic [15:0] sigmoid_values_q [0:31];
     sigmoid u_sig(.clk(clk), .rst_n(rst_n), .start(op[S_SIG_IDX]),
@@ -488,7 +511,7 @@ module llm_soc (
     // Independent lane registers keep constant slice boundaries visible to
     // synthesis. The FSM carries enables and addresses, while each lane owns
     // its arithmetic payload and its portion of the workspace write bus.
-    genvar lane;
+    genvar lane, scalar_group;
     generate
     for (lane = 0; lane < 32; lane = lane + 1) begin : g_simd
         always_ff @(posedge clk) begin
@@ -500,8 +523,6 @@ module llm_soc (
                     end
                     op[E_CALC_IDX] : lane_raw_q[lane] <= llm_extend56(math_product[lane]);
                     op[E_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd8);
-                    op[E_CLAMP_IDX], op[N_CLAMP_IDX], op[R_CLAMP_IDX], op[B_CLAMP_IDX], op[S_CLAMP_IDX] :
-                        write_vector_q[lane * 24 +: 24] <= llm_sat24(lane_round_q[lane]);
                     op[L_INPUT_IDX] : begin
                         math_a_q[lane] <= vector_q[lane * 24 +: 24];
                         case (weights_q[chunk_q[1:0] * 64 + lane * 2 +: 2])
@@ -510,8 +531,6 @@ module llm_soc (
                             default : math_b_q[lane] <= 0;
                         endcase
                     end
-                    op[L_STORE_IDX] : if (matrix_row_q[4:0] == 5'(lane))
-                        write_vector_q[lane * 24 +: 24] <= scalar_lane_q;
                     op[N_SQUARE_IDX] : begin
                         math_a_q[lane] <= vector_q[lane * 24 +: 24];
                         math_b_q[lane] <= 32'($signed(vector_q[lane * 24 +: 24]));
@@ -549,7 +568,6 @@ module llm_soc (
                         math_a_q[lane] <= second_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, probability_q};
                     end
                     op[A_ACC_IDX] : attention_acc_q[lane] <= attention_acc_q[lane] + math_product[lane];
-                    op[A_PACK_IDX] : if (lane_q == 5'(lane)) write_vector_q[lane * 24 +: 24] <= scalar_lane_q;
                     op[B_INPUT1_IDX] : begin
                         if (graph == G_GMUL) begin
                             math_a_q[lane] <= second_q[lane * 24 +: 24];
@@ -557,7 +575,9 @@ module llm_soc (
                         end else lane_raw_q[lane] <=
                             64'($signed(second_q[lane * 24 +: 24])) + 64'($signed(vector_q[lane * 24 +: 24]));
                     end
-                    op[B_ADD_CLAMP_IDX] : write_vector_q[lane * 24 +: 24] <= llm_sat24(lane_raw_q[lane]);
+                    op[S_INPUT_IDX] : lane_round_q[lane] <=
+                        rne_shift64(64'($signed(vector_q[lane * 24 +: 24])), 6'd4);
+                    op[SG_CLAMP_IDX] : sigmoid_inputs_q[lane] <= sat_s16(lane_round_q[lane]);
                     op[S_SIG_WAIT_IDX] : if (sig_done && lane_q == 5'(lane)) sigmoid_values_q[lane] <= sig_y;
                     op[S_MUL_IDX] : begin
                         math_a_q[lane] <= vector_q[lane * 24 +: 24];
@@ -571,8 +591,42 @@ module llm_soc (
                 endcase
             end
         end
+        // Only states that write this payload control its mux/enable. Keeping
+        // unrelated arithmetic states outside this cone avoids a wide priority
+        // decoder feeding every workspace bit.
+        always_ff @(posedge clk) begin
+            if (rst_n) begin
+                if (op[E_CLAMP_IDX] || op[N_CLAMP_IDX] || op[R_CLAMP_IDX] ||
+                    op[B_CLAMP_IDX] || op[S_CLAMP_IDX])
+                    write_vector_q[lane * 24 +: 24] <= llm_sat24(lane_round_q[lane]);
+                else if ((op[L_STORE_IDX] && matrix_row_q[4:0] == 5'(lane)) ||
+                         (op[A_PACK_IDX] && lane_q == 5'(lane)))
+                    write_vector_q[lane * 24 +: 24] <= scalar_group_q[lane / 4];
+                else if (op[B_ADD_CLAMP_IDX])
+                    write_vector_q[lane * 24 +: 24] <= llm_sat24(lane_raw_q[lane]);
+            end
+        end
+    end
+    for (scalar_group = 0; scalar_group < 8; scalar_group = scalar_group + 1) begin : g_scalar_output
+        // Each group has a distinct lane-qualified enable, so these payloads
+        // remain local without vendor attributes in the compute datapath.
+        always_ff @(posedge clk)
+            if (rst_n && ((op[L_SAT_IDX] && matrix_row_q[4:2] == 3'(scalar_group)) ||
+                          (op[A_SAT_IDX] && lane_q[4:2] == 3'(scalar_group))))
+                scalar_group_q[scalar_group] <= llm_sat24(scalar_round_q);
     end
     endgenerate
+
+    always_ff @(posedge clk) begin
+        if (rst_n) begin
+            if (op[O_K_WAIT_IDX] && k_valid) second_q <= k_data;
+            else if (op[B_INPUT0_IDX]) second_q <= vector_q;
+            if (op[SG_GROUP_IDX])
+                for (int group_id = 0; group_id < 4; group_id = group_id + 1)
+                    sigmoid_pick_q[group_id] <= sigmoid_inputs_q[group_id * 8 + int'(lane_q[2:0])];
+            if (op[SG_PICK_IDX]) sig_x_q <= sigmoid_pick_q[int'(lane_q[4:3])];
+        end
+    end
 
     // Payloads are assigned before their operation consumes them. Reset only
     // cancels the operation pipeline and clears architectural status.
@@ -622,11 +676,11 @@ module llm_soc (
                 op[O_V_REQ_IDX] : op <= O_V_WAIT;
                 op[O_V_WAIT_IDX] : if (v_valid) begin vector_q <= v_data; op <= return_v; end
                 op[O_K_REQ_IDX] : op <= O_K_WAIT;
-                op[O_K_WAIT_IDX] : if (k_valid) begin second_q <= k_data; op <= return_k; end
+                op[O_K_WAIT_IDX] : if (k_valid) op <= return_k;
                 op[O_M_START_IDX] : op <= O_M_WAIT;
                 op[O_M_WAIT_IDX] : if (math_done) op <= return_m;
                 op[O_WRITE_IDX] : op <= return_w;
-                op[O_FINISH_IDX] : begin op_done <= 1; op <= O_IDLE; end
+                op[O_FINISH_IDX] : if (!v_write_busy && !k_write_busy) begin op_done <= 1; op <= O_IDLE; end
                 op[E_SCALE_IDX] : begin
                     coefficient_q <= parameter_word_q[token_q[2:0] * 32 +: 24];
                     read_parameter({1'b0, token_q, 2'b00}, E_DATA);
@@ -677,7 +731,7 @@ module llm_soc (
                 op[SC_MULTIPLY_IDX] : begin scalar_product_q <= scalar_a_q * scalar_b_q; op <= return_scalar; end
                 op[L_ROUND_IDX] : begin scalar_round_q <= rne_shift64(scalar_product_q, 6'd24); op <= L_SAT; end
                 op[L_SAT_IDX] : begin
-                    scalar_lane_q <= llm_sat24(scalar_round_q); op <= L_STORE;
+                    op <= L_STORE;
                     if (scalar_round_q > 8388607 || scalar_round_q < -8388608) overflow_out <= 1;
                 end
                 op[L_STORE_IDX] : begin
@@ -811,7 +865,7 @@ module llm_soc (
                         -$signed(div_quotient + {63'h0, divide_round_up}) :
                         $signed(div_quotient + {63'h0, divide_round_up}); op <= A_SAT;
                 end
-                op[A_SAT_IDX] : begin scalar_lane_q <= llm_sat24(scalar_round_q); op <= A_PACK; end
+                op[A_SAT_IDX] : op <= A_PACK;
                 op[A_PACK_IDX] : begin
                     if (lane_q == 31) write_vector(5, {2'b0, head_q}, 32'hffffffff, A_QUERY);
                     else begin lane_q <= lane_q + 1'b1; op <= A_LANE; end
@@ -825,7 +879,7 @@ module llm_soc (
                     end
                 end
                 op[B_INPUT0_IDX] : begin
-                    second_q <= vector_q; read_vector(graph == G_GMUL ? 3'd7 : 3'd1, row_q, B_INPUT1);
+                    read_vector(graph == G_GMUL ? 3'd7 : 3'd1, row_q, B_INPUT1);
                 end
                 op[B_INPUT1_IDX] : begin
                     if (graph == G_GMUL) begin
@@ -840,14 +894,16 @@ module llm_soc (
                 end
                 op[B_PACK_IDX] : if (row_q == (graph == G_GMUL ? 11 : 3)) op <= O_FINISH;
                     else begin row_q <= row_q + 1'b1; read_vector(graph == G_GMUL ? 3'd6 : 3'd0, row_q + 1'b1, B_INPUT0); end
-                op[S_INPUT_IDX] : begin lane_q <= 0; sig_x_q <= sat_s16(rne_shift64(64'($signed(vector_q[23:0])), 6'd4)); op <= S_SIG; end
+                op[S_INPUT_IDX] : begin lane_q <= 0; op <= SG_CLAMP; end
+                op[SG_CLAMP_IDX] : op <= SG_GROUP;
+                op[SG_GROUP_IDX] : op <= SG_PICK;
+                op[SG_PICK_IDX] : op <= S_SIG;
                 op[S_SIG_IDX] : op <= S_SIG_WAIT;
                 op[S_SIG_WAIT_IDX] : if (sig_done) begin
                     if (lane_q == 31) op <= S_MUL;
                     else begin
                         lane_q <= lane_q + 1'b1;
-                        sig_x_q <= sat_s16(rne_shift64(64'($signed(vector_q[(lane_q + 1) * 24 +: 24])), 6'd4));
-                        op <= S_SIG;
+                        op <= SG_GROUP;
                     end
                 end
                 op[S_MUL_IDX] : begin

@@ -27,7 +27,7 @@ module tb_llm_graph;
     task automatic transaction(input bit write,input logic [31:0] address,data);
         integer waits;
         @(negedge clk);host_en=1;host_we=write;host_addr=address;host_wdata=data;waits=0;
-        while(!host_ready && waits<10) begin @(negedge clk);waits++;end
+        while(!host_ready && waits<16) begin @(negedge clk);waits++;end
         if(!host_ready) $fatal(1,"Graph host timeout address=%h",address);
         response=host_rdata;commands++;
         @(negedge clk);host_en=0;host_we=0;

@@ -168,10 +168,10 @@
     {
       "file": "docs/source_guide/blocks/llm_bank_ram.sv.md",
       "ordinal": 0,
-      "source_sha256": "c2abec96a559b6ce5b3b2c0fce847be3322ad3bde048700a77df6b057490db4a",
-      "width": 528,
-      "height": 385,
-      "nodes": 6,
+      "source_sha256": "b597418f5ebe3448798cfdb6984c8974bb6041e976b9e5024568b9f70885fdf0",
+      "width": 549,
+      "height": 474,
+      "nodes": 7,
       "status": "rendered"
     },
     {
@@ -181,6 +181,15 @@
       "width": 476,
       "height": 450,
       "nodes": 7,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/llm_parameter_ram.sv.md",
+      "ordinal": 0,
+      "source_sha256": "bce7fbcdb2de02622a50cfe6883e9aadd287262e6355df0ba9440b235a10f235",
+      "width": 817,
+      "height": 522,
+      "nodes": 9,
       "status": "rendered"
     },
     {
@@ -195,7 +204,7 @@
     {
       "file": "docs/source_guide/blocks/llm_soc.sv.md",
       "ordinal": 0,
-      "source_sha256": "33e9ba9f4bc85eef0246dc1974d994b31ff49d13fa3f8e36f11e51715c417eed",
+      "source_sha256": "5365bb66af92ae82b9ea71825d2f686db8f3d39fbc87bf250d8d4747c6c038a5",
       "width": 747,
       "height": 498,
       "nodes": 8,
@@ -364,6 +373,15 @@
       "status": "rendered"
     },
     {
+      "file": "docs/source_guide/blocks/pipelined_word_ram.sv.md",
+      "ordinal": 0,
+      "source_sha256": "2e5e7efb1d7a239fcbfacf6c5e0d8e608270c5934410e4bebfca228a0439fafc",
+      "width": 852,
+      "height": 587,
+      "nodes": 8,
+      "status": "rendered"
+    },
+    {
       "file": "docs/source_guide/blocks/postscale.sv.md",
       "ordinal": 0,
       "source_sha256": "87efa49a90bec79b96d09210c78b9e3f5257c46dd39281c10670da0db4ec3298",
@@ -379,6 +397,15 @@
       "width": 713,
       "height": 498,
       "nodes": 12,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/quartus_word_ram.sv.md",
+      "ordinal": 0,
+      "source_sha256": "7f18402145c2da6eb3e7a586525b1b4eb025116afdb6bc86066c4f271fb8a360",
+      "width": 985,
+      "height": 272,
+      "nodes": 6,
       "status": "rendered"
     },
     {
@@ -438,7 +465,7 @@
     {
       "file": "docs/source_guide/blocks/sigmoid.sv.md",
       "ordinal": 0,
-      "source_sha256": "75b21d91ac739e6643b3bdd0eae527217ddff6095778a8cfb80e1cd36ed69788",
+      "source_sha256": "d0efc705107bd396cf8cd1e77162d834ca714412fc6fe87f98c5883f6d42e8da",
       "width": 894,
       "height": 1210,
       "nodes": 11,
@@ -447,10 +474,10 @@
     {
       "file": "docs/source_guide/blocks/sigmoid.sv.md",
       "ordinal": 1,
-      "source_sha256": "fcfc00b85d65c26949c4752afb08c3265b18512f2c356a1f93df644f7f2987a4",
-      "width": 640,
-      "height": 1360,
-      "nodes": 12,
+      "source_sha256": "19847ee89df63fcec97fdc3cd8af358c6e3d6a7e34eeb460c5ee11486fe997ff",
+      "width": 772,
+      "height": 1384,
+      "nodes": 13,
       "status": "rendered"
     },
     {

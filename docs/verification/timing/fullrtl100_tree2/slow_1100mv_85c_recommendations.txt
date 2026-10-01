@@ -1,0 +1,158 @@
+Statistics: 40 0 3349 0 40 -0.847
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+op[36]~DUPLICATE second_q[150] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[162] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[158] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[164] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[143] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[88] write_vector_q[281] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[278] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[279] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[284] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[286] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[283] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[282] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[285] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[280] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[36]~DUPLICATE second_q[294] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[102] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[245] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[160] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+pc_debug[5]~reg0 pc_debug[5] 0.322170 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[25]~reg0 host_rdata[25] 0.321489 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[4]~reg0 pc_debug[4] 0.320582 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+lane_q[2] sig_x_q[9] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[4] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[2] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[10] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[0] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[3] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[8] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[7] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[6] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[5] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[15] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+op[36]~DUPLICATE second_q[150] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[162] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[158] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[164] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[143] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[88] write_vector_q[281] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[278] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[279] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[284] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[286] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[283] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[282] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[285] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[280] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[36]~DUPLICATE second_q[294] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[102] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[245] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[160] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+lane_q[2] sig_x_q[9] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[4] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[2] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[10] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[0] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[3] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[8] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[7] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[6] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[5] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+lane_q[2] sig_x_q[15] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+op[36]~DUPLICATE second_q[150] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[150] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[162] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[162] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[158] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[158] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[164] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[164] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[143] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[143] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[88] write_vector_q[281] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[281] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[278] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[278] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[279] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[279] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[284] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[284] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[286] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[286] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[283] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[283] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[282] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[282] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[285] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[285] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[88] write_vector_q[280] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[88]} WideNor34}}
+op[88] write_vector_q[280] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+pc_debug[5]~reg0 pc_debug[5] 0.322170 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[25]~reg0 host_rdata[25] 0.321489 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+op[36]~DUPLICATE second_q[294] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[294] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[102] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[102] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+pc_debug[4]~reg0 pc_debug[4] 0.320582 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+op[36]~DUPLICATE second_q[245] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[245] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~DUPLICATE second_q[160] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~DUPLICATE} {row_q[3]~1}}}
+op[36]~DUPLICATE second_q[160] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

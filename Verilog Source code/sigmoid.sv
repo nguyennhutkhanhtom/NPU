@@ -8,15 +8,17 @@ module sigmoid (
     import npu_pkg::*;
     // Generated together with sigmoid_257.mem; default ROM is independent of CWD.
 `include "sigmoid_lut.svh"
-    typedef enum logic [1:0] {IDLE, READ0, READ1, INTERP} state_t;
+    typedef enum logic [2:0] {IDLE, READ0, READ1, SLOPE, MULTIPLY, ADD, ROUND} state_t;
     state_t state;
     logic [8:0] index_q, index_next;
     logic [23:0] fraction_q, fraction_next;
     logic [15:0] y0, y1;
     logic signed [44:0] grid, x_extended;
-    logic signed [63:0] interpolated;
-    logic [9:0] difference;
-    logic [33:0] product;
+    logic [9:0] difference_q;
+    logic [33:0] product_q;
+    logic [16:0] integer_q;
+    logic [23:0] remainder_q;
+    logic round_up;
 
     logic [8:0] rom_address;
     logic [15:0] rom_data;
@@ -45,10 +47,23 @@ module sigmoid (
         end
         // Adjacent samples in the fixed LUT differ by at most 512.
         // Ten unsigned bits retain the exact slope, including the peak step.
-        difference = 10'(y1 - y0);
-        product = difference * fraction_q;
-        // RNE applies to the entire result, including the integer parity of y0.
-        interpolated = rne_shift64($signed({30'h0, product}) + (64'(y0) << 24), 6'd24);
+    end
+    // Registered DSP operands/product; rounding uses the parity of the whole
+    // interpolated integer, not only the fractional increment.
+    assign round_up = remainder_q > 24'h800000 ||
+        (remainder_q == 24'h800000 && integer_q[0]);
+    always_ff @(posedge clk) begin
+        if (rst_n) begin
+            if (state == IDLE && start) fraction_q <= fraction_next;
+            if (state == READ0) y0 <= rom_data;
+            if (state == READ1) y1 <= rom_data;
+            if (state == SLOPE) difference_q <= 10'(y1 - y0);
+            if (state == MULTIPLY) product_q <= difference_q * fraction_q;
+            if (state == ADD) begin
+                integer_q <= {1'b0, y0} + {7'h0, product_q[33:24]};
+                remainder_q <= product_q[23:0];
+            end
+        end
     end
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -57,28 +72,25 @@ module sigmoid (
             done <= 0;
             y_raw <= 0;
             index_q <= 0;
-            fraction_q <= 0;
-            y0 <= 0;
-            y1 <= 0;
         end else begin
             done <= 0;
             case (state)
                 IDLE : if (start) begin
                     busy <= 1;
                     index_q <= index_next;
-                    fraction_q <= fraction_next;
                     state <= READ0;
                 end
                 READ0 : begin
-                    y0 <= rom_data;
                     state <= READ1;
                 end
                 READ1 : begin
-                    y1 <= rom_data;
-                    state <= INTERP;
+                    state <= SLOPE;
                 end
-                INTERP : begin
-                    y_raw <= interpolated[15:0];
+                SLOPE : state <= MULTIPLY;
+                MULTIPLY : state <= ADD;
+                ADD : state <= ROUND;
+                ROUND : begin
+                    y_raw <= 16'(integer_q + {16'h0, round_up});
                     busy <= 0;
                     done <= 1;
                     state <= IDLE;

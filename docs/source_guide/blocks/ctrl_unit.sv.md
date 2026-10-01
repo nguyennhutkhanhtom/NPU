@@ -87,4 +87,3 @@ endmodule
 **Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
 
 **Tín hiệu và dữ liệu chính.** `reg_wr_en`: cho phép ghi register kiểu pipeline cũ; `reg_rd_en`: cho phép đọc register kiểu pipeline cũ; `alu_op`: chọn phép ALU kiểu cũ; `mem_wren`: cho phép memory write kiểu cũ; `mem_rden_0`: cho phép memory read0 kiểu cũ; `mem_rden_1`: cho phép memory read1 kiểu cũ; và 3 tín hiệu phụ khác trong đoạn code.
-

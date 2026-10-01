@@ -2,10 +2,12 @@
 
 [Project](../README.md) → [Tài liệu](../docs/README.md) → **Source RTL**
 
-Thư mục này là source đang phát triển. Top là `matmulfree.sv`; `matmul_wrap.sv` là wrapper demo. Core dùng cùng RTL cho mô phỏng và synthesis, không chọn logic theo `SYNTHESIS`/`QUARTUS_SYNTHESIS` hoặc thuộc tính memory riêng của Quartus.
+Thư mục này là source đang phát triển. Top toàn graph là `llm_soc.sv`; `matmulfree.sv` và `matmul_wrap.sv` thuộc kiến trúc legacy. Compute/control dùng cùng RTL cho mô phỏng và synthesis, không có nhánh `SYNTHESIS`/`QUARTUS_SYNTHESIS`. FPGA dùng `quartus_word_ram.sv` chứa IP `altsyncram` sau adapter `pipelined_word_ram`; đây là boundary để thay SRAM ASIC sau này. Không dùng DSP, PLL hoặc compute IP khác; arithmetic được ánh xạ sang logic cells thường.
 
 | Cần tra cứu | Tài liệu |
 |---|---|
+| Toàn graph, numeric formats và SRAM contracts | [Full RTL language](../docs/design/full_rtl_language.md) |
+| Host/tests/application của top hiện tại | [Full RTL tests](../tests/full_rtl/README.md) |
 | Opcode, descriptor, scale động, host map, LUT và build | [Interface hiện hành](../docs/design/interfaces.md) |
 | Cấu hình 32 PE, K≤512, format số và SRAM 32+8 KiB | [Kiến trúc](../docs/design/architecture.md) |
 | Engine, memory và scheduler nối với nhau thế nào | [Hierarchy và luồng dữ liệu](../docs/source_guide/README.md) |

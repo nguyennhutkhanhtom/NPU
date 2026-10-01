@@ -1,0 +1,58 @@
+Statistics: 40 0 2776 0 0 3.497
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

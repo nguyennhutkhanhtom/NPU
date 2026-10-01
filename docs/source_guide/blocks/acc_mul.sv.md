@@ -115,4 +115,3 @@ flowchart TB
     EXT --> L
     ROOT --> OUT["sum S18"]
 ```
-

@@ -106,4 +106,3 @@ endmodule
 ```
 
 OR của các output được mask bằng tag one-hot. Latency logic là một cạnh; mux cuối vẫn phải đáp ứng STA.
-

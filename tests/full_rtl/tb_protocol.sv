@@ -13,7 +13,7 @@ module tb_llm_protocol;
                                output logic [31:0] response);
         integer waits;
         @(negedge clk);host_en=1;host_we=write;host_addr=address;host_wdata=data;waits=0;
-        while(!host_ready && waits<8) begin @(negedge clk);waits++;end
+        while(!host_ready && waits<16) begin @(negedge clk);waits++;end
         if(!host_ready) $fatal(1,"LLM host timeout addr=%h",address);
         response=host_rdata;checks++;
         repeat(2) begin @(negedge clk);if(!host_ready || host_rdata!==response) $fatal(1,"LLM host held response");end
@@ -34,7 +34,7 @@ module tb_llm_protocol;
         @(negedge clk);host_en=1;host_we=1;host_addr=0;host_wdata=32'hbad00000;
         @(negedge clk);host_en=0;host_we=0;
         @(negedge clk);check_read(0,32'h12345678);
-        for(integer phase=1;phase<=4;phase++) begin
+        for(integer phase=1;phase<=10;phase++) begin
             @(negedge clk);host_en=1;host_we=0;host_addr=0;
             repeat(phase) @(negedge clk);host_en=0;
             repeat(3) begin @(negedge clk);if(host_ready) $fatal(1,"Canceled host response escaped");end
@@ -56,7 +56,7 @@ module tb_llm_protocol;
         #1;if(host_ready || host_rdata!==0) $fatal(1,"Host reset cancellation");
         @(negedge clk);host_en=0;rst_n=1;
         repeat(2) @(negedge clk);check_read(0,32'h12345678);
-        $display("LLM_PROTOCOL_PASS transactions=%0d cancellations=6 bounds=768KiB",checks);$finish;
+        $display("LLM_PROTOCOL_PASS transactions=%0d cancellations=12 bounds=768KiB parameter_read_pipeline=5",checks);$finish;
     end
     initial begin #1000000;$fatal(1,"LLM_PROTOCOL_TIMEOUT");end
 endmodule

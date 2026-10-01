@@ -96,4 +96,3 @@ endmodule
 ```
 
 Casts giữ dấu và tăng một bit mỗi mức reduction. product giữ nguyên cho client dùng kết quả từng lane.
-

@@ -1,0 +1,26 @@
+Info: *******************************************************************
+Info: Running Quartus Prime Analysis & Synthesis
+    Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
+    Info: Copyright (C) 2018  Intel Corporation. All rights reserved.
+    Info: Your use of Intel Corporation's design tools, logic functions 
+    Info: and other software and tools, and its AMPP partner logic 
+    Info: functions, and any output files from any of the foregoing 
+    Info: (including device programming or simulation files), and any 
+    Info: associated documentation or information are expressly subject 
+    Info: to the terms and conditions of the Intel Program License 
+    Info: Subscription Agreement, the Intel Quartus Prime License Agreement,
+    Info: the Intel FPGA IP License Agreement, or other applicable license
+    Info: agreement, including, without limitation, that your use is for
+    Info: the sole purpose of programming logic devices manufactured by
+    Info: Intel and sold by Intel or its authorized distributors.  Please
+    Info: refer to the applicable agreement for further details.
+    Info: Processing started: Fri Oct 02 03:58:40 2026
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off llm_soc -c llm_soc
+Error (125048): Error reading Quartus Prime Settings File D:/2151097_Nguyen Nhut Khanh/quartus/llm_soc.qsf, line 45 File: D:/2151097_Nguyen Nhut Khanh/quartus/llm_soc.qsf Line: 45
+    Info (125063): set_global_assignment -name MAX_DSP_BLOCKS 0 File: D:/2151097_Nguyen Nhut Khanh/quartus/llm_soc.qsf Line: 45
+Error (125080): Can't open project -- Quartus Prime Settings File contains one or more errors
+Error: Quartus Prime Analysis & Synthesis was unsuccessful. 2 errors, 0 warnings
+    Error: Peak virtual memory: 4658 megabytes
+    Error: Processing ended: Fri Oct 02 03:58:41 2026
+    Error: Elapsed time: 00:00:01
+    Error: Total CPU time (on all processors): 00:00:00

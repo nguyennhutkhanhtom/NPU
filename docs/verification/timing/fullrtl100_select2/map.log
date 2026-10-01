@@ -1,0 +1,40 @@
+Info: *******************************************************************
+Info: Running Quartus Prime Analysis & Synthesis
+    Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
+    Info: Copyright (C) 2018  Intel Corporation. All rights reserved.
+    Info: Your use of Intel Corporation's design tools, logic functions 
+    Info: and other software and tools, and its AMPP partner logic 
+    Info: functions, and any output files from any of the foregoing 
+    Info: (including device programming or simulation files), and any 
+    Info: associated documentation or information are expressly subject 
+    Info: to the terms and conditions of the Intel Program License 
+    Info: Subscription Agreement, the Intel Quartus Prime License Agreement,
+    Info: the Intel FPGA IP License Agreement, or other applicable license
+    Info: agreement, including, without limitation, that your use is for
+    Info: the sole purpose of programming logic devices manufactured by
+    Info: Intel and sold by Intel or its authorized distributors.  Please
+    Info: refer to the applicable agreement for further details.
+    Info: Processing started: Fri Oct 02 01:53:19 2026
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off llm_soc -c llm_soc
+Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Info (12021): Found 1 design units, including 0 entities, in source file /2151097_nguyen nhut khanh/verilog source code/npu_pkg.sv
+    Info (12022): Found design unit 1: npu_pkg (SystemVerilog) File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/npu_pkg.sv Line: 1
+Info (12021): Found 2 design units, including 2 entities, in source file /2151097_nguyen nhut khanh/verilog source code/banked_word_ram.sv
+    Info (12023): Found entity 1: sram_word_tile File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/banked_word_ram.sv Line: 3
+    Info (12023): Found entity 2: banked_word_ram File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/banked_word_ram.sv Line: 19
+Info (12021): Found 1 design units, including 0 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_pkg.sv
+    Info (12022): Found design unit 1: llm_pkg (SystemVerilog) File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_pkg.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/div.sv
+    Info (12023): Found entity 1: div File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/div.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_bank_ram.sv
+    Info (12023): Found entity 1: llm_bank_ram File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_bank_ram.sv Line: 5
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/pipelined_word_ram.sv
+    Info (12023): Found entity 1: pipelined_word_ram File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv Line: 4
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_parameter_ram.sv
+    Info (12023): Found entity 1: llm_parameter_ram File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_parameter_ram.sv Line: 5
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_math.sv
+    Info (12023): Found entity 1: llm_math File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_math.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_soc.sv
+    Info (12023): Found entity 1: llm_soc File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 3
+Info (12021): Found 2 design units, including 2 entities, in source file /2151097_nguyen nhut khanh/verilog source code/norm.sv
+    Info (12023): Found entity 1: isqrt_u64 File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/norm.sv Line: 1

@@ -5,7 +5,14 @@ NanoFable: 4 transformer layers, affine RMSNorm, attention/KV, SwiGLU, tied
 head, selection và vòng autoregressive. Host chỉ nạp dữ liệu/config/prompt.
 SRAM gồm 768 KiB parameter, 384 KiB KV và 9 KiB vectors; area là ưu tiên sau
 correctness và timing. [Timing full top](docs/verification/timing/README.md)
-đã cải thiện 70,41→83,58→84,49 MHz, vẫn FAIL; local1 fitting và sáu nhóm units PASS.
+đã cải thiện70,41→83,58→84,49→91,28→92,22MHz, vẫn FAIL. Snapshot
+`fullrtl100_select3` có sáu nhóm units PASS. Bản giảm fanout scalar và chốt
+host output trước có năm nhóm units PASS; tag `fullrtl100_group2` fitting PASS
+nhưng timing FAIL81,53MHz, gồm setup và hold. Hiện parameter/KV/vector dùng
+IP RAM M10K qua adapter thay được bằng SRAM ASIC. Không dùng DSP/PLL hay
+compute IP khác. Kiểm thử IP thực tế PASS158checks; regression bảy nhóm
+đang chạy graph đầy đủ. Build `fullrtl100_memoryip2` synthesis/fit PASS,
+0DSP/0PLL, nhưng timing FAIL87,49MHz; còn setup ở hai slow corners.
 Application pretrained chờ đủ gate source/config hiện tại và unit tests.
 
 Core instruction-driven `matmulfree` và các kết quả dưới đây được giữ làm

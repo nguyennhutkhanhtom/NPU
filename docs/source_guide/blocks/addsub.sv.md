@@ -83,4 +83,3 @@ endmodule
 **Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
 
 **Tín hiệu và dữ liệu chính.** `b_ext`: operand B mở rộng dấu S17; `b`: operand B; `wide`: kết quả mở rộng S17; `a`: operand A; `sub`: chọn trừ khi bằng 1; `overflow`: cờ kết quả vượt miền số; và 1 tín hiệu phụ khác trong đoạn code.
-

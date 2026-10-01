@@ -219,4 +219,3 @@ endmodule
 ```
 
 DIV_WAIT kiểm tra zero, underflow và range; kết quả vượt U24 không thể xuất hiện khi selector đúng. Unit regression ghi compose_max_clocks=54.
-

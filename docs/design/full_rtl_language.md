@@ -32,8 +32,11 @@ precision and requires an independent integer reference and a quality check.
 
 The 128-position context allows a short prompt plus a 96-token continuation.
 The Quartus memory demo uses Cyclone V `5CGXFC9E6F35C7`; fit and
-timing must verify the actual memory packing. The ASIC SRAM boundary remains
-generic SystemVerilog with no vendor primitives or synthesis conditionals.
+timing must verify the actual memory packing. The FPGA backend now uses explicit
+`altsyncram` M10K IP for parameters, KV and vectors. Compute/control stay portable
+SystemVerilog; only the memory technology binding contains a vendor primitive.
+No PLL, DSP hardblock or other compute IP is permitted. Multiplication, division,
+sqrt and sigmoid map to ordinary logic cells; add/subtract may use carry cells.
 
 ## Graph and execution interfaces
 
@@ -101,23 +104,40 @@ host/graph validity controls.
 
 ## SRAM replacement boundary and latency
 
-`sram_word_tile` in [banked_word_ram.sv](<../../Verilog%20Source%20code/banked_word_ram.sv>)
-is the replaceable leaf. Each tile provides one synchronous read and one
-independent write port, up to 1024 words. A read accepted at an edge returns
-the pre-write word after that edge, including a same-address collision.
-Outputs hold when read enable is low. Contents, output data and tile tags are
-unreset; clients must honor response validity and load data before reading.
+`llm_soc.USE_QUARTUS_MEMORY=1` is the FPGA default. The adapters select
+[quartus_word_ram](<../../Verilog%20Source%20code/quartus_word_ram.sv>), the sole
+explicit vendor IP module, through
+[pipelined_word_ram](<../../Verilog%20Source%20code/pipelined_word_ram.sv>).
+Each bank has one synchronous read and one independent write port on the same
+clock. Raw IP read/write occurs at E2 after adapter request acceptance E1;
+registered response is E3, with E4 for ROWS>4096. Same accepted-cycle/address
+collision returns OLD_DATA. Storage and payload are unreset/uninitialized; reset
+cancels queued enables and response-valid, including writes not yet committed.
+A committed word survives reset. Clients load every location before reading it.
+
+`USE_QUARTUS_MEMORY=0` selects a portable tiled behavioral model for ASIC macro
+integration and operator fixtures. It is not the FPGA hardware configuration.
+ASIC SRAM must provide the same 1R/1W common-clock contract or compensate inside
+the adapter. Compute/control equations and public latency remain unchanged.
 
 | Adapter | Read contract | Write contract |
 |---|---|---|
 | `banked_word_ram` | One edge, tile tag and leaf read captured together, output tile mux after edge | One word at the edge |
-| `llm_bank_ram` | Two edges including local lane request capture; reset cancels queued reads/valid | Lane mask, address and data accepted together; leaf writes on the next edge; reset cancels queued writes |
+| `llm_bank_ram` | Five edges through group/lane/tile/leaf/response stages for current KV/vector depth; reset cancels queue/valid | Lane mask/address/data accepted together; leaf commits on fourth edge; `wr_busy` drains before operator completion |
+| `llm_parameter_ram` | Compute four edges for DEPTH≤4096, five for current24576 rows; host lane selection adds one edge before frontend response | Host writes acknowledge after leaf commit; cancelled host reads cannot produce stale valid response |
+| `pipelined_word_ram` | Three edges up to four tiles, four edges for more tiles; one request per clock | Capture at first edge, leaf commit second edge; old-data collision at common accepted cycle |
 | `sram_256_wrapper` | Two edges from adapter request to valid; host lane/address tags reject stale response | 8 × 32-bit mask; host write priority |
 | `llm_math` | Seven subsequent edges after accepting start to done | Busy starts ignored; reset cancels valid pipeline |
 
-Quartus currently infers SRAM behind this boundary. A Quartus IP or ASIC SRAM
-macro must implement the same port, latency, collision and reset contracts or
-add compensation inside the adapter. It must not change compute equations.
+The FPGA branch instantiates 72 whole-bank RAM IPs: eight parameter lanes,
+32 KV lanes and 32 vector lanes. Quartus handles internal M10K banking; the RTL
+no longer expands those banks into 352 explicit tiled leaves and response muxes.
+Small inferred score/probability/token RAMs are also allowed memory resources.
+The baseline already used M10K rather than flop SRAM, so a measured resource
+reduction must come from the new fit report, not from this structural count.
+`tb_quartus_memory` compares both backends with the actual Intel simulation
+library at 96, 4096, 3072 and 24576 rows: 158 checks PASS, read3/4/write2,
+consecutive requests, boundaries, OLD_DATA and reset cancellation/retention.
 Fit reports, rather than synthesis RAM-segment counts, establish physical M10K
 packing. The first full fit used 1111 RAM blocks and 24125 ALMs, with worst
 Fmax 70.41 MHz. The next pipeline fit used 23060 ALMs and improved Fmax to
@@ -153,6 +173,59 @@ before lane selection, and uses a proven U25 reciprocal. All payload stages
 remain unreset; control cancels their use on reset. Operation latency increases,
 while handshake and numeric results remain unchanged. The following revision
 uses 93 one-hot operator states, captured shared scalar-multiplier operands,
-and local per-lane SRAM requests. Six-group units PASS, including the complete
-synthetic graph; its own four-corner timing remains FAIL84.49 MHz. No pretrained
-application was run under this failing gate.
+and local per-lane SRAM requests. That revision's six-group units PASS, including
+the synthetic graph; its own four-corner timing remains FAIL84.49 MHz.
+
+Current tree2 source splits SRAM address distribution and tile-response reduction
+into registered stages, adds a parameter adapter with host write commit acknowledgement,
+and pipelines sigmoid slope/product/integer sum/RNE. Increasing queued-write
+latency exposed operator completion before the final KV write; `O_FINISH` now
+waits for vector/cache `wr_busy` to clear. Original failure is preserved in
+`tests/full_rtl/evidence/tree1_commit_fail`. Existing expected numeric data was
+kept; only documented memory-latency bounds changed, with host cancellation
+coverage extended from four to ten phases. ModelSim operators17/2820 and legacy
+All10 PASS; compiled synthetic graph PASS3701710clocks. The exact-source six groups PASS using five ModelSim units and the unchanged
+native Verilator graph. Tree2 fitting completed with24233ALM/34698registers/
+1220M10K/252MLAB/102DSP; all-corner timing FAIL91.28MHz. Slow85 setup−0.847ns,
+TNS−158.461ns; Slow0−0.955ns/TNS−58.743ns. All other checks pass, unconstrained0.
+
+Select revision uses96one-hot states, parallel fixed RNE4/S16 clamp
+before sigmoid, two registered selection levels (8:1 then4:1), and payload
+muxes decoding only actual writer states. Host write ACK retains the previously
+cleared zero payload to permit output-register packing. QSF selects a physical
+2.5V/16mA/fast-slew output driver; SDC remains byte-equivalent at10ns with the
+same input/output budgets. This is a demo electrical contract without a supplied
+board pinout; see the [Cyclone V IOE documentation](https://docs.altera.com/r/docs/683375/current/cyclone-v-device-handbook-volume-1-device-interfaces-and-integration/programmable-ioe-features-in-cyclone-v-devices).
+Select six-group units PASS: math503,RAM28,protocol29/cancel12,selection14,
+operators17/checks2820,graph3714190clocks/16layers/3tokens. Five ModelSim units
+have zero runtime warnings; compile8SVCHK notices defer checking to vopt.
+Native graph logs retain14TIMESCALEMOD,2WIDTHTRUNC and14WIDTHEXPAND notices:
+leaf ports are10bits for a96-row vector bank accessed only0..95; address/counter
+expressions and unsigned exp arithmetic are context-expanded within their
+proven ranges. No warnings are removed from the archived logs. Select3 fitting
+PASS0errors/29warnings but timing FAIL92.22MHz: Slow85 setup−0.844ns/TNS−16.608ns,
+Slow0−0.560ns/TNS−13.116ns; all other checks pass and unconstrained0. Scalar
+broadcast→lane write and output clock/pad setup are the remaining reported cones.
+
+Group candidate uses eight lane-qualified S24 saturation registers, each serving
+four lanes, plus an unconditional public host_rdata register behind the FSM's
+transaction payload. H_DONE retains ACK/data alignment. QSF no longer forces
+I/O register packing and disables automatic shift-register RAM inference for
+shallow queues; SRAM leaves remain inferred storage. SDC and C7 device stay
+unchanged. Group1 syntax failure is retained; group2 moves genvar declarations
+outside generate-loop initialization for Quartus18.1. Five ModelSim units for that archived pre-IP revision
+PASS; its graph was cancelled when the memory backend changed. Group2 A&S0/7,fit0/3 but timing FAIL81.53MHz; Slow85
+setup−2.265ns/TNS−46.475ns and hold−0.072ns/TNS−0.175ns. Fit26534ALM/39945registers/
+1187M10K/0MLAB/102DSP. Output LAB-register→pin is now worst, while scalar group
+fanout4 still crosses the device. Keep this regression evidence and the earlier
+92.22MHz snapshot; further locality/clock/I/O work is required.
+Native graph executable was blocked by Windows Application Control;
+ModelSim with `-L altera_mf_ver` is used for the current FPGA memory configuration.
+Six units PASS; the actual-IP full graph is still running.
+`fullrtl100_memoryip2` synthesis/fit completed, timingFAIL87.49MHz. `memoryip1` preserves a QSF parser failure for unsupported MAX_DSP_BLOCKS;
+the retry keeps AUTO_DSP_RECOGNITION OFF and DSP_BLOCK_BALANCING LOGIC ELEMENTS.
+FAST_OUTPUT_REGISTER is restored; SDC remains unchanged. No pretrained
+application has run. A&S reports0errors/13warnings and0DSP/0PLL;
+Fit confirms0DSP/0PLL,29115ALM/34716registers/1187M10K.
+All hold/recovery/removal/pulse checksPASS and unconstrained0; setupFAIL at
+Slow85−1.430/TNS−157.190ns and Slow0−1.253/TNS−250.719ns. No100MHz claim.

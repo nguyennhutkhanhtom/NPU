@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — gọi từ rowwise_op.
 
-**Source:** [sigmoid.sv](<../../../Verilog%20Source%20code/sigmoid.sv>). **Số dòng:** 90. **SHA-256:** `8001c3d582b072de2146d085fbb4363350a6f876dfa4d9195bc54d3d52f944c9`.
+**Source:** [sigmoid.sv](<../../../Verilog%20Source%20code/sigmoid.sv>). **Số dòng:** 102. **SHA-256:** `76a443665caa32e2bc61cf0dc3e330e39f25444deac28ff42b01793791e16348`.
 
 ## Khối này làm gì?
 
@@ -22,7 +22,7 @@ flowchart TB
         ADDR@{ shape: trap-t, label: "ROM address selector<br/>index hoặc bounded index+1" }
         ROM@{ shape: rect, label: "Một ROM lookup dùng chung<hr/>257 × 16 bit · sigmoid_lut.svh" }
         SAMPLES["Sample storage y0 / y1"]
-        INTERP["Nội suy tổ hợp<br/>Slope U10 × fraction U24 = product U34<br/>RNE toàn tổng tại bit 24"]
+        INTERP["Pipeline nội suy<br/>Slope U10 → product U34 → integer sum U17<br/>RNE theo parity toàn tổng"]
         OUT["Output storage U16/F15"]
     end
     X --> COORD
@@ -44,12 +44,12 @@ MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ
 
 ## Cách hoạt động chi tiết
 
-`IDLE → READ0 → READ1 → INTERP → IDLE`. Chỉ index/fraction được chốt lúc start; thay x_raw sau đó không thay kết quả. Ngoài miền LUT, dùng mẫu biên. Một function case hằng cung cấp LUT cho cả simulation và synthesis; không có file loader hoặc cấu hình ROM ngoài trong datapath.
+`IDLE → READ0 → READ1 → SLOPE → MULTIPLY → ADD → ROUND → IDLE`. Index/fraction chốt lúc start; thay x_raw sau đó không đổi kết quả. Product U34 được chốt sau slope U10, rồi chốt tổng nguyên U17 và remainder U24 trước RNE. Parity của toàn tổng giữ ties-to-even đúng. Payload không reset; control reset hủy giao dịch. Ngoài miền LUT dùng mẫu biên; constant case LUT dùng chung simulation/synthesis.
 
 1. Input S16/F_t được đổi thành tọa độ `(16×x_real+0x80)` với 24 fractional bit; −8 ánh xạ index 0x000 và +8 ánh xạ 0x100.
 2. Tọa độ ngoài bảng bị clamp. Index/fraction được chốt lúc start, nên thay input sau đó không ảnh hưởng giao dịch.
 3. Một cổng ROM được dùng hai chu kỳ: READ0 lấy y0, READ1 lấy mẫu kế y1. Endpoint 0x100 dùng lại cùng mẫu.
-4. INTERP tính y0 cộng phần chênh theo fraction rồi RNE 24 bit, trả U16/F15.
+4. SLOPE/MULTIPLY/ADD/ROUND chốt slope, product, tổng nguyên/remainder và RNE, trả U16/F15 với parity toàn tổng.
 5. `sigmoid_lut.svh` là nguồn ROM duy nhất trong RTL. `sigmoid_257.mem` giữ cùng các giá trị để generator/test đối chiếu, không được load lúc chạy.
 
 **Quy ước RTL.** Tọa độ S45 chứa đủ toàn miền S16/F_t=0…24 với offset 128×2^24; index U9 và fraction U24 giữ nguyên. LUT đơn điệu và chênh hai mẫu kề nhau tối đa 512, nên slope U10 và product U34 đủ, thay cho slope U16/product U40. Tích được zero-extend khi cộng y0<<24 rồi dùng hàm RNE trên toàn tổng; parity và output U16/F15 không đổi.
@@ -58,9 +58,9 @@ MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ
 
 Các đoạn dưới đây bao phủ nguyên văn toàn bộ source hiện tại, theo thứ tự dòng.
 
-### [Dòng 1–28: Giao diện và ROM lookup dùng chung](<../../../Verilog%20Source%20code/sigmoid.sv#L1>)
+### [Dòng 1–30: Giao diện và ROM lookup dùng chung](<../../../Verilog%20Source%20code/sigmoid.sv#L1>)
 
-<!-- source-range:1:28 -->
+<!-- source-range:1:30 -->
 ```systemverilog
 module sigmoid (
     input logic clk, rst_n, start,
@@ -72,15 +72,17 @@ module sigmoid (
     import npu_pkg::*;
     // Generated together with sigmoid_257.mem; default ROM is independent of CWD.
 `include "sigmoid_lut.svh"
-    typedef enum logic [1:0] {IDLE, READ0, READ1, INTERP} state_t;
+    typedef enum logic [2:0] {IDLE, READ0, READ1, SLOPE, MULTIPLY, ADD, ROUND} state_t;
     state_t state;
     logic [8:0] index_q, index_next;
     logic [23:0] fraction_q, fraction_next;
     logic [15:0] y0, y1;
     logic signed [44:0] grid, x_extended;
-    logic signed [63:0] interpolated;
-    logic [9:0] difference;
-    logic [33:0] product;
+    logic [9:0] difference_q;
+    logic [33:0] product_q;
+    logic [16:0] integer_q;
+    logic [23:0] remainder_q;
+    logic round_up;
 
     logic [8:0] rom_address;
     logic [15:0] rom_data;
@@ -96,9 +98,9 @@ module sigmoid (
 
 **Tín hiệu chính.** `x_raw`, `frac_bits`, `index_q/index_next`, `fraction_q/fraction_next`, `rom_address/rom_data`, `y0/y1`, `busy/done/y_raw`.
 
-### [Dòng 29–52: Tọa độ và nội suy RNE](<../../../Verilog%20Source%20code/sigmoid.sv#L29>)
+### [Dòng 31–67: Tọa độ và nội suy RNE](<../../../Verilog%20Source%20code/sigmoid.sv#L31>)
 
-<!-- source-range:29:52 -->
+<!-- source-range:31:67 -->
 ```systemverilog
     always_comb begin
         // S16 at F_t=0..24 needs at most 45 signed coordinate bits,
@@ -119,10 +121,23 @@ module sigmoid (
         end
         // Adjacent samples in the fixed LUT differ by at most 512.
         // Ten unsigned bits retain the exact slope, including the peak step.
-        difference = 10'(y1 - y0);
-        product = difference * fraction_q;
-        // RNE applies to the entire result, including the integer parity of y0.
-        interpolated = rne_shift64($signed({30'h0, product}) + (64'(y0) << 24), 6'd24);
+    end
+    // Registered DSP operands/product; rounding uses the parity of the whole
+    // interpolated integer, not only the fractional increment.
+    assign round_up = remainder_q > 24'h800000 ||
+        (remainder_q == 24'h800000 && integer_q[0]);
+    always_ff @(posedge clk) begin
+        if (rst_n) begin
+            if (state == IDLE && start) fraction_q <= fraction_next;
+            if (state == READ0) y0 <= rom_data;
+            if (state == READ1) y1 <= rom_data;
+            if (state == SLOPE) difference_q <= 10'(y1 - y0);
+            if (state == MULTIPLY) product_q <= difference_q * fraction_q;
+            if (state == ADD) begin
+                integer_q <= {1'b0, y0} + {7'h0, product_q[33:24]};
+                remainder_q <= product_q[23:0];
+            end
+        end
     end
 ```
 
@@ -145,15 +160,17 @@ flowchart TB
     SAMPLE --> SUB["Monotone adjacent-sample difference U10<br/>0 ≤ y1 − y0 ≤ 512"]
     SUB --> MUL["U10 × U24 interpolation multiplier<br/>Exact product U34"]
     IDX -->|"fraction"| MUL
-    MUL --> ADD["Product zero-extension + interpolation adder"]
-    SAMPLE -->|"y0 shifted by 24"| ADD
-    ADD --> RNE["RNE entire result by 24<br/>Include integer parity on ties"]
+    MUL --> ADD["Upper product U10 + sample y0<br/>Registered integer sum U17"]
+    SAMPLE -->|"y0 zero-extended to U17"| ADD
+    MUL --> REM["Registered low product U24<br/>Fractional remainder"]
+    REM --> RNE["RNE from remainder<br/>Use entire integer sum parity on ties"]
+    ADD --> RNE
     RNE --> Y["U16/F15 output storage"]
 ```
 
-### [Dòng 53–90: FSM lấy hai mẫu và chốt output](<../../../Verilog%20Source%20code/sigmoid.sv#L53>)
+### [Dòng 68–102: FSM lấy hai mẫu và chốt output](<../../../Verilog%20Source%20code/sigmoid.sv#L68>)
 
-<!-- source-range:53:90 -->
+<!-- source-range:68:102 -->
 ```systemverilog
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -162,28 +179,25 @@ flowchart TB
             done <= 0;
             y_raw <= 0;
             index_q <= 0;
-            fraction_q <= 0;
-            y0 <= 0;
-            y1 <= 0;
         end else begin
             done <= 0;
             case (state)
                 IDLE : if (start) begin
                     busy <= 1;
                     index_q <= index_next;
-                    fraction_q <= fraction_next;
                     state <= READ0;
                 end
                 READ0 : begin
-                    y0 <= rom_data;
                     state <= READ1;
                 end
                 READ1 : begin
-                    y1 <= rom_data;
-                    state <= INTERP;
+                    state <= SLOPE;
                 end
-                INTERP : begin
-                    y_raw <= interpolated[15:0];
+                SLOPE : state <= MULTIPLY;
+                MULTIPLY : state <= ADD;
+                ADD : state <= ROUND;
+                ROUND : begin
+                    y_raw <= 16'(integer_q + {16'h0, round_up});
                     busy <= 0;
                     done <= 1;
                     state <= IDLE;
@@ -195,5 +209,4 @@ flowchart TB
 endmodule
 ```
 
-**Cách hoạt động.** IDLE chốt index/fraction lúc start. READ0 lấy y0; READ1 lấy y1; INTERP chốt kết quả U16/F15, hạ busy và phát done một chu kỳ. Input thay đổi sau start không làm đổi giao dịch đang chạy. Các thanh ghi điều khiển và sample dùng nonblocking assignment tại cạnh lên; reset đưa khối về IDLE.
-
+**Cách hoạt động.** IDLE chốt index/fraction; READ0/READ1 lấy samples; SLOPE/MULTIPLY/ADD chốt từng bước arithmetic. ROUND xuất U16/F15, hạ busy và phát done một clock. Sáu pha pipeline đã được thử reset/cancel/restart; toàn 1.638.400 input ở 25 format giữ kết quả reference. Payload dùng nonblocking assignment và không reset; control về IDLE khi reset.

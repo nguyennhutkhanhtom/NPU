@@ -1,0 +1,61 @@
+# Full RTL language graph; CPU only loads data and tokenizes.
+set_global_assignment -name FAMILY "Cyclone V"
+set_global_assignment -name DEVICE 5CGXFC9E6F35C7
+set_global_assignment -name TOP_LEVEL_ENTITY llm_soc
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
+set_global_assignment -name SEED 1
+set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name SDC_FILE llm_soc.sdc
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/npu_pkg.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/banked_word_ram.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_pkg.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/div.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_bank_ram.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/pipelined_word_ram.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_parameter_ram.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_math.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_soc.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/norm.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/sigmoid.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/sram_256_wrapper.sv"
+set_global_assignment -name VERILOG_INCLUDE_FILE "../Verilog Source code/llm_exp_lut.svh"
+set_global_assignment -name VERILOG_INCLUDE_FILE "../Verilog Source code/llm_gumbel_lut.svh"
+set_global_assignment -name VERILOG_INCLUDE_FILE "../Verilog Source code/sigmoid_lut.svh"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "host_rdata[*]"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "host_ready"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "running"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "ready"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "pc_debug[*]"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "instr_debug[*]"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "error"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "overflow_out"
+# Demo electrical contract: 2.5-V single-ended outputs, 16-mA drive, fast slew.
+# Physical driver selection reduces pad delay; timing constraints are unchanged.
+set_instance_assignment -name IO_STANDARD "2.5 V" -to "host_rdata[*]"
+set_instance_assignment -name IO_STANDARD "2.5 V" -to "host_ready"
+set_instance_assignment -name IO_STANDARD "2.5 V" -to "running"
+set_instance_assignment -name IO_STANDARD "2.5 V" -to "ready"
+set_instance_assignment -name IO_STANDARD "2.5 V" -to "pc_debug[*]"
+set_instance_assignment -name IO_STANDARD "2.5 V" -to "instr_debug[*]"
+set_instance_assignment -name IO_STANDARD "2.5 V" -to "error"
+set_instance_assignment -name IO_STANDARD "2.5 V" -to "overflow_out"
+set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "host_rdata[*]"
+set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "host_ready"
+set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "running"
+set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "ready"
+set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "pc_debug[*]"
+set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "instr_debug[*]"
+set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "error"
+set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "overflow_out"
+set_instance_assignment -name SLEW_RATE 1 -to "host_rdata[*]"
+set_instance_assignment -name SLEW_RATE 1 -to "host_ready"
+set_instance_assignment -name SLEW_RATE 1 -to "running"
+set_instance_assignment -name SLEW_RATE 1 -to "ready"
+set_instance_assignment -name SLEW_RATE 1 -to "pc_debug[*]"
+set_instance_assignment -name SLEW_RATE 1 -to "instr_debug[*]"
+set_instance_assignment -name SLEW_RATE 1 -to "error"
+set_instance_assignment -name SLEW_RATE 1 -to "overflow_out"

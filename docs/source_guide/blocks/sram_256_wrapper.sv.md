@@ -231,4 +231,3 @@ flowchart LR
 ```
 
 `read_row_q` chỉ có clock và capture enable. Tag/valid bảo đảm client không tiêu thụ dữ liệu chưa hợp lệ.
-

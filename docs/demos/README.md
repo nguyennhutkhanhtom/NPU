@@ -23,9 +23,9 @@ kết quả lịch sử, với CPU generation và linear-only RTL được phân
 
 ## Đọc trước khi export model mới
 
-1. [Kiến trúc và format số](../design/architecture.md): kiểm tra K≤512, operator và dung lượng SRAM.
-2. [Instruction, descriptor và scale](../design/interfaces.md): xác định tensor layout và chương trình.
-3. [NORM, ternary và vector unit](../source_guide/README.md): hiểu điểm làm tròn/bão hòa và dữ liệu trung gian.
-4. [Regression](../verification/README.md): kiểm tra RTL trước khi chạy checkpoint.
+1. [Graph và format số hiện tại](../design/full_rtl_language.md): kiểm tra model shape, operators và memory map.
+2. [Full RTL tests và application](../../tests/full_rtl/README.md): source/config hiện tại phải qua mọi hardware gate trước khi export hoặc chạy checkpoint.
+3. [Từng khối RTL](../source_guide/blocks/README.md): hiểu adapter SRAM, rounding/saturation và handshake.
+4. [Timing evidence](../verification/timing/README.md): kiểm tra đúng full top, mọi corner và source hashes.
 
 [Về mục lục tài liệu](../README.md) · [Xem design review](../reviews/design_review.md)

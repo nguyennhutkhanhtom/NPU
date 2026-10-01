@@ -1,0 +1,62 @@
+Statistics: 40 0 2853 0 0 3.339
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+llm_parameter_ram:u_parameters|g_ram_lane[3].write_data_q[7]~DUPLICATE llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.write_data_q[7] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_parameter_ram:u_parameters|g_ram_lane[3].write_data_q[7]~DUPLICATE}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+llm_parameter_ram:u_parameters|g_ram_lane[3].write_data_q[7]~DUPLICATE llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.write_data_q[7] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+llm_parameter_ram:u_parameters|g_ram_lane[3].write_data_q[7]~DUPLICATE llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.write_data_q[7] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_parameter_ram:u_parameters|g_ram_lane[3].write_data_q[7]~DUPLICATE}}}
+llm_parameter_ram:u_parameters|g_ram_lane[3].write_data_q[7]~DUPLICATE llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.write_data_q[7] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

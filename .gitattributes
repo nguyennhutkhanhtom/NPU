@@ -28,3 +28,9 @@ docs/verification/timing/** -whitespace
 *.pdf binary
 *.pptx binary
 *.zip binary
+# Evidence manifests hash raw simulator logs/command JSON. Disable EOL filters
+# within evidence so a Git checkout preserves those byte-exact hashes.
+docs/verification/timing/** -text
+docs/verification/memory_ip/** -text -whitespace
+tests/full_rtl/evidence/** -text -whitespace
+tests/full_rtl/unit_results.json -text -whitespace

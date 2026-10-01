@@ -77,4 +77,3 @@ endpackage
 ```
 
 Xorshift32 deterministic, seed zero được controller thay bằng one. Temperature zero cho greedy argmax.
-

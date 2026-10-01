@@ -543,7 +543,21 @@ module tb_sigmoid;
         @(negedge clk);start=0;timeout=0;
         while(!done && timeout<10) begin @(negedge clk);timeout++;end
         if(!done || y_raw!==16'h4000) $fatal(1,"SIG busy start/input capture");
-        $display("SIGMOID_PASS cases=%0d formats=25 protocol_checks=2",index);$finish;
+        // Cancel in every registered phase, then demand a fresh correct result.
+        for(integer phase=1;phase<=6;phase++) begin
+            @(negedge clk);x_raw=-16384;frac_bits=12;start=1;
+            @(negedge clk);start=0;
+            repeat(phase-1) @(negedge clk);
+            rst_n=0;#1;
+            if(busy || done || y_raw!==0) $fatal(1,"SIG pipeline reset phase=%0d",phase);
+            @(negedge clk);rst_n=1;
+            repeat(8) begin @(negedge clk);if(done || busy) $fatal(1,"SIG stale pipeline response phase=%0d",phase);end
+            @(negedge clk);x_raw=0;frac_bits=12;start=1;
+            @(negedge clk);start=0;timeout=0;
+            while(!done && timeout<10) begin @(negedge clk);timeout++;end
+            if(!done || busy || y_raw!==16'h4000) $fatal(1,"SIG restart phase=%0d",phase);
+        end
+        $display("SIGMOID_PASS cases=%0d formats=25 protocol_checks=2 pipeline_reset_phases=6",index);$finish;
     end
 endmodule
 

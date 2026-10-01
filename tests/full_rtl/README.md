@@ -7,9 +7,13 @@ not load a trained application checkpoint. `run_application.ps1` first checks
 the exact full-graph synthesis/timing evidence, source/config hashes and unit
 results. It refuses to run the application below 100 MHz or after source edits.
 
-The six groups are SIMD/LUT arithmetic, graph operators, host protocol, SRAM
-contracts, selection edge cases and a host-loaded synthetic graph. Selection
-checks masked IDs and stable ties at S32_MIN. SRAM checks two-edge adapter
+The seven groups are actual Intel RAM-IP/model contract comparison, SIMD/LUT
+arithmetic, graph operators, host protocol, SRAM contracts, selection edge cases
+and a host-loaded synthetic graph. FPGA protocol/selection/graph/application
+use the default USE_QUARTUS_MEMORY=1 and ModelSim `-L altera_mf_ver`. Operator
+fixtures explicitly use the portable model backend to initialize numeric cases;
+RAM-IP comparison verifies identical behavior without internal memory seeding. Selection
+checks masked IDs and stable ties at S32_MIN. SRAM checks five-edge adapter
 reads, queued writes, collisions, consecutive requests and reset cancellation.
 Operator coverage includes reserved-code rejection, signed
 nonuniform RMSNorm and 128-position attention on the final KV tile. The graph
@@ -28,6 +32,21 @@ The independent CPU integer model supplies expected values solely for verificati
 ./tools/timing/run.ps1 -Project quartus/llm_soc -Tag fullrtl100_final -QuartusBin C:/intelFPGA_lite/18.1/quartus/bin64
 ./tests/full_rtl/run_application.ps1 -TimingManifest docs/verification/timing/fullrtl100_final/manifest.json
 ```
+
+Parameter read now takes five internal edges plus host lane selection and
+frontend response. Parameter write ACK waits for leaf commit. Tests permit
+16 host edges and reject stale responses across ten cancellation phases;
+the expected data and tokens are unchanged. `O_FINISH` waits for queued
+vector/cache writes before reporting completion.
+
+The native helper now rejects protocol/selection/graph/application/all because
+it does not supply the actual Intel RAM-IP simulation model. It never silently
+changes USE_QUARTUS_MEMORY. Use ModelSim for the FPGA configuration.
+`merge_unit_evidence.py` can combine six exact-source ModelSim units and an
+independent ModelSim graph only after source/test/log hashes and actual Intel
+RAM model loading agree. Older [select3 units](evidence/select3_units/unit_results.json)
+verify their archived pre-IP source and cannot gate this revision. Windows
+Application Control blocks some native executables; no policy bypass is used.
 
 The new host uses registered transactions: hold `host_en`, address, write flag
 and data until `host_ready`; then deassert enable for at least one clock. All
@@ -49,4 +68,6 @@ no effect. Read status to determine completion before reading output IDs.
 
 SRAM payload is 768 KiB parameters, 384 KiB KV cache and 9 KiB vector workspace.
 Quartus uses a C9 device to verify packing and timing. The replaceable memory
-adapter carries a register-merging attribute; compute RTL uses no vendor macros.
+adapter isolates altsyncram M10K from compute RTL. AUTO_DSP_RECOGNITION OFF
+and DSP_BLOCK_BALANCING LOGIC ELEMENTS prohibit DSP inference; the application
+gate also requires actual fit summary DSP=0 and PLL=0.

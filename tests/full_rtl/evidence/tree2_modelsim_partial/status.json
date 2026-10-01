@@ -1,0 +1,5 @@
+{
+  "status": "CANCELLED_DUPLICATE_GRAPH",
+  "reason": "Same byte-exact RTL/tb_graph already PASS in native Verilator; five ModelSim groups PASS. Merge retains each simulator and immutable logs.",
+  "time_utc": "2026-10-01T18:29:23.8119457Z"
+}

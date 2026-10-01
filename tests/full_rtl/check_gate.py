@@ -20,6 +20,16 @@ def check_gate(manifest_path: Path) -> dict:
         assert sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest() == digest, \
             f"Configuration changed after timing: {name}; final timing must use quartus/llm_soc"
     metrics = evidence["metrics"]
+    # The user's FPGA technology policy permits memory IP and ordinary cells,
+    # not DSP/PLL hard macros. Check the actual fitted resource report.
+    fit_path = manifest_path.parent / "llm_soc.fit.summary"
+    assert sha256(fit_path.read_bytes()).hexdigest() == evidence["archives"][fit_path.name]["archive_sha256"], \
+        "Fitted resource report changed since timing evidence"
+    fit_summary = fit_path.read_text()
+    import re
+    for resource in ("DSP Blocks", "PLLs"):
+        count = re.search(r"^Total " + resource + r"\s*:\s*(\d+)", fit_summary, re.MULTILINE)
+        assert count and int(count[1]) == 0, f"Disallowed fitted {resource}"
     assert metrics["worst_restricted_fmax_mhz"] >= 100, "Fmax is below 100 MHz"
     assert len(metrics["corners"]) == 4
     for corner, item in metrics["corners"].items():
@@ -36,11 +46,18 @@ def check_gate(manifest_path: Path) -> dict:
             assert diagnostic["id"] != 332148, "Timing requirements were not met"
     units = json.loads((Path(__file__).parent / "unit_results.json").read_text(encoding="utf-8-sig"))
     assert units["status"] == "PASS" and units["rtl_sources"] == actual, "Current operator units have not passed"
-    assert set(units["tests"]) == {"tb_llm_math", "tb_llm_operators", "tb_llm_protocol", "tb_llm_ram", "tb_llm_graph", "tb_llm_selection"}, \
+    assert set(units["tests"]) == {"tb_quartus_memory", "tb_llm_math", "tb_llm_operators", "tb_llm_protocol", "tb_llm_ram", "tb_llm_graph", "tb_llm_selection"}, \
         "The selection boundary regression must pass along with all existing groups"
     tests = {p.name: sha256(p.read_bytes()).hexdigest() for p in Path(__file__).parent.iterdir()
              if p.name.startswith("tb_") and p.suffix == ".sv" or p.name == "run_units.ps1"}
     assert units["test_sources"] == tests, "Unit tests changed since the recorded run"
+    for name, digest in units.get("runner_sources", {}).items():
+        path = ROOT / name
+        assert sha256(path.read_bytes()).hexdigest() == digest, "Compiled unit runner changed since recorded run"
+    for item in units.get("evidence", {}).values():
+        path = (ROOT / item["log"]).resolve()
+        assert path.is_relative_to(ROOT) and sha256(path.read_bytes()).hexdigest() == item["sha256"], \
+            "Unit evidence log changed since recorded run"
     return evidence
 
 

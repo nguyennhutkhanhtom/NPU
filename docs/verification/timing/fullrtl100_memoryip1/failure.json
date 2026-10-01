@@ -1,0 +1,10 @@
+{
+  "status": "SYNTHESIS_CONFIG_FAIL",
+  "failure": "Quartus18.1 rejects MAX_DSP_BLOCKS as unrecognized QSF assignment (line45)",
+  "errors": 2,
+  "warnings": 0,
+  "map_log_sha256": "107a45b4b91d746593f452a1087a06fcd62a23d8eabcc40803036892c3ff768b",
+  "source_archive_sha256": "aed7d7b563339a5b29ed5b3953fcc544af59143c9199804b7a30c2846fe278d8",
+  "next_tag": "fullrtl100_memoryip2",
+  "fix": "Remove invalid assignment; retain AUTO_DSP_RECOGNITION OFF and DSP_BLOCK_BALANCING LOGIC ELEMENTS; require actual resource counts zero"
+}

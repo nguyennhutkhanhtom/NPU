@@ -416,4 +416,3 @@ endmodule
 **Cách phần code hoạt động.** Các câu lệnh thuộc cùng một nhánh/pha xử lý và phải được đọc liền nhau; tách riêng từng dòng sẽ làm mất quan hệ điều kiện và dữ liệu.
 
 **Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `app_addr_r`: địa chỉ gửi memory controller; `wr_addr_cnt`: số địa chỉ burst write đã phát; `app_wdf_end_r`: cờ cuối write data beat theo interface cũ; `app_en_r`: command valid gửi controller.
-

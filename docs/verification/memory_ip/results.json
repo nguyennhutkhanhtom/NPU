@@ -1,0 +1,17 @@
+{
+  "status": "ANALYSIS_SYNTHESIS_PASS",
+  "scope": "Full llm_soc with explicit Intel memory IP and logic-cell arithmetic; fitting/timing pending, not100MHz acceptance",
+  "recorded_utc": "2026-10-01T21:20:46.988028+00:00",
+  "timing_tag": "fullrtl100_memoryip2",
+  "device": "5CGXFC9E6F35C7",
+  "quartus": "18.1.0 Build625",
+  "errors": 0,
+  "warnings": 13,
+  "total_dsp_blocks": 0,
+  "total_plls": 0,
+  "files": {
+    "llm_soc.map.summary": "89a219e597ed478f60d33be2bca5dade7e998bb741adc9629cd80be3bf218b64",
+    "map.log": "012ff69c6e7d8675d438150f45043dce38c614d6b5420133bbc4886ff2cea078",
+    "sources_before.json": "b472f0e4d0b8f31a8ab12c8adb2db9657f88e76b8000d01f7e66f0d6cbc0c9f1"
+  }
+}

@@ -54,4 +54,3 @@ endmodule
 **Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
 
 **Tín hiệu và dữ liệu chính.** `a`: operand A; `result`: kết quả đã saturation.
-

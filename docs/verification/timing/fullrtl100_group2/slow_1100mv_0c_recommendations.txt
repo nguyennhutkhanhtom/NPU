@@ -1,0 +1,186 @@
+Statistics: 40 0 3173 0 40 -2.187
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+op[17]~DUPLICATE probability_sum_q[18] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[17] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[15] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[13] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[12] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[11] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[10] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[9]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[16] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[14] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[18]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[25] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[25]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[22]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[21]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[20] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[19] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[21] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[23] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[27] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+scalar_group_q[6][10] write_vector_q[586] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[17]~DUPLICATE probability_sum_q[18] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[17] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[15] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[13] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[12] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[11] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[10] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[9]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[9] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[16] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[14] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[18]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[25] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[25]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[22]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[21]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[20] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[19] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[21] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[23] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[27] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+scalar_group_q[6][10] write_vector_q[586] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[17]~DUPLICATE probability_sum_q[18] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[18] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[18] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[17] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[17] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[17] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[15] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[15] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[15] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[13] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[13] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[13] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[12] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[12] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[12] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[11] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[11] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[11] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[10] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[10] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[10] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[9]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[9]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[9]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[9] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[9] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[16] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[16] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[16] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[14] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[14] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[14] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[18]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[18]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[18]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[25] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[25] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[25] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[25]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[25]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[25]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[22]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[22]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[22]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[21]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[21]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[21]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[20] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[20] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[20] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[19] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[19] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[19] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[21] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[21] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[21] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[23] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[23] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[23] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[17]~DUPLICATE probability_sum_q[27] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[27] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[17]~DUPLICATE}}}
+op[17]~DUPLICATE probability_sum_q[27] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+op[17]~DUPLICATE probability_sum_q[18] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[17] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[15] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[13] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[12] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[11] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[10] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[9]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[9] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[16] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[14] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[18]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[25] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[25]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[22]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[21]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[20] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[19] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[21] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[23] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[17]~DUPLICATE probability_sum_q[27] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

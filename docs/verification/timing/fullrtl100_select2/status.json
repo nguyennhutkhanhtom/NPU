@@ -1,0 +1,5 @@
+{
+  "status": "INTERRUPTED",
+  "reason": "Tool sessions ended; actual process inventory empty before select3 retry; no synthesis/timing acceptance",
+  "recorded_utc": "2026-10-01T19:08:06.2282525Z"
+}

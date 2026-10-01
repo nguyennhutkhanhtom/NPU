@@ -28,7 +28,7 @@ try {
     & "$SimBin/vlog.exe" -sv -svinputport=var -work $library "+incdir+$rtl" "+incdir+$build" -f $list -l (Join-Path $build 'application_compile.log') *> (Join-Path $build 'application_compile.console')
     if($LASTEXITCODE -ne 0) {throw 'Application compile failed'}
     $log=Join-Path $build 'application.log'
-    & "$SimBin/vsim.exe" -c -onfinish exit -L $library -lib $library -l $log tb_full_rtl_application -do 'run -all; quit -f' *> "$log.console"
+    & "$SimBin/vsim.exe" -c -onfinish exit -L altera_mf_ver -L $library -lib $library -l $log tb_full_rtl_application -do 'run -all; quit -f' *> "$log.console"
     if($LASTEXITCODE -ne 0 -or !(Select-String -LiteralPath $log -SimpleMatch 'FULL_RTL_APPLICATION_PASS' -Quiet) -or (Select-String -LiteralPath $log -Pattern '^# \*\* (Fatal|Error)' -Quiet)) {
         Get-Content -LiteralPath $log -Tail 20;throw 'Application failed'
     }

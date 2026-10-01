@@ -17,6 +17,25 @@ GUIDE = ROOT / "docs/source_guide"
 RTL = ROOT / "Verilog Source code"
 
 NEW = {
+    "quartus_word_ram.sv": (
+        "FPGA memory technology binding", "IP duy nhất của Quartus trong graph là altsyncram M10K. Một read và một write dùng chung clock, raw read một cạnh; OLD_DATA khi cùng địa chỉ. Storage/output không reset, không khởi tạo. ASIC thay module này phía sau adapter, giữ nguyên interface và contract.",
+        "WR[Write address data enable] --> IP[altsyncram M10K 1R 1W]\n    RD[Read address enable] --> IP\n    CLK[Common clock] --> IP\n    IP --> Q[Raw read after one edge]\n    CONTRACT[OLD_DATA and no storage reset] -.-> IP",
+        [(1, "Technology boundary and ports", "Compute/control không instantiate vendor primitive. Client chỉ truy cập qua pipelined_word_ram; địa chỉ phải nhỏ hơn ROWS."),
+         (16, "Memory configuration", "Port A write và port B read. Address/read control B chốt CLOCK0; output unregistered giữ raw latency một cạnh. M10K không dùng DSP hay PLL."),
+         (30, "Clock and port binding", "Clock enables bypass và các cổng không dùng tie constant. Reset/cancellation thuộc adapter ngoài; memory không có reset.")]),
+    "pipelined_word_ram.sv": (
+        "Memory technology và response pipeline", "USE_QUARTUS_MEMORY chọn altsyncram cho toàn bank hoặc model SRAM portable chia tile. Hai backend có cùng throughput một read/write mỗi clock; read ba cạnh khi ROWS≤4096, bốn cạnh nếu lớn hơn; write commit cạnh thứ hai. Reset hủy enables/valid và queued write, giữ nội dung và payload. OLD_DATA collision theo request nhận cùng cạnh.",
+        "REQ[Read and write requests] --> CAP[Registered addresses data enables]\n    CAP --> IP[FPGA altsyncram whole bank]\n    CAP --> MODEL[ASIC behavioral tiled SRAM model]\n    IP --> RESPONSE[Registered response]\n    MODEL --> RESPONSE\n    RESPONSE --> FINAL[Optional extra edge for rows above 4096]\n    FINAL --> DATA[Identical data valid contract]\n    CAP --> VALID[Read and write validity pipeline]",
+        [(1, "Interface and pipeline control", "Valid phải đi cùng dữ liệu. wr_valid xuất hiện khi leaf write thực thi; storage/payload không reset."),
+         (33, "FPGA memory IP backend", "Một altsyncram toàn bank, không tạo decoder/mux tile trong compute RTL. Request E1, raw read/write E2, response E3; bank lớn thêm E4. Queued write bị hủy khi reset trước E2."),
+         (60, "Portable ASIC behavior model", "Model chia tile 1024 word để giữ contract trước khi có macro ASIC. dont_merge chỉ trong model boundary; grouped response giữ cùng latency với IP.")]),
+    "llm_parameter_ram.sv": (
+        "Parameter SRAM và host commit", "USE_QUARTUS_MEMORY chọn FPGA IP hoặc model ASIC qua word adapter. Compute read bốn cạnh khi DEPTH≤4096, năm cạnh ở cấu hình24576. Host read thêm một cạnh chọn lane trước frontend ACK. Write ACK chỉ sau leaf commit. Valid/tag pipeline loại response host đã hủy hoặc khác địa chỉ; reset giữ SRAM nhưng hủy queue.",
+        "HOST[Host active address and explicit requests] --> BANK[Eight local lane requests]\n    CORE[Compute row request] --> BANK\n    BANK --> SRAM[Technology-selected word banks]\n    SRAM --> ROW[256-bit row after five edges]\n    ROW --> LANE[Registered host lane selection]\n    TAG[Address owner and cancellation tags] --> VALID[Compute and host validity]\n    SRAM --> COMMIT[Write commit acknowledgement]",
+        [(1, "Interface and ownership", "Compute và host truy cập độc quyền do top arbitration. Host data/config không phải intermediate graph."),
+         (30, "Validity and cancellation", "Host response chỉ hợp lệ khi active, loại read/write và địa chỉ vẫn khớp. ACK write theo wr_valid từ leaf, tránh báo xong trước commit."),
+         (51, "Tags and host payload", "Địa chỉ/lane đi cùng latency suy ra theo DEPTH; output host register tách tile reduction khỏi pin host_rdata."),
+         (61, "Local lane banks", "Tám lane U32 có request registers riêng, rồi technology adapter. Nội dung và payload không reset; reset chỉ hủy enables/valid.")]),
     "scale_compose.sv": (
         "Ghép scale bằng lựa chọn shift song song", "Ghép factor_m/factor_r với quant_d thành result_m U24 và result_r U6. Chốt tích U48, đánh giá song song 48 threshold hằng, chọn shift lớn nhất còn vừa U24, rồi thực hiện một divider U48/U25 và RNE. Không còn vòng decrement candidate.",
         "IN[U24 factors and U6 base shift] --> MUL[Registered U48 product]\n    MUL --> FIT[48 constant threshold comparisons]\n    FIT --> SELECT[Prefix boundary and signed target shift]\n    SELECT --> SHIFT[Registered numerator and denominator]\n    SHIFT --> DIV[Divider U48 by U25]\n    DIV --> RNE[Remainder RNE and range checks]\n    SELECT --> OUT[Result M and r]\n    RNE --> OUT",
@@ -34,11 +53,11 @@ NEW = {
          (34, "Tile decoding", "High address bits chọn tile, low 10 bits chọn word; tag đọc được chốt cùng cạnh với SRAM."),
          (48, "Read output", "OR của các output được mask bằng tag one-hot. Latency logic là một cạnh; mux cuối vẫn phải đáp ứng STA.")]),
     "llm_bank_ram.sv": (
-        "SRAM lane-masked cho graph", "32 lane S24 độc lập tạo row 768 bit. KV dùng 4096 row, vector workspace dùng 96 row. Mỗi lane chốt địa chỉ, enable và payload riêng. Read valid sau hai cạnh; write nhận request rồi ghi leaf ở cạnh kế tiếp. Reset hủy request/valid nhưng giữ storage.",
-        "REQ[Shared row requests] --> LOCAL[Per-lane address enable and data registers]\n    MASK[Lane write mask] --> LOCAL\n    LOCAL --> BANK[32 independent word banks]\n    BANK --> DATA[768-bit read row after two edges]\n    REQ --> VALID[Two-stage read validity]",
-        [(1, "Interface", "Client cấp địa chỉ hợp lệ và chỉ tiêu thụ output khi rd_valid. Adapter giữ throughput một read và một write mỗi cạnh."),
-         (19, "Local request registers", "dont_merge chỉ nằm tại boundary SRAM để giữ fanout địa chỉ local. Reset hủy queued enables; payload và storage không reset."),
-         (38, "Lane banks and response validity", "Leaf old-data collision xảy ra khi các request đã chốt thực thi. rd_valid trễ hai cạnh; reset hủy response đang chờ.")]),
+        "SRAM lane-masked cho graph", "32 lane S24 tạo row 768 bit. USE_QUARTUS_MEMORY chọn FPGA IP hoặc model ASIC qua word adapter. Request qua group bốn lane, lane register và adapter register trước storage; read valid năm cạnh với ROWS≤4096, write commit ở cạnh thứ tư. wr_busy buộc operator drain trước completion. Reset hủy queue/valid, giữ storage/payload.",
+        "REQ[Shared row requests] --> GROUP[Requests per four lanes]\n    MASK[Lane write mask] --> GROUP\n    GROUP --> LOCAL[Per-lane request registers]\n    LOCAL --> BANK[Technology-selected word banks]\n    BANK --> DATA[768-bit row after five edges]\n    MASK --> DRAIN[Four-stage write pending and wr_busy]",
+        [(1, "Interface and write pending", "Client dùng rd_valid; operator phải chờ wr_busy hạ trước báo done. Latency bao gồm group, lane và tile stages."),
+         (25, "Group request distribution", "Địa chỉ/data payload chốt không enable mux. SRAM-only dont_merge giữ locality; read/write enables reset để hủy queued requests."),
+         (48, "Lane banks and response", "Leaf old-data collision theo cùng accepted cycle. Lane-valid có cùng latency; output dùng lane0 valid để xác nhận cả row.")]),
     "llm_math.sv": (
         "SIMD signed multiply và reduction", "32 tích S24×S32 tạo S56; cây cộng cân bằng mở rộng đến S61. Input chốt khi start và không busy. Payload không reset; pipeline valid reset để hủy transaction.",
         "IN[32 pairs S24 and S32] --> CAP[Input registers]\n    CAP --> MUL[32 registered products S56]\n    MUL --> TREE[Five registered reduction levels]\n    TREE --> SUM[Sum S61]\n    CTRL[8-bit validity pipeline] -.-> CAP\n    CTRL -.-> TREE\n    CTRL --> DONE[busy and done]",
@@ -56,7 +75,7 @@ NEW = {
         "HOST[32-bit registered host] --> PARAM[Parameter SRAM]\n    HOST --> TOKENS[Prompt and generation config]\n    TOKENS --> GRAPH[Graph and operator FSMs]\n    GRAPH --> SIMD[32-lane math plus sqrt divide sigmoid]\n    PARAM --> SIMD\n    VECTOR[Vector SRAM] <--> SIMD\n    KV[KV cache SRAM] <--> SIMD\n    SIMD --> GRAPH\n    GRAPH --> OUTPUT[RTL-selected output token buffer]",
         [(1, "Interface and FSM state", "graph_t biểu diễn toàn graph; op_t biểu diễn micro-operations và return states. Fixed graph không có instruction CPU trong execution path."),
          (75, "Host and parameter SRAM", "Request chốt trước decode, response giữ đến host_en hạ. Host write bị chặn trong core_running. Reset chỉ xóa control/config, không clear parameter SRAM."),
-         (153, "Compute memories and arithmetic", "Vector/KV có valid một cạnh; parameter wrapper hai cạnh. Shared SIMD có transaction valid; sqrt/div/sigmoid dùng busy/done."),
+         (153, "Compute memories and arithmetic", "Vector/KV và parameter compute read năm cạnh ở cấu hình hiện tại; host thêm một cạnh chọn lane. Shared SIMD có transaction valid; sqrt/div/sigmoid dùng busy/done."),
          (206, "Request helpers and graph sequencing", "Registered addresses xuất hiện trước enable. Graph xử lý mọi prompt position, bốn layer mỗi position, rồi chọn token và quay lại embedding."),
          (295, "Per-lane datapath", "Constant slices giúp synthesis thấy từng lane. RNE và saturation dùng helper portable; signedness cần tường minh cho bit slices."),
          (381, "Operator launch and memory handshakes", "O_IDLE chọn source/destination theo graph; request/wait states đợi SRAM hoặc arithmetic response; O_WRITE ghi lane mask."),
@@ -68,7 +87,7 @@ NEW = {
 }
 
 def save(path, text):
-    path.write_text(text, encoding="utf-8", newline="\n")
+    path.write_text(text.rstrip() + "\n", encoding="utf-8", newline="\n")
 
 manifest = json.loads((GUIDE / "source_manifest.json").read_text(encoding="utf-8"))
 entries = {entry["file"]: entry for entry in manifest["files"]}
@@ -83,7 +102,7 @@ for source in sorted(RTL.iterdir()):
     digest = sha256(raw).hexdigest()
     document = GUIDE / "blocks" / (source.name + ".md")
     entry = entries.get(source.name)
-    if entry and source.name not in {'scale_compose.sv', 'llm_bank_ram.sv'}:
+    if entry and source.name not in {'scale_compose.sv', 'llm_bank_ram.sv', 'llm_parameter_ram.sv', 'pipelined_word_ram.sv', 'quartus_word_ram.sv'}:
         doc = document.read_text(encoding="utf-8")
         if source.suffix in {".sv", ".v"}:
             pattern = re.compile(r"### \[Dòng (\d+)–(\d+): (.*?)\]\(<([^>]+)>\)\n\n<!-- source-range:\d+:\d+ -->\n```systemverilog\n(.*?)\n```", re.S)

@@ -6,16 +6,19 @@
 
 ## Đọc theo thứ tự
 
-**[Kiến trúc](design/architecture.md) → [ISA và host](design/interfaces.md) → [Sơ đồ RTL](source_guide/README.md) → [Từng khối](source_guide/blocks/README.md) → [Kiểm chứng](verification/README.md) → [Demo model](demos/README.md)**
+**[Toàn graph hiện tại](design/full_rtl_language.md) → [Host, tests và application](../tests/full_rtl/README.md) → [Từng khối RTL](source_guide/blocks/README.md) → [Timing post-fit](verification/timing/README.md) → [Demo model](demos/README.md)**
+
+Core instruction-driven trước được mô tả riêng tại [kiến trúc legacy](design/architecture.md),
+[ISA/host legacy](design/interfaces.md) và [hierarchy legacy](source_guide/README.md).
 
 | Bạn muốn làm gì? | Bắt đầu ở đây | Đọc tiếp |
 |---|---|---|
-| Hiểu core 32 PE, format số và SRAM | [Kiến trúc và bảng bit](design/architecture.md) | [Hierarchy và luồng dữ liệu](source_guide/README.md) |
 | Hiểu toàn graph sinh token trên RTL | [Autonomous language graph](design/full_rtl_language.md) | [Host, numeric và gate tests](../tests/full_rtl/README.md) |
-| Nạp dữ liệu hoặc viết chương trình | [Instruction, descriptor, host map và LUT](design/interfaces.md) | [Cách export và chạy model](demos/README.md) |
+| Nạp parameter/config/prompt cho top hiện tại | [Host và memory map toàn graph](design/full_rtl_language.md) | [Gated application runner](../tests/full_rtl/README.md) |
+| Tra cứu core 32 PE và chương trình legacy | [Kiến trúc và bảng bit](design/architecture.md) | [Instruction, descriptor và host](design/interfaces.md) |
 | Sửa một module RTL | [Mục lục từng file](source_guide/blocks/README.md) | [Các cải tiến và hợp đồng hiện hành](reviews/design_review.md) |
 | Chạy test, xem synthesis hoặc timing | [Regression và demo synthesis](verification/README.md) | [Critical path và Fmax post-fit](verification/timing/README.md) |
-| Chạy model có checkpoint | [Danh sách demo](demos/README.md) | [MNIST trên RTL](demos/mnist.md), [ngôn ngữ CPU + linear RTL](demos/language.md) |
+| Chạy model có checkpoint | [Full RTL application](../tests/full_rtl/README.md) | [Model candidates](demos/candidates.md), [asset setup NanoFable](../tests/language_demo/README.md) |
 | Tra cứu các quyết định và lỗi cũ | [Báo cáo tích hợp](reviews/implementation_review.md) | [Lịch sử, thesis và bài báo](history/README.md) |
 
 ## Tổ chức tài liệu
@@ -43,11 +46,14 @@ Bản rà soát ngày **01/10/2026** pass **10 mục regression**, compile **0 e
 
 Top mới `llm_soc` triển khai toàn graph và SRAM trên RTL. A&S của snapshot
 `fullrtl100_tiled` đã fitting thành công nhưng timing FAIL 70,41 MHz.
-`fullrtl100_pipeline2` cải thiện lên 83,58 MHz, vẫn timing FAIL. Source hiện tại
-đã sửa signed attention, tie selection S32_MIN và reserved ternary code, dùng
-FSM one-hot cùng local SRAM request registers; `fullrtl100_local1` A&S PASS
-0 error/6 warning, fitting PASS0/4, timing vẫn FAIL84,49MHz. Sáu nhóm unit
-đã PASS trên source này, gồm graph16layer executions/3tokenRTL.
+`fullrtl100_pipeline2` đạt83,58MHz; `local1` đạt84,49MHz. `fullrtl100_tree2`
+A&S PASS0/6, fitting PASS0/29, timing vẫn FAIL91,28MHz; sáu nhóm unit đã PASS
+đúng source snapshot đó. Current select RTL dùng96one-hot states, SRAM pipeline
+và hai tầng chọn lane sigmoid; native graph PASS16layer executions/3tokenRTL,
+sáu nhóm unit đã PASS cho snapshot `fullrtl100_select3`, nhưng timing FAIL92,22MHz.
+Bản `fullrtl100_group2` có năm nhóm units PASS, fitting PASS0/3 nhưng timing
+FAIL81,53MHz gồm setup/hold; full graph ModelSim còn chạy. Xem timing hub/checkpoint
+cho source/config hashes, warnings và kết quả mọi corner.
 Application pretrained tiếp tục bị chặn đến khi source/config hiện tại đạt đủ gate.
 
 Code trích dẫn, dòng và SHA-256 trong source guide được đối chiếu bởi [validator](source_guide/validate.py); [validation.json](source_guide/validation.json) ghi kết quả. Sau khi sửa RTL, cập nhật chú giải rồi chạy:

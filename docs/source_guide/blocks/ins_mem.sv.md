@@ -149,4 +149,3 @@ endmodule
 ```
 
 **Cách hoạt động.** Reset chỉ xóa control/tag. Cạnh lên chuyển request tag sang response và lấy request host read hoặc fetch mới. Khi request đổi địa chỉ hoặc client, response cũ không khớp nên phải đợi đủ hai cạnh lên. Top giữ host và fetch loại trừ nhau; priority host trong mux không tạo một cổng đọc thứ hai.
-

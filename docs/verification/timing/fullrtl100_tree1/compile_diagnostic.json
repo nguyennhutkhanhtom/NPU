@@ -1,0 +1,5 @@
+{
+  "status": "CANCELLED",
+  "reason": "Unit operators failed KV write commit at row7/lane0; A&S passed but fitting cancelled before stale-source evidence. Source archive preserves failing revision.",
+  "time_utc": "2026-10-01T18:06:27.9893843Z"
+}

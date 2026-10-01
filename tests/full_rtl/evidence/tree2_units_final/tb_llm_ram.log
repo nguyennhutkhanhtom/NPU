@@ -1,0 +1,17 @@
+# vsim -c -onfinish exit -L D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work -lib D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work -l D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\tb_llm_ram.log tb_llm_ram -do "run -all; quit -f" 
+# Start time: 01:05:48 on Oct 02,2026
+# Loading sv_std.std
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.tb_llm_ram
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.banked_word_ram
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.llm_bank_ram
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.sram_word_tile
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.pipelined_word_ram
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'adapter'.  Expected 10, found 9.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_llm_ram/adapter File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_ram.sv Line: 13
+# ** Warning: (vsim-3722) D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_ram.sv(13): [TFMPC] - Missing connection for port 'wr_busy'.
+# run -all
+# LLM_RAM_PASS checks=17 tile_boundaries=4 collision=old_data adapter_latency=5 mask=checked back_to_back=2 reset_cancellation=checked
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_ram.sv(80)
+#    Time: 941 ns  Iteration: 0  Instance: /tb_llm_ram
+# End time: 01:05:49 on Oct 02,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 2

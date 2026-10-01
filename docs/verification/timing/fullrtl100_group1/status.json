@@ -1,0 +1,12 @@
+{
+  "status": "SYNTHESIS_FAIL",
+  "stage": "map",
+  "errors": 2,
+  "warnings": 0,
+  "reason": "Quartus18.1 rejects inline genvar declaration at llm_soc.sv609 within explicit generate region",
+  "sources": "sources_before.json",
+  "source_archive": "source_archive.json",
+  "log": "map.log",
+  "fix_in_next_tag": "Move scalar_group genvar declaration to module scope; fullrtl100_group2",
+  "timing_acceptance": false
+}

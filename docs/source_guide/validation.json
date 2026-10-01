@@ -1,13 +1,13 @@
 {
   "snapshot_date": "2026-10-01",
-  "source_files": 38,
-  "main_rtl_diagrams": 34,
+  "source_files": 41,
+  "main_rtl_diagrams": 37,
   "detail_diagrams": 16,
-  "rtl_logic_groups": 148,
-  "rtl_source_lines_grouped": 4296,
+  "rtl_logic_groups": 158,
+  "rtl_source_lines_grouped": 4625,
   "lut_entries_explained": 1044,
-  "links_checked": 1757,
-  "mermaid_diagrams_rendered": 55,
+  "links_checked": 1807,
+  "mermaid_diagrams_rendered": 58,
   "errors": [],
   "scope": "Documentation coverage, source excerpts, line counts, headers, hashes, local links and Mermaid render evidence. Validator only; RTL regression and Quartus synthesis evidence are recorded separately in docs/reviews/design_review.md."
 }

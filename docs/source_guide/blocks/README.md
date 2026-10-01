@@ -6,12 +6,15 @@ Mỗi trang gồm vai trò, sơ đồ kiến trúc tổng quan, phần giải th
 
 | File | Vai trò | Trạng thái | Nhóm logic | Số dòng |
 |---|---|---|---:|---:|
-| [llm_soc.sv](llm_soc.sv.md) | Autonomous autoregressive graph | Full RTL graph | 11 | 906 |
+| [quartus_word_ram.sv](quartus_word_ram.sv.md) | FPGA memory technology binding | Full RTL graph | 3 | 39 |
+| [pipelined_word_ram.sv](pipelined_word_ram.sv.md) | Tile request và response pipeline | Full RTL graph | 3 | 110 |
+| [llm_parameter_ram.sv](llm_parameter_ram.sv.md) | Parameter SRAM và host commit | Full RTL graph | 4 | 87 |
+| [llm_soc.sv](llm_soc.sv.md) | Autonomous autoregressive graph | Full RTL graph | 11 | 962 |
 | [llm_pkg.sv](llm_pkg.sv.md) | Layout, saturation và sampler | Full RTL graph | 3 | 30 |
 | [llm_math.sv](llm_math.sv.md) | SIMD signed multiply và reduction | Full RTL graph | 3 | 46 |
 | [llm_gumbel_lut.svh](llm_gumbel_lut.svh.md) | LUT portable của graph | Full RTL graph | — | 262 |
 | [llm_exp_lut.svh](llm_exp_lut.svh.md) | LUT portable của graph | Full RTL graph | — | 263 |
-| [llm_bank_ram.sv](llm_bank_ram.sv.md) | SRAM lane-masked cho graph | Full RTL graph | 3 | 49 |
+| [llm_bank_ram.sv](llm_bank_ram.sv.md) | SRAM lane-masked cho graph | Full RTL graph | 3 | 74 |
 | [banked_word_ram.sv](banked_word_ram.sv.md) | SRAM tiles và mux đọc | Full RTL graph | 4 | 50 |
 | [matmulfree.sv](matmulfree.sv.md) | Top-level: điều phối toàn NPU | Đang dùng — core chính | 15 | 572 |
 | [npu_pkg.sv](npu_pkg.sv.md) | Kiểu dữ liệu, saturation và RNE S64/S42 | Đang dùng — package chung | 7 | 128 |
@@ -20,7 +23,7 @@ Mỗi trang gồm vai trò, sơ đồ kiến trúc tổng quan, phần giải th
 | [rowwise_op.sv](rowwise_op.sv.md) | ALU vector nhỏ và cập nhật state | Đang dùng — datapath rowwise | 9 | 240 |
 | [rowwise_dispatch.sv](rowwise_dispatch.sv.md) | Đọc tensor, gọi ALU và ghi output | Đang dùng — điều phối rowwise | 8 | 166 |
 | [scale_compose.sv](scale_compose.sv.md) | Ghép scale động của q vào postscale | Đang dùng — trước TMATMUL dynamic_q | 6 | 144 |
-| [sigmoid.sv](sigmoid.sv.md) | Sigmoid bằng ROM và nội suy | Đang dùng — gọi từ rowwise_op | 3 | 90 |
+| [sigmoid.sv](sigmoid.sv.md) | Sigmoid bằng ROM và nội suy | Đang dùng — gọi từ rowwise_op | 3 | 102 |
 | [sram_256_wrapper.sv](sram_256_wrapper.sv.md) | Ranh giới giữa RTL và SRAM macro | Đang dùng — chung cho hai SRAM | 5 | 101 |
 | [descriptor_file.sv](descriptor_file.sv.md) | Bảng mô tả tensor và ma trận | Đang dùng | 3 | 70 |
 | [div.sv](div.sv.md) | Divider unsigned tuần tự | Đang dùng — scalar nội bộ | 4 | 72 |
