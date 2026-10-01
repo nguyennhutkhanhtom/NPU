@@ -39,7 +39,7 @@ flowchart TB
     DATA -->|"instr 13 bit"| F
     DATA -->|"host_rinstr 13 bit"| H
     MATCH -.->|"instr_valid"| F
-    MATCH -.->|"host_rvalid → host_ready"| H
+    MATCH -.->|"host_rvalid → frontend response register"| H
 ```
 
 Nét liền là dữ liệu, nét đứt là điều khiển và địa chỉ. Memory và read data register không có reset bất đồng bộ. Sơ đồ mô tả storage logic, không quy định macro vật lý.
@@ -49,7 +49,7 @@ Nét liền là dữ liệu, nét đứt là điều khiển và địa chỉ. M
 1. Host write tại cạnh lên khi rst_n, host_en và host_we. Top chỉ chấp nhận khi core idle.
 2. Một request read ổn định qua hai cạnh lên: cạnh đầu chốt address/client, cạnh thứ hai chốt RAM data và response tag. Valid chỉ lên khi request hiện tại, request tag và response tag cùng địa chỉ/client.
 3. Fetch valid chỉ có khi fetch_en đang giữ. Scheduler ở S_FETCH đến khi valid rồi chốt instr_q ở cạnh tiếp theo. Fetch dùng cùng hai cạnh lên của hợp đồng bộ nhớ trong mọi build.
-4. Host read giữ en, we=0 và address đến host_ready. Write, idle hoặc đổi client làm response cũ mất hiệu lực; đọc lại cùng địa chỉ sau write vẫn phải chờ.
+4. Cổng host của RAM giữ en, we=0 và address đến host_rvalid; frontend top chốt request/response rồi trả host_ready sau bốn cạnh lên cho host ngoài. Write, idle hoặc đổi client làm response cũ mất hiệu lực; đọc lại cùng địa chỉ sau write vẫn phải chờ.
 5. Memory và read data register không reset; reset xóa tag/control nên response trước reset mất hiệu lực. Không được dùng data khi valid=0.
 6. Test độc lập kiểm tra toàn bộ 512 địa chỉ, chuyển client, overwrite/re-read, restart cùng PC và reset không xóa contents. Test top đi đến PC=511, restart và lỗi khi chương trình cố đi qua PC cuối.
 

@@ -25,7 +25,8 @@ module ternary_mul (
     output logic format_error
 );
     import npu_pkg::*;
-    typedef enum logic [3:0] {IDLE, REQ_CHUNK, WAIT_CHUNK, ACCUM, REQ_BIAS, WAIT_BIAS, SCALE, WRITE, FINISH} state_t;
+    typedef enum logic [3:0] {IDLE, REQ_CHUNK, WAIT_CHUNK, REDUCE_GROUPS, REDUCE_TOTAL, ACCUM, REQ_BIAS, WAIT_BIAS,
+        SCALE_PRODUCT, SCALE_ROUND, SCALE, WRITE, FINISH} state_t;
     state_t state;
 
     ws_desc_t input_desc_q, output_desc_q;
@@ -40,6 +41,10 @@ module ternary_mul (
     logic signed [17:0] accumulator_q;
     logic signed [8:0] terms [0:31];
     logic signed [17:0] partial;
+    logic signed [8:0] group_terms [0:3][0:7];
+    logic signed [11:0] group_sum [0:3], group_sum_q [0:3];
+    logic signed [13:0] total_sum, total_sum_q;
+    logic reserved_weight_q;
     logic [7:0] weight_bit_base;
     logic reserved_weight;
 
@@ -47,9 +52,16 @@ module ternary_mul (
     logic signed [31:0] y32;
     logic signed [15:0] y16;
     logic scale_ov;
-    postscale u_scale(.acc(accumulator_q),
-        .scale_m(matrix_desc_q.scale_m),
-        .scale_r(matrix_desc_q.scale_r),
+    logic signed [41:0] scale_product_q, scale_rounded_q;
+    // Payload registers have no asynchronous reset. SCALE is reachable only
+    // after both stages have captured this row; reset cancels the control FSM.
+    always_ff @(posedge clk) begin
+        if (rst_n && state == SCALE_PRODUCT)
+            scale_product_q <= $signed(accumulator_q) * $signed({1'b0, matrix_desc_q.scale_m});
+        if (rst_n && state == SCALE_ROUND)
+            scale_rounded_q <= rne_shift42(scale_product_q, matrix_desc_q.scale_r);
+    end
+    postscale_finish u_scale(.rounded(scale_rounded_q),
         .bias(bias),
         .output_s32(matrix_desc_q.output_s32),
         .y_s32(y32),
@@ -92,10 +104,29 @@ module ternary_mul (
             end
         end
     end
-    acc_mul #(.TERM_W(9),
-        .NUM_INPUTS(32),
-        .ACC_W(18)) u_reduce(.term(terms),
-        .sum(partial));
+    // Four independent eight-lane trees keep carry widths proportional to
+    // their ranges. Registers separate decode/reduction from accumulation.
+    genvar g, lane;
+    generate
+    for (g = 0; g < 4; g = g + 1) begin : g_reduce
+        for (lane = 0; lane < 8; lane = lane + 1) begin : g_lane
+            assign group_terms[g][lane] = terms[g * 8 + lane];
+        end
+        acc_mul #(.TERM_W(9), .NUM_INPUTS(8), .ACC_W(12)) u_group(
+            .term(group_terms[g]), .sum(group_sum[g]));
+    end
+    endgenerate
+    acc_mul #(.TERM_W(12), .NUM_INPUTS(4), .ACC_W(14)) u_total(
+        .term(group_sum_q), .sum(total_sum));
+    assign partial = {{4{total_sum_q[13]}}, total_sum_q};
+    // Control reset cancels an in-flight chunk before these payloads are used.
+    always_ff @(posedge clk) begin
+        if (rst_n && state == REDUCE_GROUPS) begin
+            for (int g = 0; g < 4; g = g + 1) group_sum_q[g] <= group_sum[g];
+            reserved_weight_q <= reserved_weight;
+        end
+        if (rst_n && state == REDUCE_TOTAL) total_sum_q <= total_sum;
+    end
 
     always_comb begin
         ws_rd_en = 0;
@@ -192,15 +223,17 @@ module ternary_mul (
                         w_word <= param_rd_data;
                         got_w <= 1;
                     end
-                    if ((got_q || ws_rd_valid) && (got_w || param_rd_valid)) state <= ACCUM;
+                    if ((got_q || ws_rd_valid) && (got_w || param_rd_valid)) state <= REDUCE_GROUPS;
                 end
+                REDUCE_GROUPS : state <= REDUCE_TOTAL;
+                REDUCE_TOTAL : state <= ACCUM;
                 ACCUM : begin
                     if (input_chunk_q + 1 >= chunks_per_row) begin
                         accumulator_q <= accumulator_q + partial;
                         input_chunk_q <= 0;
                         if (matrix_desc_q.reserved[1]) begin
                             bias <= 0;
-                            state <= SCALE;
+                            state <= SCALE_PRODUCT;
                         end
                         else state <= REQ_BIAS;
                     end else begin
@@ -208,7 +241,7 @@ module ternary_mul (
                         input_chunk_q <= input_chunk_q + 1'b1;
                         state <= REQ_CHUNK;
                     end
-                    if (reserved_weight) begin
+                    if (reserved_weight_q) begin
                         format_error <= 1;
                         state <= FINISH;
                     end
@@ -216,8 +249,10 @@ module ternary_mul (
                 REQ_BIAS : state <= WAIT_BIAS;
                 WAIT_BIAS : if (param_rd_valid) begin
                     bias <= param_rd_data[(output_row_q[2:0] * 32) +: 32];
-                    state <= SCALE;
+                    state <= SCALE_PRODUCT;
                 end
+                SCALE_PRODUCT : state <= SCALE_ROUND;
+                SCALE_ROUND : state <= SCALE;
                 SCALE : begin
                     overflow <= overflow | scale_ov;
                     if (matrix_desc_q.output_s32) begin

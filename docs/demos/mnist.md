@@ -2,11 +2,11 @@
 
 [Project](../../README.md) → [Tài liệu](../README.md) → [Demo](README.md) → **Binary-MNIST160**
 
-Đã chạy model **Binary-MNIST width160_160_160** được đề xuất trong [danh sách model](candidates.md), sử dụng weight đã huấn luyện công khai. Graph thực tế là **256→160→160→160→10**, ba ReLU, RMSNorm không affine trước mỗi linear layer; không có bias. RTL giữ nguyên bản portable đã pass [rà soát design](../reviews/design_review.md).
+Đã chạy model **Binary-MNIST width160_160_160** được đề xuất trong [danh sách model](candidates.md), sử dụng weight đã huấn luyện công khai. Graph thực tế là **256→160→160→160→10**, ba ReLU, RMSNorm không affine trước mỗi linear layer; không có bias. RTL dùng bản portable sau tối ưu timing; [rà soát design](../reviews/design_review.md) ghi các register boundary mới.
 
 ## Kết quả
 
-Lượt demo ngày **01/10/2026 lúc 11:23:28** pass **22.492 commands / 12.402 so sánh host**, compile và mô phỏng **0 error / 0 warning**.
+Lượt demo ngày **01/10/2026 lúc 14:30:25** pass **22.492 commands / 12.402 so sánh host**, compile và mô phỏng **0 error / 0 warning**.
 
 | Kiểm tra | Kết quả |
 |---|---|
@@ -15,7 +15,7 @@ Lượt demo ngày **01/10/2026 lúc 11:23:28** pass **22.492 commands / 12.402 
 | RTL chạy graph đã export | 10/10 đúng nhãn, không error/overflow |
 | Dữ liệu trung gian | 40 lượt tầng: output, q, z, D, hệ số NORM/QUANT khớp bit-exact với reference số nguyên |
 | Chương trình toàn graph | 12 instruction gồm HALT; chạy hai lần, lần thứ hai không reset/nạp lại |
-| Chu kỳ xử lý toàn graph | 15.899 clock cho mỗi lần chạy toàn graph của ảnh số 0; chưa tính host load/readback |
+| Chu kỳ xử lý toàn graph | 20.783 clock cho mỗi lần chạy toàn graph của ảnh số 0; chưa tính host load/readback |
 
 ![Ảnh mẫu, nhãn và dự đoán CPU/RTL](mnist.png)
 

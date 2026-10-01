@@ -16,7 +16,7 @@
 
 </details>
 
-RTL và tài liệu cập nhật 01/10/2026. Source chính dùng một implementation cho mô phỏng và synthesis; không chọn datapath theo `SYNTHESIS`, `QUARTUS_SYNTHESIS` hoặc thuộc tính memory riêng của Quartus. Quartus chỉ dùng để demo khả năng Analysis & Synthesis. RTL dùng số nguyên cho inference; chưa xác nhận timing/PPA hoặc binding SRAM của ASIC. Xem [báo cáo rà soát và kiểm chứng](../reviews/design_review.md), [kiểm tra Quartus](../verification/README.md), [tổng quan và sơ đồ khối](../source_guide/README.md) và [chú giải từng file](../source_guide/blocks/README.md).
+RTL và tài liệu cập nhật 01/10/2026. Source chính dùng một implementation cho mô phỏng và synthesis; không chọn datapath theo `SYNTHESIS`, `QUARTUS_SYNTHESIS` hoặc thuộc tính memory riêng của Quartus. Quartus dùng để demo Analysis & Synthesis và timing FPGA. RTL dùng số nguyên cho inference; chưa xác nhận timing/PPA hoặc binding SRAM của ASIC. Xem [báo cáo rà soát và kiểm chứng](../reviews/design_review.md), [critical path/Fmax](../verification/timing/README.md), [tổng quan và sơ đồ khối](../source_guide/README.md) và [chú giải từng file](../source_guide/blocks/README.md).
 
 `Verilog Source code` là nguồn đang được phát triển. Bản sao `npu_asic_v2` đã được loại bỏ khi dọn workspace; các test cần thiết đã gộp vào `tests`.
 
@@ -88,7 +88,11 @@ Bias S32 luôn tính theo đơn vị output và cộng **sau** rescale. r nằm 
 
 Khi đang chạy, chỉ đọc control/status được chấp nhận. Truy cập khác hoặc địa chỉ không hợp lệ có host_ready=0 và không làm thay đổi memory. Đây là host window đơn giản, chưa phải AXI/APB bridge. Saturation thông thường đặt overflow; lỗi format, địa chỉ, hệ số hoặc opcode đặt error và dừng scheduler. Output đã ghi ở các word trước khi phát hiện lỗi dữ liệu không được rollback.
 
-Đọc parameter/workspace SRAM và instruction memory dùng cùng giao tiếp synchronous trong mọi build: host giữ `host_en=1`, `host_we=0` và địa chỉ ổn định đến khi `host_ready=1`, rồi lấy `host_rdata`. Response hợp lệ sau hai cạnh lên clock; ready chỉ xác nhận dữ liệu của địa chỉ đang yêu cầu. Các window control/descriptor vẫn đọc trực tiếp; ghi host được chấp nhận theo tín hiệu ready. Scheduler chờ instruction valid trước khi decode. So với mô hình đọc tổ hợp trước đây, fetch thêm hai chu kỳ mỗi instruction. Reset xóa control/tag, giữ nội dung RAM.
+Host giữ `host_en=1`, `host_we=0` và địa chỉ ổn định đến `host_ready=1`, rồi lấy `host_rdata`. Top chốt request và response có tag: control/descriptor read cần **hai cạnh lên**, parameter/workspace SRAM và instruction read cần **bốn cạnh lên** tính từ lần sample request đầu. Ghi host vẫn được acknowledge trực tiếp khi hợp lệ và commit tại cạnh clock. Request đổi địa chỉ, hạ enable hoặc chuyển sang write hủy read cũ; chỉ đọc control/status được phép khi running.
+
+Sau ready, nếu tiếp tục giữ cùng enable/address thì response đầu được giữ trong cache của giao dịch đó. Để poll status mới cùng địa chỉ, hạ `host_en` qua ít nhất một cạnh lên rồi yêu cầu lại, hoặc đổi địa chỉ/issue write. Data chỉ có nghĩa khi ready. Reset xóa request/response valid, mask output về zero và giữ nội dung RAM.
+
+Backend SRAM/instruction adapter vẫn dùng read/tag/valid hai cạnh lên; hai register boundary tại frontend top tạo latency host mới. Scheduler fetch không đổi: chờ instruction valid, thêm hai chu kỳ mỗi instruction so với mô hình fetch tổ hợp cũ.
 
 `epsilon_raw32` là một thanh ghi chung. Nếu các NORM có F_t hoặc epsilon khác nhau, exporter/host phải lập lịch cập nhật thanh ghi này giữa các đoạn chương trình; chưa có epsilon riêng trong descriptor.
 
@@ -119,7 +123,7 @@ Script dùng ModelSim tại `C:/intelFPGA/20.1/modelsim_ase/win32aloem`, compile
 
 Regression chạy một bộ RTL thống nhất. Module `tb_sram` trong `tests/tb_all.sv` kiểm tra latency, đổi địa chỉ host liên tiếp, mask ghi từng lane, compute read và reset giữ dữ liệu SRAM. Các kiểm tra misuse/handshake nằm ở testbench thay vì thay đổi RTL theo macro synthesis. Sau regression, có thể chạy Analysis & Synthesis bằng Ctrl+K trong project Quartus để kiểm tra khả năng tổng hợp.
 
-Lượt `All` sau rà soát toàn design pass **9 mục kiểm tra** lúc 11:23:43 ngày 01/10/2026: ROM và tám testbench RTL; compile 0 error/0 warning. Gồm 168 ca host, 900 exact compose, 4.301 sqrt, 12.720 postscale và 1.638.400 sigmoid input ở đủ 25 F_t. Demo Quartus cùng snapshot pass 0 error/0 warning lúc 11:24:04; xem [báo cáo chi tiết](../reviews/design_review.md).
+Lượt `All` sau rà soát toàn design pass **10 mục kiểm tra** lúc 14:31:18 ngày 01/10/2026: ROM và chín testbench RTL; compile 0 error/0 warning. Gồm 168 ca host cùng 30 protocol reads/11 cancellations/4 blocked regions, 900 exact compose, 4.301 sqrt, 12.720 postscale và 1.638.400 sigmoid input ở đủ 25 F_t. Rowwise thêm 1.800 ca với reference S128, kiểm tra busy-input changes và reset trong các pha. A&S sau tối ưu timing pass 0 error/0 warning lúc 14:31:44; xem [báo cáo timing](../verification/timing/README.md) và [rà soát design](../reviews/design_review.md).
 
 Kiểm tra suy luận phần cứng riêng: `quartus_sh -t tests/check_synthesis.tcl`. Script kiểm tra latch/RAM trong netlist demo của Quartus. SRAM được chia thành tám bank 32 bit có write-enable riêng trong mọi build; descriptor dùng thanh ghi 32 bit với index hằng cho từng word. Cách viết này mô tả enable/reset rõ ràng cho công cụ synthesis, không yêu cầu primitive hay thuộc tính Intel.
 

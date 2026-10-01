@@ -1,0 +1,23 @@
++------------------------------------------------------------------------------------------------------------+
+; Create Clock                                                                                               ;
++--------------+------+--------+-----------------+-------------------+-----------+----------------+----------+
+; SDC Command  ; Name ; Period ; Waveform        ; Targets           ; Add Clock ; Location       ; Comments ;
++--------------+------+--------+-----------------+-------------------+-----------+----------------+----------+
+; create_clock ; clk  ; 1.000  ; { 0.000 0.500 } ; [get_ports {clk}] ;           ; extract.tcl:28 ;          ;
++--------------+------+--------+-----------------+-------------------+-----------+----------------+----------+
+
++---------------------------------------------------------------------------------------------------------------------------------------+
+; Set Clock Uncertainty                                                                                                                 ;
++-----------------------+--------+------------+--------------------+----------+--------------------+-------------+-----------+----------+
+; SDC Command           ; Flags  ; From Flags ; From               ; To Flags ; To                 ; Uncertainty ; Source    ; Comments ;
++-----------------------+--------+------------+--------------------+----------+--------------------+-------------+-----------+----------+
+; set_clock_uncertainty ; -setup ; -rise_from ; [get_clocks {clk}] ; -rise_to ; [get_clocks {clk}] ; 0.100       ; Generated ;          ;
+; set_clock_uncertainty ; -hold  ; -rise_from ; [get_clocks {clk}] ; -rise_to ; [get_clocks {clk}] ; 0.060       ; Generated ;          ;
+; set_clock_uncertainty ; -setup ; -rise_from ; [get_clocks {clk}] ; -fall_to ; [get_clocks {clk}] ; 0.100       ; Generated ;          ;
+; set_clock_uncertainty ; -hold  ; -rise_from ; [get_clocks {clk}] ; -fall_to ; [get_clocks {clk}] ; 0.060       ; Generated ;          ;
+; set_clock_uncertainty ; -setup ; -fall_from ; [get_clocks {clk}] ; -rise_to ; [get_clocks {clk}] ; 0.100       ; Generated ;          ;
+; set_clock_uncertainty ; -hold  ; -fall_from ; [get_clocks {clk}] ; -rise_to ; [get_clocks {clk}] ; 0.060       ; Generated ;          ;
+; set_clock_uncertainty ; -setup ; -fall_from ; [get_clocks {clk}] ; -fall_to ; [get_clocks {clk}] ; 0.100       ; Generated ;          ;
+; set_clock_uncertainty ; -hold  ; -fall_from ; [get_clocks {clk}] ; -fall_to ; [get_clocks {clk}] ; 0.060       ; Generated ;          ;
++-----------------------+--------+------------+--------------------+----------+--------------------+-------------+-----------+----------+
+

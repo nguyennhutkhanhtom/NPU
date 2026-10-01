@@ -80,6 +80,24 @@ package npu_pkg;
         end
     endfunction
 
+    // RNE for the signed 42-bit postscale product. At shift >= 42 every
+    // S42 value rounds to zero, including the minimum value's even tie.
+    function automatic logic signed [41:0] rne_shift42(
+            input logic signed [41:0] x,
+            input logic [5:0] shift
+        );
+        logic signed [41:0] q;
+        logic [41:0] discarded;
+        logic inc;
+        begin
+            q = x >>> shift;
+            discarded = $unsigned(x) << (7'd42 - {1'b0, shift});
+            inc = discarded[41] && ((|discarded[40:0]) || q[0]);
+            if (shift >= 42) rne_shift42 = '0;
+            else rne_shift42 = q + $signed({41'h0, inc});
+        end
+    endfunction
+
     // Shift is positive for division, negative for multiplication by a power of two.
     // Callers constrain left shifts to <=24 and operands to at most 33 signed bits.
     function automatic logic signed [63:0] scale_shift64(

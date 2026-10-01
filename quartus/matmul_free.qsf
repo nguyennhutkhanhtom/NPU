@@ -45,6 +45,7 @@ set_global_assignment -name PROJECT_CREATION_TIME_DATE "12:28:01  SEPTEMBER 30, 
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/ternary_mul.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/sram_256_wrapper.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/banked_word_ram.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/sigmoid.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/scale_compose.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/rowwise_op.sv"
@@ -79,7 +80,7 @@ set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 set_global_assignment -name PARALLEL_SYNTHESIS OFF
 set_global_assignment -name SYNTHESIS_EFFORT AUTO
-set_global_assignment -name OPTIMIZATION_TECHNIQUE AREA
+set_global_assignment -name OPTIMIZATION_TECHNIQUE SPEED
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
@@ -96,4 +97,10 @@ set_global_assignment -name SMART_RECOMPILE ON
 set_global_assignment -name FLOW_ENABLE_RTL_VIEWER ON
 
 
+
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+
+# Explicit, repeatable timing demo constraints.
+set_global_assignment -name SDC_FILE matmul_free.sdc
+set_global_assignment -name SEED 1
+set_global_assignment -name FITTER_EFFORT "STANDARD FIT"

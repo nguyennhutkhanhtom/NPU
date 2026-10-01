@@ -1,0 +1,138 @@
+Statistics: 40 0 2137 1 0 5.633
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+instr_q[0]~DUPLICATE instr_debug[0] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[0]~DUPLICATE}}}
+PC:u_pc|pc_out[8] pc_debug[8] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{PC:u_pc|pc_out[8]}}}
+instr_q[6]~DUPLICATE instr_debug[6] 0.833159 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[6]~DUPLICATE}}}
+instr_q[1]~DUPLICATE instr_debug[1] 0.887495 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[1]~DUPLICATE}}}
+instr_q[9] instr_debug[9] 0.796935 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[9]}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+host_addr[30] host_rdata[28] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[29] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[27] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[6] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[25] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[10] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[26] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[24] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[1] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[12] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[0] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[14] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[22] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[17] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[21] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[4] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[18] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[16] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[8] 0.846584 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+host_addr[30] host_rdata[11] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[12] host_ready 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[2] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[23] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[5] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[30] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[7] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[13] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[15] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[9] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[20] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[3] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[19] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[31] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+instr_q[0]~DUPLICATE instr_debug[0] 0.360732 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+PC:u_pc|pc_out[8] pc_debug[8] 0.360732 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+host_addr[30] host_rdata[28] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[29] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[27] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[6] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[25] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[10] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[26] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[24] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[1] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[12] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[0] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[14] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[22] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[17] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[21] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[4] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 7}
+host_addr[30] host_rdata[18] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[16] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[8] 0.846584 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+host_addr[30] host_rdata[11] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[12] host_ready 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[2] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[23] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[5] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[30] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[7] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[13] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[15] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[9] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[20] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[3] 0.785853 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+host_addr[30] host_rdata[19] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+host_addr[30] host_rdata[31] 0.968048 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+instr_q[0]~DUPLICATE instr_debug[0] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[0]~DUPLICATE}}}
+instr_q[0]~DUPLICATE instr_debug[0] 0.360732 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+PC:u_pc|pc_out[8] pc_debug[8] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{PC:u_pc|pc_out[8]}}}
+PC:u_pc|pc_out[8] pc_debug[8] 0.360732 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+instr_q[6]~DUPLICATE instr_debug[6] 0.833159 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[6]~DUPLICATE}}}
+instr_q[1]~DUPLICATE instr_debug[1] 0.887495 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[1]~DUPLICATE}}}
+instr_q[9] instr_debug[9] 0.796935 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[9]}}}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

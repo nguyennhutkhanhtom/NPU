@@ -85,7 +85,7 @@ a11_Opt12k_cos_Aug_BitMnist_PerTensor_Binary_RMS_width160_160_160_lr0.001_decay0
 
 Quantizer Binary dùng `sign(w−mean(w))` và gain `mean(abs(w))`. Bản float32 CPU này có một weight đúng tại mean, xuất thành mã 0; các weight còn lại là −1/+1. Đây vẫn là checkpoint huấn luyện với quantizer Binary. Đổi nhãn `QuantType` sang `Ternary` không tạo ra mô hình được train cho ba mức hoặc bảo đảm giữ độ chính xác. Các checkpoint khác có bias, affine norm hoặc kích thước khác cần kiểm tra lại graph và dung lượng.
 
-Đã tạo parameter/workspace/instruction images và chạy core với NORM→scale động→TM→ReLU. Mười ảnh mẫu đúng nhãn trên CPU/reference/RTL; toàn bộ intermediates của 40 lượt tầng khớp số nguyên. Chương trình đầy đủ chạy hai lần liên tục, 15.899 chu kỳ/lần cho ảnh số 0. Đây là demo phần cứng trên tập mẫu nhỏ; checkpoint `.pth` vẫn phải qua exporter, không nạp trực tiếp vào RTL.
+Đã tạo parameter/workspace/instruction images và chạy core với NORM→scale động→TM→ReLU. Mười ảnh mẫu đúng nhãn trên CPU/reference/RTL; toàn bộ intermediates của 40 lượt tầng khớp số nguyên. Chương trình đầy đủ chạy hai lần liên tục, 20.783 chu kỳ/lần cho ảnh số 0. Đây là demo phần cứng trên tập mẫu nhỏ; checkpoint `.pth` vẫn phải qua exporter, không nạp trực tiếp vào RTL.
 
 ## Demo gần kiến trúc của bài báo 2406.02528v5
 

@@ -1,7 +1,8 @@
 // Generic synchronous memory boundary for replacement by a foundry SRAM adapter.
 // Host and compute reads share the same two-cycle request/response contract.
 module sram_256_wrapper #(
-    parameter int ADDR_W = 8
+    parameter int ADDR_W = 8,
+    parameter int DEPTH = 1 << ADDR_W
 ) (
     input logic clk,
     input logic rst_n,
@@ -19,7 +20,6 @@ module sram_256_wrapper #(
     output logic [31:0] host_rdata,
     output logic host_rvalid
 );
-    localparam int DEPTH = 1 << ADDR_W;
     logic [ADDR_W - 1 : 0] write_address;
     logic [255:0] write_data;
     logic [7:0] write_mask;
@@ -62,13 +62,10 @@ module sram_256_wrapper #(
     genvar lane;
     generate
     for (lane = 0; lane < 8; lane = lane + 1) begin : g_ram_lane
-        logic [31:0] memory [0 : DEPTH - 1];
-        always_ff @(posedge clk) begin
-            if (rst_n && write_mask[lane])
-                memory[write_address] <= write_data[lane * 32 +: 32];
-            if (read_pending_q)
-                read_row_q[lane * 32 +: 32] <= memory[shared_read_address_q];
-        end
+        banked_word_ram #(.WIDTH(32), .ROWS(DEPTH), .ADDR_W(ADDR_W)) u_storage(
+            .clk(clk), .rd_en(read_pending_q), .wr_en(rst_n && write_mask[lane]),
+            .rd_addr(shared_read_address_q), .wr_addr(write_address),
+            .wr_data(write_data[lane * 32 +: 32]), .rd_data(read_row_q[lane * 32 +: 32]));
     end
     endgenerate
 

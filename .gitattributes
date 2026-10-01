@@ -12,8 +12,15 @@
 *.tcl text eol=lf
 *.qpf text eol=lf
 *.qsf text eol=lf
+*.sdc text eol=lf
+*.html text eol=lf
 *.cjs text eol=lf
 *.rpt text eol=lf
+*.log text eol=lf
+# Preserve Quartus/ModelSim report formatting as generated evidence.
+*.rpt -whitespace
+*.log -whitespace
+docs/verification/timing/** -whitespace
 *.summary text eol=lf
 *.txt text eol=lf
 *.bin binary

@@ -55,8 +55,9 @@ try {
     New-Item -ItemType Directory -Force $simRoot | Out-Null
     $lock=[IO.File]::Open((Join-Path $simRoot '.run.lock'),'OpenOrCreate','ReadWrite','None')
     $rtlPath=(Resolve-Path -LiteralPath $RtlDir).Path
-    $rtl=@(Get-Item -LiteralPath (Join-Path $rtlPath 'npu_pkg.sv'))+
-         @(Get-ChildItem -LiteralPath $rtlPath -File | Where-Object {$_.Extension -in '.sv','.v' -and $_.Name -ne 'npu_pkg.sv'} | Sort-Object Name)
+    $packages=@('npu_pkg.sv','llm_pkg.sv') | Where-Object {Test-Path -LiteralPath (Join-Path $rtlPath $_)}
+    $rtl=@($packages | ForEach-Object {Get-Item -LiteralPath (Join-Path $rtlPath $_)})+
+         @(Get-ChildItem -LiteralPath $rtlPath -File | Where-Object {$_.Extension -in '.sv','.v' -and $_.Name -notin $packages} | Sort-Object Name)
     foreach($file in Get-ChildItem -LiteralPath $rtlPath -File | Where-Object {$_.Extension -in '.sv','.v','.svh','.mem'}) {
         $sourceHashes[$file.Name]=(Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLower()
     }
@@ -72,8 +73,9 @@ try {
     $sourceList=Join-Path $simRoot 'sources.f'
     $sources | Set-Content -LiteralPath $sourceList -Encoding utf8
     $names=switch($Block) {
-        'All'        {@('host','scalar','divprofiles','postscale','sigmoid','arithmetic','imem','sram')}
-        {$_ -in @('Host','Norm','Ternary','Rowwise')} {@('host')}
+        'All'        {@('host','scalar','divprofiles','postscale','sigmoid','arithmetic','rowwise','imem','sram')}
+        'Rowwise'    {@('host','rowwise')}
+        {$_ -in @('Host','Norm','Ternary')} {@('host')}
         {$_ -in @('Arithmetic','AccMul','AddSub','Mul')} {@('arithmetic')}
         default      {@($Block.ToLower())}
     }

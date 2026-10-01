@@ -1,0 +1,410 @@
+Info: *******************************************************************
+Info: Running Quartus Prime Analysis & Synthesis
+    Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
+    Info: Copyright (C) 2018  Intel Corporation. All rights reserved.
+    Info: Your use of Intel Corporation's design tools, logic functions 
+    Info: and other software and tools, and its AMPP partner logic 
+    Info: functions, and any output files from any of the foregoing 
+    Info: (including device programming or simulation files), and any 
+    Info: associated documentation or information are expressly subject 
+    Info: to the terms and conditions of the Intel Program License 
+    Info: Subscription Agreement, the Intel Quartus Prime License Agreement,
+    Info: the Intel FPGA IP License Agreement, or other applicable license
+    Info: agreement, including, without limitation, that your use is for
+    Info: the sole purpose of programming logic devices manufactured by
+    Info: Intel and sold by Intel or its authorized distributors.  Please
+    Info: refer to the applicable agreement for further details.
+    Info: Processing started: Thu Oct 01 20:58:06 2026
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off matmul_free -c matmul_free
+Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/ternary_mul.sv
+    Info (12023): Found entity 1: ternary_mul File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/ternary_mul.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/sram_256_wrapper.sv
+    Info (12023): Found entity 1: sram_256_wrapper File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/sram_256_wrapper.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/sigmoid.sv
+    Info (12023): Found entity 1: sigmoid File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/sigmoid.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/scale_compose.sv
+    Info (12023): Found entity 1: scale_compose File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/scale_compose.sv Line: 4
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/rowwise_op.sv
+    Info (12023): Found entity 1: rowwise_op File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/rowwise_op.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/rowwise_dispatch.sv
+    Info (12023): Found entity 1: rowwise_dispatch File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/rowwise_dispatch.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/regfile.sv
+    Info (12023): Found entity 1: register File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/regfile.sv Line: 1
+Info (12021): Found 2 design units, including 2 entities, in source file rtl/postscale.sv
+    Info (12023): Found entity 1: postscale File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/postscale.sv Line: 1
+    Info (12023): Found entity 2: postscale_finish File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/postscale.sv Line: 25
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/pc.sv
+    Info (12023): Found entity 1: PC File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/PC.sv Line: 1
+Info (12021): Found 1 design units, including 0 entities, in source file rtl/npu_pkg.sv
+    Info (12022): Found design unit 1: npu_pkg (SystemVerilog) File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/npu_pkg.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/norm_dispatch.sv
+    Info (12023): Found entity 1: norm_dispatch File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/norm_dispatch.sv Line: 1
+Info (12021): Found 2 design units, including 2 entities, in source file rtl/norm.sv
+    Info (12023): Found entity 1: isqrt_u64 File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/norm.sv Line: 1
+    Info (12023): Found entity 2: norm File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/norm.sv Line: 65
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/mw_reg.sv
+    Info (12023): Found entity 1: mw_reg File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/mw_reg.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/mul.sv
+    Info (12023): Found entity 1: mul File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/mul.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/mem_mapping.sv
+    Info (12023): Found entity 1: mem_mapping File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/mem_mapping.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/mem_burst.v
+    Info (12023): Found entity 1: mem_burst File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/mem_burst.v Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/matmulfree.sv
+    Info (12023): Found entity 1: matmulfree File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/matmulfree.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/matmul_wrap.sv
+    Info (12023): Found entity 1: matmul_wrap File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/matmul_wrap.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/ins_mem.sv
+    Info (12023): Found entity 1: ins_mem File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/ins_mem.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/hazard_detect.sv
+    Info (12023): Found entity 1: hazard_detect File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/hazard_detect.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/fd_reg.sv
+    Info (12023): Found entity 1: fd_reg File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/fd_reg.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/exp.sv
+    Info (12023): Found entity 1: exp_row File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/exp.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/em_reg.sv
+    Info (12023): Found entity 1: em_reg File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/em_reg.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/div.sv
+    Info (12023): Found entity 1: div File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/div.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/descriptor_file.sv
+    Info (12023): Found entity 1: descriptor_file File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/descriptor_file.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/de_reg.sv
+    Info (12023): Found entity 1: de_reg File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/de_reg.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/ctrl_unit.sv
+    Info (12023): Found entity 1: ctrl_unit File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/ctrl_unit.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/addsub.sv
+    Info (12023): Found entity 1: addsub File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/addsub.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/acc_mul.sv
+    Info (12023): Found entity 1: acc_mul File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/acc_mul.sv Line: 1
+Info (12127): Elaborating entity "matmulfree" for the top level hierarchy
+Info (10264): Verilog HDL Case Statement information at matmulfree.sv(393): all case item expressions in this case statement are onehot File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/matmulfree.sv Line: 393
+Info (12128): Elaborating entity "PC" for hierarchy "PC:u_pc" File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/matmulfree.sv Line: 110
+Info (12128): Elaborating entity "ins_mem" for hierarchy "ins_mem:u_imem" File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/matmulfree.sv Line: 122
+Info (12128): Elaborating entity "descriptor_file" for hierarchy "descriptor_file:u_desc" File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/matmulfree.sv Line: 151
+Info (12128): Elaborating entity "register" for hierarchy "register:u_ws" File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/matmulfree.sv Line: 174
+Info (12128): Elaborating entity "sram_256_wrapper" for hierarchy "register:u_ws|sram_256_wrapper:u_sram" File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/regfile.sv Line: 39
+Info (19000): Inferred 8 megafunctions from design logic
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__1" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 8
+        Info (286033): Parameter NUMWORDS_A set to 256
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 8
+        Info (286033): Parameter NUMWORDS_B set to 256
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[1].memory[0][31]__2" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 8
+        Info (286033): Parameter NUMWORDS_A set to 256
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 8
+        Info (286033): Parameter NUMWORDS_B set to 256
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[2].memory[0][31]__3" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 8
+        Info (286033): Parameter NUMWORDS_A set to 256
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 8
+        Info (286033): Parameter NUMWORDS_B set to 256
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[3].memory[0][31]__4" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 8
+        Info (286033): Parameter NUMWORDS_A set to 256
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 8
+        Info (286033): Parameter NUMWORDS_B set to 256
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[4].memory[0][31]__5" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 8
+        Info (286033): Parameter NUMWORDS_A set to 256
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 8
+        Info (286033): Parameter NUMWORDS_B set to 256
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[5].memory[0][31]__6" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 8
+        Info (286033): Parameter NUMWORDS_A set to 256
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 8
+        Info (286033): Parameter NUMWORDS_B set to 256
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 8
+        Info (286033): Parameter NUMWORDS_A set to 256
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 8
+        Info (286033): Parameter NUMWORDS_B set to 256
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[7].memory[0][31]__8" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 8
+        Info (286033): Parameter NUMWORDS_A set to 256
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 8
+        Info (286033): Parameter NUMWORDS_B set to 256
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+Info (12128): Elaborating entity "altsyncram" for hierarchy "register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__1"
+Info (12130): Elaborated megafunction instantiation "register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__1"
+Info (12133): Instantiated megafunction "register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__1" with the following parameter:
+    Info (12134): Parameter "OPERATION_MODE" = "DUAL_PORT"
+    Info (12134): Parameter "WIDTH_A" = "32"
+    Info (12134): Parameter "WIDTHAD_A" = "8"
+    Info (12134): Parameter "NUMWORDS_A" = "256"
+    Info (12134): Parameter "WIDTH_B" = "32"
+    Info (12134): Parameter "WIDTHAD_B" = "8"
+    Info (12134): Parameter "NUMWORDS_B" = "256"
+    Info (12134): Parameter "ADDRESS_ACLR_A" = "NONE"
+    Info (12134): Parameter "OUTDATA_REG_B" = "UNREGISTERED"
+    Info (12134): Parameter "ADDRESS_ACLR_B" = "NONE"
+    Info (12134): Parameter "OUTDATA_ACLR_B" = "NONE"
+    Info (12134): Parameter "ADDRESS_REG_B" = "CLOCK0"
+    Info (12134): Parameter "INDATA_ACLR_A" = "NONE"
+    Info (12134): Parameter "WRCONTROL_ACLR_A" = "NONE"
+    Info (12134): Parameter "READ_DURING_WRITE_MODE_MIXED_PORTS" = "OLD_DATA"
+    Info (12134): Parameter "RDCONTROL_REG_B" = "CLOCK0"
+Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_g3q1.tdf
+    Info (12023): Found entity 1: altsyncram_g3q1 File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/db/altsyncram_g3q1.tdf Line: 27
+Info (12128): Elaborating entity "altsyncram_g3q1" for hierarchy "register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__1|altsyncram_g3q1:auto_generated" File: c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/altsyncram.tdf Line: 791
+Info (12128): Elaborating entity "mem_mapping" for hierarchy "mem_mapping:u_param" File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/matmulfree.sv Line: 197
+Info (12128): Elaborating entity "sram_256_wrapper" for hierarchy "mem_mapping:u_param|sram_256_wrapper:u_sram" File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/mem_mapping.sv Line: 39
+Info (19000): Inferred 8 megafunctions from design logic
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 10
+        Info (286033): Parameter NUMWORDS_A set to 1024
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 10
+        Info (286033): Parameter NUMWORDS_B set to 1024
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[1].memory[0][31]__10" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 10
+        Info (286033): Parameter NUMWORDS_A set to 1024
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 10
+        Info (286033): Parameter NUMWORDS_B set to 1024
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[2].memory[0][31]__11" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 10
+        Info (286033): Parameter NUMWORDS_A set to 1024
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 10
+        Info (286033): Parameter NUMWORDS_B set to 1024
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[3].memory[0][31]__12" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 10
+        Info (286033): Parameter NUMWORDS_A set to 1024
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 10
+        Info (286033): Parameter NUMWORDS_B set to 1024
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[4].memory[0][31]__13" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 10
+        Info (286033): Parameter NUMWORDS_A set to 1024
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 10
+        Info (286033): Parameter NUMWORDS_B set to 1024
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[5].memory[0][31]__14" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 10
+        Info (286033): Parameter NUMWORDS_A set to 1024
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 10
+        Info (286033): Parameter NUMWORDS_B set to 1024
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__15" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 10
+        Info (286033): Parameter NUMWORDS_A set to 1024
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 10
+        Info (286033): Parameter NUMWORDS_B set to 1024
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[7].memory[0][31]__16" 
+        Info (286033): Parameter OPERATION_MODE set to DUAL_PORT
+        Info (286033): Parameter WIDTH_A set to 32
+        Info (286033): Parameter WIDTHAD_A set to 10
+        Info (286033): Parameter NUMWORDS_A set to 1024
+        Info (286033): Parameter WIDTH_B set to 32
+        Info (286033): Parameter WIDTHAD_B set to 10
+        Info (286033): Parameter NUMWORDS_B set to 1024
+        Info (286033): Parameter ADDRESS_ACLR_A set to NONE
+        Info (286033): Parameter OUTDATA_REG_B set to UNREGISTERED
+        Info (286033): Parameter ADDRESS_ACLR_B set to NONE
+        Info (286033): Parameter OUTDATA_ACLR_B set to NONE
+        Info (286033): Parameter ADDRESS_REG_B set to CLOCK0
+        Info (286033): Parameter INDATA_ACLR_A set to NONE
+        Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
+        Info (286033): Parameter READ_DURING_WRITE_MODE_MIXED_PORTS set to OLD_DATA
+        Info (286033): Parameter RDCONTROL_REG_B set to CLOCK0
+Info (12128): Elaborating entity "altsyncram" for hierarchy "mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9"
+Info (12130): Elaborated megafunction instantiation "mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9"
+Info (12133): Instantiated megafunction "mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9" with the following parameter:
+    Info (12134): Parameter "OPERATION_MODE" = "DUAL_PORT"
+    Info (12134): Parameter "WIDTH_A" = "32"
+    Info (12134): Parameter "WIDTHAD_A" = "10"
+    Info (12134): Parameter "NUMWORDS_A" = "1024"
+    Info (12134): Parameter "WIDTH_B" = "32"
+    Info (12134): Parameter "WIDTHAD_B" = "10"
+    Info (12134): Parameter "NUMWORDS_B" = "1024"
+    Info (12134): Parameter "ADDRESS_ACLR_A" = "NONE"
+    Info (12134): Parameter "OUTDATA_REG_B" = "UNREGISTERED"
+    Info (12134): Parameter "ADDRESS_ACLR_B" = "NONE"
+    Info (12134): Parameter "OUTDATA_ACLR_B" = "NONE"
+    Info (12134): Parameter "ADDRESS_REG_B" = "CLOCK0"
+    Info (12134): Parameter "INDATA_ACLR_A" = "NONE"
+    Info (12134): Parameter "WRCONTROL_ACLR_A" = "NONE"
+    Info (12134): Parameter "READ_DURING_WRITE_MODE_MIXED_PORTS" = "OLD_DATA"
+    Info (12134): Parameter "RDCONTROL_REG_B" = "CLOCK0"
+Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_m8q1.tdf
+    Info (12023): Found entity 1: altsyncram_m8q1 File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/db/altsyncram_m8q1.tdf Line: 27
+Info (12128): Elaborating entity "altsyncram_m8q1" for hierarchy "mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated" File: c:/intelfpga_lite/18.1/quartus/libraries/megafunctions/altsyncram.tdf Line: 791
+Info (12128): Elaborating entity "rowwise_dispatch" for hierarchy "rowwise_dispatch:u_row" File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/matmulfree.sv Line: 223
+Info (10264): Verilog HDL Case Statement information at rowwise_dispatch.sv(78): all case item expressions in this case statement are onehot File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/rowwise_dispatch.sv Line: 78
+Info (12128): Elaborating entity "rowwise_op" for hierarchy "rowwise_dispatch:u_row|rowwise_op:u_alu" File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/rowwise_dispatch.sv Line: 71
+Info (10264): Verilog HDL Case Statement information at rowwise_op.sv(99): all case item expressions in this case statement are onehot File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search3_build/rtl/rowwise_op.sv Line: 99

@@ -115,9 +115,9 @@ module mem_burst
 **Tín hiệu và dữ liệu chính.** `rst`: reset active-high của adapter cũ.
 
 
-### [Dòng 40–82: State, counter và wiring](<../../../Verilog%20Source%20code/mem_burst.v#L40>)
+### [Dòng 40–83: State, counter và wiring](<../../../Verilog%20Source%20code/mem_burst.v#L40>)
 
-<!-- source-range:40:82 -->
+<!-- source-range:40:83 -->
 ```systemverilog
 
 	localparam IDLE = 3'h0;
@@ -162,6 +162,7 @@ module mem_burst
 			app_wdf_wren_r <= wr_burst_data_req_r;	``
 	end */
 
+	assign wr_burst_data_req = (state == MEM_WRITE) & app_wdf_rdy ;
 ```
 
 **Mục đích.** Các assign nối command, data và cờ finish; khối comment nhiều dòng không thực thi.
@@ -171,11 +172,10 @@ module mem_burst
 **Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `rd_addr_cnt`: số địa chỉ burst read đã phát; `rd_data_cnt`: số data burst read đã nhận; `wr_addr_cnt`: số địa chỉ burst write đã phát; `wr_data_cnt`: số data burst write đã cấp; `app_cmd_r`: command gửi memory controller; và 4 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 83–94: Yêu cầu write data](<../../../Verilog%20Source%20code/mem_burst.v#L83>)
+### [Dòng 84–96: Yêu cầu write data](<../../../Verilog%20Source%20code/mem_burst.v#L84>)
 
-<!-- source-range:83:94 -->
+<!-- source-range:84:96 -->
 ```systemverilog
-	assign wr_burst_data_req = (state == MEM_WRITE) & app_wdf_rdy ;
 
 	always@(posedge mem_clk or posedge rst)
 	begin
@@ -187,6 +187,8 @@ module mem_burst
 			app_wdf_wren_r <= wr_burst_data_req;
 	end
 
+	always@(posedge mem_clk or posedge rst)
+	begin
 ```
 
 **Mục đích.** wr_burst_data_req phụ thuộc state WRITE và readiness; app_wdf_wren có register và gate ready.
@@ -196,12 +198,10 @@ module mem_burst
 **Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `rst`: reset active-high của adapter cũ; `app_wdf_wren_r`: write data enable đã chốt.
 
 
-### [Dòng 95–132: Reset/IDLE](<../../../Verilog%20Source%20code/mem_burst.v#L95>)
+### [Dòng 97–134: Reset/IDLE](<../../../Verilog%20Source%20code/mem_burst.v#L97>)
 
-<!-- source-range:95:132 -->
+<!-- source-range:97:134 -->
 ```systemverilog
-	always@(posedge mem_clk or posedge rst)
-	begin
 		if(rst)
 		begin
 			state <= IDLE;
@@ -238,6 +238,8 @@ module mem_burst
 						app_wdf_end_r <= 1'b1;
 						wr_data_cnt <= 0;
 					end
+				end
+				MEM_READ:
 ```
 
 **Mục đích.** Reset active-high. Sau calibration, read có ưu tiên nếu cả hai request cùng lên.
@@ -247,12 +249,10 @@ module mem_burst
 **Tín hiệu và dữ liệu chính.** `rst`: reset active-high của adapter cũ; `state`: trạng thái FSM của khối; `app_cmd_r`: command gửi memory controller; `app_addr_r`: địa chỉ gửi memory controller; `app_en_r`: command valid gửi controller; `rd_addr_cnt`: số địa chỉ burst read đã phát; và 4 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 133–184: Read và chờ data](<../../../Verilog%20Source%20code/mem_burst.v#L133>)
+### [Dòng 135–186: Read và chờ data](<../../../Verilog%20Source%20code/mem_burst.v#L135>)
 
-<!-- source-range:133:184 -->
+<!-- source-range:135:186 -->
 ```systemverilog
-				end
-				MEM_READ:
 				begin
 					if(app_rdy)
 					begin
@@ -303,6 +303,8 @@ module mem_burst
 					//app_wdf_wren_r <= 1'b1;	
 				end
 				MEM_WRITE:
+				begin
+					if(app_rdy)
 ```
 
 **Mục đích.** Theo dõi address chấp nhận và data valid bằng hai counter riêng.
@@ -329,12 +331,10 @@ flowchart TB
 ```
 
 
-### [Dòng 185–216: Write](<../../../Verilog%20Source%20code/mem_burst.v#L185>)
+### [Dòng 187–218: Write](<../../../Verilog%20Source%20code/mem_burst.v#L187>)
 
-<!-- source-range:185:216 -->
+<!-- source-range:187:218 -->
 ```systemverilog
-				begin
-					if(app_rdy)
 					begin
 						app_addr_r <= app_addr_r + 'b1000;
 						if(wr_addr_cnt == wr_burst_len - 1)
@@ -365,6 +365,8 @@ flowchart TB
 					end
 					
 				end
+				READ_END:
+					state <= IDLE;
 ```
 
 **Mục đích.** Cấp data và địa chỉ theo các readiness riêng; giữ đủ transaction trước wait/end.
@@ -374,12 +376,10 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `app_addr_r`: địa chỉ gửi memory controller; `wr_addr_cnt`: số địa chỉ burst write đã phát; `app_wdf_end_r`: cờ cuối write data beat theo interface cũ; `app_en_r`: command valid gửi controller; `wr_data_cnt`: số data burst write đã cấp; `state`: trạng thái FSM của khối.
 
 
-### [Dòng 217–247: Kết thúc write](<../../../Verilog%20Source%20code/mem_burst.v#L217>)
+### [Dòng 219–247: Kết thúc write](<../../../Verilog%20Source%20code/mem_burst.v#L219>)
 
-<!-- source-range:217:247 -->
+<!-- source-range:219:247 -->
 ```systemverilog
-				READ_END:
-					state <= IDLE;
 				MEM_WRITE_WAIT:
 				begin
 					if(app_rdy)

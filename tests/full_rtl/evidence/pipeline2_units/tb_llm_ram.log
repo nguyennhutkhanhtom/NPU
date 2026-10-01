@@ -1,0 +1,12 @@
+# vsim -c -onfinish exit -L D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work -lib D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work -l D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\tb_llm_ram.log tb_llm_ram -do "run -all; quit -f" 
+# Start time: 23:38:43 on Oct 01,2026
+# Loading sv_std.std
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.tb_llm_ram
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.banked_word_ram
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.sram_word_tile
+# run -all
+# LLM_RAM_PASS checks=11 tile_boundaries=4 collision=old_data
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_ram.sv(28)
+#    Time: 451 ns  Iteration: 0  Instance: /tb_llm_ram
+# End time: 23:38:43 on Oct 01,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0

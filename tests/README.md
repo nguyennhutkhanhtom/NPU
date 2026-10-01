@@ -2,7 +2,9 @@
 
 [Trang bắt đầu](../README.md) · [Mục lục tài liệu](../docs/README.md) · [Kết quả kiểm chứng](../docs/verification/README.md) · [Các demo model](../docs/demos/README.md)
 
-Mọi testbench nằm trong `tb_all.sv`; runner chỉ compile `../Verilog Source code`. Không cần bản source v2 riêng hoặc các thư mục test v1.
+Legacy testbench nằm trong `tb_all.sv`; runner compile `../Verilog Source code`.
+[Full graph units và application](full_rtl/README.md) có testbench riêng cho
+`llm_soc`, cùng RTL nguồn. Không cần bản source v2 riêng hoặc test v1.
 
 Runner, testbench, reference số nguyên và `results.json` được giữ trên GitHub. Cần Python 3.10 trở lên và ModelSim có `vlib.exe`, `vlog.exe`, `vsim.exe`. Python được tìm trong PATH rồi đến bundled runtime theo user profile; có thể chỉ rõ đường dẫn khi máy có nhiều bản Python:
 

@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "verified_utc": "2026-10-01T04:32:36.559521+00:00",
+  "verified_utc": "2026-10-01T07:30:57.013546+00:00",
   "model": "adrahmana/NanoFable-1M-ternary",
   "upstream": {
     "model_revision": "8bb40dbf501bbad4a12a11c5697e5ad239744539",
@@ -130,8 +130,8 @@
       ],
       "continuation": ", there was a little girl named named named named named named named named named Timmy loved to the park. One day, she was a big tree. \n\n",
       "new_tokens": 32,
-      "cpu_seconds": 0.144872500000929,
-      "repeat_seconds": 0.12864909999916563,
+      "cpu_seconds": 0.28803090000292286,
+      "repeat_seconds": 0.26091420000011567,
       "deterministic_repeat_pass": true
     },
     {
@@ -180,8 +180,8 @@
       ],
       "continuation": " She was very happy. She was so happy. She was so happy. She was so happy. She was so happy. She was so happy. She was",
       "new_tokens": 32,
-      "cpu_seconds": 0.15967470000032336,
-      "repeat_seconds": 0.13287259999924572,
+      "cpu_seconds": 0.23902280000038445,
+      "repeat_seconds": 0.2916440999979386,
       "deterministic_repeat_pass": true
     },
     {
@@ -231,8 +231,8 @@
       ],
       "continuation": " named named named named it was a little girl. She was very happy and wanted to the park. She was very happy and wanted to the park. She was",
       "new_tokens": 32,
-      "cpu_seconds": 0.13317370000004303,
-      "repeat_seconds": 0.12288919999991776,
+      "cpu_seconds": 0.24017820000153733,
+      "repeat_seconds": 0.2707393000018783,
       "deterministic_repeat_pass": true
     }
   ],
@@ -770,845 +770,845 @@
     {
       "case": 0,
       "layer": 0,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 1,
       "layer": 0,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 2,
       "layer": 0,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 3,
       "layer": 0,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 4,
       "layer": 0,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 5,
       "layer": 0,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 6,
       "layer": 1,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 7,
       "layer": 1,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 8,
       "layer": 1,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 9,
       "layer": 1,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 10,
       "layer": 1,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 11,
       "layer": 1,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 12,
       "layer": 2,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 13,
       "layer": 2,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 14,
       "layer": 2,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 15,
       "layer": 2,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 16,
       "layer": 2,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 17,
       "layer": 2,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 18,
       "layer": 3,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 19,
       "layer": 3,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 20,
       "layer": 3,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 21,
       "layer": 3,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 22,
       "layer": 3,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 23,
       "layer": 3,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 24,
       "layer": 4,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 25,
       "layer": 4,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 26,
       "layer": 4,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 27,
       "layer": 4,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 28,
       "layer": 4,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 29,
       "layer": 4,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 30,
       "layer": 5,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 31,
       "layer": 5,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 32,
       "layer": 5,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 33,
       "layer": 5,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 34,
       "layer": 5,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 35,
       "layer": 5,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 36,
       "layer": 6,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 37,
       "layer": 6,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 38,
       "layer": 6,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 39,
       "layer": 6,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 40,
       "layer": 6,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 41,
       "layer": 6,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 42,
       "layer": 7,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 43,
       "layer": 7,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 44,
       "layer": 7,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 45,
       "layer": 7,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 46,
       "layer": 7,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 47,
       "layer": 7,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 48,
       "layer": 8,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 49,
       "layer": 8,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 50,
       "layer": 8,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 51,
       "layer": 8,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 52,
       "layer": 8,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 53,
       "layer": 8,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 54,
       "layer": 9,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 55,
       "layer": 9,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 56,
       "layer": 9,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 57,
       "layer": 9,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 58,
       "layer": 9,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 59,
       "layer": 9,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 60,
       "layer": 10,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 61,
       "layer": 10,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 62,
       "layer": 10,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 63,
       "layer": 10,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 64,
       "layer": 10,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 65,
       "layer": 10,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 66,
       "layer": 11,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 67,
       "layer": 11,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 68,
       "layer": 11,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 69,
       "layer": 11,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 70,
       "layer": 11,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 71,
       "layer": 11,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 72,
       "layer": 12,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 73,
       "layer": 12,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 74,
       "layer": 12,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 75,
       "layer": 12,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 76,
       "layer": 12,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 77,
       "layer": 12,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 78,
       "layer": 13,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 79,
       "layer": 13,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 80,
       "layer": 13,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 81,
       "layer": 13,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 82,
       "layer": 13,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 83,
       "layer": 13,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 84,
       "layer": 14,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 85,
       "layer": 14,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 86,
       "layer": 14,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 87,
       "layer": 14,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 88,
       "layer": 14,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 89,
       "layer": 14,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 90,
       "layer": 15,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 91,
       "layer": 15,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 92,
       "layer": 15,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 93,
       "layer": 15,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 94,
       "layer": 15,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 95,
       "layer": 15,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 96,
       "layer": 16,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 97,
       "layer": 16,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 98,
       "layer": 16,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 99,
       "layer": 16,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 100,
       "layer": 16,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 101,
       "layer": 16,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 102,
       "layer": 17,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 103,
       "layer": 17,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 104,
       "layer": 17,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 105,
       "layer": 17,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 106,
       "layer": 17,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 107,
       "layer": 17,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 108,
       "layer": 18,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 109,
       "layer": 18,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 110,
       "layer": 18,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 111,
       "layer": 18,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 112,
       "layer": 18,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 113,
       "layer": 18,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 114,
       "layer": 19,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 115,
       "layer": 19,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 116,
       "layer": 19,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 117,
       "layer": 19,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 118,
       "layer": 19,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 119,
       "layer": 19,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 120,
       "layer": 20,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 121,
       "layer": 20,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 122,
       "layer": 20,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 123,
       "layer": 20,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 124,
       "layer": 20,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 125,
       "layer": 20,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 126,
       "layer": 21,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 127,
       "layer": 21,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 128,
       "layer": 21,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 129,
       "layer": 21,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 130,
       "layer": 21,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 131,
       "layer": 21,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 132,
       "layer": 22,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 133,
       "layer": 22,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 134,
       "layer": 22,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 135,
       "layer": 22,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 136,
       "layer": 22,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 137,
       "layer": 22,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 138,
       "layer": 23,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 139,
       "layer": 23,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 140,
       "layer": 23,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 141,
       "layer": 23,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 142,
       "layer": 23,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 143,
       "layer": 23,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 144,
       "layer": 24,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 145,
       "layer": 24,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 146,
       "layer": 24,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 147,
       "layer": 24,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 148,
       "layer": 24,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 149,
       "layer": 24,
-      "active_cycles": 2205
+      "active_cycles": 2461
     },
     {
       "case": 150,
       "layer": 25,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 151,
       "layer": 25,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 152,
       "layer": 25,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 153,
       "layer": 25,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 154,
       "layer": 25,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 155,
       "layer": 25,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 156,
       "layer": 26,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 157,
       "layer": 26,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 158,
       "layer": 26,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 159,
       "layer": 26,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 160,
       "layer": 26,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 161,
       "layer": 26,
-      "active_cycles": 6589
+      "active_cycles": 7357
     },
     {
       "case": 162,
       "layer": 27,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 163,
       "layer": 27,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 164,
       "layer": 27,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 165,
       "layer": 27,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 166,
       "layer": 27,
-      "active_cycles": 6301
+      "active_cycles": 6557
     },
     {
       "case": 167,
       "layer": 27,
-      "active_cycles": 6301
+      "active_cycles": 6557
     }
   ],
-  "cycles_sum": 679176,
+  "cycles_sum": 746760,
   "quantization_error": {
     "max_absolute": 0.02283620834350586,
     "max_relative_l2": 0.017805220978652003,
@@ -1628,34 +1628,34 @@
     "hazard_detect.sv": "83e4434faa221906913debcd24e6a6db7366f15fe4d3e7ed37f06ec9f31991b5",
     "ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
     "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
-    "matmulfree.sv": "3a785e7285519557a973fc8597449c56d0ffdc8bf0b62ca6bbdbdfaf6d132bcc",
+    "matmulfree.sv": "6b18f26a9779be75adcba42f83dabc1bdf5d225c2ab378d712e7950afb127c12",
     "mem_burst.v": "bd2467f0fe9ed199d522a674f89c72dadcbc2f19752fbc0bdb35397135cc9f2f",
     "mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
     "mul.sv": "63bb267b9cc884ee766f94a0fda1039cb5ed61bb6f6002bfa356a3f6423bcbac",
     "mw_reg.sv": "8f27a55bda16912be3fb069bd6cf09abaf740a186c9b2503171158bb59109960",
-    "norm.sv": "03e8f34433b60a8f81509c38fbe4467cf0ef1fd363a4e2a7d41212463f2a2d1b",
+    "norm.sv": "68fb49d63c461bbff583df3c544d3685729dc61ee0aa1f3776773730f9000192",
     "norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
-    "npu_pkg.sv": "1061016c51092f4f9269fc99392c30bc1bd2117103ef5f49474a296f5077a343",
+    "npu_pkg.sv": "f2914bb24c72644edbf2b57e5eabad9a4f3dbf88d2dd72b79285ccdf8e2b2d86",
     "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
-    "postscale.sv": "462922989c54f4b4346d27cd05d5cdf342bb56a882c0cb8325ef035c36c7452a",
+    "postscale.sv": "128b264863531a01bcd427066e250d3d99ad1830b68aadb1f5889629856e8d24",
     "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
     "rowwise_dispatch.sv": "4fb73e52c6fc0afe70277b9e1d5a8817cbac0d1465e691d8801581c5444d1ae2",
-    "rowwise_op.sv": "a3f17f1e9c346841f76b31f39eda799818a139b98a2a7059778f1336d3c4ad46",
-    "scale_compose.sv": "b2f2bdcb88656ff43d92f5e91ed4dbc12ee60c560e09ea6425cd9e92639e1868",
+    "rowwise_op.sv": "e9bdb936eb5a29bb8226d1d072b7f81e534b23f48d17fc7c493eabeacb9f6ad6",
+    "scale_compose.sv": "816e13077872842daa8bd3de40bbefe354046aca60aa04889bec9acff18b0b33",
     "sigmoid.sv": "8001c3d582b072de2146d085fbb4363350a6f876dfa4d9195bc54d3d52f944c9",
     "sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
     "sigmoid_lut.svh": "3d4fc0b37d284c4f7b3a4cd2587acfaf3e35dc33b2209550d7f97ef8555e0094",
     "sram_256_wrapper.sv": "80d77f1ad41fda47969ca686807db5f069b81667b4fc5f613ff476264da8d10b",
-    "ternary_mul.sv": "0593ecc70787ee9746c6c26e7d8507c0f2e5ab05f14b1226e5efc81d052bca45"
+    "ternary_mul.sv": "14285ed2ee26752c0379d6f414382b28ee77042821ecc155dbbb5a868806bf51"
   },
   "demo_assets": {
-    "compile.log": "f6fe6f42e928cae8b5ec6bcf2f6eef442e3195ab9535718e5cae6e131ce34338",
-    "cpu_reference.json": "a761af63addfe4841bae01d9d79c11882bed27184a01b46029fb2365432ebc43",
+    "compile.log": "d98453b0a21b44de1db466c6ce3a9d3a065a01b7ad7ec532d3cce04f54efe075",
+    "cpu_reference.json": "afac5b823025a7bb380dd903c384827ddb585feff272aec236b8483d8dc4998b",
     "export_demo.py": "28a9056db6c28d09853eeae10069075d0eebc1924a57dfcc3e84b4ec75e39b08",
     "fetch_assets.py": "707b5a14cd4ae94302797c28d6b1e0399bdecf789e5e31672e2735443ba10d45",
     "finalize.py": "7502eca4ed68d484bc0b2b5e1042cdfab9c0e3272fb58a50ae6b39774fb779fa",
     "host_vectors.txt": "ea6dadc659a5f8b49626a4f0913f8ecd65b8140a90fe12c8f113a31684fb9776",
-    "language_demo.log": "98704c3f593779192b3628dfbad82b9cfc8a2159942588fc41a2f1f0cd31448a",
+    "language_demo.log": "54f0fd004c0ed43605e2aa0e342952b16e9ca8a68e96c144758ca15b4454fd32",
     "requirements.txt": "faf7d65d7d141eaedc5c8c4097ae30b1a1a3ff7de6e9b61f02dd58a61e24828e",
     "run.ps1": "13e68daa02cafad957d4918235d3e0eda3ac29b74253aabafb8c962d9bb898be",
     "setup.ps1": "22060b27187a33b0e1bd3e49d28429b322913a798a521f57a62510afaa723c94",

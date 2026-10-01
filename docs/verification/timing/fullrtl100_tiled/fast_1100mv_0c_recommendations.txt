@@ -1,0 +1,222 @@
+Statistics: 40 0 5869 0 0 3.006
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+reciprocal_q[31] math_b_q[15][31] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{reciprocal_q[31]}}}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[3].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~PORT_A_DATA_IN_12 0.956273 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_vectors|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[0].u_tile|altsyncram:memory_rtl_0|altsyncram_k0q1:auto_generated|ram_block1a0}}}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[3].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~porta_datain_reg2 0.956273 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_vectors|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[0].u_tile|altsyncram:memory_rtl_0|altsyncram_k0q1:auto_generated|ram_block1a0}}}
+vector_q[636] second_q[636] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_vectors|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[0].u_tile|altsyncram:memory_rtl_0|altsyncram_k0q1:auto_generated|ram_block1a0}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[12] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[6].u_storage|read_tile_q[4]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[12]}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[12] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[6].u_storage|read_tile_q[4] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[12]}}}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~PORT_A_DATA_IN_12 0.933504 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_vectors|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[0].u_tile|altsyncram:memory_rtl_0|altsyncram_k0q1:auto_generated|ram_block1a0}}}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~porta_datain_reg2 0.933504 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_vectors|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[0].u_tile|altsyncram:memory_rtl_0|altsyncram_k0q1:auto_generated|ram_block1a0}}}
+reciprocal_q[31] math_b_q[14][31] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{reciprocal_q[31]}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[601] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[495] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[312] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[576] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+reciprocal_q[31] math_b_q[13][31] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{reciprocal_q[31]}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[733] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+llm_math:u_math|Mult22~mult_ll_pl[0][27] write_vector_q[542] 0.409831 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {llm_math:u_math|Mult22~830 Selector3183~29}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[672] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[490] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[120] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1} Selector4407~0}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[456] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[463] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[589] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[468] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[2] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[4].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~portb_address_reg2 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[2]}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[650] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[461] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[149] 0.387063 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1} Selector4402~0}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[492] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[164] 0.979041 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1} Selector4387~0}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[147] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1} Selector4404~0}}
+op[5] math_a_q[30][12] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[5]} Equal168~27 Equal168~80}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[400] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+op[6]~DUPLICATE attention_acc_q[18][38]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE} Equal168~53 Equal168~54}}
+op[6]~DUPLICATE attention_acc_q[18][34] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE} Equal168~53 Equal168~54}}
+op[6]~DUPLICATE attention_acc_q[18][30]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE} Equal168~53 Equal168~54}}
+op[6]~DUPLICATE attention_acc_q[18][26]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE} Equal168~53 Equal168~54}}
+op[6]~DUPLICATE attention_acc_q[18][22] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE} Equal168~53 Equal168~54}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+reciprocal_q[31] math_b_q[15][31] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[3].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~PORT_A_DATA_IN_12 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[3].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~porta_datain_reg2 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[636] second_q[636] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|shared_read_address_q[12] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[6].u_storage|read_tile_q[4]~DUPLICATE 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sram_256_wrapper:u_parameters|shared_read_address_q[12] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[6].u_storage|read_tile_q[4] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~PORT_A_DATA_IN_12 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~porta_datain_reg2 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+reciprocal_q[31] math_b_q[14][31] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[601] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[495] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[511] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[312] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[576] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+reciprocal_q[31] math_b_q[13][31] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[733] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult22~mult_ll_pl[0][27] write_vector_q[542] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[672] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[490] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[120] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[456] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[463] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[589] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[468] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+sram_256_wrapper:u_parameters|shared_read_address_q[2] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[4].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~portb_address_reg2 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[650] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[504] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[461] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[149] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[492] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[269] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[164] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[147] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+op[5] math_a_q[30][12] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[400] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+op[6]~DUPLICATE attention_acc_q[18][38]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[6]~DUPLICATE attention_acc_q[18][34] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[6]~DUPLICATE attention_acc_q[18][30]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[6]~DUPLICATE attention_acc_q[18][26]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[6]~DUPLICATE attention_acc_q[18][22] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+reciprocal_q[31] math_b_q[15][31] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{reciprocal_q[31]}}}
+reciprocal_q[31] math_b_q[15][31] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[3].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~PORT_A_DATA_IN_12 0.956273 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_vectors|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[0].u_tile|altsyncram:memory_rtl_0|altsyncram_k0q1:auto_generated|ram_block1a0}}}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[3].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~PORT_A_DATA_IN_12 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[3].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~porta_datain_reg2 0.956273 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_vectors|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[0].u_tile|altsyncram:memory_rtl_0|altsyncram_k0q1:auto_generated|ram_block1a0}}}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[3].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~porta_datain_reg2 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[636] second_q[636] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_vectors|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[0].u_tile|altsyncram:memory_rtl_0|altsyncram_k0q1:auto_generated|ram_block1a0}}}
+vector_q[636] second_q[636] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|shared_read_address_q[12] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[6].u_storage|read_tile_q[4]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[12]}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[12] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[6].u_storage|read_tile_q[4]~DUPLICATE 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sram_256_wrapper:u_parameters|shared_read_address_q[12] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[6].u_storage|read_tile_q[4] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[12]}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[12] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[6].u_storage|read_tile_q[4] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~PORT_A_DATA_IN_12 0.933504 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_vectors|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[0].u_tile|altsyncram:memory_rtl_0|altsyncram_k0q1:auto_generated|ram_block1a0}}}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~PORT_A_DATA_IN_12 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~porta_datain_reg2 0.933504 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_vectors|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[0].u_tile|altsyncram:memory_rtl_0|altsyncram_k0q1:auto_generated|ram_block1a0}}}
+vector_q[636] llm_bank_ram:u_cache|banked_word_ram:g_bank[26].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_o8q1:auto_generated|ram_block1a10~porta_datain_reg2 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+reciprocal_q[31] math_b_q[14][31] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{reciprocal_q[31]}}}
+reciprocal_q[31] math_b_q[14][31] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[601] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[601] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[495] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[495] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[511] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[312] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[312] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[576] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[576] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+reciprocal_q[31] math_b_q[13][31] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{reciprocal_q[31]}}}
+reciprocal_q[31] math_b_q[13][31] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[733] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[733] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult22~mult_ll_pl[0][27] write_vector_q[542] 0.409831 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {llm_math:u_math|Mult22~830 Selector3183~29}}
+llm_math:u_math|Mult22~mult_ll_pl[0][27] write_vector_q[542] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[672] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[672] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[490] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[490] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[120] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1} Selector4407~0}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[120] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[456] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[456] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[463] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[463] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[589] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[589] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[468] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[468] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+sram_256_wrapper:u_parameters|shared_read_address_q[2] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[4].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~portb_address_reg2 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[2]}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[2] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[4].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~portb_address_reg2 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[650] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[650] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[504] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[461] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[461] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[149] 0.387063 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1} Selector4402~0}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[149] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[492] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[492] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[269] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[164] 0.979041 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1} Selector4387~0}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[164] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[147] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1} Selector4404~0}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[147] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+op[5] math_a_q[30][12] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[5]} Equal168~27 Equal168~80}}
+op[5] math_a_q[30][12] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[400] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[400] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+op[6]~DUPLICATE attention_acc_q[18][38]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE} Equal168~53 Equal168~54}}
+op[6]~DUPLICATE attention_acc_q[18][38]~DUPLICATE 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE attention_acc_q[18][38]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[6]~DUPLICATE attention_acc_q[18][34] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE} Equal168~53 Equal168~54}}
+op[6]~DUPLICATE attention_acc_q[18][34] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE attention_acc_q[18][34] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[6]~DUPLICATE attention_acc_q[18][30]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE} Equal168~53 Equal168~54}}
+op[6]~DUPLICATE attention_acc_q[18][30]~DUPLICATE 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE attention_acc_q[18][30]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[6]~DUPLICATE attention_acc_q[18][26]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE} Equal168~53 Equal168~54}}
+op[6]~DUPLICATE attention_acc_q[18][26]~DUPLICATE 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE attention_acc_q[18][26]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+op[6]~DUPLICATE attention_acc_q[18][22] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE} Equal168~53 Equal168~54}}
+op[6]~DUPLICATE attention_acc_q[18][22] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE attention_acc_q[18][22] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic
+op[6]~DUPLICATE attention_acc_q[18][38]~DUPLICATE 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE attention_acc_q[18][34] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE attention_acc_q[18][30]~DUPLICATE 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE attention_acc_q[18][26]~DUPLICATE 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE attention_acc_q[18][22] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}

@@ -1,0 +1,72 @@
+Statistics: 40 0 2111 0 0 3.410
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~portb_address_reg0 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[0]}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[18].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~portb_address_reg0 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[0]}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[20].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[4].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[19].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~portb_address_reg0 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[18].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~portb_address_reg0 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[20].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[4].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[19].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~portb_address_reg0 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[0]}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~portb_address_reg0 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[18].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~portb_address_reg0 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[0]}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[18].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~portb_address_reg0 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

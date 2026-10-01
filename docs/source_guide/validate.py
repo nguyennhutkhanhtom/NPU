@@ -95,7 +95,13 @@ for path in [ROOT/'README.md',ROOT/'Verilog Source code'/'README.md',
         elif fragment and p.suffix.lower()=='.md' and unquote(fragment) not in markdown_anchors(p):
             errors.append(f'Broken heading anchor: {path.relative_to(ROOT)}: {target}#{fragment}')
         links+=1
-if main_diagrams!=29: errors.append(f'Expected 29 main RTL diagrams, found {main_diagrams}')
+actual_assets={p.relative_to(ROOT).as_posix() for p in (ROOT/'Verilog Source code').iterdir()
+               if p.suffix.lower() in {'.sv','.v','.svh','.mem'}}
+if {entry['path'] for entry in manifest['files']}!=actual_assets:
+    errors.append('Source manifest does not cover exactly all current RTL assets')
+expected_diagrams=sum(Path(name).suffix.lower() in {'.sv','.v'} for name in actual_assets)
+if main_diagrams!=expected_diagrams:
+    errors.append(f'Expected {expected_diagrams} main RTL diagrams, found {main_diagrams}')
 
 # Keep render evidence tied to the current Mermaid text, not an old snapshot.
 render_path=OUT/'diagram_validation.json'

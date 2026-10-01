@@ -1,8 +1,16 @@
-# Kiểm chứng RTL và demo synthesis
+# Kiểm chứng RTL, synthesis và timing
 
 [Project](../../README.md) → [Tài liệu](../README.md) → **Kiểm chứng**
 
-Reference số nguyên và testbench kiểm tra chức năng, số học và giao tiếp của core. Demo Quartus kiểm tra khả năng Analysis & Synthesis trên cùng RTL; không có nhánh `SYNTHESIS`/`QUARTUS_SYNTHESIS`, primitive FPGA hoặc thuộc tính `ramstyle`/`M10K`. Binding SRAM và mục tiêu PPA ASIC được đánh giá riêng.
+Full top `llm_soc` có [sáu nhóm unit](../../tests/full_rtl/README.md) và
+[timing bốn corners riêng](timing/README.md). Timing đã đo70,41/83,58/84,49 MHz,
+đều FAIL; local1 fit và sáu nhóm units PASS. Application pretrained chỉ chạy
+khi exact source/config đạt >=100 MHz và units PASS. Các số liệu legacy
+bên dưới thuộc `matmulfree`, không phải gate cho `llm_soc`.
+
+Reference số nguyên và testbench kiểm tra chức năng, số học và giao tiếp của core. Demo Quartus kiểm tra Analysis & Synthesis và timing sau placement/routing trên cùng RTL; không có nhánh `SYNTHESIS`/`QUARTUS_SYNTHESIS`, primitive FPGA hoặc thuộc tính `ramstyle`/`M10K`. Binding SRAM và mục tiêu PPA ASIC được đánh giá riêng.
+
+**[Timing post-fit: baseline, constraint, critical path và tối ưu Fmax](timing/README.md).** Report người dùng được giữ nguyên ở snapshot riêng; phép so sánh RTL dùng baseline với SDC và cấu hình compile tương ứng.
 
 ## Regression chức năng
 
@@ -16,21 +24,26 @@ Chạy từ thư mục gốc repository:
 
 | Phạm vi | Bằng chứng của bản ngày 01/10/2026 |
 |---|---|
-| Tổng regression | 9 mục PASS, compile 0 error/0 warning |
-| Tích hợp host và scheduler | 168 ca; gồm rejected NORM sau overflow, q alias và restart không reset |
+| Tổng regression | 10 mục PASS lúc 14:31:18, compile 0 error/0 warning |
+| Tích hợp host và scheduler | 168 ca + 30 protocol reads/11 cancellations/4 blocked regions; gồm rejected NORM sau overflow, q alias và restart không reset |
+| Rowwise registered datapath | 1.800 ca / 13.260 phần tử; 42.843 thay đổi input khi busy; reset sáu pha; reference S128 |
 | Số học scalar | 4.301 sqrt, 37.189 RNE, 900 compose cases, 5 divider profiles |
 | Postscale và sigmoid | 12.720 postscale checks; 1.638.400 input ở đủ 25 F_t |
 | Memory và vector | 1.027 instruction checks, 47 SRAM checks, add/sub/mul và accumulator profiles |
 
 [Design review](../reviews/design_review.md#kiểm-chứng-bản-rtl-thống-nhất) giải thích test coverage và cải tiến được kiểm tra. [Model demo](../demos/README.md) kiểm chứng thêm graph/checkpoint thực; kết quả model được ghi trong từng báo cáo riêng.
 
-## Demo Analysis & Synthesis hiện tại
+## Analysis & Synthesis hiện hành
+
+Lượt Ctrl+K tương đương `quartus_map` hoàn tất **14:31:44 ngày 01/10/2026**, **0 error / 0 warning**, cùng RTL đã pass regression và hai model demo. Map ghi **7.390 registers**, **11.906 ALUT**, **8.174 ALM ước tính**, **334.336 bit RAM / 7 DSP**. ALM ước tính này chưa phải số sau placement/routing. [Timing hub](timing/README.md) gắn kết quả map, Fitter và STA với source/configuration hashes.
+
+## Snapshot Analysis & Synthesis trước tối ưu timing
 
 Ngày **01/10/2026**, project `matmul_free`, top `matmulfree`, Quartus Lite 18.1, Cyclone V `5CGXFC7C7F23C8`.
 
 - Analysis & Synthesis (`quartus_map`, cùng bước Ctrl+K) thành công lúc **11:24:04: 0 error, 0 warning**.
 - Không define macro để chọn nhánh RTL; project giữ effort AUTO và tối ưu AREA.
-- Regression cùng implementation pass **9 mục kiểm tra** lúc 11:23:43, compile 0 error/0 warning. Chi tiết trong [báo cáo rà soát](../reviews/design_review.md); hash RTL/test được lưu trong [tests/results.json](../../tests/results.json).
+- Regression của snapshot trước tối ưu timing pass **9 mục kiểm tra** lúc 11:23:43, compile 0 error/0 warning. Chi tiết trong [báo cáo rà soát](../reviews/design_review.md); [manifest synthesis lịch sử](reports/synthesis.json) giữ hash RTL của snapshot này. `tests/results.json` được cập nhật cho regression hiện hành.
 
 | Chỉ số trong demo FPGA | RTL thống nhất |
 |---|---:|
@@ -41,7 +54,7 @@ Ngày **01/10/2026**, project `matmul_free`, top `matmulfree`, Quartus Lite 18.1
 | Estimate ALMs needed | 8.005 |
 | DSP blocks | 7 |
 
-Report: [synthesis](reports/quartus_synthesis.rpt), [summary](reports/quartus_synthesis.summary). So với bản thống nhất lúc 01:51, giảm 215 FF, 508 ALUT và 766 logic cells; RAM/DSP giữ nguyên. ALM là estimate sau synthesis; chưa chạy Fitter hoặc Timing Analyzer, nên kết quả không xác nhận Fmax, place/route hoặc PPA ASIC.
+Report: [synthesis](reports/quartus_synthesis.rpt), [summary](reports/quartus_synthesis.summary). So với bản thống nhất lúc 01:51, giảm 215 FF, 508 ALUT và 766 logic cells; RAM/DSP giữ nguyên. ALM là estimate sau synthesis. Report A&S này không xác nhận Fmax; số liệu sau Fitter/Timing Analyzer được ghi trong [timing hub](timing/README.md). Mapping FPGA không xác nhận PPA ASIC.
 
 [Manifest synthesis](reports/synthesis.json) ghi thời điểm, 31 source hashes, resource counts và checksum của report raw/archive. Dùng manifest cùng [results regression](../../tests/results.json) để đối chiếu đúng snapshot, thay vì dựa vào tên file report.
 

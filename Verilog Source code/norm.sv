@@ -95,14 +95,14 @@ module norm (
 
     typedef enum logic [5:0] {
     IDLE,
-    P1_REQ, P1_WAIT, P1_PROC,
+    P1_REQ, P1_WAIT, P1_CAPTURE, P1_MUL, P1_PROC,
     DIV_MEAN_START, DIV_MEAN_WAIT,
     DIV_FRAC_START, DIV_FRAC_WAIT,
     SQRT_START, SQRT_WAIT,
     CNORM_PREP, CNORM_DIV_START, CNORM_DIV_WAIT,
-    P2_REQ, P2_WAIT, P2_PROC, P2_WRITE,
+    P2_REQ, P2_WAIT, P2_CAPTURE, P2_MUL, P2_ROUND, P2_PROC, P2_WRITE,
     CQUANT_PREP, CQUANT_DIV_START, CQUANT_DIV_WAIT,
-    P3_REQ, P3_WAIT, P3_PROC, P3_WRITE,
+    P3_REQ, P3_WAIT, P3_CAPTURE, P3_MUL, P3_ROUND, P3_PROC, P3_WRITE,
     FINISH
     } state_t;
     state_t state;
@@ -161,36 +161,40 @@ module norm (
     logic [10:0] idx0, idx1;
     logic signed [23:0] zr0, zr1;
     logic signed [24:0] multiply_a [0:1], multiply_b [0:1];
+    logic signed [24:0] multiply_a_q [0:1], multiply_b_q [0:1];
     logic signed [47:0] arithmetic_product [0:1];
+    logic signed [47:0] arithmetic_product_q [0:1];
     logic signed [63:0] arithmetic_rounded [0:1];
-    logic [5:0] arithmetic_shift;
+    logic signed [63:0] arithmetic_rounded_q [0:1];
+    logic [5:0] arithmetic_shift, arithmetic_shift_q;
     always_comb begin
         x0 = read_buf[lane * 16 +: 16];
         x1 = read_buf[(lane + 1) * 16 +: 16];
         zr0 = read_buf[lane * 32 +: 24];
         zr1 = read_buf[(lane + 1) * 32 +: 24];
-        // The three passes are exclusive: two multipliers and two RNE paths
-        // serve square, normalization and quantization without extra cycles.
+        // The three passes share two multipliers and two RNE paths. Register
+        // the read mux outputs, products and rounded values separately so a
+        // lane selection cannot feed multiply, RNE and absmax in one cycle.
         multiply_a[0] = '0;
         multiply_a[1] = '0;
         multiply_b[0] = '0;
         multiply_b[1] = '0;
         arithmetic_shift = '0;
         case (state)
-            P1_PROC : begin
+            P1_CAPTURE : begin
                 multiply_a[0] = {{9{x0[15]}}, x0};
                 multiply_a[1] = {{9{x1[15]}}, x1};
                 multiply_b[0] = multiply_a[0];
                 multiply_b[1] = multiply_a[1];
             end
-            P2_PROC : begin
+            P2_CAPTURE : begin
                 multiply_a[0] = {{9{x0[15]}}, x0};
                 multiply_a[1] = {{9{x1[15]}}, x1};
                 multiply_b[0] = $signed({1'b0, norm_m});
                 multiply_b[1] = $signed({1'b0, norm_m});
                 arithmetic_shift = norm_r;
             end
-            P3_PROC : begin
+            P3_CAPTURE : begin
                 multiply_a[0] = {zr0[23], zr0};
                 multiply_a[1] = {zr1[23], zr1};
                 multiply_b[0] = $signed({1'b0, quant_m});
@@ -201,17 +205,39 @@ module norm (
         endcase
         for (integer j = 0; j < 2; j = j + 1) begin
             // S24 * U24 fits S48; the extra operand bit preserves U24's sign.
-            arithmetic_product[j] = multiply_a[j] * multiply_b[j];
+            arithmetic_product[j] = multiply_a_q[j] * multiply_b_q[j];
             arithmetic_rounded[j] = rne_shift64(
-                {{16{arithmetic_product[j][47]}}, arithmetic_product[j]}, arithmetic_shift);
+                {{16{arithmetic_product_q[j][47]}}, arithmetic_product_q[j]}, arithmetic_shift_q);
         end
-        x0_sq = arithmetic_product[0][31:0];
-        x1_sq = arithmetic_product[1][31:0];
+        x0_sq = arithmetic_product_q[0][31:0];
+        x1_sq = arithmetic_product_q[1][31:0];
         idx0 = 11'({word_index, 4'b0} + lane);
         idx1 = idx0 + 1'b1;
         pair_sq = 0;
         if (idx0 < vector_length_q) pair_sq = pair_sq + $unsigned(x0_sq);
         if (idx1 < vector_length_q) pair_sq = pair_sq + $unsigned(x1_sq);
+    end
+
+    // Payload registers need no reset: the reset state cannot consume them,
+    // and every pass captures fresh operands before multiplying/rounding.
+    // Keeping the payload on plain clocked flops permits ordinary multiplier
+    // register packing in synthesis without any vendor-specific attributes.
+    always_ff @(posedge clk) begin
+        if (rst_n && (state == P1_CAPTURE || state == P2_CAPTURE || state == P3_CAPTURE)) begin
+            for (integer j = 0; j < 2; j = j + 1) begin
+                multiply_a_q[j] <= multiply_a[j];
+                multiply_b_q[j] <= multiply_b[j];
+            end
+            arithmetic_shift_q <= arithmetic_shift;
+        end
+        if (rst_n && (state == P1_MUL || state == P2_MUL || state == P3_MUL)) begin
+            for (integer j = 0; j < 2; j = j + 1)
+                arithmetic_product_q[j] <= arithmetic_product[j];
+        end
+        if (rst_n && (state == P2_ROUND || state == P3_ROUND)) begin
+            for (integer j = 0; j < 2; j = j + 1)
+                arithmetic_rounded_q[j] <= arithmetic_rounded[j];
+        end
     end
 
     // Dynamic coefficient shift choices. Larger r improves precision while M remains U24.
@@ -228,19 +254,21 @@ module norm (
     endfunction
 
     function automatic [5:0] choose_quant_r(input logic [23:0] den);
-        logic [63:0] limit;
-        logic [63:0] num;
-        logic found;
+        logic leading;
+        logic boost;
+        logic [5:0] encoded;
         begin
-            limit = den * 24'hff_ffff;
             choose_quant_r = 0;
-            found = 1'b0;
-            for (integer r = 47;r >= 0;r = r - 1) begin
-                num = 64'h0000_0000_0000_007f << r;
-                if (!found && num <= limit) begin
-                    choose_quant_r = r[5:0];
-                    found = 1'b1;
-                end
+            // For 2^p <= den < 2^(p+1), the largest fitting shift is
+            // p+17, or p+18 exactly when den > 127*2^(p-6), p>=7.
+            // Parallel constant comparisons replace a multiply and 48-step
+            // priority search. Exactly one leading mask contributes to OR.
+            for (integer p = 0; p < 24; p = p + 1) begin
+                leading = den[p] && ((den >> (p + 1)) == 0);
+                boost = 1'b0;
+                if (p >= 7) boost = den > (24'd127 << (p - 6));
+                encoded = 6'(p + 17) + {5'h0, boost};
+                choose_quant_r = choose_quant_r | ({6{leading}} & encoded);
             end
         end
     endfunction
@@ -250,17 +278,19 @@ module norm (
     always_comb begin
         mean_with_epsilon = ({1'b0, mean_q} << 32) + {10'h000, div_q} + {1'b0, epsilon_q};
         norm_r_sel = choose_norm_r(rms_r);
-        norm_num = 55'h1 << (32 + norm_r_sel);
+        // PREP registers the chosen shift before DIV_START consumes it.
+        // Reuse that value so coefficient selection is not on divider inputs.
+        norm_num = 55'h1 << (32 + norm_r);
         quant_r_sel = choose_quant_r((absmax > delta_q) ? absmax : delta_q);
-        quant_num = 55'h7f << quant_r_sel;
+        quant_num = 55'h7f << quant_r;
     end
 
     logic signed [63:0] z_round0, z_round1;
     logic signed [23:0] z0, z1;
     logic [23:0] absz0, absz1;
     always_comb begin
-        z_round0 = arithmetic_rounded[0];
-        z_round1 = arithmetic_rounded[1];
+        z_round0 = arithmetic_rounded_q[0];
+        z_round1 = arithmetic_rounded_q[1];
         if (z_round0 > 64'sh0000_0000_007f_ffff) z0 = 24'sh7f_ffff;
         else if (z_round0 < - 64'sh0000_0000_0080_0000) z0 = 24'sh80_0000;
         else z0 = z_round0[23:0];
@@ -274,8 +304,8 @@ module norm (
     logic signed [63:0] qround0, qround1;
     logic signed [7:0] q0, q1;
     always_comb begin
-        qround0 = arithmetic_rounded[0];
-        qround1 = arithmetic_rounded[1];
+        qround0 = arithmetic_rounded_q[0];
+        qround1 = arithmetic_rounded_q[1];
         if (qround0 > 64'sh0000_0000_0000_007f) q0 = 8'sh7f;
         else if (qround0 < - 64'sh0000_0000_0000_0080) q0 = 8'sh80;
         else q0 = qround0[7:0];
@@ -327,7 +357,7 @@ module norm (
             CQUANT_DIV_START : begin
                 div_start = 1'b1;
                 div_num = quant_num;
-                div_den = {8'h00, ((absmax > delta_q) ? absmax : delta_q)};
+                div_den = {8'h00, quant_d};
             end
             P3_REQ : begin
                 ws_rd_en = 1'b1;
@@ -408,8 +438,10 @@ module norm (
                 P1_WAIT : if (ws_rd_valid) begin
                     read_buf <= ws_rd_data;
                     lane <= 0;
-                    state <= P1_PROC;
+                    state <= P1_CAPTURE;
                 end
+                P1_CAPTURE : state <= P1_MUL;
+                P1_MUL : state <= P1_PROC;
                 P1_PROC : begin
                     sum_sq <= sum_sq + pair_sq;
                     if (lane == 14 || idx1 >= vector_length_q - 1) begin
@@ -418,7 +450,10 @@ module norm (
                             word_index <= word_index + 1'b1;
                             state <= P1_REQ;
                         end
-                    end else lane <= lane + 4'd2;
+                    end else begin
+                        lane <= lane + 4'd2;
+                        state <= P1_CAPTURE;
+                    end
                 end
                 DIV_MEAN_START : state <= DIV_MEAN_WAIT;
                 DIV_MEAN_WAIT : if (div_done) begin
@@ -473,8 +508,11 @@ module norm (
                 P2_WAIT : if (ws_rd_valid) begin
                     read_buf <= ws_rd_data;
                     lane <= 0;
-                    state <= P2_PROC;
+                    state <= P2_CAPTURE;
                 end
+                P2_CAPTURE : state <= P2_MUL;
+                P2_MUL : state <= P2_ROUND;
+                P2_ROUND : state <= P2_PROC;
                 P2_PROC : begin
                     if ((idx0 < vector_length_q && (z_round0 > 64'sh0000_0000_007f_ffff || z_round0 < - 64'sh0000_0000_0080_0000)) ||
                         (idx1 < vector_length_q && (z_round1 > 64'sh0000_0000_007f_ffff || z_round1 < - 64'sh0000_0000_0080_0000))) overflow <= 1;
@@ -491,6 +529,7 @@ module norm (
                     end else begin
                         pack_count <= pack_count + 6'd2;
                         lane <= lane + 4'd2;
+                        state <= P2_CAPTURE;
                     end
                 end
                 P2_WRITE : begin
@@ -505,7 +544,7 @@ module norm (
                     end
                     else begin
                         lane <= lane + 4'd2;
-                        state <= P2_PROC;
+                        state <= P2_CAPTURE;
                     end
                 end
                 CQUANT_PREP : begin
@@ -524,7 +563,7 @@ module norm (
                 end
                 CQUANT_DIV_START : state <= CQUANT_DIV_WAIT;
                 CQUANT_DIV_WAIT : if (div_done) begin
-                    quant_m <= div_q[23:0] + (({1'b0, div_rem} * 2 > ((absmax > delta_q) ? absmax : delta_q)) || (({1'b0, div_rem} * 2 == ((absmax > delta_q) ? absmax : delta_q)) && div_q[0]));
+                    quant_m <= div_q[23:0] + (({1'b0, div_rem} * 2 > quant_d) || (({1'b0, div_rem} * 2 == quant_d) && div_q[0]));
                     word_index <= 0;
                     lane <= 0;
                     pack_buf <= 0;
@@ -536,8 +575,11 @@ module norm (
                 P3_WAIT : if (ws_rd_valid) begin
                     read_buf <= ws_rd_data;
                     lane <= 0;
-                    state <= P3_PROC;
+                    state <= P3_CAPTURE;
                 end
+                P3_CAPTURE : state <= P3_MUL;
+                P3_MUL : state <= P3_ROUND;
+                P3_ROUND : state <= P3_PROC;
                 P3_PROC : begin
                     if (({word_index, 3'b0} + lane) < vector_length_q) pack_buf[pack_count * 8 +: 8] <= q0;
                     if (({word_index, 3'b0} + lane + 1) < vector_length_q) pack_buf[(pack_count + 1) * 8 +: 8] <= q1;
@@ -551,6 +593,7 @@ module norm (
                     else begin
                         lane <= lane + 4'd2;
                         pack_count <= pack_count + 6'd2;
+                        state <= P3_CAPTURE;
                     end
                 end
                 P3_WRITE : begin
@@ -565,7 +608,7 @@ module norm (
                     end
                     else begin
                         lane <= lane + 4'd2;
-                        state <= P3_PROC;
+                        state <= P3_CAPTURE;
                     end
                 end
                 FINISH : begin

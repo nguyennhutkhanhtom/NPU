@@ -1,0 +1,9 @@
+{
+  "status": "INTERRUPTED",
+  "reason": "Elaboration diagnostic to isolate SRAM size from control/datapath complexity",
+  "captured_utc": "2026-10-01T15:24:41.1455736Z",
+  "process_id": 36696,
+  "cpu_seconds": 427.8125,
+  "private_bytes": 18713608192,
+  "working_set_bytes": 661278720
+}

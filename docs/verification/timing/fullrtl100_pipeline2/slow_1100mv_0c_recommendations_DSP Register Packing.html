@@ -1,0 +1,581 @@
+
+<html><head><link rel='stylesheet' href='bogus:style.css' type='text/css' /><script type='text/javascript' src='qrc:rpwq_sorttable.js'></script>
+<script language="javascript" type="text/javascript">
+function toggle(id, showtext, hidetext) {
+	document.getElementById(id+'-toggle').innerHTML = (document.getElementById(id).style.display == "none") ? hidetext : showtext;
+	document.getElementById(id).style.display = (document.getElementById(id).style.display == "none") ? "" : "none";
+}
+</script>
+
+<style type="text/css">
+
+body { 
+	font-family:      Tahoma, sans-serif
+	font-size:        8pt;
+	background-color: white;
+	margin:           0;
+/*	border:           1px solid #7F9DB9;*/ /* border on page doesn't work right when scrolling...*/
+	padding:          2px;
+}
+
+h1, h2 { 
+	background-color: #316AC5; 
+	color:            white; 
+	padding:          2px;
+}
+
+
+h1, h2 a:link {color:#fff;}
+
+
+h1             { font-size: 10pt; }
+h2, h3, h4, h5 { font-size: 8pt; }
+p, blockquote  { font-size: 8pt; }
+table, td, th  { font-size: 8pt; }
+ul, ol, li     { font-size: 8pt; }
+dl, dt, dd     { font-size: 8pt; }
+
+/* i don't like the space after paragraphs and before lists */
+p { margin: 1em 0 0 0; }
+
+
+/* table formats */
+table {
+	border-collapse: collapse;
+}
+
+td, th {
+	border-collapse: collapse;
+	border:          1px solid #C8C8C8;
+	padding:         1px;
+	padding-left:    2px;
+	padding-right:   2px;
+	margin:          0;
+	vertical-align:  middle;
+	text-align:      left;
+}
+
+th                 { background-color: #EDEDED; } /* tq table grey - for table heading */
+tr:nth-child(2n+0) { background-color: #EDEDED; } /* tq table grey - for even rows */
+tr:nth-child(2n+1) { background-color: #FFFFFF; } /* tq table white - for odd rows */
+
+table#path_table td {
+	vertical-align:top;
+}
+
+.graph { 
+	width: 100px; 
+	border: 1px solid #aaa; 
+	padding: 0px 1px 0px 1px; 
+}
+.graph .bar { 
+	display: block;	
+	position: relative;
+	background: #aaa; 
+	text-align: left;
+	padding-left: 2px;
+	padding-right: 2px;
+	color: #000; 
+	height: 12px; 
+	vertical-align: middle;
+	left:-2px; /* needs to be adjusted in conjunction with .graph styles */
+}
+
+div.bar {
+	height:11px; 
+	background-color:#C00000; 
+	color: white; 
+	text-align: left; 
+	vertical-align: middle;
+}
+
+/* for description lists for summary */
+dl.rec {
+	margin: 1px;
+	padding: 0;
+}
+
+.rec dt {
+	clear: left;
+	float: left;
+	width: 7em;
+	margin: 0;
+	padding: 1px;
+}
+
+.rec dd {
+	margin: 0 0 0 5em;
+	padding: 1px;
+}
+
+dd.path_table_rec {
+	overflow: hidden;
+	whitespace: nowrap;
+	text-overflow: ellipsis;
+}
+
+ul, ol, li {
+	margin: 1px;
+}
+
+/* tooltip experiment for long node names */
+/* use with: <span id="links"><a href="#">short name<span>longer node name</span></a></span> */
+span#tip {position: relative; top: 0; left: 0;}
+span#tip a { text-decoration: none; color: black;}
+span#tip a:hover {}
+
+span#tip a span {display: none;}
+span#tip a:hover span {
+	display: block;
+	position: absolute; top: -2px; left: -2px; 
+	padding: 1px; margin: 0px; z-index: 100;
+	border: 1px solid black;
+	color: black; background: #FFFFDC;
+	text-align: left;
+	z-index: 100;
+}
+
+div#multicolumn {
+	-webkit-column-width: 50em;
+	-webkit-column-gap: 2em;
+}
+
+</style>
+</head>
+<body>
+<!--<h1>DSP Register Packing</h1>-->
+
+<h2>Overview
+
+<a href='#' id='twist-Overview-DSP Register Packing-toggle' onclick='toggle("twist-Overview-DSP Register Packing", "[show details]", "[hide details]");'>[hide details]</a>
+</h2><div id='twist-Overview-DSP Register Packing' style='display:inline;'>
+
+<p>
+The <b>Description and Recommendations</b> section gives general 
+advice and recommendations for addressing DSP Register Packing.
+</p>
+<p>
+The <b>Aggregate Results</b> section shows the 
+Entity Name
+and the number of occurences of the Entity Name 
+in the identified paths.
+You can sort the table by clicking the column header.
+</p>
+<p>
+The <b>Top Recommendations</b> section lists 
+recommendations for the most serious issues identified by the analysis.
+The number of stars indicates the relative importance of each recommendation,
+with five stars identifying the most important recommendations.
+Click <b>show details</b> for more information about each recommendation;
+click <b>report timing</b> to generate a timing report for the listed path. 
+</p>
+
+<p>
+The <b>Detailed Results</b> section contains the detailed 
+report for this analysis.
+Click on <b>show details</b> for more information related to the recommendation for each path;
+click on <b>report timing</b> to generate a timing report for the listed path. 
+You can sort the table by clicking the column header.
+</p>
+</div>
+
+<h2>Description and Recommendations
+
+<a href='#' id='twist-Description and Recommendations-DSP Register Packing-toggle' onclick='toggle("twist-Description and Recommendations-DSP Register Packing", "[show details]", "[hide details]");'>[hide details]</a>
+</h2><div id='twist-Description and Recommendations-DSP Register Packing' style='display:inline;'>
+
+	<p>
+The listed paths include data path delays that go through DSP blocks that are not fully utilizing internal DSP register banks. Performance of this path may be improved by taking advantage of additional register stages embedded inside the DSP block hardware. Full use of embedded DSP register stages is recommended to achieve maximum design performance. 
+</p>
+<p>
+The following suggestions may help resolve this issue:
+</p>
+<ul>
+<li>Optimize the HDL to include free registers around DSPs to be packed into internal DSP register banks of the DSPs in the design. Instantiate DSP blocks using <b>Altera Megafunctions templates</b> to ensure full utilization of internal DSP register banks. </li><li>DSP blocks may need multiple free registers at the input end, and one register at the output end to be able to fully utilize its internal DSP register banks. Refer to <b>Altera Documentations</b> on Altera's website for more information on Altera DSP architectures for your device family. </li><li>Refer to <b>DSP Block Details</b> table in <b>Fitter Report</b> for more information on internal DSP register banks utilization of the specific DSP block.</li>
+</ul>
+<p>
+See the <b>Top Recommendations</b> section for potential solutions
+for each path.
+
+</div>
+<h2>Aggregate Results
+
+<a href='#' id='twist-Aggregate Results-toggle' onclick='toggle("twist-Aggregate Results", "[show details]", "[hide details]");'>[hide details]</a>
+</h2><div id='twist-Aggregate Results' style='display:inline;'>
+<p>
+<table id='aggregate_table' class='sortable'>
+    <tr>
+      <th></th>
+      <th>Entity Name</th>
+      <th width=100>Paths Affected</th>
+    </tr>
+
+    <tr>
+      <td>1</td>
+      <td>|llm_soc</td>
+      <td><div class='graph'><div class='bar' style='width:100%;'>23</div></div></td>
+    </tr>
+
+</table>
+
+</div>
+<h2>Top Recommendations
+
+<a href='#' id='twist-Top Recommendations-toggle' onclick='toggle("twist-Top Recommendations", "[show details]", "[hide details]");'>[hide details]</a>
+</h2><div id='twist-Top Recommendations' style='display:inline;'>
+
+<dl class='rec'>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited.  for the path from <b>sigmoid:u_sig|y1[1]</b>
+        to <b>sigmoid:u_sig|y_raw[14]</b> 
+<a href='#' id='twist-1-tree-toggle' onclick='toggle("twist-1-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-1-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:DSP Register Packing'>DSP Register Packing</a></li>
+        <li><b>From:</b> sigmoid:u_sig|y1[1]</li>
+        <li><b>To:</b> sigmoid:u_sig|y_raw[14]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {sigmoid:u_sig|y1[1]} -to {sigmoid:u_sig|y_raw[14]} -detail full_path -panel_name {Path 1 (DSP Register Packing)} -show_routing'>report timing</a></li>
+        
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited.  for the path from <b>sigmoid:u_sig|y1[1]</b>
+        to <b>sigmoid:u_sig|y_raw[12]</b> 
+<a href='#' id='twist-2-tree-toggle' onclick='toggle("twist-2-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-2-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:DSP Register Packing'>DSP Register Packing</a></li>
+        <li><b>From:</b> sigmoid:u_sig|y1[1]</li>
+        <li><b>To:</b> sigmoid:u_sig|y_raw[12]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {sigmoid:u_sig|y1[1]} -to {sigmoid:u_sig|y_raw[12]} -detail full_path -panel_name {Path 2 (DSP Register Packing)} -show_routing'>report timing</a></li>
+        
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited.  for the path from <b>sigmoid:u_sig|y1[1]</b>
+        to <b>sigmoid:u_sig|y_raw[10]</b> 
+<a href='#' id='twist-3-tree-toggle' onclick='toggle("twist-3-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-3-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:DSP Register Packing'>DSP Register Packing</a></li>
+        <li><b>From:</b> sigmoid:u_sig|y1[1]</li>
+        <li><b>To:</b> sigmoid:u_sig|y_raw[10]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {sigmoid:u_sig|y1[1]} -to {sigmoid:u_sig|y_raw[10]} -detail full_path -panel_name {Path 3 (DSP Register Packing)} -show_routing'>report timing</a></li>
+        
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        DSP block Mult1~321 is not fully utilizing internal DSP register banks. Design performance may be limited.  for the path from <b>scalar_round_q[0]</b>
+        to <b>scalar_product_q[52]</b> 
+<a href='#' id='twist-4-tree-toggle' onclick='toggle("twist-4-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-4-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:DSP Register Packing'>DSP Register Packing</a></li>
+        <li><b>From:</b> scalar_round_q[0]</li>
+        <li><b>To:</b> scalar_product_q[52]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[52]} -detail full_path -panel_name {Path 4 (DSP Register Packing)} -show_routing'>report timing</a></li>
+        
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        DSP block Mult1~321 is not fully utilizing internal DSP register banks. Design performance may be limited.  for the path from <b>scalar_round_q[0]</b>
+        to <b>scalar_product_q[54]</b> 
+<a href='#' id='twist-5-tree-toggle' onclick='toggle("twist-5-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-5-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:DSP Register Packing'>DSP Register Packing</a></li>
+        <li><b>From:</b> scalar_round_q[0]</li>
+        <li><b>To:</b> scalar_product_q[54]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[54]} -detail full_path -panel_name {Path 5 (DSP Register Packing)} -show_routing'>report timing</a></li>
+        
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        DSP block Mult1~321 is not fully utilizing internal DSP register banks. Design performance may be limited.  for the path from <b>scalar_round_q[0]</b>
+        to <b>scalar_product_q[56]</b> 
+<a href='#' id='twist-6-tree-toggle' onclick='toggle("twist-6-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-6-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:DSP Register Packing'>DSP Register Packing</a></li>
+        <li><b>From:</b> scalar_round_q[0]</li>
+        <li><b>To:</b> scalar_product_q[56]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[56]} -detail full_path -panel_name {Path 6 (DSP Register Packing)} -show_routing'>report timing</a></li>
+        
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        DSP block Mult1~321 is not fully utilizing internal DSP register banks. Design performance may be limited.  for the path from <b>scalar_round_q[0]</b>
+        to <b>scalar_product_q[53]</b> 
+<a href='#' id='twist-7-tree-toggle' onclick='toggle("twist-7-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-7-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:DSP Register Packing'>DSP Register Packing</a></li>
+        <li><b>From:</b> scalar_round_q[0]</li>
+        <li><b>To:</b> scalar_product_q[53]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[53]} -detail full_path -panel_name {Path 7 (DSP Register Packing)} -show_routing'>report timing</a></li>
+        
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        DSP block Mult1~321 is not fully utilizing internal DSP register banks. Design performance may be limited.  for the path from <b>scalar_round_q[0]</b>
+        to <b>scalar_product_q[62]</b> 
+<a href='#' id='twist-8-tree-toggle' onclick='toggle("twist-8-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-8-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:DSP Register Packing'>DSP Register Packing</a></li>
+        <li><b>From:</b> scalar_round_q[0]</li>
+        <li><b>To:</b> scalar_product_q[62]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[62]} -detail full_path -panel_name {Path 8 (DSP Register Packing)} -show_routing'>report timing</a></li>
+        
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        DSP block Mult1~321 is not fully utilizing internal DSP register banks. Design performance may be limited.  for the path from <b>scalar_round_q[0]</b>
+        to <b>scalar_product_q[60]</b> 
+<a href='#' id='twist-9-tree-toggle' onclick='toggle("twist-9-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-9-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:DSP Register Packing'>DSP Register Packing</a></li>
+        <li><b>From:</b> scalar_round_q[0]</li>
+        <li><b>To:</b> scalar_product_q[60]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[60]} -detail full_path -panel_name {Path 9 (DSP Register Packing)} -show_routing'>report timing</a></li>
+        
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        DSP block Mult1~321 is not fully utilizing internal DSP register banks. Design performance may be limited.  for the path from <b>scalar_round_q[0]</b>
+        to <b>scalar_product_q[55]</b> 
+<a href='#' id='twist-10-tree-toggle' onclick='toggle("twist-10-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-10-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:DSP Register Packing'>DSP Register Packing</a></li>
+        <li><b>From:</b> scalar_round_q[0]</li>
+        <li><b>To:</b> scalar_product_q[55]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[55]} -detail full_path -panel_name {Path 10 (DSP Register Packing)} -show_routing'>report timing</a></li>
+        
+</div>
+    </ul>
+    </dd>
+</dl>
+</div>
+
+<h2>Detailed Results
+
+<a href='#' id='twist-Detailed Results-toggle' onclick='toggle("twist-Detailed Results", "[show details]", "[hide details]");'>[hide details]</a>
+</h2><div id='twist-Detailed Results' style='display:inline;'>
+
+<table id='output_table' class='sortable'>
+    <tr>
+        <th></th>
+        <th>Commands</th>
+        <th>From</th><th>To</th>
+        <th>Importance</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td><a href='tcl:taw_report_timing -from {sigmoid:u_sig|y1[1]} -to {sigmoid:u_sig|y_raw[14]} -detail full_path -panel_name {Path 1 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>sigmoid:u_sig|y1[1]</td><td>sigmoid:u_sig|y_raw[14]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>2</td>
+      <td><a href='tcl:taw_report_timing -from {sigmoid:u_sig|y1[1]} -to {sigmoid:u_sig|y_raw[12]} -detail full_path -panel_name {Path 2 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>sigmoid:u_sig|y1[1]</td><td>sigmoid:u_sig|y_raw[12]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>3</td>
+      <td><a href='tcl:taw_report_timing -from {sigmoid:u_sig|y1[1]} -to {sigmoid:u_sig|y_raw[10]} -detail full_path -panel_name {Path 3 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>sigmoid:u_sig|y1[1]</td><td>sigmoid:u_sig|y_raw[10]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>4</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[52]} -detail full_path -panel_name {Path 4 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[52]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>5</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[54]} -detail full_path -panel_name {Path 5 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[54]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>6</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[56]} -detail full_path -panel_name {Path 6 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[56]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>7</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[53]} -detail full_path -panel_name {Path 7 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[53]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>8</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[62]} -detail full_path -panel_name {Path 8 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[62]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>9</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[60]} -detail full_path -panel_name {Path 9 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[60]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>10</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[55]} -detail full_path -panel_name {Path 10 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[55]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>11</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[58]} -detail full_path -panel_name {Path 11 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[58]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>12</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[61]} -detail full_path -panel_name {Path 12 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[61]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>13</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[59]} -detail full_path -panel_name {Path 13 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[59]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>14</td>
+      <td><a href='tcl:taw_report_timing -from {sigmoid:u_sig|y1[1]} -to {sigmoid:u_sig|y_raw[15]} -detail full_path -panel_name {Path 14 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>sigmoid:u_sig|y1[1]</td><td>sigmoid:u_sig|y_raw[15]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>15</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[57]} -detail full_path -panel_name {Path 15 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[57]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>16</td>
+      <td><a href='tcl:taw_report_timing -from {sigmoid:u_sig|y1[1]} -to {sigmoid:u_sig|y_raw[13]} -detail full_path -panel_name {Path 16 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>sigmoid:u_sig|y1[1]</td><td>sigmoid:u_sig|y_raw[13]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>17</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[40]} -detail full_path -panel_name {Path 17 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[40]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>18</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[41]} -detail full_path -panel_name {Path 18 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[41]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>19</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[38]} -detail full_path -panel_name {Path 19 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[38]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>20</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[42]} -detail full_path -panel_name {Path 20 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[42]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>21</td>
+      <td><a href='tcl:taw_report_timing -from {sigmoid:u_sig|y1[1]} -to {sigmoid:u_sig|y_raw[11]} -detail full_path -panel_name {Path 21 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>sigmoid:u_sig|y1[1]</td><td>sigmoid:u_sig|y_raw[11]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>22</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[46]} -detail full_path -panel_name {Path 22 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[46]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+    <tr>
+      <td>23</td>
+      <td><a href='tcl:taw_report_timing -from {scalar_round_q[0]} -to {scalar_product_q[51]} -detail full_path -panel_name {Path 23 (DSP Register Packing)} -show_routing'>report timing</a></td>
+      <td>scalar_round_q[0]</td><td>scalar_product_q[51]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      
+    </tr>
+
+</table>
+</div>
+
+</body>
+</html>

@@ -22,12 +22,16 @@ module div #(
     logic [CW - 1 : 0] count;
     logic [DEN_W : 0] rem_shift;
     logic [NUM_W - 1 : 0] q_next;
+    logic [DEN_W + 1 : 0] difference;
 
     always_comb begin
         rem_shift = {rem_work[DEN_W - 1 : 0], q_work[NUM_W - 1]};
         q_next = q_work << 1;
-        if (rem_shift >= {1'b0, den_reg}) begin
-            rem_shift = rem_shift - {1'b0, den_reg};
+        // One extended subtraction provides both the borrow and remainder.
+        // A separate magnitude comparator would precede the same carry chain.
+        difference = {1'b0, rem_shift} - {2'b00, den_reg};
+        if (!difference[DEN_W + 1]) begin
+            rem_shift = difference[DEN_W : 0];
             q_next[0] = 1'b1;
         end
     end

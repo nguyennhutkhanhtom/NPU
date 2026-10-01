@@ -1,0 +1,21 @@
+# vsim -c -onfinish exit -L D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work -lib D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work -l D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\tb_llm_protocol.log tb_llm_protocol -do "run -all; quit -f" 
+# Start time: 23:11:13 on Oct 01,2026
+# Loading sv_std.std
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.tb_llm_protocol
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.llm_pkg
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.npu_pkg
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.llm_soc
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.sram_256_wrapper
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.llm_bank_ram
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.llm_math
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.isqrt_u64
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.div
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.sigmoid
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.banked_word_ram
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.sram_word_tile
+# run -all
+# LLM_PROTOCOL_PASS transactions=23 cancellations=6 bounds=768KiB
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_protocol.sv(59)
+#    Time: 2420 ns  Iteration: 1  Instance: /tb_llm_protocol
+# End time: 23:11:15 on Oct 01,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 0

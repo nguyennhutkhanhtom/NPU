@@ -1,0 +1,48 @@
+[
+  {
+    "started_at_utc": "2026-10-01T17:17:28.2793388Z",
+    "arguments": [
+      "--read_settings_files=on",
+      "--write_settings_files=off",
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ],
+    "stage": "map",
+    "executable": "C:\\intelFPGA_lite\\18.1\\quartus\\bin64\\quartus_map.exe"
+  },
+  {
+    "started_at_utc": "2026-10-01T17:19:42.2937462Z",
+    "arguments": [
+      "--read_settings_files=on",
+      "--write_settings_files=off",
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ],
+    "stage": "fit",
+    "executable": "C:\\intelFPGA_lite\\18.1\\quartus\\bin64\\quartus_fit.exe"
+  },
+  {
+    "started_at_utc": "2026-10-01T17:41:22.0859054Z",
+    "arguments": [
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ],
+    "stage": "sta",
+    "executable": "C:\\intelFPGA_lite\\18.1\\quartus\\bin64\\quartus_sta.exe"
+  },
+  {
+    "started_at_utc": "2026-10-01T17:42:32.8299368Z",
+    "arguments": [
+      "-t",
+      "D:\\2151097_Nguyen Nhut Khanh\\tools\\timing\\extract.tcl",
+      "D:\\2151097_Nguyen Nhut Khanh\\docs\\verification\\timing\\fullrtl100_local1",
+      "sdc",
+      "D:\\2151097_Nguyen Nhut Khanh\\quartus\\llm_soc"
+    ],
+    "stage": "extract",
+    "executable": "C:\\intelFPGA_lite\\18.1\\quartus\\bin64\\quartus_sta.exe"
+  }
+]

@@ -22,9 +22,9 @@
 
 **Bản đối chiếu RTL độc lập tool cập nhật ngày 01/10/2026.** Tài liệu giải thích source trong `Verilog Source code`, sau đợt tích hợp và refactor ASIC. Bản sao `npu_asic_v2` đã được loại bỏ; tài liệu này chỉ đối chiếu source chính.
 
-**Đã đồng bộ với source hiện tại:** code trích dẫn, số dòng, SHA-256 và sơ đồ NORM/RNE/ternary/instruction/SRAM/descriptor/host. [Rà soát design ngày 01/10](../reviews/design_review.md) ghi thay đổi và số liệu trước/sau. [README source chính](<../design/interfaces.md>) quy định interface; [báo cáo Quartus](../verification/README.md) lưu kết quả Analysis & Synthesis. Manifest tài liệu và hash regression trong `tests/results.json` có mục đích kiểm tra khác nhau.
+**Đã đồng bộ với source hiện tại:** code trích dẫn, số dòng, SHA-256 và sơ đồ NORM/RNE/ternary/instruction/SRAM/descriptor/host. [Rà soát design ngày 01/10](../reviews/design_review.md) ghi thay đổi và số liệu trước/sau. [README source chính](<../design/interfaces.md>) quy định interface; [báo cáo Quartus](../verification/timing/README.md) lưu kết quả Analysis & Synthesis và timing FPGA. Manifest tài liệu và hash regression trong `tests/results.json` có mục đích kiểm tra khác nhau.
 
-NPU này là bộ xử lý vector nhỏ dành cho **inference với ternary weight**. Host nạp dữ liệu và chương trình; NPU thực hiện lần lượt các lệnh NORM, TMATMUL và các phép tính theo phần tử, rồi trả kết quả qua memory. Nó chưa phải một hệ thống chatbot độc lập.
+Top legacy `matmulfree` là bộ xử lý vector nhỏ dành cho **inference với ternary weight**. Host nạp dữ liệu và chương trình; top này thực hiện các lệnh NORM, TMATMUL và các phép tính theo phần tử. Top mới [llm_soc](blocks/llm_soc.sv.md) sở hữu toàn graph sinh token và vòng autoregressive: xem [kiến trúc full RTL](../design/full_rtl_language.md). Phần dưới mô tả hierarchy legacy; mục lục từng file bao phủ cả hai top và toàn bộ 38 asset. Trained full-graph application vẫn chờ gate fitting/timing và unit tests của đúng source.
 
 ## Cách đọc
 
@@ -39,7 +39,7 @@ Phần chú giải là bản chụp tại thời điểm viết. [Manifest ngu�
 
 **Một instruction làm việc trên cả vector.** ADD không chỉ cộng hai số; nó yêu cầu NPU đi qua các phần tử của hai tensor được mô tả bằng descriptor. Một lệnh có thể mất nhiều chu kỳ.
 
-**32 PE chỉ nói về ternary core.** Mỗi đợt tính, core tạo 32 tích ternary rồi cộng lại cho **một output**. Nó không đồng thời tạo 32 output hoàn chỉnh. Rowwise unit có mức song song riêng: thông thường hai phần tử mỗi bước tính; REC một phần tử với hai tích; SIG xử lý tuần tự từng phần tử.
+**32 PE chỉ nói về ternary core.** Mỗi đợt tính, core tạo 32 tích ternary rồi cộng lại cho **một output**. Nó không đồng thời tạo 32 output hoàn chỉnh. Rowwise unit có mức song song riêng: ADD/SUB/MUL/RELU tạo hai phần tử mỗi batch năm clock; REC một phần tử với hai tích qua năm clock; SIG xử lý từng phần tử.
 
 **Integer-only vẫn có thể biểu diễn số lẻ.** Ví dụ raw S16 `0x0180` bằng 384; với `F_t=8`, giá trị thực là `0x0180/0x0100=1,5`. Phần cứng lưu số nguyên và dùng shift, multiply, rounding để xử lý scale. Đây là fixed-point, không phải floating-point. Inference bỏ backpropagation, nhưng vẫn cần biểu diễn activation, gate và state có phần lẻ.
 
@@ -54,7 +54,7 @@ flowchart TB
 %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
     HOST["Host 32 bit"]
     subgraph NPU["NPU — matmulfree.sv"]
-        IF["Host interface<br/>Address decoder + control/status<br/>SRAM / instruction host_ready từ read valid"]
+        IF["Host interface<br/>Read request + tagged response registers<br/>Ctrl/desc: 2 cạnh · SRAM/imem: 4 cạnh<br/>Write: same-edge acceptance"]
         subgraph CTRL["Điều khiển và cấu hình"]
             PC["PC.sv<br/>Program counter 9 bit"]
             IM@{ shape: rect, label: "ins_mem.sv<hr/>Instruction memory 512 × 13 bit" }
@@ -63,9 +63,9 @@ flowchart TB
             SCALE["Runtime q metadata + effective_mat<br/>scale_compose.sv + div 48/25<br/>Scale tĩnh hoặc ghép scale động<br/>Guard overlap với q có metadata"]
         end
         subgraph ENG["Các engine tính toán"]
-            ROW["Row-wise vector engine<br/>rowwise_dispatch + rowwise_op<br/>ADD / SUB / MUL / REC / RELU<br/>sigmoid: ROM + nội suy"]
-            NORM["NORM + QUANT engine<br/>norm_dispatch + norm<br/>isqrt_u64 + div 55/32<br/>S16 → scratch S24/F16 → S8"]
-            TM["Ternary matmul engine<br/>ternary_mul · 32 lane chọn dấu/zero<br/>acc_mul + accumulator S18<br/>postscale + bias → S16/S32"]
+            ROW["Row-wise vector engine<br/>rowwise_dispatch + rowwise_op<br/>Registered operand / product / RNE<br/>ADD / SUB / MUL / REC / RELU<br/>sigmoid: ROM + nội suy"]
+            NORM["NORM + QUANT engine<br/>norm_dispatch + norm<br/>isqrt_u64 + div 55/32<br/>Registered operand / product / RNE<br/>S16 → scratch S24/F16 → S8"]
+            TM["Ternary matmul engine<br/>ternary_mul · 32 lane chọn dấu/zero<br/>acc_mul + accumulator S18<br/>Registered product / RNE<br/>postscale_finish + bias → S16/S32"]
         end
         REQMUX@{ shape: trap-t, label: "Workspace request mux<br/>Chọn request/write theo active_unit" }
         RSPDEC@{ shape: trap-b, label: "Workspace response demux<br/>Phân phối read data/valid tới active engine" }
@@ -122,7 +122,7 @@ Các con số trên là số bit dữ liệu logic; không bao gồm control reg
 
 `sram_256_wrapper` dùng tám bank 32 bit và một cổng đọc đồng bộ chung cho host/compute. RAM và register dữ liệu đọc không asynchronous reset; reset chỉ xóa control/tag. Simulation và synthesis dùng cùng implementation, không có define hoặc thuộc tính của hãng FPGA. Binding SRAM ASIC cần adapter PDK giữ hợp đồng đọc/valid và mask ghi; cấu trúc bank logic không quy định macro vật lý.
 
-**Hợp đồng đọc host.** Giữ `host_en=1`, `host_we=0` và địa chỉ ổn định qua hai cạnh lên đến khi `host_ready=1`. Top dùng `p_host_rvalid` hoặc `ws_host_rvalid` để acknowledge read đúng row/lane; write hoặc idle ngắt request cũ, nên đọc lại cùng địa chỉ sau ghi vẫn phải chờ. Instruction read cũng dùng cùng hai cạnh lên và valid; descriptor và control/status đọc tổ hợp. Xem [chi tiết SRAM](blocks/sram_256_wrapper.sv.md).
+**Hợp đồng đọc host.** Top chốt request + response có tag: control/descriptor cần hai cạnh lên, SRAM/imem cần bốn cạnh lên từ lần sample request đầu. Giữ enable/read/address đến ready và chỉ lấy data khi ready. Held request giữ response đầu; poll status mới cùng địa chỉ cần idle qua một cạnh clock. Đổi address/drop enable/write hủy read cũ; write vẫn trực tiếp. Backend [SRAM adapter](blocks/sram_256_wrapper.sv.md) và [instruction memory](blocks/ins_mem.sv.md) vẫn read/tag/valid hai cạnh lên; latency tăng nằm tại frontend top. [Interface host](../design/interfaces.md#host-32-bit) ghi quy tắc đầy đủ.
 
 ## 3. Format số và ý nghĩa từng độ rộng
 
@@ -136,7 +136,7 @@ Các con số trên là số bit dữ liệu logic; không bao gồm control reg
 | Gate sigmoid | U16/F15; raw `0x0000…0x8000` | Biểu diễn 0…1, gồm chính xác 1 |
 | Bias | S32 theo đơn vị output | Cộng sau khi rescale accumulator |
 | Hệ số scale | M U24, r U6; hệ số ≈ M/2^r | Không dùng floating-point; miền r thực dùng 0…47 |
-| Tích postscale | S42; rounding và cộng bias dùng S64 | Giữ độ rộng trước khi saturation về S16/S32 |
+| Tích postscale | RNE S42, cộng bias S43 | Giữ độ rộng trước khi saturation về S16/S32 |
 | Bình phương trong NORM | Tín hiệu S32, giá trị luôn không âm | Bình phương input S16 |
 | Tổng bình phương | U40 | Tối đa `512×0x8000²=2^39` |
 | Mean-square và epsilon đã quy đổi | U64; phép cộng kiểm tra bằng U65 | Tránh mất phần lẻ sớm và phát hiện tràn |
@@ -225,7 +225,7 @@ V = (Q << 32) + floor((rem << 32)/K) + epsilon_raw32
 R = floor(sqrt(V))
 ```
 
-Hai bình phương được cộng vào `sum_sq` mỗi bước P1_PROC. Phần tử padding ngoài K không tham gia tổng. Divider chung U55/U32 tính thương/phần dư trong 55 bước cho mỗi phép chia. Tử số lớn nhất là bit 54 của `2^(32+r_norm)` với r_norm≤22; mọi phép chia mean-square, phần lẻ và QUANT đều vừa miền này. `isqrt_u64` lấy hai bit radicand mỗi bước, dùng remainder U34 và một phép trừ U35 để vừa so sánh trial vừa cập nhật remainder; sau 32 bước trả root U32.
+P1_CAPTURE chốt operand, P1_MUL chốt bình phương, P1_PROC cộng hai bình phương vào sum_sq. P2/P3 còn chốt kết quả tại ROUND trước PROC; tổng overhead mới 8×ceil(K/2) clock/NORM. Phần tử padding ngoài K không tham gia tổng. Divider chung U55/U32 tính thương/phần dư trong 55 bước cho mỗi phép chia. Tử số lớn nhất là bit 54 của `2^(32+r_norm)` với r_norm≤22; mọi phép chia mean-square, phần lẻ và QUANT đều vừa miền này. `isqrt_u64` lấy hai bit radicand mỗi bước, dùng remainder U34 và một phép trừ U35 để vừa so sánh trial vừa cập nhật remainder; sau 32 bước trả root U32.
 
 V giữ 32 bit phần lẻ so với mean-square tính theo raw input; vì vậy R xấp xỉ RMS raw nhân 65536. Khối tiếp theo chọn M_norm/r_norm sao cho `M_norm/2^r_norm ≈ 2^32/R`.
 
@@ -291,7 +291,7 @@ Có 32 term ternary song song ở bước ACCUM, nhưng FSM còn các bước re
 
 ## 7. Rowwise, sigmoid và state của model
 
-`rowwise_dispatch` chia vector thành các word chứa tối đa 16 phần tử, đọc A rồi B khi cần, gọi `rowwise_op`, đợi done và ghi kết quả. SIG và RELU chỉ cần A. REC còn đọc destination hiện tại làm state cũ H.
+`rowwise_dispatch` chia vector thành các word chứa tối đa 16 phần tử, đọc A rồi B khi cần, gọi `rowwise_op`, đợi done và ghi kết quả. Datapath đã tách LOAD/MULTIPLY/RAW/ROUND/PACK bằng register; handshake và descriptor contract giữ nguyên. SIG và RELU chỉ cần A. REC còn đọc destination hiện tại làm state cũ H.
 
 ADD/SUB giữ một bit mở rộng trước khi đổi scale. MUL dùng hai phép nhân 16×16 cho hai phần tử. REC dùng chính hai phép nhân đó cho **một** phần tử:
 
@@ -393,11 +393,11 @@ Ví dụ hai dòng `q_word <= ws_rd_data; state <= ACCUM;` cùng chạy tại m�
 
 Tài liệu đối chiếu 29 file `.sv/.v` và hai file LUT hiện hành (`sigmoid_lut.svh`, `sigmoid_257.mem`). Mỗi trang RTL trích nguyên văn source theo nhóm logic, lưu số dòng và SHA-256. Các helper và module legacy có trang riêng; có file không có nghĩa khối được instantiate trong top hiện tại. Các PDF/PPT thesis/paper gốc giữ làm tài liệu lịch sử.
 
-Manifest hiện bao phủ **31 file nguồn**, **123 nhóm logic**. **2.986 dòng RTL** và **519 dòng chú giải LUT**. Bộ chú giải có **46 sơ đồ** (1 tổng quan NPU, 29 toàn khối, 16 theo nhóm); render evidence cũng bao phủ các sơ đồ trong toàn bộ tài liệu thiết kế và demo. Số lượng hiện hành được ghi trong [diagram_validation.json](diagram_validation.json). [validation.json](validation.json) và [diagram_validation.json](diagram_validation.json) lưu kết quả validator/render gắn với hash hiện tại; chạy lại `python docs/source_guide/validate.py` sau khi sửa source hoặc sơ đồ.
+Manifest hiện bao phủ **31 file nguồn**, **124 nhóm logic**. **3.176 dòng RTL** và **519 dòng chú giải LUT**. Bộ chú giải có **47 sơ đồ** (1 tổng quan NPU, 29 toàn khối, 17 theo nhóm); render evidence cũng bao phủ các sơ đồ trong toàn bộ tài liệu thiết kế và demo. Số lượng hiện hành được ghi trong [diagram_validation.json](diagram_validation.json). [validation.json](validation.json) và [diagram_validation.json](diagram_validation.json) lưu kết quả validator/render gắn với hash hiện tại; chạy lại `python docs/source_guide/validate.py` sau khi sửa source hoặc sơ đồ.
 
-Regression RTL thống nhất ngày 01/10/2026 lúc 11:23:43 pass **9 mục**, compile **0 error, 0 warning**: kiểm tra asset ROM; **168 ca host/23.827 commands** (NORM 43, ternary 65, rowwise 57, host/PC 3); 106 division, **4.301 sqrt**, 37.189 RNE, **900 coefficient cases** với tối đa 99 clock quan sát; 5 divider profiles; **12.720 postscale checks**; 1.027 instruction memory checks; **1.638.400 sigmoid inputs trên toàn bộ 25 F_t=0…24**; 3.242 addsub, 4.452 mul, 5 accumulator profiles; 47 SRAM checks. Các ca mới kiểm tra rejected NORM sau overflow không reset, static TM qua descriptor alias/subrange, reset metadata và restart, divider có NUM_W=1 hoặc DEN_W>NUM_W, busy/start protocol và reset giữa giao dịch. Testbench kiểm tra arbitration và generator/test từ chối hai asset thiếu, hai asset hỏng. RTL không có assertion hoặc file I/O; các kiểm tra này nằm trong verification. Hash/result ở [tests/results.json](../../tests/results.json); chạy lại bằng `./tests/run.ps1 -Block All`, không cần macro hoặc chế độ build riêng.
+Regression RTL thống nhất ngày 01/10/2026 lúc 14:31:18 pass **10 mục**, compile **0 error, 0 warning**: kiểm tra asset ROM; **168 ca host/23.827 commands** (NORM 43, ternary 65, rowwise 57, host/PC 3); 106 division, **4.301 sqrt**, 37.189 RNE, **900 coefficient cases** với tối đa 99 clock quan sát; 5 divider profiles; **12.720 postscale checks**; 1.027 instruction memory checks; **1.638.400 sigmoid inputs trên toàn bộ 25 F_t=0…24**; 3.242 addsub, 4.452 mul, 5 accumulator profiles; 47 SRAM checks; **1.800 ca rowwise / 13.260 phần tử**, reference S128, 42.843 thay đổi input khi busy và reset sáu pha. Host frontend thêm **30 protocol reads, 11 cancellations, 4 blocked regions**. Các ca mới kiểm tra rejected NORM sau overflow không reset, static TM qua descriptor alias/subrange, reset metadata và restart, divider có NUM_W=1 hoặc DEN_W>NUM_W, busy/start protocol và reset giữa giao dịch. Testbench kiểm tra arbitration và generator/test từ chối hai asset thiếu, hai asset hỏng. RTL không có assertion hoặc file I/O; các kiểm tra này nằm trong verification. Hash/result ở [tests/results.json](../../tests/results.json); chạy lại bằng `./tests/run.ps1 -Block All`, không cần macro hoặc chế độ build riêng.
 
-Quartus Analysis & Synthesis demo ngày 01/10/2026 lúc 11:24:04 pass **0 error, 0 warning**: **6.497 registers**, **11.798 ALUT**, **8.005 ALM ước tính**, 334.336 bit block RAM, 7 DSP. So với snapshot portable trước lượt review này: 6.712→6.497 registers và 8.441→8.005 ALM ước tính; RAM/DSP không đổi. Đây là compile minh họa khả năng tổng hợp RTL; số liệu FPGA không phải ràng buộc kiến trúc hoặc PPA ASIC. Chưa chạy Fitter/STA. Xem [report và warnings](../verification/README.md), [rà soát toàn design](../reviews/design_review.md).
+Quartus Analysis & Synthesis demo ngày 01/10/2026 lúc 11:24:04 pass **0 error, 0 warning**: **6.497 registers**, **11.798 ALUT**, **8.005 ALM ước tính**, 334.336 bit block RAM, 7 DSP. So với snapshot portable trước lượt review này: 6.712→6.497 registers và 8.441→8.005 ALM ước tính; RAM/DSP không đổi. Đây là compile minh họa khả năng tổng hợp RTL; số liệu FPGA không phải ràng buộc kiến trúc hoặc PPA ASIC. Đây là snapshot A&S trước tối ưu timing. [Timing hub](../verification/timing/README.md) ghi Fitter/STA FPGA, constraint và critical path; chưa có STA ASIC. Xem [report và warnings](../verification/README.md), [rà soát toàn design](../reviews/design_review.md).
 
 RTL và verification dùng cùng hành vi bộ nhớ/ROM. [Demo checkpoint Binary-MNIST160](../demos/mnist.md) đã chạy end-to-end trên 10 ảnh mẫu, đối chiếu 40 lượt tầng và hai lần chương trình toàn graph; không thay RTL. Chưa có binding SRAM PDK, PPA ASIC hoặc accuracy toàn MNIST/model ngôn ngữ. Sharing multiplier toàn chip và exporter cho các graph khác vẫn cần triển khai.
 

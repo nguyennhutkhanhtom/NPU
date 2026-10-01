@@ -70,7 +70,7 @@ activations bit for bit.
 - Reserved workspace payload: **2,496 bytes**. The highest occupied byte is
   5,119 because buffers have fixed base addresses; the 8 KiB capacity is kept.
 - The complete program has 11 engine instructions and one HALT: **12 total**.
-- Complete active inference: **15,899 cycles** for each of the two whole-graph
+- Complete active inference: **20,783 cycles** for each of the two whole-graph
   runs, excluding host load/readback. The 10 ns testbench clock does not establish
   ASIC timing. Loading is reported separately as host write counts.
 

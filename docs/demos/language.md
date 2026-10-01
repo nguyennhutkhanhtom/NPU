@@ -2,6 +2,11 @@
 
 [Project](../../README.md) → [Tài liệu](../README.md) → [Model demo](README.md) → **NanoFable**
 
+Đây là bằng chứng hybrid trước, được giữ để tra cứu. [Full RTL graph mới](../design/full_rtl_language.md)
+đã triển khai toàn bộ computation và token selection; chưa chạy pretrained
+application vì gate timing >=100 MHz chưa đạt. Dùng [runner có gate](../../tests/full_rtl/README.md)
+cho các lần chạy tiếp theo; CPU continuation dưới đây không phải demo RTL.
+
 Demo dùng checkpoint đã train **NanoFable-1M-ternary**: chạy toàn graph sinh văn bản trên CPU, sau đó kiểm chứng các linear ternary thật bằng core RTL hiện hành. **168 lượt RTL PASS, 33.792 đầu ra S32 khớp bit-exact với reference số nguyên**, compile và simulation đều **0 error/0 warning**. Toàn graph sinh văn bản chưa chạy trên RTL.
 
 ## Checkpoint và graph
@@ -43,9 +48,9 @@ RMSNorm gain, RoPE, attention/softmax, residual, SwiGLU và embedding/head đư�
 | Output / host checks / commands | 33.792 / 34.128 / 95.801 |
 | Compile / simulation | 0 error, 0 warning ở cả hai bước |
 | Sai số so với linear CPU float32 | Relative L2 lớn nhất 1,78%; trung bình 0,288%; absolute lớn nhất 0,02284 |
-| Tổng chu kỳ active của 168 lượt | 679.176; không phải latency toàn model ngôn ngữ |
+| Tổng chu kỳ active của 168 lượt | 746.760; không phải latency toàn model ngôn ngữ |
 
-Bản chạy cuối ngày **01/10/2026 lúc 11:32:36 (UTC+7)**. Sai số ở bảng là ảnh hưởng lượng tử hóa activation và postscale tại **linear**, đo trên 168 activation đã lấy. Đầu ra RTL khớp chính xác với reference số nguyên; reference số nguyên có sai số so với CPU float32. Chưa đo perplexity hoặc đánh giá dataset ngôn ngữ.
+Bản chạy cuối ngày **01/10/2026 lúc 14:30:57 (UTC+7)**. Sai số ở bảng là ảnh hưởng lượng tử hóa activation và postscale tại **linear**, đo trên 168 activation đã lấy. Đầu ra RTL khớp chính xác với reference số nguyên; reference số nguyên có sai số so với CPU float32. Chưa đo perplexity hoặc đánh giá dataset ngôn ngữ.
 
 ### Văn bản CPU sinh ra
 

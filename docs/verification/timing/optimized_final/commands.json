@@ -1,0 +1,48 @@
+[
+  {
+    "executable": "C:\\intelFPGA_lite\\18.1\\quartus\\bin64\\quartus_map.exe",
+    "stage": "map",
+    "arguments": [
+      "--read_settings_files=on",
+      "--write_settings_files=off",
+      "matmul_free",
+      "-c",
+      "matmul_free"
+    ],
+    "started_at_utc": "2026-10-01T07:30:01.5092882Z"
+  },
+  {
+    "executable": "C:\\intelFPGA_lite\\18.1\\quartus\\bin64\\quartus_fit.exe",
+    "stage": "fit",
+    "arguments": [
+      "--read_settings_files=on",
+      "--write_settings_files=off",
+      "matmul_free",
+      "-c",
+      "matmul_free"
+    ],
+    "started_at_utc": "2026-10-01T07:31:44.7999499Z"
+  },
+  {
+    "executable": "C:\\intelFPGA_lite\\18.1\\quartus\\bin64\\quartus_sta.exe",
+    "stage": "sta",
+    "arguments": [
+      "matmul_free",
+      "-c",
+      "matmul_free"
+    ],
+    "started_at_utc": "2026-10-01T07:39:43.5419497Z"
+  },
+  {
+    "executable": "C:\\intelFPGA_lite\\18.1\\quartus\\bin64\\quartus_sta.exe",
+    "stage": "extract",
+    "arguments": [
+      "-t",
+      "D:\\2151097_Nguyen Nhut Khanh\\tools\\timing\\extract.tcl",
+      "D:\\2151097_Nguyen Nhut Khanh\\docs\\verification\\timing\\optimized_final",
+      "sdc",
+      "D:\\2151097_Nguyen Nhut Khanh\\quartus\\matmul_free"
+    ],
+    "started_at_utc": "2026-10-01T07:40:09.8008747Z"
+  }
+]

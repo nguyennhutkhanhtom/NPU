@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — package chung.
 
-**Source:** [npu_pkg.sv](<../../../Verilog%20Source%20code/npu_pkg.sv>). **Số dòng:** 110. **SHA-256:** `1061016c51092f4f9269fc99392c30bc1bd2117103ef5f49474a296f5077a343`.
+**Source:** [npu_pkg.sv](<../../../Verilog%20Source%20code/npu_pkg.sv>). **Số dòng:** 128. **SHA-256:** `f2914bb24c72644edbf2b57e5eabad9a4f3dbf88d2dd72b79285ccdf8e2b2d86`.
 
 ## Khối này làm gì?
 
@@ -35,7 +35,7 @@ MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ
 
 ## Cách hoạt động chi tiết
 
-`sat_s16/sat_s32` clamp về miền biểu diễn. `rne_shift64` dịch phải số có dấu để tạo thương floor, rồi dùng guard/sticky/LSB quyết định cộng một; kết quả là ties-to-even cho cả số dương và âm. `scale_shift64` dùng RNE khi chia cho 2^shift, hoặc shift trái khi phải tăng scale raw. Các hàm kiểm tra workspace tính số word bằng phép chia làm tròn lên.
+`sat_s16/sat_s32` clamp về miền biểu diễn. `rne_shift64` dịch phải số có dấu để tạo thương floor, rồi dùng guard/sticky/LSB quyết định cộng một; kết quả là ties-to-even cho cả số dương và âm. `rne_shift42` là bản đúng độ rộng cho tích postscale S42; shift≥42 trả zero với ties-to-even. `scale_shift64` dùng RNE S64 khi chia cho 2^shift, hoặc shift trái khi phải tăng scale raw. Các hàm kiểm tra workspace tính số word bằng phép chia làm tròn lên.
 
 1. Các parameter xác định biên thiết kế: word 256 bit, 32 ternary lane, hai vector lane và K tối đa 512. Một số module vẫn có literal theo cấu hình này, nên đổi package chưa đủ để tái cấu hình toàn chip.
 2. Workspace descriptor mô tả địa chỉ, length, format và F_t. Matrix descriptor mô tả weight, bias, K, số hàng và postscale.
@@ -145,9 +145,9 @@ package npu_pkg;
 **Tín hiệu và dữ liệu chính.** `x`: giá trị đầu vào hàm số học.
 
 
-### [Dòng 59–82: RNE](<../../../Verilog%20Source%20code/npu_pkg.sv#L59>)
+### [Dòng 59–83: RNE](<../../../Verilog%20Source%20code/npu_pkg.sv#L59>)
 
-<!-- source-range:59:82 -->
+<!-- source-range:59:83 -->
 ```systemverilog
 
     // Round-to-nearest-even signed arithmetic right shift, including shift=0.
@@ -173,6 +173,7 @@ package npu_pkg;
         end
     endfunction
 
+    // RNE for the signed 42-bit postscale product. At shift >= 42 every
 ```
 
 **Mục đích.** Guard là bit ngay dưới phần giữ lại. Sticky OR các bit thấp hơn; khi đúng nửa đơn vị, chỉ tăng nếu LSB đang lẻ.
@@ -199,12 +200,39 @@ flowchart TB
 ```
 
 
-### [Dòng 83–91: Đổi scale](<../../../Verilog%20Source%20code/npu_pkg.sv#L83>)
+### [Dòng 84–102: RNE đúng độ rộng S42](<../../../Verilog%20Source%20code/npu_pkg.sv#L84>)
 
-<!-- source-range:83:91 -->
+<!-- source-range:84:102 -->
 ```systemverilog
+    // S42 value rounds to zero, including the minimum value's even tie.
+    function automatic logic signed [41:0] rne_shift42(
+            input logic signed [41:0] x,
+            input logic [5:0] shift
+        );
+        logic signed [41:0] q;
+        logic [41:0] discarded;
+        logic inc;
+        begin
+            q = x >>> shift;
+            discarded = $unsigned(x) << (7'd42 - {1'b0, shift});
+            inc = discarded[41] && ((|discarded[40:0]) || q[0]);
+            if (shift >= 42) rne_shift42 = '0;
+            else rne_shift42 = q + $signed({41'h0, inc});
+        end
+    endfunction
+
     // Shift is positive for division, negative for multiplication by a power of two.
     // Callers constrain left shifts to <=24 and operands to at most 33 signed bits.
+```
+
+**Mục đích.** rne_shift42 giữ signed-floor, guard/sticky/parity trên tích postscale S42. Với shift≥42, toàn miền S42 làm tròn về zero; giá trị nhỏ nhất ở shift=42 là tie −0,5 và chọn số chẵn zero. Không thay thế RNE S64 ở NORM/rowwise.
+
+**Cách hoạt động.** Barrel shifter và cộng một dùng độ rộng 42 bit. Hàm tổ hợp gán đủ intermediate, không thêm latency; ternary_mul đặt register tại nơi gọi. Regression postscale đối chiếu với reference S128 ở mọi shift 0…63.
+
+### [Dòng 103–112: Đổi scale](<../../../Verilog%20Source%20code/npu_pkg.sv#L103>)
+
+<!-- source-range:103:112 -->
+```systemverilog
     function automatic logic signed [63:0] scale_shift64(
             input logic signed [63:0] x, input integer shift
         );
@@ -212,6 +240,9 @@ flowchart TB
         else scale_shift64 = x <<< $unsigned( - shift);
     endfunction
 
+    function automatic integer ws_words(input ws_desc_t d);
+        case (d.fmt)
+            FMT_S8 : ws_words = (int'(d.length) + 31) / 32;
 ```
 
 **Mục đích.** Shift dương chia và RNE; shift âm nhân lũy thừa hai. Caller phải bảo đảm miền shift và operand không tràn.
@@ -221,13 +252,10 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `x`: giá trị đầu vào hàm số học; `shift`: độ dịch để biểu diễn scale; ý nghĩa dấu theo hàm đang dùng.
 
 
-### [Dòng 92–110: Kiểm tra memory](<../../../Verilog%20Source%20code/npu_pkg.sv#L92>)
+### [Dòng 113–128: Kiểm tra memory](<../../../Verilog%20Source%20code/npu_pkg.sv#L113>)
 
-<!-- source-range:92:110 -->
+<!-- source-range:113:128 -->
 ```systemverilog
-    function automatic integer ws_words(input ws_desc_t d);
-        case (d.fmt)
-            FMT_S8 : ws_words = (int'(d.length) + 31) / 32;
             FMT_S16, FMT_U16 : ws_words = (int'(d.length) + 15) / 16;
             default : ws_words = (int'(d.length) + 7) / 8;
         endcase

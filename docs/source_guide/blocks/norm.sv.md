@@ -4,13 +4,15 @@
 
 **Trạng thái:** Đang dùng — chứa norm và isqrt_u64.
 
-**Source:** [norm.sv](<../../../Verilog%20Source%20code/norm.sv>). **Số dòng:** 580. **SHA-256:** `03e8f34433b60a8f81509c38fbe4467cf0ef1fd363a4e2a7d41212463f2a2d1b`.
+**Source:** [norm.sv](<../../../Verilog%20Source%20code/norm.sv>). **Số dòng:** 623. **SHA-256:** `46cd35b648f181dd12c59a4fb139c57be2ec0228b074e66354677bd40d9252c6`.
 
 ## Khối này làm gì?
 
 File có hai module. `isqrt_u64` tính căn nguyên của một số U64. `norm` sử dụng căn này, một divider tuần tự và ba lượt đọc/tính để biến vector S16 thành q S8. Các hệ số M/r là số nguyên mô tả scale; không có floating-point.
 
-RMSNorm ở đây không có affine gamma/beta. Epsilon đã được host quy đổi sang raw mean-square với 32 fractional bit. Scratch z là S24/F16, đặt trong ô S32; output q dùng scale D/(0x7F×0x1_0000).
+RMSNorm trong module legacy `norm` không có affine gamma/beta; affine RMSNorm của graph mới được điều phối bởi [llm_soc](llm_soc.sv.md), dùng chung `isqrt_u64` từ file này. Epsilon legacy đã được host quy đổi sang raw mean-square với 32 fractional bit. Scratch z là S24/F16, đặt trong ô S32; output q dùng scale D/(0x7F×0x1_0000).
+
+Source hiện tại chốt các bước operand, multiply và RNE; chọn quant shift theo threshold chính xác, giữ nguyên rounding/saturation và kiểm tra metadata. Regression `All` sau SRAM tiling PASS, gồm 4301 sqrt cases, 37189 scalar RNE checks và 900 coefficient cases. Đây là bằng chứng chức năng; timing của top đầy đủ được đánh giá riêng.
 
 ## Sơ đồ kiến trúc tổng quan
 
@@ -23,8 +25,11 @@ flowchart TB
         CTRL["Controller / bounds / row-lane counters"]
         READ["Read buffer 256 bit + two-lane selectors"]
         OPS@{ shape: trap-t, label: "Operand mux by pass<hr/>P1: X × X<hr/>P2: X × M_norm<hr/>P3: z × M_quant" }
+        OREG["Operand + shift registers<br/>Two S25 pairs · U6 shift"]
         MUL["Two signed 25 × 25 multipliers<br/>Product S48"]
+        PREG["Product registers<br/>2 × S48"]
         RNE["Two shared RNE paths<br/>Shift 0 / norm_r / quant_r"]
+        RREG["Rounded result registers<br/>2 × S64"]
         SUM["P1: tail mask + pair sum<br/>Accumulator U40"]
         COEF["Shared internal div 55/32<br/>isqrt_u64 / coefficient RNE"]
         Z["P2: clamp S24/F16<br/>abs + max tracker"]
@@ -38,13 +43,16 @@ flowchart TB
     READ --> OPS
     CTRL -.->|"Pass selection"| OPS
     COEF -.->|"M/r"| OPS
-    OPS --> MUL
-    MUL --> SUM
-    MUL --> RNE
+    OPS --> OREG
+    OREG --> MUL
+    MUL --> PREG
+    PREG --> SUM
+    PREG --> RNE
     COEF -.->|"r"| RNE
     SUM --> COEF
-    RNE --> Z
-    RNE --> Q
+    RNE --> RREG
+    RREG --> Z
+    RREG --> Q
     Z -->|"D=max(absmax,delta)"| COEF
     Z --> PACK
     Q --> PACK
@@ -68,7 +76,11 @@ Scratch không được overlap X hoặc q. q có thể dùng lại vùng X vì 
 5. D bằng max(absmax, delta). Divider tạo hệ số QUANT xấp xỉ 0x7F/D; D trở thành metadata scale của q.
 6. P3 đọc scratch, lượng tử hóa z về S8 và pack 32 phần tử/word. Scratch không được overlap X hay q; q được phép trùng X vì X đã đọc xong.
 
-**Tối ưu 01/10.** Ba lượt P1/P2/P3 dùng chung hai multiplier với operand S25 và hai đường RNE. S16 và S24 được sign-extend; M U24 thêm bit zero trước khi cast signed. S24×U24 vừa S48, P1 chỉ lấy 32 bit bình phương. Không thêm state hoặc chu kỳ xử lý; clamp S24/S8 và tail mask giữ riêng theo pass.
+**Tối ưu timing 01/10.** Ba lượt P1/P2/P3 tiếp tục dùng chung hai multiplier với operand S25 và hai đường RNE. S16/S24 được sign-extend; M U24 thêm bit zero trước cast signed. S24×U24 vừa S48, P1 chỉ lấy 32 bit bình phương. Chốt operand, product và rounded result để tách mux đọc khỏi multiply/RNE/absmax. P1 dùng CAPTURE → MUL → PROC; P2/P3 dùng CAPTURE → MUL → ROUND → PROC. Tổng overhead so với bản trước là **8 × ceil(K/2) clock/NORM**; clamp, scratch packing và tail giữ nguyên.
+
+CNORM_PREP/CQUANT_PREP chốt `norm_r`, `quant_r` và `quant_d`; DIV_START và RNE hệ số QUANT dùng lại các register này thay vì tính lại chooser/max ở input divider. Không thêm state hoặc chu kỳ và không thay công thức hệ số.
+
+Payload mới gồm 330 bit operand/product/rounded/shift không async reset. FSM và rst_n gate mỗi enable; reset không thể consume payload chưa ghi, start mới đi qua capture trước khi dùng. [Timing report](../../verification/timing/README.md) và [model demo](../../demos/README.md) ghi số liệu của snapshot được kiểm tra.
 
 **Quy ước RTL.** `isqrt_u64` dùng radicand U64, root U32, remainder/trial U34 và phép trừ U35 có borrow, xử lý hai bit radicand mỗi bước trong 32 bước. Divider NORM dùng tử U55/mẫu U32 trong 55 bước; giới hạn r_norm≤22 làm tử norm cao nhất ở bit 54, các tử mean-square/phần lẻ/QUANT cũng vừa U55. Index 11 bit, shift hệ số 6 bit, lane 4 bit và pack count 6 bit giữ độ rộng rõ ràng. Ba lượt NORM, RNE và scale output không đổi.
 
@@ -179,9 +191,9 @@ flowchart TB
 ```
 
 
-### [Dòng 61–109: Giao diện và state NORM](<../../../Verilog%20Source%20code/norm.sv#L61>)
+### [Dòng 61–110: Giao diện và state NORM](<../../../Verilog%20Source%20code/norm.sv#L61>)
 
-<!-- source-range:61:109 -->
+<!-- source-range:61:110 -->
 ```systemverilog
 
 // Full-vector integer RMSNorm + activation quantization.
@@ -220,18 +232,19 @@ module norm (
 
     typedef enum logic [5:0] {
     IDLE,
-    P1_REQ, P1_WAIT, P1_PROC,
+    P1_REQ, P1_WAIT, P1_CAPTURE, P1_MUL, P1_PROC,
     DIV_MEAN_START, DIV_MEAN_WAIT,
     DIV_FRAC_START, DIV_FRAC_WAIT,
     SQRT_START, SQRT_WAIT,
     CNORM_PREP, CNORM_DIV_START, CNORM_DIV_WAIT,
-    P2_REQ, P2_WAIT, P2_PROC, P2_WRITE,
+    P2_REQ, P2_WAIT, P2_CAPTURE, P2_MUL, P2_ROUND, P2_PROC, P2_WRITE,
     CQUANT_PREP, CQUANT_DIV_START, CQUANT_DIV_WAIT,
-    P3_REQ, P3_WAIT, P3_PROC, P3_WRITE,
+    P3_REQ, P3_WAIT, P3_CAPTURE, P3_MUL, P3_ROUND, P3_PROC, P3_WRITE,
     FINISH
     } state_t;
     state_t state;
 
+    logic [7:0] input_base_q, scratch_base_q, output_base_q;
 ```
 
 **Mục đích.** Tách state request/wait/process/write để không dùng dữ liệu SRAM trước valid.
@@ -241,11 +254,10 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `x_base`: base input S16; `z_base`: base scratch z; `q_base`: base SRAM mà cache q mô tả; `k_len`: độ dài dot product; `epsilon_raw32`: epsilon theo đơn vị raw-square có 32 fractional bit; và 18 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 110–157: Thanh ghi và scalar unit](<../../../Verilog%20Source%20code/norm.sv#L110>)
+### [Dòng 111–159: Thanh ghi và scalar unit](<../../../Verilog%20Source%20code/norm.sv#L111>)
 
-<!-- source-range:110:157 -->
+<!-- source-range:111:159 -->
 ```systemverilog
-    logic [7:0] input_base_q, scratch_base_q, output_base_q;
     logic [9:0] vector_length_q;
     logic [63:0] epsilon_q;
     logic [23:0] delta_q;
@@ -293,6 +305,8 @@ module norm (
         .done(sqrt_done),
         .root(sqrt_root));
 
+    logic signed [15:0] x0, x1;
+    logic signed [31:0] x0_sq, x1_sq;
 ```
 
 **Mục đích.** sum_sq U40; v_raw U64; hệ số U24/U6; pack buffer 256 bit. Divider 55/32 và square-root U64→U32 là hai instance nội bộ. Tử norm tối đa 2^54, mean remainder<<32 tối đa 41 bit, tử QUANT tối đa 48 bit nên U55 đủ cho cả bốn loại phép chia.
@@ -302,46 +316,48 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `input_base_q`: base input X đã chốt; `scratch_base_q`: base scratch z đã chốt; `output_base_q`: base q đã chốt; `vector_length_q`: K đã chốt; `epsilon_q`: epsilon đã chốt; `delta_q`: delta đã chốt; và 32 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 158–215: Datapath nhân/RNE dùng chung](<../../../Verilog%20Source%20code/norm.sv#L158>)
+### [Dòng 160–243: Datapath nhân/RNE dùng chung](<../../../Verilog%20Source%20code/norm.sv#L160>)
 
-<!-- source-range:158:215 -->
+<!-- source-range:160:243 -->
 ```systemverilog
-    logic signed [15:0] x0, x1;
-    logic signed [31:0] x0_sq, x1_sq;
     logic [39:0] pair_sq;
     logic [10:0] idx0, idx1;
     logic signed [23:0] zr0, zr1;
     logic signed [24:0] multiply_a [0:1], multiply_b [0:1];
+    logic signed [24:0] multiply_a_q [0:1], multiply_b_q [0:1];
     logic signed [47:0] arithmetic_product [0:1];
+    logic signed [47:0] arithmetic_product_q [0:1];
     logic signed [63:0] arithmetic_rounded [0:1];
-    logic [5:0] arithmetic_shift;
+    logic signed [63:0] arithmetic_rounded_q [0:1];
+    logic [5:0] arithmetic_shift, arithmetic_shift_q;
     always_comb begin
         x0 = read_buf[lane * 16 +: 16];
         x1 = read_buf[(lane + 1) * 16 +: 16];
         zr0 = read_buf[lane * 32 +: 24];
         zr1 = read_buf[(lane + 1) * 32 +: 24];
-        // The three passes are exclusive: two multipliers and two RNE paths
-        // serve square, normalization and quantization without extra cycles.
+        // The three passes share two multipliers and two RNE paths. Register
+        // the read mux outputs, products and rounded values separately so a
+        // lane selection cannot feed multiply, RNE and absmax in one cycle.
         multiply_a[0] = '0;
         multiply_a[1] = '0;
         multiply_b[0] = '0;
         multiply_b[1] = '0;
         arithmetic_shift = '0;
         case (state)
-            P1_PROC : begin
+            P1_CAPTURE : begin
                 multiply_a[0] = {{9{x0[15]}}, x0};
                 multiply_a[1] = {{9{x1[15]}}, x1};
                 multiply_b[0] = multiply_a[0];
                 multiply_b[1] = multiply_a[1];
             end
-            P2_PROC : begin
+            P2_CAPTURE : begin
                 multiply_a[0] = {{9{x0[15]}}, x0};
                 multiply_a[1] = {{9{x1[15]}}, x1};
                 multiply_b[0] = $signed({1'b0, norm_m});
                 multiply_b[1] = $signed({1'b0, norm_m});
                 arithmetic_shift = norm_r;
             end
-            P3_PROC : begin
+            P3_CAPTURE : begin
                 multiply_a[0] = {zr0[23], zr0};
                 multiply_a[1] = {zr1[23], zr1};
                 multiply_b[0] = $signed({1'b0, quant_m});
@@ -352,33 +368,55 @@ module norm (
         endcase
         for (integer j = 0; j < 2; j = j + 1) begin
             // S24 * U24 fits S48; the extra operand bit preserves U24's sign.
-            arithmetic_product[j] = multiply_a[j] * multiply_b[j];
+            arithmetic_product[j] = multiply_a_q[j] * multiply_b_q[j];
             arithmetic_rounded[j] = rne_shift64(
-                {{16{arithmetic_product[j][47]}}, arithmetic_product[j]}, arithmetic_shift);
+                {{16{arithmetic_product_q[j][47]}}, arithmetic_product_q[j]}, arithmetic_shift_q);
         end
-        x0_sq = arithmetic_product[0][31:0];
-        x1_sq = arithmetic_product[1][31:0];
+        x0_sq = arithmetic_product_q[0][31:0];
+        x1_sq = arithmetic_product_q[1][31:0];
         idx0 = 11'({word_index, 4'b0} + lane);
         idx1 = idx0 + 1'b1;
         pair_sq = 0;
         if (idx0 < vector_length_q) pair_sq = pair_sq + $unsigned(x0_sq);
         if (idx1 < vector_length_q) pair_sq = pair_sq + $unsigned(x1_sq);
     end
-```
 
-**Mục đích.** Chọn hai cặp operand theo pass và dùng chung multiplier/RNE cho bình phương, norm và quant. P1 chỉ cộng bình phương nếu chỉ số nằm trong K, kể cả word cuối chưa đủ phần tử.
-
-**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
-
-**Tín hiệu và dữ liệu chính.** `x0`: input S16 lane thứ nhất; `x1`: input S16 lane thứ hai; `x0_sq`: bình phương lane 0; `x1_sq`: bình phương lane 1; `pair_sq`: tổng bình phương của hai lane hữu ích; `idx0`: chỉ số phần tử toàn vector của lane 0; và 5 tín hiệu phụ khác trong đoạn code.
-
-
-### [Dòng 216–247: Chọn shift hệ số](<../../../Verilog%20Source%20code/norm.sv#L216>)
-
-<!-- source-range:216:247 -->
-```systemverilog
+    // Payload registers need no reset: the reset state cannot consume them,
+    // and every pass captures fresh operands before multiplying/rounding.
+    // Keeping the payload on plain clocked flops permits ordinary multiplier
+    // register packing in synthesis without any vendor-specific attributes.
+    always_ff @(posedge clk) begin
+        if (rst_n && (state == P1_CAPTURE || state == P2_CAPTURE || state == P3_CAPTURE)) begin
+            for (integer j = 0; j < 2; j = j + 1) begin
+                multiply_a_q[j] <= multiply_a[j];
+                multiply_b_q[j] <= multiply_b[j];
+            end
+            arithmetic_shift_q <= arithmetic_shift;
+        end
+        if (rst_n && (state == P1_MUL || state == P2_MUL || state == P3_MUL)) begin
+            for (integer j = 0; j < 2; j = j + 1)
+                arithmetic_product_q[j] <= arithmetic_product[j];
+        end
+        if (rst_n && (state == P2_ROUND || state == P3_ROUND)) begin
+            for (integer j = 0; j < 2; j = j + 1)
+                arithmetic_rounded_q[j] <= arithmetic_rounded[j];
+        end
+    end
 
     // Dynamic coefficient shift choices. Larger r improves precision while M remains U24.
+```
+
+**Mục đích.** Chọn hai cặp operand tại CAPTURE, chốt operand S25/shift U6, tích S48 tại MUL và kết quả S64 tại ROUND. P1 consume tích đã chốt; P2/P3 consume rounded result đã chốt. Hai multiplier/RNE dùng chung giữa các pass.
+
+**Cách phần code hoạt động.** Phần tổ hợp chọn operand theo pass và tính từ register của pha trước; block clocked có enable theo CAPTURE/MUL/ROUND để chốt payload. Tail ngoài K bị loại khỏi pair_sq. Không reset payload; reset state không có đường consume dữ liệu cũ.
+
+**Tín hiệu và dữ liệu chính.** `multiply_a_q/multiply_b_q`: operand đã chốt; `arithmetic_product_q`: hai tích S48; `arithmetic_rounded_q`: hai giá trị RNE S64; `arithmetic_shift_q`: shift của batch; `pair_sq`: tổng hai bình phương hữu ích.
+
+
+### [Dòng 244–278: Chọn shift hệ số](<../../../Verilog%20Source%20code/norm.sv#L244>)
+
+<!-- source-range:244:278 -->
+```systemverilog
     function automatic [5:0] choose_norm_r(input logic [31:0] den);
         integer msb;
         begin
@@ -392,23 +430,28 @@ module norm (
     endfunction
 
     function automatic [5:0] choose_quant_r(input logic [23:0] den);
-        logic [63:0] limit;
-        logic [63:0] num;
-        logic found;
+        logic leading;
+        logic boost;
+        logic [5:0] encoded;
         begin
-            limit = den * 24'hff_ffff;
             choose_quant_r = 0;
-            found = 1'b0;
-            for (integer r = 47;r >= 0;r = r - 1) begin
-                num = 64'h0000_0000_0000_007f << r;
-                if (!found && num <= limit) begin
-                    choose_quant_r = r[5:0];
-                    found = 1'b1;
-                end
+            // For 2^p <= den < 2^(p+1), the largest fitting shift is
+            // p+17, or p+18 exactly when den > 127*2^(p-6), p>=7.
+            // Parallel constant comparisons replace a multiply and 48-step
+            // priority search. Exactly one leading mask contributes to OR.
+            for (integer p = 0; p < 24; p = p + 1) begin
+                leading = den[p] && ((den >> (p + 1)) == 0);
+                boost = 1'b0;
+                if (p >= 7) boost = den > (24'd127 << (p - 6));
+                encoded = 6'(p + 17) + {5'h0, boost};
+                choose_quant_r = choose_quant_r | ({6{leading}} & encoded);
             end
         end
     endfunction
 
+    logic [5:0] norm_r_sel, quant_r_sel;
+    logic [DIV_NUM_W - 1:0] norm_num, quant_num;
+    always_comb begin
 ```
 
 **Mục đích.** Ưu tiên r lớn để giữ precision trong U24. Root U32 làm norm_r≤22 và norm_num≤2^54; lựa chọn QUANT giữ tử 0x7F<<r trong tối đa 48 bit. Hai miền này vừa divider chung U55.
@@ -418,39 +461,38 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `den`: denominator của hàm chọn shift; `msb`: vị trí bit 1 cao nhất của denominator; `limit`: giới hạn den×M_max; `num`: tử số 127<<r đang thử; `found`: đã tìm shift hợp lệ đầu tiên khi quét từ lớn xuống.
 
 
-### [Dòng 248–257: Chuẩn bị tử số và epsilon](<../../../Verilog%20Source%20code/norm.sv#L248>)
+### [Dòng 279–291: Chuẩn bị tử số và epsilon](<../../../Verilog%20Source%20code/norm.sv#L279>)
 
-<!-- source-range:248:257 -->
+<!-- source-range:279:291 -->
 ```systemverilog
-    logic [5:0] norm_r_sel, quant_r_sel;
-    logic [DIV_NUM_W - 1:0] norm_num, quant_num;
-    always_comb begin
         mean_with_epsilon = ({1'b0, mean_q} << 32) + {10'h000, div_q} + {1'b0, epsilon_q};
         norm_r_sel = choose_norm_r(rms_r);
-        norm_num = 55'h1 << (32 + norm_r_sel);
+        // PREP registers the chosen shift before DIV_START consumes it.
+        // Reuse that value so coefficient selection is not on divider inputs.
+        norm_num = 55'h1 << (32 + norm_r);
         quant_r_sel = choose_quant_r((absmax > delta_q) ? absmax : delta_q);
-        quant_num = 55'h7f << quant_r_sel;
+        quant_num = 55'h7f << quant_r;
     end
 
-```
-
-**Mục đích.** Ghép phần nguyên và phần lẻ của mean-square. Bit 64 của tổng giúp phát hiện tràn U64.
-
-**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
-
-**Tín hiệu và dữ liệu chính.** `norm_r_sel`: shift norm được logic lựa chọn; `quant_r_sel`: shift QUANT được logic lựa chọn; `norm_num`: tử số tính hệ số norm; `quant_num`: tử số tính hệ số QUANT; `mean_with_epsilon`: tổng U65 để kiểm tra overflow mean-square + epsilon; `mean_q`: phần nguyên của S/K; và 5 tín hiệu phụ khác trong đoạn code.
-
-
-### [Dòng 258–273: Đường tạo z](<../../../Verilog%20Source%20code/norm.sv#L258>)
-
-<!-- source-range:258:273 -->
-```systemverilog
     logic signed [63:0] z_round0, z_round1;
     logic signed [23:0] z0, z1;
     logic [23:0] absz0, absz1;
     always_comb begin
-        z_round0 = arithmetic_rounded[0];
-        z_round1 = arithmetic_rounded[1];
+```
+
+**Mục đích.** Ghép mean-square/epsilon bằng U65; tạo tử số từ norm_r/quant_r đã chốt ở PREP. Chooser chỉ tạo giá trị mới cho PREP, không nối tiếp vào input divider ở DIV_START.
+
+**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
+
+**Tín hiệu và dữ liệu chính.** `norm_r_sel`: shift norm được logic lựa chọn; `quant_r_sel`: shift QUANT được logic lựa chọn; `norm_num`: tử số từ norm_r đã chốt; `quant_num`: tử số từ quant_r đã chốt; `mean_with_epsilon`: tổng U65 để kiểm tra overflow mean-square + epsilon; `mean_q`: phần nguyên của S/K; và 5 tín hiệu phụ khác trong đoạn code.
+
+
+### [Dòng 292–308: Đường tạo z](<../../../Verilog%20Source%20code/norm.sv#L292>)
+
+<!-- source-range:292:308 -->
+```systemverilog
+        z_round0 = arithmetic_rounded_q[0];
+        z_round1 = arithmetic_rounded_q[1];
         if (z_round0 > 64'sh0000_0000_007f_ffff) z0 = 24'sh7f_ffff;
         else if (z_round0 < - 64'sh0000_0000_0080_0000) z0 = 24'sh80_0000;
         else z0 = z_round0[23:0];
@@ -461,24 +503,24 @@ module norm (
         absz1 = z1[23] ? $unsigned( - $signed(z1)) : z1;
     end
 
+    logic signed [63:0] qround0, qround1;
+    logic signed [7:0] q0, q1;
+    always_comb begin
+        qround0 = arithmetic_rounded_q[0];
+        qround1 = arithmetic_rounded_q[1];
 ```
 
 **Mục đích.** Lấy kết quả RNE từ datapath chung trong P2, clamp S24 và tính trị tuyệt đối để tìm maxabs.
 
 **Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
 
-**Tín hiệu và dữ liệu chính.** `arithmetic_rounded[0:1]`: kết quả hai lane của datapath chung; `z_round0`: z lane 0 sau RNE; `z_round1`: z lane 1 sau RNE; `z0`: z lane 0 đã clamp S24; `z1`: z lane 1 đã clamp S24; và 6 tín hiệu phụ khác trong đoạn code.
+**Tín hiệu và dữ liệu chính.** `arithmetic_rounded_q[0:1]`: kết quả RNE hai lane đã chốt; `z_round0/z_round1`: input clamp; `z0/z1`: S24 sau clamp; `absz0/absz1`: trị tuyệt đối dùng cập nhật absmax.
 
 
-### [Dòng 274–286: Đường tạo q](<../../../Verilog%20Source%20code/norm.sv#L274>)
+### [Dòng 309–322: Đường tạo q](<../../../Verilog%20Source%20code/norm.sv#L309>)
 
-<!-- source-range:274:286 -->
+<!-- source-range:309:322 -->
 ```systemverilog
-    logic signed [63:0] qround0, qround1;
-    logic signed [7:0] q0, q1;
-    always_comb begin
-        qround0 = arithmetic_rounded[0];
-        qround1 = arithmetic_rounded[1];
         if (qround0 > 64'sh0000_0000_0000_007f) q0 = 8'sh7f;
         else if (qround0 < - 64'sh0000_0000_0000_0080) q0 = 8'sh80;
         else q0 = qround0[7:0];
@@ -487,25 +529,25 @@ module norm (
         else q1 = qround1[7:0];
     end
 
-```
-
-**Mục đích.** Lấy kết quả RNE từ datapath chung trong P3 rồi clamp vào S8. Operand z lấy 24 bit thấp của mỗi ô scratch S32.
-
-**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
-
-**Tín hiệu và dữ liệu chính.** `zr0`: z lane 0 lấy từ ô scratch S32; `zr1`: z lane 1 lấy từ ô scratch S32; `arithmetic_rounded[0:1]`: kết quả hai lane của datapath chung; `qround0`: q lane 0 sau RNE; `qround1`: q lane 1 sau RNE; và 6 tín hiệu phụ khác trong đoạn code.
-
-
-### [Dòng 287–344: Phát request](<../../../Verilog%20Source%20code/norm.sv#L287>)
-
-<!-- source-range:287:344 -->
-```systemverilog
     always_comb begin
         ws_rd_en = 1'b0;
         ws_rd_addr = '0;
         ws_wr_en = 1'b0;
         ws_wr_addr = '0;
         ws_wr_data = pack_buf;
+```
+
+**Mục đích.** Lấy kết quả RNE từ datapath chung trong P3 rồi clamp vào S8. Operand z lấy 24 bit thấp của mỗi ô scratch S32.
+
+**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
+
+**Tín hiệu và dữ liệu chính.** `zr0/zr1`: z lấy từ ô scratch S32 ở CAPTURE; `arithmetic_rounded_q[0:1]`: kết quả RNE đã chốt; `qround0/qround1`: input clamp; `q0/q1`: hai mã S8 ghi ở P3_PROC.
+
+
+### [Dòng 323–381: Phát request](<../../../Verilog%20Source%20code/norm.sv#L323>)
+
+<!-- source-range:323:381 -->
+```systemverilog
         div_start = 1'b0;
         div_num = '0;
         div_den = '0;
@@ -543,7 +585,7 @@ module norm (
             CQUANT_DIV_START : begin
                 div_start = 1'b1;
                 div_num = quant_num;
-                div_den = {8'h00, ((absmax > delta_q) ? absmax : delta_q)};
+                div_den = {8'h00, quant_d};
             end
             P3_REQ : begin
                 ws_rd_en = 1'b1;
@@ -558,6 +600,13 @@ module norm (
         endcase
     end
 
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            state <= IDLE;
+            busy <= 0;
+            done <= 0;
+            overflow <= 0;
+            format_error <= 0;
 ```
 
 **Mục đích.** Control tổ hợp theo FSM: chọn vùng input/scratch/output, phát divider start hoặc sqrt start.
@@ -567,17 +616,10 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `ws_rd_en`: request đọc workspace; `ws_rd_addr`: địa chỉ đọc workspace; `ws_wr_en`: cho phép ghi workspace; `ws_wr_addr`: địa chỉ ghi workspace; `ws_wr_data`: word 256 ghi workspace; `pack_buf`: buffer pack output trước khi ghi SRAM; và 17 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 345–377: Reset thanh ghi](<../../../Verilog%20Source%20code/norm.sv#L345>)
+### [Dòng 382–414: Reset thanh ghi](<../../../Verilog%20Source%20code/norm.sv#L382>)
 
-<!-- source-range:345:377 -->
+<!-- source-range:382:414 -->
 ```systemverilog
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            state <= IDLE;
-            busy <= 0;
-            done <= 0;
-            overflow <= 0;
-            format_error <= 0;
             quant_d <= 0;
             input_base_q <= 0;
             scratch_base_q <= 0;
@@ -604,6 +646,13 @@ module norm (
         end else begin
             done <= 1'b0;
             case (state)
+                IDLE : if (start) begin
+                    busy <= 1;
+                    overflow <= 0;
+                    format_error <= 0;
+                    quant_d <= 0;
+                    norm_m <= 0;
+                    norm_r <= 0;
 ```
 
 **Mục đích.** Chỉ reset trạng thái và buffer trong khối. Nội dung workspace không được reset ở đây.
@@ -613,17 +662,10 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `busy`: khối đang xử lý; `done`: xung báo hoàn tất; `overflow`: cờ kết quả vượt miền số; `format_error`: cờ format/metadata không hợp lệ; `quant_d`: D=max(absmax,delta); và 24 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 378–406: Nhận lệnh và kiểm tra vùng](<../../../Verilog%20Source%20code/norm.sv#L378>)
+### [Dòng 415–443: Nhận lệnh và kiểm tra vùng](<../../../Verilog%20Source%20code/norm.sv#L415>)
 
-<!-- source-range:378:406 -->
+<!-- source-range:415:443 -->
 ```systemverilog
-                IDLE : if (start) begin
-                    busy <= 1;
-                    overflow <= 0;
-                    format_error <= 0;
-                    quant_d <= 0;
-                    norm_m <= 0;
-                    norm_r <= 0;
                     quant_m <= 0;
                     quant_r <= 0;
                     input_base_q <= x_base;
@@ -646,6 +688,13 @@ module norm (
                         state <= FINISH;
                     end
                 end
+                P1_REQ : state <= P1_WAIT;
+                P1_WAIT : if (ws_rd_valid) begin
+                    read_buf <= ws_rd_data;
+                    lane <= 0;
+                    state <= P1_CAPTURE;
+                end
+                P1_CAPTURE : state <= P1_MUL;
 ```
 
 **Mục đích.** Chốt bases, K, epsilon, delta. Reject K sai, delta=0, vượt SRAM hoặc scratch overlap.
@@ -655,16 +704,11 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `busy`: khối đang xử lý; `overflow`: cờ kết quả vượt miền số; `format_error`: cờ format/metadata không hợp lệ; `quant_d`: D=max(absmax,delta); `norm_m`: multiplier U24 của RMSNorm; và 19 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 407–422: Lượt 1](<../../../Verilog%20Source%20code/norm.sv#L407>)
+### [Dòng 444–464: Lượt 1](<../../../Verilog%20Source%20code/norm.sv#L444>)
 
-<!-- source-range:407:422 -->
+<!-- source-range:444:464 -->
 ```systemverilog
-                P1_REQ : state <= P1_WAIT;
-                P1_WAIT : if (ws_rd_valid) begin
-                    read_buf <= ws_rd_data;
-                    lane <= 0;
-                    state <= P1_PROC;
-                end
+                P1_MUL : state <= P1_PROC;
                 P1_PROC : begin
                     sum_sq <= sum_sq + pair_sq;
                     if (lane == 14 || idx1 >= vector_length_q - 1) begin
@@ -673,8 +717,18 @@ module norm (
                             word_index <= word_index + 1'b1;
                             state <= P1_REQ;
                         end
-                    end else lane <= lane + 4'd2;
+                    end else begin
+                        lane <= lane + 4'd2;
+                        state <= P1_CAPTURE;
+                    end
                 end
+                DIV_MEAN_START : state <= DIV_MEAN_WAIT;
+                DIV_MEAN_WAIT : if (div_done) begin
+                    mean_q <= {{9{1'b0}}, div_q};
+                    mean_rem <= div_rem;
+                    state <= DIV_FRAC_START;
+                end
+                DIV_FRAC_START : state <= DIV_FRAC_WAIT;
 ```
 
 **Mục đích.** Đọc input theo word, đi hai lane mỗi bước và cộng pair_sq cho đến hết K.
@@ -683,7 +737,7 @@ module norm (
 
 **Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `ws_rd_valid`: workspace trả dữ liệu hợp lệ; `read_buf`: word SRAM đã nhận; `ws_rd_data`: word 256 trả từ workspace; `lane`: vị trí phần tử trong word; `sum_sq`: tổng bình phương U40; và 4 tín hiệu phụ khác trong đoạn code.
 
-**Điểm cần đọc kỹ.** REQ và WAIT tách riêng để phù hợp read-valid của SRAM. P1_PROC chỉ sử dụng `read_buf` đã chốt; không đọc trực tiếp bus SRAM đang thay đổi.
+**Điểm cần đọc kỹ.** REQ và WAIT tách riêng để phù hợp read-valid của SRAM. P1_CAPTURE đọc read_buf đã chốt, P1_MUL ghi product register, P1_PROC chỉ consume product đã ghi; không dùng bus SRAM đang thay đổi.
 
 #### Sơ đồ khối phần cứng của nhóm
 
@@ -703,17 +757,10 @@ flowchart TB
 ```
 
 
-### [Dòng 423–443: Mean-square và căn](<../../../Verilog%20Source%20code/norm.sv#L423>)
+### [Dòng 465–485: Mean-square và căn](<../../../Verilog%20Source%20code/norm.sv#L465>)
 
-<!-- source-range:423:443 -->
+<!-- source-range:465:485 -->
 ```systemverilog
-                DIV_MEAN_START : state <= DIV_MEAN_WAIT;
-                DIV_MEAN_WAIT : if (div_done) begin
-                    mean_q <= {{9{1'b0}}, div_q};
-                    mean_rem <= div_rem;
-                    state <= DIV_FRAC_START;
-                end
-                DIV_FRAC_START : state <= DIV_FRAC_WAIT;
                 DIV_FRAC_WAIT : if (div_done) begin
                     v_raw <= mean_with_epsilon[63:0];
                     state <= SQRT_START;
@@ -728,6 +775,13 @@ flowchart TB
                     rms_r <= sqrt_root;
                     state <= CNORM_PREP;
                 end
+                CNORM_PREP : begin
+                    if (sum_sq == 0) begin
+                        norm_m <= 0;
+                        norm_r <= 0;
+                        absmax <= 0;
+                        word_index <= 0;
+                        lane <= 0;
 ```
 
 **Mục đích.** Lần chia thứ nhất lấy thương/phần dư; lần thứ hai lấy phần lẻ Q32. Kiểm tra tổng epsilon trước khi sqrt.
@@ -737,17 +791,10 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `div_done`: divider đã xong; `mean_q`: phần nguyên của S/K; `div_q`: thương divider; `mean_rem`: phần dư của S/K; `div_rem`: phần dư divider; và 6 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 444–471: Hệ số norm](<../../../Verilog%20Source%20code/norm.sv#L444>)
+### [Dòng 486–513: Hệ số norm](<../../../Verilog%20Source%20code/norm.sv#L486>)
 
-<!-- source-range:444:471 -->
+<!-- source-range:486:513 -->
 ```systemverilog
-                CNORM_PREP : begin
-                    if (sum_sq == 0) begin
-                        norm_m <= 0;
-                        norm_r <= 0;
-                        absmax <= 0;
-                        word_index <= 0;
-                        lane <= 0;
                         pack_buf <= 0;
                         pack_count <= 0;
                         write_word <= 0;
@@ -769,6 +816,13 @@ flowchart TB
                     absmax <= 0;
                     state <= P2_REQ;
                 end
+                P2_REQ : state <= P2_WAIT;
+                P2_WAIT : if (ws_rd_valid) begin
+                    read_buf <= ws_rd_data;
+                    lane <= 0;
+                    state <= P2_CAPTURE;
+                end
+                P2_CAPTURE : state <= P2_MUL;
 ```
 
 **Mục đích.** Input toàn zero dùng M=0. Trường hợp thường chia tử số cho R rồi RNE thương bằng cách so sánh hai lần remainder với denominator.
@@ -778,16 +832,12 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `sum_sq`: tổng bình phương U40; `norm_m`: multiplier U24 của RMSNorm; `norm_r`: shift của RMSNorm; `absmax`: trị tuyệt đối z lớn nhất đã thấy; `word_index`: chỉ số word đang đọc; `lane`: vị trí phần tử trong word; và 9 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 472–510: Lượt 2 và ghi scratch](<../../../Verilog%20Source%20code/norm.sv#L472>)
+### [Dòng 514–556: Lượt 2 và ghi scratch](<../../../Verilog%20Source%20code/norm.sv#L514>)
 
-<!-- source-range:472:510 -->
+<!-- source-range:514:556 -->
 ```systemverilog
-                P2_REQ : state <= P2_WAIT;
-                P2_WAIT : if (ws_rd_valid) begin
-                    read_buf <= ws_rd_data;
-                    lane <= 0;
-                    state <= P2_PROC;
-                end
+                P2_MUL : state <= P2_ROUND;
+                P2_ROUND : state <= P2_PROC;
                 P2_PROC : begin
                     if ((idx0 < vector_length_q && (z_round0 > 64'sh0000_0000_007f_ffff || z_round0 < - 64'sh0000_0000_0080_0000)) ||
                         (idx1 < vector_length_q && (z_round1 > 64'sh0000_0000_007f_ffff || z_round1 < - 64'sh0000_0000_0080_0000))) overflow <= 1;
@@ -804,6 +854,7 @@ flowchart TB
                     end else begin
                         pack_count <= pack_count + 6'd2;
                         lane <= lane + 4'd2;
+                        state <= P2_CAPTURE;
                     end
                 end
                 P2_WRITE : begin
@@ -818,9 +869,16 @@ flowchart TB
                     end
                     else begin
                         lane <= lane + 4'd2;
-                        state <= P2_PROC;
+                        state <= P2_CAPTURE;
                     end
                 end
+                CQUANT_PREP : begin
+                    quant_d <= (absmax > delta_q) ? absmax : delta_q;
+                    quant_r <= quant_r_sel;
+                    if ((absmax == 0) && (delta_q == 0)) begin
+                        quant_m <= 0;
+                        word_index <= 0;
+                        lane <= 0;
 ```
 
 **Mục đích.** Tạo hai z mỗi bước, sign-extend lên S32 và cập nhật maxabs. Cứ 8 z hoặc hết K thì ghi một word.
@@ -836,10 +894,14 @@ flowchart TB
 ```mermaid
 flowchart TB
 %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    X["Read buffer<br/>Two X values S16"] --> MUL["Two shared multipliers in P2<br/>X × norm_m"]
-    COEF["norm_m U24 / norm_r U6"] --> MUL
-    MUL --> ROUND["Shared RNE paths / S24 clamp"]
-    COEF -.-> ROUND
+    X["Read buffer<br/>Two X values S16"] --> OREG["P2_CAPTURE<br/>Operand S25 / shift U6 registers"]
+    COEF["norm_m U24 / norm_r U6"] --> OREG
+    OREG --> MUL["Two shared multipliers in P2<br/>X × norm_m"]
+    MUL --> PREG["P2_MUL<br/>Product registers S48"]
+    PREG --> RNE["Shared RNE paths"]
+    OREG -.->|"Shift"| RNE
+    RNE --> RREG["P2_ROUND<br/>Rounded registers S64"]
+    RREG --> ROUND["S24 clamp"]
     ROUND --> PACK["Sign-extension to S32<br/>256-bit scratch pack buffer"]
     ROUND --> MAX["Absolute-value + max comparator<br/>absmax storage"]
     PACK --> WS["Workspace scratch write port"]
@@ -850,17 +912,10 @@ flowchart TB
 ```
 
 
-### [Dòng 511–534: Hệ số quantization](<../../../Verilog%20Source%20code/norm.sv#L511>)
+### [Dòng 557–580: Hệ số quantization](<../../../Verilog%20Source%20code/norm.sv#L557>)
 
-<!-- source-range:511:534 -->
+<!-- source-range:557:580 -->
 ```systemverilog
-                CQUANT_PREP : begin
-                    quant_d <= (absmax > delta_q) ? absmax : delta_q;
-                    quant_r <= quant_r_sel;
-                    if ((absmax == 0) && (delta_q == 0)) begin
-                        quant_m <= 0;
-                        word_index <= 0;
-                        lane <= 0;
                         pack_buf <= 0;
                         pack_count <= 0;
                         write_word <= 0;
@@ -870,7 +925,7 @@ flowchart TB
                 end
                 CQUANT_DIV_START : state <= CQUANT_DIV_WAIT;
                 CQUANT_DIV_WAIT : if (div_done) begin
-                    quant_m <= div_q[23:0] + (({1'b0, div_rem} * 2 > ((absmax > delta_q) ? absmax : delta_q)) || (({1'b0, div_rem} * 2 == ((absmax > delta_q) ? absmax : delta_q)) && div_q[0]));
+                    quant_m <= div_q[23:0] + (({1'b0, div_rem} * 2 > quant_d) || (({1'b0, div_rem} * 2 == quant_d) && div_q[0]));
                     word_index <= 0;
                     lane <= 0;
                     pack_buf <= 0;
@@ -878,6 +933,13 @@ flowchart TB
                     write_word <= 0;
                     state <= P3_REQ;
                 end
+                P3_REQ : state <= P3_WAIT;
+                P3_WAIT : if (ws_rd_valid) begin
+                    read_buf <= ws_rd_data;
+                    lane <= 0;
+                    state <= P3_CAPTURE;
+                end
+                P3_CAPTURE : state <= P3_MUL;
 ```
 
 **Mục đích.** Giữ D=max(absmax,delta). Nhánh cả hai bằng 0 là nhánh phòng vệ không đạt được với delta đã kiểm tra hợp lệ.
@@ -887,16 +949,12 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `quant_d`: D=max(absmax,delta); `absmax`: trị tuyệt đối z lớn nhất đã thấy; `delta_q`: delta đã chốt; `quant_r`: shift của QUANT; `quant_r_sel`: shift QUANT được logic lựa chọn; `quant_m`: multiplier U24 của QUANT; và 9 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 535–580: Lượt 3 và hoàn tất](<../../../Verilog%20Source%20code/norm.sv#L535>)
+### [Dòng 581–623: Lượt 3 và hoàn tất](<../../../Verilog%20Source%20code/norm.sv#L581>)
 
-<!-- source-range:535:580 -->
+<!-- source-range:581:623 -->
 ```systemverilog
-                P3_REQ : state <= P3_WAIT;
-                P3_WAIT : if (ws_rd_valid) begin
-                    read_buf <= ws_rd_data;
-                    lane <= 0;
-                    state <= P3_PROC;
-                end
+                P3_MUL : state <= P3_ROUND;
+                P3_ROUND : state <= P3_PROC;
                 P3_PROC : begin
                     if (({word_index, 3'b0} + lane) < vector_length_q) pack_buf[pack_count * 8 +: 8] <= q0;
                     if (({word_index, 3'b0} + lane + 1) < vector_length_q) pack_buf[(pack_count + 1) * 8 +: 8] <= q1;
@@ -910,6 +968,7 @@ flowchart TB
                     else begin
                         lane <= lane + 4'd2;
                         pack_count <= pack_count + 6'd2;
+                        state <= P3_CAPTURE;
                     end
                 end
                 P3_WRITE : begin
@@ -924,7 +983,7 @@ flowchart TB
                     end
                     else begin
                         lane <= lane + 4'd2;
-                        state <= P3_PROC;
+                        state <= P3_CAPTURE;
                     end
                 end
                 FINISH : begin
@@ -953,10 +1012,14 @@ endmodule
 flowchart TB
 %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
     WS["Workspace scratch read port<br/>256 bit = 8 S32 slots"] --> BUF@{ shape: trap-t, label: "Read buffer + two S24 lane selectors" }
-    BUF --> MUL["Two shared multipliers in P3<br/>z × quant_m"]
-    COEF["quant_m U24 / quant_r U6"] --> MUL
-    MUL --> ROUND["Shared RNE paths / S8 clamp"]
-    COEF -.-> ROUND
+    BUF --> OREG["P3_CAPTURE<br/>Operand S25 / shift U6 registers"]
+    COEF["quant_m U24 / quant_r U6"] --> OREG
+    OREG --> MUL["Two shared multipliers in P3<br/>z × quant_m"]
+    MUL --> PREG["P3_MUL<br/>Product registers S48"]
+    PREG --> RNE["Shared RNE paths"]
+    OREG -.->|"Shift"| RNE
+    RNE --> RREG["P3_ROUND<br/>Rounded registers S64"]
+    RREG --> ROUND["S8 clamp"]
     ROUND --> PACK["256-bit output pack buffer<br/>32 q values S8"]
     PACK --> OUT["Workspace q write port"]
     CTRL["Read/write controller<br/>Address / lane / pack counters"] -.-> WS

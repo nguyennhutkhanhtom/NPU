@@ -1,0 +1,698 @@
+----------------
+; Command Info ;
+----------------
+Report Minimum Pulse Width: Found 40 results (40 violated).  Worst case slack is -2.636
+
+Tcl Command:
+  report_min_pulse_width -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/user_baseline/fast_1100mv_85c_pulse.rpt} -detail full_path -nworst 40
+
+Delay Model:
+  Fast 1100mV 85C Model
+
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Summary of Paths                                                                                                                                                                                                                     ;
++--------+--------------+----------------+------------+-------+------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Slack  ; Actual Width ; Required Width ; Type       ; Clock ; Clock Edge ; Target                                                                                                                                                    ;
++--------+--------------+----------------+------------+-------+------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------+
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~PORT_B_WRITE_ENABLE_REG                                                   ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg0                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg1                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg2                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg3                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg4                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg5                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg6                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg7                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg8                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg0                                                         ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg1                                                         ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg10                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg11                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg12                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg2                                                         ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg3                                                         ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg4                                                         ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg5                                                         ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg6                                                         ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg7                                                         ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg8                                                         ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg9                                                         ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_we_reg                                                              ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg0                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg1                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg2                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg3                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg4                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg5                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg6                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg7                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg8                                                        ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_re_reg                                                              ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated|ram_block1a0~PORT_A_DATA_IN_10       ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated|ram_block1a0~PORT_A_DATA_IN_11       ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated|ram_block1a0~PORT_B_WRITE_ENABLE_REG ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated|ram_block1a0~porta_address_reg0      ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated|ram_block1a0~porta_address_reg1      ;
+; -2.636 ; 1.000        ; 3.636          ; Min Period ; clk   ; Rise       ; mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated|ram_block1a0~porta_address_reg2      ;
++--------+--------------+----------------+------------+-------+------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+Path #1: slack is -2.636 (VIOLATED)
+===============================================================================
++--------------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                             ;
++----------------+---------------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                                   ;
++----------------+---------------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~PORT_B_WRITE_ENABLE_REG ;
+; Clock          ; clk                                                                                                     ;
+; Type           ; Min Period                                                                                              ;
+; Actual Width   ; 1.000                                                                                                   ;
+; Required Width ; 3.636                                                                                                   ;
+; Slack          ; -2.636 (VIOLATED)                                                                                       ;
++----------------+---------------------------------------------------------------------------------------------------------+
+
+
+Path #2: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg0 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #3: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg1 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #4: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg2 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #5: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg3 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #6: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg4 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #7: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg5 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #8: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg6 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #9: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg7 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #10: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_address_reg8 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #11: slack is -2.636 (VIOLATED)
+===============================================================================
++--------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                       ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                             ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg0 ;
+; Clock          ; clk                                                                                               ;
+; Type           ; Min Period                                                                                        ;
+; Actual Width   ; 1.000                                                                                             ;
+; Required Width ; 3.636                                                                                             ;
+; Slack          ; -2.636 (VIOLATED)                                                                                 ;
++----------------+---------------------------------------------------------------------------------------------------+
+
+
+Path #12: slack is -2.636 (VIOLATED)
+===============================================================================
++--------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                       ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                             ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg1 ;
+; Clock          ; clk                                                                                               ;
+; Type           ; Min Period                                                                                        ;
+; Actual Width   ; 1.000                                                                                             ;
+; Required Width ; 3.636                                                                                             ;
+; Slack          ; -2.636 (VIOLATED)                                                                                 ;
++----------------+---------------------------------------------------------------------------------------------------+
+
+
+Path #13: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg10 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #14: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg11 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #15: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg12 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #16: slack is -2.636 (VIOLATED)
+===============================================================================
++--------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                       ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                             ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg2 ;
+; Clock          ; clk                                                                                               ;
+; Type           ; Min Period                                                                                        ;
+; Actual Width   ; 1.000                                                                                             ;
+; Required Width ; 3.636                                                                                             ;
+; Slack          ; -2.636 (VIOLATED)                                                                                 ;
++----------------+---------------------------------------------------------------------------------------------------+
+
+
+Path #17: slack is -2.636 (VIOLATED)
+===============================================================================
++--------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                       ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                             ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg3 ;
+; Clock          ; clk                                                                                               ;
+; Type           ; Min Period                                                                                        ;
+; Actual Width   ; 1.000                                                                                             ;
+; Required Width ; 3.636                                                                                             ;
+; Slack          ; -2.636 (VIOLATED)                                                                                 ;
++----------------+---------------------------------------------------------------------------------------------------+
+
+
+Path #18: slack is -2.636 (VIOLATED)
+===============================================================================
++--------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                       ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                             ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg4 ;
+; Clock          ; clk                                                                                               ;
+; Type           ; Min Period                                                                                        ;
+; Actual Width   ; 1.000                                                                                             ;
+; Required Width ; 3.636                                                                                             ;
+; Slack          ; -2.636 (VIOLATED)                                                                                 ;
++----------------+---------------------------------------------------------------------------------------------------+
+
+
+Path #19: slack is -2.636 (VIOLATED)
+===============================================================================
++--------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                       ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                             ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg5 ;
+; Clock          ; clk                                                                                               ;
+; Type           ; Min Period                                                                                        ;
+; Actual Width   ; 1.000                                                                                             ;
+; Required Width ; 3.636                                                                                             ;
+; Slack          ; -2.636 (VIOLATED)                                                                                 ;
++----------------+---------------------------------------------------------------------------------------------------+
+
+
+Path #20: slack is -2.636 (VIOLATED)
+===============================================================================
++--------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                       ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                             ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg6 ;
+; Clock          ; clk                                                                                               ;
+; Type           ; Min Period                                                                                        ;
+; Actual Width   ; 1.000                                                                                             ;
+; Required Width ; 3.636                                                                                             ;
+; Slack          ; -2.636 (VIOLATED)                                                                                 ;
++----------------+---------------------------------------------------------------------------------------------------+
+
+
+Path #21: slack is -2.636 (VIOLATED)
+===============================================================================
++--------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                       ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                             ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg7 ;
+; Clock          ; clk                                                                                               ;
+; Type           ; Min Period                                                                                        ;
+; Actual Width   ; 1.000                                                                                             ;
+; Required Width ; 3.636                                                                                             ;
+; Slack          ; -2.636 (VIOLATED)                                                                                 ;
++----------------+---------------------------------------------------------------------------------------------------+
+
+
+Path #22: slack is -2.636 (VIOLATED)
+===============================================================================
++--------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                       ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                             ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg8 ;
+; Clock          ; clk                                                                                               ;
+; Type           ; Min Period                                                                                        ;
+; Actual Width   ; 1.000                                                                                             ;
+; Required Width ; 3.636                                                                                             ;
+; Slack          ; -2.636 (VIOLATED)                                                                                 ;
++----------------+---------------------------------------------------------------------------------------------------+
+
+
+Path #23: slack is -2.636 (VIOLATED)
+===============================================================================
++--------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                       ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                             ;
++----------------+---------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_datain_reg9 ;
+; Clock          ; clk                                                                                               ;
+; Type           ; Min Period                                                                                        ;
+; Actual Width   ; 1.000                                                                                             ;
+; Required Width ; 3.636                                                                                             ;
+; Slack          ; -2.636 (VIOLATED)                                                                                 ;
++----------------+---------------------------------------------------------------------------------------------------+
+
+
+Path #24: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~porta_we_reg ;
+; Clock          ; clk                                                                                          ;
+; Type           ; Min Period                                                                                   ;
+; Actual Width   ; 1.000                                                                                        ;
+; Required Width ; 3.636                                                                                        ;
+; Slack          ; -2.636 (VIOLATED)                                                                            ;
++----------------+----------------------------------------------------------------------------------------------+
+
+
+Path #25: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg0 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #26: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg1 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #27: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg2 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #28: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg3 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #29: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg4 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #30: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg5 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #31: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg6 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #32: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg7 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #33: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                              ;
++----------------+----------------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_address_reg8 ;
+; Clock          ; clk                                                                                                ;
+; Type           ; Min Period                                                                                         ;
+; Actual Width   ; 1.000                                                                                              ;
+; Required Width ; 3.636                                                                                              ;
+; Slack          ; -2.636 (VIOLATED)                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------------+
+
+
+Path #34: slack is -2.636 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                  ;
++----------------+----------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                        ;
++----------------+----------------------------------------------------------------------------------------------+
+; Node           ; ins_mem:u_imem|altsyncram:mem_rtl_0|altsyncram_63q1:auto_generated|ram_block1a0~portb_re_reg ;
+; Clock          ; clk                                                                                          ;
+; Type           ; Min Period                                                                                   ;
+; Actual Width   ; 1.000                                                                                        ;
+; Required Width ; 3.636                                                                                        ;
+; Slack          ; -2.636 (VIOLATED)                                                                            ;
++----------------+----------------------------------------------------------------------------------------------+
+
+
+Path #35: slack is -2.636 (VIOLATED)
+===============================================================================
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                                                                         ;
++----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                                                                               ;
++----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+; Node           ; mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated|ram_block1a0~PORT_A_DATA_IN_10 ;
+; Clock          ; clk                                                                                                                                                 ;
+; Type           ; Min Period                                                                                                                                          ;
+; Actual Width   ; 1.000                                                                                                                                               ;
+; Required Width ; 3.636                                                                                                                                               ;
+; Slack          ; -2.636 (VIOLATED)                                                                                                                                   ;
++----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+Path #36: slack is -2.636 (VIOLATED)
+===============================================================================
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                                                                         ;
++----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                                                                               ;
++----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+; Node           ; mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated|ram_block1a0~PORT_A_DATA_IN_11 ;
+; Clock          ; clk                                                                                                                                                 ;
+; Type           ; Min Period                                                                                                                                          ;
+; Actual Width   ; 1.000                                                                                                                                               ;
+; Required Width ; 3.636                                                                                                                                               ;
+; Slack          ; -2.636 (VIOLATED)                                                                                                                                   ;
++----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+Path #37: slack is -2.636 (VIOLATED)
+===============================================================================
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                                                                               ;
++----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                                                                                     ;
++----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Node           ; mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated|ram_block1a0~PORT_B_WRITE_ENABLE_REG ;
+; Clock          ; clk                                                                                                                                                       ;
+; Type           ; Min Period                                                                                                                                                ;
+; Actual Width   ; 1.000                                                                                                                                                     ;
+; Required Width ; 3.636                                                                                                                                                     ;
+; Slack          ; -2.636 (VIOLATED)                                                                                                                                         ;
++----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+Path #38: slack is -2.636 (VIOLATED)
+===============================================================================
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                                                                          ;
++----------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                                                                                ;
++----------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Node           ; mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated|ram_block1a0~porta_address_reg0 ;
+; Clock          ; clk                                                                                                                                                  ;
+; Type           ; Min Period                                                                                                                                           ;
+; Actual Width   ; 1.000                                                                                                                                                ;
+; Required Width ; 3.636                                                                                                                                                ;
+; Slack          ; -2.636 (VIOLATED)                                                                                                                                    ;
++----------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+Path #39: slack is -2.636 (VIOLATED)
+===============================================================================
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                                                                          ;
++----------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                                                                                ;
++----------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Node           ; mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated|ram_block1a0~porta_address_reg1 ;
+; Clock          ; clk                                                                                                                                                  ;
+; Type           ; Min Period                                                                                                                                           ;
+; Actual Width   ; 1.000                                                                                                                                                ;
+; Required Width ; 3.636                                                                                                                                                ;
+; Slack          ; -2.636 (VIOLATED)                                                                                                                                    ;
++----------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+Path #40: slack is -2.636 (VIOLATED)
+===============================================================================
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Path Summary                                                                                                                                                          ;
++----------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Property       ; Value                                                                                                                                                ;
++----------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Node           ; mem_mapping:u_param|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[0].memory[0][31]__9|altsyncram_m8q1:auto_generated|ram_block1a0~porta_address_reg2 ;
+; Clock          ; clk                                                                                                                                                  ;
+; Type           ; Min Period                                                                                                                                           ;
+; Actual Width   ; 1.000                                                                                                                                                ;
+; Required Width ; 3.636                                                                                                                                                ;
+; Slack          ; -2.636 (VIOLATED)                                                                                                                                    ;
++----------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+

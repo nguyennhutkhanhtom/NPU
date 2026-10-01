@@ -1,0 +1,9 @@
+{
+  "status": "INTERRUPTED",
+  "reason": "Superseded by separated SIMD lane processes to reduce synthesis elaboration memory",
+  "captured_utc": "2026-10-01T15:13:15.5666542Z",
+  "process_id": 20056,
+  "cpu_seconds": 609.53125,
+  "private_bytes": 17748877312,
+  "working_set_bytes": 4212391936
+}

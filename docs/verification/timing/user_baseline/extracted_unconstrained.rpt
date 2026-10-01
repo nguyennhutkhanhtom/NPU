@@ -1,0 +1,27 @@
++---------------------+
+; Unconstrained Paths ;
++---------------------+
++-------------------------------------------------+
+; Unconstrained Paths Summary                     ;
++---------------------------------+-------+-------+
+; Property                        ; Setup ; Hold  ;
++---------------------------------+-------+-------+
+; Illegal Clocks                  ; 0     ; 0     ;
+; Unconstrained Clocks            ; 0     ; 0     ;
+; Unconstrained Input Ports       ; 67    ; 67    ;
+; Unconstrained Input Port Paths  ; 76038 ; 76038 ;
+; Unconstrained Output Ports      ; 59    ; 59    ;
+; Unconstrained Output Port Paths ; 3128  ; 3128  ;
++---------------------------------+-------+-------+
+
++-------------------------------------+
+; Clock Status Summary                ;
++--------+-------+------+-------------+
+; Target ; Clock ; Type ; Status      ;
++--------+-------+------+-------------+
+; clk    ; clk   ; Base ; Constrained ;
++--------+-------+------+-------------+
+
+
+Detailed endpoint listings are retained in the archived matmul_free.sta.rpt.
+The path dump is omitted from this compact summary.

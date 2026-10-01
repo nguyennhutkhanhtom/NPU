@@ -1,0 +1,204 @@
+Statistics: 40 0 2039 0 1 -1.629
+
+Heuristic: Chained Adders
+From To Score Heuristic
+ternary_mul:u_tm|input_chunk_q[0] ternary_mul:u_tm|accumulator_q[14] 0.669587 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+host_response_valid_q host_rdata[11] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_response_valid_q}
+host_response_valid_q host_rdata[26] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~26}}
+host_response_valid_q host_rdata[19] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_response_valid_q}
+host_response_valid_q host_rdata[14] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~14}}
+host_response_valid_q host_rdata[0] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~0}}
+host_response_valid_q host_rdata[2] 0.978056 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~2}}
+host_response_valid_q host_rdata[18] 0.978056 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~18}}
+host_response_valid_q host_rdata[16] 0.978056 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~16}}
+host_response_valid_q host_rdata[28] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~28}}
+host_response_valid_q host_rdata[23] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~23}}
+host_response_valid_q host_rdata[13] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~13}}
+host_response_valid_q host_rdata[17] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_response_valid_q}
+host_response_valid_q host_rdata[9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_response_valid_q}
+host_response_valid_q host_rdata[15] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~15}}
+running~reg0 running 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} running~reg0}
+instr_q[6]~DUPLICATE instr_debug[6] 0.923720 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[6]~DUPLICATE}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+host_addr[14] host_ready 0.725121 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+host_response_valid_q host_rdata[11] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[26] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[1] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_data_q[7] host_rdata[7] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[12] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[19] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[14] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[0] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[2] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[18] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[16] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[28] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[23] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[13] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[0] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 10}
+host_response_valid_q host_rdata[17] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[1] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 10}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[1]~DUPLICATE 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 10}
+host_response_valid_q host_rdata[9] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_data_q[21] host_rdata[21] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+PC:u_pc|pc_out[3] pc_debug[3] 0.360732 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+host_response_valid_q host_rdata[15] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[2] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 10}
+host_response_data_q[10] host_rdata[10] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.FINISH 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 9}
+ternary_mul:u_tm|input_chunk_q[0] ternary_mul:u_tm|accumulator_q[14] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.FINISH~DUPLICATE 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 9}
+running~reg0 running 0.360732 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.PREP 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 9}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.PREP~DUPLICATE 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 9}
+instr_q[6]~DUPLICATE instr_debug[6] 0.360732 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[8] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[6] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[4] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[2] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[0] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[9] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[7] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[5] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+host_addr[14] host_ready 0.725121 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+host_response_valid_q host_rdata[11] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_response_valid_q}
+host_response_valid_q host_rdata[11] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[26] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~26}}
+host_response_valid_q host_rdata[26] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[1] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_data_q[7] host_rdata[7] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[12] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[19] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_response_valid_q}
+host_response_valid_q host_rdata[19] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[14] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~14}}
+host_response_valid_q host_rdata[14] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[0] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~0}}
+host_response_valid_q host_rdata[0] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[2] 0.978056 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~2}}
+host_response_valid_q host_rdata[2] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[18] 0.978056 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~18}}
+host_response_valid_q host_rdata[18] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[16] 0.978056 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~16}}
+host_response_valid_q host_rdata[16] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[28] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~28}}
+host_response_valid_q host_rdata[28] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[23] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~23}}
+host_response_valid_q host_rdata[23] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[13] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~13}}
+host_response_valid_q host_rdata[13] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[0] 0.794922 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 5 after the destination}} {Nodes to move after dest} 5 {Nodes to move before source} 0}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[0] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 10}
+host_response_valid_q host_rdata[17] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_response_valid_q}
+host_response_valid_q host_rdata[17] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[1] 0.953907 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 6 after the destination}} {Nodes to move after dest} 6 {Nodes to move before source} 0}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[1] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 10}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[1]~DUPLICATE 0.794922 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 5 after the destination}} {Nodes to move after dest} 5 {Nodes to move before source} 0}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[1]~DUPLICATE 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 10}
+host_response_valid_q host_rdata[9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_response_valid_q}
+host_response_valid_q host_rdata[9] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_data_q[21] host_rdata[21] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+PC:u_pc|pc_out[3] pc_debug[3] 0.360732 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+host_response_valid_q host_rdata[15] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~15}}
+host_response_valid_q host_rdata[15] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[2] 0.794922 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 5 after the destination}} {Nodes to move after dest} 5 {Nodes to move before source} 0}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[2] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 10}
+host_response_data_q[10] host_rdata[10] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.FINISH 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.FINISH 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 9}
+ternary_mul:u_tm|input_chunk_q[0] ternary_mul:u_tm|accumulator_q[14] 0.669587 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+ternary_mul:u_tm|input_chunk_q[0] ternary_mul:u_tm|accumulator_q[14] 0.907316 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.FINISH~DUPLICATE 0.953907 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 6 after the destination}} {Nodes to move after dest} 6 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.FINISH~DUPLICATE 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 9}
+running~reg0 running 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} running~reg0}
+running~reg0 running 0.360732 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.PREP 0.953907 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 6 after the destination}} {Nodes to move after dest} 6 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.PREP 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 9}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.PREP~DUPLICATE 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.PREP~DUPLICATE 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 9}
+instr_q[6]~DUPLICATE instr_debug[6] 0.923720 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[6]~DUPLICATE}}}
+instr_q[6]~DUPLICATE instr_debug[6] 0.360732 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[8] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[8] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[6] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[6] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[4] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[4] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[2] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[2] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[0] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[0] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[9] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[9] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[7] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[7] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[5] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[5] 1.000000 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 8}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[0] 0.794922 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 5 after the destination}} {Nodes to move after dest} 5 {Nodes to move before source} 0}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[1] 0.953907 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 6 after the destination}} {Nodes to move after dest} 6 {Nodes to move before source} 0}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[1]~DUPLICATE 0.794922 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 5 after the destination}} {Nodes to move after dest} 5 {Nodes to move before source} 0}
+norm_dispatch:u_norm|norm:u_norm|absmax[21] norm_dispatch:u_norm|norm:u_norm|quant_r[2] 0.794922 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 5 after the destination}} {Nodes to move after dest} 5 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.FINISH 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.FINISH~DUPLICATE 0.953907 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 6 after the destination}} {Nodes to move after dest} 6 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.PREP 0.953907 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 6 after the destination}} {Nodes to move after dest} 6 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|state.PREP~DUPLICATE 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[8] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[6] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[4] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[2] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[0] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[9] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[7] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+scale_compose:u_compose|candidate[2]~DUPLICATE scale_compose:u_compose|result_m[5] 1.000000 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 7 after the destination}} {Nodes to move after dest} 7 {Nodes to move before source} 0}
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

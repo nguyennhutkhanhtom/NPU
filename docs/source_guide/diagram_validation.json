@@ -31,6 +31,15 @@
       "status": "rendered"
     },
     {
+      "file": "docs/design/full_rtl_language.md",
+      "ordinal": 0,
+      "source_sha256": "74c66c7ae5698f6d29aa90733db9b90b2cfe03c5d4df109cdf956c50215fc362",
+      "width": 544,
+      "height": 2027,
+      "nodes": 17,
+      "status": "rendered"
+    },
+    {
       "file": "docs/source_guide/blocks/acc_mul.sv.md",
       "ordinal": 0,
       "source_sha256": "0c38f8eee8facf8129134215476a2b94b4fadb571a80c2842f45bd899e899b8d",
@@ -55,6 +64,15 @@
       "width": 1127,
       "height": 258,
       "nodes": 10,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/banked_word_ram.sv.md",
+      "ordinal": 0,
+      "source_sha256": "d6591f4e583d695fc4b52fb1fa1490e8c8db066916e0fce9e2ec79400bdefaf5",
+      "width": 491,
+      "height": 337,
+      "nodes": 5,
       "status": "rendered"
     },
     {
@@ -141,9 +159,45 @@
     {
       "file": "docs/source_guide/blocks/ins_mem.sv.md",
       "ordinal": 0,
-      "source_sha256": "e410b493f50c0573afa229e3dc542c33ca374ea12a389a8518d49e188c6f5135",
+      "source_sha256": "21b78f777f794a2dd36f3920e27c505ca6c98c09270440ddfeba65981971a4a2",
       "width": 1316,
       "height": 1084,
+      "nodes": 8,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/llm_bank_ram.sv.md",
+      "ordinal": 0,
+      "source_sha256": "c2abec96a559b6ce5b3b2c0fce847be3322ad3bde048700a77df6b057490db4a",
+      "width": 528,
+      "height": 385,
+      "nodes": 6,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/llm_math.sv.md",
+      "ordinal": 0,
+      "source_sha256": "e79798ef0e7384babd329d962264a162fca7a1cd13e5ce04980b01e5534464ab",
+      "width": 476,
+      "height": 450,
+      "nodes": 7,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/llm_pkg.sv.md",
+      "ordinal": 0,
+      "source_sha256": "434f5e00efddf1308b430d2c0b90dc04802bdeebcecf7be23ee2467ad7cbb23e",
+      "width": 1057,
+      "height": 183,
+      "nodes": 8,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/llm_soc.sv.md",
+      "ordinal": 0,
+      "source_sha256": "33e9ba9f4bc85eef0246dc1974d994b31ff49d13fa3f8e36f11e51715c417eed",
+      "width": 747,
+      "height": 498,
       "nodes": 8,
       "status": "rendered"
     },
@@ -159,15 +213,24 @@
     {
       "file": "docs/source_guide/blocks/matmulfree.sv.md",
       "ordinal": 0,
-      "source_sha256": "83353ca9e46b5cc747d89e4689df0eec72aa7a6cfdf7e027018a011a5bebc4af",
+      "source_sha256": "07d9b153ba8c5595dc2602a6b839aaf619896b552a467b1bd4cb428b08f926a6",
       "width": 2831,
-      "height": 2473,
+      "height": 2629,
       "nodes": 14,
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/matmulfree.sv.md",
       "ordinal": 1,
+      "source_sha256": "9180606eef9293b048a6feb2d5b82b4a2a4fd526dd880f3a6fe0eba3efb84893",
+      "width": 2228,
+      "height": 364,
+      "nodes": 9,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/matmulfree.sv.md",
+      "ordinal": 2,
       "source_sha256": "54d96572ff9ee73754856529e7385a17f3fc28bb010934166ce07e2343dd1548",
       "width": 1799,
       "height": 1318,
@@ -231,10 +294,10 @@
     {
       "file": "docs/source_guide/blocks/norm.sv.md",
       "ordinal": 0,
-      "source_sha256": "a5303ca7394fb592de985449793e9486216520b1a2d14516618a83604602ac49",
+      "source_sha256": "930ec3ba6e4ee4177b29c8a988955b88bb1fecc7bbe00370fecd10555a777075",
       "width": 1470,
-      "height": 1576,
-      "nodes": 14,
+      "height": 1960,
+      "nodes": 17,
       "status": "rendered"
     },
     {
@@ -258,19 +321,19 @@
     {
       "file": "docs/source_guide/blocks/norm.sv.md",
       "ordinal": 3,
-      "source_sha256": "06373f9e6b1ed924a0a3c57e8fb660f73a4fad077d0a4bbfdb2b9abf70494b93",
+      "source_sha256": "010334c2b8ea987bc86e8c2cd215936363b49997ada2dcddc502ef5e7ff3308a",
       "width": 897,
-      "height": 622,
-      "nodes": 10,
+      "height": 1126,
+      "nodes": 14,
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/norm.sv.md",
       "ordinal": 4,
-      "source_sha256": "c999a00818474e6c6071092d507fd774b0248f14268a1fddfa96f008a069b2cd",
+      "source_sha256": "9b066e7564972a2689f095a6f3cfea7cfa5f041c94e997c53752b77c54855245",
       "width": 801,
-      "height": 862,
-      "nodes": 8,
+      "height": 1342,
+      "nodes": 12,
       "status": "rendered"
     },
     {
@@ -303,19 +366,19 @@
     {
       "file": "docs/source_guide/blocks/postscale.sv.md",
       "ordinal": 0,
-      "source_sha256": "c55964e3600f9e4b1cafccefca0a0a154450115e95e938bfc6cae20551418cf0",
-      "width": 810,
-      "height": 694,
+      "source_sha256": "87efa49a90bec79b96d09210c78b9e3f5257c46dd39281c10670da0db4ec3298",
+      "width": 1070,
+      "height": 664,
       "nodes": 15,
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/postscale.sv.md",
       "ordinal": 1,
-      "source_sha256": "54c04da9b302a0fd8e090160fedb41cdfdc2c6a03fbfd0db2cecc971ca9dd1ee",
-      "width": 894,
-      "height": 646,
-      "nodes": 14,
+      "source_sha256": "137f4af326e09ead4d18c3bdefe5d166469361a80b686fda4c6ce0a2006a944b",
+      "width": 713,
+      "height": 498,
+      "nodes": 12,
       "status": "rendered"
     },
     {
@@ -348,37 +411,28 @@
     {
       "file": "docs/source_guide/blocks/rowwise_op.sv.md",
       "ordinal": 0,
-      "source_sha256": "7e7b5a03255be4abfc8fa9040bdb283e8568e53295d762ac0208c8e332f7df19",
-      "width": 1458,
-      "height": 1678,
-      "nodes": 16,
+      "source_sha256": "3f0ef8a0b3169b1b50d4e706cd435f6eb55616733ba2a07a0895477b9c21b523",
+      "width": 1486,
+      "height": 2086,
+      "nodes": 21,
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/rowwise_op.sv.md",
       "ordinal": 1,
-      "source_sha256": "4aca3cbb7ff530ffb001727c7333f5151c650604195296baca468a4f6f784fdd",
-      "width": 911,
-      "height": 1354,
-      "nodes": 14,
+      "source_sha256": "a599ef2116b09a9527225048d4973151771e2adefb53932f60d12c6e2860ad51",
+      "width": 895,
+      "height": 1046,
+      "nodes": 11,
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/scale_compose.sv.md",
       "ordinal": 0,
-      "source_sha256": "97c9fc304b74fabdb54e8be17fdbe2f60e28573fbbf11fe7e768ae341d947077",
-      "width": 1383,
-      "height": 1264,
-      "nodes": 14,
-      "status": "rendered"
-    },
-    {
-      "file": "docs/source_guide/blocks/scale_compose.sv.md",
-      "ordinal": 1,
-      "source_sha256": "cd6a986e8e6fd1eae3361d61d0da7a94a018903fa2e29ea9bf2f89dc78b727e7",
-      "width": 1230,
-      "height": 982,
-      "nodes": 10,
+      "source_sha256": "24d980d0628c1bdb4c7f11138f7af835757db2b27b00f1a9a8a173eaf8a74132",
+      "width": 353,
+      "height": 813,
+      "nodes": 8,
       "status": "rendered"
     },
     {
@@ -402,7 +456,7 @@
     {
       "file": "docs/source_guide/blocks/sram_256_wrapper.sv.md",
       "ordinal": 0,
-      "source_sha256": "aced8f5fbd92b69a41c981dfe3e3874ff3cbe2ff662ba5e2dca4d196585fb3de",
+      "source_sha256": "e8fc2b9d3fee26d5ff1d367cb5ca11e84793830fb64db2559cb476fe0ba5b9f1",
       "width": 1577,
       "height": 1518,
       "nodes": 10,
@@ -420,10 +474,10 @@
     {
       "file": "docs/source_guide/blocks/ternary_mul.sv.md",
       "ordinal": 0,
-      "source_sha256": "e2df6c31fa35cf651b543e5c464fd7df97a65050fe2e7f5e500f5cc7680bd69f",
-      "width": 1649,
-      "height": 1384,
-      "nodes": 16,
+      "source_sha256": "34c622d6c02d63548c8559dec83b01ddef507c925ec313a31fe14e9c0389701c",
+      "width": 1712,
+      "height": 1792,
+      "nodes": 20,
       "status": "rendered"
     },
     {
@@ -438,9 +492,9 @@
     {
       "file": "docs/source_guide/README.md",
       "ordinal": 0,
-      "source_sha256": "83353ca9e46b5cc747d89e4689df0eec72aa7a6cfdf7e027018a011a5bebc4af",
+      "source_sha256": "07d9b153ba8c5595dc2602a6b839aaf619896b552a467b1bd4cb428b08f926a6",
       "width": 2831,
-      "height": 2473,
+      "height": 2629,
       "nodes": 14,
       "status": "rendered"
     }

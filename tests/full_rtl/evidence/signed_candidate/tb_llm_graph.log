@@ -1,0 +1,26 @@
+# vsim -c -onfinish exit -L D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work -lib D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work -l D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\tb_llm_graph.log tb_llm_graph -do "run -all; quit -f" 
+# Start time: 23:11:22 on Oct 01,2026
+# Loading sv_std.std
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.tb_llm_graph
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.llm_pkg
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.npu_pkg
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.llm_soc
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.sram_256_wrapper
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.llm_bank_ram
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.llm_math
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.isqrt_u64
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.div
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.sigmoid
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.banked_word_ram
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.sram_word_tile
+# run -all
+# LLM_GRAPH_PROGRESS clocks=500000 position=1 generated=0
+# LLM_GRAPH_PROGRESS clocks=1000000 position=1 generated=0
+# LLM_GRAPH_PROGRESS clocks=1500000 position=2 generated=1
+# LLM_GRAPH_PROGRESS clocks=2000000 position=3 generated=2
+# LLM_GRAPH_PROGRESS clocks=2500000 position=3 generated=2
+# LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=2725765 host_commands=196619 fixtures=synthetic
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_graph.sv(84)
+#    Time: 39054820 ns  Iteration: 1  Instance: /tb_llm_graph
+# End time: 23:34:20 on Oct 01,2026, Elapsed time: 0:22:58
+# Errors: 0, Warnings: 0

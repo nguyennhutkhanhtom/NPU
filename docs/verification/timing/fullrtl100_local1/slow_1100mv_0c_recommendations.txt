@@ -1,0 +1,220 @@
+Statistics: 40 0 2236 1 40 -1.687
+
+Heuristic: Chained Adders
+From To Score Heuristic
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[14] 0.558490 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[12] 0.556004 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[10] 0.554412 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[15] 0.550328 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[13] 0.546303 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[8] 0.549578 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[6] 0.546675 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[11] 0.546155 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[9] 0.541746 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[7] 0.537045 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[4] 0.537654 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[5] 0.536717 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[2] 0.300310 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[3] 0.305053 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[5] 0.305197 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[9] 0.305197 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[8] 0.305313 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[11] 0.305313 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[6] 0.305139 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[2] 0.305139 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[12] 0.305429 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[3] 0.518645 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[14] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[12] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[10] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[15] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[13] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[8] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[6] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[11] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[9] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[7] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[4] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[5] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[2] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[3] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~PORT_B_WRITE_ENABLE_REG host_rdata[21]~reg0 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~portb_address_reg0 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[0]}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[18].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~portb_address_reg0 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[0]}}}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a10~PORT_B_WRITE_ENABLE_REG host_rdata[14]~reg0 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a10} {sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|rd_data[14]~284}}}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[9].write_address_q[1]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{k_write_address_q[1]~DUPLICATE}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[14] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[12] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[10] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[17].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~PORT_B_WRITE_ENABLE_REG host_rdata[30]~reg0 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[15] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[13] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[8] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[6] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[11] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[9] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[7] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[4] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[4].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[5] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[20].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~PORT_B_WRITE_ENABLE_REG host_rdata[21]~reg0 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[20].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~PORT_B_WRITE_ENABLE_REG host_rdata[27]~reg0 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~portb_address_reg0 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[13].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a0~PORT_B_WRITE_ENABLE_REG host_rdata[0]~reg0 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[0].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~PORT_B_WRITE_ENABLE_REG host_rdata[23]~reg0 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[18].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~portb_address_reg0 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[19].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[2] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[16].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a10~PORT_B_WRITE_ENABLE_REG host_rdata[17]~reg0 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[0].u_storage|sram_word_tile:g_tile[21].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a10~PORT_B_WRITE_ENABLE_REG host_rdata[16]~reg0 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[6].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a10~PORT_B_WRITE_ENABLE_REG host_rdata[11]~reg0 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+lane_q[1] sig_x_q[3] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[5] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[9] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[8] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[11] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[6] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[2] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[12] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[0].u_storage|sram_word_tile:g_tile[4].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~PORT_B_WRITE_ENABLE_REG host_rdata[31]~reg0 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[3] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a10~PORT_B_WRITE_ENABLE_REG host_rdata[14]~reg0 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+lane_q[1] sig_x_q[13] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[14] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[9].write_address_q[1]~DUPLICATE 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[14] 0.558490 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[14] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[14] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[12] 0.556004 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[12] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[12] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[10] 0.554412 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[10] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[10] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[17].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~PORT_B_WRITE_ENABLE_REG host_rdata[30]~reg0 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[15] 0.550328 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[15] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[15] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[13] 0.546303 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[13] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[13] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[8] 0.549578 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[8] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[8] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[6] 0.546675 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[6] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[6] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[11] 0.546155 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[11] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[11] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[9] 0.541746 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[9] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[9] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[7] 0.537045 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[7] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[7] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[4] 0.537654 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[4] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[4] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[4].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[5] 0.536717 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[5] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[5] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[20].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~PORT_B_WRITE_ENABLE_REG host_rdata[21]~reg0 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20}}}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~PORT_B_WRITE_ENABLE_REG host_rdata[21]~reg0 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[20].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~PORT_B_WRITE_ENABLE_REG host_rdata[27]~reg0 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~portb_address_reg0 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[0]}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[8].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~portb_address_reg0 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[13].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a0~PORT_B_WRITE_ENABLE_REG host_rdata[0]~reg0 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[0].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~PORT_B_WRITE_ENABLE_REG host_rdata[23]~reg0 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[18].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~portb_address_reg0 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|shared_read_address_q[0]}}}
+sram_256_wrapper:u_parameters|shared_read_address_q[0] sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[18].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a20~portb_address_reg0 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[19].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[2] 0.300310 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[2] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[2] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[4].u_storage|sram_word_tile:g_tile[16].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a10~PORT_B_WRITE_ENABLE_REG host_rdata[17]~reg0 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[0].u_storage|sram_word_tile:g_tile[21].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a10~PORT_B_WRITE_ENABLE_REG host_rdata[16]~reg0 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[6].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a10~PORT_B_WRITE_ENABLE_REG host_rdata[11]~reg0 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+lane_q[1] sig_x_q[3] 0.305053 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[3] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[5] 0.305197 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[5] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[9] 0.305197 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[9] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[8] 0.305313 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[8] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[11] 0.305313 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[11] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[6] 0.305139 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[6] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[2] 0.305139 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[2] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[12] 0.305429 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[1] sig_x_q[12] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[0].u_storage|sram_word_tile:g_tile[4].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a30~PORT_B_WRITE_ENABLE_REG host_rdata[31]~reg0 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[3] 0.518645 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[3] 1.000000 {DSP Register Packing} {recommendation {{DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. } {DSP block sigmoid:u_sig|Mult0~mac is not fully utilizing internal DSP register banks. Design performance may be limited. }}}
+sigmoid:u_sig|y0[1] sigmoid:u_sig|y_raw[3] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a10~PORT_B_WRITE_ENABLE_REG host_rdata[14]~reg0 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a10} {sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|rd_data[14]~284}}}
+sram_256_wrapper:u_parameters|banked_word_ram:g_ram_lane[3].u_storage|sram_word_tile:g_tile[2].u_tile|altsyncram:memory_rtl_0|altsyncram_m8q1:auto_generated|ram_block1a10~PORT_B_WRITE_ENABLE_REG host_rdata[14]~reg0 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+lane_q[1] sig_x_q[13] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+lane_q[1] sig_x_q[14] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[9].write_address_q[1]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{k_write_address_q[1]~DUPLICATE}}}
+k_write_address_q[1]~DUPLICATE llm_bank_ram:u_cache|g_bank[9].write_address_q[1]~DUPLICATE 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

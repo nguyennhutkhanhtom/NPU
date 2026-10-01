@@ -1,0 +1,608 @@
+Info: *******************************************************************
+Info: Running Quartus Prime Timing Analyzer
+    Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
+    Info: Copyright (C) 2018  Intel Corporation. All rights reserved.
+    Info: Your use of Intel Corporation's design tools, logic functions 
+    Info: and other software and tools, and its AMPP partner logic 
+    Info: functions, and any output files from any of the foregoing 
+    Info: (including device programming or simulation files), and any 
+    Info: associated documentation or information are expressly subject 
+    Info: to the terms and conditions of the Intel Program License 
+    Info: Subscription Agreement, the Intel Quartus Prime License Agreement,
+    Info: the Intel FPGA IP License Agreement, or other applicable license
+    Info: agreement, including, without limitation, that your use is for
+    Info: the sole purpose of programming logic devices manufactured by
+    Info: Intel and sold by Intel or its authorized distributors.  Please
+    Info: refer to the applicable agreement for further details.
+    Info: Processing started: Thu Oct 01 23:20:39 2026
+Info: Command: quartus_sta -t "D:\2151097_Nguyen Nhut Khanh\tools\timing\extract.tcl" "D:\2151097_Nguyen Nhut Khanh\docs\verification\timing\fullrtl100_tiled" sdc "D:\2151097_Nguyen Nhut Khanh\quartus\llm_soc"
+Info: Quartus(args): {D:\2151097_Nguyen Nhut Khanh\docs\verification\timing\fullrtl100_tiled} sdc {D:\2151097_Nguyen Nhut Khanh\quartus\llm_soc}
+Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Info (21077): Low junction temperature is 0 degrees C
+Info (21077): High junction temperature is 85 degrees C
+Info (332104): Reading SDC File: 'llm_soc.sdc'
+Info (332151): Clock uncertainty is not calculated until you update the timing netlist.
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332101): Design is fully constrained for setup requirements
+Info (332101): Design is fully constrained for hold requirements
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 40 setup paths (40 violated).  Worst case slack is -3.781
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/slow_1100mv_85c_setup.rpt}
+Info (332115): Report Timing: Found 40 hold paths (0 violated).  Worst case slack is 0.176
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/slow_1100mv_85c_hold.rpt}
+Info (332115): Report Timing: Found 40 recovery paths (0 violated).  Worst case slack is 4.999
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/slow_1100mv_85c_recovery.rpt}
+Info (332115): Report Timing: Found 40 removal paths (0 violated).  Worst case slack is 0.140
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/slow_1100mv_85c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 40 results (0 violated).  Worst case slack is 3.600
+    Info (332113): Targets: *
+    Info (332113): -nworst: 40
+    Info (332113): -detail: full_path
+TIMING_CORNER_EXTRACTED: slow_1100mv_85c
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 40 setup paths (40 violated).  Worst case slack is -4.202
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/slow_1100mv_0c_setup.rpt}
+Info (332115): Report Timing: Found 40 hold paths (0 violated).  Worst case slack is 0.055
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/slow_1100mv_0c_hold.rpt}
+Info (332115): Report Timing: Found 40 recovery paths (0 violated).  Worst case slack is 5.116
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/slow_1100mv_0c_recovery.rpt}
+Info (332115): Report Timing: Found 40 removal paths (0 violated).  Worst case slack is 0.038
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/slow_1100mv_0c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 40 results (0 violated).  Worst case slack is 3.548
+    Info (332113): Targets: *
+    Info (332113): -nworst: 40
+    Info (332113): -detail: full_path
+TIMING_CORNER_EXTRACTED: slow_1100mv_0c
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 40 setup paths (0 violated).  Worst case slack is 1.941
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/fast_1100mv_85c_setup.rpt}
+Info (332115): Report Timing: Found 40 hold paths (0 violated).  Worst case slack is 0.103
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/fast_1100mv_85c_hold.rpt}
+Info (332115): Report Timing: Found 40 recovery paths (0 violated).  Worst case slack is 6.398
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/fast_1100mv_85c_recovery.rpt}
+Info (332115): Report Timing: Found 40 removal paths (0 violated).  Worst case slack is 0.416
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/fast_1100mv_85c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 40 results (0 violated).  Worst case slack is 3.798
+    Info (332113): Targets: *
+    Info (332113): -nworst: 40
+    Info (332113): -detail: full_path
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.396
+    Info (332115): -through [get_pins {attention_acc_q[18][39]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.396 
+    Info (332115):    Slack        : 6.396 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][39]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.282
+    Info (332115):    Data Delay   : 3.222
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.420
+    Info (332115): -through [get_pins {attention_acc_q[18][38]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.420 
+    Info (332115):    Slack        : 6.420 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][38]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.281
+    Info (332115):    Data Delay   : 3.199
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.464
+    Info (332115): -through [get_pins {attention_acc_q[18][34]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.464 
+    Info (332115):    Slack        : 6.464 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][34]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.281
+    Info (332115):    Data Delay   : 3.155
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.521
+    Info (332115): -through [get_pins {attention_acc_q[18][30]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.521 
+    Info (332115):    Slack        : 6.521 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][30]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.281
+    Info (332115):    Data Delay   : 3.098
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.535
+    Info (332115): -through [get_pins {attention_acc_q[18][29]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.535 
+    Info (332115):    Slack        : 6.535 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][29]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.282
+    Info (332115):    Data Delay   : 3.083
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.569
+    Info (332115): -through [get_pins {attention_acc_q[18][28]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.569 
+    Info (332115):    Slack        : 6.569 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][28]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.281
+    Info (332115):    Data Delay   : 3.050
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.646
+    Info (332115): -through [get_pins {attention_acc_q[18][26]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.646 
+    Info (332115):    Slack        : 6.646 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][2]
+    Info (332115):    To Node      : attention_acc_q[18][26]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.278
+    Info (332115):    Data Delay   : 2.976
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.724
+    Info (332115): -through [get_pins {attention_acc_q[18][22]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.724 
+    Info (332115):    Slack        : 6.724 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][2]
+    Info (332115):    To Node      : attention_acc_q[18][22]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.278
+    Info (332115):    Data Delay   : 2.898
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.848
+    Info (332115): -through [get_pins {attention_acc_q[18][20]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.848 
+    Info (332115):    Slack        : 6.848 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][2]
+    Info (332115):    To Node      : attention_acc_q[18][20]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.278
+    Info (332115):    Data Delay   : 2.774
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.436
+    Info (332115): -through [get_pins {attention_acc_q[18][35]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.436 
+    Info (332115):    Slack        : 6.436 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][35]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.282
+    Info (332115):    Data Delay   : 3.182
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.454
+    Info (332115): -through [get_pins {attention_acc_q[18][33]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.454 
+    Info (332115):    Slack        : 6.454 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][33]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.282
+    Info (332115):    Data Delay   : 3.164
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.712
+    Info (332115): -through [get_pins {attention_acc_q[18][21]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.712 
+    Info (332115):    Slack        : 6.712 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][2]
+    Info (332115):    To Node      : attention_acc_q[18][21]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.279
+    Info (332115):    Data Delay   : 2.909
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.634
+    Info (332115): -through [get_pins {attention_acc_q[18][25]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.634 
+    Info (332115):    Slack        : 6.634 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][2]
+    Info (332115):    To Node      : attention_acc_q[18][25]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.279
+    Info (332115):    Data Delay   : 2.987
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.607
+    Info (332115): -through [get_pins {attention_acc_q[18][27]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.607 
+    Info (332115):    Slack        : 6.607 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][2]
+    Info (332115):    To Node      : attention_acc_q[18][27]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.279
+    Info (332115):    Data Delay   : 3.014
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.480
+    Info (332115): -through [get_pins {attention_acc_q[18][31]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.480 
+    Info (332115):    Slack        : 6.480 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][31]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.282
+    Info (332115):    Data Delay   : 3.138
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.412
+    Info (332115): -through [get_pins {attention_acc_q[18][37]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.412 
+    Info (332115):    Slack        : 6.412 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][37]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.280
+    Info (332115):    Data Delay   : 3.208
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.451
+    Info (332115): -through [get_pins {attention_acc_q[18][36]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.451 
+    Info (332115):    Slack        : 6.451 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][36]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.281
+    Info (332115):    Data Delay   : 3.168
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.436
+    Info (332115): -through [get_pins {attention_acc_q[18][35]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.436 
+    Info (332115):    Slack        : 6.436 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][35]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.282
+    Info (332115):    Data Delay   : 3.182
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.455
+    Info (332115): -through [get_pins {attention_acc_q[18][33]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.455 
+    Info (332115):    Slack        : 6.455 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][33]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.280
+    Info (332115):    Data Delay   : 3.165
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.495
+    Info (332115): -through [get_pins {attention_acc_q[18][32]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.495 
+    Info (332115):    Slack        : 6.495 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][32]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.281
+    Info (332115):    Data Delay   : 3.124
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.481
+    Info (332115): -through [get_pins {attention_acc_q[18][31]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.481 
+    Info (332115):    Slack        : 6.481 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][31]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.280
+    Info (332115):    Data Delay   : 3.139
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.607
+    Info (332115): -through [get_pins {attention_acc_q[18][27]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.607 
+    Info (332115):    Slack        : 6.607 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][2]
+    Info (332115):    To Node      : attention_acc_q[18][27]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.279
+    Info (332115):    Data Delay   : 3.014
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.635
+    Info (332115): -through [get_pins {attention_acc_q[18][25]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.635 
+    Info (332115):    Slack        : 6.635 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][2]
+    Info (332115):    To Node      : attention_acc_q[18][25]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.277
+    Info (332115):    Data Delay   : 2.988
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.665
+    Info (332115): -through [get_pins {attention_acc_q[18][24]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.665 
+    Info (332115):    Slack        : 6.665 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][2]
+    Info (332115):    To Node      : attention_acc_q[18][24]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.278
+    Info (332115):    Data Delay   : 2.957
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.654
+    Info (332115): -through [get_pins {attention_acc_q[18][23]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.654 
+    Info (332115):    Slack        : 6.654 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][2]
+    Info (332115):    To Node      : attention_acc_q[18][23]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.277
+    Info (332115):    Data Delay   : 2.969
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.713
+    Info (332115): -through [get_pins {attention_acc_q[18][21]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.713 
+    Info (332115):    Slack        : 6.713 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][2]
+    Info (332115):    To Node      : attention_acc_q[18][21]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.277
+    Info (332115):    Data Delay   : 2.910
+TIMING_CORNER_EXTRACTED: fast_1100mv_85c
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 40 setup paths (0 violated).  Worst case slack is 3.006
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/fast_1100mv_0c_setup.rpt}
+Info (332115): Report Timing: Found 40 hold paths (0 violated).  Worst case slack is 0.037
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/fast_1100mv_0c_hold.rpt}
+Info (332115): Report Timing: Found 40 recovery paths (0 violated).  Worst case slack is 6.403
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/fast_1100mv_0c_recovery.rpt}
+Info (332115): Report Timing: Found 40 removal paths (0 violated).  Worst case slack is 0.418
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled/fast_1100mv_0c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 40 results (0 violated).  Worst case slack is 3.787
+    Info (332113): Targets: *
+    Info (332113): -nworst: 40
+    Info (332113): -detail: full_path
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.639
+    Info (332115): -through [get_pins {attention_acc_q[18][38]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.639 
+    Info (332115):    Slack        : 6.639 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][38]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.317
+    Info (332115):    Data Delay   : 2.944
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.687
+    Info (332115): -through [get_pins {attention_acc_q[18][34]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.687 
+    Info (332115):    Slack        : 6.687 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][34]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.317
+    Info (332115):    Data Delay   : 2.896
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.746
+    Info (332115): -through [get_pins {attention_acc_q[18][30]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.746 
+    Info (332115):    Slack        : 6.746 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~mult_ll_pl[0][24]
+    Info (332115):    To Node      : attention_acc_q[18][30]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.317
+    Info (332115):    Data Delay   : 2.837
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.865
+    Info (332115): -through [get_pins {attention_acc_q[18][26]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.865 
+    Info (332115):    Slack        : 6.865 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][2]
+    Info (332115):    To Node      : attention_acc_q[18][26]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.314
+    Info (332115):    Data Delay   : 2.721
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.939
+    Info (332115): -through [get_pins {attention_acc_q[18][22]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.939 
+    Info (332115):    Slack        : 6.939 
+    Info (332115):    From Node    : llm_math:u_math|Mult18~add_lh_hlmac_pl[0][1]
+    Info (332115):    To Node      : attention_acc_q[18][22]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.314
+    Info (332115):    Data Delay   : 2.647
+TIMING_CORNER_EXTRACTED: fast_1100mv_0c
+TIMING_EXTRACTION_PASS: D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_tiled (sdc)
+Info (23030): Evaluation of Tcl script D:\2151097_Nguyen Nhut Khanh\tools\timing\extract.tcl was successful
+Info: Quartus Prime Timing Analyzer was successful. 0 errors, 0 warnings
+    Info: Peak virtual memory: 5991 megabytes
+    Info: Processing ended: Thu Oct 01 23:22:36 2026
+    Info: Elapsed time: 00:01:57
+    Info: Total CPU time (on all processors): 00:02:21

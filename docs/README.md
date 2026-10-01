@@ -11,9 +11,10 @@
 | Bạn muốn làm gì? | Bắt đầu ở đây | Đọc tiếp |
 |---|---|---|
 | Hiểu core 32 PE, format số và SRAM | [Kiến trúc và bảng bit](design/architecture.md) | [Hierarchy và luồng dữ liệu](source_guide/README.md) |
+| Hiểu toàn graph sinh token trên RTL | [Autonomous language graph](design/full_rtl_language.md) | [Host, numeric và gate tests](../tests/full_rtl/README.md) |
 | Nạp dữ liệu hoặc viết chương trình | [Instruction, descriptor, host map và LUT](design/interfaces.md) | [Cách export và chạy model](demos/README.md) |
 | Sửa một module RTL | [Mục lục từng file](source_guide/blocks/README.md) | [Các cải tiến và hợp đồng hiện hành](reviews/design_review.md) |
-| Chạy test hoặc xem synthesis | [Regression và demo synthesis](verification/README.md) | [Report gốc](verification/reports/quartus_synthesis.rpt) |
+| Chạy test, xem synthesis hoặc timing | [Regression và demo synthesis](verification/README.md) | [Critical path và Fmax post-fit](verification/timing/README.md) |
 | Chạy model có checkpoint | [Danh sách demo](demos/README.md) | [MNIST trên RTL](demos/mnist.md), [ngôn ngữ CPU + linear RTL](demos/language.md) |
 | Tra cứu các quyết định và lỗi cũ | [Báo cáo tích hợp](reviews/implementation_review.md) | [Lịch sử, thesis và bài báo](history/README.md) |
 
@@ -24,7 +25,7 @@ docs/
 ├── README.md                 ← mục lục này
 ├── design/                   ← kiến trúc, bit-width, ISA và host contract
 ├── source_guide/              ← hierarchy, chú giải từng RTL, hash và validator
-├── verification/             ← cách kiểm chứng, synthesis và report
+├── verification/             ← regression, synthesis, timing post-fit và report
 ├── demos/                    ← model candidates và các demo đã thực hiện
 ├── reviews/                  ← sửa lỗi, cải tiến và phạm vi đã kiểm tra
 └── history/                  ← archive, cleanup manifest, thesis và tài liệu gốc
@@ -34,11 +35,20 @@ Mỗi nội dung có một trang chính; README trong source dẫn về tài li�
 
 ## Trạng thái và bằng chứng
 
-RTL dùng **cùng implementation trong mô phỏng và synthesis**, không chọn nhánh theo `SYNTHESIS`/`QUARTUS_SYNTHESIS`. Core có 32 PE ternary, K≤512, accumulator S18, state S16 và SRAM logic 32+8 KiB. Quartus dùng để demo Analysis & Synthesis; binding SRAM, STA và PPA ASIC cần được đánh giá riêng.
+RTL dùng **cùng implementation trong mô phỏng và synthesis**, không chọn nhánh theo `SYNTHESIS`/`QUARTUS_SYNTHESIS`. Core có 32 PE ternary, K≤512, accumulator S18, state S16 và SRAM logic 32+8 KiB. Quartus dùng để demo Analysis & Synthesis và timing FPGA; binding SRAM, STA và PPA ASIC cần được đánh giá riêng.
 
-Bản rà soát ngày **01/10/2026** pass **9 mục regression**, compile **0 error/0 warning**. Demo A&S cùng snapshot pass **0 error/0 warning**, 6.497 FF và 11.798 ALUT. [Báo cáo design](reviews/design_review.md) ghi số liệu, thời điểm, test coverage và các giới hạn.
+Bản rà soát ngày **01/10/2026** pass **10 mục regression**, compile **0 error/0 warning**. A&S sau tối ưu timing pass **0 error/0 warning**, 7.390 FF và 11.906 ALUT; [timing hub](verification/timing/README.md) ghi baseline và phép đo post-fit riêng. [Báo cáo design](reviews/design_review.md) ghi số liệu, thời điểm, test coverage và các giới hạn.
 
 [Demo NanoFable](demos/language.md) bổ sung sinh văn bản trên CPU và 168 lượt replay linear ternary thực trên RTL; toàn model chưa chạy trên NPU.
+
+Top mới `llm_soc` triển khai toàn graph và SRAM trên RTL. A&S của snapshot
+`fullrtl100_tiled` đã fitting thành công nhưng timing FAIL 70,41 MHz.
+`fullrtl100_pipeline2` cải thiện lên 83,58 MHz, vẫn timing FAIL. Source hiện tại
+đã sửa signed attention, tie selection S32_MIN và reserved ternary code, dùng
+FSM one-hot cùng local SRAM request registers; `fullrtl100_local1` A&S PASS
+0 error/6 warning, fitting PASS0/4, timing vẫn FAIL84,49MHz. Sáu nhóm unit
+đã PASS trên source này, gồm graph16layer executions/3tokenRTL.
+Application pretrained tiếp tục bị chặn đến khi source/config hiện tại đạt đủ gate.
 
 Code trích dẫn, dòng và SHA-256 trong source guide được đối chiếu bởi [validator](source_guide/validate.py); [validation.json](source_guide/validation.json) ghi kết quả. Sau khi sửa RTL, cập nhật chú giải rồi chạy:
 

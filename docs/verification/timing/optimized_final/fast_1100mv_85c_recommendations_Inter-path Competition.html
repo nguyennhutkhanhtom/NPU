@@ -1,0 +1,708 @@
+
+<html><head><link rel='stylesheet' href='bogus:style.css' type='text/css' /><script type='text/javascript' src='qrc:rpwq_sorttable.js'></script>
+<script language="javascript" type="text/javascript">
+function toggle(id, showtext, hidetext) {
+	document.getElementById(id+'-toggle').innerHTML = (document.getElementById(id).style.display == "none") ? hidetext : showtext;
+	document.getElementById(id).style.display = (document.getElementById(id).style.display == "none") ? "" : "none";
+}
+</script>
+
+<style type="text/css">
+
+body { 
+	font-family:      Tahoma, sans-serif
+	font-size:        8pt;
+	background-color: white;
+	margin:           0;
+/*	border:           1px solid #7F9DB9;*/ /* border on page doesn't work right when scrolling...*/
+	padding:          2px;
+}
+
+h1, h2 { 
+	background-color: #316AC5; 
+	color:            white; 
+	padding:          2px;
+}
+
+
+h1, h2 a:link {color:#fff;}
+
+
+h1             { font-size: 10pt; }
+h2, h3, h4, h5 { font-size: 8pt; }
+p, blockquote  { font-size: 8pt; }
+table, td, th  { font-size: 8pt; }
+ul, ol, li     { font-size: 8pt; }
+dl, dt, dd     { font-size: 8pt; }
+
+/* i don't like the space after paragraphs and before lists */
+p { margin: 1em 0 0 0; }
+
+
+/* table formats */
+table {
+	border-collapse: collapse;
+}
+
+td, th {
+	border-collapse: collapse;
+	border:          1px solid #C8C8C8;
+	padding:         1px;
+	padding-left:    2px;
+	padding-right:   2px;
+	margin:          0;
+	vertical-align:  middle;
+	text-align:      left;
+}
+
+th                 { background-color: #EDEDED; } /* tq table grey - for table heading */
+tr:nth-child(2n+0) { background-color: #EDEDED; } /* tq table grey - for even rows */
+tr:nth-child(2n+1) { background-color: #FFFFFF; } /* tq table white - for odd rows */
+
+table#path_table td {
+	vertical-align:top;
+}
+
+.graph { 
+	width: 100px; 
+	border: 1px solid #aaa; 
+	padding: 0px 1px 0px 1px; 
+}
+.graph .bar { 
+	display: block;	
+	position: relative;
+	background: #aaa; 
+	text-align: left;
+	padding-left: 2px;
+	padding-right: 2px;
+	color: #000; 
+	height: 12px; 
+	vertical-align: middle;
+	left:-2px; /* needs to be adjusted in conjunction with .graph styles */
+}
+
+div.bar {
+	height:11px; 
+	background-color:#C00000; 
+	color: white; 
+	text-align: left; 
+	vertical-align: middle;
+}
+
+/* for description lists for summary */
+dl.rec {
+	margin: 1px;
+	padding: 0;
+}
+
+.rec dt {
+	clear: left;
+	float: left;
+	width: 7em;
+	margin: 0;
+	padding: 1px;
+}
+
+.rec dd {
+	margin: 0 0 0 5em;
+	padding: 1px;
+}
+
+dd.path_table_rec {
+	overflow: hidden;
+	whitespace: nowrap;
+	text-overflow: ellipsis;
+}
+
+ul, ol, li {
+	margin: 1px;
+}
+
+/* tooltip experiment for long node names */
+/* use with: <span id="links"><a href="#">short name<span>longer node name</span></a></span> */
+span#tip {position: relative; top: 0; left: 0;}
+span#tip a { text-decoration: none; color: black;}
+span#tip a:hover {}
+
+span#tip a span {display: none;}
+span#tip a:hover span {
+	display: block;
+	position: absolute; top: -2px; left: -2px; 
+	padding: 1px; margin: 0px; z-index: 100;
+	border: 1px solid black;
+	color: black; background: #FFFFDC;
+	text-align: left;
+	z-index: 100;
+}
+
+div#multicolumn {
+	-webkit-column-width: 50em;
+	-webkit-column-gap: 2em;
+}
+
+</style>
+</head>
+<body>
+<!--<h1>Inter-path Competition</h1>-->
+
+<h2>Overview
+
+<a href='#' id='twist-Overview-Inter-path Competition-toggle' onclick='toggle("twist-Overview-Inter-path Competition", "[show details]", "[hide details]");'>[hide details]</a>
+</h2><div id='twist-Overview-Inter-path Competition' style='display:inline;'>
+
+<p>
+The <b>Description and Recommendations</b> section gives general 
+advice and recommendations for addressing Inter-path Competition.
+</p>
+<p>
+The <b>Aggregate Results</b> section shows the 
+Node Name
+and the number of occurences of the Node Name 
+in the identified paths.
+You can sort the table by clicking the column header.
+</p>
+<p>
+The <b>Top Recommendations</b> section lists 
+recommendations for the most serious issues identified by the analysis.
+The number of stars indicates the relative importance of each recommendation,
+with five stars identifying the most important recommendations.
+Click <b>show details</b> for more information about each recommendation;
+click <b>report timing</b> to generate a timing report for the listed path. 
+</p>
+
+<p>
+The <b>Detailed Results</b> section contains the detailed 
+report for this analysis.
+Click on <b>show details</b> for more information related to the recommendation for each path;
+click on <b>report timing</b> to generate a timing report for the listed path. 
+You can sort the table by clicking the column header.
+</p>
+</div>
+
+<h2>Description and Recommendations
+
+<a href='#' id='twist-Description and Recommendations-Inter-path Competition-toggle' onclick='toggle("twist-Description and Recommendations-Inter-path Competition", "[show details]", "[hide details]");'>[hide details]</a>
+</h2><div id='twist-Description and Recommendations-Inter-path Competition' style='display:inline;'>
+
+	<p>
+Nodes on each listed path have fanouts in other timing paths. These paths have conflicting optimization goals. This conflict results in the placer finding a globally optimal solution which is not optimal for each individual path.
+</p>
+<p>
+The following suggestions may help resolve this issue:
+</p>
+<ul>
+<li>Replicate the recommended nodes or related logic in the appropriate HDL code. </li><li>Enable Physical Synthesis duplication. </li><li>Use the <b>Manual Logic Duplication</b> or <b>Maximum Fan-Out</b> logic options to create duplicate nodes.See documentation for details on these logic options.</li>
+</ul>
+<p>
+See the <b>Top Recommendations</b> section for potential solutions
+for each path.
+
+</div>
+<h2>Aggregate Results
+
+<a href='#' id='twist-Aggregate Results-toggle' onclick='toggle("twist-Aggregate Results", "[show details]", "[hide details]");'>[hide details]</a>
+</h2><div id='twist-Aggregate Results' style='display:inline;'>
+<p>
+<table id='aggregate_table' class='sortable'>
+    <tr>
+      <th></th>
+      <th>Node Name</th>
+      <th width=100>Paths Affected</th>
+    </tr>
+
+    <tr>
+      <td>1</td>
+      <td>host_response_valid_q</td>
+      <td><div class='graph'><div class='bar' style='width:100%;'>14</div></div></td>
+    </tr>
+
+    <tr>
+      <td>2</td>
+      <td>comb~14</td>
+      <td><div class='graph'><div class='bar' style='width:35%;'>5</div></div></td>
+    </tr>
+
+    <tr>
+      <td>3</td>
+      <td>register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19</td>
+      <td><div class='graph'><div class='bar' style='width:35%;'>5</div></div></td>
+    </tr>
+
+    <tr>
+      <td>4</td>
+      <td>host_rdata~18</td>
+      <td><div class='graph'><div class='bar' style='width:7%;'>1</div></div></td>
+    </tr>
+
+    <tr>
+      <td>5</td>
+      <td>PC:u_pc|pc_out[2]</td>
+      <td><div class='graph'><div class='bar' style='width:7%;'>1</div></div></td>
+    </tr>
+
+    <tr>
+      <td>6</td>
+      <td>instr_q[4]</td>
+      <td><div class='graph'><div class='bar' style='width:7%;'>1</div></div></td>
+    </tr>
+
+    <tr>
+      <td>7</td>
+      <td>host_rdata~23</td>
+      <td><div class='graph'><div class='bar' style='width:7%;'>1</div></div></td>
+    </tr>
+
+    <tr>
+      <td>8</td>
+      <td>running~reg0</td>
+      <td><div class='graph'><div class='bar' style='width:7%;'>1</div></div></td>
+    </tr>
+
+    <tr>
+      <td>9</td>
+      <td>host_rdata~0</td>
+      <td><div class='graph'><div class='bar' style='width:7%;'>1</div></div></td>
+    </tr>
+
+    <tr>
+      <td>10</td>
+      <td>host_rdata~26</td>
+      <td><div class='graph'><div class='bar' style='width:7%;'>1</div></div></td>
+    </tr>
+
+</table>
+
+</div>
+<h2>Top Recommendations
+
+<a href='#' id='twist-Top Recommendations-toggle' onclick='toggle("twist-Top Recommendations", "[show details]", "[hide details]");'>[hide details]</a>
+</h2><div id='twist-Top Recommendations' style='display:inline;'>
+
+<dl class='rec'>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Duplicate the nodes specified in the details for the path from <b>host_response_valid_q</b>
+        to <b>host_rdata[11]</b> 
+<a href='#' id='twist-1-tree-toggle' onclick='toggle("twist-1-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-1-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:Inter-path Competition'>Inter-path Competition</a></li>
+        <li><b>From:</b> host_response_valid_q</li>
+        <li><b>To:</b> host_rdata[11]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[11]} -detail full_path -panel_name {Path 1 (Inter-path Competition)} -show_routing'>report timing</a></li>
+        <li><b>Nodes to duplicate:</b></li><ul><li>host_response_valid_q</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Duplicate the nodes specified in the details for the path from <b>host_response_valid_q</b>
+        to <b>host_rdata[0]</b> 
+<a href='#' id='twist-2-tree-toggle' onclick='toggle("twist-2-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-2-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:Inter-path Competition'>Inter-path Competition</a></li>
+        <li><b>From:</b> host_response_valid_q</li>
+        <li><b>To:</b> host_rdata[0]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[0]} -detail full_path -panel_name {Path 2 (Inter-path Competition)} -show_routing'>report timing</a></li>
+        <li><b>Nodes to duplicate:</b></li><ul><li>host_response_valid_q</li><li>host_rdata~0</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Duplicate the nodes specified in the details for the path from <b>host_response_valid_q</b>
+        to <b>host_rdata[14]</b> 
+<a href='#' id='twist-3-tree-toggle' onclick='toggle("twist-3-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-3-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:Inter-path Competition'>Inter-path Competition</a></li>
+        <li><b>From:</b> host_response_valid_q</li>
+        <li><b>To:</b> host_rdata[14]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[14]} -detail full_path -panel_name {Path 3 (Inter-path Competition)} -show_routing'>report timing</a></li>
+        <li><b>Nodes to duplicate:</b></li><ul><li>host_response_valid_q</li><li>host_rdata~14</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Duplicate the nodes specified in the details for the path from <b>host_response_valid_q</b>
+        to <b>host_rdata[26]</b> 
+<a href='#' id='twist-4-tree-toggle' onclick='toggle("twist-4-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-4-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:Inter-path Competition'>Inter-path Competition</a></li>
+        <li><b>From:</b> host_response_valid_q</li>
+        <li><b>To:</b> host_rdata[26]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[26]} -detail full_path -panel_name {Path 4 (Inter-path Competition)} -show_routing'>report timing</a></li>
+        <li><b>Nodes to duplicate:</b></li><ul><li>host_response_valid_q</li><li>host_rdata~26</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Duplicate the nodes specified in the details for the path from <b>host_response_valid_q</b>
+        to <b>host_rdata[13]</b> 
+<a href='#' id='twist-5-tree-toggle' onclick='toggle("twist-5-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-5-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:Inter-path Competition'>Inter-path Competition</a></li>
+        <li><b>From:</b> host_response_valid_q</li>
+        <li><b>To:</b> host_rdata[13]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[13]} -detail full_path -panel_name {Path 5 (Inter-path Competition)} -show_routing'>report timing</a></li>
+        <li><b>Nodes to duplicate:</b></li><ul><li>host_response_valid_q</li><li>host_rdata~13</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Duplicate the nodes specified in the details for the path from <b>host_response_valid_q</b>
+        to <b>host_rdata[23]</b> 
+<a href='#' id='twist-6-tree-toggle' onclick='toggle("twist-6-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-6-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:Inter-path Competition'>Inter-path Competition</a></li>
+        <li><b>From:</b> host_response_valid_q</li>
+        <li><b>To:</b> host_rdata[23]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[23]} -detail full_path -panel_name {Path 6 (Inter-path Competition)} -show_routing'>report timing</a></li>
+        <li><b>Nodes to duplicate:</b></li><ul><li>host_response_valid_q</li><li>host_rdata~23</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Duplicate the nodes specified in the details for the path from <b>running~reg0</b>
+        to <b>running</b> 
+<a href='#' id='twist-7-tree-toggle' onclick='toggle("twist-7-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-7-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:Inter-path Competition'>Inter-path Competition</a></li>
+        <li><b>From:</b> running~reg0</li>
+        <li><b>To:</b> running</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {running~reg0} -to {running} -detail full_path -panel_name {Path 7 (Inter-path Competition)} -show_routing'>report timing</a></li>
+        <li><b>Nodes to duplicate:</b></li><ul><li>running~reg0</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Duplicate the nodes specified in the details for the path from <b>host_response_valid_q</b>
+        to <b>host_rdata[4]</b> 
+<a href='#' id='twist-8-tree-toggle' onclick='toggle("twist-8-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-8-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:Inter-path Competition'>Inter-path Competition</a></li>
+        <li><b>From:</b> host_response_valid_q</li>
+        <li><b>To:</b> host_rdata[4]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[4]} -detail full_path -panel_name {Path 8 (Inter-path Competition)} -show_routing'>report timing</a></li>
+        <li><b>Nodes to duplicate:</b></li><ul><li>host_response_valid_q</li><li>host_rdata~4</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Duplicate the nodes specified in the details for the path from <b>host_response_valid_q</b>
+        to <b>host_rdata[28]</b> 
+<a href='#' id='twist-9-tree-toggle' onclick='toggle("twist-9-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-9-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:Inter-path Competition'>Inter-path Competition</a></li>
+        <li><b>From:</b> host_response_valid_q</li>
+        <li><b>To:</b> host_rdata[28]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[28]} -detail full_path -panel_name {Path 9 (Inter-path Competition)} -show_routing'>report timing</a></li>
+        <li><b>Nodes to duplicate:</b></li><ul><li>host_response_valid_q</li><li>host_rdata~28</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Duplicate the nodes specified in the details for the path from <b>host_response_valid_q</b>
+        to <b>host_rdata[15]</b> 
+<a href='#' id='twist-10-tree-toggle' onclick='toggle("twist-10-tree", "[show details]", "[hide details]");'>[show details]</a>
+</li><ul><div id='twist-10-tree' style='display:none;'>
+
+        <li><b>Issue:</b> <a href='rdb:Inter-path Competition'>Inter-path Competition</a></li>
+        <li><b>From:</b> host_response_valid_q</li>
+        <li><b>To:</b> host_rdata[15]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[15]} -detail full_path -panel_name {Path 10 (Inter-path Competition)} -show_routing'>report timing</a></li>
+        <li><b>Nodes to duplicate:</b></li><ul><li>host_response_valid_q</li><li>host_rdata~15</li></ul>
+</div>
+    </ul>
+    </dd>
+</dl>
+</div>
+
+<h2>Detailed Results
+
+<a href='#' id='twist-Detailed Results-toggle' onclick='toggle("twist-Detailed Results", "[show details]", "[hide details]");'>[hide details]</a>
+</h2><div id='twist-Detailed Results' style='display:inline;'>
+
+<table id='output_table' class='sortable'>
+    <tr>
+        <th></th>
+        <th>Commands</th>
+        <th>From</th><th>To</th>
+        <th>Importance</th>
+        <th>Nodes to duplicate</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[11]} -detail full_path -panel_name {Path 1 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[11]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>host_response_valid_q<br></td>
+    </tr>
+
+    <tr>
+      <td>2</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[0]} -detail full_path -panel_name {Path 2 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[0]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-2-table-toggle' onclick='toggle("twist-2-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-2-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~0<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>3</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[14]} -detail full_path -panel_name {Path 3 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[14]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-3-table-toggle' onclick='toggle("twist-3-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-3-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~14<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>4</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[26]} -detail full_path -panel_name {Path 4 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[26]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-4-table-toggle' onclick='toggle("twist-4-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-4-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~26<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>5</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[13]} -detail full_path -panel_name {Path 5 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[13]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-5-table-toggle' onclick='toggle("twist-5-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-5-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~13<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>6</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[23]} -detail full_path -panel_name {Path 6 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[23]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-6-table-toggle' onclick='toggle("twist-6-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-6-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~23<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>7</td>
+      <td><a href='tcl:taw_report_timing -from {running~reg0} -to {running} -detail full_path -panel_name {Path 7 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>running~reg0</td><td>running</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>running~reg0<br></td>
+    </tr>
+
+    <tr>
+      <td>8</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[4]} -detail full_path -panel_name {Path 8 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[4]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-8-table-toggle' onclick='toggle("twist-8-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-8-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~4<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>9</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[28]} -detail full_path -panel_name {Path 9 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[28]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-9-table-toggle' onclick='toggle("twist-9-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-9-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~28<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>10</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[15]} -detail full_path -panel_name {Path 10 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[15]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-10-table-toggle' onclick='toggle("twist-10-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-10-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~15<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>11</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[3]} -detail full_path -panel_name {Path 11 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[3]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-11-table-toggle' onclick='toggle("twist-11-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-11-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~3<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>12</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[8]} -detail full_path -panel_name {Path 12 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[8]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-12-table-toggle' onclick='toggle("twist-12-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-12-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~8<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>13</td>
+      <td><a href='tcl:taw_report_timing -from {PC:u_pc|pc_out[2]} -to {pc_debug[2]} -detail full_path -panel_name {Path 13 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>PC:u_pc|pc_out[2]</td><td>pc_debug[2]</td>
+      <td sorttable_customkey='100.0'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>PC:u_pc|pc_out[2]<br></td>
+    </tr>
+
+    <tr>
+      <td>14</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[16]} -detail full_path -panel_name {Path 14 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[16]</td>
+      <td sorttable_customkey='97.8056'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-14-table-toggle' onclick='toggle("twist-14-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-14-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~16<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>15</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[18]} -detail full_path -panel_name {Path 15 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[18]</td>
+      <td sorttable_customkey='97.8056'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-15-table-toggle' onclick='toggle("twist-15-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-15-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~18<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>16</td>
+      <td><a href='tcl:taw_report_timing -from {host_response_valid_q} -to {host_rdata[2]} -detail full_path -panel_name {Path 16 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_response_valid_q</td><td>host_rdata[2]</td>
+      <td sorttable_customkey='97.8056'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-16-table-toggle' onclick='toggle("twist-16-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-16-table' style='display:none;'><br>
+host_response_valid_q<br>host_rdata~2<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>17</td>
+      <td><a href='tcl:taw_report_timing -from {host_we} -to {register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[4].memory[0][31]__5|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg2} -detail full_path -panel_name {Path 17 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_we</td><td><span id='tip'><a href='#'>register:u_ws|sra...orta_datain_reg2<span>register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[4].memory[0][31]__5|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg2</span></a></span></td>
+      <td sorttable_customkey='94.1832'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-17-table-toggle' onclick='toggle("twist-17-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-17-table' style='display:none;'><br>
+comb~14<br>register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>18</td>
+      <td><a href='tcl:taw_report_timing -from {instr_q[6]~DUPLICATE} -to {instr_debug[6]} -detail full_path -panel_name {Path 18 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>instr_q[6]~DUPLICATE</td><td>instr_debug[6]</td>
+      <td sorttable_customkey='92.372'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>instr_q[6]~DUPLICATE<br></td>
+    </tr>
+
+    <tr>
+      <td>19</td>
+      <td><a href='tcl:taw_report_timing -from {instr_q[4]} -to {instr_debug[4]} -detail full_path -panel_name {Path 19 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>instr_q[4]</td><td>instr_debug[4]</td>
+      <td sorttable_customkey='90.5607'>&#9733;&#9733;&#9733;&#9733;&#9733;</td>
+      <td>instr_q[4]<br></td>
+    </tr>
+
+    <tr>
+      <td>20</td>
+      <td><a href='tcl:taw_report_timing -from {host_we} -to {register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[5].memory[0][31]__6|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg7} -detail full_path -panel_name {Path 20 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_we</td><td><span id='tip'><a href='#'>register:u_ws|sra...orta_datain_reg7<span>register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[5].memory[0][31]__6|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg7</span></a></span></td>
+      <td sorttable_customkey='79.6935'>&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-20-table-toggle' onclick='toggle("twist-20-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-20-table' style='display:none;'><br>
+comb~14<br>register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>21</td>
+      <td><a href='tcl:taw_report_timing -from {host_we} -to {register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[3].memory[0][31]__4|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg14} -detail full_path -panel_name {Path 21 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_we</td><td><span id='tip'><a href='#'>register:u_ws|sra...rta_datain_reg14<span>register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[3].memory[0][31]__4|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg14</span></a></span></td>
+      <td sorttable_customkey='72.4486'>&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-21-table-toggle' onclick='toggle("twist-21-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-21-table' style='display:none;'><br>
+comb~14<br>register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>22</td>
+      <td><a href='tcl:taw_report_timing -from {host_we} -to {register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg16} -detail full_path -panel_name {Path 22 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_we</td><td><span id='tip'><a href='#'>register:u_ws|sra...rta_datain_reg16<span>register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg16</span></a></span></td>
+      <td sorttable_customkey='68.8262'>&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-22-table-toggle' onclick='toggle("twist-22-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-22-table' style='display:none;'><br>
+comb~14<br>register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19<br>
+</span></td>
+    </tr>
+
+    <tr>
+      <td>23</td>
+      <td><a href='tcl:taw_report_timing -from {host_we} -to {register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg21} -detail full_path -panel_name {Path 23 (Inter-path Competition)} -show_routing'>report timing</a></td>
+      <td>host_we</td><td><span id='tip'><a href='#'>register:u_ws|sra...rta_datain_reg21<span>register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg21</span></a></span></td>
+      <td sorttable_customkey='65.2037'>&#9733;&#9733;&#9733;&#9733;</td>
+      <td>
+<a href='#' id='twist-23-table-toggle' onclick='toggle("twist-23-table", "[show details]", "[hide details]");'>[show details]</a>
+<span id='twist-23-table' style='display:none;'><br>
+comb~14<br>register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19<br>
+</span></td>
+    </tr>
+
+</table>
+</div>
+
+</body>
+</html>

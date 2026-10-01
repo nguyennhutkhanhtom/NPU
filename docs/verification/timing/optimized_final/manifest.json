@@ -1,0 +1,689 @@
+{
+  "recorded_at_utc": "2026-10-01T07:40:35.147524+00:00",
+  "git_head": "26ba5dbcc1e62b64236f036c7f244da145ec5cd2",
+  "project": "quartus/matmul_free",
+  "rtl_dir": "Verilog Source code",
+  "quartus_version": "18.1.0 Build 625 09/12/2018 SJ Lite Edition",
+  "source_snapshot": "docs/verification/timing/optimized_final/sources_before.json",
+  "source_hashes_verified": true,
+  "source_snapshot_archive": "sources_before.json",
+  "configuration_hashes_verified": true,
+  "configuration_hash_normalization": "CRLF -> LF before comparison",
+  "rtl_sources": {
+    "acc_mul.sv": "ba8eab6bcc06296d5c69b9c973f54a2e7f81dc73915528b1171b7cf1e94f8860",
+    "addsub.sv": "14484f9f2777b2662cfa8538ab92149d0e7f80be1012d21fc0906d8ea45d3b98",
+    "ctrl_unit.sv": "b4daf5e7d1b059306d11a907e2512c917d60ec46c4dd68267a1190ed1f579968",
+    "de_reg.sv": "dbb7c23f6bda7e1f5b435bd34fbb4cdca9ef63f6af3a9b535cf4030f7f3dd50d",
+    "descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+    "div.sv": "c2c7e524ecc7219f8a3792eca7957626991e2127a4c7f0fa31d4df272f321f54",
+    "em_reg.sv": "5e57748e00ff223653210e970a6a8e6d95ba124fc023c6b92b368daa692cb9ee",
+    "exp.sv": "d94cf43353c33633ec7a30fbf3def2e0841a669492ec876d660c446ef7d11529",
+    "fd_reg.sv": "75de20e3fb5abe35246fc7f003a6159ce7f78a38b80e6a26d795881b56811565",
+    "hazard_detect.sv": "83e4434faa221906913debcd24e6a6db7366f15fe4d3e7ed37f06ec9f31991b5",
+    "ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+    "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+    "matmulfree.sv": "6b18f26a9779be75adcba42f83dabc1bdf5d225c2ab378d712e7950afb127c12",
+    "mem_burst.v": "bd2467f0fe9ed199d522a674f89c72dadcbc2f19752fbc0bdb35397135cc9f2f",
+    "mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+    "mul.sv": "63bb267b9cc884ee766f94a0fda1039cb5ed61bb6f6002bfa356a3f6423bcbac",
+    "mw_reg.sv": "8f27a55bda16912be3fb069bd6cf09abaf740a186c9b2503171158bb59109960",
+    "norm.sv": "68fb49d63c461bbff583df3c544d3685729dc61ee0aa1f3776773730f9000192",
+    "norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+    "npu_pkg.sv": "f2914bb24c72644edbf2b57e5eabad9a4f3dbf88d2dd72b79285ccdf8e2b2d86",
+    "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+    "postscale.sv": "128b264863531a01bcd427066e250d3d99ad1830b68aadb1f5889629856e8d24",
+    "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+    "rowwise_dispatch.sv": "4fb73e52c6fc0afe70277b9e1d5a8817cbac0d1465e691d8801581c5444d1ae2",
+    "rowwise_op.sv": "e9bdb936eb5a29bb8226d1d072b7f81e534b23f48d17fc7c493eabeacb9f6ad6",
+    "scale_compose.sv": "816e13077872842daa8bd3de40bbefe354046aca60aa04889bec9acff18b0b33",
+    "sigmoid.sv": "8001c3d582b072de2146d085fbb4363350a6f876dfa4d9195bc54d3d52f944c9",
+    "sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
+    "sigmoid_lut.svh": "3d4fc0b37d284c4f7b3a4cd2587acfaf3e35dc33b2209550d7f97ef8555e0094",
+    "sram_256_wrapper.sv": "80d77f1ad41fda47969ca686807db5f069b81667b4fc5f613ff476264da8d10b",
+    "ternary_mul.sv": "14285ed2ee26752c0379d6f414382b28ee77042821ecc155dbbb5a868806bf51"
+  },
+  "configuration": {
+    "matmul_free.qpf": "9bac66a323c94da6800bde7eeb343dcf877683d90d236875c96c2e0f51eb33b4",
+    "matmul_free.qsf": "8d56b18c000895d9e6380e52a68a414104771817f33e09fa61dca7975e51272a",
+    "matmul_free.sdc": "434c9123e62c92d6331f55106420d7e3b8e2cb2f3c61740419ee9f3ba83dbf0c"
+  },
+  "settings": {
+    "FAMILY": "\"Cyclone V\"",
+    "DEVICE": "5CGXFC7C7F23C8",
+    "TOP_LEVEL_ENTITY": "matmulfree",
+    "SEED": "1",
+    "OPTIMIZATION_TECHNIQUE": "AREA",
+    "FITTER_EFFORT": null,
+    "SDC_FILE": "matmul_free.sdc"
+  },
+  "archives": {
+    "sources_before.json": {
+      "source": "docs/verification/timing/optimized_final/sources_before.json",
+      "source_sha256": "dee5a73a8304beb2dcf816feb7a84e8160ea5c6e65a9a21a5cb3f2c298c154e0",
+      "archive_sha256": "dee5a73a8304beb2dcf816feb7a84e8160ea5c6e65a9a21a5cb3f2c298c154e0",
+      "source_bytes": 3099,
+      "archive_bytes": 3099
+    },
+    "matmul_free.map.rpt": {
+      "source": "quartus/output_files/matmul_free.map.rpt",
+      "source_sha256": "8b42e0d23bb29dcb91f59f30c9d3ed02c7928a8d833070e7e90ec3ab485bd429",
+      "archive_sha256": "cafa875293bbbdf6e9a531ebdc6a6c92163e0ba797b01faa9d511e5e4e4885ed",
+      "source_bytes": 385631,
+      "archive_bytes": 382804,
+      "source_modified_local": "2026-10-01T14:31:44.686588+07:00"
+    },
+    "matmul_free.map.summary": {
+      "source": "quartus/output_files/matmul_free.map.summary",
+      "source_sha256": "556a287e5a42f3a85ca06f9770d48fb9167ee33dde3041104eb568936c9c07e2",
+      "archive_sha256": "c4feaa2100522660f75c1cd58de3016b60a0fb34f7e689e87c7087459d9c925a",
+      "source_bytes": 533,
+      "archive_bytes": 516,
+      "source_modified_local": "2026-10-01T14:31:44.595800+07:00"
+    },
+    "matmul_free.fit.rpt": {
+      "source": "quartus/output_files/matmul_free.fit.rpt",
+      "source_sha256": "8a9b612d5504a1fea7987d5f3938aa649853db15cb8eaeb76f62c5957ac907d5",
+      "archive_sha256": "c99ac0744de4e0ad81ba5c4fd2873561c6cf43f03f8aadeaa658936b2a12dc46",
+      "source_bytes": 979723,
+      "archive_bytes": 974544,
+      "source_modified_local": "2026-10-01T14:39:43.367080+07:00"
+    },
+    "matmul_free.fit.summary": {
+      "source": "quartus/output_files/matmul_free.fit.summary",
+      "source_sha256": "5d81c09e70a533d272734d79dbf1a90e2979e70aa2d193edd1c53cb03926112c",
+      "archive_sha256": "eae065d53dc3d7777293a67a7d7e6e32304cf14b4ae2cf187c74986ba92cdcdf",
+      "source_bytes": 746,
+      "archive_bytes": 726,
+      "source_modified_local": "2026-10-01T14:39:38.649782+07:00"
+    },
+    "matmul_free.sta.rpt": {
+      "source": "quartus/output_files/matmul_free.sta.rpt",
+      "source_sha256": "83b6dc8a80fb624699f4658f765000e0d27ab6613956c7af62a65d225b078c18",
+      "archive_sha256": "3af0e6e6ede4b70172437cbeb63529be486b908e2d2a9ce5c37fc780dfe39324",
+      "source_bytes": 235887,
+      "archive_bytes": 234885,
+      "source_modified_local": "2026-10-01T14:40:09.599421+07:00"
+    },
+    "matmul_free.sta.summary": {
+      "source": "quartus/output_files/matmul_free.sta.summary",
+      "source_sha256": "bb2ddfd82b00de945be1d1213f0674f70f3a881827f55ff5edbcfde1061f4317",
+      "archive_sha256": "2159a81ec3cf3ed2d19ea4d15ded4d9ed20c399cf3ee424589674dd92192b87b",
+      "source_bytes": 1783,
+      "archive_bytes": 1698,
+      "source_modified_local": "2026-10-01T14:40:09.328799+07:00"
+    },
+    "matmul_free.qpf": {
+      "source": "quartus/matmul_free.qpf",
+      "source_sha256": "9bac66a323c94da6800bde7eeb343dcf877683d90d236875c96c2e0f51eb33b4",
+      "archive_sha256": "9bac66a323c94da6800bde7eeb343dcf877683d90d236875c96c2e0f51eb33b4"
+    },
+    "matmul_free.qsf": {
+      "source": "quartus/matmul_free.qsf",
+      "source_sha256": "3ec609d111d35cec1459184b22e45838e87c5fa28a36230bd64a6267832d3042",
+      "archive_sha256": "8d56b18c000895d9e6380e52a68a414104771817f33e09fa61dca7975e51272a"
+    },
+    "matmul_free.sdc": {
+      "source": "quartus/matmul_free.sdc",
+      "source_sha256": "434c9123e62c92d6331f55106420d7e3b8e2cb2f3c61740419ee9f3ba83dbf0c",
+      "archive_sha256": "434c9123e62c92d6331f55106420d7e3b8e2cb2f3c61740419ee9f3ba83dbf0c"
+    }
+  },
+  "commands_sha256": "1bc54089909094a914c6fbc9c62978cecd7ca99c4705d00a7b1448d85f599acd",
+  "normalization": "CRLF -> LF only",
+  "text_reports": {
+    "extract.log": {
+      "raw_sha256": "705321f539dd1238299ad66045a15c13f1e04b4f0a8d746f4a12cb2e5142e580",
+      "archive_sha256": "5b4677a71c96cfaad1e35ddffc3151f2c06b26fe0983ded00d2ae84e51c93b88",
+      "archive_bytes": 10165
+    },
+    "extracted_checks.rpt": {
+      "raw_sha256": "da92ed35ab1b8aba74b9f953c0fb8a08da3b73ee57ea59977da5058b72d3f4a4",
+      "archive_sha256": "0634fdb24740564bfdd38cd413deb6cd75cb1047d99a9352ab3a4aa004e1d585",
+      "archive_bytes": 2046
+    },
+    "extracted_sdc.rpt": {
+      "raw_sha256": "85270aa7c9060bd62bbd026a8f7417a8e85a70ffb70eb18e3d55a56ac8b5a016",
+      "archive_sha256": "93cb816d31d4dcfab3c9d670ffbad78ddb08bda301808d71d15e03691267d5ae",
+      "archive_bytes": 58553
+    },
+    "extracted_unconstrained.rpt": {
+      "raw_sha256": "1e88127cc1cc2f0c5a78c85919026dd7b39d9cada8683bfacdcfc43f3819c596",
+      "archive_sha256": "3a0a3daeec30eaac36309654447ab3336f1b706e98d2c1e889cd8ef9f7704223",
+      "archive_bytes": 966
+    },
+    "fast_1100mv_0c_fmax.rpt": {
+      "raw_sha256": "7d8d5e4956862caf57c230d0e95ef2c5fd58a924f79577b80bb14cbaff70ff44",
+      "archive_sha256": "ecc8dfb46193a99cb2017c6238c1a6ed5e593ec445a8a86daed0b47e1d92c481",
+      "archive_bytes": 947
+    },
+    "fast_1100mv_0c_hold.rpt": {
+      "raw_sha256": "24de9c528e729eda445146e91326aa02ebcff46fc5f9d63e8218ad0ee8da3bfb",
+      "archive_sha256": "6cb6e1e7d835ad9e4ba6cff76f694ae20851b59557b8bbb106cbe6df3efeb3cb",
+      "archive_bytes": 696278
+    },
+    "fast_1100mv_0c_pulse.rpt": {
+      "raw_sha256": "eb43177c4a5b966ffd53a552e3774cecdc7717b3ae0f7ce396df7a061eb74e73",
+      "archive_sha256": "db2310af39e0c93ad54d2f140cf01b80ab6509e0cc5483828637d2b373413659",
+      "archive_bytes": 320883
+    },
+    "fast_1100mv_0c_recommendations.txt": {
+      "raw_sha256": "0cff61847644bb1485c904aece6eee0420cfec662f3f711cc91a599fce990ccb",
+      "archive_sha256": "23dcc9280b0791c5e23865f3b9cf51db94276bb2976163f947ecc2b73cd5e011",
+      "archive_bytes": 15284
+    },
+    "fast_1100mv_0c_recommendations_Inter-path Competition.html": {
+      "raw_sha256": "36c3c42ada6e0d2fadc03388fc81d41f4e8306d2a2546e64f739b0d575800a08",
+      "archive_sha256": "c8bf2879cf95f381ecb560e9bd45ff1cc8bb690822bccdbd49f8e28462a6074d",
+      "archive_bytes": 31690
+    },
+    "fast_1100mv_0c_recommendations_Long Combinational Path.html": {
+      "raw_sha256": "73d3ae40646d53b48ea11e8818ef61966b2ed5cbcf9a2071e37d9ede288e91f6",
+      "archive_sha256": "565b4f29061ce4153db5e72078d13d4990857379fbb2a0f31249f5972848bef8",
+      "archive_bytes": 16443
+    },
+    "fast_1100mv_0c_recovery.rpt": {
+      "raw_sha256": "c54e9be4ae4a14f70700fd8a4e2fcbfe2d4d1c26f18a96f835ca61a5b299a850",
+      "archive_sha256": "c82b88bc3f3e7b8877c7c5686328fe7b5db73a74cbf3f11ae0796ab13c7f018d",
+      "archive_bytes": 590033
+    },
+    "fast_1100mv_0c_removal.rpt": {
+      "raw_sha256": "094cfd67baf6624cafde775141dee77e5b30af4158c361c646ee1f907ebc97ba",
+      "archive_sha256": "69815192cfc5988310c5efbf77e5e9c293cf5bc6f245f3979ffd5e8a902c8b76",
+      "archive_bytes": 587181
+    },
+    "fast_1100mv_0c_setup.rpt": {
+      "raw_sha256": "688ba3b78cef95cc7d004ffe98f78af67b160a76755e534f4bb6c2e8bcff9779",
+      "archive_sha256": "8df905df3e98f39020c54c95a1dd6385ca61fa2f709bd3064f57211df02236d4",
+      "archive_bytes": 590983
+    },
+    "fast_1100mv_85c_fmax.rpt": {
+      "raw_sha256": "1a960f094e66ab5a34f654ff780f406b5ddbb41cb6f844dcca9b4a3ad5bc66f5",
+      "archive_sha256": "2106b4de3f205a44ac0d7675beedb8b1543fdd19bd8613ff5467b0530bf9e236",
+      "archive_bytes": 947
+    },
+    "fast_1100mv_85c_hold.rpt": {
+      "raw_sha256": "0cef1df6a0ff7e2a6b45b561022eb92def4a95483cadfd0a4bbbd015a5374892",
+      "archive_sha256": "693a1b10eb5b71a8fc102094791f65e184f9445f23af419eef357fec44b6c582",
+      "archive_bytes": 699830
+    },
+    "fast_1100mv_85c_pulse.rpt": {
+      "raw_sha256": "6a5d44ddaa9495daff523897fae24543893320b0ce2b1cda5e6005467bbe136b",
+      "archive_sha256": "08195ce28a7c9c5f843de96ca0a67f62738d677331fdc9d04e58ccd9552d3fa9",
+      "archive_bytes": 322992
+    },
+    "fast_1100mv_85c_recommendations.txt": {
+      "raw_sha256": "5c552e5277fe23f4f0ae56b89805b1d37902c3ff81cad0d23ffef3320eb1400b",
+      "archive_sha256": "7acce9a24cf9170c641c81a9a72701941572d0af8b15d5a2c82acfc9cb683581",
+      "archive_bytes": 22216
+    },
+    "fast_1100mv_85c_recommendations_Inter-path Competition.html": {
+      "raw_sha256": "fcaa82f1f97a1f64e09493c7612b6bc7b7e83d487358baa87214ede647473973",
+      "archive_sha256": "f11800c623a904491153d786f94e9a118419349a0fbfd4f4881243926d65a66d",
+      "archive_bytes": 32219
+    },
+    "fast_1100mv_85c_recommendations_Long Combinational Path.html": {
+      "raw_sha256": "f1736ecb61fc58098f41a69032149bfe035abfd5502ad1ea804953b91450c9db",
+      "archive_sha256": "16309e8526220777b8927b6f7e529b4aa8317e784b0868393d05fde3930c4bf7",
+      "archive_bytes": 28444
+    },
+    "fast_1100mv_85c_recovery.rpt": {
+      "raw_sha256": "b1d9baf31174e58e1b65f14d8dfa9f2ad7e8275f91a6660ca2c45a1607c44053",
+      "archive_sha256": "90707d63259811362fe01461deaf12f208cc4618c517fa59382411650f57e4f2",
+      "archive_bytes": 590036
+    },
+    "fast_1100mv_85c_removal.rpt": {
+      "raw_sha256": "62f89e24b9b384fb7427543f21e50ae077905940043261bf69dc41da7a5f0884",
+      "archive_sha256": "37eb5a9eec58f08aa643a6a708b6652cf5db2a04837a0fc154eeaa31e46d7a31",
+      "archive_bytes": 587184
+    },
+    "fast_1100mv_85c_setup.rpt": {
+      "raw_sha256": "d331aac5437e565d705d3fc34b2a2b2176466601d8851f06e0258dc0c8a49132",
+      "archive_sha256": "03785609e5741830b3d755047c2d652539cd8e582431801bc3ef01de8e60a3a6",
+      "archive_bytes": 674875
+    },
+    "fit.log": {
+      "raw_sha256": "0391ea5c3db980f5d803bd2c8143f657221c75f5ac9150e0306c801b03819a81",
+      "archive_sha256": "ba3dd981e7f18fc94487464313b234ae348d55c68cda2136df3638ee91b630a1",
+      "archive_bytes": 5553
+    },
+    "map.log": {
+      "raw_sha256": "c026a02acb30591959c9022c2bf152f53f38eeb54e12257888ce59e35effb7d8",
+      "archive_sha256": "f6f6415d79edf162781944f1b09dcaee80bc7bbf2fe28867e866c35a033a8a03",
+      "archive_bytes": 20525
+    },
+    "matmul_free.fit.rpt": {
+      "raw_sha256": "c99ac0744de4e0ad81ba5c4fd2873561c6cf43f03f8aadeaa658936b2a12dc46",
+      "archive_sha256": "c99ac0744de4e0ad81ba5c4fd2873561c6cf43f03f8aadeaa658936b2a12dc46",
+      "archive_bytes": 974544
+    },
+    "matmul_free.fit.summary": {
+      "raw_sha256": "eae065d53dc3d7777293a67a7d7e6e32304cf14b4ae2cf187c74986ba92cdcdf",
+      "archive_sha256": "eae065d53dc3d7777293a67a7d7e6e32304cf14b4ae2cf187c74986ba92cdcdf",
+      "archive_bytes": 726
+    },
+    "matmul_free.map.rpt": {
+      "raw_sha256": "cafa875293bbbdf6e9a531ebdc6a6c92163e0ba797b01faa9d511e5e4e4885ed",
+      "archive_sha256": "cafa875293bbbdf6e9a531ebdc6a6c92163e0ba797b01faa9d511e5e4e4885ed",
+      "archive_bytes": 382804
+    },
+    "matmul_free.map.summary": {
+      "raw_sha256": "c4feaa2100522660f75c1cd58de3016b60a0fb34f7e689e87c7087459d9c925a",
+      "archive_sha256": "c4feaa2100522660f75c1cd58de3016b60a0fb34f7e689e87c7087459d9c925a",
+      "archive_bytes": 516
+    },
+    "matmul_free.sta.rpt": {
+      "raw_sha256": "3af0e6e6ede4b70172437cbeb63529be486b908e2d2a9ce5c37fc780dfe39324",
+      "archive_sha256": "3af0e6e6ede4b70172437cbeb63529be486b908e2d2a9ce5c37fc780dfe39324",
+      "archive_bytes": 234885
+    },
+    "matmul_free.sta.summary": {
+      "raw_sha256": "2159a81ec3cf3ed2d19ea4d15ded4d9ed20c399cf3ee424589674dd92192b87b",
+      "archive_sha256": "2159a81ec3cf3ed2d19ea4d15ded4d9ed20c399cf3ee424589674dd92192b87b",
+      "archive_bytes": 1698
+    },
+    "slow_1100mv_0c_fmax.rpt": {
+      "raw_sha256": "6a6958014916307009ade8025950948e1d15c55de8677985b3e68c033b359fc0",
+      "archive_sha256": "a62275a0f5c810e829c124da2ce03624275c1165f375eeba410a27175dd2357b",
+      "archive_bytes": 947
+    },
+    "slow_1100mv_0c_hold.rpt": {
+      "raw_sha256": "d47a1c3a494b2eece2c83f975a53f7f7c5309075168fce282fab53ab7235a1df",
+      "archive_sha256": "867e4982fefe2a7f670090b1df9346c18d04e04190dd5f7d5ed9bc195925daa8",
+      "archive_bytes": 705589
+    },
+    "slow_1100mv_0c_pulse.rpt": {
+      "raw_sha256": "29e43369fbf7fb217f052c399c73fb5d11d58199fa9ca8d8b0e72dfd5ea1df48",
+      "archive_sha256": "45be7048619946bf7e0e399b5eb5984ca39967c5a29acebacb41b6751ed1fbed",
+      "archive_bytes": 312180
+    },
+    "slow_1100mv_0c_recommendations.txt": {
+      "raw_sha256": "bfa370eb1bb25c9584df022f17ed0facc36540c49fd3d052e31fac3458c40bcd",
+      "archive_sha256": "005ab68be517027c5ad31ed1dd7c2783bdb0952f661e54a482e3b8ba08f29573",
+      "archive_bytes": 35927
+    },
+    "slow_1100mv_0c_recommendations_Inter-path Competition.html": {
+      "raw_sha256": "c8045424ee4fa15206d995a4c9ebd3e3729f4b8f431ad57a6954675786f94572",
+      "archive_sha256": "09e28e30c841dfa87713af8073ea527f964187c767eca74a63385d48351ac564",
+      "archive_bytes": 21345
+    },
+    "slow_1100mv_0c_recommendations_Long Combinational Path.html": {
+      "raw_sha256": "0fd0d8ea0175a74b464af0b93ac44bd8bb8db8d941cf9a1600f0dce947b2049d",
+      "archive_sha256": "c08edcc0772220e766dce13d5a02a84f20cd4a1e2ab2d7a0c8a4deebb6467fdf",
+      "archive_bytes": 41423
+    },
+    "slow_1100mv_0c_recommendations_Unbalanced Combinational Logic.html": {
+      "raw_sha256": "25ea78c0da32950f789623b8e5b3247bc9989a57523f672d6f1d2ac6178fd73b",
+      "archive_sha256": "ed88bcc00afdffc1c382eaebe5fce451b67ed7dffa3574327e0650f5e06edaa0",
+      "archive_bytes": 34776
+    },
+    "slow_1100mv_0c_recovery.rpt": {
+      "raw_sha256": "178add1ee848dc55d06cf8c6a531b60f4785d45715149045acb6cf4b034df0b9",
+      "archive_sha256": "d58f23ea717ead8c446e69dec4179e3b693e9b0067736cef8106c4dd1d97c20d",
+      "archive_bytes": 591753
+    },
+    "slow_1100mv_0c_removal.rpt": {
+      "raw_sha256": "3ac0125818eafedeb2b43d7bccf06dc6b330c18a9943aab6808abad2c39bad26",
+      "archive_sha256": "28a0618dfae560dba5fdf2e0093132b25aea05622892b25e9655929c8a5bcbc2",
+      "archive_bytes": 589901
+    },
+    "slow_1100mv_0c_setup.rpt": {
+      "raw_sha256": "d99428a4fac1b4b7770c5b7ab6f65918f64fd131cc412d704601dafe03e5ac20",
+      "archive_sha256": "4492b308c4d0e8c94dd39d9a446c7c68a4ce12b6ac6f3173b7e8d7be5c24039c",
+      "archive_bytes": 1228841
+    },
+    "slow_1100mv_85c_fmax.rpt": {
+      "raw_sha256": "07d676fb1549d95ed56f15c3347bcd7efe2566996dd2361266f309ce32cc472b",
+      "archive_sha256": "656a66a200359badfd0712e2592445d91bebb28837a7b33c3a45f19814998acb",
+      "archive_bytes": 947
+    },
+    "slow_1100mv_85c_hold.rpt": {
+      "raw_sha256": "fdbb2c460496ff33ade551766056fb904fdfd900651d03fc505c4b6200291995",
+      "archive_sha256": "c27d59a3a57310e88feac668cbe2210f92bee7e0f313a7d248fd57286f884bd3",
+      "archive_bytes": 704012
+    },
+    "slow_1100mv_85c_pulse.rpt": {
+      "raw_sha256": "2675b518f7d02c26b46296a3ee00734fad8cc44db0529fde12607ef2bc937aa1",
+      "archive_sha256": "cf01e484f266ce10f0b28a49a6fb5a3203595f2528d61f91cbe836a439c0cd2d",
+      "archive_bytes": 325622
+    },
+    "slow_1100mv_85c_recommendations.txt": {
+      "raw_sha256": "5a48e2ccc3011795628073f297880bb329600a27341f19928d1937928b79da8b",
+      "archive_sha256": "3ebe9c331ff2db163c81e91b864ddb11f1ecca66aee0b95efad83ea859d87963",
+      "archive_bytes": 33067
+    },
+    "slow_1100mv_85c_recommendations_Chained Adders.html": {
+      "raw_sha256": "720144953bdc6ecc4341dee5e0ee4ba9de8b484501dd6b708dde386cd8153055",
+      "archive_sha256": "90d8f66547a1cba83a9e0617ae2884a0052f29e494ab9e0f550bbad41082db2f",
+      "archive_bytes": 7144
+    },
+    "slow_1100mv_85c_recommendations_Inter-path Competition.html": {
+      "raw_sha256": "b8e16b6e8fd0281434fdad3e0039e1461e304f58c2375a9f5cd56129f250af96",
+      "archive_sha256": "50cf731a4cfc69877b0ee4e0f14ee330dffe9fb6e1030744197e0d179a7b4d4d",
+      "archive_bytes": 25990
+    },
+    "slow_1100mv_85c_recommendations_Long Combinational Path.html": {
+      "raw_sha256": "38b976301132b4b989fa41213eb3900f7e05ef44a73dfb09b1ff3de6f812b158",
+      "archive_sha256": "2f6ec12d5254606805bd7367619678ebdb36be290d5325cfe4216a0799e89f30",
+      "archive_bytes": 38893
+    },
+    "slow_1100mv_85c_recommendations_Unbalanced Combinational Logic.html": {
+      "raw_sha256": "796cbcf50c976dd362b75a6868d2ac72a05853d34bea5edb03b3e35c13424ec1",
+      "archive_sha256": "13ad9cbc4e4aeb39dcee4042576475da25025bb70138c595d10b4099b717fcbd",
+      "archive_bytes": 28807
+    },
+    "slow_1100mv_85c_recovery.rpt": {
+      "raw_sha256": "9b3aa1bd0f83843d5b4a71e56e2b6b3e8b030650fd2dbe5d7af83c4b38d07502",
+      "archive_sha256": "8c7a88313cf62b86637e29537519c483855ecb4dc7ca31357e21591f188a62b4",
+      "archive_bytes": 591756
+    },
+    "slow_1100mv_85c_removal.rpt": {
+      "raw_sha256": "4605f935c0d5cd5777a9721e9806f838659692cd25b2d1e600de501b7cc3e532",
+      "archive_sha256": "79e842fddfabe5e1149aec0d30081f9bf262d414f94dde10a878cc536a84daca",
+      "archive_bytes": 587184
+    },
+    "slow_1100mv_85c_setup.rpt": {
+      "raw_sha256": "ecfa2d114a8f72f25dc47ed0a45d3961db6524f199f1b3af90f79b5bb6d2cbdd",
+      "archive_sha256": "4c61c1127d49766c6e8e34087fd5245bb6a5779485ed1e12e2a3e6bf53c9c3df",
+      "archive_bytes": 952241
+    },
+    "sta.log": {
+      "raw_sha256": "9ec597530f619e942479a0f7944777e86e47f1c5beed7562e9edd3f48c4a95cf",
+      "archive_sha256": "a1efea94e710e601d7f0a00a9ac7dc7281f3ca3dfad6a6d125c95b6f2f6851e3",
+      "archive_bytes": 7907
+    }
+  },
+  "metrics": {
+    "corners": {
+      "slow_1100mv_85c": {
+        "clocks": {
+          "clk": {
+            "setup": {
+              "slack_ns": -1.629,
+              "tns_ns": -1.629
+            },
+            "hold": {
+              "slack_ns": 0.294,
+              "tns_ns": 0.0
+            },
+            "recovery": {
+              "slack_ns": 13.054,
+              "tns_ns": 0.0
+            },
+            "removal": {
+              "slack_ns": 2.808,
+              "tns_ns": 0.0
+            },
+            "pulse": {
+              "slack_ns": 8.381,
+              "tns_ns": 0.0
+            }
+          }
+        },
+        "fmax": {
+          "clk": {
+            "mhz": 46.23,
+            "restricted_mhz": 46.23
+          }
+        },
+        "worst_setup_path": {
+          "slack_ns": -1.629,
+          "from": "host_addr[14]",
+          "to": "host_ready",
+          "launch_clock": "clk",
+          "latch_clock": "clk",
+          "relationship_ns": 20.0,
+          "clock_skew_ns": 0.0,
+          "data_delay_ns": 17.529
+        },
+        "worst_hold_path": {
+          "slack_ns": 0.294,
+          "from": "norm_dispatch:u_norm|norm:u_norm|sum_sq[4]",
+          "to": "norm_dispatch:u_norm|norm:u_norm|sum_sq[4]~DUPLICATE",
+          "launch_clock": "clk",
+          "latch_clock": "clk",
+          "relationship_ns": 0.0,
+          "clock_skew_ns": 0.131,
+          "data_delay_ns": 0.425
+        }
+      },
+      "slow_1100mv_0c": {
+        "clocks": {
+          "clk": {
+            "setup": {
+              "slack_ns": -1.451,
+              "tns_ns": -1.451
+            },
+            "hold": {
+              "slack_ns": 0.284,
+              "tns_ns": 0.0
+            },
+            "recovery": {
+              "slack_ns": 13.79,
+              "tns_ns": 0.0
+            },
+            "removal": {
+              "slack_ns": 2.154,
+              "tns_ns": 0.0
+            },
+            "pulse": {
+              "slack_ns": 8.3,
+              "tns_ns": 0.0
+            }
+          }
+        },
+        "fmax": {
+          "clk": {
+            "mhz": 46.62,
+            "restricted_mhz": 46.62
+          }
+        },
+        "worst_setup_path": {
+          "slack_ns": -1.451,
+          "from": "host_addr[14]",
+          "to": "host_ready",
+          "launch_clock": "clk",
+          "latch_clock": "clk",
+          "relationship_ns": 20.0,
+          "clock_skew_ns": 0.0,
+          "data_delay_ns": 17.351
+        },
+        "worst_hold_path": {
+          "slack_ns": 0.284,
+          "from": "norm_dispatch:u_norm|norm:u_norm|sum_sq[4]",
+          "to": "norm_dispatch:u_norm|norm:u_norm|sum_sq[4]~DUPLICATE",
+          "launch_clock": "clk",
+          "latch_clock": "clk",
+          "relationship_ns": 0.0,
+          "clock_skew_ns": 0.123,
+          "data_delay_ns": 0.407
+        }
+      },
+      "fast_1100mv_85c": {
+        "clocks": {
+          "clk": {
+            "setup": {
+              "slack_ns": 7.273,
+              "tns_ns": 0.0
+            },
+            "hold": {
+              "slack_ns": 0.133,
+              "tns_ns": 0.0
+            },
+            "recovery": {
+              "slack_ns": 15.663,
+              "tns_ns": 0.0
+            },
+            "removal": {
+              "slack_ns": 1.795,
+              "tns_ns": 0.0
+            },
+            "pulse": {
+              "slack_ns": 8.78,
+              "tns_ns": 0.0
+            }
+          }
+        },
+        "fmax": {
+          "clk": {
+            "mhz": 78.57,
+            "restricted_mhz": 78.57
+          }
+        },
+        "worst_setup_path": {
+          "slack_ns": 7.273,
+          "from": "host_addr[14]",
+          "to": "host_ready",
+          "launch_clock": "clk",
+          "latch_clock": "clk",
+          "relationship_ns": 20.0,
+          "clock_skew_ns": 0.0,
+          "data_delay_ns": 8.627
+        },
+        "worst_hold_path": {
+          "slack_ns": 0.133,
+          "from": "norm_dispatch:u_norm|norm:u_norm|sum_sq[0]",
+          "to": "norm_dispatch:u_norm|norm:u_norm|sum_sq[0]",
+          "launch_clock": "clk",
+          "latch_clock": "clk",
+          "relationship_ns": 0.0,
+          "clock_skew_ns": 0.037,
+          "data_delay_ns": 0.17
+        }
+      },
+      "fast_1100mv_0c": {
+        "clocks": {
+          "clk": {
+            "setup": {
+              "slack_ns": 7.957,
+              "tns_ns": 0.0
+            },
+            "hold": {
+              "slack_ns": 0.125,
+              "tns_ns": 0.0
+            },
+            "recovery": {
+              "slack_ns": 15.655,
+              "tns_ns": 0.0
+            },
+            "removal": {
+              "slack_ns": 1.788,
+              "tns_ns": 0.0
+            },
+            "pulse": {
+              "slack_ns": 8.774,
+              "tns_ns": 0.0
+            }
+          }
+        },
+        "fmax": {
+          "clk": {
+            "mhz": 83.04,
+            "restricted_mhz": 83.04
+          }
+        },
+        "worst_setup_path": {
+          "slack_ns": 7.957,
+          "from": "host_addr[14]",
+          "to": "host_ready",
+          "launch_clock": "clk",
+          "latch_clock": "clk",
+          "relationship_ns": 20.0,
+          "clock_skew_ns": 0.0,
+          "data_delay_ns": 7.943
+        },
+        "worst_hold_path": {
+          "slack_ns": 0.125,
+          "from": "norm_dispatch:u_norm|norm:u_norm|sum_sq[0]",
+          "to": "norm_dispatch:u_norm|norm:u_norm|sum_sq[0]",
+          "launch_clock": "clk",
+          "latch_clock": "clk",
+          "relationship_ns": 0.0,
+          "clock_skew_ns": 0.03,
+          "data_delay_ns": 0.155
+        }
+      }
+    },
+    "worst_fmax_mhz": 46.23,
+    "worst_restricted_fmax_mhz": 46.23,
+    "worst_setup_slack_ns": -1.629,
+    "unconstrained": {
+      "Illegal Clocks": {
+        "setup": 0,
+        "hold": 0
+      },
+      "Unconstrained Clocks": {
+        "setup": 0,
+        "hold": 0
+      },
+      "Unconstrained Input Ports": {
+        "setup": 0,
+        "hold": 0
+      },
+      "Unconstrained Input Port Paths": {
+        "setup": 0,
+        "hold": 0
+      },
+      "Unconstrained Output Ports": {
+        "setup": 0,
+        "hold": 0
+      },
+      "Unconstrained Output Port Paths": {
+        "setup": 0,
+        "hold": 0
+      }
+    },
+    "fitted_resources": {
+      "alms": 8165,
+      "registers": 7358,
+      "block_memory_bits": 334336,
+      "ram_blocks": 41,
+      "dsp_blocks": 7,
+      "pins": 127
+    },
+    "stage_counts": {
+      "map": {
+        "errors": 0,
+        "warnings": 0,
+        "reported_diagnostics": []
+      },
+      "fit": {
+        "errors": 0,
+        "warnings": 3,
+        "reported_diagnostics": [
+          {
+            "kind": "Warning",
+            "id": 292013,
+            "message": "Feature LogicLock is only available with a valid subscription license. You can purchase a software subscription to gain full access to this feature."
+          },
+          {
+            "kind": "Warning",
+            "id": 15714,
+            "message": "Some pins have incomplete I/O assignments. Refer to the I/O Assignment Warnings report for details"
+          },
+          {
+            "kind": "Critical Warning",
+            "id": 169085,
+            "message": "No exact pin location assignment(s) for 127 pins of 127 total pins. For the list of pins please refer to the I/O Assignment Warnings table in the fitter report."
+          }
+        ]
+      },
+      "sta": {
+        "errors": 0,
+        "warnings": 2,
+        "reported_diagnostics": [
+          {
+            "kind": "Critical Warning",
+            "id": 332148,
+            "message": "Timing requirements not met"
+          },
+          {
+            "kind": "Critical Warning",
+            "id": 332148,
+            "message": "Timing requirements not met"
+          }
+        ]
+      }
+    }
+  },
+  "scope": "Post-fit FPGA timing for the recorded device, constraints and inputs; not ASIC or board signoff"
+}

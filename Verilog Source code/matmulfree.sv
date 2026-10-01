@@ -34,10 +34,65 @@ module matmulfree (
         (host_addr[7:2] >= 4 && host_addr[7:2] <= 10));
     logic ws_host_rvalid, p_host_rvalid;
     logic instr_fetch_en, instr_fetch_valid, instr_host_valid;
-    assign host_ready = (host_ctrl && (!host_we || !running)) ||
-    (!running && (host_desc || (host_imem && (host_we || instr_host_valid)) ||
-        (host_param && (host_we || p_host_rvalid)) ||
-        (host_ws && (host_we || ws_host_rvalid))));
+    // Reads have a registered request and a tagged registered response. The
+    // host holds its request until ready; changing address, dropping enable or
+    // issuing a write cancels the old read. Writes retain same-edge acceptance.
+    logic host_read_allowed, host_read_request, host_read_pending_q, host_read_matches;
+    logic [4:0] host_read_region_q;
+    logic [31:0] host_read_address_q, host_response_address_q;
+    logic host_read_param, host_read_ws, host_read_desc, host_read_imem, host_read_ctrl;
+    logic host_response_fire, host_response_valid_q, host_response_ctrl_q;
+    logic [31:0] host_response_data, host_response_data_q, host_control_data;
+    assign host_read_allowed = !host_we && (host_ctrl ||
+        (!running && (host_param || host_ws || host_desc || host_imem)));
+    assign host_read_request = host_read_allowed &&
+        (!host_read_pending_q || host_read_address_q != host_addr);
+    assign host_read_matches = host_read_pending_q && host_en && !host_we &&
+        host_read_address_q == host_addr;
+    assign host_read_param = host_read_matches && !host_response_valid_q && !running && host_read_region_q[0];
+    assign host_read_ws = host_read_matches && !host_response_valid_q && !running && host_read_region_q[1];
+    assign host_read_desc = host_read_matches && !host_response_valid_q && !running && host_read_region_q[2];
+    assign host_read_imem = host_read_matches && !host_response_valid_q && !running && host_read_region_q[3];
+    assign host_read_ctrl = host_read_matches && !host_response_valid_q && host_read_region_q[4];
+    assign host_response_fire = host_read_ctrl || host_read_desc ||
+        (host_read_param && p_host_rvalid) || (host_read_ws && ws_host_rvalid) ||
+        (host_read_imem && instr_host_valid);
+    assign host_ready = host_we ? (!running &&
+        (host_ctrl || host_desc || host_imem || host_param || host_ws)) :
+        (host_en && host_response_valid_q && host_response_address_q == host_addr &&
+        (!running || host_response_ctrl_q));
+    // Data is meaningful only with ready. A resettable response-valid bit
+    // masks the unreset payload and keeps the reset output deterministic.
+    assign host_rdata = host_response_valid_q ? host_response_data_q : 32'h0;
+
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            host_read_pending_q <= 1'b0;
+            host_read_region_q <= '0;
+            host_response_valid_q <= 1'b0;
+            host_response_ctrl_q <= 1'b0;
+        end else begin
+            if (!host_read_allowed) begin
+                host_read_pending_q <= 1'b0;
+                host_read_region_q <= '0;
+                host_response_valid_q <= 1'b0;
+            end else if (host_read_request) begin
+                host_read_pending_q <= 1'b1;
+                host_read_region_q <= {host_ctrl, host_imem, host_desc, host_ws, host_param};
+                host_response_valid_q <= 1'b0;
+            end else if (host_response_fire) begin
+                host_response_valid_q <= 1'b1;
+                host_response_ctrl_q <= host_read_region_q[4];
+            end
+        end
+    end
+    always_ff @(posedge clk) begin
+        if (rst_n && host_read_request) host_read_address_q <= host_addr;
+        if (rst_n && host_response_fire) begin
+            host_response_address_q <= host_read_address_q;
+            host_response_data_q <= host_response_data;
+        end
+    end
 
     logic start_pulse;
     logic [7:0] scratch_z_base;
@@ -59,9 +114,9 @@ module matmulfree (
         .addr(pc),
         .instr(instr_fetch),
         .instr_valid(instr_fetch_valid),
-        .host_en(host_imem && !running),
+        .host_en((host_imem && host_we && !running) || host_read_imem),
         .host_we(host_imem && host_we && !running),
-        .host_addr(host_addr[10:2]),
+        .host_addr(host_we ? host_addr[10:2] : host_read_address_q[10:2]),
         .host_instr(host_wdata[12:0]),
         .host_rinstr(instr_host),
         .host_rvalid(instr_host_valid));
@@ -73,9 +128,9 @@ module matmulfree (
     logic [2:0] desc_host_id;
     logic [1:0] desc_host_word;
     logic [31:0] desc_host_rdata;
-    assign desc_host_matrix = host_addr[8];
-    assign desc_host_id = host_addr[6:4];
-    assign desc_host_word = host_addr[3:2];
+    assign desc_host_matrix = host_we ? host_addr[8] : host_read_address_q[8];
+    assign desc_host_id = host_we ? host_addr[6:4] : host_read_address_q[6:4];
+    assign desc_host_word = host_we ? host_addr[3:2] : host_read_address_q[3:2];
     descriptor_file u_desc(
         .clk(clk),
         .rst_n(rst_n),
@@ -110,9 +165,9 @@ module matmulfree (
         .wr_en(ws_wr_en),
         .wr_addr(ws_wr_addr),
         .wr_data(ws_wr_data),
-        .host_en(host_ws && !running),
+        .host_en((host_ws && host_we && !running) || host_read_ws),
         .host_we(host_we),
-        .host_addr(host_addr[12:2]),
+        .host_addr(host_we ? host_addr[12:2] : host_read_address_q[12:2]),
         .host_wdata(host_wdata),
         .host_rdata(ws_host_rdata),
         .host_rvalid(ws_host_rvalid)
@@ -133,9 +188,9 @@ module matmulfree (
         .wr_en(1'b0),
         .wr_addr('0),
         .wr_data('0),
-        .host_en(host_param && !running),
+        .host_en((host_param && host_we && !running) || host_read_param),
         .host_we(host_we),
-        .host_addr(host_addr[14:2]),
+        .host_addr(host_we ? host_addr[14:2] : host_read_address_q[14:2]),
         .host_wdata(host_wdata),
         .host_rdata(p_host_rdata),
         .host_rvalid(p_host_rvalid)
@@ -476,25 +531,25 @@ module matmulfree (
     assign instr_debug = instr_q;
 
     always_comb begin
-        host_rdata = 32'h0000_0000;
-        if (host_param) host_rdata = p_host_rdata;
-        else if (host_ws) host_rdata = ws_host_rdata;
-        else if (host_desc) host_rdata = desc_host_rdata;
-        else if (host_imem) host_rdata = {19'h0, instr_host};
-        else if (host_ctrl) begin
-            case (host_addr[7:2])
-                6'h00 : host_rdata = {28'h0, error, overflow_out, ready, running};
-                6'h01 : host_rdata = {23'h0, pc};
-                6'h04 : host_rdata = {24'h00_0000, scratch_z_base};
-                6'h05 : host_rdata = epsilon_raw32[31:0];
-                6'h06 : host_rdata = epsilon_raw32[63:32];
-                6'h07 : host_rdata = {8'h00, delta_raw};
-                6'h08 : host_rdata = {2'h0, quant_r, quant_m};
-                6'h09 : host_rdata = {2'h0, norm_r, norm_m};
-                6'h0a : host_rdata = {8'h00, quant_d};
-                default : host_rdata = 0;
-            endcase
-        end
+        case (host_read_address_q[7:2])
+            6'h00 : host_control_data = {28'h0, error, overflow_out, ready, running};
+            6'h01 : host_control_data = {23'h0, pc};
+            6'h04 : host_control_data = {24'h00_0000, scratch_z_base};
+            6'h05 : host_control_data = epsilon_raw32[31:0];
+            6'h06 : host_control_data = epsilon_raw32[63:32];
+            6'h07 : host_control_data = {8'h00, delta_raw};
+            6'h08 : host_control_data = {2'h0, quant_r, quant_m};
+            6'h09 : host_control_data = {2'h0, norm_r, norm_m};
+            6'h0a : host_control_data = {8'h00, quant_d};
+            default : host_control_data = 0;
+        endcase
+        // Legal regions are mutually exclusive. A parallel one-hot mux avoids
+        // a priority chain between unrelated host windows.
+        host_response_data = ({32{host_read_region_q[0]}} & p_host_rdata) |
+            ({32{host_read_region_q[1]}} & ws_host_rdata) |
+            ({32{host_read_region_q[2]}} & desc_host_rdata) |
+            ({32{host_read_region_q[3]}} & {19'h0, instr_host}) |
+            ({32{host_read_region_q[4]}} & host_control_data);
     end
 
     assign start_pulse = host_ctrl && host_we && (host_addr[7:2] == 0) && host_wdata[0];

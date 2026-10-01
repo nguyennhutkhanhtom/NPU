@@ -1,0 +1,797 @@
+----------------
+; Command Info ;
+----------------
+Report Timing: Found 3 setup paths (3 violated).  Worst case slack is -19.839 
+
+Tcl Command:
+    report_timing -setup -show_routing -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/user_baseline/modules/descriptor_slow_1100mv_0c_setup.rpt} -from [get_registers {*u_desc*}] -to [get_registers *] -nworst 1 -npaths 3 -detail full_path
+
+Options:
+    -from [get_registers {*u_desc*}] 
+    -to [get_registers *] 
+    -setup 
+    -nworst 1 
+    -npaths 3 
+    -show_routing 
+    -detail full_path 
+    -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/user_baseline/modules/descriptor_slow_1100mv_0c_setup.rpt} 
+
+Delay Model:
+    Slow 1100mV 0C Model
+
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Summary of Paths                                                                                                                                                            ;
++---------+----------------------------------------+----------------------------------------------------+--------------+-------------+--------------+------------+------------+
+; Slack   ; From Node                              ; To Node                                            ; Launch Clock ; Latch Clock ; Relationship ; Clock Skew ; Data Delay ;
++---------+----------------------------------------+----------------------------------------------------+--------------+-------------+--------------+------------+------------+
+; -19.839 ; descriptor_file:u_desc|ws[5].length[2] ; norm_dispatch:u_norm|norm:u_norm|lane[2]~DUPLICATE ; clk          ; clk         ; 1.000        ; -0.184     ; 20.555     ;
+; -19.831 ; descriptor_file:u_desc|ws[5].length[2] ; norm_dispatch:u_norm|norm:u_norm|lane[2]           ; clk          ; clk         ; 1.000        ; -0.174     ; 20.557     ;
+; -19.352 ; descriptor_file:u_desc|ws[7].length[2] ; rowwise_dispatch:u_row|state.REQ_A                 ; clk          ; clk         ; 1.000        ; -0.164     ; 20.088     ;
++---------+----------------------------------------+----------------------------------------------------+--------------+-------------+--------------+------------+------------+
+
+Path #1: Setup slack is -19.839 (VIOLATED)
+===============================================================================
++-------------------------------------------------------------------------+
+; Path Summary                                                            ;
++--------------------+----------------------------------------------------+
+; Property           ; Value                                              ;
++--------------------+----------------------------------------------------+
+; From Node          ; descriptor_file:u_desc|ws[5].length[2]             ;
+; To Node            ; norm_dispatch:u_norm|norm:u_norm|lane[2]~DUPLICATE ;
+; Launch Clock       ; clk                                                ;
+; Latch Clock        ; clk                                                ;
+; Data Arrival Time  ; 25.412                                             ;
+; Data Required Time ; 5.573                                              ;
+; Slack              ; -19.839 (VIOLATED)                                 ;
++--------------------+----------------------------------------------------+
+
++-------------------------------------------------------------------------------------+
+; Statistics                                                                          ;
++------------------------+--------+-------+-------------+------------+--------+-------+
+; Property               ; Value  ; Count ; Total Delay ; % of Total ; Min    ; Max   ;
++------------------------+--------+-------+-------------+------------+--------+-------+
+; Setup Relationship     ; 1.000  ;       ;             ;            ;        ;       ;
+; Clock Skew             ; -0.184 ;       ;             ;            ;        ;       ;
+; Data Delay             ; 20.555 ;       ;             ;            ;        ;       ;
+; Number of Logic Levels ;        ; 11    ;             ;            ;        ;       ;
+; Physical Delays        ;        ;       ;             ;            ;        ;       ;
+;  Arrival Path          ;        ;       ;             ;            ;        ;       ;
+;   Clock                ;        ;       ;             ;            ;        ;       ;
+;    IC                  ;        ; 3     ; 0.001       ; 0          ; 0.000  ; 0.001 ;
+;    Cell                ;        ; 3     ; 2.165       ; 45         ; 0.538  ; 0.989 ;
+;    Routing Element     ;        ; 27    ; 2.691       ; 55         ; 0.000  ; 0.859 ;
+;   Data                 ;        ;       ;             ;            ;        ;       ;
+;    IC                  ;        ; 18    ; 0.002       ; 0          ; -0.001 ; 0.001 ;
+;    Cell                ;        ; 19    ; 9.698       ; 47         ; 0.000  ; 1.550 ;
+;    uTco                ;        ; 1     ; 0.000       ; 0          ; 0.000  ; 0.000 ;
+;    Routing Element     ;        ; 74    ; 10.855      ; 53         ; 0.000  ; 0.415 ;
+;  Required Path         ;        ;       ;             ;            ;        ;       ;
+;   Clock                ;        ;       ;             ;            ;        ;       ;
+;    IC                  ;        ; 3     ; 0.000       ; 0          ; 0.000  ; 0.000 ;
+;    Cell                ;        ; 3     ; 2.053       ; 44         ; 0.505  ; 0.989 ;
+;    Routing Element     ;        ; 27    ; 2.572       ; 56         ; 0.000  ; 0.828 ;
++------------------------+--------+-------+-------------+------------+--------+-------+
+Note: Negative delays are omitted from totals when calculating percentages
+
++-------------------------------------------------------------------------------------------------------------------------------------------+
+; Data Arrival Path                                                                                                                         ;
++----------+----------+----+------+--------+-------------------------------------------+----------------------------------------------------+
+; Total    ; Incr     ; RF ; Type ; Fanout ; Location                                  ; Element                                            ;
++----------+----------+----+------+--------+-------------------------------------------+----------------------------------------------------+
+; 0.000    ; 0.000    ;    ;      ;        ;                                           ; launch edge time                                   ;
+; 4.857    ; 4.857    ;    ;      ;        ;                                           ; clock path                                         ;
+;   0.000  ;   0.000  ;    ;      ;        ;                                           ; source latency                                     ;
+;   0.000  ;   0.000  ;    ;      ; 1      ; PIN_N16                                   ; clk                                                ;
+;   0.000  ;   0.000  ;    ; RE   ; 1      ; IOPAD_X89_Y35_N43                         ; ARRIAV_IO_PAD                                      ;
+;   0.000  ;   0.000  ;    ; RE   ; 1      ; IO_PAD_OUTPUT_X89_Y35_N43_I1              ; IO_PAD_OUTPUT                                      ;
+;   0.000  ;   0.000  ;    ; RE   ; 1      ; IO_INPUT_BUFFER_INPUT_X89_Y35_N44_I0      ; IO_INPUT_BUFFER_INPUT                              ;
+;   0.000  ;   0.000  ; RR ; IC   ; 1      ; IOIBUF_X89_Y35_N44                        ; clk~input|i                                        ;
+;   0.989  ;   0.989  ; RR ; CELL ; 1      ; IOIBUF_X89_Y35_N44                        ; clk~input|o                                        ;
+;   0.989  ;   0.000  ;    ; RE   ; 1      ; IOIBUF_X89_Y35_N44                        ; ARRIAV_IO_IBUF                                     ;
+;   0.989  ;   0.000  ;    ; RE   ; 1      ; IO_INPUT_BUFFER_OUTPUT_X89_Y35_N44_I2     ; IO_INPUT_BUFFER_OUTPUT                             ;
+;   0.989  ;   0.000  ;    ; RE   ; 1      ; IO_RE_X89_Y35_N43_I96                     ; IO_RE                                              ;
+;   1.089  ;   0.100  ;    ; RE   ; 1      ; IO_RE_X89_Y35_N43_I66                     ; IO_RE                                              ;
+;   1.311  ;   0.222  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I368         ; CLKBUF_CLUSTER_RE                                  ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I764         ; CLKBUF_CLUSTER_RE                                  ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I813         ; CLKBUF_CLUSTER_RE                                  ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I553         ; CLKBUF_CLUSTER_RE                                  ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X89_Y39_N6_I10            ; GCLK_CLUSTER_RE                                    ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; CLKBUFBLOCK_INPUT_X89_Y39_N7_I0           ; CLKBUFBLOCK_INPUT                                  ;
+;   1.311  ;   0.000  ; RR ; IC   ; 1      ; CLKCTRL_G9                                ; clk~inputCLKENA0|inclk                             ;
+;   1.849  ;   0.538  ; RR ; CELL ; 6701   ; CLKCTRL_G9                                ; clk~inputCLKENA0|outclk                            ;
+;   1.849  ;   0.000  ;    ; RE   ; 1      ; CLKCTRL_G9                                ; ARRIAV_CLKBUF                                      ;
+;   1.849  ;   0.000  ;    ; RE   ; 1      ; CLKBUFBLOCK_OUTPUT_X89_Y39_N7_I2          ; CLKBUFBLOCK_OUTPUT                                 ;
+;   1.849  ;   0.000  ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X89_Y39_N6_I12            ; GCLK_CLUSTER_RE                                    ;
+;   1.849  ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I416         ; CLKBUF_CLUSTER_RE                                  ;
+;   2.708  ;   0.859  ;    ; RE   ; 10     ; GLOBAL_CLOCK_X0_Y36_N0_I9                 ; GLOBAL_CLOCK                                       ;
+;   2.878  ;   0.170  ;    ; RE   ; 18     ; SPINE_CLOCK_X55_Y59_N0_I22                ; SPINE_CLOCK                                        ;
+;   3.361  ;   0.483  ;    ; RE   ; 1      ; SCLK_TO_ROWCLK_BUF_X55_Y65_N0_I133        ; SCLK_TO_ROWCLK_BUF                                 ;
+;   3.460  ;   0.099  ;    ; RE   ; 2      ; SCLK_TO_ROWCLK_BUF_X55_Y65_N0_I136        ; SCLK_TO_ROWCLK_BUF                                 ;
+;   3.959  ;   0.499  ;    ; RE   ; 6      ; LAB_CLK_X56_Y65_N0_I5                     ; LAB_CLK                                            ;
+;   4.108  ;   0.149  ;    ; RE   ; 1      ; BLK_CLK_BUF_X56_Y65_N0_I5                 ; BLK_CLK_BUF                                        ;
+;   4.170  ;   0.062  ;    ; RE   ; 1      ; ROWCLKSEL_PREBUF_X56_Y65_N0_I5            ; ROWCLKSEL_PREBUF                                   ;
+;   4.218  ;   0.048  ;    ; RE   ; 1      ; ROWCLKSEL_X56_Y65_N0_I1                   ; ROWCLKSEL                                          ;
+;   4.218  ;   0.000  ;    ; RE   ; 3      ; GLOBAL_LOCAL_SEL_X56_Y65_N0_I1            ; GLOBAL_LOCAL_SEL                                   ;
+;   4.218  ;   0.000  ;    ; RE   ; 3      ; LAB_INPUT_X56_Y65_N0_I0                   ; LAB_INPUT                                          ;
+;   4.219  ;   0.001  ; RR ; IC   ; 1      ; FF_X56_Y65_N17                            ; u_desc|ws[5].length[2]|clk                         ;
+;   4.857  ;   0.638  ; RR ; CELL ; 1      ; FF_X56_Y65_N17                            ; descriptor_file:u_desc|ws[5].length[2]             ;
+; 25.412   ; 20.555   ;    ;      ;        ;                                           ; data path                                          ;
+;   4.857  ;   0.000  ;    ; uTco ; 1      ; FF_X56_Y65_N17                            ; descriptor_file:u_desc|ws[5].length[2]             ;
+;   4.857  ;   0.000  ; FF ; CELL ; 4      ; FF_X56_Y65_N17                            ; u_desc|ws[5].length[2]|q                           ;
+;   4.924  ;   0.067  ;    ; RE   ; 2      ; FF_X56_Y65_N17                            ; ARRIAV_FF                                          ;
+;   5.020  ;   0.096  ;    ; RE   ; 1      ; LE_BUFFER_X56_Y65_N0_I11                  ; LE_BUFFER                                          ;
+;   5.356  ;   0.336  ;    ; RE   ; 1      ; C4_X55_Y61_N0_I8                          ; V_SEG4                                             ;
+;   5.771  ;   0.415  ;    ; RE   ; 1      ; R3_X56_Y63_N0_I8                          ; H_SEG3                                             ;
+;   5.976  ;   0.205  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X57_Y63_N0_I43         ; LAB_LINE                                           ;
+;   6.082  ;   0.106  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X57_Y63_N0_I51            ; LEIM_INPUT                                         ;
+;   6.083  ;   0.001  ; FF ; IC   ; 1      ; LABCELL_X57_Y63_N36                       ; u_desc|Mux79~0|datab                               ;
+;   6.823  ;   0.740  ; FF ; CELL ; 4      ; LABCELL_X57_Y63_N36                       ; u_desc|Mux79~0|combout                             ;
+;   6.823  ;   0.000  ;    ; RE   ; 1      ; LABCELL_X57_Y63_N36                       ; ARRIAV_LCELL_COMB                                  ;
+;   6.884  ;   0.061  ;    ; RE   ; 1      ; LE_BUFFER_X57_Y63_N0_I24                  ; LE_BUFFER                                          ;
+;   7.051  ;   0.167  ;    ; RE   ; 2      ; C2_X57_Y61_N0_I14                         ; V_SEG2                                             ;
+;   7.424  ;   0.373  ;    ; RE   ; 2      ; R6_X58_Y62_N0_I5                          ; H_SEG6                                             ;
+;   7.722  ;   0.298  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X63_Y62_N0_I10         ; LAB_LINE                                           ;
+;   7.857  ;   0.135  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X63_Y62_N0_I12            ; LEIM_INPUT                                         ;
+;   7.857  ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X63_Y62_N6                        ; u_tm|Add48~34|datac                                ;
+;   9.003  ;   1.146  ; FF ; CELL ; 1      ; LABCELL_X63_Y62_N6                        ; u_tm|Add48~34|cout                                 ;
+;   9.003  ;   0.000  ;    ; RE   ; 1      ; LABCELL_X63_Y62_N6                        ; ARRIAV_LCELL_COMB                                  ;
+;   9.003  ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X63_Y62_N9                        ; u_tm|Add48~30|cin                                  ;
+;   9.003  ;   0.000  ; FF ; CELL ; 1      ; LABCELL_X63_Y62_N9                        ; u_tm|Add48~30|cout                                 ;
+;   9.003  ;   0.000  ;    ; RE   ; 1      ; LABCELL_X63_Y62_N9                        ; ARRIAV_LCELL_COMB                                  ;
+;   9.003  ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X63_Y62_N12                       ; u_tm|Add48~5|cin                                   ;
+;   9.060  ;   0.057  ; FF ; CELL ; 1      ; LABCELL_X63_Y62_N12                       ; u_tm|Add48~5|cout                                  ;
+;   9.060  ;   0.000  ;    ; RE   ; 2      ; LABCELL_X63_Y62_N12                       ; ARRIAV_LCELL_COMB                                  ;
+;   9.060  ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X63_Y62_N15                       ; u_tm|Add48~9|cin                                   ;
+;   9.060  ;   0.000  ; FF ; CELL ; 1      ; LABCELL_X63_Y62_N15                       ; u_tm|Add48~9|cout                                  ;
+;   9.060  ;   0.000  ;    ; RE   ; 2      ; LABCELL_X63_Y62_N15                       ; ARRIAV_LCELL_COMB                                  ;
+;   9.060  ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X63_Y62_N18                       ; u_tm|Add48~1|cin                                   ;
+;   9.551  ;   0.491  ; FF ; CELL ; 1      ; LABCELL_X63_Y62_N18                       ; u_tm|Add48~1|sumout                                ;
+;   9.551  ;   0.000  ;    ; RE   ; 2      ; LABCELL_X63_Y62_N18                       ; ARRIAV_LCELL_COMB                                  ;
+;   9.614  ;   0.063  ;    ; RE   ; 1      ; LE_BUFFER_X63_Y62_N0_I12                  ; LE_BUFFER                                          ;
+;   9.800  ;   0.186  ;    ; RE   ; 1      ; R3_X61_Y62_N0_I22                         ; H_SEG3                                             ;
+;   9.992  ;   0.192  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X62_Y62_N0_I30         ; LAB_LINE                                           ;
+;   10.113 ;   0.121  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X62_Y62_N0_I52            ; LEIM_INPUT                                         ;
+;   10.113 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X62_Y62_N36                       ; u_norm|Selector11~0|datac                          ;
+;   10.746 ;   0.633  ; FF ; CELL ; 1      ; LABCELL_X62_Y62_N36                       ; u_norm|Selector11~0|combout                        ;
+;   10.746 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X62_Y62_N36                       ; ARRIAV_LCELL_COMB                                  ;
+;   10.808 ;   0.062  ;    ; RE   ; 1      ; LE_BUFFER_X62_Y62_N0_I24                  ; LE_BUFFER                                          ;
+;   11.071 ;   0.263  ;    ; RE   ; 1      ; R6_X57_Y62_N0_I37                         ; H_SEG6                                             ;
+;   11.382 ;   0.311  ;    ; RE   ; 1      ; C2_X58_Y60_N0_I15                         ; V_SEG2                                             ;
+;   11.690 ;   0.308  ;    ; RE   ; 1      ; R6_X59_Y60_N0_I7                          ; H_SEG6                                             ;
+;   11.941 ;   0.251  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X62_Y60_N0_I29         ; LAB_LINE                                           ;
+;   12.069 ;   0.128  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X62_Y60_N0_I9             ; LEIM_INPUT                                         ;
+;   12.068 ;   -0.001 ; FF ; IC   ; 2      ; LABCELL_X62_Y60_N6                        ; u_norm|Add7~5|dataf                                ;
+;   13.618 ;   1.550  ; FF ; CELL ; 1      ; LABCELL_X62_Y60_N6                        ; u_norm|Add7~5|cout                                 ;
+;   13.618 ;   0.000  ;    ; RE   ; 2      ; LABCELL_X62_Y60_N6                        ; ARRIAV_LCELL_COMB                                  ;
+;   13.618 ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X62_Y60_N9                        ; u_norm|Add7~17|cin                                 ;
+;   13.618 ;   0.000  ; FF ; CELL ; 1      ; LABCELL_X62_Y60_N9                        ; u_norm|Add7~17|cout                                ;
+;   13.618 ;   0.000  ;    ; RE   ; 2      ; LABCELL_X62_Y60_N9                        ; ARRIAV_LCELL_COMB                                  ;
+;   13.618 ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X62_Y60_N12                       ; u_norm|Add7~21|cin                                 ;
+;   14.122 ;   0.504  ; FR ; CELL ; 2      ; LABCELL_X62_Y60_N12                       ; u_norm|Add7~21|sumout                              ;
+;   14.122 ;   0.000  ;    ; RE   ; 2      ; LABCELL_X62_Y60_N12                       ; ARRIAV_LCELL_COMB                                  ;
+;   14.235 ;   0.113  ;    ; RE   ; 1      ; LE_BUFFER_X62_Y60_N0_I9                   ; LE_BUFFER                                          ;
+;   14.395 ;   0.160  ;    ; RE   ; 1      ; C2_X61_Y58_N0_I11                         ; V_SEG2                                             ;
+;   14.564 ;   0.169  ;    ; RE   ; 2      ; LOCAL_INTERCONNECT_X62_Y59_N0_I0          ; LAB_LINE                                           ;
+;   14.666 ;   0.102  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X62_Y59_N0_I67            ; LEIM_INPUT                                         ;
+;   14.666 ;   0.000  ; RR ; IC   ; 1      ; LABCELL_X62_Y59_N48                       ; u_norm|LessThan7~0|datab                           ;
+;   15.434 ;   0.768  ; RF ; CELL ; 1      ; LABCELL_X62_Y59_N48                       ; u_norm|LessThan7~0|combout                         ;
+;   15.434 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X62_Y59_N48                       ; ARRIAV_LCELL_COMB                                  ;
+;   15.512 ;   0.078  ;    ; RE   ; 1      ; LOCAL_LINE_X62_Y59_N0_I16                 ; LOCAL_LINE                                         ;
+;   15.650 ;   0.138  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X62_Y59_N0_I60            ; LEIM_INPUT                                         ;
+;   15.650 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X62_Y59_N42                       ; u_norm|LessThan7~1|datac                           ;
+;   16.329 ;   0.679  ; FF ; CELL ; 1      ; LABCELL_X62_Y59_N42                       ; u_norm|LessThan7~1|combout                         ;
+;   16.329 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X62_Y59_N42                       ; ARRIAV_LCELL_COMB                                  ;
+;   16.404 ;   0.075  ;    ; RE   ; 1      ; LE_BUFFER_X62_Y59_N0_I29                  ; LE_BUFFER                                          ;
+;   16.581 ;   0.177  ;    ; RE   ; 1      ; C2_X61_Y57_N0_I15                         ; V_SEG2                                             ;
+;   16.934 ;   0.353  ;    ; RE   ; 1      ; R6_X56_Y58_N0_I29                         ; H_SEG6                                             ;
+;   17.203 ;   0.269  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X57_Y58_N0_I18         ; LAB_LINE                                           ;
+;   17.297 ;   0.094  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X57_Y58_N0_I66            ; LEIM_INPUT                                         ;
+;   17.298 ;   0.001  ; FF ; IC   ; 1      ; LABCELL_X57_Y58_N48                       ; u_tm|always3~2|dataa                               ;
+;   18.044 ;   0.746  ; FF ; CELL ; 7      ; LABCELL_X57_Y58_N48                       ; u_tm|always3~2|combout                             ;
+;   18.044 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X57_Y58_N48                       ; ARRIAV_LCELL_COMB                                  ;
+;   18.119 ;   0.075  ;    ; RE   ; 1      ; LE_BUFFER_X57_Y58_N0_I33                  ; LE_BUFFER                                          ;
+;   18.294 ;   0.175  ;    ; RE   ; 1      ; C2_X56_Y56_N0_I21                         ; V_SEG2                                             ;
+;   18.528 ;   0.234  ;    ; RE   ; 1      ; R3_X57_Y57_N0_I4                          ; H_SEG3                                             ;
+;   18.528 ;   0.000  ;    ; RE   ; 2      ; R14_C12_INTERCONNECT_DRIVER_X57_Y57_N0_I1 ; WIRE_MUX                                           ;
+;   18.894 ;   0.366  ;    ; RE   ; 1      ; C12_X57_Y45_N0_I1                         ; V_SEG12                                            ;
+;   19.289 ;   0.395  ;    ; RE   ; 1      ; R6_X52_Y45_N0_I29                         ; H_SEG6                                             ;
+;   19.612 ;   0.323  ;    ; RE   ; 6      ; LOCAL_INTERCONNECT_X57_Y45_N0_I19         ; LAB_LINE                                           ;
+;   19.756 ;   0.144  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X57_Y45_N0_I72            ; LEIM_INPUT                                         ;
+;   19.756 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X57_Y45_N54                       ; u_norm|u_norm|quant_m[17]~0|datad                  ;
+;   20.162 ;   0.406  ; FF ; CELL ; 139    ; LABCELL_X57_Y45_N54                       ; u_norm|u_norm|quant_m[17]~0|combout                ;
+;   20.162 ;   0.000  ;    ; RE   ; 3      ; LABCELL_X57_Y45_N54                       ; ARRIAV_LCELL_COMB                                  ;
+;   20.235 ;   0.073  ;    ; RE   ; 3      ; LE_BUFFER_X57_Y45_N0_I36                  ; LE_BUFFER                                          ;
+;   20.487 ;   0.252  ;    ; RE   ; 6      ; C4_X57_Y41_N0_I9                          ; V_SEG4                                             ;
+;   20.825 ;   0.338  ;    ; RE   ; 1      ; R3_X55_Y43_N0_I14                         ; H_SEG3                                             ;
+;   21.015 ;   0.190  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X56_Y43_N0_I22         ; LAB_LINE                                           ;
+;   21.127 ;   0.112  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X56_Y43_N0_I49            ; LEIM_INPUT                                         ;
+;   21.127 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X56_Y43_N36                       ; u_norm|u_norm|word_index[3]~2|dataf                ;
+;   21.241 ;   0.114  ; FR ; CELL ; 2      ; LABCELL_X56_Y43_N36                       ; u_norm|u_norm|word_index[3]~2|combout              ;
+;   21.241 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X56_Y43_N36                       ; ARRIAV_LCELL_COMB                                  ;
+;   21.373 ;   0.132  ;    ; RE   ; 2      ; LOCAL_LINE_X56_Y43_N0_I12                 ; LOCAL_LINE                                         ;
+;   21.526 ;   0.153  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X56_Y43_N0_I32            ; LEIM_INPUT                                         ;
+;   21.526 ;   0.000  ; RR ; IC   ; 1      ; LABCELL_X56_Y43_N24                       ; u_norm|u_norm|lane[3]~3|datad                      ;
+;   21.834 ;   0.308  ; RR ; CELL ; 3      ; LABCELL_X56_Y43_N24                       ; u_norm|u_norm|lane[3]~3|combout                    ;
+;   21.834 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X56_Y43_N24                       ; ARRIAV_LCELL_COMB                                  ;
+;   21.991 ;   0.157  ;    ; RE   ; 1      ; LE_BUFFER_X56_Y43_N0_I17                  ; LE_BUFFER                                          ;
+;   22.288 ;   0.297  ;    ; RE   ; 2      ; C4_X55_Y39_N0_I8                          ; V_SEG4                                             ;
+;   22.608 ;   0.320  ;    ; RE   ; 1      ; R6_X50_Y42_N0_I30                         ; H_SEG6                                             ;
+;   22.786 ;   0.178  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X52_Y42_N0_I0          ; LAB_LINE                                           ;
+;   22.884 ;   0.098  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X52_Y42_N0_I59            ; LEIM_INPUT                                         ;
+;   22.885 ;   0.001  ; RR ; IC   ; 1      ; MLABCELL_X52_Y42_N42                      ; u_norm|u_norm|lane[2]~7|datab                      ;
+;   23.644 ;   0.759  ; RF ; CELL ; 2      ; MLABCELL_X52_Y42_N42                      ; u_norm|u_norm|lane[2]~7|combout                    ;
+;   23.644 ;   0.000  ;    ; RE   ; 1      ; MLABCELL_X52_Y42_N42                      ; ARRIAV_LCELL_COMB                                  ;
+;   23.724 ;   0.080  ;    ; RE   ; 1      ; LE_BUFFER_X52_Y42_N0_I28                  ; LE_BUFFER                                          ;
+;   23.930 ;   0.206  ;    ; RE   ; 1      ; C2_X52_Y40_N0_I16                         ; V_SEG2                                             ;
+;   24.251 ;   0.321  ;    ; RE   ; 1      ; R6_X47_Y41_N0_I39                         ; H_SEG6                                             ;
+;   24.494 ;   0.243  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X51_Y41_N0_I31         ; LAB_LINE                                           ;
+;   24.615 ;   0.121  ;    ; RE   ; 2      ; BLOCK_INPUT_MUX_X51_Y41_N0_I70            ; LEIM_INPUT                                         ;
+;   24.615 ;   0.000  ; FF ; IC   ; 1      ; FF_X51_Y41_N52                            ; u_norm|u_norm|lane[2]~DUPLICATE|asdata             ;
+;   25.412 ;   0.797  ; FF ; CELL ; 1      ; FF_X51_Y41_N52                            ; norm_dispatch:u_norm|norm:u_norm|lane[2]~DUPLICATE ;
++----------+----------+----+------+--------+-------------------------------------------+----------------------------------------------------+
+
++-------------------------------------------------------------------------------------------------------------------------------------+
+; Data Required Path                                                                                                                  ;
++---------+---------+----+------+--------+---------------------------------------+----------------------------------------------------+
+; Total   ; Incr    ; RF ; Type ; Fanout ; Location                              ; Element                                            ;
++---------+---------+----+------+--------+---------------------------------------+----------------------------------------------------+
+; 1.000   ; 1.000   ;    ;      ;        ;                                       ; latch edge time                                    ;
+; 5.673   ; 4.673   ;    ;      ;        ;                                       ; clock path                                         ;
+;   1.000 ;   0.000 ;    ;      ;        ;                                       ; source latency                                     ;
+;   1.000 ;   0.000 ;    ;      ; 1      ; PIN_N16                               ; clk                                                ;
+;   1.000 ;   0.000 ;    ; RE   ; 1      ; IOPAD_X89_Y35_N43                     ; ARRIAV_IO_PAD                                      ;
+;   1.000 ;   0.000 ;    ; RE   ; 1      ; IO_PAD_OUTPUT_X89_Y35_N43_I1          ; IO_PAD_OUTPUT                                      ;
+;   1.000 ;   0.000 ;    ; RE   ; 1      ; IO_INPUT_BUFFER_INPUT_X89_Y35_N44_I0  ; IO_INPUT_BUFFER_INPUT                              ;
+;   1.000 ;   0.000 ; RR ; IC   ; 1      ; IOIBUF_X89_Y35_N44                    ; clk~input|i                                        ;
+;   1.989 ;   0.989 ; RR ; CELL ; 1      ; IOIBUF_X89_Y35_N44                    ; clk~input|o                                        ;
+;   1.989 ;   0.000 ;    ; RE   ; 1      ; IOIBUF_X89_Y35_N44                    ; ARRIAV_IO_IBUF                                     ;
+;   1.989 ;   0.000 ;    ; RE   ; 1      ; IO_INPUT_BUFFER_OUTPUT_X89_Y35_N44_I2 ; IO_INPUT_BUFFER_OUTPUT                             ;
+;   1.989 ;   0.000 ;    ; RE   ; 1      ; IO_RE_X89_Y35_N43_I96                 ; IO_RE                                              ;
+;   2.084 ;   0.095 ;    ; RE   ; 1      ; IO_RE_X89_Y35_N43_I66                 ; IO_RE                                              ;
+;   2.296 ;   0.212 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I368     ; CLKBUF_CLUSTER_RE                                  ;
+;   2.296 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I764     ; CLKBUF_CLUSTER_RE                                  ;
+;   2.296 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I813     ; CLKBUF_CLUSTER_RE                                  ;
+;   2.296 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I553     ; CLKBUF_CLUSTER_RE                                  ;
+;   2.296 ;   0.000 ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X89_Y39_N6_I10        ; GCLK_CLUSTER_RE                                    ;
+;   2.296 ;   0.000 ;    ; RE   ; 1      ; CLKBUFBLOCK_INPUT_X89_Y39_N7_I0       ; CLKBUFBLOCK_INPUT                                  ;
+;   2.296 ;   0.000 ; RR ; IC   ; 1      ; CLKCTRL_G9                            ; clk~inputCLKENA0|inclk                             ;
+;   2.801 ;   0.505 ; RR ; CELL ; 6701   ; CLKCTRL_G9                            ; clk~inputCLKENA0|outclk                            ;
+;   2.801 ;   0.000 ;    ; RE   ; 1      ; CLKCTRL_G9                            ; ARRIAV_CLKBUF                                      ;
+;   2.801 ;   0.000 ;    ; RE   ; 1      ; CLKBUFBLOCK_OUTPUT_X89_Y39_N7_I2      ; CLKBUFBLOCK_OUTPUT                                 ;
+;   2.801 ;   0.000 ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X89_Y39_N6_I12        ; GCLK_CLUSTER_RE                                    ;
+;   2.801 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I416     ; CLKBUF_CLUSTER_RE                                  ;
+;   3.629 ;   0.828 ;    ; RE   ; 10     ; GLOBAL_CLOCK_X0_Y36_N0_I9             ; GLOBAL_CLOCK                                       ;
+;   3.794 ;   0.165 ;    ; RE   ; 22     ; SPINE_CLOCK_X55_Y37_N0_I22            ; SPINE_CLOCK                                        ;
+;   4.251 ;   0.457 ;    ; RE   ; 1      ; SCLK_TO_ROWCLK_BUF_X55_Y41_N0_I133    ; SCLK_TO_ROWCLK_BUF                                 ;
+;   4.350 ;   0.099 ;    ; RE   ; 2      ; SCLK_TO_ROWCLK_BUF_X55_Y41_N0_I136    ; SCLK_TO_ROWCLK_BUF                                 ;
+;   4.830 ;   0.480 ;    ; RE   ; 6      ; LAB_CLK_X45_Y41_N0_I5                 ; LAB_CLK                                            ;
+;   4.963 ;   0.133 ;    ; RE   ; 1      ; BLK_CLK_BUF_X51_Y41_N0_I5             ; BLK_CLK_BUF                                        ;
+;   5.024 ;   0.061 ;    ; RE   ; 1      ; ROWCLKSEL_PREBUF_X51_Y41_N0_I5        ; ROWCLKSEL_PREBUF                                   ;
+;   5.066 ;   0.042 ;    ; RE   ; 1      ; ROWCLKSEL_X51_Y41_N0_I0               ; ROWCLKSEL                                          ;
+;   5.066 ;   0.000 ;    ; RE   ; 2      ; GLOBAL_LOCAL_SEL_X51_Y41_N0_I0        ; GLOBAL_LOCAL_SEL                                   ;
+;   5.066 ;   0.000 ;    ; RE   ; 4      ; LAB_INPUT_X51_Y41_N0_I0               ; LAB_INPUT                                          ;
+;   5.066 ;   0.000 ; RR ; IC   ; 1      ; FF_X51_Y41_N52                        ; u_norm|u_norm|lane[2]~DUPLICATE|clk                ;
+;   5.625 ;   0.559 ; RR ; CELL ; 1      ; FF_X51_Y41_N52                        ; norm_dispatch:u_norm|norm:u_norm|lane[2]~DUPLICATE ;
+;   5.673 ;   0.048 ;    ;      ;        ;                                       ; clock pessimism removed                            ;
+; 5.573   ; -0.100  ;    ;      ;        ;                                       ; clock uncertainty                                  ;
+; 5.573   ; 0.000   ;    ; uTsu ; 1      ; FF_X51_Y41_N52                        ; norm_dispatch:u_norm|norm:u_norm|lane[2]~DUPLICATE ;
++---------+---------+----+------+--------+---------------------------------------+----------------------------------------------------+
+
+----------------------------
+; Extra Fitter Information ;
+----------------------------
+HTML report is unavailable in plain text report export.
+
+
+Path #2: Setup slack is -19.831 (VIOLATED)
+===============================================================================
++---------------------------------------------------------------+
+; Path Summary                                                  ;
++--------------------+------------------------------------------+
+; Property           ; Value                                    ;
++--------------------+------------------------------------------+
+; From Node          ; descriptor_file:u_desc|ws[5].length[2]   ;
+; To Node            ; norm_dispatch:u_norm|norm:u_norm|lane[2] ;
+; Launch Clock       ; clk                                      ;
+; Latch Clock        ; clk                                      ;
+; Data Arrival Time  ; 25.414                                   ;
+; Data Required Time ; 5.583                                    ;
+; Slack              ; -19.831 (VIOLATED)                       ;
++--------------------+------------------------------------------+
+
++-------------------------------------------------------------------------------------+
+; Statistics                                                                          ;
++------------------------+--------+-------+-------------+------------+--------+-------+
+; Property               ; Value  ; Count ; Total Delay ; % of Total ; Min    ; Max   ;
++------------------------+--------+-------+-------------+------------+--------+-------+
+; Setup Relationship     ; 1.000  ;       ;             ;            ;        ;       ;
+; Clock Skew             ; -0.174 ;       ;             ;            ;        ;       ;
+; Data Delay             ; 20.557 ;       ;             ;            ;        ;       ;
+; Number of Logic Levels ;        ; 11    ;             ;            ;        ;       ;
+; Physical Delays        ;        ;       ;             ;            ;        ;       ;
+;  Arrival Path          ;        ;       ;             ;            ;        ;       ;
+;   Clock                ;        ;       ;             ;            ;        ;       ;
+;    IC                  ;        ; 3     ; 0.001       ; 0          ; 0.000  ; 0.001 ;
+;    Cell                ;        ; 3     ; 2.165       ; 45         ; 0.538  ; 0.989 ;
+;    Routing Element     ;        ; 27    ; 2.691       ; 55         ; 0.000  ; 0.859 ;
+;   Data                 ;        ;       ;             ;            ;        ;       ;
+;    IC                  ;        ; 18    ; 0.002       ; 0          ; -0.001 ; 0.001 ;
+;    Cell                ;        ; 19    ; 9.700       ; 47         ; 0.000  ; 1.550 ;
+;    uTco                ;        ; 1     ; 0.000       ; 0          ; 0.000  ; 0.000 ;
+;    Routing Element     ;        ; 74    ; 10.855      ; 53         ; 0.000  ; 0.415 ;
+;  Required Path         ;        ;       ;             ;            ;        ;       ;
+;   Clock                ;        ;       ;             ;            ;        ;       ;
+;    IC                  ;        ; 3     ; 0.000       ; 0          ; 0.000  ; 0.000 ;
+;    Cell                ;        ; 3     ; 2.063       ; 45         ; 0.505  ; 0.989 ;
+;    Routing Element     ;        ; 27    ; 2.572       ; 55         ; 0.000  ; 0.828 ;
++------------------------+--------+-------+-------------+------------+--------+-------+
+Note: Negative delays are omitted from totals when calculating percentages
+
++---------------------------------------------------------------------------------------------------------------------------------+
+; Data Arrival Path                                                                                                               ;
++----------+----------+----+------+--------+-------------------------------------------+------------------------------------------+
+; Total    ; Incr     ; RF ; Type ; Fanout ; Location                                  ; Element                                  ;
++----------+----------+----+------+--------+-------------------------------------------+------------------------------------------+
+; 0.000    ; 0.000    ;    ;      ;        ;                                           ; launch edge time                         ;
+; 4.857    ; 4.857    ;    ;      ;        ;                                           ; clock path                               ;
+;   0.000  ;   0.000  ;    ;      ;        ;                                           ; source latency                           ;
+;   0.000  ;   0.000  ;    ;      ; 1      ; PIN_N16                                   ; clk                                      ;
+;   0.000  ;   0.000  ;    ; RE   ; 1      ; IOPAD_X89_Y35_N43                         ; ARRIAV_IO_PAD                            ;
+;   0.000  ;   0.000  ;    ; RE   ; 1      ; IO_PAD_OUTPUT_X89_Y35_N43_I1              ; IO_PAD_OUTPUT                            ;
+;   0.000  ;   0.000  ;    ; RE   ; 1      ; IO_INPUT_BUFFER_INPUT_X89_Y35_N44_I0      ; IO_INPUT_BUFFER_INPUT                    ;
+;   0.000  ;   0.000  ; RR ; IC   ; 1      ; IOIBUF_X89_Y35_N44                        ; clk~input|i                              ;
+;   0.989  ;   0.989  ; RR ; CELL ; 1      ; IOIBUF_X89_Y35_N44                        ; clk~input|o                              ;
+;   0.989  ;   0.000  ;    ; RE   ; 1      ; IOIBUF_X89_Y35_N44                        ; ARRIAV_IO_IBUF                           ;
+;   0.989  ;   0.000  ;    ; RE   ; 1      ; IO_INPUT_BUFFER_OUTPUT_X89_Y35_N44_I2     ; IO_INPUT_BUFFER_OUTPUT                   ;
+;   0.989  ;   0.000  ;    ; RE   ; 1      ; IO_RE_X89_Y35_N43_I96                     ; IO_RE                                    ;
+;   1.089  ;   0.100  ;    ; RE   ; 1      ; IO_RE_X89_Y35_N43_I66                     ; IO_RE                                    ;
+;   1.311  ;   0.222  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I368         ; CLKBUF_CLUSTER_RE                        ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I764         ; CLKBUF_CLUSTER_RE                        ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I813         ; CLKBUF_CLUSTER_RE                        ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I553         ; CLKBUF_CLUSTER_RE                        ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X89_Y39_N6_I10            ; GCLK_CLUSTER_RE                          ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; CLKBUFBLOCK_INPUT_X89_Y39_N7_I0           ; CLKBUFBLOCK_INPUT                        ;
+;   1.311  ;   0.000  ; RR ; IC   ; 1      ; CLKCTRL_G9                                ; clk~inputCLKENA0|inclk                   ;
+;   1.849  ;   0.538  ; RR ; CELL ; 6701   ; CLKCTRL_G9                                ; clk~inputCLKENA0|outclk                  ;
+;   1.849  ;   0.000  ;    ; RE   ; 1      ; CLKCTRL_G9                                ; ARRIAV_CLKBUF                            ;
+;   1.849  ;   0.000  ;    ; RE   ; 1      ; CLKBUFBLOCK_OUTPUT_X89_Y39_N7_I2          ; CLKBUFBLOCK_OUTPUT                       ;
+;   1.849  ;   0.000  ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X89_Y39_N6_I12            ; GCLK_CLUSTER_RE                          ;
+;   1.849  ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I416         ; CLKBUF_CLUSTER_RE                        ;
+;   2.708  ;   0.859  ;    ; RE   ; 10     ; GLOBAL_CLOCK_X0_Y36_N0_I9                 ; GLOBAL_CLOCK                             ;
+;   2.878  ;   0.170  ;    ; RE   ; 18     ; SPINE_CLOCK_X55_Y59_N0_I22                ; SPINE_CLOCK                              ;
+;   3.361  ;   0.483  ;    ; RE   ; 1      ; SCLK_TO_ROWCLK_BUF_X55_Y65_N0_I133        ; SCLK_TO_ROWCLK_BUF                       ;
+;   3.460  ;   0.099  ;    ; RE   ; 2      ; SCLK_TO_ROWCLK_BUF_X55_Y65_N0_I136        ; SCLK_TO_ROWCLK_BUF                       ;
+;   3.959  ;   0.499  ;    ; RE   ; 6      ; LAB_CLK_X56_Y65_N0_I5                     ; LAB_CLK                                  ;
+;   4.108  ;   0.149  ;    ; RE   ; 1      ; BLK_CLK_BUF_X56_Y65_N0_I5                 ; BLK_CLK_BUF                              ;
+;   4.170  ;   0.062  ;    ; RE   ; 1      ; ROWCLKSEL_PREBUF_X56_Y65_N0_I5            ; ROWCLKSEL_PREBUF                         ;
+;   4.218  ;   0.048  ;    ; RE   ; 1      ; ROWCLKSEL_X56_Y65_N0_I1                   ; ROWCLKSEL                                ;
+;   4.218  ;   0.000  ;    ; RE   ; 3      ; GLOBAL_LOCAL_SEL_X56_Y65_N0_I1            ; GLOBAL_LOCAL_SEL                         ;
+;   4.218  ;   0.000  ;    ; RE   ; 3      ; LAB_INPUT_X56_Y65_N0_I0                   ; LAB_INPUT                                ;
+;   4.219  ;   0.001  ; RR ; IC   ; 1      ; FF_X56_Y65_N17                            ; u_desc|ws[5].length[2]|clk               ;
+;   4.857  ;   0.638  ; RR ; CELL ; 1      ; FF_X56_Y65_N17                            ; descriptor_file:u_desc|ws[5].length[2]   ;
+; 25.414   ; 20.557   ;    ;      ;        ;                                           ; data path                                ;
+;   4.857  ;   0.000  ;    ; uTco ; 1      ; FF_X56_Y65_N17                            ; descriptor_file:u_desc|ws[5].length[2]   ;
+;   4.857  ;   0.000  ; FF ; CELL ; 4      ; FF_X56_Y65_N17                            ; u_desc|ws[5].length[2]|q                 ;
+;   4.924  ;   0.067  ;    ; RE   ; 2      ; FF_X56_Y65_N17                            ; ARRIAV_FF                                ;
+;   5.020  ;   0.096  ;    ; RE   ; 1      ; LE_BUFFER_X56_Y65_N0_I11                  ; LE_BUFFER                                ;
+;   5.356  ;   0.336  ;    ; RE   ; 1      ; C4_X55_Y61_N0_I8                          ; V_SEG4                                   ;
+;   5.771  ;   0.415  ;    ; RE   ; 1      ; R3_X56_Y63_N0_I8                          ; H_SEG3                                   ;
+;   5.976  ;   0.205  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X57_Y63_N0_I43         ; LAB_LINE                                 ;
+;   6.082  ;   0.106  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X57_Y63_N0_I51            ; LEIM_INPUT                               ;
+;   6.083  ;   0.001  ; FF ; IC   ; 1      ; LABCELL_X57_Y63_N36                       ; u_desc|Mux79~0|datab                     ;
+;   6.823  ;   0.740  ; FF ; CELL ; 4      ; LABCELL_X57_Y63_N36                       ; u_desc|Mux79~0|combout                   ;
+;   6.823  ;   0.000  ;    ; RE   ; 1      ; LABCELL_X57_Y63_N36                       ; ARRIAV_LCELL_COMB                        ;
+;   6.884  ;   0.061  ;    ; RE   ; 1      ; LE_BUFFER_X57_Y63_N0_I24                  ; LE_BUFFER                                ;
+;   7.051  ;   0.167  ;    ; RE   ; 2      ; C2_X57_Y61_N0_I14                         ; V_SEG2                                   ;
+;   7.424  ;   0.373  ;    ; RE   ; 2      ; R6_X58_Y62_N0_I5                          ; H_SEG6                                   ;
+;   7.722  ;   0.298  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X63_Y62_N0_I10         ; LAB_LINE                                 ;
+;   7.857  ;   0.135  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X63_Y62_N0_I12            ; LEIM_INPUT                               ;
+;   7.857  ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X63_Y62_N6                        ; u_tm|Add48~34|datac                      ;
+;   9.003  ;   1.146  ; FF ; CELL ; 1      ; LABCELL_X63_Y62_N6                        ; u_tm|Add48~34|cout                       ;
+;   9.003  ;   0.000  ;    ; RE   ; 1      ; LABCELL_X63_Y62_N6                        ; ARRIAV_LCELL_COMB                        ;
+;   9.003  ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X63_Y62_N9                        ; u_tm|Add48~30|cin                        ;
+;   9.003  ;   0.000  ; FF ; CELL ; 1      ; LABCELL_X63_Y62_N9                        ; u_tm|Add48~30|cout                       ;
+;   9.003  ;   0.000  ;    ; RE   ; 1      ; LABCELL_X63_Y62_N9                        ; ARRIAV_LCELL_COMB                        ;
+;   9.003  ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X63_Y62_N12                       ; u_tm|Add48~5|cin                         ;
+;   9.060  ;   0.057  ; FF ; CELL ; 1      ; LABCELL_X63_Y62_N12                       ; u_tm|Add48~5|cout                        ;
+;   9.060  ;   0.000  ;    ; RE   ; 2      ; LABCELL_X63_Y62_N12                       ; ARRIAV_LCELL_COMB                        ;
+;   9.060  ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X63_Y62_N15                       ; u_tm|Add48~9|cin                         ;
+;   9.060  ;   0.000  ; FF ; CELL ; 1      ; LABCELL_X63_Y62_N15                       ; u_tm|Add48~9|cout                        ;
+;   9.060  ;   0.000  ;    ; RE   ; 2      ; LABCELL_X63_Y62_N15                       ; ARRIAV_LCELL_COMB                        ;
+;   9.060  ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X63_Y62_N18                       ; u_tm|Add48~1|cin                         ;
+;   9.551  ;   0.491  ; FF ; CELL ; 1      ; LABCELL_X63_Y62_N18                       ; u_tm|Add48~1|sumout                      ;
+;   9.551  ;   0.000  ;    ; RE   ; 2      ; LABCELL_X63_Y62_N18                       ; ARRIAV_LCELL_COMB                        ;
+;   9.614  ;   0.063  ;    ; RE   ; 1      ; LE_BUFFER_X63_Y62_N0_I12                  ; LE_BUFFER                                ;
+;   9.800  ;   0.186  ;    ; RE   ; 1      ; R3_X61_Y62_N0_I22                         ; H_SEG3                                   ;
+;   9.992  ;   0.192  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X62_Y62_N0_I30         ; LAB_LINE                                 ;
+;   10.113 ;   0.121  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X62_Y62_N0_I52            ; LEIM_INPUT                               ;
+;   10.113 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X62_Y62_N36                       ; u_norm|Selector11~0|datac                ;
+;   10.746 ;   0.633  ; FF ; CELL ; 1      ; LABCELL_X62_Y62_N36                       ; u_norm|Selector11~0|combout              ;
+;   10.746 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X62_Y62_N36                       ; ARRIAV_LCELL_COMB                        ;
+;   10.808 ;   0.062  ;    ; RE   ; 1      ; LE_BUFFER_X62_Y62_N0_I24                  ; LE_BUFFER                                ;
+;   11.071 ;   0.263  ;    ; RE   ; 1      ; R6_X57_Y62_N0_I37                         ; H_SEG6                                   ;
+;   11.382 ;   0.311  ;    ; RE   ; 1      ; C2_X58_Y60_N0_I15                         ; V_SEG2                                   ;
+;   11.690 ;   0.308  ;    ; RE   ; 1      ; R6_X59_Y60_N0_I7                          ; H_SEG6                                   ;
+;   11.941 ;   0.251  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X62_Y60_N0_I29         ; LAB_LINE                                 ;
+;   12.069 ;   0.128  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X62_Y60_N0_I9             ; LEIM_INPUT                               ;
+;   12.068 ;   -0.001 ; FF ; IC   ; 2      ; LABCELL_X62_Y60_N6                        ; u_norm|Add7~5|dataf                      ;
+;   13.618 ;   1.550  ; FF ; CELL ; 1      ; LABCELL_X62_Y60_N6                        ; u_norm|Add7~5|cout                       ;
+;   13.618 ;   0.000  ;    ; RE   ; 2      ; LABCELL_X62_Y60_N6                        ; ARRIAV_LCELL_COMB                        ;
+;   13.618 ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X62_Y60_N9                        ; u_norm|Add7~17|cin                       ;
+;   13.618 ;   0.000  ; FF ; CELL ; 1      ; LABCELL_X62_Y60_N9                        ; u_norm|Add7~17|cout                      ;
+;   13.618 ;   0.000  ;    ; RE   ; 2      ; LABCELL_X62_Y60_N9                        ; ARRIAV_LCELL_COMB                        ;
+;   13.618 ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X62_Y60_N12                       ; u_norm|Add7~21|cin                       ;
+;   14.122 ;   0.504  ; FR ; CELL ; 2      ; LABCELL_X62_Y60_N12                       ; u_norm|Add7~21|sumout                    ;
+;   14.122 ;   0.000  ;    ; RE   ; 2      ; LABCELL_X62_Y60_N12                       ; ARRIAV_LCELL_COMB                        ;
+;   14.235 ;   0.113  ;    ; RE   ; 1      ; LE_BUFFER_X62_Y60_N0_I9                   ; LE_BUFFER                                ;
+;   14.395 ;   0.160  ;    ; RE   ; 1      ; C2_X61_Y58_N0_I11                         ; V_SEG2                                   ;
+;   14.564 ;   0.169  ;    ; RE   ; 2      ; LOCAL_INTERCONNECT_X62_Y59_N0_I0          ; LAB_LINE                                 ;
+;   14.666 ;   0.102  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X62_Y59_N0_I67            ; LEIM_INPUT                               ;
+;   14.666 ;   0.000  ; RR ; IC   ; 1      ; LABCELL_X62_Y59_N48                       ; u_norm|LessThan7~0|datab                 ;
+;   15.434 ;   0.768  ; RF ; CELL ; 1      ; LABCELL_X62_Y59_N48                       ; u_norm|LessThan7~0|combout               ;
+;   15.434 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X62_Y59_N48                       ; ARRIAV_LCELL_COMB                        ;
+;   15.512 ;   0.078  ;    ; RE   ; 1      ; LOCAL_LINE_X62_Y59_N0_I16                 ; LOCAL_LINE                               ;
+;   15.650 ;   0.138  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X62_Y59_N0_I60            ; LEIM_INPUT                               ;
+;   15.650 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X62_Y59_N42                       ; u_norm|LessThan7~1|datac                 ;
+;   16.329 ;   0.679  ; FF ; CELL ; 1      ; LABCELL_X62_Y59_N42                       ; u_norm|LessThan7~1|combout               ;
+;   16.329 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X62_Y59_N42                       ; ARRIAV_LCELL_COMB                        ;
+;   16.404 ;   0.075  ;    ; RE   ; 1      ; LE_BUFFER_X62_Y59_N0_I29                  ; LE_BUFFER                                ;
+;   16.581 ;   0.177  ;    ; RE   ; 1      ; C2_X61_Y57_N0_I15                         ; V_SEG2                                   ;
+;   16.934 ;   0.353  ;    ; RE   ; 1      ; R6_X56_Y58_N0_I29                         ; H_SEG6                                   ;
+;   17.203 ;   0.269  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X57_Y58_N0_I18         ; LAB_LINE                                 ;
+;   17.297 ;   0.094  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X57_Y58_N0_I66            ; LEIM_INPUT                               ;
+;   17.298 ;   0.001  ; FF ; IC   ; 1      ; LABCELL_X57_Y58_N48                       ; u_tm|always3~2|dataa                     ;
+;   18.044 ;   0.746  ; FF ; CELL ; 7      ; LABCELL_X57_Y58_N48                       ; u_tm|always3~2|combout                   ;
+;   18.044 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X57_Y58_N48                       ; ARRIAV_LCELL_COMB                        ;
+;   18.119 ;   0.075  ;    ; RE   ; 1      ; LE_BUFFER_X57_Y58_N0_I33                  ; LE_BUFFER                                ;
+;   18.294 ;   0.175  ;    ; RE   ; 1      ; C2_X56_Y56_N0_I21                         ; V_SEG2                                   ;
+;   18.528 ;   0.234  ;    ; RE   ; 1      ; R3_X57_Y57_N0_I4                          ; H_SEG3                                   ;
+;   18.528 ;   0.000  ;    ; RE   ; 2      ; R14_C12_INTERCONNECT_DRIVER_X57_Y57_N0_I1 ; WIRE_MUX                                 ;
+;   18.894 ;   0.366  ;    ; RE   ; 1      ; C12_X57_Y45_N0_I1                         ; V_SEG12                                  ;
+;   19.289 ;   0.395  ;    ; RE   ; 1      ; R6_X52_Y45_N0_I29                         ; H_SEG6                                   ;
+;   19.612 ;   0.323  ;    ; RE   ; 6      ; LOCAL_INTERCONNECT_X57_Y45_N0_I19         ; LAB_LINE                                 ;
+;   19.756 ;   0.144  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X57_Y45_N0_I72            ; LEIM_INPUT                               ;
+;   19.756 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X57_Y45_N54                       ; u_norm|u_norm|quant_m[17]~0|datad        ;
+;   20.162 ;   0.406  ; FF ; CELL ; 139    ; LABCELL_X57_Y45_N54                       ; u_norm|u_norm|quant_m[17]~0|combout      ;
+;   20.162 ;   0.000  ;    ; RE   ; 3      ; LABCELL_X57_Y45_N54                       ; ARRIAV_LCELL_COMB                        ;
+;   20.235 ;   0.073  ;    ; RE   ; 3      ; LE_BUFFER_X57_Y45_N0_I36                  ; LE_BUFFER                                ;
+;   20.487 ;   0.252  ;    ; RE   ; 6      ; C4_X57_Y41_N0_I9                          ; V_SEG4                                   ;
+;   20.825 ;   0.338  ;    ; RE   ; 1      ; R3_X55_Y43_N0_I14                         ; H_SEG3                                   ;
+;   21.015 ;   0.190  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X56_Y43_N0_I22         ; LAB_LINE                                 ;
+;   21.127 ;   0.112  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X56_Y43_N0_I49            ; LEIM_INPUT                               ;
+;   21.127 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X56_Y43_N36                       ; u_norm|u_norm|word_index[3]~2|dataf      ;
+;   21.241 ;   0.114  ; FR ; CELL ; 2      ; LABCELL_X56_Y43_N36                       ; u_norm|u_norm|word_index[3]~2|combout    ;
+;   21.241 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X56_Y43_N36                       ; ARRIAV_LCELL_COMB                        ;
+;   21.373 ;   0.132  ;    ; RE   ; 2      ; LOCAL_LINE_X56_Y43_N0_I12                 ; LOCAL_LINE                               ;
+;   21.526 ;   0.153  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X56_Y43_N0_I32            ; LEIM_INPUT                               ;
+;   21.526 ;   0.000  ; RR ; IC   ; 1      ; LABCELL_X56_Y43_N24                       ; u_norm|u_norm|lane[3]~3|datad            ;
+;   21.834 ;   0.308  ; RR ; CELL ; 3      ; LABCELL_X56_Y43_N24                       ; u_norm|u_norm|lane[3]~3|combout          ;
+;   21.834 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X56_Y43_N24                       ; ARRIAV_LCELL_COMB                        ;
+;   21.991 ;   0.157  ;    ; RE   ; 1      ; LE_BUFFER_X56_Y43_N0_I17                  ; LE_BUFFER                                ;
+;   22.288 ;   0.297  ;    ; RE   ; 2      ; C4_X55_Y39_N0_I8                          ; V_SEG4                                   ;
+;   22.608 ;   0.320  ;    ; RE   ; 1      ; R6_X50_Y42_N0_I30                         ; H_SEG6                                   ;
+;   22.786 ;   0.178  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X52_Y42_N0_I0          ; LAB_LINE                                 ;
+;   22.884 ;   0.098  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X52_Y42_N0_I59            ; LEIM_INPUT                               ;
+;   22.885 ;   0.001  ; RR ; IC   ; 1      ; MLABCELL_X52_Y42_N42                      ; u_norm|u_norm|lane[2]~7|datab            ;
+;   23.644 ;   0.759  ; RF ; CELL ; 2      ; MLABCELL_X52_Y42_N42                      ; u_norm|u_norm|lane[2]~7|combout          ;
+;   23.644 ;   0.000  ;    ; RE   ; 1      ; MLABCELL_X52_Y42_N42                      ; ARRIAV_LCELL_COMB                        ;
+;   23.724 ;   0.080  ;    ; RE   ; 1      ; LE_BUFFER_X52_Y42_N0_I28                  ; LE_BUFFER                                ;
+;   23.930 ;   0.206  ;    ; RE   ; 1      ; C2_X52_Y40_N0_I16                         ; V_SEG2                                   ;
+;   24.251 ;   0.321  ;    ; RE   ; 1      ; R6_X47_Y41_N0_I39                         ; H_SEG6                                   ;
+;   24.494 ;   0.243  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X51_Y41_N0_I31         ; LAB_LINE                                 ;
+;   24.615 ;   0.121  ;    ; RE   ; 2      ; BLOCK_INPUT_MUX_X51_Y41_N0_I70            ; LEIM_INPUT                               ;
+;   24.615 ;   0.000  ; FF ; IC   ; 1      ; FF_X51_Y41_N53                            ; u_norm|u_norm|lane[2]|asdata             ;
+;   25.414 ;   0.799  ; FF ; CELL ; 1      ; FF_X51_Y41_N53                            ; norm_dispatch:u_norm|norm:u_norm|lane[2] ;
++----------+----------+----+------+--------+-------------------------------------------+------------------------------------------+
+
++---------------------------------------------------------------------------------------------------------------------------+
+; Data Required Path                                                                                                        ;
++---------+---------+----+------+--------+---------------------------------------+------------------------------------------+
+; Total   ; Incr    ; RF ; Type ; Fanout ; Location                              ; Element                                  ;
++---------+---------+----+------+--------+---------------------------------------+------------------------------------------+
+; 1.000   ; 1.000   ;    ;      ;        ;                                       ; latch edge time                          ;
+; 5.683   ; 4.683   ;    ;      ;        ;                                       ; clock path                               ;
+;   1.000 ;   0.000 ;    ;      ;        ;                                       ; source latency                           ;
+;   1.000 ;   0.000 ;    ;      ; 1      ; PIN_N16                               ; clk                                      ;
+;   1.000 ;   0.000 ;    ; RE   ; 1      ; IOPAD_X89_Y35_N43                     ; ARRIAV_IO_PAD                            ;
+;   1.000 ;   0.000 ;    ; RE   ; 1      ; IO_PAD_OUTPUT_X89_Y35_N43_I1          ; IO_PAD_OUTPUT                            ;
+;   1.000 ;   0.000 ;    ; RE   ; 1      ; IO_INPUT_BUFFER_INPUT_X89_Y35_N44_I0  ; IO_INPUT_BUFFER_INPUT                    ;
+;   1.000 ;   0.000 ; RR ; IC   ; 1      ; IOIBUF_X89_Y35_N44                    ; clk~input|i                              ;
+;   1.989 ;   0.989 ; RR ; CELL ; 1      ; IOIBUF_X89_Y35_N44                    ; clk~input|o                              ;
+;   1.989 ;   0.000 ;    ; RE   ; 1      ; IOIBUF_X89_Y35_N44                    ; ARRIAV_IO_IBUF                           ;
+;   1.989 ;   0.000 ;    ; RE   ; 1      ; IO_INPUT_BUFFER_OUTPUT_X89_Y35_N44_I2 ; IO_INPUT_BUFFER_OUTPUT                   ;
+;   1.989 ;   0.000 ;    ; RE   ; 1      ; IO_RE_X89_Y35_N43_I96                 ; IO_RE                                    ;
+;   2.084 ;   0.095 ;    ; RE   ; 1      ; IO_RE_X89_Y35_N43_I66                 ; IO_RE                                    ;
+;   2.296 ;   0.212 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I368     ; CLKBUF_CLUSTER_RE                        ;
+;   2.296 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I764     ; CLKBUF_CLUSTER_RE                        ;
+;   2.296 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I813     ; CLKBUF_CLUSTER_RE                        ;
+;   2.296 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I553     ; CLKBUF_CLUSTER_RE                        ;
+;   2.296 ;   0.000 ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X89_Y39_N6_I10        ; GCLK_CLUSTER_RE                          ;
+;   2.296 ;   0.000 ;    ; RE   ; 1      ; CLKBUFBLOCK_INPUT_X89_Y39_N7_I0       ; CLKBUFBLOCK_INPUT                        ;
+;   2.296 ;   0.000 ; RR ; IC   ; 1      ; CLKCTRL_G9                            ; clk~inputCLKENA0|inclk                   ;
+;   2.801 ;   0.505 ; RR ; CELL ; 6701   ; CLKCTRL_G9                            ; clk~inputCLKENA0|outclk                  ;
+;   2.801 ;   0.000 ;    ; RE   ; 1      ; CLKCTRL_G9                            ; ARRIAV_CLKBUF                            ;
+;   2.801 ;   0.000 ;    ; RE   ; 1      ; CLKBUFBLOCK_OUTPUT_X89_Y39_N7_I2      ; CLKBUFBLOCK_OUTPUT                       ;
+;   2.801 ;   0.000 ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X89_Y39_N6_I12        ; GCLK_CLUSTER_RE                          ;
+;   2.801 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I416     ; CLKBUF_CLUSTER_RE                        ;
+;   3.629 ;   0.828 ;    ; RE   ; 10     ; GLOBAL_CLOCK_X0_Y36_N0_I9             ; GLOBAL_CLOCK                             ;
+;   3.794 ;   0.165 ;    ; RE   ; 22     ; SPINE_CLOCK_X55_Y37_N0_I22            ; SPINE_CLOCK                              ;
+;   4.251 ;   0.457 ;    ; RE   ; 1      ; SCLK_TO_ROWCLK_BUF_X55_Y41_N0_I133    ; SCLK_TO_ROWCLK_BUF                       ;
+;   4.350 ;   0.099 ;    ; RE   ; 2      ; SCLK_TO_ROWCLK_BUF_X55_Y41_N0_I136    ; SCLK_TO_ROWCLK_BUF                       ;
+;   4.830 ;   0.480 ;    ; RE   ; 6      ; LAB_CLK_X45_Y41_N0_I5                 ; LAB_CLK                                  ;
+;   4.963 ;   0.133 ;    ; RE   ; 1      ; BLK_CLK_BUF_X51_Y41_N0_I5             ; BLK_CLK_BUF                              ;
+;   5.024 ;   0.061 ;    ; RE   ; 1      ; ROWCLKSEL_PREBUF_X51_Y41_N0_I5        ; ROWCLKSEL_PREBUF                         ;
+;   5.066 ;   0.042 ;    ; RE   ; 1      ; ROWCLKSEL_X51_Y41_N0_I0               ; ROWCLKSEL                                ;
+;   5.066 ;   0.000 ;    ; RE   ; 2      ; GLOBAL_LOCAL_SEL_X51_Y41_N0_I0        ; GLOBAL_LOCAL_SEL                         ;
+;   5.066 ;   0.000 ;    ; RE   ; 4      ; LAB_INPUT_X51_Y41_N0_I0               ; LAB_INPUT                                ;
+;   5.066 ;   0.000 ; RR ; IC   ; 1      ; FF_X51_Y41_N53                        ; u_norm|u_norm|lane[2]|clk                ;
+;   5.635 ;   0.569 ; RR ; CELL ; 1      ; FF_X51_Y41_N53                        ; norm_dispatch:u_norm|norm:u_norm|lane[2] ;
+;   5.683 ;   0.048 ;    ;      ;        ;                                       ; clock pessimism removed                  ;
+; 5.583   ; -0.100  ;    ;      ;        ;                                       ; clock uncertainty                        ;
+; 5.583   ; 0.000   ;    ; uTsu ; 1      ; FF_X51_Y41_N53                        ; norm_dispatch:u_norm|norm:u_norm|lane[2] ;
++---------+---------+----+------+--------+---------------------------------------+------------------------------------------+
+
+----------------------------
+; Extra Fitter Information ;
+----------------------------
+HTML report is unavailable in plain text report export.
+
+
+Path #3: Setup slack is -19.352 (VIOLATED)
+===============================================================================
++-------------------------------------------------------------+
+; Path Summary                                                ;
++--------------------+----------------------------------------+
+; Property           ; Value                                  ;
++--------------------+----------------------------------------+
+; From Node          ; descriptor_file:u_desc|ws[7].length[2] ;
+; To Node            ; rowwise_dispatch:u_row|state.REQ_A     ;
+; Launch Clock       ; clk                                    ;
+; Latch Clock        ; clk                                    ;
+; Data Arrival Time  ; 24.926                                 ;
+; Data Required Time ; 5.574                                  ;
+; Slack              ; -19.352 (VIOLATED)                     ;
++--------------------+----------------------------------------+
+
++-------------------------------------------------------------------------------------+
+; Statistics                                                                          ;
++------------------------+--------+-------+-------------+------------+--------+-------+
+; Property               ; Value  ; Count ; Total Delay ; % of Total ; Min    ; Max   ;
++------------------------+--------+-------+-------------+------------+--------+-------+
+; Setup Relationship     ; 1.000  ;       ;             ;            ;        ;       ;
+; Clock Skew             ; -0.164 ;       ;             ;            ;        ;       ;
+; Data Delay             ; 20.088 ;       ;             ;            ;        ;       ;
+; Number of Logic Levels ;        ; 14    ;             ;            ;        ;       ;
+; Physical Delays        ;        ;       ;             ;            ;        ;       ;
+;  Arrival Path          ;        ;       ;             ;            ;        ;       ;
+;   Clock                ;        ;       ;             ;            ;        ;       ;
+;    IC                  ;        ; 3     ; 0.001       ; 0          ; 0.000  ; 0.001 ;
+;    Cell                ;        ; 3     ; 2.145       ; 44         ; 0.538  ; 0.989 ;
+;    Routing Element     ;        ; 27    ; 2.692       ; 56         ; 0.000  ; 0.859 ;
+;   Data                 ;        ;       ;             ;            ;        ;       ;
+;    IC                  ;        ; 21    ; 0.004       ; 0          ; -0.001 ; 0.001 ;
+;    Cell                ;        ; 22    ; 11.030      ; 55         ; 0.000  ; 1.146 ;
+;    uTco                ;        ; 1     ; 0.000       ; 0          ; 0.000  ; 0.000 ;
+;    Routing Element     ;        ; 72    ; 9.054       ; 45         ; 0.000  ; 0.383 ;
+;  Required Path         ;        ;       ;             ;            ;        ;       ;
+;   Clock                ;        ;       ;             ;            ;        ;       ;
+;    IC                  ;        ; 3     ; -0.001      ; 0          ; -0.001 ; 0.000 ;
+;    Cell                ;        ; 3     ; 2.062       ; 45         ; 0.505  ; 0.989 ;
+;    Routing Element     ;        ; 27    ; 2.565       ; 55         ; 0.000  ; 0.828 ;
++------------------------+--------+-------+-------------+------------+--------+-------+
+Note: Negative delays are omitted from totals when calculating percentages
+
++---------------------------------------------------------------------------------------------------------------------------+
+; Data Arrival Path                                                                                                         ;
++----------+----------+----+------+--------+---------------------------------------+----------------------------------------+
+; Total    ; Incr     ; RF ; Type ; Fanout ; Location                              ; Element                                ;
++----------+----------+----+------+--------+---------------------------------------+----------------------------------------+
+; 0.000    ; 0.000    ;    ;      ;        ;                                       ; launch edge time                       ;
+; 4.838    ; 4.838    ;    ;      ;        ;                                       ; clock path                             ;
+;   0.000  ;   0.000  ;    ;      ;        ;                                       ; source latency                         ;
+;   0.000  ;   0.000  ;    ;      ; 1      ; PIN_N16                               ; clk                                    ;
+;   0.000  ;   0.000  ;    ; RE   ; 1      ; IOPAD_X89_Y35_N43                     ; ARRIAV_IO_PAD                          ;
+;   0.000  ;   0.000  ;    ; RE   ; 1      ; IO_PAD_OUTPUT_X89_Y35_N43_I1          ; IO_PAD_OUTPUT                          ;
+;   0.000  ;   0.000  ;    ; RE   ; 1      ; IO_INPUT_BUFFER_INPUT_X89_Y35_N44_I0  ; IO_INPUT_BUFFER_INPUT                  ;
+;   0.000  ;   0.000  ; RR ; IC   ; 1      ; IOIBUF_X89_Y35_N44                    ; clk~input|i                            ;
+;   0.989  ;   0.989  ; RR ; CELL ; 1      ; IOIBUF_X89_Y35_N44                    ; clk~input|o                            ;
+;   0.989  ;   0.000  ;    ; RE   ; 1      ; IOIBUF_X89_Y35_N44                    ; ARRIAV_IO_IBUF                         ;
+;   0.989  ;   0.000  ;    ; RE   ; 1      ; IO_INPUT_BUFFER_OUTPUT_X89_Y35_N44_I2 ; IO_INPUT_BUFFER_OUTPUT                 ;
+;   0.989  ;   0.000  ;    ; RE   ; 1      ; IO_RE_X89_Y35_N43_I96                 ; IO_RE                                  ;
+;   1.089  ;   0.100  ;    ; RE   ; 1      ; IO_RE_X89_Y35_N43_I66                 ; IO_RE                                  ;
+;   1.311  ;   0.222  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I368     ; CLKBUF_CLUSTER_RE                      ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I764     ; CLKBUF_CLUSTER_RE                      ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I813     ; CLKBUF_CLUSTER_RE                      ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I553     ; CLKBUF_CLUSTER_RE                      ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X89_Y39_N6_I10        ; GCLK_CLUSTER_RE                        ;
+;   1.311  ;   0.000  ;    ; RE   ; 1      ; CLKBUFBLOCK_INPUT_X89_Y39_N7_I0       ; CLKBUFBLOCK_INPUT                      ;
+;   1.311  ;   0.000  ; RR ; IC   ; 1      ; CLKCTRL_G9                            ; clk~inputCLKENA0|inclk                 ;
+;   1.849  ;   0.538  ; RR ; CELL ; 6701   ; CLKCTRL_G9                            ; clk~inputCLKENA0|outclk                ;
+;   1.849  ;   0.000  ;    ; RE   ; 1      ; CLKCTRL_G9                            ; ARRIAV_CLKBUF                          ;
+;   1.849  ;   0.000  ;    ; RE   ; 1      ; CLKBUFBLOCK_OUTPUT_X89_Y39_N7_I2      ; CLKBUFBLOCK_OUTPUT                     ;
+;   1.849  ;   0.000  ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X89_Y39_N6_I12        ; GCLK_CLUSTER_RE                        ;
+;   1.849  ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I416     ; CLKBUF_CLUSTER_RE                      ;
+;   2.708  ;   0.859  ;    ; RE   ; 10     ; GLOBAL_CLOCK_X0_Y36_N0_I9             ; GLOBAL_CLOCK                           ;
+;   2.879  ;   0.171  ;    ; RE   ; 18     ; SPINE_CLOCK_X55_Y59_N0_I22            ; SPINE_CLOCK                            ;
+;   3.361  ;   0.482  ;    ; RE   ; 1      ; SCLK_TO_ROWCLK_BUF_X55_Y63_N0_I132    ; SCLK_TO_ROWCLK_BUF                     ;
+;   3.460  ;   0.099  ;    ; RE   ; 2      ; SCLK_TO_ROWCLK_BUF_X55_Y63_N0_I135    ; SCLK_TO_ROWCLK_BUF                     ;
+;   3.960  ;   0.500  ;    ; RE   ; 7      ; LAB_CLK_X56_Y63_N0_I2                 ; LAB_CLK                                ;
+;   4.109  ;   0.149  ;    ; RE   ; 1      ; BLK_CLK_BUF_X57_Y63_N0_I2             ; BLK_CLK_BUF                            ;
+;   4.171  ;   0.062  ;    ; RE   ; 1      ; ROWCLKSEL_PREBUF_X57_Y63_N0_I2        ; ROWCLKSEL_PREBUF                       ;
+;   4.219  ;   0.048  ;    ; RE   ; 1      ; ROWCLKSEL_X57_Y63_N0_I1               ; ROWCLKSEL                              ;
+;   4.219  ;   0.000  ;    ; RE   ; 3      ; GLOBAL_LOCAL_SEL_X57_Y63_N0_I1        ; GLOBAL_LOCAL_SEL                       ;
+;   4.219  ;   0.000  ;    ; RE   ; 3      ; LAB_INPUT_X57_Y63_N0_I2               ; LAB_INPUT                              ;
+;   4.220  ;   0.001  ; RR ; IC   ; 1      ; FF_X57_Y63_N8                         ; u_desc|ws[7].length[2]|clk             ;
+;   4.838  ;   0.618  ; RR ; CELL ; 1      ; FF_X57_Y63_N8                         ; descriptor_file:u_desc|ws[7].length[2] ;
+; 24.926   ; 20.088   ;    ;      ;        ;                                       ; data path                              ;
+;   4.838  ;   0.000  ;    ; uTco ; 1      ; FF_X57_Y63_N8                         ; descriptor_file:u_desc|ws[7].length[2] ;
+;   4.838  ;   0.000  ; FF ; CELL ; 4      ; FF_X57_Y63_N8                         ; u_desc|ws[7].length[2]|q               ;
+;   4.906  ;   0.068  ;    ; RE   ; 2      ; FF_X57_Y63_N8                         ; ARRIAV_FF                              ;
+;   4.979  ;   0.073  ;    ; RE   ; 1      ; LE_BUFFER_X57_Y63_N0_I5               ; LE_BUFFER                              ;
+;   5.172  ;   0.193  ;    ; RE   ; 1      ; C2_X56_Y64_N0_I3                      ; V_SEG2                                 ;
+;   5.400  ;   0.228  ;    ; RE   ; 1      ; R3_X54_Y65_N0_I16                     ; H_SEG3                                 ;
+;   5.616  ;   0.216  ;    ; RE   ; 3      ; LOCAL_INTERCONNECT_X56_Y65_N0_I20     ; LAB_LINE                               ;
+;   5.724  ;   0.108  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X56_Y65_N0_I27        ; LEIM_INPUT                             ;
+;   5.725  ;   0.001  ; FF ; IC   ; 1      ; LABCELL_X56_Y65_N21                   ; u_desc|Mux15~0|datab                   ;
+;   6.463  ;   0.738  ; FF ; CELL ; 1      ; LABCELL_X56_Y65_N21                   ; u_desc|Mux15~0|combout                 ;
+;   6.463  ;   0.000  ;    ; RE   ; 1      ; LABCELL_X56_Y65_N21                   ; ARRIAV_LCELL_COMB                      ;
+;   6.527  ;   0.064  ;    ; RE   ; 1      ; LE_BUFFER_X56_Y65_N0_I14              ; LE_BUFFER                              ;
+;   6.776  ;   0.249  ;    ; RE   ; 1      ; C4_X56_Y61_N0_I8                      ; V_SEG4                                 ;
+;   7.116  ;   0.340  ;    ; RE   ; 1      ; R6_X51_Y61_N0_I29                     ; H_SEG6                                 ;
+;   7.391  ;   0.275  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X56_Y61_N0_I18     ; LAB_LINE                               ;
+;   7.488  ;   0.097  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X56_Y61_N0_I66        ; LEIM_INPUT                             ;
+;   7.489  ;   0.001  ; FF ; IC   ; 1      ; LABCELL_X56_Y61_N48                   ; u_desc|Mux15~2|dataa                   ;
+;   8.235  ;   0.746  ; FF ; CELL ; 18     ; LABCELL_X56_Y61_N48                   ; u_desc|Mux15~2|combout                 ;
+;   8.235  ;   0.000  ;    ; RE   ; 1      ; LABCELL_X56_Y61_N48                   ; ARRIAV_LCELL_COMB                      ;
+;   8.307  ;   0.072  ;    ; RE   ; 3      ; LE_BUFFER_X56_Y61_N0_I32              ; LE_BUFFER                              ;
+;   8.563  ;   0.256  ;    ; RE   ; 4      ; C4_X56_Y57_N0_I6                      ; V_SEG4                                 ;
+;   8.898  ;   0.335  ;    ; RE   ; 3      ; R3_X54_Y58_N0_I21                     ; H_SEG3                                 ;
+;   9.163  ;   0.265  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X55_Y58_N0_I15     ; LAB_LINE                               ;
+;   9.318  ;   0.155  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X55_Y58_N0_I12        ; LEIM_INPUT                             ;
+;   9.318  ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X55_Y58_N6                    ; u_row|Add1~34|datac                    ;
+;   10.464 ;   1.146  ; FF ; CELL ; 1      ; LABCELL_X55_Y58_N6                    ; u_row|Add1~34|cout                     ;
+;   10.464 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X55_Y58_N6                    ; ARRIAV_LCELL_COMB                      ;
+;   10.464 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X55_Y58_N9                    ; u_row|Add1~30|cin                      ;
+;   10.464 ;   0.000  ; FF ; CELL ; 1      ; LABCELL_X55_Y58_N9                    ; u_row|Add1~30|cout                     ;
+;   10.464 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X55_Y58_N9                    ; ARRIAV_LCELL_COMB                      ;
+;   10.464 ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X55_Y58_N12                   ; u_row|Add1~5|cin                       ;
+;   10.962 ;   0.498  ; FF ; CELL ; 2      ; LABCELL_X55_Y58_N12                   ; u_row|Add1~5|sumout                    ;
+;   10.962 ;   0.000  ;    ; RE   ; 3      ; LABCELL_X55_Y58_N12                   ; ARRIAV_LCELL_COMB                      ;
+;   11.042 ;   0.080  ;    ; RE   ; 1      ; LE_BUFFER_X55_Y58_N0_I8               ; LE_BUFFER                              ;
+;   11.203 ;   0.161  ;    ; RE   ; 1      ; R6_X56_Y58_N0_I0                      ; H_SEG6                                 ;
+;   11.434 ;   0.231  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X56_Y58_N0_I22     ; LAB_LINE                               ;
+;   11.559 ;   0.125  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X56_Y58_N0_I77        ; LEIM_INPUT                             ;
+;   11.559 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X56_Y58_N57                   ; u_row|Selector6~0|datac                ;
+;   12.191 ;   0.632  ; FF ; CELL ; 2      ; LABCELL_X56_Y58_N57                   ; u_row|Selector6~0|combout              ;
+;   12.191 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X56_Y58_N57                   ; ARRIAV_LCELL_COMB                      ;
+;   12.290 ;   0.099  ;    ; RE   ; 1      ; LE_BUFFER_X56_Y58_N0_I39              ; LE_BUFFER                              ;
+;   12.638 ;   0.348  ;    ; RE   ; 2      ; R6_X56_Y58_N0_I5                      ; H_SEG6                                 ;
+;   12.947 ;   0.309  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X60_Y58_N0_I39     ; LAB_LINE                               ;
+;   13.092 ;   0.145  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X60_Y58_N0_I4         ; LEIM_INPUT                             ;
+;   13.093 ;   0.001  ; FF ; IC   ; 2      ; LABCELL_X60_Y58_N0                    ; u_row|Add3~9|datac                     ;
+;   14.239 ;   1.146  ; FF ; CELL ; 1      ; LABCELL_X60_Y58_N0                    ; u_row|Add3~9|cout                      ;
+;   14.239 ;   0.000  ;    ; RE   ; 2      ; LABCELL_X60_Y58_N0                    ; ARRIAV_LCELL_COMB                      ;
+;   14.239 ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X60_Y58_N3                    ; u_row|Add3~13|cin                      ;
+;   14.239 ;   0.000  ; FF ; CELL ; 1      ; LABCELL_X60_Y58_N3                    ; u_row|Add3~13|cout                     ;
+;   14.239 ;   0.000  ;    ; RE   ; 2      ; LABCELL_X60_Y58_N3                    ; ARRIAV_LCELL_COMB                      ;
+;   14.239 ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X60_Y58_N6                    ; u_row|Add3~5|cin                       ;
+;   14.296 ;   0.057  ; FF ; CELL ; 1      ; LABCELL_X60_Y58_N6                    ; u_row|Add3~5|cout                      ;
+;   14.296 ;   0.000  ;    ; RE   ; 2      ; LABCELL_X60_Y58_N6                    ; ARRIAV_LCELL_COMB                      ;
+;   14.296 ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X60_Y58_N9                    ; u_row|Add3~17|cin                      ;
+;   14.296 ;   0.000  ; FF ; CELL ; 1      ; LABCELL_X60_Y58_N9                    ; u_row|Add3~17|cout                     ;
+;   14.296 ;   0.000  ;    ; RE   ; 2      ; LABCELL_X60_Y58_N9                    ; ARRIAV_LCELL_COMB                      ;
+;   14.296 ;   0.000  ; FF ; IC   ; 2      ; LABCELL_X60_Y58_N12                   ; u_row|Add3~21|cin                      ;
+;   14.801 ;   0.505  ; FR ; CELL ; 1      ; LABCELL_X60_Y58_N12                   ; u_row|Add3~21|sumout                   ;
+;   14.801 ;   0.000  ;    ; RE   ; 2      ; LABCELL_X60_Y58_N12                   ; ARRIAV_LCELL_COMB                      ;
+;   14.934 ;   0.133  ;    ; RE   ; 1      ; LOCAL_LINE_X60_Y58_N0_I4              ; LOCAL_LINE                             ;
+;   15.052 ;   0.118  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X60_Y58_N0_I67        ; LEIM_INPUT                             ;
+;   15.052 ;   0.000  ; RR ; IC   ; 1      ; LABCELL_X60_Y58_N48                   ; u_row|LessThan3~0|datab                ;
+;   15.820 ;   0.768  ; RF ; CELL ; 1      ; LABCELL_X60_Y58_N48                   ; u_row|LessThan3~0|combout              ;
+;   15.820 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X60_Y58_N48                   ; ARRIAV_LCELL_COMB                      ;
+;   15.898 ;   0.078  ;    ; RE   ; 1      ; LOCAL_LINE_X60_Y58_N0_I16             ; LOCAL_LINE                             ;
+;   16.007 ;   0.109  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X60_Y58_N0_I58        ; LEIM_INPUT                             ;
+;   16.007 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X60_Y58_N42                   ; u_row|LessThan3~1|dataa                ;
+;   16.766 ;   0.759  ; FR ; CELL ; 1      ; LABCELL_X60_Y58_N42                   ; u_row|LessThan3~1|combout              ;
+;   16.766 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X60_Y58_N42                   ; ARRIAV_LCELL_COMB                      ;
+;   16.890 ;   0.124  ;    ; RE   ; 1      ; LE_BUFFER_X60_Y58_N0_I28              ; LE_BUFFER                              ;
+;   17.153 ;   0.263  ;    ; RE   ; 1      ; R6_X55_Y58_N0_I35                     ; H_SEG6                                 ;
+;   17.338 ;   0.185  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X57_Y58_N0_I39     ; LAB_LINE                               ;
+;   17.469 ;   0.131  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X57_Y58_N0_I63        ; LEIM_INPUT                             ;
+;   17.469 ;   0.000  ; RR ; IC   ; 1      ; LABCELL_X57_Y58_N45                   ; u_row|invalid~6|dataf                  ;
+;   17.582 ;   0.113  ; RF ; CELL ; 2      ; LABCELL_X57_Y58_N45                   ; u_row|invalid~6|combout                ;
+;   17.582 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X57_Y58_N45                   ; ARRIAV_LCELL_COMB                      ;
+;   17.667 ;   0.085  ;    ; RE   ; 2      ; LE_BUFFER_X57_Y58_N0_I31              ; LE_BUFFER                              ;
+;   17.865 ;   0.198  ;    ; RE   ; 1      ; C2_X56_Y59_N0_I7                      ; V_SEG2                                 ;
+;   18.248 ;   0.383  ;    ; RE   ; 1      ; R6_X51_Y60_N0_I24                     ; H_SEG6                                 ;
+;   18.543 ;   0.295  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X52_Y60_N0_I8      ; LAB_LINE                               ;
+;   18.666 ;   0.123  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X52_Y60_N0_I53        ; LEIM_INPUT                             ;
+;   18.665 ;   -0.001 ; FF ; IC   ; 1      ; MLABCELL_X52_Y60_N39                  ; u_row|invalid~14|datac                 ;
+;   19.435 ;   0.770  ; FF ; CELL ; 2      ; MLABCELL_X52_Y60_N39                  ; u_row|invalid~14|combout               ;
+;   19.435 ;   0.000  ;    ; RE   ; 1      ; MLABCELL_X52_Y60_N39                  ; ARRIAV_LCELL_COMB                      ;
+;   19.511 ;   0.076  ;    ; RE   ; 1      ; LE_BUFFER_X52_Y60_N0_I27              ; LE_BUFFER                              ;
+;   19.701 ;   0.190  ;    ; RE   ; 1      ; C4_X51_Y61_N0_I0                      ; V_SEG4                                 ;
+;   19.954 ;   0.253  ;    ; RE   ; 2      ; LOCAL_INTERCONNECT_X51_Y61_N0_I39     ; LAB_LINE                               ;
+;   20.115 ;   0.161  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X51_Y61_N0_I44        ; LEIM_INPUT                             ;
+;   20.116 ;   0.001  ; FF ; IC   ; 1      ; LABCELL_X51_Y61_N30                   ; u_row|Mux0~5|datac                     ;
+;   20.751 ;   0.635  ; FF ; CELL ; 1      ; LABCELL_X51_Y61_N30                   ; u_row|Mux0~5|combout                   ;
+;   20.751 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X51_Y61_N30                   ; ARRIAV_LCELL_COMB                      ;
+;   20.842 ;   0.091  ;    ; RE   ; 1      ; LOCAL_LINE_X51_Y61_N0_I10             ; LOCAL_LINE                             ;
+;   20.990 ;   0.148  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X51_Y61_N0_I37        ; LEIM_INPUT                             ;
+;   20.990 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X51_Y61_N24                   ; u_row|Mux0~10|datad                    ;
+;   21.670 ;   0.680  ; FF ; CELL ; 1      ; LABCELL_X51_Y61_N24                   ; u_row|Mux0~10|combout                  ;
+;   21.670 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X51_Y61_N24                   ; ARRIAV_LCELL_COMB                      ;
+;   21.733 ;   0.063  ;    ; RE   ; 1      ; LE_BUFFER_X51_Y61_N0_I16              ; LE_BUFFER                              ;
+;   21.898 ;   0.165  ;    ; RE   ; 1      ; R3_X49_Y61_N0_I12                     ; H_SEG3                                 ;
+;   22.179 ;   0.281  ;    ; RE   ; 1      ; C4_X50_Y57_N0_I7                      ; V_SEG4                                 ;
+;   22.444 ;   0.265  ;    ; RE   ; 1      ; LOCAL_INTERCONNECT_X51_Y57_N0_I8      ; LAB_LINE                               ;
+;   22.539 ;   0.095  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X51_Y57_N0_I43        ; LEIM_INPUT                             ;
+;   22.539 ;   0.000  ; FF ; IC   ; 1      ; LABCELL_X51_Y57_N30                   ; u_row|invalid~20|datab                 ;
+;   23.266 ;   0.727  ; FR ; CELL ; 1      ; LABCELL_X51_Y57_N30                   ; u_row|invalid~20|combout               ;
+;   23.266 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X51_Y57_N30                   ; ARRIAV_LCELL_COMB                      ;
+;   23.412 ;   0.146  ;    ; RE   ; 1      ; LOCAL_LINE_X51_Y57_N0_I10             ; LOCAL_LINE                             ;
+;   23.566 ;   0.154  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X51_Y57_N0_I15        ; LEIM_INPUT                             ;
+;   23.566 ;   0.000  ; RR ; IC   ; 1      ; LABCELL_X51_Y57_N9                    ; u_row|invalid~25|dataf                 ;
+;   23.683 ;   0.117  ; RF ; CELL ; 3      ; LABCELL_X51_Y57_N9                    ; u_row|invalid~25|combout               ;
+;   23.683 ;   0.000  ;    ; RE   ; 2      ; LABCELL_X51_Y57_N9                    ; ARRIAV_LCELL_COMB                      ;
+;   23.777 ;   0.094  ;    ; RE   ; 2      ; LOCAL_LINE_X51_Y57_N0_I3              ; LOCAL_LINE                             ;
+;   23.932 ;   0.155  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X51_Y57_N0_I5         ; LEIM_INPUT                             ;
+;   23.933 ;   0.001  ; FF ; IC   ; 1      ; LABCELL_X51_Y57_N0                    ; u_row|Selector98~0|datad               ;
+;   24.609 ;   0.676  ; FF ; CELL ; 1      ; LABCELL_X51_Y57_N0                    ; u_row|Selector98~0|combout             ;
+;   24.609 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X51_Y57_N0                    ; ARRIAV_LCELL_COMB                      ;
+;   24.609 ;   0.000  ; FF ; IC   ; 1      ; FF_X51_Y57_N1                         ; u_row|state.REQ_A|d                    ;
+;   24.926 ;   0.317  ; FF ; CELL ; 1      ; FF_X51_Y57_N1                         ; rowwise_dispatch:u_row|state.REQ_A     ;
++----------+----------+----+------+--------+---------------------------------------+----------------------------------------+
+
++----------------------------------------------------------------------------------------------------------------------+
+; Data Required Path                                                                                                   ;
++---------+----------+----+------+--------+---------------------------------------+------------------------------------+
+; Total   ; Incr     ; RF ; Type ; Fanout ; Location                              ; Element                            ;
++---------+----------+----+------+--------+---------------------------------------+------------------------------------+
+; 1.000   ; 1.000    ;    ;      ;        ;                                       ; latch edge time                    ;
+; 5.674   ; 4.674    ;    ;      ;        ;                                       ; clock path                         ;
+;   1.000 ;   0.000  ;    ;      ;        ;                                       ; source latency                     ;
+;   1.000 ;   0.000  ;    ;      ; 1      ; PIN_N16                               ; clk                                ;
+;   1.000 ;   0.000  ;    ; RE   ; 1      ; IOPAD_X89_Y35_N43                     ; ARRIAV_IO_PAD                      ;
+;   1.000 ;   0.000  ;    ; RE   ; 1      ; IO_PAD_OUTPUT_X89_Y35_N43_I1          ; IO_PAD_OUTPUT                      ;
+;   1.000 ;   0.000  ;    ; RE   ; 1      ; IO_INPUT_BUFFER_INPUT_X89_Y35_N44_I0  ; IO_INPUT_BUFFER_INPUT              ;
+;   1.000 ;   0.000  ; RR ; IC   ; 1      ; IOIBUF_X89_Y35_N44                    ; clk~input|i                        ;
+;   1.989 ;   0.989  ; RR ; CELL ; 1      ; IOIBUF_X89_Y35_N44                    ; clk~input|o                        ;
+;   1.989 ;   0.000  ;    ; RE   ; 1      ; IOIBUF_X89_Y35_N44                    ; ARRIAV_IO_IBUF                     ;
+;   1.989 ;   0.000  ;    ; RE   ; 1      ; IO_INPUT_BUFFER_OUTPUT_X89_Y35_N44_I2 ; IO_INPUT_BUFFER_OUTPUT             ;
+;   1.989 ;   0.000  ;    ; RE   ; 1      ; IO_RE_X89_Y35_N43_I96                 ; IO_RE                              ;
+;   2.084 ;   0.095  ;    ; RE   ; 1      ; IO_RE_X89_Y35_N43_I66                 ; IO_RE                              ;
+;   2.296 ;   0.212  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I368     ; CLKBUF_CLUSTER_RE                  ;
+;   2.296 ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I764     ; CLKBUF_CLUSTER_RE                  ;
+;   2.296 ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I813     ; CLKBUF_CLUSTER_RE                  ;
+;   2.296 ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I553     ; CLKBUF_CLUSTER_RE                  ;
+;   2.296 ;   0.000  ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X89_Y39_N6_I10        ; GCLK_CLUSTER_RE                    ;
+;   2.296 ;   0.000  ;    ; RE   ; 1      ; CLKBUFBLOCK_INPUT_X89_Y39_N7_I0       ; CLKBUFBLOCK_INPUT                  ;
+;   2.296 ;   0.000  ; RR ; IC   ; 1      ; CLKCTRL_G9                            ; clk~inputCLKENA0|inclk             ;
+;   2.801 ;   0.505  ; RR ; CELL ; 6701   ; CLKCTRL_G9                            ; clk~inputCLKENA0|outclk            ;
+;   2.801 ;   0.000  ;    ; RE   ; 1      ; CLKCTRL_G9                            ; ARRIAV_CLKBUF                      ;
+;   2.801 ;   0.000  ;    ; RE   ; 1      ; CLKBUFBLOCK_OUTPUT_X89_Y39_N7_I2      ; CLKBUFBLOCK_OUTPUT                 ;
+;   2.801 ;   0.000  ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X89_Y39_N6_I12        ; GCLK_CLUSTER_RE                    ;
+;   2.801 ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X89_Y39_N3_I416     ; CLKBUF_CLUSTER_RE                  ;
+;   3.629 ;   0.828  ;    ; RE   ; 10     ; GLOBAL_CLOCK_X0_Y36_N0_I9             ; GLOBAL_CLOCK                       ;
+;   3.791 ;   0.162  ;    ; RE   ; 22     ; SPINE_CLOCK_X55_Y37_N0_I22            ; SPINE_CLOCK                        ;
+;   4.249 ;   0.458  ;    ; RE   ; 1      ; SCLK_TO_ROWCLK_BUF_X55_Y57_N0_I133    ; SCLK_TO_ROWCLK_BUF                 ;
+;   4.346 ;   0.097  ;    ; RE   ; 2      ; SCLK_TO_ROWCLK_BUF_X55_Y57_N0_I136    ; SCLK_TO_ROWCLK_BUF                 ;
+;   4.825 ;   0.479  ;    ; RE   ; 5      ; LAB_CLK_X45_Y57_N0_I5                 ; LAB_CLK                            ;
+;   4.956 ;   0.131  ;    ; RE   ; 1      ; BLK_CLK_BUF_X51_Y57_N0_I5             ; BLK_CLK_BUF                        ;
+;   5.015 ;   0.059  ;    ; RE   ; 1      ; ROWCLKSEL_PREBUF_X51_Y57_N0_I5        ; ROWCLKSEL_PREBUF                   ;
+;   5.059 ;   0.044  ;    ; RE   ; 1      ; ROWCLKSEL_X51_Y57_N0_I0               ; ROWCLKSEL                          ;
+;   5.059 ;   0.000  ;    ; RE   ; 2      ; GLOBAL_LOCAL_SEL_X51_Y57_N0_I0        ; GLOBAL_LOCAL_SEL                   ;
+;   5.059 ;   0.000  ;    ; RE   ; 7      ; LAB_INPUT_X51_Y57_N0_I0               ; LAB_INPUT                          ;
+;   5.058 ;   -0.001 ; RR ; IC   ; 1      ; FF_X51_Y57_N1                         ; u_row|state.REQ_A|clk              ;
+;   5.626 ;   0.568  ; RR ; CELL ; 1      ; FF_X51_Y57_N1                         ; rowwise_dispatch:u_row|state.REQ_A ;
+;   5.674 ;   0.048  ;    ;      ;        ;                                       ; clock pessimism removed            ;
+; 5.574   ; -0.100   ;    ;      ;        ;                                       ; clock uncertainty                  ;
+; 5.574   ; 0.000    ;    ; uTsu ; 1      ; FF_X51_Y57_N1                         ; rowwise_dispatch:u_row|state.REQ_A ;
++---------+----------+----+------+--------+---------------------------------------+------------------------------------+
+
+----------------------------
+; Extra Fitter Information ;
+----------------------------
+HTML report is unavailable in plain text report export.
+
+

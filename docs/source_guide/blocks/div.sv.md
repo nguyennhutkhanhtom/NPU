@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — scalar nội bộ.
 
-**Source:** [div.sv](<../../../Verilog%20Source%20code/div.sv>). **Số dòng:** 68. **SHA-256:** `c2c7e524ecc7219f8a3792eca7957626991e2127a4c7f0fa31d4df272f321f54`.
+**Source:** [div.sv](<../../../Verilog%20Source%20code/div.sv>). **Số dòng:** 72. **SHA-256:** `ddb1191f9879b7d3643d82a544ea14c30e7df999a3af5d913f354259363aa228`.
 
 ## Khối này làm gì?
 
@@ -58,9 +58,9 @@ Start khi rảnh chốt numerator/denominator. Mỗi cycle busy tiến một bit
 Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
 
 
-### [Dòng 1–24: Giao diện và độ rộng](<../../../Verilog%20Source%20code/div.sv#L1>)
+### [Dòng 1–25: Giao diện và độ rộng](<../../../Verilog%20Source%20code/div.sv#L1>)
 
-<!-- source-range:1:24 -->
+<!-- source-range:1:25 -->
 ```systemverilog
 // Small sequential unsigned divider used by the scalar unit.
 // Signed operations are formed outside this block from magnitudes/signs.
@@ -86,6 +86,7 @@ module div #(
     logic [CW - 1 : 0] count;
     logic [DEN_W : 0] rem_shift;
     logic [NUM_W - 1 : 0] q_next;
+    logic [DEN_W + 1 : 0] difference;
 ```
 
 **Mục đích.** Remainder trung gian rộng DEN_W+1 để không mất carry khi dịch.
@@ -95,16 +96,19 @@ module div #(
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `numerator`: tử số phép chia; `denominator`: mẫu số phép chia; `busy`: khối đang xử lý; `done`: xung báo hoàn tất; `div_zero`: divider báo mẫu bằng 0; và 8 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 25–33: Một bước chia](<../../../Verilog%20Source%20code/div.sv#L25>)
+### [Dòng 26–37: Một bước chia](<../../../Verilog%20Source%20code/div.sv#L26>)
 
-<!-- source-range:25:33 -->
+<!-- source-range:26:37 -->
 ```systemverilog
 
     always_comb begin
         rem_shift = {rem_work[DEN_W - 1 : 0], q_work[NUM_W - 1]};
         q_next = q_work << 1;
-        if (rem_shift >= {1'b0, den_reg}) begin
-            rem_shift = rem_shift - {1'b0, den_reg};
+        // One extended subtraction provides both the borrow and remainder.
+        // A separate magnitude comparator would precede the same carry chain.
+        difference = {1'b0, rem_shift} - {2'b00, den_reg};
+        if (!difference[DEN_W + 1]) begin
+            rem_shift = difference[DEN_W : 0];
             q_next[0] = 1'b1;
         end
     end
@@ -139,9 +143,9 @@ flowchart TB
 ```
 
 
-### [Dòng 34–54: Reset/start](<../../../Verilog%20Source%20code/div.sv#L34>)
+### [Dòng 38–58: Reset/start](<../../../Verilog%20Source%20code/div.sv#L38>)
 
-<!-- source-range:34:54 -->
+<!-- source-range:38:58 -->
 ```systemverilog
 
     always_ff @(posedge clk or negedge rst_n) begin
@@ -173,9 +177,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `busy`: khối đang xử lý; `done`: xung báo hoàn tất; `div_zero`: divider báo mẫu bằng 0; `quotient`: thương; `remainder`: phần dư; `q_work`: thanh ghi numerator/quotient trong vòng chia; và 6 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 55–68: Vòng lặp](<../../../Verilog%20Source%20code/div.sv#L55>)
+### [Dòng 59–72: Vòng lặp](<../../../Verilog%20Source%20code/div.sv#L59>)
 
-<!-- source-range:55:68 -->
+<!-- source-range:59:72 -->
 ```systemverilog
             end else if (busy) begin
                 q_work <= q_next;

@@ -4,40 +4,40 @@
     {
       "file": "matmulfree.sv",
       "path": "Verilog Source code/matmulfree.sv",
-      "sha256": "3a785e7285519557a973fc8597449c56d0ffdc8bf0b62ca6bbdbdfaf6d132bcc",
-      "lines": 517,
+      "sha256": "6b18f26a9779be75adcba42f83dabc1bdf5d225c2ab378d712e7950afb127c12",
+      "lines": 572,
       "groups": 15,
       "document": "blocks/matmulfree.sv.md"
     },
     {
       "file": "npu_pkg.sv",
       "path": "Verilog Source code/npu_pkg.sv",
-      "sha256": "1061016c51092f4f9269fc99392c30bc1bd2117103ef5f49474a296f5077a343",
-      "lines": 110,
-      "groups": 6,
+      "sha256": "f2914bb24c72644edbf2b57e5eabad9a4f3dbf88d2dd72b79285ccdf8e2b2d86",
+      "lines": 128,
+      "groups": 7,
       "document": "blocks/npu_pkg.sv.md"
     },
     {
       "file": "norm.sv",
       "path": "Verilog Source code/norm.sv",
-      "sha256": "03e8f34433b60a8f81509c38fbe4467cf0ef1fd363a4e2a7d41212463f2a2d1b",
-      "lines": 580,
+      "sha256": "46cd35b648f181dd12c59a4fb139c57be2ec0228b074e66354677bd40d9252c6",
+      "lines": 623,
       "groups": 17,
       "document": "blocks/norm.sv.md"
     },
     {
       "file": "ternary_mul.sv",
       "path": "Verilog Source code/ternary_mul.sv",
-      "sha256": "0593ecc70787ee9746c6c26e7d8507c0f2e5ab05f14b1226e5efc81d052bca45",
-      "lines": 266,
+      "sha256": "b78af1a9a1c89f80eeca091bc66ea6a4c400d0ca1a3fe418906c9197554b2152",
+      "lines": 301,
       "groups": 9,
       "document": "blocks/ternary_mul.sv.md"
     },
     {
       "file": "rowwise_op.sv",
       "path": "Verilog Source code/rowwise_op.sv",
-      "sha256": "a3f17f1e9c346841f76b31f39eda799818a139b98a2a7059778f1336d3c4ad46",
-      "lines": 193,
+      "sha256": "e9bdb936eb5a29bb8226d1d072b7f81e534b23f48d17fc7c493eabeacb9f6ad6",
+      "lines": 240,
       "groups": 9,
       "document": "blocks/rowwise_op.sv.md"
     },
@@ -50,12 +50,12 @@
       "document": "blocks/rowwise_dispatch.sv.md"
     },
     {
+      "groups": 6,
       "file": "scale_compose.sv",
       "path": "Verilog Source code/scale_compose.sv",
-      "sha256": "b2f2bdcb88656ff43d92f5e91ed4dbc12ee60c560e09ea6425cd9e92639e1868",
-      "lines": 144,
-      "groups": 6,
-      "document": "blocks/scale_compose.sv.md"
+      "document": "blocks/scale_compose.sv.md",
+      "sha256": "99062a47596ae9093442d217ac6451cb554a9c0f55bcee98d3144fa683bad054",
+      "lines": 144
     },
     {
       "file": "sigmoid.sv",
@@ -68,8 +68,8 @@
     {
       "file": "sram_256_wrapper.sv",
       "path": "Verilog Source code/sram_256_wrapper.sv",
-      "sha256": "80d77f1ad41fda47969ca686807db5f069b81667b4fc5f613ff476264da8d10b",
-      "lines": 104,
+      "sha256": "71f041b5cb800a98075849e16376a2723b952795f4b1bb3503daf96b44a13138",
+      "lines": 101,
       "groups": 5,
       "document": "blocks/sram_256_wrapper.sv.md"
     },
@@ -84,24 +84,24 @@
     {
       "file": "div.sv",
       "path": "Verilog Source code/div.sv",
-      "sha256": "c2c7e524ecc7219f8a3792eca7957626991e2127a4c7f0fa31d4df272f321f54",
-      "lines": 68,
+      "sha256": "ddb1191f9879b7d3643d82a544ea14c30e7df999a3af5d913f354259363aa228",
+      "lines": 72,
       "groups": 4,
       "document": "blocks/div.sv.md"
     },
     {
       "file": "acc_mul.sv",
       "path": "Verilog Source code/acc_mul.sv",
-      "sha256": "ba8eab6bcc06296d5c69b9c973f54a2e7f81dc73915528b1171b7cf1e94f8860",
-      "lines": 19,
+      "sha256": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
+      "lines": 31,
       "groups": 2,
       "document": "blocks/acc_mul.sv.md"
     },
     {
       "file": "postscale.sv",
       "path": "Verilog Source code/postscale.sv",
-      "sha256": "462922989c54f4b4346d27cd05d5cdf342bb56a882c0cb8325ef035c36c7452a",
-      "lines": 24,
+      "sha256": "128b264863531a01bcd427066e250d3d99ad1830b68aadb1f5889629856e8d24",
+      "lines": 42,
       "groups": 2,
       "document": "blocks/postscale.sv.md"
     },
@@ -248,6 +248,60 @@
       "lines": 257,
       "document": "blocks/sigmoid_257.mem.md",
       "groups": 0
+    },
+    {
+      "groups": 4,
+      "file": "banked_word_ram.sv",
+      "path": "Verilog Source code/banked_word_ram.sv",
+      "document": "blocks/banked_word_ram.sv.md",
+      "sha256": "260bca8ecb29bb358e9633174f14bd5a012fa5fd2b986c461770b326a00e3799",
+      "lines": 50
+    },
+    {
+      "groups": 3,
+      "file": "llm_bank_ram.sv",
+      "path": "Verilog Source code/llm_bank_ram.sv",
+      "document": "blocks/llm_bank_ram.sv.md",
+      "sha256": "43f096bf29a7c9452e0d75a786d80c1e51be8f7d3419873122c2665cf8944b76",
+      "lines": 49
+    },
+    {
+      "file": "llm_exp_lut.svh",
+      "path": "Verilog Source code/llm_exp_lut.svh",
+      "document": "blocks/llm_exp_lut.svh.md",
+      "sha256": "f813b5cb24cf4831d95712374a6df67857b6b419ca3dbf71cf96007ea65aed91",
+      "lines": 263
+    },
+    {
+      "file": "llm_gumbel_lut.svh",
+      "path": "Verilog Source code/llm_gumbel_lut.svh",
+      "document": "blocks/llm_gumbel_lut.svh.md",
+      "sha256": "eb17030ed02470294188c1c374087cfbf52c90fa6eb32117186e0b7ca1cd1db8",
+      "lines": 262
+    },
+    {
+      "groups": 3,
+      "file": "llm_math.sv",
+      "path": "Verilog Source code/llm_math.sv",
+      "document": "blocks/llm_math.sv.md",
+      "sha256": "d249f138a627eee4075377f3de9c5ed2fcd5888160968b6b6b8a78092f749f3a",
+      "lines": 46
+    },
+    {
+      "groups": 3,
+      "file": "llm_pkg.sv",
+      "path": "Verilog Source code/llm_pkg.sv",
+      "document": "blocks/llm_pkg.sv.md",
+      "sha256": "d66c690e47020bdda3375fe8d626ff4b476fb881cd6cf8b1cc2ec47498a7aa87",
+      "lines": 30
+    },
+    {
+      "groups": 11,
+      "file": "llm_soc.sv",
+      "path": "Verilog Source code/llm_soc.sv",
+      "document": "blocks/llm_soc.sv.md",
+      "sha256": "ff0dcec791e0a9541150ca57e3821978db85a631329ad6d0b06f12d3377d5a00",
+      "lines": 906
     }
   ],
   "cleanup_date": "2026-09-30",

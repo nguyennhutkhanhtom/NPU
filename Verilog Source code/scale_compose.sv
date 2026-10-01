@@ -9,10 +9,14 @@ module scale_compose (
     output logic [23:0] result_m,
     output logic [5:0] result_r
 );
-    typedef enum logic [2:0] {IDLE, PREP, DIV_START, DIV_WAIT, FINISH} state_t;
+    typedef enum logic [2:0] {IDLE, MULTIPLY, SELECT_SHIFT, SHIFT, DIV_START, DIV_WAIT, FINISH} state_t;
     state_t state;
     logic [47:0] numerator_base;
     logic [5:0] base_r, candidate;
+    logic [23:0] factor_q, quant_q;
+    logic [47:0] positive_fit;
+    logic signed [6:0] selected_shift, shift_q;
+    logic signed [7:0] target_r;
     logic [47:0] numerator;
     logic [24:0] denominator;
     logic [47:0] quotient;
@@ -21,33 +25,40 @@ module scale_compose (
     logic [48:0] rounded;
     logic [25:0] twice_rem;
     logic round_up;
-    integer shift;
-    logic shift_overflow;
-    logic coefficient_fits;
-    // U24 max is odd: the half-way value rounds up to 2^24, which is invalid.
-    // RNE(n/d) fits iff n < (2^24 - 1/2)*d. For d=127*65536 this is U47.
+    // RNE(n/d) fits U24 iff n < (2^24 - 1/2)*d. Test every
+    // nonnegative shift in parallel with constant thresholds; the fit vector
+    // is a prefix of ones. Its boundary identifies the largest fitting shift.
     localparam logic [46:0] COEFFICIENT_LIMIT = 47'h7eff_ffc0_8000;
     always_comb begin
-        shift = int'(candidate) - int'(base_r);
-        numerator = numerator_base;
-        denominator = 25'h07f_0000;
-        shift_overflow = 0;
-        if (shift >= 0) begin
-            shift_overflow = numerator > (48'hffff_ffff_ffff >> $unsigned(shift));
-            numerator = numerator << $unsigned(shift);
+        for (int s = 0; s < 48; s = s + 1)
+            positive_fit[s] = numerator_base <= (({1'b0, COEFFICIENT_LIMIT} - 48'd1) >> s);
+        selected_shift = -7'sd2;
+        if (!positive_fit[0]) begin
+            if (numerator_base < {COEFFICIENT_LIMIT, 1'b0}) selected_shift = -7'sd1;
         end else begin
-            shift_overflow = denominator > (25'h1ff_ffff >> $unsigned( - shift));
-            denominator = denominator << $unsigned( - shift);
+            selected_shift = 0;
+            for (int s = 0; s < 47; s = s + 1)
+                selected_shift = selected_shift |
+                    (7'(s) & {7{positive_fit[s] && !positive_fit[s + 1]}});
+            selected_shift = selected_shift | (7'd47 & {7{positive_fit[47]}});
         end
-        // Reject overlarge coefficients before spending 48 divider cycles.
-        // For shift <= -2, even the largest U24*U24 product is below 4*limit.
-        coefficient_fits = 1'b1;
-        if (shift >= 0) coefficient_fits = numerator < {1'b0, COEFFICIENT_LIMIT};
-        else if (shift == -1) coefficient_fits = numerator_base < {COEFFICIENT_LIMIT, 1'b0};
+        target_r = $signed({2'b00, base_r}) + $signed(selected_shift);
         twice_rem = {1'b0, remainder} << 1;
         round_up = (twice_rem > {1'b0, denominator}) ||
             ((twice_rem == {1'b0, denominator}) && quotient[0]);
         rounded = {1'b0, quotient} + {48'h0000_0000_0000, round_up};
+    end
+    always_ff @(posedge clk) begin
+        if (rst_n && state == MULTIPLY) numerator_base <= factor_q * quant_q;
+        if (rst_n && state == SHIFT) begin
+            if (shift_q >= 0) begin
+                numerator <= numerator_base << $unsigned(shift_q);
+                denominator <= 25'h07f_0000;
+            end else begin
+                numerator <= numerator_base;
+                denominator <= 25'h07f_0000 << $unsigned(-shift_q);
+            end
+        end
     end
     // Every launch has shift >= -2. A fitting positive shift gives n < limit;
     // a negative shift leaves the U48 product unchanged and d <= 127*65536*4.
@@ -69,7 +80,6 @@ module scale_compose (
             busy <= 0;
             done <= 0;
             format_error <= 0;
-            numerator_base <= 0;
             base_r <= 0;
             candidate <= 0;
             result_m <= 0;
@@ -82,7 +92,8 @@ module scale_compose (
                     format_error <= 0;
                     result_m <= 0;
                     result_r <= 0;
-                    numerator_base <= factor_m * quant_d;
+                    factor_q <= factor_m;
+                    quant_q <= quant_d;
                     base_r <= factor_r;
                     candidate <= 47;
                     if (factor_r > 47 || quant_d == 0) begin
@@ -90,27 +101,21 @@ module scale_compose (
                         state <= FINISH;
                     end
                     else if (factor_m == 0) state <= FINISH;
-                    else state <= PREP;
+                    else state <= MULTIPLY;
                 end
-                PREP : begin
-                    // Starting shift is nonnegative, and shift=-2 always fits.
-                    // Guard the narrowed divider interface if that invariant is violated.
-                    if (shift < -2) begin
+                MULTIPLY : state <= SELECT_SHIFT;
+                SELECT_SHIFT : begin
+                    if (target_r < 0) begin
                         format_error <= 1;
                         state <= FINISH;
-                    end else if (shift_overflow) begin
-                        if (shift < 0 || candidate == 0) begin
-                            format_error <= 1;
-                            state <= FINISH;
-                        end
-                        else candidate <= candidate - 1'b1;
-                    end else if (!coefficient_fits) begin
-                        if (candidate == 0) begin
-                            format_error <= 1;
-                            state <= FINISH;
-                        end else candidate <= candidate - 1'b1;
-                    end else state <= DIV_START;
+                    end else begin
+                        candidate <= (target_r > 47) ? 6'd47 : target_r[5:0];
+                        shift_q <= (target_r > 47) ?
+                            (7'sd47 - $signed({1'b0, base_r})) : selected_shift;
+                        state <= SHIFT;
+                    end
                 end
+                SHIFT : state <= DIV_START;
                 DIV_START : state <= DIV_WAIT;
                 DIV_WAIT : if (div_done) begin
                     if (div_zero || rounded == 0) begin
@@ -118,14 +123,9 @@ module scale_compose (
                         state <= FINISH;
                     end
                     else if (rounded > 49'h00ff_ffff) begin
-                        if (candidate == 0) begin
-                            format_error <= 1;
-                            state <= FINISH;
-                        end
-                        else begin
-                            candidate <= candidate - 1'b1;
-                            state <= PREP;
-                        end
+                        // The exact threshold selector must exclude this case.
+                        format_error <= 1;
+                        state <= FINISH;
                     end else begin
                         result_m <= rounded[23:0];
                         result_r <= candidate;

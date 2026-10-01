@@ -4,11 +4,11 @@
 
 **Trạng thái:** Đang dùng — datapath rowwise.
 
-**Source:** [rowwise_op.sv](<../../../Verilog%20Source%20code/rowwise_op.sv>). **Số dòng:** 193. **SHA-256:** `a3f17f1e9c346841f76b31f39eda799818a139b98a2a7059778f1336d3c4ad46`.
+**Source:** [rowwise_op.sv](<../../../Verilog%20Source%20code/rowwise_op.sv>). **Số dòng:** 240. **SHA-256:** `e9bdb936eb5a29bb8226d1d072b7f81e534b23f48d17fc7c493eabeacb9f6ad6`.
 
 ## Khối này làm gì?
 
-Khối nhận tối đa 16 phần tử trong một word, chốt input rồi xử lý dần. ADD/SUB/MUL/RELU đi hai phần tử mỗi bước; SIG chờ sigmoid từng phần tử; REC đi một phần tử với hai tích song song. Hai multiplier dùng chung cho MUL và REC; điều này không có nghĩa toàn chip chỉ có hai multiplier.
+Khối chốt tối đa 16 phần tử trong một word rồi xử lý các batch lần lượt. ADD/SUB/MUL/RELU xử lý hai phần tử qua năm pha; REC xử lý một state bằng hai tích song song qua cùng năm pha. SIG dùng một instance sigmoid. Các register tách chọn lane, multiplier, raw arithmetic, RNE và saturation/pack; hai multiplier 16×16 vẫn dùng chung cho MUL và REC.
 
 ## Sơ đồ kiến trúc tổng quan
 
@@ -16,68 +16,83 @@ Khối nhận tối đa 16 phần tử trong một word, chốt input rồi xử
 flowchart TB
 %%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
     IN["A / B / old state words 256 bit<br/>Format + fractional bits + valid_elems"]
-    subgraph CORE["rowwise_op"]
-        CTRL["Opcode controller + element index<br/>Input / format checks"]
-        BUF["Operand buffers"]
-        LANE@{ shape: trap-t, label: "Lane selectors" }
-        AS["ADD/SUB extended arithmetic<br/>ReLU clamp negative to zero"]
-        OMUX@{ shape: trap-t, label: "Multiplier operand mux" }
-        MUL["Two unsigned 16 × 16 multipliers<br/>Sign correction · shared MUL and REC"]
-        REC["REC adder S33<br/>Sum two products of one state element"]
-        RMUX@{ shape: trap-t, label: "Two raw-value selectors<hr/>ADD/SUB · MUL · ReLU<hr/>REC sum on lane 0" }
-        SCALE["Two shared scale / RNE paths<br/>REC shift=15 · rescale others<br/>Saturation S16 / U16"]
-        SIG["sigmoid instance<br/>ROM + interpolation"]
-        RES@{ shape: trap-t, label: "Result / write-lane selector<hr/>REC lane 0 · SIG one element" }
+    subgraph CORE["rowwise_op — registered datapath"]
+        CTRL["Opcode controller + element index<br/>LOAD / MULTIPLY / RAW / ROUND / PACK"]
+        BUF["Input word buffers"]
+        LANE@{ shape: trap-t, label: "Lane and multiplier operand selectors<hr/>Magnitude / sign / gate complement" }
+        LREG["Lane registers<br/>2 × S17 for A and B"]
+        MREG["Magnitude + sign registers<br/>2 × U16 pairs"]
+        MUL["Two shared unsigned<br/>16 × 16 multipliers"]
+        PREG["Product registers<br/>2 × U32"]
+        SIGN["Product sign correction<br/>REC sum S33"]
+        AS["ADD / SUB / ReLU<br/>Extended arithmetic"]
+        RAW@{ shape: trap-t, label: "Raw-value selectors<hr/>MUL / REC / ADD / SUB / ReLU" }
+        RREG["Raw result registers<br/>2 × S33"]
+        RNE["Two shared scale / RNE paths<br/>REC shift=15"]
+        SREG["Rounded result registers<br/>2 × S64"]
+        SAT["S16 / U16 saturation<br/>Tail and result position selection"]
+        SQ["Sigmoid input register S16"]
+        SIG["sigmoid<br/>ROM + interpolation"]
+        RES@{ shape: trap-t, label: "Result selector<hr/>Arithmetic PACK / SIG done" }
         RBUF["Result buffer 256 bit"]
     end
     IN --> BUF
     IN -.-> CTRL
-    OP["start / select"] -.-> CTRL
     BUF --> LANE
-    CTRL -.->|"Select lane / opcode"| LANE
-    CTRL -.-> OMUX
-    LANE --> AS
-    LANE --> OMUX
-    LANE --> SIG
-    OMUX --> MUL
-    MUL -->|"MUL products"| RMUX
-    MUL -->|"Two REC products"| REC
-    AS --> RMUX
-    REC -->|"Combined S33 sum"| RMUX
-    CTRL -.-> RMUX
-    RMUX --> SCALE
-    CTRL -.->|"Common shift"| SCALE
-    SCALE --> RES
+    CTRL -.->|"Index / opcode"| LANE
+    LANE --> LREG
+    LANE --> MREG
+    LANE --> SQ
+    MREG --> MUL
+    MUL --> PREG
+    PREG --> SIGN
+    LREG --> AS
+    AS --> RAW
+    SIGN --> RAW
+    RAW --> RREG
+    RREG --> RNE
+    CTRL -.->|"Latched shift"| RNE
+    RNE --> SREG
+    SREG --> SAT
+    CTRL -.->|"Index / valid lanes"| SAT
+    SAT --> RES
+    SQ --> SIG
     SIG --> RES
-    CTRL -.->|"Result / write position"| RES
+    CTRL -.->|"Enable / state"| RES
     RES --> RBUF
     RBUF --> OUT["result_word 256 bit"]
     CTRL -.-> STATUS["busy / done / overflow / format_error"]
 ```
 
-MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ ra; decoder/demux dùng hình thang ngược lại, mở rộng về phía nhiều ngõ ra. Hình chữ nhật có các vạch ngang biểu diễn bộ nhớ hoặc bank descriptor. Các hình chữ nhật thường là datapath, thanh ghi đơn hoặc giao diện. Nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.
+Nét liền là dữ liệu, nét đứt là control. MUX dùng hình thang thu hẹp về ngõ ra. Các hộp mang tên register là ranh giới clock thực trong datapath; các batch vẫn chạy tuần tự, không nhận một batch mới mỗi clock. Sơ đồ mô tả phần cứng, không phải pipeline instruction CPU.
 
 ## Cách hoạt động chi tiết
 
-Đường tổ hợp tạo result_buffer_next từ buffer hiện tại. Phần sequential chốt kết quả, tiến element_index và trả done. Sign/magnitude cho phép cùng multiplier unsigned xử lý S16 và gate có raw=0x8000. Hai raw-value mux đưa ADD/SUB, MUL, ReLU hoặc tổng REC vào đúng hai đường scale/RNE dùng chung; REC chỉ dùng lane 0 với shift 15. Tail không hữu ích giữ zero trong output.
+1. Cạnh start hợp lệ chốt opcode, word, format, số phần tử và shift signed 7 bit. Start khi busy bị bỏ qua; input ngoài thay đổi không làm đổi giao dịch đã chốt.
+2. LOAD chọn lane, kiểm tra gate/format và chốt magnitude/sign cho multiplier. `sig_x_q` cũng được chốt tại đây.
+3. MULTIPLY chốt hai tích magnitude U32. RAW khôi phục sign và chọn ADD/SUB, ReLU, hai product MUL hoặc tổng REC S33.
+4. ROUND sign-extend raw S33 rồi rescale/RNE qua hai đường dùng chung. REC đưa cả tổng vào lane 0 với shift 15, chỉ làm tròn một lần.
+5. PACK saturation, ghi hai lane arithmetic hoặc một state REC, gom overflow/format_error và tiến index. Padding ngoài `valid_elems` giữ zero.
+6. SIG đi từ LOAD sang SIG_WAIT, chờ sigmoid done rồi ghi một lane. Không dùng các payload RAW/ROUND của giao dịch trước.
 
-1. Start chốt word, F_t, unsigned flag và số phần tử hợp lệ, tách giao dịch nhiều chu kỳ khỏi thay đổi bên ngoài.
-2. ADD/SUB tính trong S17 rồi đổi scale. MUL có F sản phẩm bằng tổng F của hai nguồn.
-3. Hai multiplier xử lý hai lane MUL. Với REC, chúng xử lý H×F và C×(0x8000−F) của một lane.
-4. REC cộng hai tích trong S33 rồi đưa toàn tổng vào lane 0 của đường scale/RNE chung, shift=15; không còn một đường RNE riêng cho REC. Làm tròn riêng từng tích sẽ sai ở các trường hợp nửa đơn vị.
-5. SIG dùng một instance sigmoid nên chạy từng phần tử. RELU đưa số âm về zero trước khi rescale.
-6. Buffer, cờ và index được cập nhật mỗi bước; hết `valid_elems` thì trả nguyên word và pulse done.
+| Phép toán, word có n phần tử hữu ích | Chu kỳ từ accepted start đến done |
+|---|---:|
+| ADD/SUB/MUL/RELU | `5 × ceil(n/2)` |
+| REC | `5 × n` |
+| SIG | `6 × n` |
 
-**Quy ước RTL.** Magnitude 16 bit và bước element index `5'd1`/`5'd2` được ghi rõ. Hai multiplier dùng chung cho MUL/REC; hai đường scale/RNE dùng chung cho ADD/SUB/MUL/RELU/REC. ReLU đưa phần âm về zero trước rescale; REC chỉ ghi một state sau khi cộng hai tích và RNE một lần.
+Payload magnitude/product/raw/rounded không async reset; FSM chỉ consume sau đúng enable ghi. Reset xóa trạng thái giao dịch, result/status và ngăn payload cũ đi tới output. [Timing report](../../verification/timing/README.md) ghi critical path, constraint và ảnh hưởng chu kỳ model.
+
+**Quy ước RTL.** Magnitude U16 giữ được abs(S16 min) và gate `0x8000`. RAW S33 chứa tổng hai tích REC; rescale dùng S64 để giữ shift trái tối đa 24 bit. Có đúng hai multiplier trong datapath này; chia sẻ hai multiplier toàn chip vẫn là mục tiêu kiến trúc riêng.
 
 ## Các nhóm logic trong source
 
-Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
+Mỗi nhóm giữ nguyên source và phạm vi dòng để đối chiếu. Giải thích tập trung vào register boundary, enable và số học.
 
 
-### [Dòng 1–34: Giao diện và sigmoid](<../../../Verilog%20Source%20code/rowwise_op.sv#L1>)
+### [Dòng 1–39: Giao diện, controller và sigmoid](<../../../Verilog%20Source%20code/rowwise_op.sv#L1>)
 
-<!-- source-range:1:34 -->
+<!-- source-range:1:39 -->
 ```systemverilog
 module rowwise_op (
     input logic clk, rst_n, start,
@@ -95,318 +110,342 @@ module rowwise_op (
     localparam logic [3:0] OP_SIG = 4'h6;
     localparam logic [3:0] OP_REC = 4'hb;
     localparam logic [3:0] OP_RELU = 4'hc;
-    logic [255:0] source_a_q, source_b_q, state_word_q, result_buffer_q, result_buffer_next;
-    logic [4:0] source_a_frac_q, source_b_frac_q, destination_frac_q, element_count_q, element_index_q;
+    typedef enum logic [2:0] {IDLE, LOAD, MULTIPLY, RAW, ROUND, PACK, SIG_WAIT} state_t;
+    state_t state;
+
+    logic [255:0] source_a_q, source_b_q, state_word_q;
+    logic [255:0] result_buffer_q, result_buffer_next;
+    logic [4:0] source_a_frac_q, element_count_q, element_index_q;
     logic source_a_unsigned_q, source_b_unsigned_q, destination_unsigned_q;
     logic [3:0] operation_q;
+    logic signed [6:0] result_shift_q;
+
     logic sig_busy, sig_done, sig_start;
     logic [15:0] sig_y;
-    logic signed [15:0] sig_x;
-    assign sig_x = source_a_q[element_index_q * 16 +: 16];
-    assign sig_start = busy && operation_q == OP_SIG && !sig_busy && !sig_done;
+    logic signed [15:0] sig_x_q;
+    assign sig_start = busy && state == SIG_WAIT && !sig_busy && !sig_done;
     sigmoid u_sig(
         .clk(clk),
         .rst_n(rst_n),
         .start(sig_start),
-        .x_raw(sig_x),
+        .x_raw(sig_x_q),
         .frac_bits(source_a_frac_q),
         .busy(sig_busy),
         .done(sig_done),
         .y_raw(sig_y));
 ```
 
-**Mục đích.** Chốt select, input words, scale và số phần tử hữu ích. Sigmoid nhận một lane theo element_index.
+**Mục đích.** Opcode và FSM xác định pha. Sigmoid nhận sig_x_q đã chốt tại LOAD; sig_start chỉ hợp lệ ở SIG_WAIT khi core con sẵn sàng.
 
-**Cách phần code hoạt động.** Có continuous assignment: biểu thức luôn lái tín hiệu đích, không cần start hoặc cạnh clock. Có instance module con; named-port ở nhóm này xác định chính xác đường control/data giữa hai cấp hierarchy.
-
-**Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `select`: opcode chọn phép rowwise; `a_word`: word A; `b_word`: word B; `c_word`: word state cũ của REC; `valid_elems`: số lane hữu ích của word cuối; và 27 tín hiệu phụ khác trong đoạn code.
+**Cách hoạt động.** source_a_q/source_b_q/state_word_q giữ giao dịch, result_shift_q S7 giữ shift và operation_q giữ opcode.
 
 
-### [Dòng 35–48: Dữ liệu trung gian](<../../../Verilog%20Source%20code/rowwise_op.sv#L35>)
+### [Dòng 40–60: Payload số học và cờ](<../../../Verilog%20Source%20code/rowwise_op.sv#L40>)
 
-<!-- source-range:35:48 -->
+<!-- source-range:40:60 -->
 ```systemverilog
-    logic lane_overflow, lane_format_error;
+
     logic signed [16:0] lane_a[0:1], lane_b[0:1];
-    // MUL and REC share these two physical unsigned 16x16 multipliers.
-    // Sign correction happens after multiplication, preserving gate raw 0x8000.
+    logic signed [16:0] lane_a_q[0:1], lane_b_q[0:1];
     logic signed [16:0] multiply_a[0:1], multiply_b[0:1];
     logic [15:0] magnitude_a[0:1], magnitude_b[0:1];
-    logic [31:0] magnitude_product[0:1];
+    logic [15:0] magnitude_a_q[0:1], magnitude_b_q[0:1];
+    // MUL and REC retain two unsigned 16x16 multipliers. Their inputs and
+    // outputs have registers, so lane selection and sign correction are
+    // separate from multiplication. Arithmetic payloads need no reset.
+    logic [31:0] magnitude_product_q[0:1];
+    logic [1:0] product_negative_q, lane_valid_q;
     logic signed [31:0] product[0:1];
-    logic signed [63:0] raw_value[0:1], scaled[0:1];
+    logic signed [32:0] recurrent_sum;
+    logic signed [32:0] raw_value_q[0:1];
+    logic signed [63:0] scaled_q[0:1];
     logic signed [15:0] old_state, candidate;
     logic [15:0] gate, complement;
-    logic signed [32:0] recurrent_sum;
-    logic signed [63:0] recurrent_value;
-    integer result_shift;
+    logic source_format_error, source_format_error_q;
+    logic lane_overflow, lane_format_error;
+
+    always_comb begin
 ```
 
-**Mục đích.** Lane mở rộng S17 phân biệt unsigned gate với S16 âm. Hai product S32, recurrent_sum S33; hai raw_value/scaled S64 là input/output của đường scale/RNE chung, không tạo thêm một đường riêng cho REC hoặc ReLU.
+**Mục đích.** Hai lane S17 phân biệt S16 có dấu với gate U16/F15. Magnitude U16, product U32, raw S33 và scaled S64 là các ranh giới clock riêng.
 
-**Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
-
-**Tín hiệu và dữ liệu chính.** `lane_overflow`: cờ overflow của bước lane hiện tại; `lane_format_error`: cờ gate/format sai ở bước lane hiện tại; `lane_a`: hai lane A mở rộng17 bit; `lane_b`: hai lane B mở rộng17 bit; `multiply_a`: hai operand A của multiplier dùng chung; `multiply_b`: hai operand B của multiplier dùng chung; và 13 tín hiệu phụ khác trong đoạn code.
+**Cách hoạt động.** product_negative_q khôi phục dấu sau multiplier; lane_valid_q và source_format_error_q đi cùng batch, không đọc lại input ngoài.
 
 
-### [Dòng 49–58: Mặc định tổ hợp](<../../../Verilog%20Source%20code/rowwise_op.sv#L49>)
+### [Dòng 61–90: Chọn lane, magnitude và tổng REC](<../../../Verilog%20Source%20code/rowwise_op.sv#L61>)
 
-<!-- source-range:49:58 -->
+<!-- source-range:61:90 -->
 ```systemverilog
-    always_comb begin
-        result_buffer_next = result_buffer_q;
-        lane_overflow = 0;
-        lane_format_error = 0;
         candidate = source_a_q[element_index_q * 16 +: 16];
         old_state = state_word_q[element_index_q * 16 +: 16];
         gate = source_b_q[element_index_q * 16 +: 16];
         complement = 16'h8000 - gate;
-        result_shift = (operation_q == OP_REC) ? 15 :
-        (operation_q == OP_MUL ? int'(source_a_frac_q) + int'(source_b_frac_q) : int'(source_a_frac_q)) - int'(destination_frac_q);
-```
-
-**Mục đích.** Giữ buffer cũ, xóa cờ lane và tính một result_shift cho cả hai lane: REC cố định 15, MUL dùng F_A+F_B−F_dst, ADD/SUB/ReLU dùng F_A−F_dst. REC dùng complement 0x8000−gate.
-
-**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
-
-**Tín hiệu và dữ liệu chính.** `result_buffer_next`: giá trị kế tiếp của buffer kết quả; `result_buffer_q`: buffer kết quả đang xây; `lane_overflow`: cờ overflow của bước lane hiện tại; `lane_format_error`: cờ gate/format sai ở bước lane hiện tại; `candidate`: ứng viên; ở REC là C, ở scale_compose là shift đang thử; `source_a_q`: word nguồn A đã chốt; và 11 tín hiệu phụ khác trong đoạn code.
-
-
-### [Dòng 59–81: Hai multiplier dùng chung](<../../../Verilog%20Source%20code/rowwise_op.sv#L59>)
-
-<!-- source-range:59:81 -->
-```systemverilog
-        for (integer j = 0;j < 2;j = j + 1) begin
+        source_format_error = 1'b0;
+        for (integer j = 0; j < 2; j = j + 1) begin
             lane_a[j] = source_a_unsigned_q ? $signed({1'b0, source_a_q[(element_index_q + j) * 16 +: 16]}) : $signed(source_a_q[(element_index_q + j) * 16 +: 16]);
             lane_b[j] = source_b_unsigned_q ? $signed({1'b0, source_b_q[(element_index_q + j) * 16 +: 16]}) : $signed(source_b_q[(element_index_q + j) * 16 +: 16]);
-            // Operand isolation avoids toggling multipliers during ADD/SIG/idle.
             multiply_a[j] = '0;
             multiply_b[j] = '0;
-            if (busy && operation_q == OP_MUL && element_index_q + j < element_count_q) begin
+            if (operation_q == OP_MUL && element_index_q + j < element_count_q) begin
                 multiply_a[j] = lane_a[j];
                 multiply_b[j] = lane_b[j];
-            end else if (busy && operation_q == OP_REC) begin
+            end else if (operation_q == OP_REC) begin
                 multiply_a[j] = (j == 0) ? {old_state[15], old_state} : {candidate[15], candidate};
                 multiply_b[j] = (j == 0) ? $signed({1'b0, gate}) : $signed({1'b0, complement});
             end
-            // The magnitude of an S16 or valid U16/F15 operand fits in 16 bits.
             magnitude_a[j] = 16'(multiply_a[j][16] ? - multiply_a[j] : multiply_a[j]);
             magnitude_b[j] = 16'(multiply_b[j][16] ? - multiply_b[j] : multiply_b[j]);
-            magnitude_product[j] = magnitude_a[j] * magnitude_b[j];
-            product[j] = (multiply_a[j][16] ^ multiply_b[j][16]) ?
-             - $signed(magnitude_product[j]) : $signed(magnitude_product[j]);
+            if (element_index_q + j < element_count_q && operation_q != OP_RELU &&
+                ((source_a_unsigned_q && lane_a[j] > 17'sh0_8000) ||
+                (source_b_unsigned_q && lane_b[j] > 17'sh0_8000))) source_format_error = 1'b1;
+            product[j] = product_negative_q[j] ?
+                - $signed(magnitude_product_q[j]) : $signed(magnitude_product_q[j]);
         end
+        if (operation_q == OP_REC) source_format_error = gate > 16'h8000;
         recurrent_sum = {product[0][31], product[0]} + {product[1][31], product[1]};
-        // Every operation uses the same two scale/round paths. REC supplies
-        // its combined S33 sum to lane 0, so its two products round only once.
+    end
+
+    // Each enable is the validity of its payload. Reset only cancels the FSM;
 ```
 
-**Mục đích.** MUL đưa hai cặp A/B; REC đưa H×F và C×(1−F). Operand isolation đưa multiplier về 0 khi không cần. Sau nhân magnitude, khôi phục sign.
+**Mục đích.** MUL chọn hai cặp A/B; REC chọn H×F và C×(0x8000−F). Magnitude 16 bit cộng sign flag cho phép dùng chung hai multiplier. Sign correction đọc product đã chốt; tổng REC giữ S33.
 
-**Cách phần code hoạt động.** Các câu lệnh thuộc cùng một nhánh/pha xử lý và phải được đọc liền nhau; tách riêng từng dòng sẽ làm mất quan hệ điều kiện và dữ liệu.
+**Cách hoạt động.** Các kết quả tổ hợp chỉ được consume ở LOAD hoặc RAW tương ứng. Gate raw lớn hơn 0x8000 báo format_error; ReLU có quy tắc signed riêng.
 
-**Tín hiệu và dữ liệu chính.** `lane_a`: hai lane A mở rộng17 bit; `source_a_unsigned_q`: A được diễn giải unsigned; `source_a_q`: word nguồn A đã chốt; `element_index_q`: vị trí phần tử đang tính; `lane_b`: hai lane B mở rộng17 bit; `source_b_unsigned_q`: B được diễn giải unsigned; và 17 tín hiệu phụ khác trong đoạn code.
 
-**Điểm cần đọc kỹ.** REC dùng cả hai multiplier trong cùng một lane. Nó không xử lý hai state song song như MUL, vì hai tích của cùng state phải được cộng trước lần RNE duy nhất.
+### [Dòng 91–132: Chốt operand, product, raw result và RNE](<../../../Verilog%20Source%20code/rowwise_op.sv#L91>)
+
+<!-- source-range:91:132 -->
+```systemverilog
+    // uninitialized arithmetic registers cannot reach architectural outputs.
+    always_ff @(posedge clk) begin
+        if (rst_n && start && !busy) begin
+            source_a_q <= a_word;
+            source_b_q <= b_word;
+            state_word_q <= c_word;
+        end
+        if (rst_n && busy) begin
+            case (state)
+                LOAD : begin
+                    sig_x_q <= source_a_q[element_index_q * 16 +: 16];
+                    source_format_error_q <= source_format_error;
+                    for (integer j = 0; j < 2; j = j + 1) begin
+                        lane_a_q[j] <= lane_a[j];
+                        lane_b_q[j] <= lane_b[j];
+                        magnitude_a_q[j] <= magnitude_a[j];
+                        magnitude_b_q[j] <= magnitude_b[j];
+                        product_negative_q[j] <= multiply_a[j][16] ^ multiply_b[j][16];
+                        lane_valid_q[j] <= element_index_q + j < element_count_q;
+                    end
+                end
+                MULTIPLY : for (integer j = 0; j < 2; j = j + 1)
+                    magnitude_product_q[j] <= magnitude_a_q[j] * magnitude_b_q[j];
+                RAW : for (integer j = 0; j < 2; j = j + 1) begin
+                    case (operation_q)
+                        OP_ADD : raw_value_q[j] <= 33'(lane_a_q[j]) + 33'(lane_b_q[j]);
+                        OP_SUB : raw_value_q[j] <= 33'(lane_a_q[j]) - 33'(lane_b_q[j]);
+                        OP_RELU : raw_value_q[j] <= lane_a_q[j] < 0 ? 33'sh0 : 33'(lane_a_q[j]);
+                        OP_REC : raw_value_q[j] <= (j == 0) ? recurrent_sum : 33'sh0;
+                        default : raw_value_q[j] <= {product[j][31], product[j]};
+                    endcase
+                end
+                ROUND : for (integer j = 0; j < 2; j = j + 1)
+                    scaled_q[j] <= scale_shift64({{31{raw_value_q[j][32]}}, raw_value_q[j]}, int'(result_shift_q));
+                default : ;
+            endcase
+        end
+    end
+
+    always_comb begin
+        result_buffer_next = result_buffer_q;
+        lane_overflow = 1'b0;
+```
+
+**Mục đích.** Clocked payload block không có reset asynchronous. LOAD chốt lane/magnitude/sign; MULTIPLY chốt tích; RAW tạo S33; ROUND chốt scale_shift64 của toàn raw value.
+
+**Cách hoạt động.** rst_n và pha FSM là validity của payload. Mỗi đường đến PACK đi qua mọi capture cần thiết; reset hủy chuỗi, start mới ghi lại payload trước khi dùng.
 
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    MULIN["Two pairs of MUL lane operands"] --> MUX@{ shape: trap-t, label: "Operand selection + magnitude/sign logic<hr/>MUL or REC" }
-    RECIN["Old state H · candidate C · gate F"] --> MUX
-    RECIN --> COMP["Gate complement subtractor<br/>0x8000 − F"]
-    COMP --> MUX
-    OP["Opcode / valid lanes"] -.-> MUX
-    MUX --> M0["Shared unsigned multiplier 0<br/>16 × 16"]
-    MUX --> M1["Shared unsigned multiplier 1<br/>16 × 16"]
-    M0 --> SIGN["Product sign-correction logic"]
-    M1 --> SIGN
-    SIGN --> SUM["REC adder S33<br/>Two products of one state element"]
-    SIGN --> RMUX@{ shape: trap-t, label: "Two raw-value muxes<hr/>MUL products or REC sum on lane 0" }
-    SUM --> RMUX
-    OTHER["ADD/SUB extended result<br/>ReLU max(A,0)"] --> RMUX
-    OP -.-> RMUX
-    RMUX --> SCALE["Two shared scale / RNE paths<br/>REC fixed shift 15"]
-    SCALE --> SAT["S16 / U16 saturation and write selection<br/>REC writes only lane 0"]
-    SAT --> OUT["Result buffer"]
+    SELECT["Lane selection + magnitude / sign"] --> INREG["LOAD registers<br/>Magnitude U16 pairs + sign + lane S17"]
+    INREG --> MUL["2 shared unsigned 16 × 16 multipliers"]
+    MUL --> PREG["MULTIPLY registers<br/>2 × U32"]
+    PREG --> RAW["Sign correction / REC S33 sum<br/>Raw operation selection"]
+    INREG --> RAW
+    RAW --> RREG["RAW registers<br/>2 × S33"]
+    RREG --> RNE["Shared scale_shift64 / RNE"]
+    RNE --> SREG["ROUND registers<br/>2 × S64"]
+    SREG --> PACK["Saturation / tail / pack<br/>Result register write at PACK"]
+    OP["Latched opcode / shift"] -.-> RAW
+    OP -.-> RNE
+    CTRL["FSM phase enables"] -.-> INREG
+    CTRL -.-> PREG
+    CTRL -.-> RREG
+    CTRL -.-> SREG
+    CTRL -.-> PACK
 ```
 
 
-### [Dòng 82–109: Hai đường scale/RNE và saturation](<../../../Verilog%20Source%20code/rowwise_op.sv#L82>)
+### [Dòng 133–164: Saturation, tail và pack](<../../../Verilog%20Source%20code/rowwise_op.sv#L133>)
 
-<!-- source-range:82:109 -->
+<!-- source-range:133:164 -->
 ```systemverilog
+        lane_format_error = source_format_error_q;
         for (integer j = 0; j < 2; j = j + 1) begin
-            case (operation_q)
-                OP_ADD : raw_value[j] = 64'(lane_a[j]) + 64'(lane_b[j]);
-                OP_SUB : raw_value[j] = 64'(lane_a[j]) - 64'(lane_b[j]);
-                OP_RELU : raw_value[j] = lane_a[j] < 0 ? 64'sh0 : 64'(lane_a[j]);
-                OP_REC : raw_value[j] = (j == 0) ? {{31{recurrent_sum[32]}}, recurrent_sum} : 64'sh0;
-                default : raw_value[j] = {{32{product[j][31]}}, product[j]};
-            endcase
-            scaled[j] = scale_shift64(raw_value[j], result_shift);
-            if (element_index_q + j < element_count_q) begin
-                if (operation_q != OP_RELU &&
-                    ((source_a_unsigned_q && lane_a[j] > 17'sh0_8000) || (source_b_unsigned_q && lane_b[j] > 17'sh0_8000))) lane_format_error = 1;
+            if (lane_valid_q[j]) begin
                 if (destination_unsigned_q && operation_q != OP_RELU) begin
-                    if (scaled[j] < 0) begin
+                    if (scaled_q[j] < 0) begin
                         result_buffer_next[(element_index_q + j) * 16 +: 16] = 0;
-                        lane_overflow = 1;
-                    end
-                    else if (scaled[j] > 64'sh0000_0000_0000_8000) begin
+                        lane_overflow = 1'b1;
+                    end else if (scaled_q[j] > 64'sh0000_0000_0000_8000) begin
                         result_buffer_next[(element_index_q + j) * 16 +: 16] = 16'h8000;
-                        lane_overflow = 1;
-                    end
-                    else result_buffer_next[(element_index_q + j) * 16 +: 16] = scaled[j][15:0];
+                        lane_overflow = 1'b1;
+                    end else result_buffer_next[(element_index_q + j) * 16 +: 16] = scaled_q[j][15:0];
                 end else begin
-                    result_buffer_next[(element_index_q + j) * 16 +: 16] = sat_s16(scaled[j]);
-                    if (scaled[j] > 64'sh0000_0000_0000_7fff || scaled[j] < - 64'sh0000_0000_0000_8000) lane_overflow = 1;
+                    result_buffer_next[(element_index_q + j) * 16 +: 16] = sat_s16(scaled_q[j]);
+                    if (scaled_q[j] > 64'sh0000_0000_0000_7fff || scaled_q[j] < - 64'sh0000_0000_0000_8000) lane_overflow = 1'b1;
                 end
             end
         end
-```
-
-**Mục đích.** Hai raw-value mux chọn ADD/SUB, product MUL, max(A,0) của ReLU hoặc tổng REC ở lane 0 rồi gọi scale_shift64 chung. Chỉ lane hữu ích cập nhật output/error. Gate bị giới hạn raw 0x0000…0x8000; signed output clamp S16.
-
-**Cách phần code hoạt động.** Các câu lệnh thuộc cùng một nhánh/pha xử lý và phải được đọc liền nhau; tách riêng từng dòng sẽ làm mất quan hệ điều kiện và dữ liệu.
-
-**Tín hiệu và dữ liệu chính.** `element_index_q`: vị trí phần tử đang tính; `element_count_q`: số phần tử hữu ích; `source_a_unsigned_q`: A được diễn giải unsigned; `lane_a`: hai lane A mở rộng17 bit; `source_b_unsigned_q`: B được diễn giải unsigned; `lane_b`: hai lane B mở rộng17 bit; và 5 tín hiệu phụ khác trong đoạn code.
-
-
-### [Dòng 110–121: Ghi kết quả SIG và REC](<../../../Verilog%20Source%20code/rowwise_op.sv#L110>)
-
-<!-- source-range:110:121 -->
-```systemverilog
         if (operation_q == OP_SIG) begin
             result_buffer_next = result_buffer_q;
             result_buffer_next[element_index_q * 16 +: 16] = sig_y;
         end
-        recurrent_value = scaled[0];
         if (operation_q == OP_REC) begin
             result_buffer_next = result_buffer_q;
-            result_buffer_next[element_index_q * 16 +: 16] = sat_s16(recurrent_value);
-            lane_format_error = gate > 16'h8000;
-            lane_overflow = (recurrent_value > 64'sh0000_0000_0000_7fff || recurrent_value < - 64'sh0000_0000_0000_8000);
+            result_buffer_next[element_index_q * 16 +: 16] = sat_s16(scaled_q[0]);
+            lane_overflow = scaled_q[0] > 64'sh0000_0000_0000_7fff || scaled_q[0] < - 64'sh0000_0000_0000_8000;
         end
     end
-```
 
-**Mục đích.** SIG ghi sample từ sigmoid; REC lấy scaled[0] từ đường RNE chung, khôi phục buffer cũ và chỉ ghi state ở element_index. ReLU đã được xử lý tại raw-value mux, không có một vòng rescale thứ hai. REC giữ kiểm tra gate và overflow riêng cho một state.
-
-**Cách phần code hoạt động.** Các câu lệnh thuộc cùng một nhánh/pha xử lý và phải được đọc liền nhau; tách riêng từng dòng sẽ làm mất quan hệ điều kiện và dữ liệu.
-
-**Tín hiệu và dữ liệu chính.** `operation_q`: opcode đã chốt; `result_buffer_next`: giá trị kế tiếp của buffer kết quả; `result_buffer_q`: buffer kết quả đang xây; `element_index_q`: vị trí phần tử đang tính; `sig_y`: gate U16/F15 nhận từ sigmoid; `lane_overflow`: cờ overflow của bước lane hiện tại; và 10 tín hiệu phụ khác trong đoạn code.
-
-
-### [Dòng 122–143: Reset](<../../../Verilog%20Source%20code/rowwise_op.sv#L122>)
-
-<!-- source-range:122:143 -->
-```systemverilog
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
+            state <= IDLE;
             busy <= 0;
+```
+
+**Mục đích.** Hai rounded result được clamp S16 hoặc U16/F15. Chỉ lane_valid mới ghi. SIG chọn sig_y; REC chỉ ghi lane 0 sau RNE của tổng.
+
+**Cách hoạt động.** result_buffer_next mặc định giữ buffer hiện tại, lane_overflow được gom. Tail không được ghi và buffer khởi tạo zero ở start.
+
+
+### [Dòng 165–183: Reset control và output](<../../../Verilog%20Source%20code/rowwise_op.sv#L165>)
+
+<!-- source-range:165:183 -->
+```systemverilog
             done <= 0;
             overflow <= 0;
             format_error <= 0;
             result_word <= 0;
-            source_a_q <= 0;
-            source_b_q <= 0;
-            state_word_q <= 0;
             result_buffer_q <= 0;
             source_a_frac_q <= 0;
-            source_b_frac_q <= 0;
-            destination_frac_q <= 0;
-            element_count_q <= 0;
-            element_index_q <= 0;
             source_a_unsigned_q <= 0;
             source_b_unsigned_q <= 0;
             destination_unsigned_q <= 0;
+            element_count_q <= 0;
+            element_index_q <= 0;
             operation_q <= 0;
+            result_shift_q <= 0;
         end else begin
             done <= 0;
-```
-
-**Mục đích.** Xóa buffer và trạng thái giao dịch cũ.
-
-**Cách phần code hoạt động.** Có logic tuần tự: register/FSM chỉ cập nhật tại cạnh clock; nonblocking assignment đọc giá trị cũ ở vế phải rồi chốt đồng thời.
-
-**Tín hiệu và dữ liệu chính.** `busy`: khối đang xử lý; `done`: xung báo hoàn tất; `overflow`: cờ kết quả vượt miền số; `format_error`: cờ format/metadata không hợp lệ; `result_word`: word 256 output rowwise; `source_a_q`: word nguồn A đã chốt; và 12 tín hiệu phụ khác trong đoạn code.
-
-
-### [Dòng 144–167: Chốt input và validate](<../../../Verilog%20Source%20code/rowwise_op.sv#L144>)
-
-<!-- source-range:144:167 -->
-```systemverilog
             if (start && !busy) begin
-                source_a_q <= a_word;
-                source_b_q <= b_word;
-                state_word_q <= c_word;
                 source_a_frac_q <= a_frac_bits;
-                source_b_frac_q <= b_frac_bits;
-                destination_frac_q <= dst_frac_bits;
                 source_a_unsigned_q <= a_unsigned;
                 source_b_unsigned_q <= b_unsigned;
+```
+
+**Mục đích.** Reset đưa FSM về IDLE, busy/done/error/overflow về zero và xóa result/control. Payload số học nằm ở block clocked riêng.
+
+**Cách hoạt động.** Không cần reset payload để bảo đảm output kiến trúc sạch: IDLE không consume và giao dịch mới phải qua LOAD/MULTIPLY/RAW/ROUND.
+
+
+### [Dòng 184–207: Nhận start và từ chối cấu hình](<../../../Verilog%20Source%20code/rowwise_op.sv#L184>)
+
+<!-- source-range:184:207 -->
+```systemverilog
                 destination_unsigned_q <= dst_unsigned;
                 element_count_q <= valid_elems;
                 operation_q <= select;
+                result_shift_q <= 7'(select == OP_REC ? 15 :
+                    (select == OP_MUL ? int'(a_frac_bits) + int'(b_frac_bits) : int'(a_frac_bits)) - int'(dst_frac_bits));
                 element_index_q <= 0;
                 result_buffer_q <= 0;
                 busy <= 1;
                 overflow <= 0;
                 format_error <= 0;
+                state <= LOAD;
                 if (valid_elems == 0 || valid_elems > 16 || a_frac_bits > 24 || b_frac_bits > 24 || dst_frac_bits > 24 ||
                     !(select == OP_ADD || select == OP_SUB || select == OP_MUL || select == OP_SIG || select == OP_REC || select == OP_RELU)) begin
                     busy <= 0;
                     done <= 1;
                     format_error <= 1;
                     result_word <= 0;
+                    state <= IDLE;
                 end
+            end else if (busy) begin
+                case (state)
+                    LOAD : state <= operation_q == OP_SIG ? SIG_WAIT : MULTIPLY;
+                    MULTIPLY : state <= RAW;
+                    RAW : state <= ROUND;
 ```
 
-**Mục đích.** Nhận start khi !busy. Reject số phần tử/scale/opcode sai; input được giữ trong register để host hoặc dispatcher thay tín hiệu ngoài không ảnh hưởng phép tính đang chạy.
+**Mục đích.** Start chỉ nhận khi !busy. Chốt format, valid_elems, opcode và shift một lần; reset index/buffer/cờ. Length=0/>16, F_t>24 hoặc opcode lạ kết thúc ngay với format_error.
 
-**Cách phần code hoạt động.** Các câu lệnh thuộc cùng một nhánh/pha xử lý và phải được đọc liền nhau; tách riêng từng dòng sẽ làm mất quan hệ điều kiện và dữ liệu.
-
-**Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `busy`: khối đang xử lý; `source_a_q`: word nguồn A đã chốt; `a_word`: word A; `source_b_q`: word nguồn B đã chốt; `b_word`: word B; và 21 tín hiệu phụ khác trong đoạn code.
+**Cách hoạt động.** Shift của REC cố định 15; MUL dùng F_A+F_B−F_dst; ADD/SUB/ReLU dùng F_A−F_dst. Dải signed 7 bit đủ các format được phép.
 
 
-### [Dòng 168–193: Chạy từng lane](<../../../Verilog%20Source%20code/rowwise_op.sv#L168>)
+### [Dòng 208–224: Tiến pha và handshake SIG](<../../../Verilog%20Source%20code/rowwise_op.sv#L208>)
 
-<!-- source-range:168:193 -->
+<!-- source-range:208:224 -->
 ```systemverilog
-            end else if (busy) begin
-                if (operation_q == OP_SIG) begin
-                    if (sig_done) begin
+                    ROUND : state <= PACK;
+                    SIG_WAIT : if (sig_done) begin
                         result_buffer_q <= result_buffer_next;
                         if (element_index_q + 1 >= element_count_q) begin
                             result_word <= result_buffer_next;
                             busy <= 0;
                             done <= 1;
+                            state <= IDLE;
+                        end else begin
+                            element_index_q <= element_index_q + 1'b1;
+                            state <= LOAD;
                         end
-                        else element_index_q <= element_index_q + 1'b1;
                     end
-                end else begin
-                    result_buffer_q <= result_buffer_next;
-                    overflow <= overflow | lane_overflow;
-                    format_error <= format_error | lane_format_error;
-                    if (element_index_q + (operation_q == OP_REC ? 1 : 2) >= element_count_q || lane_format_error) begin
-                        result_word <= result_buffer_next;
-                        busy <= 0;
-                        done <= 1;
+                    PACK : begin
+                        result_buffer_q <= result_buffer_next;
+                        overflow <= overflow | lane_overflow;
+                        format_error <= format_error | lane_format_error;
+```
+
+**Mục đích.** LOAD chọn SIG_WAIT hoặc MULTIPLY. Arithmetic đi qua RAW và ROUND trước PACK. SIG chỉ ghi khi sig_done, xong lane cuối thì pulse done, nếu chưa xong quay lại LOAD.
+
+**Cách hoạt động.** sig_x_q giữ ổn định khi sigmoid busy. LOAD tận dụng khoảng trống done/start giữa các lane; latency SIG tăng một clock mỗi word so với bản trước.
+
+
+### [Dòng 225–240: PACK, gom cờ và kết thúc](<../../../Verilog%20Source%20code/rowwise_op.sv#L225>)
+
+<!-- source-range:225:240 -->
+```systemverilog
+                        if (element_index_q + (operation_q == OP_REC ? 1 : 2) >= element_count_q || lane_format_error) begin
+                            result_word <= result_buffer_next;
+                            busy <= 0;
+                            done <= 1;
+                            state <= IDLE;
+                        end else begin
+                            element_index_q <= element_index_q + (operation_q == OP_REC ? 5'd1 : 5'd2);
+                            state <= LOAD;
+                        end
                     end
-                    else element_index_q <= element_index_q + (operation_q == OP_REC ? 5'd1 : 5'd2);
-                end
+                    default : state <= IDLE;
+                endcase
             end
         end
     end
 endmodule
 ```
 
-**Mục đích.** SIG chỉ tiến khi sig_done. Operation khác tích lũy cờ, tăng một lane cho REC hoặc hai lane cho các phép còn lại.
+**Mục đích.** PACK chốt result, OR overflow/error và kết thúc khi hết lane hoặc có format_error. REC tăng index một, các phép arithmetic khác tăng hai rồi quay về LOAD.
 
-**Cách phần code hoạt động.** Các câu lệnh thuộc cùng một nhánh/pha xử lý và phải được đọc liền nhau; tách riêng từng dòng sẽ làm mất quan hệ điều kiện và dữ liệu.
-
-**Tín hiệu và dữ liệu chính.** `busy`: khối đang xử lý; `operation_q`: opcode đã chốt; `result_buffer_q`: buffer kết quả đang xây; `result_buffer_next`: giá trị kế tiếp của buffer kết quả; `element_index_q`: vị trí phần tử đang tính; `element_count_q`: số phần tử hữu ích; và 6 tín hiệu phụ khác trong đoạn code.
-
+**Cách hoạt động.** Mỗi batch arithmetic cần năm clock; batch kế tiếp chỉ bắt đầu sau PACK. Dispatcher chờ done, nên số chu kỳ mới không đổi ISA hoặc memory contract.

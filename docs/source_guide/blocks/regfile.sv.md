@@ -39,7 +39,7 @@ Compute đọc/ghi word 256; host chọn một slice32. Wrapper không thêm FSM
 3. Port được nối thẳng vào `sram_256_wrapper`; wrapper không thêm storage, latency hoặc arbitration.
 4. Timing read, mask write và quy tắc không overlap do implementation chung quyết định.
 
-**Quy ước RTL.** Wrapper nối `host_rvalid` từ SRAM lên top. Host giữ read/address đến ready sau hai cạnh lên; top dùng valid để tránh nhận data cũ. Memory có tám bank 32 bit, write-enable riêng từng lane. Wrapper chỉ nối cổng, không thêm register hoặc đổi latency. Simulation và synthesis dùng cùng hợp đồng memory. Xem [implementation và sơ đồ SRAM](sram_256_wrapper.sv.md).
+**Quy ước RTL.** Wrapper nối `host_rvalid` từ SRAM lên top. Backend nhận read/address từ frontend và trả host_rvalid sau hai cạnh lên. Frontend top chốt request/response, nên host ngoài giữ read/address bốn cạnh lên đến host_ready. Memory có tám bank 32 bit, write-enable riêng từng lane. Wrapper chỉ nối cổng, không thêm register hoặc đổi latency. Simulation và synthesis dùng cùng hợp đồng memory. Xem [implementation và sơ đồ SRAM](sram_256_wrapper.sv.md).
 
 ## Các nhóm logic trong source
 

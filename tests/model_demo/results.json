@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "verified_utc": "2026-10-01T04:23:28+00:00",
+  "verified_utc": "2026-10-01T07:30:25+00:00",
   "compile_errors": 0,
   "compile_warnings": 0,
   "simulation_errors": 0,
@@ -18,34 +18,34 @@
     "hazard_detect.sv": "83e4434faa221906913debcd24e6a6db7366f15fe4d3e7ed37f06ec9f31991b5",
     "ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
     "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
-    "matmulfree.sv": "3a785e7285519557a973fc8597449c56d0ffdc8bf0b62ca6bbdbdfaf6d132bcc",
+    "matmulfree.sv": "6b18f26a9779be75adcba42f83dabc1bdf5d225c2ab378d712e7950afb127c12",
     "mem_burst.v": "bd2467f0fe9ed199d522a674f89c72dadcbc2f19752fbc0bdb35397135cc9f2f",
     "mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
     "mul.sv": "63bb267b9cc884ee766f94a0fda1039cb5ed61bb6f6002bfa356a3f6423bcbac",
     "mw_reg.sv": "8f27a55bda16912be3fb069bd6cf09abaf740a186c9b2503171158bb59109960",
-    "norm.sv": "03e8f34433b60a8f81509c38fbe4467cf0ef1fd363a4e2a7d41212463f2a2d1b",
+    "norm.sv": "68fb49d63c461bbff583df3c544d3685729dc61ee0aa1f3776773730f9000192",
     "norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
-    "npu_pkg.sv": "1061016c51092f4f9269fc99392c30bc1bd2117103ef5f49474a296f5077a343",
+    "npu_pkg.sv": "f2914bb24c72644edbf2b57e5eabad9a4f3dbf88d2dd72b79285ccdf8e2b2d86",
     "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
-    "postscale.sv": "462922989c54f4b4346d27cd05d5cdf342bb56a882c0cb8325ef035c36c7452a",
+    "postscale.sv": "128b264863531a01bcd427066e250d3d99ad1830b68aadb1f5889629856e8d24",
     "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
     "rowwise_dispatch.sv": "4fb73e52c6fc0afe70277b9e1d5a8817cbac0d1465e691d8801581c5444d1ae2",
-    "rowwise_op.sv": "a3f17f1e9c346841f76b31f39eda799818a139b98a2a7059778f1336d3c4ad46",
-    "scale_compose.sv": "b2f2bdcb88656ff43d92f5e91ed4dbc12ee60c560e09ea6425cd9e92639e1868",
+    "rowwise_op.sv": "e9bdb936eb5a29bb8226d1d072b7f81e534b23f48d17fc7c493eabeacb9f6ad6",
+    "scale_compose.sv": "816e13077872842daa8bd3de40bbefe354046aca60aa04889bec9acff18b0b33",
     "sigmoid.sv": "8001c3d582b072de2146d085fbb4363350a6f876dfa4d9195bc54d3d52f944c9",
     "sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
     "sigmoid_lut.svh": "3d4fc0b37d284c4f7b3a4cd2587acfaf3e35dc33b2209550d7f97ef8555e0094",
     "sram_256_wrapper.sv": "80d77f1ad41fda47969ca686807db5f069b81667b4fc5f613ff476264da8d10b",
-    "ternary_mul.sv": "0593ecc70787ee9746c6c26e7d8507c0f2e5ab05f14b1226e5efc81d052bca45"
+    "ternary_mul.sv": "14285ed2ee26752c0379d6f414382b28ee77042821ecc155dbbb5a868806bf51"
   },
   "demo_assets": {
-    "compile.log": "2b5e5dbb377d6d9215513ebd8856c953ed201825346b54ae8850fe273b884f5c",
+    "compile.log": "024771dc5f397146b9799e8920d1eddfbb0b8fa07529c089c772ba788a9f752b",
     "cpu_reference.json": "9d72da1cef3525e7d29f06e53064765b4cb968185d966856508b1f346f816464",
     "export_demo.py": "eac9965fbbdc07d755f2eba6f7c20a0dcfd2f18dbbf0c3672acc1cb8abbf0519",
     "fetch_assets.py": "911438edc50f8148298171f747a8eb609cbb579a05e71af9c884bf494afef398",
     "finalize.py": "aa67123e48ce00a594831a2c08114a8f810eced2dffa4718fa539ab258973f0f",
     "host_vectors.txt": "bb3d4c79395b856f0ae43da4192c4f7cf9c4dd22dc8e05f5d9b7b09687609733",
-    "model_demo.log": "cfd1aa70ec058b2f715f812e00b02b5c63ef8d150d723246e7393cabcc50c4a3",
+    "model_demo.log": "172ac60cf6b74212cb04111dbdce506df0457218f487a7556dcd48ca9287f67a",
     "parameter.bin": "25b2543559e6f36ca530f0ef63813edff10485f9078ca0540c7819d9672f109d",
     "parameter.mem": "99f6838d74221e2a790d7e407c33dff67f3e00cac0d10cf0c053a0d969f8195e",
     "program.mem": "3796d282eee93eef7839565cee1b28866771e53d08617100230d52c552c4298e",
@@ -158,212 +158,212 @@
     {
       "sample": 0,
       "layer": 0,
-      "active_cycles": 6416
+      "active_cycles": 8080
     },
     {
       "sample": 0,
       "layer": 1,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 0,
       "layer": 2,
-      "active_cycles": 4265
+      "active_cycles": 5545
     },
     {
       "sample": 0,
       "layer": 3,
-      "active_cycles": 967
+      "active_cycles": 1627
     },
     {
       "sample": 1,
       "layer": 0,
-      "active_cycles": 6416
+      "active_cycles": 8080
     },
     {
       "sample": 1,
       "layer": 1,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 1,
       "layer": 2,
-      "active_cycles": 4265
+      "active_cycles": 5545
     },
     {
       "sample": 1,
       "layer": 3,
-      "active_cycles": 968
+      "active_cycles": 1628
     },
     {
       "sample": 2,
       "layer": 0,
-      "active_cycles": 6416
+      "active_cycles": 8080
     },
     {
       "sample": 2,
       "layer": 1,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 2,
       "layer": 2,
-      "active_cycles": 4265
+      "active_cycles": 5545
     },
     {
       "sample": 2,
       "layer": 3,
-      "active_cycles": 968
+      "active_cycles": 1628
     },
     {
       "sample": 3,
       "layer": 0,
-      "active_cycles": 6416
+      "active_cycles": 8080
     },
     {
       "sample": 3,
       "layer": 1,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 3,
       "layer": 2,
-      "active_cycles": 4265
+      "active_cycles": 5545
     },
     {
       "sample": 3,
       "layer": 3,
-      "active_cycles": 968
+      "active_cycles": 1628
     },
     {
       "sample": 4,
       "layer": 0,
-      "active_cycles": 6416
+      "active_cycles": 8080
     },
     {
       "sample": 4,
       "layer": 1,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 4,
       "layer": 2,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 4,
       "layer": 3,
-      "active_cycles": 968
+      "active_cycles": 1628
     },
     {
       "sample": 5,
       "layer": 0,
-      "active_cycles": 6416
+      "active_cycles": 8080
     },
     {
       "sample": 5,
       "layer": 1,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 5,
       "layer": 2,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 5,
       "layer": 3,
-      "active_cycles": 968
+      "active_cycles": 1628
     },
     {
       "sample": 6,
       "layer": 0,
-      "active_cycles": 6416
+      "active_cycles": 8080
     },
     {
       "sample": 6,
       "layer": 1,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 6,
       "layer": 2,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 6,
       "layer": 3,
-      "active_cycles": 968
+      "active_cycles": 1628
     },
     {
       "sample": 7,
       "layer": 0,
-      "active_cycles": 6416
+      "active_cycles": 8080
     },
     {
       "sample": 7,
       "layer": 1,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 7,
       "layer": 2,
-      "active_cycles": 4265
+      "active_cycles": 5545
     },
     {
       "sample": 7,
       "layer": 3,
-      "active_cycles": 968
+      "active_cycles": 1628
     },
     {
       "sample": 8,
       "layer": 0,
-      "active_cycles": 6416
+      "active_cycles": 8080
     },
     {
       "sample": 8,
       "layer": 1,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 8,
       "layer": 2,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 8,
       "layer": 3,
-      "active_cycles": 968
+      "active_cycles": 1628
     },
     {
       "sample": 9,
       "layer": 0,
-      "active_cycles": 6416
+      "active_cycles": 8080
     },
     {
       "sample": 9,
       "layer": 1,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 9,
       "layer": 2,
-      "active_cycles": 4266
+      "active_cycles": 5546
     },
     {
       "sample": 9,
       "layer": 3,
-      "active_cycles": 968
+      "active_cycles": 1628
     },
     {
       "sample": 10,
       "layer": 4,
-      "active_cycles": 15899
+      "active_cycles": 20783
     },
     {
       "sample": 10,
       "layer": 5,
-      "active_cycles": 15899
+      "active_cycles": 20783
     }
   ],
   "predictions": [
@@ -447,8 +447,8 @@
   "intermediate_layers_checked": 40,
   "whole_graph_runs": 2,
   "whole_graph_active_cycles": [
-    15899,
-    15899
+    20783,
+    20783
   ],
   "program_layout": {
     "instruction_count_including_halt": 12,

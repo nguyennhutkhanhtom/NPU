@@ -1,0 +1,177 @@
++------------------------------------------------------------+
+; Summary                                                    ;
++-----------------------------------+------------------------+
+; Check                             ; Number of Issues Found ;
++-----------------------------------+------------------------+
+; no_clock                          ; 0                      ;
+; multiple_clock                    ; 0                      ;
+; pos_neg_clock_domain              ; 0                      ;
+; generated_clock                   ; 0                      ;
+; virtual_clock                     ; 1                      ;
+; no_input_delay                    ; 67                     ;
+; no_output_delay                   ; 59                     ;
+; partial_input_delay               ; 0                      ;
+; partial_output_delay              ; 0                      ;
+; io_min_max_delay_consistency      ; 0                      ;
+; reference_pin                     ; 0                      ;
+; generated_io_delay                ; 0                      ;
+; latency_override                  ; 0                      ;
+; partial_multicycle                ; 0                      ;
+; multicycle_consistency            ; 0                      ;
+; loops                             ; 0                      ;
+; latches                           ; 0                      ;
+; pll_cross_check                   ; 0                      ;
+; uncertainty                       ; 0                      ;
+; partial_min_max_delay             ; 0                      ;
+; clock_assignments_on_output_ports ; 0                      ;
+; input_delay_assigned_to_clock     ; 0                      ;
++-----------------------------------+------------------------+
+
++-------------------------------------+
+; Virtual Clock                       ;
++-------+-----------------------------+
+; Clock ; Reason                      ;
++-------+-----------------------------+
+;       ; No virtual clock was found. ;
++-------+-----------------------------+
+
++--------------------------------------------------------+
+; No Input Delay                                         ;
++----------------+---------------------------------------+
+; Port           ; Reason                                ;
++----------------+---------------------------------------+
+; rst_n          ; No input delay was set on input port. ;
+; host_addr[16]  ; No input delay was set on input port. ;
+; host_addr[9]   ; No input delay was set on input port. ;
+; host_addr[10]  ; No input delay was set on input port. ;
+; host_addr[13]  ; No input delay was set on input port. ;
+; host_addr[12]  ; No input delay was set on input port. ;
+; host_addr[14]  ; No input delay was set on input port. ;
+; host_en        ; No input delay was set on input port. ;
+; host_addr[30]  ; No input delay was set on input port. ;
+; host_addr[1]   ; No input delay was set on input port. ;
+; host_addr[22]  ; No input delay was set on input port. ;
+; host_addr[27]  ; No input delay was set on input port. ;
+; host_addr[28]  ; No input delay was set on input port. ;
+; host_addr[31]  ; No input delay was set on input port. ;
+; host_addr[0]   ; No input delay was set on input port. ;
+; host_addr[15]  ; No input delay was set on input port. ;
+; host_addr[20]  ; No input delay was set on input port. ;
+; host_addr[24]  ; No input delay was set on input port. ;
+; host_addr[26]  ; No input delay was set on input port. ;
+; host_addr[29]  ; No input delay was set on input port. ;
+; host_addr[23]  ; No input delay was set on input port. ;
+; host_addr[19]  ; No input delay was set on input port. ;
+; host_addr[21]  ; No input delay was set on input port. ;
+; host_addr[25]  ; No input delay was set on input port. ;
+; host_addr[11]  ; No input delay was set on input port. ;
+; host_addr[7]   ; No input delay was set on input port. ;
+; host_addr[6]   ; No input delay was set on input port. ;
+; host_addr[8]   ; No input delay was set on input port. ;
+; host_addr[2]   ; No input delay was set on input port. ;
+; host_addr[5]   ; No input delay was set on input port. ;
+; host_addr[4]   ; No input delay was set on input port. ;
+; host_addr[3]   ; No input delay was set on input port. ;
+; host_addr[18]  ; No input delay was set on input port. ;
+; host_addr[17]  ; No input delay was set on input port. ;
+; host_wdata[0]  ; No input delay was set on input port. ;
+; host_we        ; No input delay was set on input port. ;
+; host_wdata[2]  ; No input delay was set on input port. ;
+; host_wdata[12] ; No input delay was set on input port. ;
+; host_wdata[3]  ; No input delay was set on input port. ;
+; host_wdata[6]  ; No input delay was set on input port. ;
+; host_wdata[10] ; No input delay was set on input port. ;
+; host_wdata[8]  ; No input delay was set on input port. ;
+; host_wdata[7]  ; No input delay was set on input port. ;
+; host_wdata[4]  ; No input delay was set on input port. ;
+; host_wdata[5]  ; No input delay was set on input port. ;
+; host_wdata[11] ; No input delay was set on input port. ;
+; host_wdata[9]  ; No input delay was set on input port. ;
+; host_wdata[1]  ; No input delay was set on input port. ;
+; host_wdata[31] ; No input delay was set on input port. ;
+; host_wdata[23] ; No input delay was set on input port. ;
+; host_wdata[22] ; No input delay was set on input port. ;
+; host_wdata[21] ; No input delay was set on input port. ;
+; host_wdata[20] ; No input delay was set on input port. ;
+; host_wdata[19] ; No input delay was set on input port. ;
+; host_wdata[18] ; No input delay was set on input port. ;
+; host_wdata[17] ; No input delay was set on input port. ;
+; host_wdata[16] ; No input delay was set on input port. ;
+; host_wdata[15] ; No input delay was set on input port. ;
+; host_wdata[14] ; No input delay was set on input port. ;
+; host_wdata[13] ; No input delay was set on input port. ;
+; host_wdata[30] ; No input delay was set on input port. ;
+; host_wdata[29] ; No input delay was set on input port. ;
+; host_wdata[28] ; No input delay was set on input port. ;
+; host_wdata[27] ; No input delay was set on input port. ;
+; host_wdata[26] ; No input delay was set on input port. ;
+; host_wdata[25] ; No input delay was set on input port. ;
+; host_wdata[24] ; No input delay was set on input port. ;
++----------------+---------------------------------------+
+
++-----------------------------------------------------------+
+; No Output Delay                                           ;
++-----------------+-----------------------------------------+
+; Port            ; Reason                                  ;
++-----------------+-----------------------------------------+
+; instr_debug[0]  ; No output delay was set on output port. ;
+; instr_debug[1]  ; No output delay was set on output port. ;
+; instr_debug[2]  ; No output delay was set on output port. ;
+; instr_debug[3]  ; No output delay was set on output port. ;
+; instr_debug[4]  ; No output delay was set on output port. ;
+; instr_debug[5]  ; No output delay was set on output port. ;
+; instr_debug[6]  ; No output delay was set on output port. ;
+; instr_debug[7]  ; No output delay was set on output port. ;
+; instr_debug[8]  ; No output delay was set on output port. ;
+; instr_debug[9]  ; No output delay was set on output port. ;
+; instr_debug[10] ; No output delay was set on output port. ;
+; instr_debug[11] ; No output delay was set on output port. ;
+; instr_debug[12] ; No output delay was set on output port. ;
+; host_rdata[0]   ; No output delay was set on output port. ;
+; host_rdata[1]   ; No output delay was set on output port. ;
+; host_rdata[2]   ; No output delay was set on output port. ;
+; host_rdata[3]   ; No output delay was set on output port. ;
+; host_rdata[4]   ; No output delay was set on output port. ;
+; host_rdata[5]   ; No output delay was set on output port. ;
+; host_rdata[6]   ; No output delay was set on output port. ;
+; host_rdata[7]   ; No output delay was set on output port. ;
+; host_rdata[8]   ; No output delay was set on output port. ;
+; host_rdata[9]   ; No output delay was set on output port. ;
+; host_rdata[10]  ; No output delay was set on output port. ;
+; host_rdata[11]  ; No output delay was set on output port. ;
+; host_rdata[12]  ; No output delay was set on output port. ;
+; host_rdata[13]  ; No output delay was set on output port. ;
+; host_rdata[14]  ; No output delay was set on output port. ;
+; host_rdata[15]  ; No output delay was set on output port. ;
+; host_rdata[16]  ; No output delay was set on output port. ;
+; host_rdata[17]  ; No output delay was set on output port. ;
+; host_rdata[18]  ; No output delay was set on output port. ;
+; host_rdata[19]  ; No output delay was set on output port. ;
+; host_rdata[20]  ; No output delay was set on output port. ;
+; host_rdata[21]  ; No output delay was set on output port. ;
+; host_rdata[22]  ; No output delay was set on output port. ;
+; host_rdata[23]  ; No output delay was set on output port. ;
+; host_rdata[24]  ; No output delay was set on output port. ;
+; host_rdata[25]  ; No output delay was set on output port. ;
+; host_rdata[26]  ; No output delay was set on output port. ;
+; host_rdata[27]  ; No output delay was set on output port. ;
+; host_rdata[28]  ; No output delay was set on output port. ;
+; host_rdata[29]  ; No output delay was set on output port. ;
+; host_rdata[30]  ; No output delay was set on output port. ;
+; host_rdata[31]  ; No output delay was set on output port. ;
+; host_ready      ; No output delay was set on output port. ;
+; running         ; No output delay was set on output port. ;
+; ready           ; No output delay was set on output port. ;
+; error           ; No output delay was set on output port. ;
+; overflow_out    ; No output delay was set on output port. ;
+; pc_debug[0]     ; No output delay was set on output port. ;
+; pc_debug[1]     ; No output delay was set on output port. ;
+; pc_debug[2]     ; No output delay was set on output port. ;
+; pc_debug[3]     ; No output delay was set on output port. ;
+; pc_debug[4]     ; No output delay was set on output port. ;
+; pc_debug[5]     ; No output delay was set on output port. ;
+; pc_debug[6]     ; No output delay was set on output port. ;
+; pc_debug[7]     ; No output delay was set on output port. ;
+; pc_debug[8]     ; No output delay was set on output port. ;
++-----------------+-----------------------------------------+
+

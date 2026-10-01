@@ -1,0 +1,89 @@
+Info: *******************************************************************
+Info: Running Quartus Prime Analysis & Synthesis
+    Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
+    Info: Copyright (C) 2018  Intel Corporation. All rights reserved.
+    Info: Your use of Intel Corporation's design tools, logic functions 
+    Info: and other software and tools, and its AMPP partner logic 
+    Info: functions, and any output files from any of the foregoing 
+    Info: (including device programming or simulation files), and any 
+    Info: associated documentation or information are expressly subject 
+    Info: to the terms and conditions of the Intel Program License 
+    Info: Subscription Agreement, the Intel Quartus Prime License Agreement,
+    Info: the Intel FPGA IP License Agreement, or other applicable license
+    Info: agreement, including, without limitation, that your use is for
+    Info: the sole purpose of programming logic devices manufactured by
+    Info: Intel and sold by Intel or its authorized distributors.  Please
+    Info: refer to the applicable agreement for further details.
+    Info: Processing started: Thu Oct 01 20:53:01 2026
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off matmul_free -c matmul_free
+Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Error (10170): Verilog HDL syntax error at ternary_mul.sv(110) near text: "genvar";  expecting an identifier ("genvar" is a reserved keyword ). Check for and fix any syntax errors that appear immediately before or at the specified keyword. The Intel FPGA Knowledge Database contains many articles with specific details on how to resolve this error. Visit the Knowledge Database at https://www.altera.com/support/support-resources/knowledge-base/search.html and search for this specific error message number. File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/ternary_mul.sv Line: 110
+Error (10170): Verilog HDL syntax error at ternary_mul.sv(111) near text: "genvar";  expecting an identifier ("genvar" is a reserved keyword ). Check for and fix any syntax errors that appear immediately before or at the specified keyword. The Intel FPGA Knowledge Database contains many articles with specific details on how to resolve this error. Visit the Knowledge Database at https://www.altera.com/support/support-resources/knowledge-base/search.html and search for this specific error message number. File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/ternary_mul.sv Line: 111
+Error (10112): Ignored design unit "ternary_mul" at ternary_mul.sv(1) due to previous errors File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/ternary_mul.sv Line: 1
+Info (12021): Found 0 design units, including 0 entities, in source file rtl/ternary_mul.sv
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/sram_256_wrapper.sv
+    Info (12023): Found entity 1: sram_256_wrapper File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/sram_256_wrapper.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/sigmoid.sv
+    Info (12023): Found entity 1: sigmoid File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/sigmoid.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/scale_compose.sv
+    Info (12023): Found entity 1: scale_compose File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/scale_compose.sv Line: 4
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/rowwise_op.sv
+    Info (12023): Found entity 1: rowwise_op File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/rowwise_op.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/rowwise_dispatch.sv
+    Info (12023): Found entity 1: rowwise_dispatch File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/rowwise_dispatch.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/regfile.sv
+    Info (12023): Found entity 1: register File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/regfile.sv Line: 1
+Info (12021): Found 2 design units, including 2 entities, in source file rtl/postscale.sv
+    Info (12023): Found entity 1: postscale File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/postscale.sv Line: 1
+    Info (12023): Found entity 2: postscale_finish File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/postscale.sv Line: 25
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/pc.sv
+    Info (12023): Found entity 1: PC File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/PC.sv Line: 1
+Info (12021): Found 1 design units, including 0 entities, in source file rtl/npu_pkg.sv
+    Info (12022): Found design unit 1: npu_pkg (SystemVerilog) File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/npu_pkg.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/norm_dispatch.sv
+    Info (12023): Found entity 1: norm_dispatch File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/norm_dispatch.sv Line: 1
+Info (12021): Found 2 design units, including 2 entities, in source file rtl/norm.sv
+    Info (12023): Found entity 1: isqrt_u64 File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/norm.sv Line: 1
+    Info (12023): Found entity 2: norm File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/norm.sv Line: 65
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/mw_reg.sv
+    Info (12023): Found entity 1: mw_reg File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/mw_reg.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/mul.sv
+    Info (12023): Found entity 1: mul File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/mul.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/mem_mapping.sv
+    Info (12023): Found entity 1: mem_mapping File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/mem_mapping.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/mem_burst.v
+    Info (12023): Found entity 1: mem_burst File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/mem_burst.v Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/matmulfree.sv
+    Info (12023): Found entity 1: matmulfree File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/matmulfree.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/matmul_wrap.sv
+    Info (12023): Found entity 1: matmul_wrap File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/matmul_wrap.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/ins_mem.sv
+    Info (12023): Found entity 1: ins_mem File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/ins_mem.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/hazard_detect.sv
+    Info (12023): Found entity 1: hazard_detect File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/hazard_detect.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/fd_reg.sv
+    Info (12023): Found entity 1: fd_reg File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/fd_reg.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/exp.sv
+    Info (12023): Found entity 1: exp_row File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/exp.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/em_reg.sv
+    Info (12023): Found entity 1: em_reg File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/em_reg.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/div.sv
+    Info (12023): Found entity 1: div File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/div.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/descriptor_file.sv
+    Info (12023): Found entity 1: descriptor_file File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/descriptor_file.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/de_reg.sv
+    Info (12023): Found entity 1: de_reg File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/de_reg.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/ctrl_unit.sv
+    Info (12023): Found entity 1: ctrl_unit File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/ctrl_unit.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file rtl/addsub.sv
+    Info (12023): Found entity 1: addsub File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/addsub.sv Line: 1
+Error (10170): Verilog HDL syntax error at acc_mul.sv(14) near text: "genvar";  expecting an identifier ("genvar" is a reserved keyword ). Check for and fix any syntax errors that appear immediately before or at the specified keyword. The Intel FPGA Knowledge Database contains many articles with specific details on how to resolve this error. Visit the Knowledge Database at https://www.altera.com/support/support-resources/knowledge-base/search.html and search for this specific error message number. File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/acc_mul.sv Line: 14
+Error (10170): Verilog HDL syntax error at acc_mul.sv(18) near text: "genvar";  expecting an identifier ("genvar" is a reserved keyword ). Check for and fix any syntax errors that appear immediately before or at the specified keyword. The Intel FPGA Knowledge Database contains many articles with specific details on how to resolve this error. Visit the Knowledge Database at https://www.altera.com/support/support-resources/knowledge-base/search.html and search for this specific error message number. File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/acc_mul.sv Line: 18
+Error (10112): Ignored design unit "acc_mul" at acc_mul.sv(1) due to previous errors File: D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/rtl/acc_mul.sv Line: 1
+Info (12021): Found 0 design units, including 0 entities, in source file rtl/acc_mul.sv
+Info (144001): Generated suppressed messages file D:/2151097_Nguyen Nhut Khanh/tests/sim/timing_100_search2_build/output_files/matmul_free.map.smsg
+Error: Quartus Prime Analysis & Synthesis was unsuccessful. 6 errors, 0 warnings
+    Error: Peak virtual memory: 4772 megabytes
+    Error: Processing ended: Thu Oct 01 20:53:13 2026
+    Error: Elapsed time: 00:00:12
+    Error: Total CPU time (on all processors): 00:00:02

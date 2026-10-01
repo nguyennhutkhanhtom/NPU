@@ -19,6 +19,10 @@
 /quartus/*
 !/quartus/matmul_free.qpf
 !/quartus/matmul_free.qsf
+!/quartus/matmul_free.sdc
+!/quartus/llm_soc.qpf
+!/quartus/llm_soc.qsf
+!/quartus/llm_soc.sdc
 /tmp/
 /quartus/db/
 /quartus/incremental_db/
@@ -36,6 +40,8 @@
 !/tests/results.json
 !/tests/model_demo/
 !/tests/language_demo/
+!/tests/full_rtl/
+/tests/full_rtl/build/
 /tests/model_demo/*
 !/tests/model_demo/*.py
 !/tests/model_demo/*.ps1

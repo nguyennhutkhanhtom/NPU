@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — trong ternary_mul.
 
-**Source:** [acc_mul.sv](<../../../Verilog%20Source%20code/acc_mul.sv>). **Số dòng:** 19. **SHA-256:** `ba8eab6bcc06296d5c69b9c973f54a2e7f81dc73915528b1171b7cf1e94f8860`.
+**Source:** [acc_mul.sv](<../../../Verilog%20Source%20code/acc_mul.sv>). **Số dòng:** 31. **SHA-256:** `a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108`.
 
 ## Khối này làm gì?
 
@@ -41,9 +41,9 @@ Nạp lá vào nửa cuối mảng tree, padding 0 nếu cần đến lũy thừ
 Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
 
 
-### [Dòng 1–11: Kích thước cây](<../../../Verilog%20Source%20code/acc_mul.sv#L1>)
+### [Dòng 1–14: Kích thước cây](<../../../Verilog%20Source%20code/acc_mul.sv#L1>)
 
-<!-- source-range:1:11 -->
+<!-- source-range:1:14 -->
 ```systemverilog
 module acc_mul #(
     parameter int TERM_W = 9,
@@ -53,9 +53,12 @@ module acc_mul #(
     input logic signed [TERM_W - 1 : 0] term [NUM_INPUTS - 1 : 0],
     output logic signed [ACC_W - 1 : 0] sum
 );
-    localparam int LEAVES = 2 ** $clog2(NUM_INPUTS);
-    logic signed [ACC_W - 1 : 0] tree [0 : 2 * LEAVES - 2];
-    integer i;
+    localparam int LEVELS = $clog2(NUM_INPUTS);
+    localparam int LEAVES = 2 ** LEVELS;
+    // Each tree level needs just one extra sign bit. Capping at ACC_W keeps
+    // the original modulo-2^ACC_W behavior when the caller requests truncation.
+    genvar level, n;
+    generate
 ```
 
 **Mục đích.** LEAVES làm tròn NUM_INPUTS lên lũy thừa 2; tree có 2×LEAVES−1 node.
@@ -65,17 +68,26 @@ module acc_mul #(
 **Tín hiệu và dữ liệu chính.** `term`: mảng các term ternary S9 cần cộng; `sum`: tổng của chunk 32 term; `tree`: các node S18 của cây cộng cân bằng.
 
 
-### [Dòng 12–19: Reduction](<../../../Verilog%20Source%20code/acc_mul.sv#L12>)
+### [Dòng 15–31: Reduction](<../../../Verilog%20Source%20code/acc_mul.sv#L15>)
 
-<!-- source-range:12:19 -->
+<!-- source-range:15:31 -->
 ```systemverilog
-    always_comb begin
-        for (i = 0;i < LEAVES;i = i + 1)
-            if (i < NUM_INPUTS) tree[LEAVES - 1 + i] = {{(ACC_W - TERM_W){term[i][TERM_W - 1]}}, term[i]};
-        else tree[LEAVES - 1 + i] = '0;
-        for (i = LEAVES - 2;i >= 0;i = i - 1) tree[i] = tree[2 * i + 1] + tree[2 * i + 2];
-        sum = tree[0];
+    for (level = 0; level <= LEVELS; level = level + 1) begin : g_level
+        localparam int WIDTH = (TERM_W + level < ACC_W) ? TERM_W + level : ACC_W;
+        localparam int COUNT = LEAVES >> level;
+        logic signed [WIDTH - 1:0] node [0:COUNT - 1];
+        for (n = 0; n < COUNT; n = n + 1) begin : g_node
+            if (level == 0) begin : g_leaf
+                if (n < NUM_INPUTS) assign node[n] = term[n];
+                else assign node[n] = '0;
+            end else begin : g_add
+                assign node[n] = $signed(g_level[level - 1].node[2 * n]) +
+                    $signed(g_level[level - 1].node[2 * n + 1]);
+            end
+        end
     end
+    endgenerate
+    assign sum = g_level[LEVELS].node[0];
 endmodule
 ```
 

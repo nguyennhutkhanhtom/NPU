@@ -1,0 +1,150 @@
+Statistics: 40 0 1623 0 0 7.273
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+host_response_valid_q host_rdata[11] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_response_valid_q}
+instr_q[6]~DUPLICATE instr_debug[6] 0.923720 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[6]~DUPLICATE}}}
+host_response_valid_q host_rdata[0] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~0}}
+host_response_valid_q host_rdata[14] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~14}}
+host_response_valid_q host_rdata[16] 0.978056 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~16}}
+host_response_valid_q host_rdata[26] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~26}}
+host_response_valid_q host_rdata[18] 0.978056 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~18}}
+host_response_valid_q host_rdata[13] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~13}}
+host_response_valid_q host_rdata[2] 0.978056 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~2}}
+host_response_valid_q host_rdata[23] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~23}}
+running~reg0 running 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} running~reg0}
+host_response_valid_q host_rdata[4] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~4}}
+host_response_valid_q host_rdata[28] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~28}}
+host_response_valid_q host_rdata[15] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~15}}
+host_response_valid_q host_rdata[3] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~3}}
+host_response_valid_q host_rdata[8] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~8}}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[3].memory[0][31]__4|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg14 0.724486 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {comb~14 {register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19}}}
+instr_q[4] instr_debug[4] 0.905607 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[4]}}}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[4].memory[0][31]__5|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg2 0.941832 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {comb~14 {register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19}}}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg21 0.652037 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {comb~14 {register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19}}}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg16 0.688262 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {comb~14 {register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19}}}
+PC:u_pc|pc_out[2] pc_debug[2] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{PC:u_pc|pc_out[2]}}}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[5].memory[0][31]__6|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg7 0.796935 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {comb~14 {register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+host_addr[14] host_ready 0.725121 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[11] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[1] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_data_q[7] host_rdata[7] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[0] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[14] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[16] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[12] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_data_q[19] host_rdata[19] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[18] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[13] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[2] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[23] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_addr[13] host_response_data_q[1] 0.846584 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+host_addr[13] host_response_data_q[31] 0.846584 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[3].memory[0][31]__4|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg14 0.664390 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[4].memory[0][31]__5|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg2 0.664390 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg21 0.664390 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg16 0.664390 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_addr[13] host_response_data_q[7] 0.846584 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+host_addr[13] host_response_data_q[10] 0.846584 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+host_addr[13] host_response_data_q[11] 0.846584 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[5].memory[0][31]__6|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg7 0.664390 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+host_addr[14] host_ready 0.725121 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[11] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_response_valid_q}
+host_response_valid_q host_rdata[11] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+instr_q[6]~DUPLICATE instr_debug[6] 0.923720 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[6]~DUPLICATE}}}
+host_response_valid_q host_rdata[1] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_data_q[7] host_rdata[7] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[0] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~0}}
+host_response_valid_q host_rdata[0] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[14] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~14}}
+host_response_valid_q host_rdata[14] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[16] 0.978056 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~16}}
+host_response_valid_q host_rdata[16] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[12] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_data_q[19] host_rdata[19] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[26] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~26}}
+host_response_valid_q host_rdata[18] 0.978056 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~18}}
+host_response_valid_q host_rdata[18] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[13] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~13}}
+host_response_valid_q host_rdata[13] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[2] 0.978056 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~2}}
+host_response_valid_q host_rdata[2] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_response_valid_q host_rdata[23] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~23}}
+host_response_valid_q host_rdata[23] 0.421463 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+running~reg0 running 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} running~reg0}
+host_response_valid_q host_rdata[4] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~4}}
+host_response_valid_q host_rdata[28] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~28}}
+host_response_valid_q host_rdata[15] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~15}}
+host_response_valid_q host_rdata[3] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~3}}
+host_addr[13] host_response_data_q[1] 0.846584 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+host_addr[13] host_response_data_q[31] 0.846584 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+host_response_valid_q host_rdata[8] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {host_response_valid_q host_rdata~8}}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[3].memory[0][31]__4|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg14 0.724486 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {comb~14 {register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19}}}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[3].memory[0][31]__4|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg14 0.664390 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+instr_q[4] instr_debug[4] 0.905607 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{instr_q[4]}}}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[4].memory[0][31]__5|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg2 0.941832 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {comb~14 {register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19}}}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[4].memory[0][31]__5|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg2 0.664390 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg21 0.652037 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {comb~14 {register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19}}}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg21 0.664390 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg16 0.688262 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {comb~14 {register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19}}}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[6].memory[0][31]__7|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg16 0.664390 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+PC:u_pc|pc_out[2] pc_debug[2] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{PC:u_pc|pc_out[2]}}}
+host_addr[13] host_response_data_q[7] 0.846584 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+host_addr[13] host_response_data_q[10] 0.846584 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+host_addr[13] host_response_data_q[11] 0.846584 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[5].memory[0][31]__6|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg7 0.796935 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {comb~14 {register:u_ws|sram_256_wrapper:u_sram|write_data[227]~19}}}
+host_we register:u_ws|sram_256_wrapper:u_sram|altsyncram:g_ram_lane[5].memory[0][31]__6|altsyncram_g3q1:auto_generated|ram_block1a0~porta_datain_reg7 0.664390 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

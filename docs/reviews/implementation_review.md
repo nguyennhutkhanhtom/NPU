@@ -2,7 +2,11 @@
 
 [Project](../../README.md) → [Tài liệu](../README.md) → **Implementation review**
 
-Tài liệu cập nhật ngày 01/10/2026. RTL/LUT được tích hợp từ ngày 29/09, sửa tiếp ngày 30/09 và tối ưu ngày 01/10. Sau đó đã bỏ nhánh `SYNTHESIS`/`QUARTUS_SYNTHESIS`, thuộc tính memory riêng của Intel và LUT file override để core dùng một implementation. Quartus chỉ dùng để demo khả năng synthesis. Các bản source trùng và snapshot v1 đã loại bỏ; xem [báo cáo cải tiến và kiểm chứng](design_review.md).
+Phạm vi dưới đây là core legacy `matmulfree`. Top mới `llm_soc` có graph
+đầy đủ và adapter SRAM khác; xem [thiết kế hiện tại](../design/full_rtl_language.md)
+và [gates thực tế](../verification/timing/README.md).
+
+Tài liệu cập nhật ngày 01/10/2026. RTL/LUT được tích hợp từ ngày 29/09, sửa tiếp ngày 30/09 và tối ưu ngày 01/10. Sau đó đã bỏ nhánh `SYNTHESIS`/`QUARTUS_SYNTHESIS`, thuộc tính memory riêng của Intel và LUT file override để core dùng một implementation. Quartus dùng để demo synthesis và timing FPGA; mục tiêu thiết kế vẫn là ASIC. Các bản source trùng và snapshot v1 đã loại bỏ; xem [báo cáo cải tiến và kiểm chứng](design_review.md) và [critical path/Fmax](../verification/timing/README.md).
 
 ## Kết luận
 
@@ -25,7 +29,7 @@ Bản v2 ban đầu đúng hướng 32 PE, INT8×ternary, ACC18, state S16, SRAM
 | Reduction | Cộng tuần tự bằng vòng lặp tạo chuỗi cộng dài | Chuyển sang reduction tree cân bằng |
 | Wrapper | Wrapper v1 gọi port carry_out không còn có trong top v2 | Cập nhật host ports và LED ready/overflow/error |
 | SRAM inference | Đọc host bất đồng bộ và ghi slice khiến SRAM lớn thành FF | Dùng 8 bank 32 bit, whole-word write với enable từng lane, shared synchronous read trong mọi build; không async reset RAM/read data, không dùng primitive/thuộc tính riêng của Intel |
-| Host SRAM valid | Read sau đổi địa chỉ, write hoặc idle có thể nhận response cũ | So khớp request/response row + lane; host giữ read đến valid/ready sau hai cạnh lên |
+| Host SRAM valid | Read sau đổi địa chỉ, write hoặc idle có thể nhận response cũ | Backend so khớp request/response row + lane sau hai cạnh lên; frontend top thêm request/response registers, host SRAM read bốn cạnh |
 | Descriptor inference | Partial write vào packed struct với dynamic index thành latch | Generate index hằng, 8 workspace word và 8×3 matrix word FF 32 bit; reset đủ 1.024 FF, không latch |
 | Package RNE | Biến tạm shift=0 có thể tạo pin function không driver | Gán đầy đủ mọi biến trên mọi path; giữ kết quả RNE |
 | Độ rộng và PC | Cast/increment/shift ngầm tạo warnings; clear gộp trong reset PC | Sized casts và unsigned shift rõ ràng; bỏ biến không dùng; clear synchronous tách khỏi rst_n asynchronous |
@@ -35,11 +39,13 @@ Bản v2 ban đầu đúng hướng 32 PE, INT8×ternary, ACC18, state S16, SRAM
 
 ## Kiểm chứng implementation thống nhất
 
-Ngày 01/10/2026, `./tests/run.ps1 -Block All` pass **9 mục kiểm tra** lúc **11:23:43**: xác minh ROM và tám testbench RTL; compile toàn source **0 error / 0 warning**. Source/test hashes khớp snapshot được kiểm tra. Suite không dùng macro chọn nhánh.
+Ngày 01/10/2026, `./tests/run.ps1 -Block All` pass **10 mục kiểm tra** lúc **14:31:18**: xác minh ROM và chín testbench RTL; compile toàn source **0 error / 0 warning**. Source/test hashes khớp snapshot được kiểm tra. Suite không dùng macro chọn nhánh.
 
-168 ca host / 23.827 commands; scalar 37.189 RNE, 106 divider, 4.301 sqrt, 900 exact compose (max 99 clock); 5 divider profiles / 2.320 checks; 12.720 postscale; sigmoid 1.638.400 input ở đủ 25 F_t; instruction memory 1.027; SRAM 47; arithmetic 3.242 addsub, 4.452 mul và 5 accumulator profiles. Bao gồm reset/busy-start/input capture, no-reset overflow→reject và alias metadata.
+168 ca host / 23.827 commands; scalar 37.189 RNE, 106 divider, 4.301 sqrt, 900 exact compose (max 99 clock); 5 divider profiles / 2.320 checks; 12.720 postscale; sigmoid 1.638.400 input ở đủ 25 F_t; instruction memory 1.027; SRAM 47; arithmetic 3.242 addsub, 4.452 mul và 5 accumulator profiles. Host frontend thêm 30 protocol reads, 11 cancellations và 4 running-blocked regions. Bao gồm reset/busy-start/input capture, no-reset overflow→reject và alias metadata.
 
-Demo Analysis & Synthesis cùng snapshot thành công lúc **11:24:04**, **0 error / 0 warning**, 6.497 FF, 11.798 ALUT, 334.336 bit block RAM và 7 DSP. Xem [báo cáo chi tiết](design_review.md).
+Testbench rowwise riêng kiểm tra thêm 1.800 ca/13.260 phần tử với reference S128, 42.843 thay đổi input khi busy và reset tại sáu pha; xác nhận register boundary mới giữ phép tính, tail và cờ.
+
+Demo Analysis & Synthesis trước tối ưu timing thành công lúc **11:24:04**, **0 error / 0 warning**, 6.497 FF, 11.798 ALUT, 334.336 bit block RAM và 7 DSP. Đây là số liệu synthesis của snapshot lịch sử; [báo cáo timing](../verification/timing/README.md) ghi kết quả và cấu trúc datapath sau khi xét critical path.
 
 ## Kiểm chứng lịch sử trước khi bỏ macro
 

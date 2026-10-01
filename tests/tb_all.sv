@@ -24,6 +24,7 @@ module tb_host;
         end
     end
     integer fd,rc,op,case_id=0,count=0,cases_run=0;
+    integer protocol_reads=0,protocol_cancels=0,protocol_blocked=0,quant_selector_checks=0;
     logic [31:0] a,b,c;
     task automatic host_write(input logic [31:0] addr,data,input bit accepted);
         @(negedge clk);host_en=1;host_we=1;host_addr=addr;host_wdata=data;
@@ -46,7 +47,161 @@ module tb_host;
             $fatal(1,"READ case=%0d addr=%h expected=%h actual=%h mask=%h",case_id,addr,data,host_rdata,mask);
         @(negedge clk);host_en=0;
     endtask
+
+    task automatic protocol_wait(input logic [31:0] data,input integer latency);
+        #1;if(host_ready!==0) $fatal(1,"New host read accepted a stale response addr=%h",host_addr);
+        for(integer edge_count=1;edge_count<=latency;edge_count++) begin
+            @(negedge clk);#1;
+            if(host_ready!==(edge_count==latency))
+                $fatal(1,"Host read latency addr=%h edge=%0d expected_edges=%0d ready=%b",host_addr,edge_count,latency,host_ready);
+        end
+        if(host_rdata!==data) $fatal(1,"Host protocol data addr=%h expected=%h actual=%h",host_addr,data,host_rdata);
+        protocol_reads++;
+    endtask
+
+    task automatic protocol_release;
+        host_en=0;host_we=0;
+        #1;if(host_ready!==0) $fatal(1,"Host ready after request release");
+        @(negedge clk);#1;
+        if(host_ready!==0 || host_rdata!==0) $fatal(1,"Host response remained valid after release");
+    endtask
+
+    task automatic protocol_read(input logic [31:0] addr,data,input integer latency);
+        @(negedge clk);host_en=1;host_we=0;host_addr=addr;
+        protocol_wait(data,latency);
+        repeat(2) begin
+            @(negedge clk);#1;
+            if(host_ready!==1 || host_rdata!==data) $fatal(1,"Held host response changed addr=%h",addr);
+        end
+        protocol_release();
+    endtask
+
+    task automatic check_host_protocol;
+        logic [31:0] blocked_addresses[0:3];
+        integer clocks;
+        blocked_addresses='{32'h00000000,32'h00010000,32'h00020000,32'h00030000};
+        @(negedge clk);rst_n=0;host_en=0;host_we=0;
+        repeat(2) @(negedge clk);rst_n=1;
+        host_write(32'h00000000,32'h13579bdf,1);
+        host_write(32'h00000004,32'h2468ace0,1);
+        host_write(32'h00010000,32'h11223344,1);
+        host_write(32'h00010004,32'h55667788,1);
+        host_write(32'h00020000,32'h01a5f00d,1);
+        host_write(32'h00020100,32'h10203040,1);
+        host_write(32'h00020104,32'h50607080,1);
+        host_write(32'h00020108,32'h90a0b0c0,1);
+        host_write(32'h00040010,32'h00000099,1);
+        host_write(32'h00040014,32'h13572468,1);
+        protocol_read(32'h00000000,32'h13579bdf,4);
+        protocol_read(32'h00000004,32'h2468ace0,4);
+        protocol_read(32'h00010000,32'h11223344,4);
+        protocol_read(32'h00010004,32'h55667788,4);
+        protocol_read(32'h00020000,32'h01a5f00d,2);
+        protocol_read(32'h00020100,32'h10203040,2);
+        protocol_read(32'h00020104,32'h50607080,2);
+        protocol_read(32'h00020108,32'h90a0b0c0,2);
+        protocol_read(32'h00040010,32'h00000099,2);
+        protocol_read(32'h00040014,32'h13572468,2);
+
+        // Cancel at each incomplete memory-read edge, including the edge at
+        // which the backend data is available but the response is not latched.
+        for(integer phase=1;phase<=3;phase++) begin
+            @(negedge clk);host_en=1;host_we=0;host_addr=0;
+            repeat(phase) @(negedge clk);
+            protocol_release();
+            repeat(3) begin @(negedge clk);#1;if(host_ready!==0) $fatal(1,"Canceled host response escaped");end
+            protocol_read(0,32'h13579bdf,4);
+            protocol_cancels++;
+        end
+        for(integer phase=1;phase<=3;phase++) begin
+            @(negedge clk);host_en=1;host_we=0;host_addr=0;
+            repeat(phase) @(negedge clk);
+            host_addr=4;
+            protocol_wait(32'h2468ace0,4);
+            protocol_release();
+            protocol_cancels++;
+        end
+        // A completed read can be replaced without an idle cycle; the full
+        // address tag must reject both a new lane and an out-of-window alias.
+        @(negedge clk);host_en=1;host_we=0;host_addr=0;
+        protocol_wait(32'h13579bdf,4);
+        host_addr=4;
+        protocol_wait(32'h2468ace0,4);
+        host_addr=32'h80000004;
+        repeat(3) begin #1;if(host_ready!==0) $fatal(1,"Aliased host address accepted");@(negedge clk);end
+        protocol_release();protocol_cancels++;
+        // A write immediately replaces a pending read. The write must use its
+        // own current address rather than the canceled read's registered tag.
+        for(integer phase=1;phase<=3;phase++) begin
+            @(negedge clk);host_en=1;host_we=0;host_addr=0;
+            repeat(phase) @(negedge clk);
+            host_we=1;host_addr=4;host_wdata=32'habcdef00+phase;
+            #1;if(host_ready!==1) $fatal(1,"Read-to-write switch changed write acceptance");
+            @(negedge clk);protocol_release();
+            protocol_read(0,32'h13579bdf,4);
+            protocol_read(4,32'habcdef00+phase,4);
+            protocol_cancels++;
+        end
+        @(negedge clk);host_en=1;host_we=0;host_addr=0;
+        repeat(3) @(negedge clk);rst_n=0;
+        #1;if(host_ready!==0 || host_rdata!==0) $fatal(1,"Reset did not cancel host response");
+        @(negedge clk);rst_n=1;
+        protocol_wait(32'h13579bdf,4);
+        protocol_release();protocol_cancels++;
+
+        // A long NOP program keeps the core active during host arbitration.
+        for(integer index=0;index<32;index++) host_write(32'h00030000+index*4,0,1);
+        host_write(32'h00030080,32'h00001e00,1);
+        protocol_read(32'h00030080,32'h00001e00,4);
+        host_write(32'h00040000,1,1);
+        if(!running) $fatal(1,"Host protocol program did not start");
+        for(integer region=0;region<4;region++) begin
+            @(negedge clk);host_en=1;host_we=0;host_addr=blocked_addresses[region];
+            repeat(5) begin
+                #1;if(!running || host_ready!==0) $fatal(1,"Host memory/descriptor access accepted while running");
+                @(negedge clk);
+            end
+            protocol_release();protocol_blocked++;
+        end
+        host_write(0,32'hbad00000,0);
+        host_write(32'h00040010,32'h00000001,0);
+        @(negedge clk);host_en=1;host_we=0;host_addr=32'h00040000;
+        protocol_wait(1,2);
+        clocks=0;
+        while(running && clocks<512) begin @(negedge clk);clocks++;end
+        if(running) $fatal(1,"Host protocol program timeout");
+        #1;if(host_ready!==1 || host_rdata!==1) $fatal(1,"Held control read did not retain its first snapshot");
+        protocol_release();
+        protocol_read(32'h00040000,2,2);
+        protocol_read(0,32'h13579bdf,4);
+        protocol_read(32'h00040010,32'h00000080,2);
+    endtask
+
+    task automatic check_quant_selector(input logic [23:0] denominator);
+        logic [127:0] limit, numerator;
+        logic [5:0] expected;
+        bit found;
+        limit=128'(denominator)*128'hffffff;
+        expected=0;found=0;
+        for(integer shift=47;shift>=0;shift--) begin
+            numerator=128'd127 << shift;
+            if(!found && numerator<=limit) begin expected=6'(shift);found=1;end
+        end
+        if(dut.u_norm.u_norm.choose_quant_r(denominator)!==expected)
+            $fatal(1,"QUANT selector den=%h expected=%0d",denominator,expected);
+        quant_selector_checks++;
+    endtask
     initial begin
+        check_quant_selector(0);
+        for(integer bit_index=0;bit_index<24;bit_index++) begin
+            for(integer offset=-1;offset<=1;offset++)
+                check_quant_selector(24'((128'd1<<bit_index)+offset));
+            if(bit_index>=7)
+                for(integer offset=-1;offset<=1;offset++)
+                    check_quant_selector(24'((128'd127<<(bit_index-6))+offset));
+        end
+        repeat(4096) check_quant_selector($urandom);
+        check_host_protocol();
         fd=$fopen("tests/sim/host_vectors.txt","r");
         if(fd==0) $fatal(1,"Missing host vectors");
         while(!$feof(fd)) begin
@@ -80,7 +235,7 @@ module tb_host;
                 endcase
             end else if(!$feof(fd)) $fatal(1,"Malformed vectors");
         end
-        $fclose(fd);$display("HOST_PASS cases=%0d",cases_run);$finish;
+        $fclose(fd);$display("HOST_PASS cases=%0d protocol_reads=%0d protocol_cancels=%0d blocked_regions=%0d quant_selector=%0d",cases_run,protocol_reads,protocol_cancels,protocol_blocked,quant_selector_checks);$finish;
     end
     initial begin #1000000000;$fatal(1,"GLOBAL_TIMEOUT");end
 endmodule
@@ -699,4 +854,193 @@ module tb_imem;
         $display("IMEM_PASS checks=%0d",checks);$finish;
     end
     initial begin #1000000;$fatal(1,"IMEM_TIMEOUT");end
+endmodule
+
+// Rowwise arithmetic uses an independent S128 reference, including ties,
+// partial words and protocol cancellation of payload registers without reset.
+module tb_rowwise;
+    logic clk=0,rst_n=0,start=0;
+    logic [3:0] select=0;
+    logic [255:0] a_word=0,b_word=0,c_word=0,result_word;
+    logic [4:0] a_frac_bits=0,b_frac_bits=0,dst_frac_bits=0,valid_elems=0;
+    logic a_unsigned=0,b_unsigned=0,dst_unsigned=0;
+    logic busy,done,overflow,format_error;
+    integer checks=0,element_checks=0,busy_checks=0,reset_checks=0;
+    integer operations[0:4]='{1,2,3,11,12};
+    integer fractions[0:3]='{0,1,15,24};
+    integer tails[0:3]='{1,3,15,16};
+    integer edges[0:9]='{-32768,-32767,-5,-1,0,1,3,5,32766,32767};
+    always #5 clk=~clk;
+    rowwise_op dut(.*);
+
+    function automatic logic signed [127:0] widen(input logic [15:0] value,input bit unsigned_input);
+        return unsigned_input ? $signed({112'h0,value}) : $signed({{112{value[15]}},value});
+    endfunction
+
+    function automatic logic signed [127:0] scale_reference(
+            input logic signed [127:0] value,input integer shift);
+        logic [127:0] magnitude,denominator,quotient,remainder;
+        if(shift<0) return value<<<(-shift);
+        if(shift==0) return value;
+        magnitude=value<0 ? $unsigned(-value) : $unsigned(value);
+        denominator=128'h1<<shift;
+        quotient=magnitude/denominator;
+        remainder=magnitude%denominator;
+        if(2*remainder>denominator || (2*remainder==denominator && quotient[0])) quotient++;
+        return value<0 ? -$signed(quotient) : $signed(quotient);
+    endfunction
+
+    task automatic check_case(input integer operation,
+            input logic [255:0] aw,bw,cw,input integer af,bf,df,n,
+            input bit au,bu,du,tamper,input bit launch_now=0);
+        logic [255:0] expected;
+        logic signed [127:0] a,b,raw,scaled,old_state,candidate;
+        logic [15:0] gate,complement;
+        bit expected_overflow,expected_error,pair_error;
+        integer stride,shift,clocks,checked;
+        expected=0;expected_overflow=0;expected_error=0;checked=0;
+        if(n==0 || n>16 || af>24 || bf>24 || df>24 ||
+            !(operation==1 || operation==2 || operation==3 || operation==6 || operation==11 || operation==12)) expected_error=1;
+        else begin
+            stride=operation==11 ? 1 : 2;
+            shift=operation==11 ? 15 : (operation==3 ? af+bf : af)-df;
+            for(integer base=0;base<n;base+=stride) begin
+                pair_error=0;
+                for(integer lane=0;lane<stride && base+lane<n;lane++) begin
+                    a=widen(aw[(base+lane)*16+:16],au);
+                    b=widen(bw[(base+lane)*16+:16],bu);
+                    if(operation!=12 && ((au && a>32768) || (bu && b>32768))) pair_error=1;
+                    case(operation)
+                        1: raw=a+b;
+                        2: raw=a-b;
+                        3: raw=a*b;
+                        6: begin
+                            if(aw[(base+lane)*16+:16]!==16'h0000) $fatal(1,"SIG smoke expects zero input");
+                            raw=16384;
+                        end
+                        11: begin
+                            old_state=widen(cw[base*16+:16],0);
+                            candidate=widen(aw[base*16+:16],0);
+                            gate=bw[base*16+:16];
+                            complement=16'h8000-gate;
+                            raw=old_state*$signed({112'h0,gate})+candidate*$signed({112'h0,complement});
+                            pair_error=gate>16'h8000;
+                        end
+                        default: raw=a<0 ? 128'sh0 : a;
+                    endcase
+                    scaled=operation==6 ? raw : scale_reference(raw,shift);
+                    if(du && operation!=12 && operation!=11 && operation!=6) begin
+                        if(scaled<0) begin expected[(base+lane)*16+:16]=0;expected_overflow=1;end
+                        else if(scaled>32768) begin expected[(base+lane)*16+:16]=16'h8000;expected_overflow=1;end
+                        else expected[(base+lane)*16+:16]=16'(scaled);
+                    end else begin
+                        if(scaled>32767) begin expected[(base+lane)*16+:16]=16'h7fff;expected_overflow=1;end
+                        else if(scaled< -128'sd32768) begin expected[(base+lane)*16+:16]=16'h8000;expected_overflow=1;end
+                        else expected[(base+lane)*16+:16]=16'(scaled);
+                    end
+                    checked++;
+                end
+                if(operation==6) pair_error=0;
+                if(pair_error) begin expected_error=1;break;end
+            end
+        end
+        if(!launch_now) @(negedge clk);
+        select=4'(operation);a_word=aw;b_word=bw;c_word=cw;
+        a_frac_bits=5'(af);b_frac_bits=5'(bf);dst_frac_bits=5'(df);valid_elems=5'(n);
+        a_unsigned=au;b_unsigned=bu;dst_unsigned=du;start=1;
+        @(negedge clk);start=0;clocks=0;
+        while(!done && clocks<256) begin
+            if(tamper) begin
+                select=4'hf;a_word=~aw;b_word=~bw;c_word=~cw;
+                a_frac_bits=31;b_frac_bits=31;dst_frac_bits=31;valid_elems=0;
+                a_unsigned=!au;b_unsigned=!bu;dst_unsigned=!du;start=1;
+                busy_checks++;
+            end
+            @(negedge clk);clocks++;
+        end
+        start=0;
+        if(!done || busy || result_word!==expected || overflow!==expected_overflow || format_error!==expected_error)
+            $fatal(1,"ROWWISE op=%0d n=%0d frac=%0d/%0d/%0d unsigned=%0b%0b%0b clocks=%0d expected=%h actual=%h flags=%b%b expected_flags=%b%b",
+                operation,n,af,bf,df,au,bu,du,clocks,expected,result_word,format_error,overflow,expected_error,expected_overflow);
+        checks++;element_checks+=checked;
+        @(negedge clk);
+        if(done || busy || result_word!==expected || overflow!==expected_overflow || format_error!==expected_error)
+            $fatal(1,"ROWWISE response did not remain stable after one-cycle done");
+    endtask
+
+    task automatic reset_phase(input integer phase);
+        integer clocks;
+        @(negedge clk);select=phase==6 ? 6 : 11;
+        a_word={16{16'h7fff}};b_word={16{16'h4000}};c_word={16{16'h8000}};
+        a_frac_bits=15;b_frac_bits=15;dst_frac_bits=15;valid_elems=3;
+        a_unsigned=0;b_unsigned=0;dst_unsigned=0;start=1;
+        @(negedge clk);start=0;clocks=0;
+        while(integer'(dut.state)!=phase && clocks<20) begin @(negedge clk);clocks++;end
+        if(integer'(dut.state)!=phase || !busy) $fatal(1,"ROWWISE reset phase was not reached: %0d",phase);
+        rst_n=0;
+        #1;if(busy || done || overflow || format_error || result_word!==256'h0)
+            $fatal(1,"ROWWISE asynchronous reset failed in phase %0d",phase);
+        @(negedge clk);rst_n=1;
+        // A fresh request starts on the same edge that releases reset. The
+        // canceled products must not leak into the new half-way result.
+        check_case(3,{16{16'h0001}},{16{16'h0005}},0,1,0,0,3,0,0,0,1,1);
+        reset_checks++;
+    endtask
+
+    initial begin
+        logic [255:0] aw,bw,cw;
+        integer operation,af,bf,df,n;
+        bit au,bu,du;
+        repeat(2) @(negedge clk);rst_n=1;
+        for(integer op_index=0;op_index<5;op_index++)
+            for(integer signs=0;signs<4;signs++)
+                for(integer a_shift=0;a_shift<4;a_shift++)
+                    for(integer d_shift=0;d_shift<4;d_shift++)
+                        for(integer tail=0;tail<4;tail++) begin
+                            operation=operations[op_index];au=signs[0];bu=signs[1];du=(a_shift+d_shift)%2;
+                            for(integer lane=0;lane<16;lane++) begin
+                                aw[lane*16+:16]=au ? 16'((lane%4)*10923) : 16'(edges[lane%10]);
+                                bw[lane*16+:16]=operation==11 ? 16'((lane%5)*8192) :
+                                    bu ? 16'((lane%3)*16384) : 16'(edges[(lane+3)%10]);
+                                cw[lane*16+:16]=16'(edges[(lane+5)%10]);
+                            end
+                            check_case(operation,aw,bw,cw,fractions[a_shift],fractions[(a_shift+1)%4],fractions[d_shift],tails[tail],au,bu,du,1);
+                        end
+        repeat(500) begin
+            operation=operations[$urandom_range(0,4)];af=$urandom_range(0,24);bf=$urandom_range(0,24);df=$urandom_range(0,24);
+            n=$urandom_range(1,16);au=$urandom_range(0,1);bu=$urandom_range(0,1);du=$urandom_range(0,1);
+            for(integer lane=0;lane<16;lane++) begin
+                aw[lane*16+:16]=au ? 16'($urandom_range(0,32768)) : 16'($urandom);
+                bw[lane*16+:16]=(bu || operation==11) ? 16'($urandom_range(0,32768)) : 16'($urandom);
+                cw[lane*16+:16]=16'($urandom);
+            end
+            check_case(operation,aw,bw,cw,af,bf,df,n,au,bu,du,1);
+        end
+        // U16 values outside the valid active tail are deliberately invalid.
+        aw={16{16'hffff}};bw=aw;cw=0;
+        for(integer lane=0;lane<3;lane++) begin aw[lane*16+:16]=16'(lane+1);bw[lane*16+:16]=16'(lane+2);end
+        check_case(3,aw,bw,cw,0,0,0,3,1,1,0,1);
+        check_case(1,aw,bw,cw,0,0,0,3,1,1,1,1);
+        // An invalid recurrent gate stops after its own output, leaving the
+        // remaining tail zero instead of consuming later elements.
+        bw={16{16'h4000}};bw[16+:16]=16'h8001;
+        check_case(11,{16{16'h1234}},bw,{16{16'hfedc}},15,15,15,4,0,0,0,1);
+        for(integer bad=0;bad<4;bad++) begin
+            aw={16{16'h0002}};bw={16{16'h0003}};
+            if(bad[0]) aw[0+:16]=16'hffff;
+            if(bad[1]) bw[16+:16]=16'hffff;
+            check_case(3,aw,bw,0,0,0,0,5,1,1,0,1);
+        end
+        check_case(1,0,0,0,0,0,0,0,0,0,0,1);
+        check_case(1,0,0,0,0,0,0,17,0,0,0,1);
+        check_case(1,0,0,0,25,0,0,1,0,0,0,1);
+        check_case(1,0,0,0,0,25,0,1,0,0,0,1);
+        check_case(1,0,0,0,0,0,25,1,0,0,0,1);
+        check_case(15,0,0,0,0,0,0,1,0,0,0,1);
+        check_case(6,0,0,0,15,0,15,3,0,0,1,1);
+        for(integer phase=1;phase<=6;phase++) reset_phase(phase);
+        $display("ROWWISE_PASS cases=%0d elements=%0d busy_input_changes=%0d reset_phases=%0d reference=S128",checks,element_checks,busy_checks,reset_checks);
+        $finish;
+    end
+    initial begin #10000000;$fatal(1,"ROWWISE_TIMEOUT");end
 endmodule

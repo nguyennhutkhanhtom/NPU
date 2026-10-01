@@ -1,0 +1,210 @@
+Statistics: 40 0 3711 0 40 -4.202
+
+Heuristic: Chained Adders
+From To Score Heuristic
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[538] 0.356884 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[550] 0.356937 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[532] 0.365988 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[537] 0.363465 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[539] 0.366318 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[542] 0.900000 {Chained Adders} {recommendation {{Add a pipeline stage in the adder}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[535] 0.365335 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[545] 0.365723 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[548] 0.366000 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[546] 0.367252 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[549] 0.367840 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[534] 0.368654 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[540] 0.368598 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[130] 0.422980 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[128] 0.422980 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[125] 0.423369 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[541] 0.370209 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[533] 0.371205 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[547] 0.371604 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[543] 0.373040 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[129] 0.427432 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult31~add_lh_hlmac_pl[0][7] write_vector_q[747] 0.346005 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[531] 0.374661 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[136] 0.428095 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[135] 0.428228 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult31~add_lh_hlmac_pl[0][7] write_vector_q[755] 0.346059 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[544] 0.374748 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[528] 0.375272 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[131] 0.424085 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[537] 0.500905 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {llm_math:u_math|Mult22~16 llm_math:u_math|Mult22~791 Add199~57 Selector3183~5}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[463] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[672] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[490] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[601] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[589] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[312] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[538] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[550] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[532] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[537] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[539] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[542] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[535] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[545] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[548] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[546] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[549] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[534] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[463] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[540] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[130] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[128] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[125] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[541] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[672] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult12~add_lh_hlmac_pl[0][9] write_vector_q[298] 0.895014 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[533] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[547] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[490] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[543] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[601] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult6~mult_ll_pl[0][21] write_vector_q[164] 0.895014 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+llm_math:u_math|Mult12~add_lh_hlmac_pl[0][9] write_vector_q[294] 0.895014 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[129] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[589] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult6~mult_ll_pl[0][21] write_vector_q[155] 0.895014 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+llm_math:u_math|Mult31~add_lh_hlmac_pl[0][7] write_vector_q[747] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[531] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[136] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[135] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult31~add_lh_hlmac_pl[0][7] write_vector_q[755] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[544] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[528] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[312] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[131] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult13~add_lh_hlmac_pl[0][7] write_vector_q[319] 0.895014 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[538] 0.356884 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[538] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[550] 0.356937 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[550] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[532] 0.365988 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[532] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[537] 0.500905 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {llm_math:u_math|Mult22~16 llm_math:u_math|Mult22~791 Add199~57 Selector3183~5}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[537] 0.363465 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[537] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[539] 0.366318 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[539] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[542] 0.900000 {Chained Adders} {recommendation {{Add a pipeline stage in the adder}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[542] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[535] 0.365335 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[535] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[545] 0.365723 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[545] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[548] 0.366000 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[548] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[546] 0.367252 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[546] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[549] 0.367840 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[549] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[534] 0.368654 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[534] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[463] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[463] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[540] 0.368598 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[540] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[130] 0.422980 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[130] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[128] 0.422980 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[128] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[125] 0.423369 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[125] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[541] 0.370209 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[541] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[672] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[672] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult12~add_lh_hlmac_pl[0][9] write_vector_q[298] 0.895014 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[533] 0.371205 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[533] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[547] 0.371604 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[547] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[490] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[490] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[543] 0.373040 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[543] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[601] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[601] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult6~mult_ll_pl[0][21] write_vector_q[164] 0.895014 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+llm_math:u_math|Mult12~add_lh_hlmac_pl[0][9] write_vector_q[294] 0.895014 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[129] 0.427432 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[129] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[589] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[589] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult6~mult_ll_pl[0][21] write_vector_q[155] 0.895014 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+llm_math:u_math|Mult31~add_lh_hlmac_pl[0][7] write_vector_q[747] 0.346005 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult31~add_lh_hlmac_pl[0][7] write_vector_q[747] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[531] 0.374661 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[531] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[136] 0.428095 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[136] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[135] 0.428228 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[135] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult31~add_lh_hlmac_pl[0][7] write_vector_q[755] 0.346059 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult31~add_lh_hlmac_pl[0][7] write_vector_q[755] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[544] 0.374748 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[544] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[528] 0.375272 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult22~add_lh_hlmac_pl[0][9] write_vector_q[528] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[312] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[34]~_Duplicate_1}}}
+scalar_round_q[34]~_Duplicate_1 write_vector_q[312] 0.969391 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 5}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[131] 0.424085 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+llm_math:u_math|Mult5~add_lh_hlmac_pl[0][4] write_vector_q[131] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_math:u_math|Mult13~add_lh_hlmac_pl[0][7] write_vector_q[319] 0.895014 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 6}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

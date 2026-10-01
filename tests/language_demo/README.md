@@ -38,7 +38,7 @@ Model có **1.377.408 tham số**, 4 block, width 128, 4 attention head, context
 
 Exporter dùng activation thật tại input của từng linear. Quantization activation là absmax/127, RNE sang S8; coefficient giữ weight scale và input scale, output S32/F16. Reference dot/RNE dùng số nguyên Python/NumPy và được so sánh qua host interface. Không thêm NORM vào graph hoặc nhận kết quả của linear đơn lẻ là kết quả sinh văn bản bằng RTL.
 
-Weight ternary của cả 28 tensor cần **212.992 B** theo layout 2 bit với padding từng hàng, vượt 32 KiB. Từng tensor tối đa **12.288 B** nên host có thể nạp và chạy riêng; workspace high water **2.560 B**. FP16 embedding/head, affine norm gain, RoPE, attention và graph floating point đầy đủ vẫn chạy trên CPU. Tổng **679.176 clock** chỉ cộng các chương trình linear riêng; không phải latency toàn model và chưa tính host load/readback.
+Weight ternary của cả 28 tensor cần **212.992 B** theo layout 2 bit với padding từng hàng, vượt 32 KiB. Từng tensor tối đa **12.288 B** nên host có thể nạp và chạy riêng; workspace high water **2.560 B**. FP16 embedding/head, affine norm gain, RoPE, attention và graph floating point đầy đủ vẫn chạy trên CPU. Tổng **746.760 clock** chỉ cộng các chương trình linear riêng; không phải latency toàn model và chưa tính host load/readback.
 
 ## Chất lượng văn bản
 
