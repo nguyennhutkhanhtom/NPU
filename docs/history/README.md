@@ -28,4 +28,8 @@ Archive có SHA-256 `6d7e6b88f8d28863fc03b47593b3c4d9c0a60653f910ef7289315b6310d
 
 Các file gốc được chuyển thư mục và giữ nguyên byte. [Phần so sánh với thesis](../source_guide/README.md#8-khác-gì-so-với-thesis-của-bạn) giải thích khác biệt với core hiện hành.
 
+[Cleanup render cache](render_cache_cleanup_20261002.json) ghi224PNG/SVG cũ đã xóa,
+10.393.764bytes; giữ đủ114file của57sơ đồ hiện tại. Có thể tạo lại bằng
+`node tools/docs/render.cjs`.
+
 [Về mục lục tài liệu](../README.md)
