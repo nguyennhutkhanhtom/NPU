@@ -1,6 +1,6 @@
 # NPU resume checkpoint
 
-Updated 2026-10-04 19:49 Asia/Saigon. Repo/reports/hashes are authoritative; preserve valid changes and immutable tags, no reset/revert.
+Updated 2026-10-04 20:04 Asia/Saigon. Repo/reports/hashes are authoritative; preserve valid changes and immutable tags, no reset/revert.
 
 ## Goal and rules
 
@@ -16,7 +16,9 @@ Source llm_soc changes one clear assignment: A_QUERY clears attention_acc_q inst
 
 RUNNING timing exec49792, isolated quartus_attention1/llm_soc, tag fullrtl100_attention1; A&S PASS0errors12warnings19:41:12, Fitter45332/supervisor30228 active. Source/config ZIP37 SHA0f9badde7a854d76f1edb6541af9f1547d132579c39342d94a14968dd43c059e. RUNNING all-seven exec25145, attention1_questa_work/EvidenceTag attention1, actualRAM25.1/Questa2025.2; initial snapshot tests/full_rtl/build/attention1_modelsim_start.json, compile0errors0warnings, allsixgroupsPASS including operators17/checks3460/scalar128/clamp128 at19:39:11; graph40192 RUNNING. Six-group archive tests/full_rtl/evidence/attention1_six_units/results.json, A&S archive docs/verification/synthesis/attention1/manifest.json. Rootunit_results currently RUNNING, not PASS. Preserve prior pipeline3 archive; no application.
 
-Source guide refreshed/excerpts/hash match34assets;51diagram hashes unchanged. Do not edit RTL/QSF/SDC or unit inputs while jobs active. Wait for current operators/graph and full fit/all20checks before claiming milestone. Latest pushed c9a83b9 records completed fanout2 FAIL; bc4f375 vendor-free elaboration/ASIC memory guide retained.
+Source guide refreshed/excerpts/hash match34assets;51diagram hashes unchanged. Do not edit RTL/QSF/SDC or unit inputs while jobs active. Wait for current graph and full fit/all20checks before claiming milestone. Latest pushed a2fa161 records early attention clear/A&S/six units; c9a83b9 completed fanout2 FAIL and bc4f375 vendor-free elaboration/ASIC memory guide retained.
+
+Current source policy review docs/verification/rtl_policy_attention1/results.json: exact34hashes,41generate/13small static procedural/2elaboration loops,13pure runtime helpers/2geometry functions. All61arithmetic-symbol statements reviewed as elaboration/index geometry, vendor symbols SRAM leaf only. Manual review plus lexical inventory, not a functional/timing proof. Docs hub simplified; validator PASS34assets/51renders/1901links. Graph passed1Mcompute clocks by20:03; still RUNNING.
 
 ## Preceding verified RTL and tests
 
@@ -45,7 +47,7 @@ Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD. S
 
 ## Cleanup and commits
 
-Latest verified timing/parser milestone pushed main d6e5377. Prior86b1c52: inactive Quartus DB cleanup12directories/1864217551bytes; all six historical ZIP/report hashes verified, outputs/evidence/activeDB/weights/model cache retained. [Cleanup record](docs/history/quartus_database_cleanup_20261004.json). Prior unused helper originals preserved in [SHA-verified ZIP](docs/history/helper_cleanup1/manifest.json); current runners and legacy reachable modules retained. No large weights/build artifacts/vendor libraries/secrets committed.
+Latest source/six-unit milestone pushed main a2fa161; preceding timing/parser d6e5377 preserved. Prior86b1c52: inactive Quartus DB cleanup12directories/1864217551bytes; all six historical ZIP/report hashes verified, outputs/evidence/activeDB/weights/model cache retained. [Cleanup record](docs/history/quartus_database_cleanup_20261004.json). Prior unused helper originals preserved in [SHA-verified ZIP](docs/history/helper_cleanup1/manifest.json); current runners and legacy reachable modules retained. No large weights/build artifacts/vendor libraries/secrets committed.
 
 ## Reproduction and next steps
 

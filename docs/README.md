@@ -41,33 +41,20 @@ Mỗi nội dung có một trang chính; README trong source dẫn về tài li�
 
 ## Trạng thái và bằng chứng
 
-RTL dùng **cùng implementation trong mô phỏng và synthesis**, không chọn nhánh theo `SYNTHESIS`/`QUARTUS_SYNTHESIS`. Core có 32 PE ternary, K≤512, accumulator S18, state S16 và SRAM logic 32+8 KiB. Quartus dùng để demo Analysis & Synthesis và timing FPGA; binding SRAM, STA và PPA ASIC cần được đánh giá riêng.
+Top hiện tại là **`llm_soc`**, chạy toàn graph sinh token trên RTL. Compute/control dùng SystemVerilog portable; nhân/chia được viết bằng tích bit, cộng/trừ và dịch. Không có nhánh `SYNTHESIS`/`QUARTUS_SYNTHESIS`, task synthesizable hoặc IP tính toán/control Quartus. Chỉ `quartus_word_ram` chứa `altsyncram`, sau [adapter SRAM có hợp đồng rõ ràng](design/asic_memory_binding.md).
 
-Bản rà soát ngày **01/10/2026** pass **10 mục regression**, compile **0 error/0 warning**. A&S sau tối ưu timing pass **0 error/0 warning**, 7.390 FF và 11.906 ALUT; [timing hub](verification/timing/README.md) ghi baseline và phép đo post-fit riêng. [Báo cáo design](reviews/design_review.md) ghi số liệu, thời điểm, test coverage và các giới hạn.
+**Quartus chỉ là backend demo EDA.** Thiết kế ưu tiên chuyển sang ASIC bằng cách thay technology leaf SRAM và cung cấp library/constraints phù hợp. Pin, I/O delay và placement trong QSF thuộc backend này; không có mục tiêu bring-up board FPGA. Kết quả Quartus không phải ASIC signoff.
 
-[Demo NanoFable](demos/language.md) bổ sung sinh văn bản trên CPU và 168 lượt replay linear ternary thực trên RTL; toàn model chưa chạy trên NPU.
+| Phạm vi xác minh | Kết quả và evidence |
+|---|---|
+| Source hiện tại `attention1`, 34 assets | Clear accumulator attention tại đầu mỗi head; [A&S PASS, 0 errors/12 warnings](verification/synthesis/attention1/manifest.json). |
+| Coding policy source hiện tại | [Inventory và rà soát theo hash](verification/rtl_policy_attention1/results.json): không có runtime nhân/chia, task synthesizable hoặc IP compute/control. Đây là source review, không phải timing/functional proof. |
+| Unit source hiện tại | [6 nhóm PASS](../tests/full_rtl/evidence/attention1_six_units/results.json), compile/runtime 0 warnings; graph đang chạy. Chưa có kết luận cả 7 nhóm PASS. |
+| Timing source hiện tại | Fitter đang chạy với SDC 10 ns giữ nguyên; chưa có timing PASS. Theo dõi [checkpoint](../TASK_STATE.md) và [timing hub](verification/timing/README.md). |
+| Source trước thay đổi clear attention | [7 nhóm PASS](../tests/full_rtl/evidence/pipeline3_all_units/results.json); [full-top fanout2 timing FAIL 96,67 MHz](verification/timing/fullrtl100_fanout2/manifest.json), setup/hold còn lỗi. Recovery/removal/pulse đạt mọi corner; không có unconstrained paths. |
+| Pretrained application toàn graph | Chưa chạy theo gate hiện hành. Chỉ chạy sau khi đúng source/config đạt cả 7 nhóm và post-fit ≥100 MHz, mọi corner/slack/TNS/UCP đạt. Numeric matching và chất lượng đoạn văn được đánh giá riêng. |
 
-Top `llm_soc` triển khai toàn graph và SRAM trên RTL. IP Quartus duy nhất được
-instantiate là altsyncram M10K, sau adapter thay được bằng SRAM ASIC; compute
-dùng RTL portable/logic cells. Milestone `d3825b2` đã push: synthesis/fit PASS,
-0DSP/0PLL nhưng timing FAIL87,49MHz. Bản byte-product tiếp theo có sáu nhóm
-units PASS, fit0DSP/0PLL và timing FAIL89,60MHz/setup+hold. Full graph của hai
-bản đó được hủy để sửa theo critical paths, không có assertion failure hay
-kết luận bảy nhóm PASS. `fullrtl100_control1` có sáu nhóm units PASS, fit0DSP/PLL/
-DLL/HSSI nhưng timing FAIL92,75MHz gồm setup/hold/recovery; graph đã được hủy
-để sửa host mux theo report. Source có102state, pipeline ternary/exp/clamp,
-enable SRAM cục bộ. Clock LVDS qua buffer/GCLK thường, không PLL/SERDES, chưa
-giải quyết I/O timing. Xem [timing hub](verification/timing/README.md)
-và [checkpoint](../TASK_STATE.md) cho source/config hashes, warnings và mọi corner.
-Mốc control1 đã commit/push `5e621c4`. Source hiện tại thay tất cả phép nhân
-datapath full/legacy bằng cây tích bit portable, không dùng toán tử nhân/chia hay
-arithmetic IP. Mốc `e75166e` đã push:35source assets, sáu nhóm units PASS,
-legacy10nhóm PASS, A&S0errors/12warnings. Quartus thực tế hiện cài25.1std;
-`fullrtl100_logic5` fit PASS0DSP/PLL/DLL/HSSI, timing FAIL99,07MHz gồm setup/
-hold/removal. Logic6 cũng FAIL99,07MHz;logic7 FAIL96,04MHz. [Bảy nhóm unit](../tests/full_rtl/evidence/logic6q5_all_units/results.json)
-đã PASS cho snapshot35source cũ,0warnings. Bản 33assets đã chuyển
-task/pipeline/LUT sang [RTL tường minh](design/rtl_style.md); [cả 7 nhóm regression PASS](../tests/full_rtl/evidence/explicit3_all_units/results.json), timing mới FAIL93,28MHz/setup/removal,
-Bản trước fix clear attention34assets bỏ SIMD payload enable dư thừa và dùng hai FF reset release; cả bảy nhóm regression PASS. Timing fanout2 FAIL96,67MHz/setup+hold; recovery/removal đạt mọi corner. Chưa có100MHz PASS hoặc pretrained application.
+Các kết quả cũ, warnings, critical paths, commands và source/config hashes giữ trong [timing hub](verification/timing/README.md), [verification](verification/README.md) và [lịch sử](history/README.md). Core instruction-driven cùng 10 nhóm regression là phạm vi legacy riêng. [Demo NanoFable trước đây](demos/language.md) dùng CPU và replay 168 linear trên RTL; đó chưa phải application toàn graph RTL.
 
 Code trích dẫn, dòng và SHA-256 trong source guide được đối chiếu bởi [validator](source_guide/validate.py); [validation.json](source_guide/validation.json) ghi kết quả. Sau khi sửa RTL, cập nhật chú giải rồi chạy:
 
@@ -77,5 +64,3 @@ python docs/source_guide/validate.py
 ```
 
 Runner, reference, testbench và manifest demo nhẹ được đưa lên repository để chạy lại. Model/checkpoint tải từ nguồn upstream đã pin; dependency, build cache và log được tạo local. Xem [hướng dẫn test](../tests/README.md) và [hướng dẫn demo](demos/README.md).
-
-Current attention1 source moves accumulator clear to each head entry; all-seven regression and fresh full-top timing are pending. Preceding PASS results apply to their archived source hashes only.
