@@ -133,7 +133,7 @@ Kiểm tra suy luận phần cứng riêng: `quartus_sh -t tests/check_synthesis
 
 `matmul_wrap` giữ CLOCK_50/SW/LEDG và bổ sung host ports. LED0=ready, LED1=overflow, LED2=error. Pin assignment của board phải bổ sung các host ports nếu dùng wrapper này.
 
-Các pipeline register/ctrl_unit/hazard_detect và mem_burst được giữ để tham khảo/migration; top v2 không instantiate chúng. Các regression v1 dùng interface cũ đã được loại bỏ; test hiện tại nằm trong một file `tests/tb_all.sv`.
+Các pipeline register, ctrl_unit, hazard_detect và mem_burst không được top hiện tại instantiate và đã được loại bỏ trong cleanup; tra cứu code lịch sử qua Git/evidence archives. Các regression v1 dùng interface cũ đã được loại bỏ; test hiện tại nằm trong một file `tests/tb_all.sv`.
 
 ## Cách tổ chức RTL và thay đổi để hỗ trợ ASIC
 

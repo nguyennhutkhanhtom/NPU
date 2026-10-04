@@ -2,7 +2,7 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [banked_word_ram.sv](<../../../Verilog%20Source%20code/banked_word_ram.sv>). **Số dòng:** 50. **SHA-256:** `260bca8ecb29bb358e9633174f14bd5a012fa5fd2b986c461770b326a00e3799`.
+**Source:** [banked_word_ram.sv](<../../../Verilog%20Source%20code/banked_word_ram.sv>). **Số dòng:** 55. **SHA-256:** `bb7a3bb83e0aef84c030403bcd675e4853f190ea79d9851ad742a5a0d02d2409`.
 
 ## Khối này làm gì?
 
@@ -74,9 +74,9 @@ Hai nonblocking assignment trả dữ liệu trước write khi read/write cùng
 
 Chia ROWS thành tile; tile cuối có thể ngắn hơn. ADDR_W phải đủ cho ROWS và client chỉ phát địa chỉ hợp lệ.
 
-### [Dòng 34–47: Tile decoding](<../../../Verilog%20Source%20code/banked_word_ram.sv#L34>)
+### [Dòng 34–49: Tile decoding](<../../../Verilog%20Source%20code/banked_word_ram.sv#L34>)
 
-<!-- source-range:34:47 -->
+<!-- source-range:34:49 -->
 ```systemverilog
     for (tile = 0; tile < TILES; tile = tile + 1) begin : g_tile
         localparam int TILE_ROWS = (ROWS - tile * 1024 < 1024) ? ROWS - tile * 1024 : 1024;
@@ -89,19 +89,24 @@ Chia ROWS thành tile; tile cuối có thể ngắn hơn. ADDR_W phải đủ ch
             if (rd_en) read_tile_q[tile] <= (rd_addr >> 10) == tile;
     end
     endgenerate
-    always_comb begin
-        rd_data = '0;
-        for (int tile_id = 0; tile_id < TILES; tile_id = tile_id + 1)
+    wire [WIDTH - 1:0] read_mux [0:TILES];
+    genvar mux_tile;
+    assign read_mux[0] = '0;
+    generate
+    for (mux_tile = 0; mux_tile < TILES; mux_tile = mux_tile + 1) begin : g_read_mux
 ```
 
 High address bits chọn tile, low 10 bits chọn word; tag đọc được chốt cùng cạnh với SRAM.
 
-### [Dòng 48–50: Read output](<../../../Verilog%20Source%20code/banked_word_ram.sv#L48>)
+### [Dòng 50–55: Read output](<../../../Verilog%20Source%20code/banked_word_ram.sv#L50>)
 
-<!-- source-range:48:50 -->
+<!-- source-range:50:55 -->
 ```systemverilog
-            rd_data = rd_data | (tile_data[tile_id] & {WIDTH{read_tile_q[tile_id]}});
+        assign read_mux[mux_tile + 1] = read_mux[mux_tile] |
+            (tile_data[mux_tile] & {WIDTH{read_tile_q[mux_tile]}});
     end
+    endgenerate
+    assign rd_data = read_mux[TILES];
 endmodule
 ```
 

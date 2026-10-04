@@ -1,0 +1,11 @@
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\tests\sim\Quartus-imem.log tests/sim/quartus-work.tb_imem -do "run -all; quit -f" 
+# Start time: 01:17:16 on Oct 01,2026
+# Loading sv_std.std
+# Loading tests/sim/quartus-work.tb_imem
+# Loading tests/sim/quartus-work.ins_mem
+# run -all
+# IMEM_PASS checks=1027
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv(476)
+#    Time: 25746 ns  Iteration: 0  Instance: /tb_imem
+# End time: 01:17:17 on Oct 01,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

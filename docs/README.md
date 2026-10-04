@@ -18,6 +18,7 @@ Core instruction-driven trước được mô tả riêng tại [kiến trúc le
 | Tra cứu core 32 PE và chương trình legacy | [Kiến trúc và bảng bit](design/architecture.md) | [Instruction, descriptor và host](design/interfaces.md) |
 | Sửa một module RTL | [Mục lục từng file](source_guide/blocks/README.md) | [Các cải tiến và hợp đồng hiện hành](reviews/design_review.md) |
 | Chuyển sang ASIC và kiểm tra policy IP | [ASIC portability](design/asic_portability.md) | [Cây nhân bit](source_guide/blocks/logic_mul.sv.md), [SRAM binding](source_guide/blocks/quartus_word_ram.sv.md) |
+| Kiểm tra coding style RTL | [Explicit RTL và register ownership](design/rtl_style.md) | [Repository rules](../AGENTS.md) |
 | Chạy test, xem synthesis hoặc timing | [Regression và demo synthesis](verification/README.md) | [Critical path và Fmax post-fit](verification/timing/README.md) |
 | Chạy model có checkpoint | [Full RTL application](../tests/full_rtl/README.md) | [Model candidates](demos/candidates.md), [asset setup NanoFable](../tests/language_demo/README.md) |
 | Tra cứu các quyết định và lỗi cũ | [Báo cáo tích hợp](reviews/implementation_review.md) | [Lịch sử, thesis và bài báo](history/README.md) |
@@ -59,10 +60,13 @@ giải quyết I/O timing. Xem [timing hub](verification/timing/README.md)
 và [checkpoint](../TASK_STATE.md) cho source/config hashes, warnings và mọi corner.
 Mốc control1 đã commit/push `5e621c4`. Source hiện tại thay tất cả phép nhân
 datapath full/legacy bằng cây tích bit portable, không dùng toán tử nhân/chia hay
-arithmetic IP. Quartus thực tế hiện cài25.1std; build `fullrtl100_logic3` và unit
-operators đang chạy. QSF mới dùng clock2.5V/AC18, resetV28 và output LVDS thường,
-không serializer/PLL. Legacy regression đúng source mới đã PASS10nhóm.
-Application pretrained tiếp tục bị chặn đến khi source/config hiện tại đạt đủ gate.
+arithmetic IP. Mốc `e75166e` đã push:35source assets, sáu nhóm units PASS,
+legacy10nhóm PASS, A&S0errors/12warnings. Quartus thực tế hiện cài25.1std;
+`fullrtl100_logic5` fit PASS0DSP/PLL/DLL/HSSI, timing FAIL99,07MHz gồm setup/
+hold/removal. Logic6 cũng FAIL99,07MHz;logic7 FAIL96,04MHz. [Bảy nhóm unit](../tests/full_rtl/evidence/logic6q5_all_units/results.json)
+đã PASS cho snapshot35source cũ,0warnings. Source hiện tại33assets đã chuyển
+task/pipeline/LUT sang [RTL tường minh](design/rtl_style.md); regression và fit mới đang chạy,
+chưa có100MHz PASS hoặc pretrained application.
 
 Code trích dẫn, dòng và SHA-256 trong source guide được đối chiếu bởi [validator](source_guide/validate.py); [validation.json](source_guide/validation.json) ghi kết quả. Sau khi sửa RTL, cập nhật chú giải rồi chạy:
 

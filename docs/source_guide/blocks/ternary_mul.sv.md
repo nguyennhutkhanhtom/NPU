@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — TMATMUL.
 
-**Source:** [ternary_mul.sv](<../../../Verilog%20Source%20code/ternary_mul.sv>). **Số dòng:** 305. **SHA-256:** `b3f3dba3b08bf7044631566890082627521a12818b8da8a86d6f6499c292da50`.
+**Source:** [ternary_mul.sv](<../../../Verilog%20Source%20code/ternary_mul.sv>). **Số dòng:** 309. **SHA-256:** `71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f`.
 
 ## Khối này làm gì?
 
@@ -177,9 +177,9 @@ module ternary_mul (
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `q_desc`: metadata nguồn activation S8; `out_desc`: metadata output TMATMUL; `mat_desc`: metadata ma trận và postscale; `ws_rd_en`: request đọc workspace; `ws_rd_addr`: địa chỉ đọc workspace; và 43 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 78–133: Ternary PE và cây cộng](<../../../Verilog%20Source%20code/ternary_mul.sv#L78>)
+### [Dòng 78–137: Ternary PE và cây cộng](<../../../Verilog%20Source%20code/ternary_mul.sv#L78>)
 
-<!-- source-range:78:133 -->
+<!-- source-range:78:137 -->
 ```systemverilog
 
     // Validated K is 1..512, so each row occupies one to four weight words.
@@ -195,25 +195,28 @@ module ternary_mul (
         endcase
     end
 
-    always_comb begin
-        weight_bit_base = {input_chunk_q[1:0], 6'b0};
-        reserved_weight = 0;
-        for (int i = 0;i < 32;i = i + 1) begin
-            logic signed [7:0] a;
-            logic [1:0] w;
-            a = q_word[i * 8 +: 8];
-            w = w_word[weight_bit_base + i * 2 +: 2];
-            if (((int'(input_chunk_q) << 5) + i) >= matrix_desc_q.k_len) terms[i] = 9'sh000;
-            else begin
-                if (w == 2'b10) reserved_weight = 1;
-                case (w)
-                    2'b01 : terms[i] = {a[7], a};
-                    2'b11 : terms[i] = - $signed({a[7], a});
-                    default : terms[i] = 9'sh000; // 00=0, 10 reserved -> 0
+    assign weight_bit_base = {input_chunk_q[1:0], 6'b0};
+    wire [31:0] reserved_lane;
+    genvar decode_lane;
+    generate
+    for (decode_lane = 0; decode_lane < 32; decode_lane = decode_lane + 1) begin : g_decode
+        wire signed [7:0] lane_value = q_word[decode_lane * 8 +: 8];
+        wire [1:0] lane_weight = w_word[weight_bit_base + decode_lane * 2 +: 2];
+        wire lane_active = ((int'(input_chunk_q) << 5) + decode_lane) < matrix_desc_q.k_len;
+        assign reserved_lane[decode_lane] = lane_active && lane_weight == 2'b10;
+        always_comb begin
+            terms[decode_lane] = 9'sh000;
+            if (lane_active) begin
+                case (lane_weight)
+                    2'b01 : terms[decode_lane] = {lane_value[7], lane_value};
+                    2'b11 : terms[decode_lane] = -$signed({lane_value[7], lane_value});
+                    default : terms[decode_lane] = 9'sh000;
                 endcase
             end
         end
     end
+    endgenerate
+    assign reserved_weight = |reserved_lane;
     // Four independent eight-lane trees keep carry widths proportional to
     // their ranges. Registers separate decode/reduction from accumulation.
     genvar g, lane;
@@ -222,6 +225,8 @@ module ternary_mul (
         for (lane = 0; lane < 8; lane = lane + 1) begin : g_lane
             assign group_terms[g][lane] = terms[g * 8 + lane];
         end
+        always_ff @(posedge clk)
+            if (rst_n && state == REDUCE_GROUPS) group_sum_q[g] <= group_sum[g];
         acc_mul #(.TERM_W(9), .NUM_INPUTS(8), .ACC_W(12)) u_group(
             .term(group_terms[g]), .sum(group_sum[g]));
     end
@@ -232,7 +237,6 @@ module ternary_mul (
     // Control reset cancels an in-flight chunk before these payloads are used.
     always_ff @(posedge clk) begin
         if (rst_n && state == REDUCE_GROUPS) begin
-            for (int g = 0; g < 4; g = g + 1) group_sum_q[g] <= group_sum[g];
             reserved_weight_q <= reserved_weight;
         end
         if (rst_n && state == REDUCE_TOTAL) total_sum_q <= total_sum;
@@ -267,9 +271,9 @@ flowchart TB
 ```
 
 
-### [Dòng 134–158: Địa chỉ SRAM](<../../../Verilog%20Source%20code/ternary_mul.sv#L134>)
+### [Dòng 138–162: Địa chỉ SRAM](<../../../Verilog%20Source%20code/ternary_mul.sv#L138>)
 
-<!-- source-range:134:158 -->
+<!-- source-range:138:162 -->
 ```systemverilog
 
     always_comb begin
@@ -305,9 +309,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `ws_rd_en`: request đọc workspace; `ws_rd_addr`: địa chỉ đọc workspace; `ws_wr_en`: cho phép ghi workspace; `ws_wr_addr`: địa chỉ ghi workspace; `ws_wr_data`: word 256 ghi workspace; `pack_buf`: buffer pack output trước khi ghi SRAM; và 13 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 159–185: Reset](<../../../Verilog%20Source%20code/ternary_mul.sv#L159>)
+### [Dòng 163–189: Reset](<../../../Verilog%20Source%20code/ternary_mul.sv#L163>)
 
-<!-- source-range:159:185 -->
+<!-- source-range:163:189 -->
 ```systemverilog
         if (!rst_n) begin
             state <= IDLE;
@@ -345,9 +349,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `busy`: khối đang xử lý; `done`: xung báo hoàn tất; `overflow`: cờ kết quả vượt miền số; `format_error`: cờ format/metadata không hợp lệ; `input_desc_q`: descriptor q đã chốt; và 15 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 186–216: Chốt lệnh và validate](<../../../Verilog%20Source%20code/ternary_mul.sv#L186>)
+### [Dòng 190–220: Chốt lệnh và validate](<../../../Verilog%20Source%20code/ternary_mul.sv#L190>)
 
-<!-- source-range:186:216 -->
+<!-- source-range:190:220 -->
 ```systemverilog
                     busy <= 1;
                     overflow <= 0;
@@ -389,9 +393,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `busy`: khối đang xử lý; `overflow`: cờ kết quả vượt miền số; `format_error`: cờ format/metadata không hợp lệ; `input_desc_q`: descriptor q đã chốt; `q_desc`: metadata nguồn activation S8; và 24 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 217–234: Nhận q và weight](<../../../Verilog%20Source%20code/ternary_mul.sv#L217>)
+### [Dòng 221–238: Nhận q và weight](<../../../Verilog%20Source%20code/ternary_mul.sv#L221>)
 
-<!-- source-range:217:234 -->
+<!-- source-range:221:238 -->
 ```systemverilog
                     got_q <= 0;
                     got_w <= (input_chunk_q[1:0] != 0);
@@ -420,9 +424,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `got_q`: đã nhận word activation; `got_w`: đã có word weight cho chunk; `input_chunk_q`: chunk 32 activation trong hàng hiện tại; `state`: trạng thái FSM của khối; `ws_rd_valid`: workspace trả dữ liệu hợp lệ; `q_word`: buffer32 activation S8; và 4 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 235–258: Accumulate và bias](<../../../Verilog%20Source%20code/ternary_mul.sv#L235>)
+### [Dòng 239–262: Accumulate và bias](<../../../Verilog%20Source%20code/ternary_mul.sv#L239>)
 
-<!-- source-range:235:258 -->
+<!-- source-range:239:262 -->
 ```systemverilog
                     if (input_chunk_q + 1 >= chunks_per_row) begin
                         accumulator_q <= accumulator_q + partial;
@@ -457,9 +461,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `input_chunk_q`: chunk 32 activation trong hàng hiện tại; `chunks_per_row`: ceil(K/32), số bước accumulate một hàng; `accumulator_q`: tổng tích lũy S18 của hàng; `partial`: tổng 32 term của chunk; `matrix_desc_q`: matrix descriptor đã chốt; `reserved`: bit để dành hoặc flag mở rộng theo loại descriptor; và 7 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 259–284: Rescale và pack](<../../../Verilog%20Source%20code/ternary_mul.sv#L259>)
+### [Dòng 263–288: Rescale và pack](<../../../Verilog%20Source%20code/ternary_mul.sv#L263>)
 
-<!-- source-range:259:284 -->
+<!-- source-range:263:288 -->
 ```systemverilog
                 SCALE_ROUND : state <= SCALE;
                 SCALE : begin
@@ -496,9 +500,9 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `overflow`: cờ kết quả vượt miền số; `scale_ov`: overflow của postscale_finish; `matrix_desc_q`: matrix descriptor đã chốt; `output_s32`: chọn format output S32 thay vì S16; `pack_buf`: buffer pack output trước khi ghi SRAM; `pack_count`: số/vị trí phần tử đang pack; và 6 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 285–305: Write và finish](<../../../Verilog%20Source%20code/ternary_mul.sv#L285>)
+### [Dòng 289–309: Write và finish](<../../../Verilog%20Source%20code/ternary_mul.sv#L289>)
 
-<!-- source-range:285:305 -->
+<!-- source-range:289:309 -->
 ```systemverilog
                     pack_buf <= 0;
                     pack_count <= 0;

@@ -76,15 +76,6 @@
       "status": "rendered"
     },
     {
-      "file": "docs/source_guide/blocks/ctrl_unit.sv.md",
-      "ordinal": 0,
-      "source_sha256": "32ba4a96c9f24386be6752b8e14ce6b3b35c2c3de397d25b26b3a812961e46a4",
-      "width": 672,
-      "height": 415,
-      "nodes": 8,
-      "status": "rendered"
-    },
-    {
       "file": "docs/source_guide/blocks/descriptor_file.sv.md",
       "ordinal": 0,
       "source_sha256": "7de8b12e5268fdc048129b221adecdf4e73140b00a5b8304f854922095ff163a",
@@ -108,15 +99,6 @@
       "source_sha256": "b68fe6d625ce2a4cd64b80de08f0b879bb1659a8d57fed71df0213e484b1f20e",
       "width": 1011,
       "height": 670,
-      "nodes": 8,
-      "status": "rendered"
-    },
-    {
-      "file": "docs/source_guide/blocks/hazard_detect.sv.md",
-      "ordinal": 0,
-      "source_sha256": "941e985177cb3da4e2d9359f6d024072a448703add1a885cbfbfbc42c9245ce2",
-      "width": 970,
-      "height": 246,
       "nodes": 8,
       "status": "rendered"
     },

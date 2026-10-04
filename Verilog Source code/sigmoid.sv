@@ -1,3 +1,4 @@
+`include "sigmoid_lut.svh"
 module sigmoid (
     input logic clk, rst_n, start,
     input logic signed [15:0] x_raw,
@@ -7,7 +8,6 @@ module sigmoid (
 );
     import npu_pkg::*;
     // Generated together with sigmoid_257.mem; default ROM is independent of CWD.
-`include "sigmoid_lut.svh"
     typedef enum logic [2:0] {IDLE, READ0, READ1, SLOPE, MULTIPLY, ADD, ROUND} state_t;
     state_t state;
     logic [8:0] index_q, index_next;
@@ -31,7 +31,7 @@ module sigmoid (
     // ASIC synthesis sees a constant case table, never an initialized RAM.
     assign rom_address = (state == READ1 && index_q != 9'h100) ?
     index_q + 9'h001 : index_q;
-    assign rom_data = sigmoid_sample(int'(rom_address));
+    sigmoid_sample u_lookup(.index(rom_address), .value(rom_data));
     always_comb begin
         // S16 at F_t=0..24 needs at most 45 signed coordinate bits,
         // including the 128-point offset. Keep all 24 fractional bits.

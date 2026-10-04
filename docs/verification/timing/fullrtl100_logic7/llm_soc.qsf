@@ -1,0 +1,82 @@
+# Full RTL language graph; CPU only loads data and tokenizes.
+set_global_assignment -name FAMILY "Cyclone V"
+set_global_assignment -name DEVICE 5CGXFC9E6F35C7
+set_global_assignment -name TOP_LEVEL_ENTITY llm_soc
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
+set_global_assignment -name SEED 1
+set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name SDC_FILE llm_soc.sdc
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/npu_pkg.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/banked_word_ram.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_pkg.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/div.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_bank_ram.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/pipelined_word_ram.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_parameter_ram.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_math.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_soc.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/norm.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/sigmoid.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/sram_256_wrapper.sv"
+set_global_assignment -name VERILOG_INCLUDE_FILE "../Verilog Source code/llm_exp_lut.svh"
+set_global_assignment -name VERILOG_INCLUDE_FILE "../Verilog Source code/llm_gumbel_lut.svh"
+set_global_assignment -name VERILOG_INCLUDE_FILE "../Verilog Source code/sigmoid_lut.svh"
+# Group2 ordinary LAB output routes regressed. Request physical I/O packing;
+# the public host response FF now has only an unconditional D input and reset.
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "host_rdata[*]"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "host_ready"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "running"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "ready"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "pc_debug[*]"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "instr_debug[*]"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "error"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "overflow_out"
+# Preserve shallow request/payload queues as FFs. Real SRAM leaves remain
+# inferred memories; avoid consuming scarce M10K/MLABs for three-word delays.
+set_global_assignment -name AUTO_SHIFT_REGISTER_RECOGNITION OFF
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/quartus_word_ram.sv"
+# Memory IP is the sole vendor macro. Arithmetic maps into ordinary logic cells.
+set_global_assignment -name AUTO_DSP_RECOGNITION OFF
+set_global_assignment -name DSP_BLOCK_BALANCING "LOGIC ELEMENTS"
+# Ordinary clock input and dedicated reset routing; no clock-generation IP.
+# Differential SDR output buffers reduce pad delay. Each output has a physical
+# negative companion; external host must receive a parallel LVDS bus. No
+# ALTLVDS, serializer, SERDES or PLL is used. This is a demo electrical contract,
+# not an assigned board pinout. The existing SDC remains unchanged.
+set_instance_assignment -name IO_STANDARD LVDS -to "host_rdata[*]"
+set_instance_assignment -name IO_STANDARD LVDS -to "host_ready"
+set_instance_assignment -name IO_STANDARD LVDS -to "running"
+set_instance_assignment -name IO_STANDARD LVDS -to "ready"
+set_instance_assignment -name IO_STANDARD LVDS -to "pc_debug[*]"
+set_instance_assignment -name IO_STANDARD LVDS -to "instr_debug[*]"
+set_instance_assignment -name IO_STANDARD LVDS -to "error"
+set_instance_assignment -name IO_STANDARD LVDS -to "overflow_out"
+
+# Portable gate-level bit-product tree, shared by full and legacy arithmetic.
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/logic_mul.sv"
+
+set_location_assignment PIN_AC18 -to clk
+set_location_assignment PIN_V28 -to rst_n
+set_instance_assignment -name IO_STANDARD "2.5 V" -to rst_n
+set_instance_assignment -name IO_STANDARD "2.5 V" -to clk
+
+# Logic5 has a 9.188-ns cache address route (zero combinational levels),
+# and small host-input hold / asynchronous-output removal violations.
+# Duplicate physical FF drivers and optimize high-fanout input delay chains.
+# These change placement/routing only; clock and I/O timing budgets are intact.
+set_global_assignment -name PHYSICAL_SYNTHESIS_REGISTER_DUPLICATION ON
+set_global_assignment -name AUTO_DELAY_CHAINS_FOR_HIGH_FANOUT_INPUT_PINS ON
+
+# Logic6 retained all logic5 slacks/routes despite the automatic options.
+# Explicitly split the cache-address FF fanout (8 group drivers) into pairs.
+# Input taps add real data-path delay for the measured hold/removal endpoints;
+# they are physical pad settings, not SDC timing exceptions or compute IP.
+set_instance_assignment -name MAX_FANOUT 2 -to "k_address_q[*]"
+set_instance_assignment -name INPUT_DELAY_CHAIN 8 -to "host_addr[8]"
+set_instance_assignment -name INPUT_DELAY_CHAIN 8 -to "host_addr[9]"
+set_instance_assignment -name INPUT_DELAY_CHAIN 8 -to "host_wdata[28]"
+set_instance_assignment -name INPUT_DELAY_CHAIN 3 -to rst_n

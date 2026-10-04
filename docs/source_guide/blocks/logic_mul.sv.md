@@ -2,7 +2,7 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [logic_mul.sv](<../../../Verilog%20Source%20code/logic_mul.sv>). **Số dòng:** 76. **SHA-256:** `b54ffa7814b0d19816f3137d123ea022cba56b31089aa2a52fdbbfca1a2a7137`.
+**Source:** [logic_mul.sv](<../../../Verilog%20Source%20code/logic_mul.sv>). **Số dòng:** 74. **SHA-256:** `ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0`.
 
 ## Khối này làm gì?
 
@@ -26,9 +26,9 @@ Multiplier tổ hợp từ AND/XOR/OR/NOT, dịch hằng và một bộ cộng c
 
 ## Các nhóm logic trong source
 
-### [Dòng 1–15: Contract and independent signedness](<../../../Verilog%20Source%20code/logic_mul.sv#L1>)
+### [Dòng 1–16: Contract and independent signedness](<../../../Verilog%20Source%20code/logic_mul.sv#L1>)
 
-<!-- source-range:1:15 -->
+<!-- source-range:1:16 -->
 ```systemverilog
 // Portable bit-product compressor tree. No arithmetic multiply operator or IP.
 // Combinational: callers own operand/product registers, validity and reset.
@@ -45,33 +45,31 @@ module logic_mul #(
     output wire [OUT_W - 1:0] product
 );
     localparam int ROWS = B_W + (SIGNED_B ? 1 : 0);
+    // Elaboration-only geometry; every iteration has the static ROWS bound.
 ```
 
 Payload combinational, không reset/handshake riêng. ASIC map cùng module vào standard cells; không cần technology branch.
 
-### [Dòng 16–37: Elaboration geometry](<../../../Verilog%20Source%20code/logic_mul.sv#L16>)
+### [Dòng 17–35: Elaboration geometry](<../../../Verilog%20Source%20code/logic_mul.sv#L17>)
 
-<!-- source-range:16:37 -->
+<!-- source-range:17:35 -->
 ```systemverilog
     function automatic integer rows_at(input integer level);
-        integer count, groups;
+        integer count;
         begin
             count = ROWS;
-            for (integer step = 0; step < level; step = step + 1) begin
-                // Constant elaboration division by three, using subtraction.
-                groups = 0;
-                for (integer remaining = count; remaining >= 3; remaining = remaining - 3)
-                    groups = groups + 1;
-                count = count - groups;
-            end
+            for (integer step = 0; step < ROWS; step = step + 1)
+                if (step < level) count = count - count / 3;
             rows_at = count;
         end
     endfunction
     function automatic integer tree_depth();
-        integer depth;
+        integer count, depth;
         begin
+            count = ROWS;
             depth = 0;
-            while (rows_at(depth) > 2) depth = depth + 1;
+            for (integer step = 0; step < ROWS; step = step + 1)
+                if (count > 2) begin count = count - count / 3; depth = depth + 1; end
             tree_depth = depth;
         end
     endfunction
@@ -79,9 +77,9 @@ Payload combinational, không reset/handshake riêng. ASIC map cùng module vào
 
 Đếm rows bằng loop hằng, không tạo divider hay counter runtime. Các genvar tạo hierarchy cố định.
 
-### [Dòng 38–74: Partial products and carry-save compression](<../../../Verilog%20Source%20code/logic_mul.sv#L38>)
+### [Dòng 36–72: Partial products and carry-save compression](<../../../Verilog%20Source%20code/logic_mul.sv#L36>)
 
-<!-- source-range:38:74 -->
+<!-- source-range:36:72 -->
 ```systemverilog
     localparam int LEVELS = tree_depth();
     wire [OUT_W - 1:0] extended_a;
@@ -124,9 +122,9 @@ Payload combinational, không reset/handshake riêng. ASIC map cùng module vào
 
 Unsigned bits góp A dịch trái; signed top bit góp -A dịch trái. Correction bù cộng một; compressor giữ tổng modulo và không có carry chain ngang mỗi level.
 
-### [Dòng 75–76: Final sum](<../../../Verilog%20Source%20code/logic_mul.sv#L75>)
+### [Dòng 73–74: Final sum](<../../../Verilog%20Source%20code/logic_mul.sv#L73>)
 
-<!-- source-range:75:76 -->
+<!-- source-range:73:74 -->
 ```systemverilog
     endgenerate
 endmodule

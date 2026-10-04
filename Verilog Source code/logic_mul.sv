@@ -13,25 +13,23 @@ module logic_mul #(
     output wire [OUT_W - 1:0] product
 );
     localparam int ROWS = B_W + (SIGNED_B ? 1 : 0);
+    // Elaboration-only geometry; every iteration has the static ROWS bound.
     function automatic integer rows_at(input integer level);
-        integer count, groups;
+        integer count;
         begin
             count = ROWS;
-            for (integer step = 0; step < level; step = step + 1) begin
-                // Constant elaboration division by three, using subtraction.
-                groups = 0;
-                for (integer remaining = count; remaining >= 3; remaining = remaining - 3)
-                    groups = groups + 1;
-                count = count - groups;
-            end
+            for (integer step = 0; step < ROWS; step = step + 1)
+                if (step < level) count = count - count / 3;
             rows_at = count;
         end
     endfunction
     function automatic integer tree_depth();
-        integer depth;
+        integer count, depth;
         begin
+            count = ROWS;
             depth = 0;
-            while (rows_at(depth) > 2) depth = depth + 1;
+            for (integer step = 0; step < ROWS; step = step + 1)
+                if (count > 2) begin count = count - count / 3; depth = depth + 1; end
             tree_depth = depth;
         end
     endfunction

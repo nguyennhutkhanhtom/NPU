@@ -11,16 +11,24 @@ generate geometry and constant bit-slice offsets are elaboration arithmetic,
 not hardware multipliers or dividers. Runtime power-of-two address/word-count
 calculations use explicit shifts; small constant address factors use shift/add.
 
-The current full-top candidate uses the isolated `quartus_logic5/llm_soc`
-database; its QSF/QPF/SDC bytes match `quartus/llm_soc` exactly, and both point
-to the same35source assets. Analysis & Synthesis has passed0errors/12warnings
-on Quartus Lite25.1std.0 Build1129; Fitter/STA are pending. Legacy regression
-has passed10groups for these source hashes with0runtimewarnings. Six full-top
-unit groups passed, including17operators/3460checks/scalar128/clamp128, with
-0runtimewarnings. Actual-IP graph remains required after hardware timing passes.
-See [synthesis-only archive](../verification/synthesis/logic4/manifest.json),
-[six-unit archive](../../tests/full_rtl/evidence/logic4_six_units/results.json) and
-[legacy regression archive](../../tests/evidence/logic4_units/results.json).
+The current candidate is `quartus_explicit2/llm_soc`, with 33 source assets
+after removing the unused `ctrl_unit` and `hazard_detect`. Its QSF/QPF/SDC
+matches the canonical full-top project. [Synthesis](../verification/synthesis/explicit2/manifest.json)
+passed0errors/12warnings and [six units](../../tests/full_rtl/evidence/explicit3_six_units/results.json)
+passed0compile/runtimewarnings; RTL/configuration are locked while graph and
+fitting run. The [explicit RTL rules](rtl_style.md) now prohibit
+synthesizable tasks, hidden sequential ownership and variable/unbounded loops.
+All 61 request helpers are inline FSM updates; substantial replicated datapaths
+and pipeline stages use generate blocks. LUTs are explicit combinational modules.
+
+The [preceding seven-unit run](../../tests/full_rtl/evidence/logic6q5_all_units/results.json)
+passed with official Quartus25.1 RAM on Questa2025.2, zero compile/runtime
+warnings, for its archived35-source snapshot. Its synthetic graph generated
+three RTL-selected tokens after two-token prefill and16layer executions.
+These results cannot gate the changed source. Logic5/6 both fitted99.07MHz
+but failed setup/hold/removal. Logic7 fitted96.04MHz and also failed;
+its requested input delay chains were ignored by the actual Fitter.
+No current100MHz timing PASS or trained application is claimed.
 
 `logic_mul` has independently selected signedness for A and B. A is extended to
 the output width, then each B bit masks a constant-shifted row. The signed top
@@ -50,7 +58,7 @@ QSF disables DSP and automatic shift-register recognition. QSF I/O standards,
 pin locations and packed output-register requests are FPGA physical bindings,
 not portable RTL or arithmetic IP.
 
-The current `fullrtl100_logic5` candidate uses a single-ended 2.5-V 100-MHz clock on AC18,
+The current candidate uses a single-ended 2.5-V 100-MHz clock on AC18,
 reset on V28, and ordinary SDR LVDS output buffers. Every output has a physical
 negative companion; an external host must receive this parallel differential
 bus. There is no serializer, ALTLVDS or PLL. Board routing/termination has not

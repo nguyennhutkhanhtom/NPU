@@ -1,0 +1,14 @@
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\tests\sim\Synthesis-scalar.log tests/sim/synthesis-work.tb_scalar -do "run -all; quit -f" 
+# Start time: 01:16:06 on Oct 01,2026
+# Loading sv_std.std
+# Loading tests/sim/synthesis-work.npu_pkg
+# Loading tests/sim/synthesis-work.tb_scalar
+# Loading tests/sim/synthesis-work.div
+# Loading tests/sim/synthesis-work.isqrt_u64
+# Loading tests/sim/synthesis-work.scale_compose
+# run -all
+# SCALAR_PASS division=105 sqrt=105 RNE=37189 coefficient_edges=6
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv(133)
+#    Time: 118270 ns  Iteration: 1  Instance: /tb_scalar
+# End time: 01:16:12 on Oct 01,2026, Elapsed time: 0:00:06
+# Errors: 0, Warnings: 0

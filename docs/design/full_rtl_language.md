@@ -297,7 +297,7 @@ PASS claimed. See timing hub for all corners. See the
 [clock input handbook](https://docs.altera.com/r/docs/683375/current/cyclone-v-device-handbook-volume-1-device-interfaces-and-integration/dedicated-clock-input-pins)
 and [differential pin guide](https://docs.altera.com/r/docs/683492/18.1/intel-quartus-prime-standard-edition-user-guide-design-constraints/assigning-differential-pins).
 The preceding control1 results describe an archived revision. The current
-`fullrtl100_logic3` candidate replaces all full and legacy datapath multiplication
+portable logic revision replaces all full and legacy datapath multiplication
 operators with the portable `logic_mul` bit-product tree. Existing product
 registers, RNE, clipping, valid/reset and handshake latencies remain intact.
 Runtime power-of-two address/word-count arithmetic uses explicit shifts;
@@ -314,7 +314,18 @@ serializer, PLL or other compute IP is instantiated. This requires a differentia
 host receiver; board routing/termination and ASIC signoff are not established.
 The original10ns SDC and input/output budgets are unchanged.
 
-Preflight math passed503SIMDtransactions,9resetphases,513LUTchecks and1536
-exhaustive small-width bit-product checks, including all signedness combinations,
-truncation and one-bit signed operands. Current-source full regression and
-post-fit timing are pending; trained application remains blocked by these gates.
+The archived logic6q5 regression passed all seven groups for its35-source
+snapshot with actual Quartus25.1 RAM on Questa2025.2, zero compile/runtime
+warnings. It includes503SIMDtransactions/reset9/LUT513/bit1536,
+17operators/3460checks/scalar128/clamp128 and the synthetic graph with
+two-token prefill/threeRTL-selectedtokens/16layer runs/causal checks.
+Logic5/6 fitted51986ALM/46834FF/1186M10K/0DSP-PLL-DLL-HSSI but failed
+99.07MHz setup/hold/removal. Logic7 failed96.04MHz; its manual input delay
+settings were ignored. Current33-source refactor has fresh mathPASS and
+legacy10groupsPASS for unchanged legacy reachable RTL, but full operators,
+graph and timing must pass again. Application and trained reference inference
+remain blocked by the hardware/all-seven gate.
+
+## Explicit RTL refactor
+
+See [coding rules and structural ownership](rtl_style.md). Request/address/return-state updates are visible in the FSM, SIMD/tag pipelines use generate blocks, and LUTs are explicit combinational instances. Latencies/numeric values are unchanged. Earlier35-source unit/timing evidence is historical; current33-source gates must be rerun.

@@ -1,0 +1,15 @@
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\tests\sim\rowwise.log tests/sim/work.tb_rowwise -do "run -all; quit -f" 
+# Start time: 13:17:10 on Oct 04,2026
+# Loading sv_std.std
+# Loading tests/sim/work.tb_rowwise
+# Loading tests/sim/work.npu_pkg
+# Loading tests/sim/work.rowwise_op
+# Loading tests/sim/work.sigmoid
+# Loading tests/sim/work.logic_mul
+# Loading tests/sim/work.sigmoid_sample
+# run -all
+# ROWWISE_PASS cases=1800 elements=13260 busy_input_changes=42852 reset_phases=6 reference=S128
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv(1062)
+#    Time: 482770 ns  Iteration: 1  Instance: /tb_rowwise
+# End time: 13:17:16 on Oct 04,2026, Elapsed time: 0:00:06
+# Errors: 0, Warnings: 0

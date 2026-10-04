@@ -26,10 +26,11 @@ Revision hiện tại thay toàn bộ phép nhân datapath full/legacy bằng
 không dùng toán tử nhân/chia hoặc arithmetic IP. Divider/sqrt dùng dịch/trừ.
 [ASIC portability](docs/design/asic_portability.md) quy định boundary SRAM và
 standard cells. Full-top A&S bằng Quartus Lite25.1std PASS0errors/12warnings;
-Fitter/all-corner STA của `fullrtl100_logic5` còn pending. Legacy regression
-đúng35source hashes PASS10nhóm với0runtimewarnings. QSF hiện dùng clock2.5V
-và output LVDS parallel qua buffer thường, không serializer/PLL; yêu cầu host
-receiver differential. Chưa có bằng chứng full-top đạt100MHz.
+`fullrtl100_logic5` fit PASS0DSP/PLL/DLL/HSSI nhưng timing FAIL99,07MHz:
+setup/hold/removal còn vi phạm. Logic6 cũng FAIL99,07MHz;logic7 FAIL96,04MHz. [Bảy nhóm unit](tests/full_rtl/evidence/logic6q5_all_units/results.json)
+đã PASS cho snapshot35source cũ,0warnings. Source hiện tại33assets đã chuyển
+task/pipeline/LUT sang [RTL tường minh](docs/design/rtl_style.md); regression và fit mới đang chạy,
+chưa có100MHz PASS hoặc pretrained application.
 
 Core instruction-driven `matmulfree` và các kết quả dưới đây được giữ làm
 tài liệu của kiến trúc trước. Timing hoặc demo hybrid của core này không

@@ -312,6 +312,11 @@ Trong RTL v1, `ternary_mul` buộc độ rộng bus vào `DATA_WIDTH*LANES`. Khi
 
 ### Memory, pipeline và control
 
+This table records the historical v1 migration proposal. The unused pipeline,
+`ctrl_unit`, `hazard_detect` and `mem_burst` modules have since been removed;
+the current schedulers directly own state and handshakes. Current code is in
+the [source guide](../source_guide/blocks/README.md).
+
 | File / module v1 (lịch sử) | RTL v1 trước chuyển đổi | Cấu hình đề xuất | Format và ý nghĩa |
 |---|---|---|---|
 | `regfile.sv` — `register` | 1024×512 bit =64 KiB khai báo; bus512; logical register ID3; pointer nội bộ19, NORM address10 | **Dùng làm workspace SRAM256×256 =8 KiB; bus256; physical address8** | Raw packed bits theo tensor: 32×S8, 16×S16/U16 hoặc8×S32 mỗi word. Bỏ decode cố định mỗi register16 word; dùng base/length/format descriptor. Logical ID3 có thể giữ cho8 slot. Count toàn depth256 cần9 bit. Workspace này chính là8 KiB đã dự toán, không cộng thêm một workspace khác |

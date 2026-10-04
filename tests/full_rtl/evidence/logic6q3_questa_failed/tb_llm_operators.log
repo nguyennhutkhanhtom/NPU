@@ -1,0 +1,15 @@
+# ** Note: (vsim-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# vsim -c -onfinish exit -voptargs="-duselectreport=tests/full_rtl/build/logic6q3_tb_llm_operators_design_units.json" -L tests/full_rtl/build/questa25_model/altera_mf_ver -L tests/full_rtl/build/logic6q3_questa_work -lib tests/full_rtl/build/logic6q3_questa_work -l D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\tb_llm_operators.log tb_llm_operators -do "run -all; quit -f" 
+# Start time: 09:42:44 on Oct 04,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Note: (vopt-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# ** Error (suppressible): D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv(251): (vopt-7061) Variable 'token_q' driven in an always_ff block, may not be driven by any other process. See D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv(486).
+# ** Error (suppressible): D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv(387): (vopt-7061) Variable 'position_q' driven in an always_ff block, may not be driven by any other process. See D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv(485).
+# ** Error (suppressible): D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv(407): (vopt-7061) Variable 'layer_q' driven in an always_ff block, may not be driven by any other process. See D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv(485).
+# ** Error (suppressible): D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv(407): (vopt-7061) Variable 'position_q' driven in an always_ff block, may not be driven by any other process. See D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv(485).
+# Optimization failed
+# ** Error: (vopt-2064) Compiler back-end code generation process terminated due to previous errors with code 12.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=5, Warnings=0.
+# Error loading design
+# End time: 09:42:47 on Oct 04,2026, Elapsed time: 0:00:03
+# Errors: 5, Warnings: 0

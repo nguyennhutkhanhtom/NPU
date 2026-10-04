@@ -67,3 +67,7 @@
 /tools/docs/output/
 # Isolated Quartus database; canonical QSF/QPF/SDC are copied byte-exact.
 /quartus_logic5/
+/quartus_logic6/
+/quartus_logic7/
+/quartus_explicit1/
+/quartus_explicit2/

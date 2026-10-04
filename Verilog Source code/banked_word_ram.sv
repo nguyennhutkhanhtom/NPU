@@ -42,9 +42,14 @@ module banked_word_ram #(
             if (rd_en) read_tile_q[tile] <= (rd_addr >> 10) == tile;
     end
     endgenerate
-    always_comb begin
-        rd_data = '0;
-        for (int tile_id = 0; tile_id < TILES; tile_id = tile_id + 1)
-            rd_data = rd_data | (tile_data[tile_id] & {WIDTH{read_tile_q[tile_id]}});
+    wire [WIDTH - 1:0] read_mux [0:TILES];
+    genvar mux_tile;
+    assign read_mux[0] = '0;
+    generate
+    for (mux_tile = 0; mux_tile < TILES; mux_tile = mux_tile + 1) begin : g_read_mux
+        assign read_mux[mux_tile + 1] = read_mux[mux_tile] |
+            (tile_data[mux_tile] & {WIDTH{read_tile_q[mux_tile]}});
     end
+    endgenerate
+    assign rd_data = read_mux[TILES];
 endmodule

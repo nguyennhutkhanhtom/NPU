@@ -2,7 +2,7 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [pipelined_word_ram.sv](<../../../Verilog%20Source%20code/pipelined_word_ram.sv>). **Số dòng:** 111. **SHA-256:** `cfceddad12c059b47558b9be28974f6f5085e62fb2a29978d406120c14de354f`.
+**Source:** [pipelined_word_ram.sv](<../../../Verilog%20Source%20code/pipelined_word_ram.sv>). **Số dòng:** 114. **SHA-256:** `0e82266f6da5f31bd2612e4696778f9560915020f6a5a3b498dfd4acd8b6e07a`.
 
 ## Khối này làm gì?
 
@@ -103,9 +103,9 @@ Valid phải đi cùng dữ liệu. wr_valid xuất hiện khi leaf write thực
 
 Một altsyncram toàn bank, không tạo decoder/mux tile trong compute RTL. Request E1, raw read/write E2, response E3; bank lớn thêm E4. Queued write bị hủy khi reset trước E2.
 
-### [Dòng 60–111: Portable ASIC behavior model](<../../../Verilog%20Source%20code/pipelined_word_ram.sv#L60>)
+### [Dòng 60–114: Portable ASIC behavior model](<../../../Verilog%20Source%20code/pipelined_word_ram.sv#L60>)
 
-<!-- source-range:60:111 -->
+<!-- source-range:60:114 -->
 ```systemverilog
         localparam int TILE_ROWS = (ROWS - tile * 1024 < 1024) ? ROWS - tile * 1024 : 1024;
         (* dont_merge *) logic [9:0] read_address_q, write_address_q;
@@ -134,6 +134,7 @@ Một altsyncram toàn bank, không tạo decoder/mux tile trong compute RTL. Re
         logic [WIDTH - 1:0] selected;
         always_comb begin
             selected = 0;
+            // Four static mux inputs per group; local bounded reduction.
             for (int member = 0; member < 4; member = member + 1)
                 if (group_id * 4 + member < TILES)
                     selected = selected | (tile_data[group_id * 4 + member] &
@@ -147,11 +148,13 @@ Một altsyncram toàn bank, không tạo decoder/mux tile trong compute RTL. Re
         assign rd_valid = read_valid_q[2];
     end else begin : g_final_response
         logic [WIDTH - 1:0] selected;
-        always_comb begin
-            selected = 0;
-            for (int index = 0; index < GROUPS; index = index + 1)
-                selected = selected | group_data_q[index];
+        wire [WIDTH - 1:0] response_mux [0:GROUPS];
+        genvar response_group;
+        assign response_mux[0] = '0;
+        for (response_group = 0; response_group < GROUPS; response_group = response_group + 1) begin : g_mux
+            assign response_mux[response_group + 1] = response_mux[response_group] | group_data_q[response_group];
         end
+        assign selected = response_mux[GROUPS];
         always_ff @(posedge clk)
             if (rst_n && read_valid_q[2]) rd_data <= selected;
         assign rd_valid = read_valid_q[3];

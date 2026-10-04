@@ -36,17 +36,11 @@ module llm_parameter_ram #(
         host_read_valid_q && response_address_q == host_addr);
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            read_valid_q <= 0; read_host_q <= 0;
+            read_valid_q[0] <= 0; read_host_q[0] <= 0;
             host_read_valid_q <= 0; host_write_valid_q <= 0;
         end else begin
             read_valid_q[0] <= read_request;
             read_host_q[0] <= host_read_req;
-            for (int stage = 1; stage < READ_LATENCY; stage = stage + 1) begin
-                read_valid_q[stage] <= read_valid_q[stage - 1] &&
-                    (!read_host_q[stage - 1] ||
-                        (host_active && !host_we && host_addr == read_address_q[stage - 1]));
-                read_host_q[stage] <= read_host_q[stage - 1];
-            end
             host_read_valid_q <= read_valid_q[LAST_READ] && read_host_q[LAST_READ] &&
                 host_active && !host_we && host_addr == read_address_q[LAST_READ];
             host_write_valid_q <= (|lane_write_valid) && host_active && host_we;
@@ -54,14 +48,25 @@ module llm_parameter_ram #(
     end
     always_ff @(posedge clk) begin
         read_address_q[0] <= host_addr;
-        for (int stage = 1; stage < READ_LATENCY; stage = stage + 1)
-            read_address_q[stage] <= read_address_q[stage - 1];
         if (read_valid_q[LAST_READ] && read_host_q[LAST_READ]) begin
             response_address_q <= read_address_q[LAST_READ];
             host_rdata <= read_row[(int'(read_address_q[LAST_READ][2:0]) << 5) +: 32];
         end
     end
-    genvar lane;
+    genvar stage, lane;
+    generate
+    for (stage = 1; stage < READ_LATENCY; stage = stage + 1) begin : g_read_stage
+        always_ff @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin read_valid_q[stage] <= 0; read_host_q[stage] <= 0; end
+            else begin
+                read_valid_q[stage] <= read_valid_q[stage - 1] &&
+                    (!read_host_q[stage - 1] || (host_active && !host_we && host_addr == read_address_q[stage - 1]));
+                read_host_q[stage] <= read_host_q[stage - 1];
+            end
+        end
+        always_ff @(posedge clk) read_address_q[stage] <= read_address_q[stage - 1];
+    end
+    endgenerate
     generate
     for (lane = 0; lane < 8; lane = lane + 1) begin : g_ram_lane
         (* dont_merge *) logic [ADDR_W - 1:0] read_address_local_q, write_address_q;

@@ -4,7 +4,8 @@
 
 ## Compile, extract and archive
 
-Use Python 3 and Quartus Lite 18.1. The paths can be supplied explicitly; Python
+Use Python 3 and the installed Quartus Lite25.1std for current full-top builds;
+older archived tags used18.1. The paths can be supplied explicitly; Python
 and Quartus on `PATH` are otherwise used. The Python helper needs no third-party
 packages.
 
@@ -26,7 +27,7 @@ were checked before archiving. This recovery adds provenance without changing
 any earlier timing manifest/report.
 
 ```powershell
-./tools/timing/run.ps1 -Tag replay-01 -QuartusBin 'C:/intelFPGA_lite/18.1/quartus/bin64'
+./tools/timing/run.ps1 -Project quartus/llm_soc -Tag replay-01 -QuartusBin 'C:/altera_lite/25.1std/quartus/bin64'
 ```
 
 The runner compiles the existing project using its QSF and SDC, runs post-fit
@@ -41,7 +42,7 @@ For the separate immutable baseline project:
 ./tools/timing/run.ps1 -Project tests/sim/timing_baseline_build/matmul_free -RtlDir tests/sim/timing_baseline_build/rtl -Tag baseline-replay-01 -QuartusBin 'C:/intelFPGA_lite/18.1/quartus/bin64'
 ```
 
-Before compilation, `sources_before.json` records 31 RTL/source assets and the
+Before compilation, `sources_before.json` records all current RTL/source assets and the
 QPF/QSF/SDC. Recording evidence checks them again and fails if inputs changed.
 Each stage must report successful completion and produce fresh reports; a
 successful exit code alone cannot reuse reports left by an earlier compile.
@@ -55,6 +56,10 @@ slacks, worst setup/hold endpoints and data delays, unconstrained endpoint
 counts, fitted resources and stage error/warning totals. The six map/fit/STA
 reports and summaries are archived with raw and LF-normalized hashes. A flow
 report from an older compilation is not included.
+`TIMING_STAGE_PASS` means that a Quartus tool stage completed. Evidence recording
+prints `TIMING_EVIDENCE_RECORDED`, then a separate `TIMING_100MHZ_PASS/FAIL`;
+the latter requires all four corners, all five timing checks, TNS0 and no
+unconstrained paths. It does not replace the seven-unit application gate.
 The source snapshot is copied into the evidence directory and hashed in the
 manifest, including when a manual run originally kept it under an ignored
 build directory. Runner command arguments are recorded and hashed as well.

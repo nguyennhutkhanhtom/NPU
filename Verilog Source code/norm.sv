@@ -247,48 +247,35 @@ module norm (
         end
     end
 
-    // Dynamic coefficient shift choices. Larger r improves precision while M remains U24.
-    function automatic [5:0] choose_norm_r(input logic [31:0] den);
-        integer msb;
-        begin
-            msb = 0;
-            for (integer i = 31;i >= 0;i = i - 1)
-                if (den[i] && msb == 0) msb = i;
-            if (msb <= 9) choose_norm_r = 0;
-            else if (msb - 9 > 31) choose_norm_r = 31;
-            else choose_norm_r = 6'(msb - 9);
-        end
-    endfunction
-
-    function automatic [5:0] choose_quant_r(input logic [23:0] den);
-        logic leading;
-        logic boost;
-        logic [5:0] encoded;
-        begin
-            choose_quant_r = 0;
-            // For 2^p <= den < 2^(p+1), the largest fitting shift is
-            // p+17, or p+18 exactly when den > 127*2^(p-6), p>=7.
-            // Parallel constant comparisons replace a multiply and 48-step
-            // priority search. Exactly one leading mask contributes to OR.
-            for (integer p = 0; p < 24; p = p + 1) begin
-                leading = den[p] && ((den >> (p + 1)) == 0);
-                boost = 1'b0;
-                if (p >= 7) boost = den > (24'd127 << (p - 6));
-                encoded = 6'(p + 17) + {5'h0, boost};
-                choose_quant_r = choose_quant_r | ({6{leading}} & encoded);
-            end
-        end
-    endfunction
-
-    logic [5:0] norm_r_sel, quant_r_sel;
+    // Parallel leading-bit masks and constant comparisons expose shift selection.
+    wire [23:0] quant_den = (absmax > delta_q) ? absmax : delta_q;
+    wire [5:0] norm_encode [0:32], quant_encode [0:24];
+    wire [5:0] norm_r_sel = norm_encode[32];
+    wire [5:0] quant_r_sel = quant_encode[24];
+    genvar norm_bit, quant_bit;
+    generate
+    for (norm_bit = 0; norm_bit < 32; norm_bit = norm_bit + 1) begin : g_norm_shift
+        wire leading = rms_r[norm_bit] && ((rms_r >> (norm_bit + 1)) == 0);
+        assign norm_encode[norm_bit + 1] = norm_encode[norm_bit] |
+            (6'(norm_bit > 9 ? norm_bit - 9 : 0) & {6{leading}});
+    end
+    for (quant_bit = 0; quant_bit < 24; quant_bit = quant_bit + 1) begin : g_quant_shift
+        wire leading = quant_den[quant_bit] && ((quant_den >> (quant_bit + 1)) == 0);
+        wire boost;
+        if (quant_bit >= 7) assign boost = quant_den > (24'd127 << (quant_bit - 6));
+        else assign boost = 0;
+        assign quant_encode[quant_bit + 1] = quant_encode[quant_bit] |
+            ((6'(quant_bit + 17) + {5'h0, boost}) & {6{leading}});
+    end
+    endgenerate
+    assign norm_encode[0] = 0;
+    assign quant_encode[0] = 0;
     logic [DIV_NUM_W - 1:0] norm_num, quant_num;
     always_comb begin
         mean_with_epsilon = ({1'b0, mean_q} << 32) + {10'h000, div_q} + {1'b0, epsilon_q};
-        norm_r_sel = choose_norm_r(rms_r);
         // PREP registers the chosen shift before DIV_START consumes it.
         // Reuse that value so coefficient selection is not on divider inputs.
         norm_num = 55'h1 << (32 + norm_r);
-        quant_r_sel = choose_quant_r((absmax > delta_q) ? absmax : delta_q);
         quant_num = 55'h7f << quant_r;
     end
 

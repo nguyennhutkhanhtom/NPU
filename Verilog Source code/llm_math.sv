@@ -34,37 +34,39 @@ module llm_math (
         if (!rst_n) valid_q <= 0;
         else valid_q <= {valid_q[8:0], start && !busy};
     end
-    always_ff @(posedge clk) begin
-        if (rst_n && start && !busy)
-            for (int i = 0; i < 32; i = i + 1) begin
-                a_q[i] <= a[i];
-                b_q[i] <= b[i];
+    genvar pipe_lane, pipe_part, reduction_node;
+    generate
+    for (pipe_lane = 0; pipe_lane < 32; pipe_lane = pipe_lane + 1) begin : g_lane_pipeline
+        always_ff @(posedge clk) begin
+            if (rst_n && start && !busy) begin a_q[pipe_lane] <= a[pipe_lane]; b_q[pipe_lane] <= b[pipe_lane]; end
+            if (valid_q[1]) begin
+                pair_q[pipe_lane][0] <= 41'(partial_q[pipe_lane][0]) + (41'(partial_q[pipe_lane][1]) <<< 8);
+                pair_q[pipe_lane][1] <= 41'(partial_q[pipe_lane][2]) + (41'(partial_q[pipe_lane][3]) <<< 8);
             end
-        if (valid_q[0])
-            for (int i = 0; i < 32; i = i + 1) begin
-                for (int part = 0; part < 4; part = part + 1)
-                    partial_q[i][part] <= partial_comb[i][part];
-            end
-        if (valid_q[1])
-            for (int i = 0; i < 32; i = i + 1) begin
-                pair_q[i][0] <= 41'(partial_q[i][0]) + (41'(partial_q[i][1]) <<< 8);
-                pair_q[i][1] <= 41'(partial_q[i][2]) + (41'(partial_q[i][3]) <<< 8);
-            end
-        if (valid_q[2])
-            for (int i = 0; i < 32; i = i + 1)
-                product[i] <= 56'(pair_q[i][0]) + (56'(pair_q[i][1]) <<< 16);
-        if (valid_q[3])
-            for (int i = 0; i < 16; i = i + 1)
-                level1[i] <= 57'(product[2 * i]) + 57'(product[2 * i + 1]);
-        if (valid_q[4])
-            for (int i = 0; i < 8; i = i + 1)
-                level2[i] <= 58'(level1[2 * i]) + 58'(level1[2 * i + 1]);
-        if (valid_q[5])
-            for (int i = 0; i < 4; i = i + 1)
-                level3[i] <= 59'(level2[2 * i]) + 59'(level2[2 * i + 1]);
-        if (valid_q[6])
-            for (int i = 0; i < 2; i = i + 1)
-                level4[i] <= 60'(level3[2 * i]) + 60'(level3[2 * i + 1]);
-        if (valid_q[7]) sum <= 61'(level4[0]) + 61'(level4[1]);
+            if (valid_q[2]) product[pipe_lane] <= 56'(pair_q[pipe_lane][0]) + (56'(pair_q[pipe_lane][1]) <<< 16);
+        end
+        for (pipe_part = 0; pipe_part < 4; pipe_part = pipe_part + 1) begin : g_partial_register
+            always_ff @(posedge clk)
+                if (valid_q[0]) partial_q[pipe_lane][pipe_part] <= partial_comb[pipe_lane][pipe_part];
+        end
     end
+    for (reduction_node = 0; reduction_node < 16; reduction_node = reduction_node + 1) begin : g_reduce1
+        always_ff @(posedge clk)
+            if (valid_q[3]) level1[reduction_node] <= 57'(product[2 * reduction_node]) + 57'(product[2 * reduction_node + 1]);
+    end
+    for (reduction_node = 0; reduction_node < 8; reduction_node = reduction_node + 1) begin : g_reduce2
+        always_ff @(posedge clk)
+            if (valid_q[4]) level2[reduction_node] <= 58'(level1[2 * reduction_node]) + 58'(level1[2 * reduction_node + 1]);
+    end
+    for (reduction_node = 0; reduction_node < 4; reduction_node = reduction_node + 1) begin : g_reduce3
+        always_ff @(posedge clk)
+            if (valid_q[5]) level3[reduction_node] <= 59'(level2[2 * reduction_node]) + 59'(level2[2 * reduction_node + 1]);
+    end
+    for (reduction_node = 0; reduction_node < 2; reduction_node = reduction_node + 1) begin : g_reduce4
+        always_ff @(posedge clk)
+            if (valid_q[6]) level4[reduction_node] <= 60'(level3[2 * reduction_node]) + 60'(level3[2 * reduction_node + 1]);
+    end
+    endgenerate
+    always_ff @(posedge clk)
+        if (valid_q[7]) sum <= 61'(level4[0]) + 61'(level4[1]);
 endmodule

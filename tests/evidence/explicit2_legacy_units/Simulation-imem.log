@@ -1,0 +1,11 @@
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\tests\sim\Simulation-imem.log tests/sim/simulation-work.tb_imem -do "run -all; quit -f" 
+# Start time: 01:15:08 on Oct 01,2026
+# Loading sv_std.std
+# Loading tests/sim/simulation-work.tb_imem
+# Loading tests/sim/simulation-work.ins_mem
+# run -all
+# IMEM_PASS checks=1027
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv(476)
+#    Time: 15471 ns  Iteration: 0  Instance: /tb_imem
+# End time: 01:15:09 on Oct 01,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

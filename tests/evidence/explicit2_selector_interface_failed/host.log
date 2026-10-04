@@ -1,0 +1,38 @@
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\tests\sim\host.log tests/sim/work.tb_host -do "run -all; quit -f" 
+# Start time: 13:10:43 on Oct 04,2026
+# Loading sv_std.std
+# Loading tests/sim/work.tb_host
+# Loading tests/sim/work.npu_pkg
+# Loading tests/sim/work.matmulfree
+# Loading tests/sim/work.PC
+# Loading tests/sim/work.ins_mem
+# Loading tests/sim/work.descriptor_file
+# Loading tests/sim/work.register
+# Loading tests/sim/work.sram_256_wrapper
+# Loading tests/sim/work.mem_mapping
+# Loading tests/sim/work.rowwise_dispatch
+# Loading tests/sim/work.rowwise_op
+# Loading tests/sim/work.sigmoid
+# Loading tests/sim/work.logic_mul
+# Loading tests/sim/work.sigmoid_sample
+# Loading tests/sim/work.norm_dispatch
+# Loading tests/sim/work.norm
+# Loading tests/sim/work.div
+# Loading tests/sim/work.isqrt_u64
+# Loading tests/sim/work.ternary_mul
+# Loading tests/sim/work.postscale_finish
+# Loading tests/sim/work.acc_mul
+# Loading tests/sim/work.scale_compose
+# Loading tests/sim/work.banked_word_ram
+# Loading tests/sim/work.sram_word_tile
+# ** Warning: (vsim-3008) [CNNODP] - Component name (choose_quant_r) is not on a downward path.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_host File: D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv Line: 190
+# ** Error: (vsim-3043) Unresolved reference to 'choose_quant_r' in dut.u_norm.u_norm.choose_quant_r.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_host File: D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv Line: 190
+# ** Warning: (vsim-3008) [CNNODP] - Component name (choose_quant_r) is not on a downward path.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_host File: D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv Line: 190
+# ** Error: (vsim-3043) Unresolved reference to 'choose_quant_r' in dut.u_norm.u_norm.choose_quant_r.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_host File: D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv Line: 190
+# Error loading design
+# End time: 13:10:45 on Oct 04,2026, Elapsed time: 0:00:02
+# Errors: 2, Warnings: 2

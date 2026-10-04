@@ -1,0 +1,17 @@
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\tests\sim\divprofiles.log tests/sim/work.tb_divprofiles -do "run -all; quit -f" 
+# Start time: 13:13:28 on Oct 04,2026
+# Loading sv_std.std
+# Loading tests/sim/work.tb_divprofiles
+# Loading tests/sim/work.tb_div_case
+# Loading tests/sim/work.div
+# run -all
+# DIV_PROFILE_PASS NUM=1 DEN=1 checks=4
+# DIV_PROFILE_PASS NUM=3 DEN=7 checks=1024
+# DIV_PROFILE_PASS NUM=7 DEN=3 checks=1024
+# DIV_PROFILE_PASS NUM=64 DEN=32 checks=134
+# DIV_PROFILE_PASS NUM=64 DEN=64 checks=134
+# DIVPROFILES_PASS profiles=5
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv(298)
+#    Time: 87180 ns  Iteration: 2  Instance: /tb_divprofiles
+# End time: 13:13:30 on Oct 04,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 0

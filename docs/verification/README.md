@@ -2,13 +2,16 @@
 
 [Project](../../README.md) → [Tài liệu](../README.md) → **Kiểm chứng**
 
-Full top `llm_soc` có [sáu nhóm unit](../../tests/full_rtl/README.md) và
-[timing bốn corners riêng](timing/README.md). Timing đã đo70,41/83,58/84,49 MHz,
-đều FAIL; local1 fit và sáu nhóm units PASS. Application pretrained chỉ chạy
-khi exact source/config đạt >=100 MHz và units PASS. Các số liệu legacy
-bên dưới thuộc `matmulfree`, không phải gate cho `llm_soc`.
+Full top `llm_soc` có [7 nhóm unit PASS lịch sử](../../tests/full_rtl/evidence/logic6q5_all_units/results.json)
+trên snapshot35source, dùng RAM Quartus25.1 thật và Questa2025.2,0compile/runtime
+warnings. Graph có2prompt/3token doRTLchọn/16layer runs/causal checks. Source hiện
+tại33assets đã refactor theo [coding rules](../design/rtl_style.md), đang regression
+và fit lại. Logic5/6 timing FAIL99,07MHz;logic7 FAIL96,04MHz. Không có full-top
+100MHz PASS và chưa chạy pretrained application. [Timing hub](timing/README.md)
+ghi device, constraints, source/config hashes, critical paths và mọi corner.
+Các số liệu legacy bên dưới thuộc `matmulfree`, không phải gate cho `llm_soc`.
 
-Reference số nguyên và testbench kiểm tra chức năng, số học và giao tiếp của core. Demo Quartus kiểm tra Analysis & Synthesis và timing sau placement/routing trên cùng RTL; không có nhánh `SYNTHESIS`/`QUARTUS_SYNTHESIS`, primitive FPGA hoặc thuộc tính `ramstyle`/`M10K`. Binding SRAM và mục tiêu PPA ASIC được đánh giá riêng.
+Reference số nguyên và testbench kiểm tra chức năng, số học và giao tiếp của core. Demo Quartus kiểm tra Analysis & Synthesis và timing sau placement/routing trên cùng RTL; không có nhánh compute `SYNTHESIS`/`QUARTUS_SYNTHESIS` hoặc compute/control vendor IP. IP bộ nhớ altsyncram M10K chỉ nằm sau adapter thay được bằng SRAM ASIC. Binding SRAM và mục tiêu PPA ASIC được đánh giá riêng.
 
 **[Timing post-fit: baseline, constraint, critical path và tối ưu Fmax](timing/README.md).** Report người dùng được giữ nguyên ở snapshot riêng; phép so sánh RTL dùng baseline với SDC và cấu hình compile tương ứng.
 
@@ -33,7 +36,7 @@ Chạy từ thư mục gốc repository:
 
 [Design review](../reviews/design_review.md#kiểm-chứng-bản-rtl-thống-nhất) giải thích test coverage và cải tiến được kiểm tra. [Model demo](../demos/README.md) kiểm chứng thêm graph/checkpoint thực; kết quả model được ghi trong từng báo cáo riêng.
 
-## Analysis & Synthesis hiện hành
+## Analysis & Synthesis legacy ngày01/10/2026
 
 Lượt Ctrl+K tương đương `quartus_map` hoàn tất **14:31:44 ngày 01/10/2026**, **0 error / 0 warning**, cùng RTL đã pass regression và hai model demo. Map ghi **7.390 registers**, **11.906 ALUT**, **8.174 ALM ước tính**, **334.336 bit RAM / 7 DSP**. ALM ước tính này chưa phải số sau placement/routing. [Timing hub](timing/README.md) gắn kết quả map, Fitter và STA với source/configuration hashes.
 

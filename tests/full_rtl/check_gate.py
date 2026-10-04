@@ -11,6 +11,15 @@ RTL = ROOT / "Verilog Source code"
 def check_gate(manifest_path: Path) -> dict:
     evidence = json.loads(manifest_path.read_text(encoding="utf-8-sig"))
     assert evidence["source_hashes_verified"] and evidence["configuration_hashes_verified"]
+    # Metrics are accepted only with the exact archived reports that produced
+    # them. A successful tool exit or edited summary is insufficient evidence.
+    for collection in ("archives", "text_reports"):
+        for name, item in evidence[collection].items():
+            path = (manifest_path.parent / name).resolve()
+            assert path.is_relative_to(manifest_path.parent.resolve())
+            assert sha256(path.read_bytes()).hexdigest() == item["archive_sha256"], \
+                f"Timing report changed: {name}"
+    assert sha256((manifest_path.parent / "commands.json").read_bytes()).hexdigest() == evidence["commands_sha256"]
     assert evidence["settings"]["TOP_LEVEL_ENTITY"] == "llm_soc", "Timing must cover the full graph top"
     actual = {p.name: sha256(p.read_bytes()).hexdigest() for p in RTL.iterdir()
               if p.suffix in {".sv", ".v", ".svh", ".mem"}}
@@ -59,6 +68,11 @@ def check_gate(manifest_path: Path) -> dict:
         path = (ROOT / item["log"]).resolve()
         assert path.is_relative_to(ROOT) and sha256(path.read_bytes()).hexdigest() == item["sha256"], \
             "Unit evidence log changed since recorded run"
+        if "design_units" in item:
+            binding = item["design_units"]
+            path = (ROOT / binding["file"]).resolve()
+            assert path.is_relative_to(ROOT) and sha256(path.read_bytes()).hexdigest() == binding["sha256"], \
+                "Unit elaboration evidence changed"
     return evidence
 
 

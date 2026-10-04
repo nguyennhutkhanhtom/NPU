@@ -33,9 +33,40 @@ RTL/reference continuation IDs match; text quality is explicitly NOT_ASSESSED
 until the actual RTL-decoded paragraph is reviewed. No application or checkpoint
 reference inference is run before the hardware/unit gate.
 
+The installed hardware tools are Quartus Lite25.1std and official Questa
+Altera Starter2025.2; ModelSim Intel Starter20.1 remains available. The archived
+[logic6q5 seven groups](evidence/logic6q5_all_units/results.json) PASS with the
+official25.1 RAM model and zero compile/runtime warnings. Graph:196619host
+commands, two-token prefill, three RTL-selected tokens,16layer executions and
+4229462compute clocks. This is synthetic verification, not pretrained text.
+Current33-source explicit-RTL refactor requires a fresh regression.
+
+`memory_model.py` compiles the official `altera_mf.v` from the Quartus installation
+recorded by timing commands. It verifies source/compiler/library-object/compile-log
+hashes. Questa uses optimizer design-unit reports to prove the actual selected
+RAM source/library; ModelSim uses its explicit library loading log. Vendor source
+and compiled libraries stay in ignored caches. A changed compiler/model requires
+a fresh cache. The older [ram25 archive](../../docs/verification/memory_ip/ram25/results.json)
+contains its original helper version, preserving historical helper hashes.
+
+Questa fixtures retain all numeric expected values. Portable RAM is seeded through
+its leaf write ports; one-time scalar/control initialization uses deposit or
+force/release so the RTL `always_ff` remains the sole register writer. Signed
+minimum bit patterns are explicit. No simulator diagnostic is suppressed.
+
+```powershell
+python tests/full_rtl/memory_model.py --timing docs/verification/timing/fullrtl100_logic5/manifest.json --sim-bin C:/altera_lite/25.1std/questa_fse/win64 --output tests/full_rtl/build/questa25_model
+./tests/full_rtl/run_units.ps1 -SimBin C:/altera_lite/25.1std/questa_fse/win64 -Questa -MemoryModelManifest tests/full_rtl/build/questa25_model/manifest.json -TimingManifest docs/verification/timing/fullrtl100_logic5/manifest.json -WorkLibraryName NEW_WORK -EvidenceTag NEW_UNUSED_TAG
+```
+
+Do not recompile/overwrite an active work library or evidence tag. Current jobs
+and reproduction commands are in [TASK_STATE](../../TASK_STATE.md). Application
+preparation/reference execution remain blocked until exact-current hardware
+AND all-seven-unit gates pass.
+
 ```powershell
 ./tests/full_rtl/run_units.ps1
-./tools/timing/run.ps1 -Project quartus/llm_soc -Tag fullrtl100_final -QuartusBin C:/intelFPGA_lite/18.1/quartus/bin64
+./tools/timing/run.ps1 -Project quartus/llm_soc -Tag fullrtl100_final -QuartusBin C:/altera_lite/25.1std/quartus/bin64
 ./tests/full_rtl/run_application.ps1 -TimingManifest docs/verification/timing/fullrtl100_final/manifest.json
 ```
 

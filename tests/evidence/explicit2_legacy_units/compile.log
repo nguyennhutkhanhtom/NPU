@@ -1,0 +1,75 @@
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+Start time: 13:12:32 on Oct 04,2026
+vlog -sv -svinputport=var -work tests/sim/work "+incdir+D:\2151097_Nguyen Nhut Khanh\Verilog Source code" -f D:\2151097_Nguyen Nhut Khanh\tests\sim\sources.f -l D:\2151097_Nguyen Nhut Khanh\tests\sim\compile.log 
+-- Compiling package npu_pkg
+-- Compiling package llm_pkg
+-- Compiling module llm_exp_sample
+-- Compiling module llm_gumbel_sample
+-- Compiling module acc_mul
+-- Compiling module sram_word_tile
+-- Compiling module banked_word_ram
+-- Compiling module descriptor_file
+-- Importing package npu_pkg
+-- Compiling module div
+-- Compiling module ins_mem
+-- Compiling module llm_bank_ram
+-- Compiling module llm_math
+-- Compiling module llm_parameter_ram
+-- Compiling module llm_soc
+-- Importing package llm_pkg
+-- Compiling module logic_mul
+-- Compiling module matmul_wrap
+-- Compiling module matmulfree
+-- Compiling module mem_mapping
+-- Compiling module mul
+-- Compiling module addsub
+-- Compiling module norm_dispatch
+-- Compiling module isqrt_u64
+-- Compiling module norm
+-- Compiling module PC
+-- Compiling module pipelined_word_ram
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv(86): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv(88): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv(88): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv(90): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+-- Compiling module postscale
+-- Compiling module postscale_finish
+-- Compiling module quartus_word_ram
+-- Compiling module register
+-- Compiling module rowwise_dispatch
+-- Compiling module rowwise_op
+-- Compiling module scale_compose
+-- Compiling module sigmoid_sample
+-- Compiling module sigmoid
+-- Compiling module sram_256_wrapper
+-- Compiling module ternary_mul
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/ternary_mul.sv(102): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/ternary_mul.sv(105): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/ternary_mul.sv(106): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/ternary_mul.sv(107): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+-- Compiling module tb_host
+-- Compiling module tb_div_case
+-- Compiling module tb_divprofiles
+-- Compiling module tb_postscale
+-- Compiling module tb_scalar
+-- Compiling module tb_sigmoid
+-- Compiling module tb_sram
+-- Compiling module tb_acc_case
+-- Compiling module tb_arithmetic
+-- Compiling module tb_imem
+-- Compiling module tb_rowwise
+
+Top level modules:
+	llm_soc
+	matmul_wrap
+	tb_host
+	tb_divprofiles
+	tb_postscale
+	tb_scalar
+	tb_sigmoid
+	tb_sram
+	tb_arithmetic
+	tb_imem
+	tb_rowwise
+End time: 13:12:34 on Oct 04,2026, Elapsed time: 0:00:02
+Errors: 0, Warnings: 8

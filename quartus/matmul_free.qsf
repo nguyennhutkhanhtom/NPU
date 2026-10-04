@@ -61,10 +61,8 @@ set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/mem_mappi
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/matmulfree.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/matmul_wrap.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/ins_mem.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/hazard_detect.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/div.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/descriptor_file.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/ctrl_unit.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/acc_mul.sv"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256

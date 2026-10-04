@@ -1,0 +1,7 @@
+{
+  "status": "CANCELLED",
+  "reason": "Full RTL operator regression FAIL: signed 3-bit constant buffer index sign-extended after inline task refactor. No synthesis/fitting/timing PASS claimed. Original source/config archived before repair.",
+  "time": "2026-10-04T06:21:16.7675291Z",
+  "supervisor": 12664,
+  "map": 3036
+}

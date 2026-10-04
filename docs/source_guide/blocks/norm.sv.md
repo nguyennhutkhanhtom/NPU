@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — chứa norm và isqrt_u64.
 
-**Source:** [norm.sv](<../../../Verilog%20Source%20code/norm.sv>). **Số dòng:** 630. **SHA-256:** `16d0b2d44fc65b0e127e0a2871bc0a392b209b77b6be98b5b9ce9b56dea76e8a`.
+**Source:** [norm.sv](<../../../Verilog%20Source%20code/norm.sv>). **Số dòng:** 617. **SHA-256:** `045a18b3d7152a114705cf85f87396eb1d080193dbb867b6791f37e278f17f36`.
 
 ## Khối này làm gì?
 
@@ -410,7 +410,7 @@ module norm (
         end
     end
 
-    // Dynamic coefficient shift choices. Larger r improves precision while M remains U24.
+    // Parallel leading-bit masks and constant comparisons expose shift selection.
 ```
 
 **Mục đích.** Chọn hai cặp operand tại CAPTURE, chốt operand S25/shift U6, tích S48 tại MUL và kết quả S64 tại ROUND. P1 consume tích đã chốt; P2/P3 consume rounded result đã chốt. Hai multiplier/RNE dùng chung giữa các pass.
@@ -420,45 +420,35 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `multiply_a_q/multiply_b_q`: operand đã chốt; `arithmetic_product_q`: hai tích S48; `arithmetic_rounded_q`: hai giá trị RNE S64; `arithmetic_shift_q`: shift của batch; `pair_sq`: tổng hai bình phương hữu ích.
 
 
-### [Dòng 251–285: Chọn shift hệ số](<../../../Verilog%20Source%20code/norm.sv#L251>)
+### [Dòng 251–275: Chọn shift hệ số](<../../../Verilog%20Source%20code/norm.sv#L251>)
 
-<!-- source-range:251:285 -->
+<!-- source-range:251:275 -->
 ```systemverilog
-    function automatic [5:0] choose_norm_r(input logic [31:0] den);
-        integer msb;
-        begin
-            msb = 0;
-            for (integer i = 31;i >= 0;i = i - 1)
-                if (den[i] && msb == 0) msb = i;
-            if (msb <= 9) choose_norm_r = 0;
-            else if (msb - 9 > 31) choose_norm_r = 31;
-            else choose_norm_r = 6'(msb - 9);
-        end
-    endfunction
-
-    function automatic [5:0] choose_quant_r(input logic [23:0] den);
-        logic leading;
-        logic boost;
-        logic [5:0] encoded;
-        begin
-            choose_quant_r = 0;
-            // For 2^p <= den < 2^(p+1), the largest fitting shift is
-            // p+17, or p+18 exactly when den > 127*2^(p-6), p>=7.
-            // Parallel constant comparisons replace a multiply and 48-step
-            // priority search. Exactly one leading mask contributes to OR.
-            for (integer p = 0; p < 24; p = p + 1) begin
-                leading = den[p] && ((den >> (p + 1)) == 0);
-                boost = 1'b0;
-                if (p >= 7) boost = den > (24'd127 << (p - 6));
-                encoded = 6'(p + 17) + {5'h0, boost};
-                choose_quant_r = choose_quant_r | ({6{leading}} & encoded);
-            end
-        end
-    endfunction
-
-    logic [5:0] norm_r_sel, quant_r_sel;
+    wire [23:0] quant_den = (absmax > delta_q) ? absmax : delta_q;
+    wire [5:0] norm_encode [0:32], quant_encode [0:24];
+    wire [5:0] norm_r_sel = norm_encode[32];
+    wire [5:0] quant_r_sel = quant_encode[24];
+    genvar norm_bit, quant_bit;
+    generate
+    for (norm_bit = 0; norm_bit < 32; norm_bit = norm_bit + 1) begin : g_norm_shift
+        wire leading = rms_r[norm_bit] && ((rms_r >> (norm_bit + 1)) == 0);
+        assign norm_encode[norm_bit + 1] = norm_encode[norm_bit] |
+            (6'(norm_bit > 9 ? norm_bit - 9 : 0) & {6{leading}});
+    end
+    for (quant_bit = 0; quant_bit < 24; quant_bit = quant_bit + 1) begin : g_quant_shift
+        wire leading = quant_den[quant_bit] && ((quant_den >> (quant_bit + 1)) == 0);
+        wire boost;
+        if (quant_bit >= 7) assign boost = quant_den > (24'd127 << (quant_bit - 6));
+        else assign boost = 0;
+        assign quant_encode[quant_bit + 1] = quant_encode[quant_bit] |
+            ((6'(quant_bit + 17) + {5'h0, boost}) & {6{leading}});
+    end
+    endgenerate
+    assign norm_encode[0] = 0;
+    assign quant_encode[0] = 0;
     logic [DIV_NUM_W - 1:0] norm_num, quant_num;
     always_comb begin
+        mean_with_epsilon = ({1'b0, mean_q} << 32) + {10'h000, div_q} + {1'b0, epsilon_q};
 ```
 
 **Mục đích.** Ưu tiên r lớn để giữ precision trong U24. Root U32 làm norm_r≤22 và norm_num≤2^54; lựa chọn QUANT giữ tử 0x7F<<r trong tối đa 48 bit. Hai miền này vừa divider chung U55.
@@ -468,16 +458,13 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `den`: denominator của hàm chọn shift; `msb`: vị trí bit 1 cao nhất của denominator; `limit`: giới hạn den×M_max; `num`: tử số 127<<r đang thử; `found`: đã tìm shift hợp lệ đầu tiên khi quét từ lớn xuống.
 
 
-### [Dòng 286–298: Chuẩn bị tử số và epsilon](<../../../Verilog%20Source%20code/norm.sv#L286>)
+### [Dòng 276–286: Chuẩn bị tử số và epsilon](<../../../Verilog%20Source%20code/norm.sv#L276>)
 
-<!-- source-range:286:298 -->
+<!-- source-range:276:286 -->
 ```systemverilog
-        mean_with_epsilon = ({1'b0, mean_q} << 32) + {10'h000, div_q} + {1'b0, epsilon_q};
-        norm_r_sel = choose_norm_r(rms_r);
         // PREP registers the chosen shift before DIV_START consumes it.
         // Reuse that value so coefficient selection is not on divider inputs.
         norm_num = 55'h1 << (32 + norm_r);
-        quant_r_sel = choose_quant_r((absmax > delta_q) ? absmax : delta_q);
         quant_num = 55'h7f << quant_r;
     end
 
@@ -485,6 +472,7 @@ module norm (
     logic signed [23:0] z0, z1;
     logic [23:0] absz0, absz1;
     always_comb begin
+        z_round0 = arithmetic_rounded_q[0];
 ```
 
 **Mục đích.** Ghép mean-square/epsilon bằng U65; tạo tử số từ norm_r/quant_r đã chốt ở PREP. Chooser chỉ tạo giá trị mới cho PREP, không nối tiếp vào input divider ở DIV_START.
@@ -494,11 +482,10 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `norm_r_sel`: shift norm được logic lựa chọn; `quant_r_sel`: shift QUANT được logic lựa chọn; `norm_num`: tử số từ norm_r đã chốt; `quant_num`: tử số từ quant_r đã chốt; `mean_with_epsilon`: tổng U65 để kiểm tra overflow mean-square + epsilon; `mean_q`: phần nguyên của S/K; và 5 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 299–315: Đường tạo z](<../../../Verilog%20Source%20code/norm.sv#L299>)
+### [Dòng 287–303: Đường tạo z](<../../../Verilog%20Source%20code/norm.sv#L287>)
 
-<!-- source-range:299:315 -->
+<!-- source-range:287:303 -->
 ```systemverilog
-        z_round0 = arithmetic_rounded_q[0];
         z_round1 = arithmetic_rounded_q[1];
         if (z_round0 > 64'sh0000_0000_007f_ffff) z0 = 24'sh7f_ffff;
         else if (z_round0 < - 64'sh0000_0000_0080_0000) z0 = 24'sh80_0000;
@@ -515,6 +502,7 @@ module norm (
     always_comb begin
         qround0 = arithmetic_rounded_q[0];
         qround1 = arithmetic_rounded_q[1];
+        if (qround0 > 64'sh0000_0000_0000_007f) q0 = 8'sh7f;
 ```
 
 **Mục đích.** Lấy kết quả RNE từ datapath chung trong P2, clamp S24 và tính trị tuyệt đối để tìm maxabs.
@@ -524,11 +512,10 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `arithmetic_rounded_q[0:1]`: kết quả RNE hai lane đã chốt; `z_round0/z_round1`: input clamp; `z0/z1`: S24 sau clamp; `absz0/absz1`: trị tuyệt đối dùng cập nhật absmax.
 
 
-### [Dòng 316–329: Đường tạo q](<../../../Verilog%20Source%20code/norm.sv#L316>)
+### [Dòng 304–317: Đường tạo q](<../../../Verilog%20Source%20code/norm.sv#L304>)
 
-<!-- source-range:316:329 -->
+<!-- source-range:304:317 -->
 ```systemverilog
-        if (qround0 > 64'sh0000_0000_0000_007f) q0 = 8'sh7f;
         else if (qround0 < - 64'sh0000_0000_0000_0080) q0 = 8'sh80;
         else q0 = qround0[7:0];
         if (qround1 > 64'sh0000_0000_0000_007f) q1 = 8'sh7f;
@@ -542,6 +529,7 @@ module norm (
         ws_wr_en = 1'b0;
         ws_wr_addr = '0;
         ws_wr_data = pack_buf;
+        div_start = 1'b0;
 ```
 
 **Mục đích.** Lấy kết quả RNE từ datapath chung trong P3 rồi clamp vào S8. Operand z lấy 24 bit thấp của mỗi ô scratch S32.
@@ -551,11 +539,10 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `zr0/zr1`: z lấy từ ô scratch S32 ở CAPTURE; `arithmetic_rounded_q[0:1]`: kết quả RNE đã chốt; `qround0/qround1`: input clamp; `q0/q1`: hai mã S8 ghi ở P3_PROC.
 
 
-### [Dòng 330–388: Phát request](<../../../Verilog%20Source%20code/norm.sv#L330>)
+### [Dòng 318–376: Phát request](<../../../Verilog%20Source%20code/norm.sv#L318>)
 
-<!-- source-range:330:388 -->
+<!-- source-range:318:376 -->
 ```systemverilog
-        div_start = 1'b0;
         div_num = '0;
         div_den = '0;
         sqrt_start = 1'b0;
@@ -614,6 +601,7 @@ module norm (
             done <= 0;
             overflow <= 0;
             format_error <= 0;
+            quant_d <= 0;
 ```
 
 **Mục đích.** Control tổ hợp theo FSM: chọn vùng input/scratch/output, phát divider start hoặc sqrt start.
@@ -623,11 +611,10 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `ws_rd_en`: request đọc workspace; `ws_rd_addr`: địa chỉ đọc workspace; `ws_wr_en`: cho phép ghi workspace; `ws_wr_addr`: địa chỉ ghi workspace; `ws_wr_data`: word 256 ghi workspace; `pack_buf`: buffer pack output trước khi ghi SRAM; và 17 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 389–421: Reset thanh ghi](<../../../Verilog%20Source%20code/norm.sv#L389>)
+### [Dòng 377–409: Reset thanh ghi](<../../../Verilog%20Source%20code/norm.sv#L377>)
 
-<!-- source-range:389:421 -->
+<!-- source-range:377:409 -->
 ```systemverilog
-            quant_d <= 0;
             input_base_q <= 0;
             scratch_base_q <= 0;
             output_base_q <= 0;
@@ -660,6 +647,7 @@ module norm (
                     quant_d <= 0;
                     norm_m <= 0;
                     norm_r <= 0;
+                    quant_m <= 0;
 ```
 
 **Mục đích.** Chỉ reset trạng thái và buffer trong khối. Nội dung workspace không được reset ở đây.
@@ -669,11 +657,10 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `busy`: khối đang xử lý; `done`: xung báo hoàn tất; `overflow`: cờ kết quả vượt miền số; `format_error`: cờ format/metadata không hợp lệ; `quant_d`: D=max(absmax,delta); và 24 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 422–450: Nhận lệnh và kiểm tra vùng](<../../../Verilog%20Source%20code/norm.sv#L422>)
+### [Dòng 410–438: Nhận lệnh và kiểm tra vùng](<../../../Verilog%20Source%20code/norm.sv#L410>)
 
-<!-- source-range:422:450 -->
+<!-- source-range:410:438 -->
 ```systemverilog
-                    quant_m <= 0;
                     quant_r <= 0;
                     input_base_q <= x_base;
                     scratch_base_q <= z_base;
@@ -702,6 +689,7 @@ module norm (
                     state <= P1_CAPTURE;
                 end
                 P1_CAPTURE : state <= P1_MUL;
+                P1_MUL : state <= P1_PROC;
 ```
 
 **Mục đích.** Chốt bases, K, epsilon, delta. Reject K sai, delta=0, vượt SRAM hoặc scratch overlap.
@@ -711,11 +699,10 @@ module norm (
 **Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `busy`: khối đang xử lý; `overflow`: cờ kết quả vượt miền số; `format_error`: cờ format/metadata không hợp lệ; `quant_d`: D=max(absmax,delta); `norm_m`: multiplier U24 của RMSNorm; và 19 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 451–471: Lượt 1](<../../../Verilog%20Source%20code/norm.sv#L451>)
+### [Dòng 439–459: Lượt 1](<../../../Verilog%20Source%20code/norm.sv#L439>)
 
-<!-- source-range:451:471 -->
+<!-- source-range:439:459 -->
 ```systemverilog
-                P1_MUL : state <= P1_PROC;
                 P1_PROC : begin
                     sum_sq <= sum_sq + pair_sq;
                     if (lane == 14 || idx1 >= vector_length_q - 1) begin
@@ -736,6 +723,7 @@ module norm (
                     state <= DIV_FRAC_START;
                 end
                 DIV_FRAC_START : state <= DIV_FRAC_WAIT;
+                DIV_FRAC_WAIT : if (div_done) begin
 ```
 
 **Mục đích.** Đọc input theo word, đi hai lane mỗi bước và cộng pair_sq cho đến hết K.
@@ -764,11 +752,10 @@ flowchart TB
 ```
 
 
-### [Dòng 472–492: Mean-square và căn](<../../../Verilog%20Source%20code/norm.sv#L472>)
+### [Dòng 460–480: Mean-square và căn](<../../../Verilog%20Source%20code/norm.sv#L460>)
 
-<!-- source-range:472:492 -->
+<!-- source-range:460:480 -->
 ```systemverilog
-                DIV_FRAC_WAIT : if (div_done) begin
                     v_raw <= mean_with_epsilon[63:0];
                     state <= SQRT_START;
                     if (mean_with_epsilon[64]) begin
@@ -789,6 +776,7 @@ flowchart TB
                         absmax <= 0;
                         word_index <= 0;
                         lane <= 0;
+                        pack_buf <= 0;
 ```
 
 **Mục đích.** Lần chia thứ nhất lấy thương/phần dư; lần thứ hai lấy phần lẻ Q32. Kiểm tra tổng epsilon trước khi sqrt.
@@ -798,11 +786,10 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `div_done`: divider đã xong; `mean_q`: phần nguyên của S/K; `div_q`: thương divider; `mean_rem`: phần dư của S/K; `div_rem`: phần dư divider; và 6 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 493–520: Hệ số norm](<../../../Verilog%20Source%20code/norm.sv#L493>)
+### [Dòng 481–508: Hệ số norm](<../../../Verilog%20Source%20code/norm.sv#L481>)
 
-<!-- source-range:493:520 -->
+<!-- source-range:481:508 -->
 ```systemverilog
-                        pack_buf <= 0;
                         pack_count <= 0;
                         write_word <= 0;
                         state <= P2_REQ;
@@ -830,6 +817,7 @@ flowchart TB
                     state <= P2_CAPTURE;
                 end
                 P2_CAPTURE : state <= P2_MUL;
+                P2_MUL : state <= P2_ROUND;
 ```
 
 **Mục đích.** Input toàn zero dùng M=0. Trường hợp thường chia tử số cho R rồi RNE thương bằng cách so sánh hai lần remainder với denominator.
@@ -839,11 +827,10 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `sum_sq`: tổng bình phương U40; `norm_m`: multiplier U24 của RMSNorm; `norm_r`: shift của RMSNorm; `absmax`: trị tuyệt đối z lớn nhất đã thấy; `word_index`: chỉ số word đang đọc; `lane`: vị trí phần tử trong word; và 9 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 521–563: Lượt 2 và ghi scratch](<../../../Verilog%20Source%20code/norm.sv#L521>)
+### [Dòng 509–551: Lượt 2 và ghi scratch](<../../../Verilog%20Source%20code/norm.sv#L509>)
 
-<!-- source-range:521:563 -->
+<!-- source-range:509:551 -->
 ```systemverilog
-                P2_MUL : state <= P2_ROUND;
                 P2_ROUND : state <= P2_PROC;
                 P2_PROC : begin
                     if ((idx0 < vector_length_q && (z_round0 > 64'sh0000_0000_007f_ffff || z_round0 < - 64'sh0000_0000_0080_0000)) ||
@@ -886,6 +873,7 @@ flowchart TB
                         quant_m <= 0;
                         word_index <= 0;
                         lane <= 0;
+                        pack_buf <= 0;
 ```
 
 **Mục đích.** Tạo hai z mỗi bước, sign-extend lên S32 và cập nhật maxabs. Cứ 8 z hoặc hết K thì ghi một word.
@@ -919,11 +907,10 @@ flowchart TB
 ```
 
 
-### [Dòng 564–587: Hệ số quantization](<../../../Verilog%20Source%20code/norm.sv#L564>)
+### [Dòng 552–575: Hệ số quantization](<../../../Verilog%20Source%20code/norm.sv#L552>)
 
-<!-- source-range:564:587 -->
+<!-- source-range:552:575 -->
 ```systemverilog
-                        pack_buf <= 0;
                         pack_count <= 0;
                         write_word <= 0;
                         state <= P3_REQ;
@@ -947,6 +934,7 @@ flowchart TB
                     state <= P3_CAPTURE;
                 end
                 P3_CAPTURE : state <= P3_MUL;
+                P3_MUL : state <= P3_ROUND;
 ```
 
 **Mục đích.** Giữ D=max(absmax,delta). Nhánh cả hai bằng 0 là nhánh phòng vệ không đạt được với delta đã kiểm tra hợp lệ.
@@ -956,11 +944,10 @@ flowchart TB
 **Tín hiệu và dữ liệu chính.** `quant_d`: D=max(absmax,delta); `absmax`: trị tuyệt đối z lớn nhất đã thấy; `delta_q`: delta đã chốt; `quant_r`: shift của QUANT; `quant_r_sel`: shift QUANT được logic lựa chọn; `quant_m`: multiplier U24 của QUANT; và 9 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 588–630: Lượt 3 và hoàn tất](<../../../Verilog%20Source%20code/norm.sv#L588>)
+### [Dòng 576–617: Lượt 3 và hoàn tất](<../../../Verilog%20Source%20code/norm.sv#L576>)
 
-<!-- source-range:588:630 -->
+<!-- source-range:576:617 -->
 ```systemverilog
-                P3_MUL : state <= P3_ROUND;
                 P3_ROUND : state <= P3_PROC;
                 P3_PROC : begin
                     if (({word_index, 3'b0} + lane) < vector_length_q) pack_buf[(int'(pack_count) << 3) +: 8] <= q0;

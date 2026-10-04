@@ -1,0 +1,16 @@
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\tests\sim\lut-missing.log tests/sim/simulation-work.tb_sigmoid -do "run -all; quit -f" -gLUT_FILE=tests/sim/absent-lut.mem 
+# Start time: 01:15:29 on Oct 01,2026
+# Loading sv_std.std
+# Loading tests/sim/simulation-work.tb_sigmoid
+# Loading tests/sim/simulation-work.npu_pkg
+# Loading tests/sim/simulation-work.sigmoid
+# run -all
+# ** Warning: (vsim-3534) [FOFIR] - Failed to open file "tests/sim/absent-lut.mem" for reading.
+# No such file or directory. (errno = ENOENT)    : D:/2151097_Nguyen Nhut Khanh/Verilog Source code/sigmoid.sv(38)
+#    Time: 0 ps  Iteration: 0  Region: /tb_sigmoid/dut/g_file_rom
+# ** Fatal: Missing sigmoid LUT: tests/sim/absent-lut.mem
+#    Time: 0 ps  Scope: tb_sigmoid.dut.g_file_rom.validate_file File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/sigmoid.sv Line: 39
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/Verilog Source code/sigmoid.sv(39)
+#    Time: 0 ps  Iteration: 0  Region: /tb_sigmoid/dut/g_file_rom
+# End time: 01:15:32 on Oct 01,2026, Elapsed time: 0:00:03
+# Errors: 1, Warnings: 1

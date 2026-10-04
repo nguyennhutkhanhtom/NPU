@@ -4,6 +4,88 @@
 
 Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL dựa trên critical path. Phần full graph dùng Cyclone V C9; các snapshot legacy bên dưới dùng thiết bị riêng được ghi trong manifest. Các phép đo là FPGA demo, chưa xác nhận ASIC signoff.
 
+## Logic5 result: 99.07 MHz, setup/hold/removal FAIL
+
+`fullrtl100_logic5` is the complete `llm_soc`, built from35 RTL/source assets
+at commit `e75166e`, Quartus Lite25.1std.0 Build1129,
+Cyclone V `5CGXFC9E6F35C7`, seed1/SPEED/STANDARD. The archived10ns SDC retains
+input0.5..2ns/output2ns setup and0.5ns hold, with no timing exceptions.
+[Manifest](fullrtl100_logic5/manifest.json), [source ZIP hashes](fullrtl100_logic5/source_archive.json)
+and raw reports identify the exact source/configuration. Synthesis PASS0errors/
+12warnings and fitting PASS0errors/4warnings do **not** imply timing PASS.
+Fitted resources:51986ALM,46834FF,1186M10K,9515648memory bits,186physical pins,
+DSP/PLL/DLL/HSSI0. STA completes0errors/2warnings; both332148 warnings report
+unmet timing. No trained application or CPU checkpoint reference has run.
+
+| Corner1.1V | Setup slack/TNS ns | Hold slack/TNS ns | Recovery slack/TNS ns | Removal slack/TNS ns | Pulse slack/TNS ns |
+|---|---:|---:|---:|---:|---:|
+| Slow85°C | −0.094/−0.094 | −0.069/−0.171 | 5.353/0 | −0.138/−4.452 | 3.600/0 |
+| Slow0°C | 0.153/0 | 0.233/0 | 5.383/0 | −0.166/−5.485 | 3.543/0 |
+| Fast85°C | 3.760/0 | 0.129/0 | 6.559/0 | 0.351/0 | 3.800/0 |
+| Fast0°C | 4.024/0 | 0.119/0 | 6.559/0 | 0.357/0 | 3.790/0 |
+
+[Unconstrained counts](fullrtl100_logic5/extracted_unconstrained.rpt) are all0.
+[Worst setup](fullrtl100_logic5/slow_1100mv_85c_setup.rpt) is cache address
+`k_address_q[3]` → `u_cache|g_request[3].read_address_q[3]`:9.792ns data,
+9.188ns routing, zero combinational levels, fanout8 and clock skew−0.202ns.
+The route detours across the device; adding arithmetic pipeline stages would
+not address this path. [Recommendations](fullrtl100_logic5/slow_1100mv_85c_recommendations.txt)
+also identify control-node duplication and score-comparison logic near critical.
+[Hold](fullrtl100_logic5/slow_1100mv_85c_hold.rpt) fails on host_addr8/9 and
+host_wdata28 inputs. [Removal](fullrtl100_logic5/slow_1100mv_0c_removal.rpt)
+fails on reset release to packed output FFs; recovery now passes all corners.
+
+Logic6 completed with exactly the same20slack/TNS checks, resource counts and
+99.07MHz FAIL as logic5. Automatic physical FF duplication/high-fanout input
+delay optimization did not improve closure. [Logic6 manifest](fullrtl100_logic6/manifest.json)
+and [source archive](fullrtl100_logic6/source_archive.json) preserve the full result.
+
+Logic7 added cache-address MAX_FANOUT2 and manual input delay chains. Mapping
+inserted logic cells and Fitter created5register duplicates, but all four input
+delay assignments were explicitly ignored (Fitter171167). Fmax96.04MHz FAIL;
+worst setup op[88] -> lane_round_q[11][0], data10.141ns/skew-.171ns.
+The failing hold endpoints moved to host_wdata4/5; reset removal still fails.
+[Historical logic7 manifest](fullrtl100_logic7/manifest.json) records all corners.
+Its runner rejected the final source-set mismatch after two unused legacy files
+were deleted. The original35sources were recovered byte-exact from the preserved
+logic6 ZIP. This is historical evidence, with source_hashes_verified=false for
+the workspace comparison; it cannot gate the changed current source.
+
+| Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
+|---|---:|---:|---:|---:|---:|
+| slow_1100mv_85c | -0.412/-3.286 | -0.036/-0.069 | 5.372/0.0 | -0.139/-4.434 | 3.6/0.0 |
+| slow_1100mv_0c | -0.024/-0.056 | 0.232/0.0 | 5.401/0.0 | -0.166/-5.479 | 3.543/0.0 |
+| fast_1100mv_85c | 3.527/0.0 | 0.128/0.0 | 6.564/0.0 | 0.351/0.0 | 3.799/0.0 |
+| fast_1100mv_0c | 4.024/0.0 | 0.119/0.0 | 6.564/0.0 | 0.357/0.0 | 3.789/0.0 |
+
+The current `fullrtl100_explicit2` uses33sources after structural RTL cleanup,
+no synthesizable tasks/unbounded loops, explicit pipeline/LUT ownership. QSF
+removes the four ignored delay settings and adds MAX_FANOUT16 on onehot op bits,
+targeting the measured control path. SRAM remains the only explicit vendor IP.
+SDC/device/seed/I/O budgets are unchanged. [A&S](../synthesis/explicit2/manifest.json)
+PASS0errors/12warnings; [six units](../../../tests/full_rtl/evidence/explicit3_six_units/results.json)
+PASS0compile/runtimewarnings. Graph and fitting are in progress; no current100MHz
+PASS is claimed. The preceding explicit1 map was
+cancelled after its operator test found a signed buffer-address cast regression.
+Its [source/config ZIP](fullrtl100_explicit1/source_archive.json) and
+[cancellation](fullrtl100_explicit1/cancellation.json) are retained. The current
+candidate explicitly keeps the former unsigned task argument contract.
+
+The12 synthesis warnings include the bounded scalar-group LUT index10027,
+unused write-A/read-B ports287013, token-output RAM read/write forwarding276020,
+and constant pc_debug7 output13024/13410. Existing boundary/protocol/numeric
+tests verify the intended behavior; no warning is suppressed. Fitter292013
+reports the unavailable LogicLock license; no LogicLock placement is requested.
+15714/169085 identify125 automatically located pins because a board pinout was
+not supplied.176251/176252 ignore invalid destinations of pc_debug/instr_debug
+fast-output wildcards; their constant bits need no FF.56 output FFs were packed.
+These reports demonstrate device timing only, not a board implementation.
+
+Actual model25.1 RAM/protocol/selection reruns PASS with0runtimewarnings;
+[version-matched evidence](../memory_ip/ram25/results.json) records the official
+model source/compiler/library hashes without committing vendor code or cache.
+All seven groups and successful hardware gates are still required before application.
+
 ## Control1 result:92.75MHz, setup/hold/recovery FAIL
 
 Fresh tag `fullrtl100_control1` records41RTL+3config inputs before compile.
@@ -374,26 +456,10 @@ quartus_sta -t tools/timing/extract.tcl docs/verification/timing/constrained sdc
 ---
 
 [Về verification](../README.md) · [Rowwise RTL](../../source_guide/blocks/rowwise_op.sv.md) · [Design review](../../reviews/design_review.md)
-# Current portable bit-product candidate
+## Current verification scope
 
-`fullrtl100_logic3` is the current full-top candidate on Cyclone V
-`5CGXFC9E6F35C7`, Quartus Lite25.1std.0 Build1129. The installed18.1 executable
-from the old checkpoint is absent. New reports therefore record the actual
-tool version; older18.1 timing belongs to its archived source/config.
-All multiplication datapaths now instantiate `logic_mul` built from bitwise
-compressors, shifts and one final adder. Divider/sqrt remain shift/subtract.
-The memory primitive remains isolated `altsyncram`. SDC is unchanged10ns with
-the original I/O budgets and no exceptions. QSF uses ordinary single-ended
-clockAC18/resetV28 and parallel SDR LVDS outputs, requiring physical companion
-pins and an external differential host receiver; no ALTLVDS/SERDES/PLL.
-
-`fullrtl100_logic2` preserves the synthesis FAIL caused by implicit generate
-syntax. ModelSim accepted it; Quartus25.1 required explicit generate regions.
-The current retry declares genvars and generate/endgenerate explicitly.
-Six current-source unit groups passed, including17operators/3460checks/scalar128/
-clamp128, all runtime0warnings. The actual-IP graph is still pending. A&S passed
-0errors/12warnings; its [separate synthesis archive](../synthesis/logic4/manifest.json)
-has35source hashes, exact source/configZIP and raw map reportSHA.
-No fitted100MHz result is claimed while this build is in progress. See
-[ASIC portability](../../design/asic_portability.md) and [checkpoint](../../../TASK_STATE.md).
-
+Portable bit-product arithmetic, ordinary registers/control and replaceable
+SRAM binding remain the implementation policy. The preceding35-source graph
+unit PASS is archived in [logic6q5](../../../tests/full_rtl/evidence/logic6q5_all_units/results.json).
+The changed33-source refactor needs fresh hardware and seven-group verification.
+See [checkpoint](../../../TASK_STATE.md) for active jobs and reproduction commands.

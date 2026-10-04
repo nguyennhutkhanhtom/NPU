@@ -1,0 +1,15 @@
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\tests\sim\Synthesis-arithmetic.log tests/sim/synthesis-work.tb_arithmetic -do "run -all; quit -f" 
+# Start time: 01:16:38 on Oct 01,2026
+# Loading sv_std.std
+# Loading tests/sim/synthesis-work.tb_arithmetic
+# Loading tests/sim/synthesis-work.npu_pkg
+# Loading tests/sim/synthesis-work.addsub
+# Loading tests/sim/synthesis-work.mul
+# Loading tests/sim/synthesis-work.tb_acc_case
+# Loading tests/sim/synthesis-work.acc_mul
+# run -all
+# ARITHMETIC_PASS block=all addsub=3242 mul=4452 accumulator_profiles=5
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv(421)
+#    Time: 7694 ns  Iteration: 0  Instance: /tb_arithmetic
+# End time: 01:16:39 on Oct 01,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

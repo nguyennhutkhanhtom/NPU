@@ -33,18 +33,24 @@ module scale_compose (
     // nonnegative shift in parallel with constant thresholds; the fit vector
     // is a prefix of ones. Its boundary identifies the largest fitting shift.
     localparam logic [46:0] COEFFICIENT_LIMIT = 47'h7eff_ffc0_8000;
+    wire [6:0] fit_encoded [0:48];
+    genvar fit_shift;
+    generate
+    for (fit_shift = 0; fit_shift < 48; fit_shift = fit_shift + 1) begin : g_fit_shift
+        assign positive_fit[fit_shift] = numerator_base <= (({1'b0, COEFFICIENT_LIMIT} - 48'd1) >> fit_shift);
+        if (fit_shift < 47)
+            assign fit_encoded[fit_shift + 1] = fit_encoded[fit_shift] |
+                (7'(fit_shift) & {7{positive_fit[fit_shift] && !positive_fit[fit_shift + 1]}});
+        else assign fit_encoded[48] = fit_encoded[47] | (7'd47 & {7{positive_fit[47]}});
+    end
+    endgenerate
+    assign fit_encoded[0] = 0;
     always_comb begin
-        for (int s = 0; s < 48; s = s + 1)
-            positive_fit[s] = numerator_base <= (({1'b0, COEFFICIENT_LIMIT} - 48'd1) >> s);
         selected_shift = -7'sd2;
         if (!positive_fit[0]) begin
             if (numerator_base < {COEFFICIENT_LIMIT, 1'b0}) selected_shift = -7'sd1;
         end else begin
-            selected_shift = 0;
-            for (int s = 0; s < 47; s = s + 1)
-                selected_shift = selected_shift |
-                    (7'(s) & {7{positive_fit[s] && !positive_fit[s + 1]}});
-            selected_shift = selected_shift | (7'd47 & {7{positive_fit[47]}});
+            selected_shift = fit_encoded[48];
         end
         target_r = $signed({2'b00, base_r}) + $signed(selected_shift);
         twice_rem = {1'b0, remainder} << 1;

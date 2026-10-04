@@ -2,7 +2,7 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [llm_pkg.sv](<../../../Verilog%20Source%20code/llm_pkg.sv>). **Số dòng:** 30. **SHA-256:** `d66c690e47020bdda3375fe8d626ff4b476fb881cd6cf8b1cc2ec47498a7aa87`.
+**Source:** [llm_pkg.sv](<../../../Verilog%20Source%20code/llm_pkg.sv>). **Số dòng:** 31. **SHA-256:** `8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21`.
 
 ## Khối này làm gì?
 
@@ -42,9 +42,9 @@ package llm_pkg;
 
 PARAM_ROWS=24576; địa chỉ tính theo row 256 bit. EMB_SCALE, matrix metadata, gains và RoPE nằm sau trọng số.
 
-### [Dòng 11–21: Numeric helpers](<../../../Verilog%20Source%20code/llm_pkg.sv#L11>)
+### [Dòng 11–20: Numeric helpers](<../../../Verilog%20Source%20code/llm_pkg.sv#L11>)
 
-<!-- source-range:11:21 -->
+<!-- source-range:11:20 -->
 ```systemverilog
         if (x > 64'sd8388607) llm_sat24 = 24'sh7fffff;
         else if (x < -64'sd8388608) llm_sat24 = 24'sh800000;
@@ -55,17 +55,15 @@ PARAM_ROWS=24576; địa chỉ tính theo row 256 bit. EMB_SCALE, matrix metadat
         llm_extend56 = {{8{x[55]}}, x};
     endfunction
 
-    `include "llm_exp_lut.svh"
-    `include "llm_gumbel_lut.svh"
+    function automatic logic [31:0] llm_random_next(input logic [31:0] previous);
 ```
 
 Saturation ở biên ±2^23; llm_extend56 giữ sign của SIMD product trước RNE64.
 
-### [Dòng 22–30: Sampler](<../../../Verilog%20Source%20code/llm_pkg.sv#L22>)
+### [Dòng 21–31: Sampler](<../../../Verilog%20Source%20code/llm_pkg.sv#L21>)
 
-<!-- source-range:22:30 -->
+<!-- source-range:21:31 -->
 ```systemverilog
-    function automatic logic [31:0] llm_random_next(input logic [31:0] previous);
         logic [31:0] x;
         begin
             x = previous ^ (previous << 13);
@@ -74,6 +72,9 @@ Saturation ở biên ±2^23; llm_extend56 giữ sign của SIMD product trước
         end
     endfunction
 endpackage
+
+`include "llm_exp_lut.svh"
+`include "llm_gumbel_lut.svh"
 ```
 
 Xorshift32 deterministic, seed zero được controller thay bằng one. Temperature zero cho greedy argmax.

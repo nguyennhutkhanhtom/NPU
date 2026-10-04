@@ -1,7 +1,9 @@
 param(
     [Parameter(Mandatory=$true)][string]$TimingManifest,
     [string]$Python='C:/Users/khanh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe',
-    [string]$SimBin='C:/intelFPGA/20.1/modelsim_ase/win32aloem',
+    [string]$SimBin='C:/altera_lite/25.1std/questa_fse/win64',
+    [bool]$Questa=$true,
+    [string]$MemoryModelDir='tests/full_rtl/build/application_memory_model',
     [string]$Prompt='Once upon a time, Lily found a tiny kitten.',
     [int]$NewTokens=96,[int]$Temperature=166,[int]$Seed=7,[int]$MinNew=64
 )
@@ -12,7 +14,15 @@ try {
     # Both entry points reject missing, stale or failing 100 MHz evidence.
     & $Python (Join-Path $PSScriptRoot 'check_gate.py') $TimingManifest
     if($LASTEXITCODE -ne 0) {throw 'Application blocked: synthesis/timing/unit gate has not passed'}
-    & $Python (Join-Path $PSScriptRoot 'export_checkpoint.py') --timing $TimingManifest --prompt $Prompt --new-tokens $NewTokens --temperature $Temperature --seed $Seed --min-new $MinNew
+    $memoryModel=if ([IO.Path]::IsPathRooted($MemoryModelDir)) {$MemoryModelDir} else {Join-Path $repo $MemoryModelDir}
+    & $Python (Join-Path $PSScriptRoot 'memory_model.py') --timing $TimingManifest --sim-bin $SimBin --output $memoryModel
+    if($LASTEXITCODE -ne 0) {throw 'RAM model does not match the recorded Quartus installation'}
+    $memoryManifest=Join-Path $memoryModel 'manifest.json'
+    $memoryLibrary=(Get-Content -LiteralPath $memoryManifest -Raw | ConvertFrom-Json).library
+    $bindingReport='tests/full_rtl/build/application_design_units.json'
+    $exportArguments=@('--timing',$TimingManifest,'--memory-model',$memoryManifest,'--prompt',$Prompt,'--new-tokens',$NewTokens,'--temperature',$Temperature,'--seed',$Seed,'--min-new',$MinNew)
+    if ($Questa) {$exportArguments+=@('--design-units',$bindingReport)}
+    & $Python (Join-Path $PSScriptRoot 'export_checkpoint.py') @exportArguments
     if($LASTEXITCODE -ne 0) {throw 'Application export/reference failed'}
     $build=Join-Path $PSScriptRoot 'build'
     $rtl=Join-Path $repo 'Verilog Source code'
@@ -28,7 +38,16 @@ try {
     & "$SimBin/vlog.exe" -sv -svinputport=var -work $library "+incdir+$rtl" "+incdir+$build" -f $list -l (Join-Path $build 'application_compile.log') *> (Join-Path $build 'application_compile.console')
     if($LASTEXITCODE -ne 0) {throw 'Application compile failed'}
     $log=Join-Path $build 'application.log'
-    & "$SimBin/vsim.exe" -c -onfinish exit -L altera_mf_ver -L $library -lib $library -l $log tb_full_rtl_application -do 'run -all; quit -f' *> "$log.console"
+    $simArguments=@('-c','-onfinish','exit')
+    $simulationLibrary=$library
+    $simulationMemory=$memoryLibrary
+    if ($Questa) {
+        $simulationLibrary='tests/full_rtl/build/application_work'
+        $simulationMemory=[IO.Path]::GetRelativePath($repo,$memoryLibrary).Replace('\','/')
+    }
+    if ($Questa) {$simArguments+='-voptargs=-duselectreport='+$bindingReport}
+    $simArguments+=@('-L',$simulationMemory,'-L',$simulationLibrary,'-lib',$simulationLibrary,'-l',$log,'tb_full_rtl_application','-do','run -all; quit -f')
+    & "$SimBin/vsim.exe" @simArguments *> "$log.console"
     if($LASTEXITCODE -ne 0 -or !(Select-String -LiteralPath $log -SimpleMatch 'FULL_RTL_APPLICATION_PASS' -Quiet) -or (Select-String -LiteralPath $log -Pattern '^# \*\* (Fatal|Error)' -Quiet)) {
         Get-Content -LiteralPath $log -Tail 20;throw 'Application failed'
     }

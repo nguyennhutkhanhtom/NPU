@@ -89,25 +89,28 @@ module ternary_mul (
         endcase
     end
 
-    always_comb begin
-        weight_bit_base = {input_chunk_q[1:0], 6'b0};
-        reserved_weight = 0;
-        for (int i = 0;i < 32;i = i + 1) begin
-            logic signed [7:0] a;
-            logic [1:0] w;
-            a = q_word[i * 8 +: 8];
-            w = w_word[weight_bit_base + i * 2 +: 2];
-            if (((int'(input_chunk_q) << 5) + i) >= matrix_desc_q.k_len) terms[i] = 9'sh000;
-            else begin
-                if (w == 2'b10) reserved_weight = 1;
-                case (w)
-                    2'b01 : terms[i] = {a[7], a};
-                    2'b11 : terms[i] = - $signed({a[7], a});
-                    default : terms[i] = 9'sh000; // 00=0, 10 reserved -> 0
+    assign weight_bit_base = {input_chunk_q[1:0], 6'b0};
+    wire [31:0] reserved_lane;
+    genvar decode_lane;
+    generate
+    for (decode_lane = 0; decode_lane < 32; decode_lane = decode_lane + 1) begin : g_decode
+        wire signed [7:0] lane_value = q_word[decode_lane * 8 +: 8];
+        wire [1:0] lane_weight = w_word[weight_bit_base + decode_lane * 2 +: 2];
+        wire lane_active = ((int'(input_chunk_q) << 5) + decode_lane) < matrix_desc_q.k_len;
+        assign reserved_lane[decode_lane] = lane_active && lane_weight == 2'b10;
+        always_comb begin
+            terms[decode_lane] = 9'sh000;
+            if (lane_active) begin
+                case (lane_weight)
+                    2'b01 : terms[decode_lane] = {lane_value[7], lane_value};
+                    2'b11 : terms[decode_lane] = -$signed({lane_value[7], lane_value});
+                    default : terms[decode_lane] = 9'sh000;
                 endcase
             end
         end
     end
+    endgenerate
+    assign reserved_weight = |reserved_lane;
     // Four independent eight-lane trees keep carry widths proportional to
     // their ranges. Registers separate decode/reduction from accumulation.
     genvar g, lane;
@@ -116,6 +119,8 @@ module ternary_mul (
         for (lane = 0; lane < 8; lane = lane + 1) begin : g_lane
             assign group_terms[g][lane] = terms[g * 8 + lane];
         end
+        always_ff @(posedge clk)
+            if (rst_n && state == REDUCE_GROUPS) group_sum_q[g] <= group_sum[g];
         acc_mul #(.TERM_W(9), .NUM_INPUTS(8), .ACC_W(12)) u_group(
             .term(group_terms[g]), .sum(group_sum[g]));
     end
@@ -126,7 +131,6 @@ module ternary_mul (
     // Control reset cancels an in-flight chunk before these payloads are used.
     always_ff @(posedge clk) begin
         if (rst_n && state == REDUCE_GROUPS) begin
-            for (int g = 0; g < 4; g = g + 1) group_sum_q[g] <= group_sum[g];
             reserved_weight_q <= reserved_weight;
         end
         if (rst_n && state == REDUCE_TOTAL) total_sum_q <= total_sum;

@@ -17,8 +17,6 @@ package llm_pkg;
         llm_extend56 = {{8{x[55]}}, x};
     endfunction
 
-    `include "llm_exp_lut.svh"
-    `include "llm_gumbel_lut.svh"
     function automatic logic [31:0] llm_random_next(input logic [31:0] previous);
         logic [31:0] x;
         begin
@@ -28,3 +26,6 @@ package llm_pkg;
         end
     endfunction
 endpackage
+
+`include "llm_exp_lut.svh"
+`include "llm_gumbel_lut.svh"

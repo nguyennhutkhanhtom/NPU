@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — gọi từ rowwise_op.
 
-**Source:** [sigmoid.sv](<../../../Verilog%20Source%20code/sigmoid.sv>). **Số dòng:** 106. **SHA-256:** `d00693c9bf91ee834e49d75e276bc4fdca8af3b594fcf4b20a98a033c7b600a7`.
+**Source:** [sigmoid.sv](<../../../Verilog%20Source%20code/sigmoid.sv>). **Số dòng:** 106. **SHA-256:** `d85cdc54ba8843c4e8aa99d4d14eb8b72edf38966aa6c09d68abd537e329fce2`.
 
 ## Khối này làm gì?
 
@@ -62,6 +62,7 @@ Các đoạn dưới đây bao phủ nguyên văn toàn bộ source hiện tại
 
 <!-- source-range:1:34 -->
 ```systemverilog
+`include "sigmoid_lut.svh"
 module sigmoid (
     input logic clk, rst_n, start,
     input logic signed [15:0] x_raw,
@@ -71,7 +72,6 @@ module sigmoid (
 );
     import npu_pkg::*;
     // Generated together with sigmoid_257.mem; default ROM is independent of CWD.
-`include "sigmoid_lut.svh"
     typedef enum logic [2:0] {IDLE, READ0, READ1, SLOPE, MULTIPLY, ADD, ROUND} state_t;
     state_t state;
     logic [8:0] index_q, index_next;
@@ -95,7 +95,7 @@ module sigmoid (
     // ASIC synthesis sees a constant case table, never an initialized RAM.
     assign rom_address = (state == READ1 && index_q != 9'h100) ?
     index_q + 9'h001 : index_q;
-    assign rom_data = sigmoid_sample(int'(rom_address));
+    sigmoid_sample u_lookup(.index(rom_address), .value(rom_data));
 ```
 
 **Cách hoạt động.** `sigmoid_sample` từ include chứa 257 hằng U16/F15. Selector chọn `index_q` ở READ0 và `index_q+1` ở READ1, trừ endpoint 0x100 dùng lại cùng mẫu. Một lookup tổ hợp dùng chung cho cả hai sample registers. Không cần parameter đường dẫn file hoặc initialize array.

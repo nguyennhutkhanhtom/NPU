@@ -84,6 +84,7 @@ module pipelined_word_ram #(
         logic [WIDTH - 1:0] selected;
         always_comb begin
             selected = 0;
+            // Four static mux inputs per group; local bounded reduction.
             for (int member = 0; member < 4; member = member + 1)
                 if (group_id * 4 + member < TILES)
                     selected = selected | (tile_data[group_id * 4 + member] &
@@ -97,11 +98,13 @@ module pipelined_word_ram #(
         assign rd_valid = read_valid_q[2];
     end else begin : g_final_response
         logic [WIDTH - 1:0] selected;
-        always_comb begin
-            selected = 0;
-            for (int index = 0; index < GROUPS; index = index + 1)
-                selected = selected | group_data_q[index];
+        wire [WIDTH - 1:0] response_mux [0:GROUPS];
+        genvar response_group;
+        assign response_mux[0] = '0;
+        for (response_group = 0; response_group < GROUPS; response_group = response_group + 1) begin : g_mux
+            assign response_mux[response_group + 1] = response_mux[response_group] | group_data_q[response_group];
         end
+        assign selected = response_mux[GROUPS];
         always_ff @(posedge clk)
             if (rst_n && read_valid_q[2]) rd_data <= selected;
         assign rd_valid = read_valid_q[3];

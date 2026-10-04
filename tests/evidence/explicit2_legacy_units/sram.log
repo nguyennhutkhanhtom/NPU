@@ -1,0 +1,13 @@
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\tests\sim\sram.log tests/sim/work.tb_sram -do "run -all; quit -f" 
+# Start time: 13:17:28 on Oct 04,2026
+# Loading sv_std.std
+# Loading tests/sim/work.tb_sram
+# Loading tests/sim/work.sram_256_wrapper
+# Loading tests/sim/work.banked_word_ram
+# Loading tests/sim/work.sram_word_tile
+# run -all
+# SRAM_PASS checks=47
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv(694)
+#    Time: 1321 ns  Iteration: 0  Instance: /tb_sram
+# End time: 13:17:30 on Oct 04,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 0

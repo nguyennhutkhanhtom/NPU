@@ -1,0 +1,5 @@
+{
+  "sha256": "3998b8a7dcf36d810c1ead02058c17ceb7e06b7623a47f5a80c3a01fcac0e74f",
+  "members": 38,
+  "provenance": "Original snapshot recovered byte-exact from logic6 source ZIP. Workspace lost two unused legacy assets while run was in progress; original runner rejected final source-set mismatch. Historical result only, cannot gate current workspace."
+}

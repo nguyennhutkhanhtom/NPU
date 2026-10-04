@@ -1,0 +1,60 @@
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+Start time: 01:14:30 on Oct 01,2026
+vlog -sv -svinputport=var -work tests/sim/simulation-work "+incdir+D:\2151097_Nguyen Nhut Khanh\Verilog Source code" -f D:\2151097_Nguyen Nhut Khanh\tests\sim\sources.f -l D:\2151097_Nguyen Nhut Khanh\tests\sim\Simulation-compile.log 
+-- Compiling package npu_pkg
+-- Compiling module acc_mul
+-- Compiling module addsub
+-- Importing package npu_pkg
+-- Compiling module ctrl_unit
+-- Compiling module de_reg
+-- Compiling module descriptor_file
+-- Compiling module div
+-- Compiling module em_reg
+-- Compiling module exp_row
+-- Compiling module fd_reg
+-- Compiling module hazard_detect
+-- Compiling module ins_mem
+-- Compiling module matmul_wrap
+-- Compiling module matmulfree
+-- Compiling module mem_burst
+-- Compiling module mem_mapping
+-- Compiling module mul
+-- Compiling module mw_reg
+-- Compiling module norm_dispatch
+-- Compiling module isqrt_u64
+-- Compiling module norm
+-- Compiling module PC
+-- Compiling module postscale
+-- Compiling module register
+-- Compiling module rowwise_dispatch
+-- Compiling module rowwise_op
+-- Compiling module scale_compose
+-- Compiling module sigmoid
+-- Compiling module sram_256_wrapper
+-- Compiling module ternary_mul
+-- Compiling module tb_host
+-- Compiling module tb_scalar
+-- Compiling module tb_sigmoid
+-- Compiling module tb_sram
+-- Compiling module tb_acc_case
+-- Compiling module tb_arithmetic
+-- Compiling module tb_imem
+
+Top level modules:
+	ctrl_unit
+	de_reg
+	em_reg
+	exp_row
+	fd_reg
+	hazard_detect
+	matmul_wrap
+	mem_burst
+	mw_reg
+	tb_host
+	tb_scalar
+	tb_sigmoid
+	tb_sram
+	tb_arithmetic
+	tb_imem
+End time: 01:14:30 on Oct 01,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0

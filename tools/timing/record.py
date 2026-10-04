@@ -235,6 +235,18 @@ def main() -> None:
                 "archive_bytes": len(normalized),
             }
     metrics = report_metrics(output, revision)
+    timing_pass = (
+        metrics["worst_restricted_fmax_mhz"] >= 100
+        and len(metrics["corners"]) == 4
+        and all(set(corner["clocks"]) == {"clk"}
+                and all(corner["clocks"]["clk"].get(kind, {}).get("slack_ns", -1) >= 0
+                        and corner["clocks"]["clk"].get(kind, {}).get("tns_ns", -1) == 0
+                        for kind in ("setup", "hold", "recovery", "removal", "pulse"))
+                for corner in metrics["corners"].values())
+        and all(value["setup"] == 0 and value["hold"] == 0 for value in metrics["unconstrained"].values())
+        and all(stage["errors"] == 0 and not any(d["id"] == 332148 for d in stage["reported_diagnostics"])
+                for stage in metrics["stage_counts"].values())
+    )
     match = re.search(r"^Quartus Prime Version\s*:\s*(.+)$", (output / f"{revision}.fit.summary").read_text(), re.MULTILINE)
     settings = {}
     qsf = project.with_suffix(".qsf").read_text(encoding="utf-8-sig")
@@ -257,9 +269,11 @@ def main() -> None:
         "commands_sha256": sha256((output / "commands.json").read_bytes()) if (output / "commands.json").is_file() else None,
         "normalization": "CRLF -> LF only", "text_reports": normalized_files,
         "metrics": metrics,
+        "timing_100mhz_status": "PASS" if timing_pass else "FAIL",
         "scope": "Post-fit FPGA timing for the recorded device, constraints and inputs; not ASIC or board signoff",
     })
-    print(f"TIMING_EVIDENCE_PASS: Fmax={metrics['worst_fmax_mhz']:.2f} MHz, setup={metrics['worst_setup_slack_ns']:.3f} ns")
+    print(f"TIMING_EVIDENCE_RECORDED: Fmax={metrics['worst_fmax_mhz']:.2f} MHz, setup={metrics['worst_setup_slack_ns']:.3f} ns")
+    print("TIMING_100MHZ_" + ("PASS" if timing_pass else "FAIL"))
 
 
 if __name__ == "__main__":

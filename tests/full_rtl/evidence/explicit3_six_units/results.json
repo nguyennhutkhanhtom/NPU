@@ -1,0 +1,151 @@
+{
+  "status": "SIX_GROUPS_PASS_GRAPH_RUNNING",
+  "scope": "Exact current source and explicit RTL refactor and unsigned address contract, not a trained application",
+  "rtl_sources": {
+    "acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
+    "banked_word_ram.sv": "bb7a3bb83e0aef84c030403bcd675e4853f190ea79d9851ad742a5a0d02d2409",
+    "descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+    "div.sv": "ddb1191f9879b7d3643d82a544ea14c30e7df999a3af5d913f354259363aa228",
+    "ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+    "llm_bank_ram.sv": "c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb",
+    "llm_exp_lut.svh": "7aafb64bcea808bcb74387c174c808784433bb941f2e9e2f815bcbeb9b1a5c6e",
+    "llm_gumbel_lut.svh": "870d129c9722a00efb733f0a6fbcad493e069447877de57a123db9d9b4adbec8",
+    "llm_math.sv": "6d65c6134ca7c81dafdca8dbd5e0ee5a0349cb0d9276466017efd0a8f5e07fc8",
+    "llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
+    "llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
+    "llm_soc.sv": "b57f1f0d7185f57c29f30dea319ef7861f7ad2d47bff03e07a5afb12e25d2e31",
+    "logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
+    "matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
+    "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+    "mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+    "mul.sv": "fdca97fe654f877cd33e7eb934d3869a6e754bd9a4d9d128f228d9c17add646e",
+    "norm.sv": "045a18b3d7152a114705cf85f87396eb1d080193dbb867b6791f37e278f17f36",
+    "norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+    "npu_pkg.sv": "18385ff77706c505eb7c947c5b1f056b5d6230e6971a1cc09a4d823c27a7bcfd",
+    "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+    "pipelined_word_ram.sv": "0e82266f6da5f31bd2612e4696778f9560915020f6a5a3b498dfd4acd8b6e07a",
+    "postscale.sv": "b9cb61b7014c037c408340a8042b4c0862ed46997754d9b4dee40056835e7160",
+    "quartus_word_ram.sv": "c38b8642bfb143f71bf89902b767844086f0894a16db11ebc0abe98131709a0b",
+    "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+    "rowwise_dispatch.sv": "e0f7cb0088af29afe233478a72f4ef9aab0676f2a24d56903b7f35261a6b3543",
+    "rowwise_op.sv": "ce49a16c12069b0560986f7b8cf5bd0a187ce1d409f0ce0e69515bff11e1a559",
+    "scale_compose.sv": "12c6b58896e3f71367ba1149f6f23784aa0389500aeaf3b66deb2abd198aa55b",
+    "sigmoid.sv": "d85cdc54ba8843c4e8aa99d4d14eb8b72edf38966aa6c09d68abd537e329fce2",
+    "sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
+    "sigmoid_lut.svh": "c72383f3cd3c3dadf7e8579d7d12edca2cc2d6555735dd1e9d4def6f561b73ef",
+    "sram_256_wrapper.sv": "7c17702a2fa1c9a2baed950aff5e687f2981a07206ea3582e05659c6690e968a",
+    "ternary_mul.sv": "71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f"
+  },
+  "test_sources": {
+    "run_units.ps1": "28672093a173db4ea1e4e8166bc9cdbc8853151cba9063463fbf7990f54cd345",
+    "tb_graph.sv": "f3935e1049990dabcb066b7260b3363c0cce57de9567f0501c7904b51a9d26e9",
+    "tb_math.sv": "9a7befb14c6a8392952a14ea5ed858206f5287ff95eedd96716d7af9a4252ea4",
+    "tb_memory_ip.sv": "698fbbcb7199006cc49030d17a3b8d4b282d646e7ba736568bb63922dd9b149f",
+    "tb_operators.sv": "0b8fc71c9e2786fd371935c68aed2b310942cd8ee2c576a9b2a288a1057daf5c",
+    "tb_protocol.sv": "ec1faaff370c195f2a216860a395e0b76e757f90ca654b893d8543a00cea578b",
+    "tb_ram.sv": "4d40fea39efbf26f67db28c6ad4fde34f194603f57f4ee2f2fda6e0fc93ed0b1",
+    "tb_selection.sv": "cb75edc6865b0aa51aaee6c53f419c352b68147e8b950b40dd4caeb86c05dcc3"
+  },
+  "tests": {
+    "tb_quartus_memory": "# QUARTUS_MEMORY_PASS banks=4 checks=158 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained",
+    "tb_llm_math": "# LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128",
+    "tb_llm_ram": "# LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3",
+    "tb_llm_protocol": "# LLM_PROTOCOL_PASS transactions=29 cancellations=12 bounds=768KiB parameter_read_pipeline=5",
+    "tb_llm_selection": "# SELECT_EDGE_PASS checks=14 minimum_score_ties=2 excluded=5 stable_ties=2",
+    "tb_llm_operators": "# LLM_OPERATORS_PASS operators=17 checks=3460 scalar_cases=128 clamp_cases=128 reference=S128 fixtures=synthetic"
+  },
+  "evidence": {
+    "tb_quartus_memory": {
+      "log": "tests/full_rtl/evidence/explicit3_six_units/tb_quartus_memory.log",
+      "sha256": "9c8a70cdf67c6eea873539d0918540a7b705279c1e0e64119ea51023d6dc9048",
+      "design_units": {
+        "file": "tests/full_rtl/evidence/explicit3_six_units/explicit3_tb_quartus_memory_design_units.json",
+        "sha256": "1337dff4f2dd7cf0e370bb761ebbffdb3023c97aff2a39eac4541509911bf6d0"
+      }
+    },
+    "tb_llm_math": {
+      "log": "tests/full_rtl/evidence/explicit3_six_units/tb_llm_math.log",
+      "sha256": "36f6ee7c635397f90e7193ead2478b8d04a531cde6306c50f30aec1031cf85d5",
+      "design_units": {
+        "file": "tests/full_rtl/evidence/explicit3_six_units/explicit3_tb_llm_math_design_units.json",
+        "sha256": "f23299a47e22fda45306ee99f240c350bf8034728c5686b5a2d1ba80d61d2413"
+      }
+    },
+    "tb_llm_ram": {
+      "log": "tests/full_rtl/evidence/explicit3_six_units/tb_llm_ram.log",
+      "sha256": "a76a341e9884884de0100622b735371ad20f9606ca256de94fce92e03a851529",
+      "design_units": {
+        "file": "tests/full_rtl/evidence/explicit3_six_units/explicit3_tb_llm_ram_design_units.json",
+        "sha256": "047c6c953ddf96d008ec1b489cde1d05a51de1f42b6eed2913a5e1b1e216fc4c"
+      }
+    },
+    "tb_llm_protocol": {
+      "log": "tests/full_rtl/evidence/explicit3_six_units/tb_llm_protocol.log",
+      "sha256": "5a2c013f31c121e5d09ba71ac951842ca60c129c9222a7b590f0b50c358ce54a",
+      "design_units": {
+        "file": "tests/full_rtl/evidence/explicit3_six_units/explicit3_tb_llm_protocol_design_units.json",
+        "sha256": "8222610377d6a6123a4efdcd39cdac49bd0aec77176e9d23224b24dd7fd231df"
+      }
+    },
+    "tb_llm_selection": {
+      "log": "tests/full_rtl/evidence/explicit3_six_units/tb_llm_selection.log",
+      "sha256": "4864a527e48b3270b2a2ebf3e4ea79ec2226860850d4022e1a029aade4470516",
+      "design_units": {
+        "file": "tests/full_rtl/evidence/explicit3_six_units/explicit3_tb_llm_selection_design_units.json",
+        "sha256": "e670b4137ee69d9831ef18fec2e1f6fbd65817ef9e976e6e5db0694d2e79e819"
+      }
+    },
+    "tb_llm_operators": {
+      "log": "tests/full_rtl/evidence/explicit3_six_units/tb_llm_operators.log",
+      "sha256": "4dc464eb3eab6bfe95d6c69f4a0ff6c1619c2fb8c1c7a9952b110a0e8d91f1f1",
+      "design_units": {
+        "file": "tests/full_rtl/evidence/explicit3_six_units/explicit3_tb_llm_operators_design_units.json",
+        "sha256": "adcc163714b14aabf7c1bc71b2d63fa1aaf73292c53ad61db3d6cdf1532e56d8"
+      }
+    }
+  },
+  "simulator": "QuestaAlteraStarter2025.2",
+  "model": {
+    "scope": "Actual RAM simulation model only; no application execution",
+    "quartus_version": "25.1std.0 Build 1129 10/21/2025 SC Lite Edition",
+    "source": "C:\\altera_lite\\25.1std\\quartus\\eda\\sim_lib\\altera_mf.v",
+    "source_sha256": "2ae09f97f9606626da216e9eb91007beec3ebbe023c5b9415be472417fe49d5e",
+    "library": "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver",
+    "compiler_sha256": {
+      "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlib.exe": "cdf08c2c3665d020ac32a1a56da88687cc7b03e6d8ca32149243f6d07b707350",
+      "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlog.exe": "f3419a63d42323f11a61627a690dfc4f4877f7fa892a13cedffb4ddff83bc5d5"
+    },
+    "commands": [
+      [
+        "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlib.exe",
+        "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver"
+      ],
+      [
+        "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlog.exe",
+        "-work",
+        "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver",
+        "C:\\altera_lite\\25.1std\\quartus\\eda\\sim_lib\\altera_mf.v",
+        "-l",
+        "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\compile.log"
+      ]
+    ],
+    "compile_sha256": "20d08364edcfe5c0297826619a84151b7a764912a61d0d5001dbfe92226f0177",
+    "objects_sha256": {
+      "_info": "afeb4994ce35d5dbb484740a634db23c79969c1878b8c2ad7cde9f37d11c4cab",
+      "_lib.qdb": "ee8b849c2f3344d8a4e348eb72d3f25a2605c1f0b5c4b7944e4489da0354ffaa",
+      "_lib1_0.qdb": "38d68ede54d428b8ef95325610c8feaf8b9337aa69e7f73cb148f18b2e6137d7",
+      "_lib1_0.qpg": "85212b314a082c54f1f714a3baea253ca06b84321649e9f8e2521ce406af9bce",
+      "_lib1_0.qtl": "261fab8c6e922696d654402aaa001a92c9d3fc15376cf0166f37966172ebde50",
+      "_vmake": "d287f8a335408d3f94fea840ad628f2cbed3775952c49131049ef8f60fd337c9"
+    }
+  },
+  "runner_sources": {
+    "tests/full_rtl/memory_model.py": "501824c2466a31956c120cd574da1b9dbb3d7cdce43893023c499a9fffdf366e"
+  },
+  "compile_sha256": "f527bd5174d35ab919928444aff4a7ff6e73e789f1a32608fc8c02dc0aa6863e",
+  "initial_snapshot_sha256": "0ed0c9cdccbcfce42e956ddcab7075d390dcdc23c70ccb9e4ed87f12f024c64b",
+  "model_manifest_sha256": "173ca62a91b62feb03eee8a7a769065d6e021d0852b789196661ba555be4c078",
+  "graph": "RUNNING: same source/tests, actual RAM25.1 binding; no PASS claimed",
+  "runtime_warnings": 0,
+  "fixture_changes": "Same expected bit values/checks. Signed minima expressed as exact bit vectors; RAM seeding via leaf write ports; one-time scalar/control deposit/force-release. RTL always_ff single-writer preserved; no suppressed errors."
+}

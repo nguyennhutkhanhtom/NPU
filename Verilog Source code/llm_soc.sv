@@ -242,12 +242,15 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     logic [23:0] coefficient_q;
     logic [255:0] parameter_word_q, weights_q;
     logic reserved_weight;
-    always_comb begin
-        reserved_weight = 0;
-        for (int lane_id = 0; lane_id < 32; lane_id = lane_id + 1)
-            reserved_weight = reserved_weight |
-                (weights_q[(int'(chunk_q[1:0]) << 6) + lane_id * 2 +: 2] == 2'b10);
+    wire [31:0] reserved_weight_lane;
+    genvar weight_lane;
+    generate
+    for (weight_lane = 0; weight_lane < 32; weight_lane = weight_lane + 1) begin : g_weight_check
+        assign reserved_weight_lane[weight_lane] =
+            weights_q[(int'(chunk_q[1:0]) << 6) + weight_lane * 2 +: 2] == 2'b10;
     end
+    endgenerate
+    assign reserved_weight = |reserved_weight_lane;
     logic [511:0] table_q;
     logic [767:0] vector_q, second_q, write_vector_q, query_q;
     logic [6:0] write_vector_addr_q;
@@ -285,17 +288,31 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     wire [36:0] exp_interpolation_comb;
     logic_mul #(.A_W(25), .B_W(12), .OUT_W(37), .SIGNED_A(0), .SIGNED_B(0)) u_exp_mul
         (.a(exp_delta_q), .b(exp_difference_q[11:0]), .product(exp_interpolation_comb));
+    wire signed [23:0] gumbel_value;
     wire [32:0] noise_product_comb;
     logic_mul #(.A_W(24), .B_W(8), .OUT_W(33), .SIGNED_A(1), .SIGNED_B(0)) u_noise_mul
-        (.a(llm_gumbel_sample(random_q[31:24])), .b(temperature_q), .product(noise_product_comb));
+        (.a(gumbel_value), .b(temperature_q), .product(noise_product_comb));
+
+    wire [24:0] exp_value_hi, exp_value_lo;
+    llm_gumbel_sample u_gumbel_lookup(.index(random_q[31:24]), .value(gumbel_value));
+    llm_exp_sample u_exp_hi(.index({1'b0, exp_difference_q[19:12]}), .value(exp_value_hi));
+    llm_exp_sample u_exp_lo(.index({1'b0, exp_difference_q[19:12]} + 9'd1), .value(exp_value_lo));
 
     logic divide_negative_q;
 
-    function automatic logic [6:0] op_index(input op_t value);
-        op_index = 0;
-        for (int index = 0; index < OP_COUNT; index = index + 1)
-            op_index = op_index | (7'(index) & {7{value[index]}});
-    endfunction
+    wire [6:0] op_debug_index;
+    wire [OP_COUNT:0] op_debug_prefix [0:6];
+    genvar debug_bit, debug_state;
+    generate
+    for (debug_bit = 0; debug_bit < 7; debug_bit = debug_bit + 1) begin : g_debug_bit
+        assign op_debug_prefix[debug_bit][0] = 1'b0;
+        for (debug_state = 0; debug_state < OP_COUNT; debug_state = debug_state + 1) begin : g_state
+            assign op_debug_prefix[debug_bit][debug_state + 1] =
+                op_debug_prefix[debug_bit][debug_state] | (op[debug_state] && ((debug_state >> debug_bit) & 1));
+        end
+        assign op_debug_index[debug_bit] = op_debug_prefix[debug_bit][OP_COUNT];
+    end
+    endgenerate
 
     // Registered host transactions. Hold address/data until ready, then deassert
     // host_en for at least one clock before issuing another transaction.
@@ -448,29 +465,10 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
         if (!rst_n) begin running <= 0; ready <= 1; pc_debug <= 0; instr_debug <= 0; end
         else begin
             running <= core_running; ready <= !core_running;
-            pc_debug <= {2'b0, position_q}; instr_debug <= {1'b0, graph, op_index(op)};
+            pc_debug <= {2'b0, position_q}; instr_debug <= {1'b0, graph, op_debug_index};
         end
     end
 
-    // Request helpers set registered addresses before the corresponding enable.
-    task automatic read_parameter(input logic [14:0] address, input op_t next_op);
-        p_address_q <= address; return_p <= next_op; op <= O_P_REQ;
-    endtask
-    task automatic read_vector(input logic [2:0] buffer_id, input logic [3:0] row_id,
-                               input op_t next_op);
-        v_address_q <= 7'(((int'(buffer_id) << 3) + (int'(buffer_id) << 2)) + row_id); return_v <= next_op; op <= O_V_REQ;
-    endtask
-    task automatic read_cache(input logic [11:0] address, input op_t next_op);
-        k_address_q <= address; return_k <= next_op; op <= O_K_REQ;
-    endtask
-    task automatic run_math(input op_t next_op);
-        return_m <= next_op; op <= O_M_START;
-    endtask
-    task automatic write_vector(input logic [2:0] buffer_id, input logic [3:0] row_id,
-                                input logic [31:0] mask, input op_t next_op);
-        write_vector_addr_q <= 7'(((int'(buffer_id) << 3) + (int'(buffer_id) << 2)) + row_id);
-        write_vector_mask_q <= mask; return_w <= next_op; op <= O_WRITE;
-    endtask
     function automatic logic [14:0] matrix_meta(input logic [1:0] layer_id, input logic [2:0] matrix_id);
         matrix_meta = 15'(MATRIX_META_BASE + ((int'(layer_id) << 3) - int'(layer_id)) + matrix_id);
     endfunction
@@ -665,12 +663,18 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
         if (rst_n) begin
             if (op[O_K_WAIT_IDX] && k_valid) second_q <= k_data;
             else if (op[B_INPUT0_IDX]) second_q <= vector_q;
-            if (op[SG_GROUP_IDX])
-                for (int group_id = 0; group_id < 4; group_id = group_id + 1)
-                    sigmoid_pick_q[group_id] <= sigmoid_inputs_q[group_id * 8 + int'(lane_q[2:0])];
             if (op[SG_PICK_IDX]) sig_x_q <= sigmoid_pick_q[int'(lane_q[4:3])];
         end
     end
+
+    genvar sigmoid_group;
+    generate
+    for (sigmoid_group = 0; sigmoid_group < 4; sigmoid_group = sigmoid_group + 1) begin : g_sigmoid_pick
+        always_ff @(posedge clk)
+            if (rst_n && op[SG_GROUP_IDX])
+                sigmoid_pick_q[sigmoid_group] <= sigmoid_inputs_q[sigmoid_group * 8 + int'(lane_q[2:0])];
+    end
+    endgenerate
 
     // Payloads are assigned before their operation consumes them. Reset only
     // cancels the operation pipeline and clears architectural status.
@@ -683,34 +687,34 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                     row_q <= 0; chunk_q <= 0; head_q <= 0; time_q <= 0; lane_q <= 0;
                     source_q <= 1; destination_q <= 1; linear_acc_q <= 0;
                     case (graph)
-                        G_EMBED : read_parameter(15'(EMB_SCALE_BASE + (token_q >> 3)), E_SCALE);
+                        G_EMBED : begin p_address_q <= 15'(EMB_SCALE_BASE + (token_q >> 3)); return_p <= E_SCALE; op <= O_P_REQ; end
                         G_ANORM, G_MNORM, G_FNORM : begin
-                            square_sum_q <= 0; read_vector(0, 0, N_SQUARE);
+                            square_sum_q <= 0; begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(0)))); return_v <= N_SQUARE; op <= O_V_REQ; end
                         end
-                        G_Q : begin destination_q <= 2; read_parameter(matrix_meta(layer_q, 0), L_META); end
-                        G_K : begin destination_q <= 3; read_parameter(matrix_meta(layer_q, 1), L_META); end
-                        G_V : begin destination_q <= 4; read_parameter(matrix_meta(layer_q, 2), L_META); end
-                        G_O : begin source_q <= 5; read_parameter(matrix_meta(layer_q, 3), L_META); end
-                        G_GATE : begin destination_q <= 6; read_parameter(matrix_meta(layer_q, 4), L_META); end
-                        G_UP : begin destination_q <= 7; read_parameter(matrix_meta(layer_q, 5), L_META); end
-                        G_DOWN : begin source_q <= 6; read_parameter(matrix_meta(layer_q, 6), L_META); end
+                        G_Q : begin destination_q <= 2; begin p_address_q <= matrix_meta(layer_q, 0); return_p <= L_META; op <= O_P_REQ; end end
+                        G_K : begin destination_q <= 3; begin p_address_q <= matrix_meta(layer_q, 1); return_p <= L_META; op <= O_P_REQ; end end
+                        G_V : begin destination_q <= 4; begin p_address_q <= matrix_meta(layer_q, 2); return_p <= L_META; op <= O_P_REQ; end end
+                        G_O : begin source_q <= 5; begin p_address_q <= matrix_meta(layer_q, 3); return_p <= L_META; op <= O_P_REQ; end end
+                        G_GATE : begin destination_q <= 6; begin p_address_q <= matrix_meta(layer_q, 4); return_p <= L_META; op <= O_P_REQ; end end
+                        G_UP : begin destination_q <= 7; begin p_address_q <= matrix_meta(layer_q, 5); return_p <= L_META; op <= O_P_REQ; end end
+                        G_DOWN : begin source_q <= 6; begin p_address_q <= matrix_meta(layer_q, 6); return_p <= L_META; op <= O_P_REQ; end end
                         G_RQ, G_RK : begin
                             source_q <= graph == G_RQ ? 3'd2 : 3'd3;
-                            read_parameter(15'(ROPE_BASE + (int'(position_q) << 1)), R_TABLE0);
+                            begin p_address_q <= 15'(ROPE_BASE + (int'(position_q) << 1)); return_p <= R_TABLE0; op <= O_P_REQ; end
                         end
-                        G_CACHE : read_vector(3, 0, C_INPUT);
+                        G_CACHE : begin v_address_q <= 7'(((int'($unsigned(3'(3))) << 3) + (int'($unsigned(3'(3))) << 2)) + int'($unsigned(4'(0)))); return_v <= C_INPUT; op <= O_V_REQ; end
                         G_ATTENTION : begin
                             max_score_q <= 32'sh80000000; probability_sum_q <= 0;
-                            read_vector(2, 0, A_QUERY);
+                            begin v_address_q <= 7'(((int'($unsigned(3'(2))) << 3) + (int'($unsigned(3'(2))) << 2)) + int'($unsigned(4'(0)))); return_v <= A_QUERY; op <= O_V_REQ; end
                         end
-                        G_AADD, G_MADD : read_vector(0, 0, B_INPUT0);
-                        G_GMUL : begin source_q <= 6; read_vector(6, 0, B_INPUT0); end
-                        G_SILU : read_vector(6, 0, S_INPUT);
+                        G_AADD, G_MADD : begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(0)))); return_v <= B_INPUT0; op <= O_V_REQ; end
+                        G_GMUL : begin source_q <= 6; begin v_address_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(0)))); return_v <= B_INPUT0; op <= O_V_REQ; end end
+                        G_SILU : begin v_address_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(0)))); return_v <= S_INPUT; op <= O_V_REQ; end
                         G_HEAD : begin
                             vocabulary_row_q <= 0; best_score_q <= 32'sh80000000;
                             // Lowest eligible fallback also handles all-S32_MIN ties.
                             best_token_q <= generated_q >= min_new_q ? 12'd1 : 12'd3;
-                            read_parameter(15'(EMB_SCALE_BASE), H_SCALE);
+                            begin p_address_q <= 15'(EMB_SCALE_BASE); return_p <= H_SCALE; op <= O_P_REQ; end
                         end
                         default : ;
                     endcase
@@ -727,24 +731,24 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                 op[O_FINISH_IDX] : if (!v_write_busy && !k_write_busy) begin op_done <= 1; op <= O_IDLE; end
                 op[E_SCALE_IDX] : begin
                     coefficient_q <= parameter_word_q[(int'(token_q[2:0]) << 5) +: 24];
-                    read_parameter({1'b0, token_q, 2'b00}, E_DATA);
+                    begin p_address_q <= {1'b0, token_q, 2'b00}; return_p <= E_DATA; op <= O_P_REQ; end
                 end
                 op[E_DATA_IDX] : begin
-                    run_math(E_CALC);
+                    begin return_m <= E_CALC; op <= O_M_START; end
                 end
                 op[E_CALC_IDX] : op <= E_ROUND;
                 op[E_ROUND_IDX] : op <= E_CLAMP;
                 op[E_CLAMP_IDX] : begin
-                    write_vector(0, row_q, 32'hffffffff, E_PACK);
+                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= E_PACK; op <= O_WRITE; end
                 end
                 op[E_PACK_IDX] : if (row_q == 3) op <= O_FINISH;
-                    else begin row_q <= row_q + 1'b1; read_parameter(15'((int'(token_q) << 2) + row_q + 1), E_DATA); end
+                    else begin row_q <= row_q + 1'b1; begin p_address_q <= 15'((int'(token_q) << 2) + row_q + 1); return_p <= E_DATA; op <= O_P_REQ; end end
                 op[L_META_IDX] : begin
                     weight_row_q <= parameter_word_q[14:0];
                     matrix_chunks_q <= parameter_word_q[23:20]; // K/32; validated K is 128 or 384.
                     matrix_rows_q <= parameter_word_q[34:25];
                     coefficient_q <= parameter_word_q[58:35]; matrix_row_q <= 0;
-                    read_parameter(parameter_word_q[14:0], L_WEIGHT);
+                    begin p_address_q <= parameter_word_q[14:0]; return_p <= L_WEIGHT; op <= O_P_REQ; end
                     if (parameter_word_q[24:15] != (graph == G_DOWN ? 10'd384 : 10'd128) ||
                         parameter_word_q[34:25] != ((graph == G_GATE || graph == G_UP) ? 10'd384 : 10'd128) ||
                         parameter_word_q[58:35] == 0 || parameter_word_q[255:59] != 0 ||
@@ -754,19 +758,19 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                         op_fault_q <= 1; op <= O_FINISH;
                     end
                 end
-                op[L_WEIGHT_IDX] : begin weights_q <= parameter_word_q; read_vector(source_q, chunk_q, L_INPUT); end
+                op[L_WEIGHT_IDX] : begin weights_q <= parameter_word_q; begin v_address_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(chunk_q)))); return_v <= L_INPUT; op <= O_V_REQ; end end
                 op[L_INPUT_IDX] : begin
                     if (reserved_weight) begin op_fault_q <= 1; op <= O_FINISH; end
                     else op <= L_DECODE;
                 end
-                op[L_DECODE_IDX] : run_math(L_MAC);
+                op[L_DECODE_IDX] : begin return_m <= L_MAC; op <= O_M_START; end
                 op[L_MAC_IDX] : begin
                     linear_acc_q <= linear_acc_q + math_sum[38:0];
                     if (chunk_q + 1 >= matrix_chunks_q) op <= L_COEFF;
                     else begin
                         chunk_q <= chunk_q + 1'b1;
-                        if (chunk_q[1:0] == 3) read_parameter(weight_row_q + 15'((chunk_q + 1) >> 2), L_WEIGHT);
-                        else read_vector(source_q, chunk_q + 1'b1, L_INPUT);
+                        if (chunk_q[1:0] == 3) begin p_address_q <= weight_row_q + 15'((chunk_q + 1) >> 2); return_p <= L_WEIGHT; op <= O_P_REQ; end
+                        else begin v_address_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(chunk_q + 1'b1)))); return_v <= L_INPUT; op <= O_V_REQ; end
                     end
                 end
                 op[L_COEFF_IDX] : begin
@@ -794,7 +798,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                     if (scalar_clip_high_q[matrix_row_q[4:2]] || scalar_clip_low_q[matrix_row_q[4:2]]) overflow_out <= 1;
                 end
                 op[L_STORE_IDX] : begin
-                    write_vector(destination_q, matrix_row_q[8:5], 32'b1 << matrix_row_q[4:0], E_PACK);
+                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(destination_q))) << 3) + (int'($unsigned(3'(destination_q))) << 2)) + int'($unsigned(4'(matrix_row_q[8:5])))); write_vector_mask_q <= 32'b1 << matrix_row_q[4:0]; return_w <= E_PACK; op <= O_WRITE; end
                     // E_PACK is replaced here by the row-specific continuation.
                     return_w <= L_META; op <= O_WRITE;
                     if (matrix_row_q + 1 >= matrix_rows_q) return_w <= O_FINISH;
@@ -807,13 +811,13 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                     end
                 end
                 op[N_SQUARE_IDX] : begin
-                    run_math(N_ACC);
+                    begin return_m <= N_ACC; op <= O_M_START; end
                 end
                 op[N_ACC_IDX] : begin
                     square_sum_q <= square_sum_q + 64'(math_sum);
                     if (row_q == 3) begin
                         root_input_q <= ((square_sum_q + 64'(math_sum)) >> 7) + 64'd42950; op <= N_ROOT;
-                    end else begin row_q <= row_q + 1'b1; read_vector(0, row_q + 1'b1, N_SQUARE); end
+                    end else begin row_q <= row_q + 1'b1; begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(row_q + 1'b1)))); return_v <= N_SQUARE; op <= O_V_REQ; end end
                 end
                 op[N_ROOT_IDX] : op <= N_ROOT_WAIT;
                 op[N_ROOT_WAIT_IDX] : if (root_done) begin
@@ -822,51 +826,51 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                 op[N_DIV_IDX] : op <= N_DIV_WAIT;
                 op[N_DIV_WAIT_IDX] : if (div_done) begin
                     reciprocal_q <= div_quotient[24:0] + {24'h0, divide_round_up}; row_q <= 0;
-                    read_parameter(gain_address(graph, layer_q, 0), N_GAIN0);
+                    begin p_address_q <= gain_address(graph, layer_q, 0); return_p <= N_GAIN0; op <= O_P_REQ; end
                 end
-                op[N_GAIN0_IDX] : begin table_q[255:0] <= parameter_word_q; read_parameter(p_address_q + 1'b1, N_GAIN1); end
-                op[N_GAIN1_IDX] : begin table_q[511:256] <= parameter_word_q; read_vector(0, row_q, N_INPUT); end
+                op[N_GAIN0_IDX] : begin table_q[255:0] <= parameter_word_q; begin p_address_q <= p_address_q + 1'b1; return_p <= N_GAIN1; op <= O_P_REQ; end end
+                op[N_GAIN1_IDX] : begin table_q[511:256] <= parameter_word_q; begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(row_q)))); return_v <= N_INPUT; op <= O_V_REQ; end end
                 op[N_INPUT_IDX] : begin
-                    run_math(N_RECIP);
+                    begin return_m <= N_RECIP; op <= O_M_START; end
                 end
                 op[N_RECIP_IDX] : op <= NR_ROUND;
                 op[NR_ROUND_IDX] : op <= NR_CLAMP;
                 op[NR_CLAMP_IDX] : begin
-                    run_math(N_GAIN);
+                    begin return_m <= N_GAIN; op <= O_M_START; end
                 end
                 op[N_GAIN_IDX] : op <= N_ROUND;
                 op[N_ROUND_IDX] : op <= N_CLAMP;
                 op[N_CLAMP_IDX] : begin
-                    write_vector(1, row_q, 32'hffffffff, N_PACK);
+                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(1))) << 3) + (int'($unsigned(3'(1))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= N_PACK; op <= O_WRITE; end
                 end
                 op[N_PACK_IDX] : if (row_q == 3) op <= O_FINISH;
-                    else begin row_q <= row_q + 1'b1; read_parameter(gain_address(graph, layer_q, row_q + 1'b1), N_GAIN0); end
-                op[R_TABLE0_IDX] : begin table_q[255:0] <= parameter_word_q; read_parameter(p_address_q + 1'b1, R_TABLE1); end
-                op[R_TABLE1_IDX] : begin table_q[511:256] <= parameter_word_q; read_vector(source_q, row_q, R_INPUT); end
+                    else begin row_q <= row_q + 1'b1; begin p_address_q <= gain_address(graph, layer_q, row_q + 1'b1); return_p <= N_GAIN0; op <= O_P_REQ; end end
+                op[R_TABLE0_IDX] : begin table_q[255:0] <= parameter_word_q; begin p_address_q <= p_address_q + 1'b1; return_p <= R_TABLE1; op <= O_P_REQ; end end
+                op[R_TABLE1_IDX] : begin table_q[511:256] <= parameter_word_q; begin v_address_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(row_q)))); return_v <= R_INPUT; op <= O_V_REQ; end end
                 op[R_INPUT_IDX] : begin
-                    run_math(R_COS);
+                    begin return_m <= R_COS; op <= O_M_START; end
                 end
                 op[R_COS_IDX] : begin
-                    run_math(R_SIN);
+                    begin return_m <= R_SIN; op <= O_M_START; end
                 end
                 op[R_SIN_IDX] : op <= R_ROUND;
                 op[R_ROUND_IDX] : op <= R_CLAMP;
                 op[R_CLAMP_IDX] : begin
-                    write_vector(source_q, row_q, 32'hffffffff, R_PACK);
+                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= R_PACK; op <= O_WRITE; end
                 end
                 op[R_PACK_IDX] : if (row_q == 3) op <= O_FINISH;
-                    else begin row_q <= row_q + 1'b1; read_vector(source_q, row_q + 1'b1, R_INPUT); end
+                    else begin row_q <= row_q + 1'b1; begin v_address_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(row_q + 1'b1)))); return_v <= R_INPUT; op <= O_V_REQ; end end
                 op[C_INPUT_IDX] : begin
                     k_write_address_q <= {layer_q, position_q, row_q[2:0]}; op <= C_STORE;
                 end
                 op[C_STORE_IDX] : if (row_q == 7) op <= O_FINISH;
                     else begin
                         row_q <= row_q + 1'b1;
-                        read_vector(row_q < 3 ? 3'd3 : 3'd4, 4'((row_q + 1) & 3), C_INPUT);
+                        begin v_address_q <= 7'(((int'($unsigned(3'(row_q < 3 ? 3'd3 : 3'd4))) << 3) + (int'($unsigned(3'(row_q < 3 ? 3'd3 : 3'd4))) << 2)) + int'($unsigned(4'(4'((row_q + 1) & 3))))); return_v <= C_INPUT; op <= O_V_REQ; end
                     end
-                op[A_QUERY_IDX] : begin query_q <= vector_q; read_cache({layer_q, time_q, 1'b0, head_q}, A_KEY); end
+                op[A_QUERY_IDX] : begin query_q <= vector_q; begin k_address_q <= {layer_q, time_q, 1'b0, head_q}; return_k <= A_KEY; op <= O_K_REQ; end end
                 op[A_KEY_IDX] : begin
-                    run_math(A_DOT);
+                    begin return_m <= A_DOT; op <= O_M_START; end
                 end
                 op[A_DOT_IDX] : begin scalar_round_q <= rne_shift64(64'(math_sum), 6'd16); op <= A_SCALE; end
                 op[A_SCALE_IDX] : begin
@@ -880,7 +884,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                     score_memory[time_q] <= sat_s32(scalar_round_q);
                     if (sat_s32(scalar_round_q) > max_score_q) max_score_q <= sat_s32(scalar_round_q);
                     if (time_q == position_q) begin time_q <= 0; op <= A_EXP_READ; end
-                    else begin time_q <= time_q + 1'b1; read_cache({layer_q, 7'(time_q + 1'b1), 1'b0, head_q}, A_KEY); end
+                    else begin time_q <= time_q + 1'b1; begin k_address_q <= {layer_q, 7'(time_q + 1'b1), 1'b0, head_q}; return_k <= A_KEY; op <= O_K_REQ; end end
                 end
                 op[A_EXP_READ_IDX] : begin
                     exp_difference_q <= 33'(max_score_q) - 33'(score_memory[time_q]); op <= A_EXP_PREP;
@@ -888,8 +892,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                 op[A_EXP_PREP_IDX] : begin
                     if (exp_difference_q >= 33'd1048576) begin exp_hi_q <= 0; exp_lo_q <= 0; end
                     else begin
-                        exp_hi_q <= llm_exp_sample({1'b0, exp_difference_q[19:12]});
-                        exp_lo_q <= llm_exp_sample({1'b0, exp_difference_q[19:12]} + 1'b1);
+                        exp_hi_q <= exp_value_hi;
+                        exp_lo_q <= exp_value_lo;
                     end
                     op <= A_EXP_DELTA;
                 end
@@ -902,16 +906,16 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                     probability_sum_q <= probability_sum_q + exp_hi_q - 32'((exp_interpolation_q + 37'd2048) >> 12);
                     if (time_q == position_q) begin
                         time_q <= 0;
-                        read_cache({layer_q, 7'd0, 1'b1, head_q}, A_VALUE);
+                        begin k_address_q <= {layer_q, 7'd0, 1'b1, head_q}; return_k <= A_VALUE; op <= O_K_REQ; end
                     end else begin time_q <= time_q + 1'b1; op <= A_EXP_READ; end
                 end
                 op[A_VALUE_IDX] : begin probability_q <= probability_memory[time_q]; op <= A_WEIGHT; end
                 op[A_WEIGHT_IDX] : begin
-                    run_math(A_ACC);
+                    begin return_m <= A_ACC; op <= O_M_START; end
                 end
                 op[A_ACC_IDX] : begin
                     if (time_q == position_q) begin lane_q <= 0; op <= A_LANE; end
-                    else begin time_q <= time_q + 1'b1; read_cache({layer_q, 7'(time_q + 1'b1), 1'b1, head_q}, A_VALUE); end
+                    else begin time_q <= time_q + 1'b1; begin k_address_q <= {layer_q, 7'(time_q + 1'b1), 1'b1, head_q}; return_k <= A_VALUE; op <= O_K_REQ; end end
                 end
                 op[A_LANE_IDX] : begin
                     divide_negative_q <= attention_acc_q[lane_q][55];
@@ -928,7 +932,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                 op[A_FLAGS_IDX] : op <= A_SAT;
                 op[A_SAT_IDX] : op <= A_PACK;
                 op[A_PACK_IDX] : begin
-                    if (lane_q == 31) write_vector(5, {2'b0, head_q}, 32'hffffffff, A_QUERY);
+                    if (lane_q == 31) begin write_vector_addr_q <= 7'(((int'($unsigned(3'(5))) << 3) + (int'($unsigned(3'(5))) << 2)) + int'($unsigned(4'({2'b0, head_q})))); write_vector_mask_q <= 32'hffffffff; return_w <= A_QUERY; op <= O_WRITE; end
                     else begin lane_q <= lane_q + 1'b1; op <= A_LANE; end
                     if (lane_q == 31) begin
                         if (head_q == 3) return_w <= O_FINISH;
@@ -940,21 +944,21 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                     end
                 end
                 op[B_INPUT0_IDX] : begin
-                    read_vector(graph == G_GMUL ? 3'd7 : 3'd1, row_q, B_INPUT1);
+                    begin v_address_q <= 7'(((int'($unsigned(3'(graph == G_GMUL ? 3'd7 : 3'd1))) << 3) + (int'($unsigned(3'(graph == G_GMUL ? 3'd7 : 3'd1))) << 2)) + int'($unsigned(4'(row_q)))); return_v <= B_INPUT1; op <= O_V_REQ; end
                 end
                 op[B_INPUT1_IDX] : begin
                     if (graph == G_GMUL) begin
-                        run_math(B_CALC);
+                        begin return_m <= B_CALC; op <= O_M_START; end
                     end else op <= B_ADD_CLAMP;
                 end
-                op[B_ADD_CLAMP_IDX] : write_vector(0, row_q, 32'hffffffff, B_PACK);
+                op[B_ADD_CLAMP_IDX] : begin write_vector_addr_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= B_PACK; op <= O_WRITE; end
                 op[B_CALC_IDX] : op <= B_ROUND;
                 op[B_ROUND_IDX] : op <= B_CLAMP;
                 op[B_CLAMP_IDX] : begin
-                    write_vector(6, row_q, 32'hffffffff, B_PACK);
+                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= B_PACK; op <= O_WRITE; end
                 end
                 op[B_PACK_IDX] : if (row_q == (graph == G_GMUL ? 11 : 3)) op <= O_FINISH;
-                    else begin row_q <= row_q + 1'b1; read_vector(graph == G_GMUL ? 3'd6 : 3'd0, row_q + 1'b1, B_INPUT0); end
+                    else begin row_q <= row_q + 1'b1; begin v_address_q <= 7'(((int'($unsigned(3'(graph == G_GMUL ? 3'd6 : 3'd0))) << 3) + (int'($unsigned(3'(graph == G_GMUL ? 3'd6 : 3'd0))) << 2)) + int'($unsigned(4'(row_q + 1'b1)))); return_v <= B_INPUT0; op <= O_V_REQ; end end
                 op[S_INPUT_IDX] : begin lane_q <= 0; op <= SG_CLAMP; end
                 op[SG_CLAMP_IDX] : op <= SG_GROUP;
                 op[SG_GROUP_IDX] : op <= SG_PICK;
@@ -968,27 +972,27 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                     end
                 end
                 op[S_MUL_IDX] : begin
-                    run_math(S_PACK);
+                    begin return_m <= S_PACK; op <= O_M_START; end
                 end
                 op[S_PACK_IDX] : op <= S_ROUND;
                 op[S_ROUND_IDX] : op <= S_CLAMP;
                 op[S_CLAMP_IDX] : begin
-                    write_vector(6, row_q, 32'hffffffff, B_PACK);
+                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= B_PACK; op <= O_WRITE; end
                     if (row_q == 11) return_w <= O_FINISH;
                     else begin row_q <= row_q + 1'b1; v_address_q <= 7'(6 * 12 + row_q + 1); return_v <= S_INPUT; return_w <= O_V_REQ; end
                 end
                 op[H_SCALE_IDX] : begin
                     coefficient_q <= parameter_word_q[(int'(vocabulary_row_q[2:0]) << 5) +: 24];
-                    read_parameter({1'b0, vocabulary_row_q, 2'b00}, H_WEIGHT);
+                    begin p_address_q <= {1'b0, vocabulary_row_q, 2'b00}; return_p <= H_WEIGHT; op <= O_P_REQ; end
                 end
-                op[H_WEIGHT_IDX] : begin weights_q <= parameter_word_q; read_vector(1, chunk_q, H_INPUT); end
+                op[H_WEIGHT_IDX] : begin weights_q <= parameter_word_q; begin v_address_q <= 7'(((int'($unsigned(3'(1))) << 3) + (int'($unsigned(3'(1))) << 2)) + int'($unsigned(4'(chunk_q)))); return_v <= H_INPUT; op <= O_V_REQ; end end
                 op[H_INPUT_IDX] : begin
-                    run_math(H_MAC);
+                    begin return_m <= H_MAC; op <= O_M_START; end
                 end
                 op[H_MAC_IDX] : begin
                     linear_acc_q <= linear_acc_q + math_sum[38:0];
                     if (chunk_q == 3) op <= H_COEFF;
-                    else begin chunk_q <= chunk_q + 1'b1; read_parameter(15'((int'(vocabulary_row_q) << 2) + chunk_q + 1), H_WEIGHT); end
+                    else begin chunk_q <= chunk_q + 1'b1; begin p_address_q <= 15'((int'(vocabulary_row_q) << 2) + chunk_q + 1); return_p <= H_WEIGHT; op <= O_P_REQ; end end
                 end
                 op[H_COEFF_IDX] : begin
                     scalar_a_q <= linear_acc_q; scalar_b_q <= $signed({1'b0, coefficient_q});
@@ -1013,7 +1017,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                     if (vocabulary_row_q == 4095) op <= O_FINISH;
                     else begin
                         vocabulary_row_q <= vocabulary_row_q + 1'b1; chunk_q <= 0; linear_acc_q <= 0;
-                        read_parameter(15'(EMB_SCALE_BASE + ((vocabulary_row_q + 1) >> 3)), H_SCALE);
+                        begin p_address_q <= 15'(EMB_SCALE_BASE + ((vocabulary_row_q + 1) >> 3)); return_p <= H_SCALE; op <= O_P_REQ; end
                     end
                 end
                 default : ;

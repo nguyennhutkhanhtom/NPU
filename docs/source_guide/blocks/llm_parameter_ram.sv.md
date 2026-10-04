@@ -2,7 +2,7 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [llm_parameter_ram.sv](<../../../Verilog%20Source%20code/llm_parameter_ram.sv>). **Số dòng:** 90. **SHA-256:** `268039f8c72c7d8b461901cfb60c4a2c7d62b8de042ea322c2b554a4636a9538`.
+**Source:** [llm_parameter_ram.sv](<../../../Verilog%20Source%20code/llm_parameter_ram.sv>). **Số dòng:** 95. **SHA-256:** `7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e`.
 
 ## Khối này làm gì?
 
@@ -77,18 +77,18 @@ Compute và host truy cập độc quyền do top arbitration. Host data/config 
         host_read_valid_q && response_address_q == host_addr);
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            read_valid_q <= 0; read_host_q <= 0;
+            read_valid_q[0] <= 0; read_host_q[0] <= 0;
             host_read_valid_q <= 0; host_write_valid_q <= 0;
         end else begin
             read_valid_q[0] <= read_request;
             read_host_q[0] <= host_read_req;
-            for (int stage = 1; stage < READ_LATENCY; stage = stage + 1) begin
-                read_valid_q[stage] <= read_valid_q[stage - 1] &&
-                    (!read_host_q[stage - 1] ||
-                        (host_active && !host_we && host_addr == read_address_q[stage - 1]));
-                read_host_q[stage] <= read_host_q[stage - 1];
-            end
             host_read_valid_q <= read_valid_q[LAST_READ] && read_host_q[LAST_READ] &&
+                host_active && !host_we && host_addr == read_address_q[LAST_READ];
+            host_write_valid_q <= (|lane_write_valid) && host_active && host_we;
+        end
+    end
+    always_ff @(posedge clk) begin
+        read_address_q[0] <= host_addr;
 ```
 
 Host response chỉ hợp lệ khi active, loại read/write và địa chỉ vẫn khớp. ACK write theo wr_valid từ leaf, tránh báo xong trước commit.
@@ -97,28 +97,33 @@ Host response chỉ hợp lệ khi active, loại read/write và địa chỉ v�
 
 <!-- source-range:51:60 -->
 ```systemverilog
-                host_active && !host_we && host_addr == read_address_q[LAST_READ];
-            host_write_valid_q <= (|lane_write_valid) && host_active && host_we;
-        end
-    end
-    always_ff @(posedge clk) begin
-        read_address_q[0] <= host_addr;
-        for (int stage = 1; stage < READ_LATENCY; stage = stage + 1)
-            read_address_q[stage] <= read_address_q[stage - 1];
         if (read_valid_q[LAST_READ] && read_host_q[LAST_READ]) begin
             response_address_q <= read_address_q[LAST_READ];
+            host_rdata <= read_row[(int'(read_address_q[LAST_READ][2:0]) << 5) +: 32];
+        end
+    end
+    genvar stage, lane;
+    generate
+    for (stage = 1; stage < READ_LATENCY; stage = stage + 1) begin : g_read_stage
+        always_ff @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin read_valid_q[stage] <= 0; read_host_q[stage] <= 0; end
 ```
 
 Địa chỉ/lane đi cùng latency suy ra theo DEPTH; output host register tách tile reduction khỏi pin host_rdata.
 
-### [Dòng 61–90: Local lane banks](<../../../Verilog%20Source%20code/llm_parameter_ram.sv#L61>)
+### [Dòng 61–95: Local lane banks](<../../../Verilog%20Source%20code/llm_parameter_ram.sv#L61>)
 
-<!-- source-range:61:90 -->
+<!-- source-range:61:95 -->
 ```systemverilog
-            host_rdata <= read_row[(int'(read_address_q[LAST_READ][2:0]) << 5) +: 32];
+            else begin
+                read_valid_q[stage] <= read_valid_q[stage - 1] &&
+                    (!read_host_q[stage - 1] || (host_active && !host_we && host_addr == read_address_q[stage - 1]));
+                read_host_q[stage] <= read_host_q[stage - 1];
+            end
         end
+        always_ff @(posedge clk) read_address_q[stage] <= read_address_q[stage - 1];
     end
-    genvar lane;
+    endgenerate
     generate
     for (lane = 0; lane < 8; lane = lane + 1) begin : g_ram_lane
         (* dont_merge *) logic [ADDR_W - 1:0] read_address_local_q, write_address_q;

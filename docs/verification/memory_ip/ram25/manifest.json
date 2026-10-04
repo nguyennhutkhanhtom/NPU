@@ -1,0 +1,34 @@
+{
+  "scope": "Actual RAM simulation model only; no application execution",
+  "quartus_version": "25.1std.0 Build 1129 10/21/2025 SC Lite Edition",
+  "source": "C:\\altera_lite\\25.1std\\quartus\\eda\\sim_lib\\altera_mf.v",
+  "source_sha256": "2ae09f97f9606626da216e9eb91007beec3ebbe023c5b9415be472417fe49d5e",
+  "library": "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\current_memory_model\\altera_mf_ver",
+  "compiler_sha256": {
+    "C:\\intelFPGA\\20.1\\modelsim_ase\\win32aloem\\vlib.exe": "1be6b62216ae7323042a7e602381fa6550c2650c5b16c51f5963dfcea91d06b1",
+    "C:\\intelFPGA\\20.1\\modelsim_ase\\win32aloem\\vlog.exe": "8a01969d8154b4a6415e4d908de0b1dc48ab2f4b893dda8586b2b5d7a87dc232"
+  },
+  "commands": [
+    [
+      "C:\\intelFPGA\\20.1\\modelsim_ase\\win32aloem\\vlib.exe",
+      "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\current_memory_model\\altera_mf_ver"
+    ],
+    [
+      "C:\\intelFPGA\\20.1\\modelsim_ase\\win32aloem\\vlog.exe",
+      "-work",
+      "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\current_memory_model\\altera_mf_ver",
+      "C:\\altera_lite\\25.1std\\quartus\\eda\\sim_lib\\altera_mf.v",
+      "-l",
+      "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\current_memory_model\\compile.log"
+    ]
+  ],
+  "compile_sha256": "90f1916dc27db9fa058ff504117b2bf1a2b45ae4116f53fd5bbe063d6306297a",
+  "objects_sha256": {
+    "_info": "eb10c6f1f1df8ca256145239dbc804228fec050a1721dff556b1a2308c967a8c",
+    "_lib.qdb": "f0a9258d19f413a30e7a0248e344b96e8ecf7afc36460454057486ad2df4f038",
+    "_lib1_0.qdb": "a578dbe09906d29088658cd7e67de7b4cb77f3a70bf5891348d8bf5462b8100b",
+    "_lib1_0.qpg": "1162c7b81812c0712830629182092fa008d9a4b98afd99d45385c94f9689ff35",
+    "_lib1_0.qtl": "53948a291d5617221d33657b42932c6ce3f7b2ddf787d6d5c9529f0af08343df",
+    "_vmake": "d287f8a335408d3f94fea840ad628f2cbed3775952c49131049ef8f60fd337c9"
+  }
+}

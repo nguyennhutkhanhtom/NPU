@@ -1,0 +1,12 @@
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\tests\sim\Quartus-sigmoid.log tests/sim/quartus-work.tb_sigmoid -do "run -all; quit -f" 
+# Start time: 01:16:57 on Oct 01,2026
+# Loading sv_std.std
+# Loading tests/sim/quartus-work.tb_sigmoid
+# Loading tests/sim/quartus-work.npu_pkg
+# Loading tests/sim/quartus-work.sigmoid
+# run -all
+# SIGMOID_PASS cases=393216
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv(166)
+#    Time: 19660820 ns  Iteration: 1  Instance: /tb_sigmoid
+# End time: 01:17:09 on Oct 01,2026, Elapsed time: 0:00:12
+# Errors: 0, Warnings: 0

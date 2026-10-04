@@ -120,7 +120,7 @@ for source in sorted(RTL.iterdir()):
     digest = sha256(raw).hexdigest()
     document = GUIDE / "blocks" / (source.name + ".md")
     entry = entries.get(source.name)
-    if entry and source.name not in {'scale_compose.sv', 'llm_bank_ram.sv', 'llm_parameter_ram.sv', 'pipelined_word_ram.sv', 'quartus_word_ram.sv', 'llm_math.sv'}:
+    if entry and source.name not in {'scale_compose.sv', 'llm_bank_ram.sv', 'llm_parameter_ram.sv', 'pipelined_word_ram.sv', 'quartus_word_ram.sv', 'llm_math.sv', 'llm_exp_lut.svh', 'llm_gumbel_lut.svh', 'sigmoid_lut.svh'}:
         doc = document.read_text(encoding="utf-8")
         if source.suffix in {".sv", ".v"}:
             pattern = re.compile(r"### \[Dòng (\d+)–(\d+): (.*?)\]\(<([^>]+)>\)\n\n<!-- source-range:\d+:\d+ -->\n```systemverilog\n(.*?)\n```", re.S)
@@ -157,10 +157,11 @@ for source in sorted(RTL.iterdir()):
                 doc += f"### [Dòng {start}–{end}: {title}](<{link}#L{start}>)\n\n<!-- source-range:{start}:{end} -->\n```systemverilog\n{excerpt}\n```\n\n{explanation}\n\n"
             entry = {"groups": len(groups)}
         else:
-            title = "Exp Q24: exp(-index/16)" if "exp" in source.name else "Gumbel S24/F16: -ln(-ln((index+0.5)/256))"
-            doc = f"# {source.name} — {title}\n\n[Source guide](../README.md) · [Mục lục](README.md)\n\n**Source:** [{source.name}](<{link}>). **Số dòng:** {len(lines)}. **SHA-256:** `{digest}`.\n\nGenerator: [generate_tables.py](../../../tools/llm/generate_tables.py). Math units independently verify every numeric entry using real exp/log.\n\n| Dòng | Code gốc | Giải thích |\n|---|---|---|\n"
+            title = "Sigmoid U16/F15: 1/(1+exp(-index/16+8))" if "sigmoid" in source.name else ("Exp Q24: exp(-index/16)" if "exp" in source.name else "Gumbel S24/F16: -ln(-ln((index+0.5)/256))")
+            provenance = "Independent Decimal reference constructs and verifies every sigmoid entry: [reference.py](../../../tests/reference.py)." if "sigmoid" in source.name else "Generator: [generate_tables.py](../../../tools/llm/generate_tables.py). Math units independently verify every numeric entry using real exp/log."
+            doc = f"# {source.name} — {title}\n\n[Source guide](../README.md) · [Mục lục](README.md)\n\n**Source:** [{source.name}](<{link}>). **Số dòng:** {len(lines)}. **SHA-256:** `{digest}`.\n\n{provenance}\n\n| Dòng | Code gốc | Giải thích |\n|---|---|---|\n"
             for n, line in enumerate(lines, 1):
-                meaning = "Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền." if ":" in line else "Khai báo hoặc điều khiển function LUT portable."
+                meaning = "Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền." if ":" in line else "Module LUT tổ hợp portable, case table tường minh; không register hay memory access trong function."
                 doc += f"| [{n}](<{link}#L{n}>) | <code>{html.escape(line or chr(160))}</code> | {meaning} |\n"
             entry = {}
         entry.update(file=source.name, path=f"Verilog Source code/{source.name}", document=f"blocks/{source.name}.md")

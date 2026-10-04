@@ -12,6 +12,7 @@ import sys
 from hashlib import sha256
 from datetime import datetime, timezone
 from check_gate import check_gate
+from memory_model import verify_model
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
@@ -21,6 +22,8 @@ LANGUAGE = ROOT / "tests/language_demo"
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--timing", required=True, type=Path)
+    parser.add_argument("--memory-model", required=True, type=Path)
+    parser.add_argument("--design-units", type=Path)
     parser.add_argument("--prompt", default="Once upon a time, Lily found a tiny kitten.")
     parser.add_argument("--new-tokens", type=int, default=96)
     parser.add_argument("--temperature", type=int, default=166)
@@ -28,8 +31,10 @@ def main():
     parser.add_argument("--min-new", type=int, default=64)
     args = parser.parse_args()
     timing = check_gate(args.timing)
+    memory_model = verify_model(args.memory_model, args.timing)
+    memory_digest = sha256(args.memory_model.read_bytes()).hexdigest()
     runner_names = ("application_tb.sv", "run_application.ps1", "check_gate.py",
-                    "export_checkpoint.py", "finalize_application.py")
+                    "export_checkpoint.py", "finalize_application.py", "memory_model.py")
     runner_hashes = {name: sha256((HERE/name).read_bytes()).hexdigest() for name in runner_names}
     timing_digest = sha256(args.timing.read_bytes()).hexdigest()
     if not (1 <= args.new_tokens <= 127 and 0 <= args.temperature <= 255
@@ -203,12 +208,18 @@ def main():
                  "timing_manifest":str(args.timing),"fmax_mhz":timing['metrics']['worst_restricted_fmax_mhz'],
                  "prepared_utc":datetime.now(timezone.utc).isoformat(),
                  "timing_manifest_sha256":timing_digest,"rtl_sources":timing["rtl_sources"],
-                 "runner_sources":runner_hashes}
+                 "runner_sources":runner_hashes,
+                 "memory_model":memory_model,"memory_model_manifest":str(args.memory_model.resolve()),
+                 "memory_model_manifest_sha256":memory_digest}
+    if args.design_units:
+        reference["memory_binding_report"] = str(args.design_units.resolve())
     (build/"config.svh").write_text(f"localparam integer PROMPT_COUNT={len(prompt)}, MAX_NEW={args.new_tokens}, EXPECTED_COUNT={len(output)}, TEMPERATURE={args.temperature}, SEED={args.seed or 1}, MIN_NEW={args.min_new};\n")
     reference["input_files"] = {name: sha256((build/name).read_bytes()).hexdigest()
                                 for name in ("parameter.mem", "prompt.mem", "expected.mem", "config.svh")}
     assert runner_hashes == {name: sha256((HERE/name).read_bytes()).hexdigest() for name in runner_names}, "Application sources changed during export/reference"
     check_gate(args.timing)
+    verify_model(args.memory_model, args.timing)
+    assert sha256(args.memory_model.read_bytes()).hexdigest() == memory_digest, "RAM model changed during export"
     assert sha256(args.timing.read_bytes()).hexdigest() == timing_digest, "Timing evidence changed during export"
     (build/"reference.json").write_text(json.dumps(reference,indent=2)+"\n")
     print(f"FULL_RTL_REFERENCE_READY: prompt={len(prompt)} continuation={len(output)}")

@@ -1,274 +1,277 @@
-# sigmoid_lut.svh — ROM sigmoid hằng trong RTL
+# sigmoid_lut.svh — Sigmoid U16/F15: 1/(1+exp(-index/16+8))
 
-[Tài liệu](../../README.md) → [Hierarchy RTL](../README.md) → [Mục lục từng file](README.md)
+[Source guide](../README.md) · [Mục lục](README.md)
 
-**Source:** [sigmoid_lut.svh](<../../../Verilog%20Source%20code/sigmoid_lut.svh>). **Số dòng:** 262. **SHA-256:** `3d4fc0b37d284c4f7b3a4cd2587acfaf3e35dc33b2209550d7f97ef8555e0094`.
+**Source:** [sigmoid_lut.svh](<../../../Verilog%20Source%20code/sigmoid_lut.svh>). **Số dòng:** 267. **SHA-256:** `c72383f3cd3c3dadf7e8579d7d12edca2cc2d6555735dd1e9d4def6f561b73ef`.
 
-## Cách sử dụng
+Independent Decimal reference constructs and verifies every sigmoid entry: [reference.py](../../../tests/reference.py).
 
-Cùng 257 mẫu tại x=−8+i/16, raw=RNE(0x8000/(1+exp(−x))). Raw lưu 16 bit và có scale 2^−15. Công thức exp chỉ dùng lúc tạo bảng. `sigmoid_lut.svh` là ROM hằng dùng trong RTL; `sigmoid_257.mem` là bản hex để generator/test đối chiếu. Không load file hex trong datapath. ROM hiện tại không dùng sigContent.mif. Mỗi dòng dữ liệu bên dưới được giải thích bằng index, tọa độ x và giá trị gate thực.
-
-| Dòng | Code/dữ liệu gốc | Giải thích |
-|---:|---|---|
-| [1](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L1>) | <code>function automatic logic [15:0] sigmoid_sample(input integer index);</code> | Khai báo function sigmoid_sample; automatic tạo biến cục bộ riêng cho mỗi lần sử dụng. |
-| [2](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L2>) | <code>    case(index)</code> | Chọn nhánh theo index; mỗi nhánh mô tả operation/state hoặc lựa chọn dữ liệu tương ứng. |
-| [3](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L3>) | <code>        0: sigmoid_sample = 16'h000b;</code> | Địa chỉ 0: x=-8; trả raw=0x000B (11), gate=0.00033569. |
-| [4](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L4>) | <code>        1: sigmoid_sample = 16'h000c;</code> | Địa chỉ 1: x=-7.9375; trả raw=0x000C (12), gate=0.00036621. |
-| [5](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L5>) | <code>        2: sigmoid_sample = 16'h000c;</code> | Địa chỉ 2: x=-7.875; trả raw=0x000C (12), gate=0.00036621. |
-| [6](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L6>) | <code>        3: sigmoid_sample = 16'h000d;</code> | Địa chỉ 3: x=-7.8125; trả raw=0x000D (13), gate=0.00039673. |
-| [7](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L7>) | <code>        4: sigmoid_sample = 16'h000e;</code> | Địa chỉ 4: x=-7.75; trả raw=0x000E (14), gate=0.00042725. |
-| [8](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L8>) | <code>        5: sigmoid_sample = 16'h000f;</code> | Địa chỉ 5: x=-7.6875; trả raw=0x000F (15), gate=0.00045776. |
-| [9](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L9>) | <code>        6: sigmoid_sample = 16'h0010;</code> | Địa chỉ 6: x=-7.625; trả raw=0x0010 (16), gate=0.00048828. |
-| [10](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L10>) | <code>        7: sigmoid_sample = 16'h0011;</code> | Địa chỉ 7: x=-7.5625; trả raw=0x0011 (17), gate=0.00051880. |
-| [11](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L11>) | <code>        8: sigmoid_sample = 16'h0012;</code> | Địa chỉ 8: x=-7.5; trả raw=0x0012 (18), gate=0.00054932. |
-| [12](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L12>) | <code>        9: sigmoid_sample = 16'h0013;</code> | Địa chỉ 9: x=-7.4375; trả raw=0x0013 (19), gate=0.00057983. |
-| [13](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L13>) | <code>        10: sigmoid_sample = 16'h0015;</code> | Địa chỉ 10: x=-7.375; trả raw=0x0015 (21), gate=0.00064087. |
-| [14](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L14>) | <code>        11: sigmoid_sample = 16'h0016;</code> | Địa chỉ 11: x=-7.3125; trả raw=0x0016 (22), gate=0.00067139. |
-| [15](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L15>) | <code>        12: sigmoid_sample = 16'h0017;</code> | Địa chỉ 12: x=-7.25; trả raw=0x0017 (23), gate=0.00070190. |
-| [16](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L16>) | <code>        13: sigmoid_sample = 16'h0019;</code> | Địa chỉ 13: x=-7.1875; trả raw=0x0019 (25), gate=0.00076294. |
-| [17](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L17>) | <code>        14: sigmoid_sample = 16'h001a;</code> | Địa chỉ 14: x=-7.125; trả raw=0x001A (26), gate=0.00079346. |
-| [18](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L18>) | <code>        15: sigmoid_sample = 16'h001c;</code> | Địa chỉ 15: x=-7.0625; trả raw=0x001C (28), gate=0.00085449. |
-| [19](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L19>) | <code>        16: sigmoid_sample = 16'h001e;</code> | Địa chỉ 16: x=-7; trả raw=0x001E (30), gate=0.00091553. |
-| [20](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L20>) | <code>        17: sigmoid_sample = 16'h0020;</code> | Địa chỉ 17: x=-6.9375; trả raw=0x0020 (32), gate=0.00097656. |
-| [21](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L21>) | <code>        18: sigmoid_sample = 16'h0022;</code> | Địa chỉ 18: x=-6.875; trả raw=0x0022 (34), gate=0.00103760. |
-| [22](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L22>) | <code>        19: sigmoid_sample = 16'h0024;</code> | Địa chỉ 19: x=-6.8125; trả raw=0x0024 (36), gate=0.00109863. |
-| [23](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L23>) | <code>        20: sigmoid_sample = 16'h0026;</code> | Địa chỉ 20: x=-6.75; trả raw=0x0026 (38), gate=0.00115967. |
-| [24](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L24>) | <code>        21: sigmoid_sample = 16'h0029;</code> | Địa chỉ 21: x=-6.6875; trả raw=0x0029 (41), gate=0.00125122. |
-| [25](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L25>) | <code>        22: sigmoid_sample = 16'h002b;</code> | Địa chỉ 22: x=-6.625; trả raw=0x002B (43), gate=0.00131226. |
-| [26](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L26>) | <code>        23: sigmoid_sample = 16'h002e;</code> | Địa chỉ 23: x=-6.5625; trả raw=0x002E (46), gate=0.00140381. |
-| [27](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L27>) | <code>        24: sigmoid_sample = 16'h0031;</code> | Địa chỉ 24: x=-6.5; trả raw=0x0031 (49), gate=0.00149536. |
-| [28](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L28>) | <code>        25: sigmoid_sample = 16'h0034;</code> | Địa chỉ 25: x=-6.4375; trả raw=0x0034 (52), gate=0.00158691. |
-| [29](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L29>) | <code>        26: sigmoid_sample = 16'h0038;</code> | Địa chỉ 26: x=-6.375; trả raw=0x0038 (56), gate=0.00170898. |
-| [30](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L30>) | <code>        27: sigmoid_sample = 16'h003b;</code> | Địa chỉ 27: x=-6.3125; trả raw=0x003B (59), gate=0.00180054. |
-| [31](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L31>) | <code>        28: sigmoid_sample = 16'h003f;</code> | Địa chỉ 28: x=-6.25; trả raw=0x003F (63), gate=0.00192261. |
-| [32](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L32>) | <code>        29: sigmoid_sample = 16'h0043;</code> | Địa chỉ 29: x=-6.1875; trả raw=0x0043 (67), gate=0.00204468. |
-| [33](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L33>) | <code>        30: sigmoid_sample = 16'h0048;</code> | Địa chỉ 30: x=-6.125; trả raw=0x0048 (72), gate=0.00219727. |
-| [34](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L34>) | <code>        31: sigmoid_sample = 16'h004c;</code> | Địa chỉ 31: x=-6.0625; trả raw=0x004C (76), gate=0.00231934. |
-| [35](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L35>) | <code>        32: sigmoid_sample = 16'h0051;</code> | Địa chỉ 32: x=-6; trả raw=0x0051 (81), gate=0.00247192. |
-| [36](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L36>) | <code>        33: sigmoid_sample = 16'h0056;</code> | Địa chỉ 33: x=-5.9375; trả raw=0x0056 (86), gate=0.00262451. |
-| [37](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L37>) | <code>        34: sigmoid_sample = 16'h005c;</code> | Địa chỉ 34: x=-5.875; trả raw=0x005C (92), gate=0.00280762. |
-| [38](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L38>) | <code>        35: sigmoid_sample = 16'h0062;</code> | Địa chỉ 35: x=-5.8125; trả raw=0x0062 (98), gate=0.00299072. |
-| [39](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L39>) | <code>        36: sigmoid_sample = 16'h0068;</code> | Địa chỉ 36: x=-5.75; trả raw=0x0068 (104), gate=0.00317383. |
-| [40](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L40>) | <code>        37: sigmoid_sample = 16'h006f;</code> | Địa chỉ 37: x=-5.6875; trả raw=0x006F (111), gate=0.00338745. |
-| [41](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L41>) | <code>        38: sigmoid_sample = 16'h0076;</code> | Địa chỉ 38: x=-5.625; trả raw=0x0076 (118), gate=0.00360107. |
-| [42](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L42>) | <code>        39: sigmoid_sample = 16'h007d;</code> | Địa chỉ 39: x=-5.5625; trả raw=0x007D (125), gate=0.00381470. |
-| [43](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L43>) | <code>        40: sigmoid_sample = 16'h0085;</code> | Địa chỉ 40: x=-5.5; trả raw=0x0085 (133), gate=0.00405884. |
-| [44](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L44>) | <code>        41: sigmoid_sample = 16'h008e;</code> | Địa chỉ 41: x=-5.4375; trả raw=0x008E (142), gate=0.00433350. |
-| [45](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L45>) | <code>        42: sigmoid_sample = 16'h0097;</code> | Địa chỉ 42: x=-5.375; trả raw=0x0097 (151), gate=0.00460815. |
-| [46](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L46>) | <code>        43: sigmoid_sample = 16'h00a1;</code> | Địa chỉ 43: x=-5.3125; trả raw=0x00A1 (161), gate=0.00491333. |
-| [47](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L47>) | <code>        44: sigmoid_sample = 16'h00ab;</code> | Địa chỉ 44: x=-5.25; trả raw=0x00AB (171), gate=0.00521851. |
-| [48](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L48>) | <code>        45: sigmoid_sample = 16'h00b6;</code> | Địa chỉ 45: x=-5.1875; trả raw=0x00B6 (182), gate=0.00555420. |
-| [49](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L49>) | <code>        46: sigmoid_sample = 16'h00c2;</code> | Địa chỉ 46: x=-5.125; trả raw=0x00C2 (194), gate=0.00592041. |
-| [50](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L50>) | <code>        47: sigmoid_sample = 16'h00ce;</code> | Địa chỉ 47: x=-5.0625; trả raw=0x00CE (206), gate=0.00628662. |
-| [51](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L51>) | <code>        48: sigmoid_sample = 16'h00db;</code> | Địa chỉ 48: x=-5; trả raw=0x00DB (219), gate=0.00668335. |
-| [52](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L52>) | <code>        49: sigmoid_sample = 16'h00e9;</code> | Địa chỉ 49: x=-4.9375; trả raw=0x00E9 (233), gate=0.00711060. |
-| [53](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L53>) | <code>        50: sigmoid_sample = 16'h00f8;</code> | Địa chỉ 50: x=-4.875; trả raw=0x00F8 (248), gate=0.00756836. |
-| [54](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L54>) | <code>        51: sigmoid_sample = 16'h0108;</code> | Địa chỉ 51: x=-4.8125; trả raw=0x0108 (264), gate=0.00805664. |
-| [55](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L55>) | <code>        52: sigmoid_sample = 16'h0119;</code> | Địa chỉ 52: x=-4.75; trả raw=0x0119 (281), gate=0.00857544. |
-| [56](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L56>) | <code>        53: sigmoid_sample = 16'h012b;</code> | Địa chỉ 53: x=-4.6875; trả raw=0x012B (299), gate=0.00912476. |
-| [57](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L57>) | <code>        54: sigmoid_sample = 16'h013e;</code> | Địa chỉ 54: x=-4.625; trả raw=0x013E (318), gate=0.00970459. |
-| [58](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L58>) | <code>        55: sigmoid_sample = 16'h0152;</code> | Địa chỉ 55: x=-4.5625; trả raw=0x0152 (338), gate=0.01031494. |
-| [59](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L59>) | <code>        56: sigmoid_sample = 16'h0168;</code> | Địa chỉ 56: x=-4.5; trả raw=0x0168 (360), gate=0.01098633. |
-| [60](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L60>) | <code>        57: sigmoid_sample = 16'h017f;</code> | Địa chỉ 57: x=-4.4375; trả raw=0x017F (383), gate=0.01168823. |
-| [61](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L61>) | <code>        58: sigmoid_sample = 16'h0197;</code> | Địa chỉ 58: x=-4.375; trả raw=0x0197 (407), gate=0.01242065. |
-| [62](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L62>) | <code>        59: sigmoid_sample = 16'h01b1;</code> | Địa chỉ 59: x=-4.3125; trả raw=0x01B1 (433), gate=0.01321411. |
-| [63](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L63>) | <code>        60: sigmoid_sample = 16'h01cd;</code> | Địa chỉ 60: x=-4.25; trả raw=0x01CD (461), gate=0.01406860. |
-| [64](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L64>) | <code>        61: sigmoid_sample = 16'h01ea;</code> | Địa chỉ 61: x=-4.1875; trả raw=0x01EA (490), gate=0.01495361. |
-| [65](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L65>) | <code>        62: sigmoid_sample = 16'h0209;</code> | Địa chỉ 62: x=-4.125; trả raw=0x0209 (521), gate=0.01589966. |
-| [66](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L66>) | <code>        63: sigmoid_sample = 16'h022a;</code> | Địa chỉ 63: x=-4.0625; trả raw=0x022A (554), gate=0.01690674. |
-| [67](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L67>) | <code>        64: sigmoid_sample = 16'h024d;</code> | Địa chỉ 64: x=-4; trả raw=0x024D (589), gate=0.01797485. |
-| [68](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L68>) | <code>        65: sigmoid_sample = 16'h0273;</code> | Địa chỉ 65: x=-3.9375; trả raw=0x0273 (627), gate=0.01913452. |
-| [69](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L69>) | <code>        66: sigmoid_sample = 16'h029a;</code> | Địa chỉ 66: x=-3.875; trả raw=0x029A (666), gate=0.02032471. |
-| [70](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L70>) | <code>        67: sigmoid_sample = 16'h02c4;</code> | Địa chỉ 67: x=-3.8125; trả raw=0x02C4 (708), gate=0.02160645. |
-| [71](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L71>) | <code>        68: sigmoid_sample = 16'h02f1;</code> | Địa chỉ 68: x=-3.75; trả raw=0x02F1 (753), gate=0.02297974. |
-| [72](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L72>) | <code>        69: sigmoid_sample = 16'h0320;</code> | Địa chỉ 69: x=-3.6875; trả raw=0x0320 (800), gate=0.02441406. |
-| [73](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L73>) | <code>        70: sigmoid_sample = 16'h0353;</code> | Địa chỉ 70: x=-3.625; trả raw=0x0353 (851), gate=0.02597046. |
-| [74](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L74>) | <code>        71: sigmoid_sample = 16'h0388;</code> | Địa chỉ 71: x=-3.5625; trả raw=0x0388 (904), gate=0.02758789. |
-| [75](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L75>) | <code>        72: sigmoid_sample = 16'h03c1;</code> | Địa chỉ 72: x=-3.5; trả raw=0x03C1 (961), gate=0.02932739. |
-| [76](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L76>) | <code>        73: sigmoid_sample = 16'h03fd;</code> | Địa chỉ 73: x=-3.4375; trả raw=0x03FD (1021), gate=0.03115845. |
-| [77](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L77>) | <code>        74: sigmoid_sample = 16'h043c;</code> | Địa chỉ 74: x=-3.375; trả raw=0x043C (1084), gate=0.03308105. |
-| [78](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L78>) | <code>        75: sigmoid_sample = 16'h0480;</code> | Địa chỉ 75: x=-3.3125; trả raw=0x0480 (1152), gate=0.03515625. |
-| [79](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L79>) | <code>        76: sigmoid_sample = 16'h04c7;</code> | Địa chỉ 76: x=-3.25; trả raw=0x04C7 (1223), gate=0.03732300. |
-| [80](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L80>) | <code>        77: sigmoid_sample = 16'h0513;</code> | Địa chỉ 77: x=-3.1875; trả raw=0x0513 (1299), gate=0.03964233. |
-| [81](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L81>) | <code>        78: sigmoid_sample = 16'h0563;</code> | Địa chỉ 78: x=-3.125; trả raw=0x0563 (1379), gate=0.04208374. |
-| [82](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L82>) | <code>        79: sigmoid_sample = 16'h05b8;</code> | Địa chỉ 79: x=-3.0625; trả raw=0x05B8 (1464), gate=0.04467773. |
-| [83](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L83>) | <code>        80: sigmoid_sample = 16'h0612;</code> | Địa chỉ 80: x=-3; trả raw=0x0612 (1554), gate=0.04742432. |
-| [84](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L84>) | <code>        81: sigmoid_sample = 16'h0671;</code> | Địa chỉ 81: x=-2.9375; trả raw=0x0671 (1649), gate=0.05032349. |
-| [85](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L85>) | <code>        82: sigmoid_sample = 16'h06d6;</code> | Địa chỉ 82: x=-2.875; trả raw=0x06D6 (1750), gate=0.05340576. |
-| [86](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L86>) | <code>        83: sigmoid_sample = 16'h0740;</code> | Địa chỉ 83: x=-2.8125; trả raw=0x0740 (1856), gate=0.05664062. |
-| [87](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L87>) | <code>        84: sigmoid_sample = 16'h07b1;</code> | Địa chỉ 84: x=-2.75; trả raw=0x07B1 (1969), gate=0.06008911. |
-| [88](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L88>) | <code>        85: sigmoid_sample = 16'h0828;</code> | Địa chỉ 85: x=-2.6875; trả raw=0x0828 (2088), gate=0.06372070. |
-| [89](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L89>) | <code>        86: sigmoid_sample = 16'h08a5;</code> | Địa chỉ 86: x=-2.625; trả raw=0x08A5 (2213), gate=0.06753540. |
-| [90](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L90>) | <code>        87: sigmoid_sample = 16'h092a;</code> | Địa chỉ 87: x=-2.5625; trả raw=0x092A (2346), gate=0.07159424. |
-| [91](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L91>) | <code>        88: sigmoid_sample = 16'h09b6;</code> | Địa chỉ 88: x=-2.5; trả raw=0x09B6 (2486), gate=0.07586670. |
-| [92](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L92>) | <code>        89: sigmoid_sample = 16'h0a49;</code> | Địa chỉ 89: x=-2.4375; trả raw=0x0A49 (2633), gate=0.08035278. |
-| [93](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L93>) | <code>        90: sigmoid_sample = 16'h0ae5;</code> | Địa chỉ 90: x=-2.375; trả raw=0x0AE5 (2789), gate=0.08511353. |
-| [94](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L94>) | <code>        91: sigmoid_sample = 16'h0b88;</code> | Địa chỉ 91: x=-2.3125; trả raw=0x0B88 (2952), gate=0.09008789. |
-| [95](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L95>) | <code>        92: sigmoid_sample = 16'h0c34;</code> | Địa chỉ 92: x=-2.25; trả raw=0x0C34 (3124), gate=0.09533691. |
-| [96](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L96>) | <code>        93: sigmoid_sample = 16'h0cea;</code> | Địa chỉ 93: x=-2.1875; trả raw=0x0CEA (3306), gate=0.10089111. |
-| [97](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L97>) | <code>        94: sigmoid_sample = 16'h0da8;</code> | Địa chỉ 94: x=-2.125; trả raw=0x0DA8 (3496), gate=0.10668945. |
-| [98](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L98>) | <code>        95: sigmoid_sample = 16'h0e70;</code> | Địa chỉ 95: x=-2.0625; trả raw=0x0E70 (3696), gate=0.11279297. |
-| [99](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L99>) | <code>        96: sigmoid_sample = 16'h0f42;</code> | Địa chỉ 96: x=-2; trả raw=0x0F42 (3906), gate=0.11920166. |
-| [100](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L100>) | <code>        97: sigmoid_sample = 16'h101e;</code> | Địa chỉ 97: x=-1.9375; trả raw=0x101E (4126), gate=0.12591553. |
-| [101](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L101>) | <code>        98: sigmoid_sample = 16'h1105;</code> | Địa chỉ 98: x=-1.875; trả raw=0x1105 (4357), gate=0.13296509. |
-| [102](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L102>) | <code>        99: sigmoid_sample = 16'h11f7;</code> | Địa chỉ 99: x=-1.8125; trả raw=0x11F7 (4599), gate=0.14035034. |
-| [103](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L103>) | <code>        100: sigmoid_sample = 16'h12f3;</code> | Địa chỉ 100: x=-1.75; trả raw=0x12F3 (4851), gate=0.14804077. |
-| [104](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L104>) | <code>        101: sigmoid_sample = 16'h13fb;</code> | Địa chỉ 101: x=-1.6875; trả raw=0x13FB (5115), gate=0.15609741. |
-| [105](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L105>) | <code>        102: sigmoid_sample = 16'h150f;</code> | Địa chỉ 102: x=-1.625; trả raw=0x150F (5391), gate=0.16452026. |
-| [106](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L106>) | <code>        103: sigmoid_sample = 16'h162e;</code> | Địa chỉ 103: x=-1.5625; trả raw=0x162E (5678), gate=0.17327881. |
-| [107](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L107>) | <code>        104: sigmoid_sample = 16'h175a;</code> | Địa chỉ 104: x=-1.5; trả raw=0x175A (5978), gate=0.18243408. |
-| [108](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L108>) | <code>        105: sigmoid_sample = 16'h1891;</code> | Địa chỉ 105: x=-1.4375; trả raw=0x1891 (6289), gate=0.19192505. |
-| [109](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L109>) | <code>        106: sigmoid_sample = 16'h19d5;</code> | Địa chỉ 106: x=-1.375; trả raw=0x19D5 (6613), gate=0.20181274. |
-| [110](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L110>) | <code>        107: sigmoid_sample = 16'h1b25;</code> | Địa chỉ 107: x=-1.3125; trả raw=0x1B25 (6949), gate=0.21206665. |
-| [111](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L111>) | <code>        108: sigmoid_sample = 16'h1c81;</code> | Địa chỉ 108: x=-1.25; trả raw=0x1C81 (7297), gate=0.22268677. |
-| [112](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L112>) | <code>        109: sigmoid_sample = 16'h1dea;</code> | Địa chỉ 109: x=-1.1875; trả raw=0x1DEA (7658), gate=0.23370361. |
-| [113](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L113>) | <code>        110: sigmoid_sample = 16'h1f5f;</code> | Địa chỉ 110: x=-1.125; trả raw=0x1F5F (8031), gate=0.24508667. |
-| [114](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L114>) | <code>        111: sigmoid_sample = 16'h20e0;</code> | Địa chỉ 111: x=-1.0625; trả raw=0x20E0 (8416), gate=0.25683594. |
-| [115](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L115>) | <code>        112: sigmoid_sample = 16'h226d;</code> | Địa chỉ 112: x=-1; trả raw=0x226D (8813), gate=0.26895142. |
-| [116](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L116>) | <code>        113: sigmoid_sample = 16'h2405;</code> | Địa chỉ 113: x=-0.9375; trả raw=0x2405 (9221), gate=0.28140259. |
-| [117](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L117>) | <code>        114: sigmoid_sample = 16'h25a9;</code> | Địa chỉ 114: x=-0.875; trả raw=0x25A9 (9641), gate=0.29421997. |
-| [118](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L118>) | <code>        115: sigmoid_sample = 16'h2758;</code> | Địa chỉ 115: x=-0.8125; trả raw=0x2758 (10072), gate=0.30737305. |
-| [119](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L119>) | <code>        116: sigmoid_sample = 16'h2911;</code> | Địa chỉ 116: x=-0.75; trả raw=0x2911 (10513), gate=0.32083130. |
-| [120](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L120>) | <code>        117: sigmoid_sample = 16'h2ad4;</code> | Địa chỉ 117: x=-0.6875; trả raw=0x2AD4 (10964), gate=0.33459473. |
-| [121](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L121>) | <code>        118: sigmoid_sample = 16'h2ca0;</code> | Địa chỉ 118: x=-0.625; trả raw=0x2CA0 (11424), gate=0.34863281. |
-| [122](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L122>) | <code>        119: sigmoid_sample = 16'h2e76;</code> | Địa chỉ 119: x=-0.5625; trả raw=0x2E76 (11894), gate=0.36297607. |
-| [123](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L123>) | <code>        120: sigmoid_sample = 16'h3053;</code> | Địa chỉ 120: x=-0.5; trả raw=0x3053 (12371), gate=0.37753296. |
-| [124](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L124>) | <code>        121: sigmoid_sample = 16'h3238;</code> | Địa chỉ 121: x=-0.4375; trả raw=0x3238 (12856), gate=0.39233398. |
-| [125](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L125>) | <code>        122: sigmoid_sample = 16'h3424;</code> | Địa chỉ 122: x=-0.375; trả raw=0x3424 (13348), gate=0.40734863. |
-| [126](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L126>) | <code>        123: sigmoid_sample = 16'h3615;</code> | Địa chỉ 123: x=-0.3125; trả raw=0x3615 (13845), gate=0.42251587. |
-| [127](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L127>) | <code>        124: sigmoid_sample = 16'h380b;</code> | Địa chỉ 124: x=-0.25; trả raw=0x380B (14347), gate=0.43783569. |
-| [128](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L128>) | <code>        125: sigmoid_sample = 16'h3a04;</code> | Địa chỉ 125: x=-0.1875; trả raw=0x3A04 (14852), gate=0.45324707. |
-| [129](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L129>) | <code>        126: sigmoid_sample = 16'h3c01;</code> | Địa chỉ 126: x=-0.125; trả raw=0x3C01 (15361), gate=0.46878052. |
-| [130](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L130>) | <code>        127: sigmoid_sample = 16'h3e00;</code> | Địa chỉ 127: x=-0.0625; trả raw=0x3E00 (15872), gate=0.48437500. |
-| [131](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L131>) | <code>        128: sigmoid_sample = 16'h4000;</code> | Địa chỉ 128: x=0; trả raw=0x4000 (16384), gate=0.50000000. |
-| [132](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L132>) | <code>        129: sigmoid_sample = 16'h4200;</code> | Địa chỉ 129: x=0.0625; trả raw=0x4200 (16896), gate=0.51562500. |
-| [133](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L133>) | <code>        130: sigmoid_sample = 16'h43ff;</code> | Địa chỉ 130: x=0.125; trả raw=0x43FF (17407), gate=0.53121948. |
-| [134](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L134>) | <code>        131: sigmoid_sample = 16'h45fc;</code> | Địa chỉ 131: x=0.1875; trả raw=0x45FC (17916), gate=0.54675293. |
-| [135](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L135>) | <code>        132: sigmoid_sample = 16'h47f5;</code> | Địa chỉ 132: x=0.25; trả raw=0x47F5 (18421), gate=0.56216431. |
-| [136](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L136>) | <code>        133: sigmoid_sample = 16'h49eb;</code> | Địa chỉ 133: x=0.3125; trả raw=0x49EB (18923), gate=0.57748413. |
-| [137](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L137>) | <code>        134: sigmoid_sample = 16'h4bdc;</code> | Địa chỉ 134: x=0.375; trả raw=0x4BDC (19420), gate=0.59265137. |
-| [138](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L138>) | <code>        135: sigmoid_sample = 16'h4dc8;</code> | Địa chỉ 135: x=0.4375; trả raw=0x4DC8 (19912), gate=0.60766602. |
-| [139](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L139>) | <code>        136: sigmoid_sample = 16'h4fad;</code> | Địa chỉ 136: x=0.5; trả raw=0x4FAD (20397), gate=0.62246704. |
-| [140](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L140>) | <code>        137: sigmoid_sample = 16'h518a;</code> | Địa chỉ 137: x=0.5625; trả raw=0x518A (20874), gate=0.63702393. |
-| [141](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L141>) | <code>        138: sigmoid_sample = 16'h5360;</code> | Địa chỉ 138: x=0.625; trả raw=0x5360 (21344), gate=0.65136719. |
-| [142](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L142>) | <code>        139: sigmoid_sample = 16'h552c;</code> | Địa chỉ 139: x=0.6875; trả raw=0x552C (21804), gate=0.66540527. |
-| [143](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L143>) | <code>        140: sigmoid_sample = 16'h56ef;</code> | Địa chỉ 140: x=0.75; trả raw=0x56EF (22255), gate=0.67916870. |
-| [144](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L144>) | <code>        141: sigmoid_sample = 16'h58a8;</code> | Địa chỉ 141: x=0.8125; trả raw=0x58A8 (22696), gate=0.69262695. |
-| [145](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L145>) | <code>        142: sigmoid_sample = 16'h5a57;</code> | Địa chỉ 142: x=0.875; trả raw=0x5A57 (23127), gate=0.70578003. |
-| [146](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L146>) | <code>        143: sigmoid_sample = 16'h5bfb;</code> | Địa chỉ 143: x=0.9375; trả raw=0x5BFB (23547), gate=0.71859741. |
-| [147](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L147>) | <code>        144: sigmoid_sample = 16'h5d93;</code> | Địa chỉ 144: x=1; trả raw=0x5D93 (23955), gate=0.73104858. |
-| [148](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L148>) | <code>        145: sigmoid_sample = 16'h5f20;</code> | Địa chỉ 145: x=1.0625; trả raw=0x5F20 (24352), gate=0.74316406. |
-| [149](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L149>) | <code>        146: sigmoid_sample = 16'h60a1;</code> | Địa chỉ 146: x=1.125; trả raw=0x60A1 (24737), gate=0.75491333. |
-| [150](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L150>) | <code>        147: sigmoid_sample = 16'h6216;</code> | Địa chỉ 147: x=1.1875; trả raw=0x6216 (25110), gate=0.76629639. |
-| [151](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L151>) | <code>        148: sigmoid_sample = 16'h637f;</code> | Địa chỉ 148: x=1.25; trả raw=0x637F (25471), gate=0.77731323. |
-| [152](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L152>) | <code>        149: sigmoid_sample = 16'h64db;</code> | Địa chỉ 149: x=1.3125; trả raw=0x64DB (25819), gate=0.78793335. |
-| [153](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L153>) | <code>        150: sigmoid_sample = 16'h662b;</code> | Địa chỉ 150: x=1.375; trả raw=0x662B (26155), gate=0.79818726. |
-| [154](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L154>) | <code>        151: sigmoid_sample = 16'h676f;</code> | Địa chỉ 151: x=1.4375; trả raw=0x676F (26479), gate=0.80807495. |
-| [155](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L155>) | <code>        152: sigmoid_sample = 16'h68a6;</code> | Địa chỉ 152: x=1.5; trả raw=0x68A6 (26790), gate=0.81756592. |
-| [156](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L156>) | <code>        153: sigmoid_sample = 16'h69d2;</code> | Địa chỉ 153: x=1.5625; trả raw=0x69D2 (27090), gate=0.82672119. |
-| [157](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L157>) | <code>        154: sigmoid_sample = 16'h6af1;</code> | Địa chỉ 154: x=1.625; trả raw=0x6AF1 (27377), gate=0.83547974. |
-| [158](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L158>) | <code>        155: sigmoid_sample = 16'h6c05;</code> | Địa chỉ 155: x=1.6875; trả raw=0x6C05 (27653), gate=0.84390259. |
-| [159](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L159>) | <code>        156: sigmoid_sample = 16'h6d0d;</code> | Địa chỉ 156: x=1.75; trả raw=0x6D0D (27917), gate=0.85195923. |
-| [160](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L160>) | <code>        157: sigmoid_sample = 16'h6e09;</code> | Địa chỉ 157: x=1.8125; trả raw=0x6E09 (28169), gate=0.85964966. |
-| [161](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L161>) | <code>        158: sigmoid_sample = 16'h6efb;</code> | Địa chỉ 158: x=1.875; trả raw=0x6EFB (28411), gate=0.86703491. |
-| [162](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L162>) | <code>        159: sigmoid_sample = 16'h6fe2;</code> | Địa chỉ 159: x=1.9375; trả raw=0x6FE2 (28642), gate=0.87408447. |
-| [163](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L163>) | <code>        160: sigmoid_sample = 16'h70be;</code> | Địa chỉ 160: x=2; trả raw=0x70BE (28862), gate=0.88079834. |
-| [164](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L164>) | <code>        161: sigmoid_sample = 16'h7190;</code> | Địa chỉ 161: x=2.0625; trả raw=0x7190 (29072), gate=0.88720703. |
-| [165](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L165>) | <code>        162: sigmoid_sample = 16'h7258;</code> | Địa chỉ 162: x=2.125; trả raw=0x7258 (29272), gate=0.89331055. |
-| [166](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L166>) | <code>        163: sigmoid_sample = 16'h7316;</code> | Địa chỉ 163: x=2.1875; trả raw=0x7316 (29462), gate=0.89910889. |
-| [167](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L167>) | <code>        164: sigmoid_sample = 16'h73cc;</code> | Địa chỉ 164: x=2.25; trả raw=0x73CC (29644), gate=0.90466309. |
-| [168](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L168>) | <code>        165: sigmoid_sample = 16'h7478;</code> | Địa chỉ 165: x=2.3125; trả raw=0x7478 (29816), gate=0.90991211. |
-| [169](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L169>) | <code>        166: sigmoid_sample = 16'h751b;</code> | Địa chỉ 166: x=2.375; trả raw=0x751B (29979), gate=0.91488647. |
-| [170](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L170>) | <code>        167: sigmoid_sample = 16'h75b7;</code> | Địa chỉ 167: x=2.4375; trả raw=0x75B7 (30135), gate=0.91964722. |
-| [171](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L171>) | <code>        168: sigmoid_sample = 16'h764a;</code> | Địa chỉ 168: x=2.5; trả raw=0x764A (30282), gate=0.92413330. |
-| [172](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L172>) | <code>        169: sigmoid_sample = 16'h76d6;</code> | Địa chỉ 169: x=2.5625; trả raw=0x76D6 (30422), gate=0.92840576. |
-| [173](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L173>) | <code>        170: sigmoid_sample = 16'h775b;</code> | Địa chỉ 170: x=2.625; trả raw=0x775B (30555), gate=0.93246460. |
-| [174](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L174>) | <code>        171: sigmoid_sample = 16'h77d8;</code> | Địa chỉ 171: x=2.6875; trả raw=0x77D8 (30680), gate=0.93627930. |
-| [175](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L175>) | <code>        172: sigmoid_sample = 16'h784f;</code> | Địa chỉ 172: x=2.75; trả raw=0x784F (30799), gate=0.93991089. |
-| [176](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L176>) | <code>        173: sigmoid_sample = 16'h78c0;</code> | Địa chỉ 173: x=2.8125; trả raw=0x78C0 (30912), gate=0.94335938. |
-| [177](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L177>) | <code>        174: sigmoid_sample = 16'h792a;</code> | Địa chỉ 174: x=2.875; trả raw=0x792A (31018), gate=0.94659424. |
-| [178](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L178>) | <code>        175: sigmoid_sample = 16'h798f;</code> | Địa chỉ 175: x=2.9375; trả raw=0x798F (31119), gate=0.94967651. |
-| [179](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L179>) | <code>        176: sigmoid_sample = 16'h79ee;</code> | Địa chỉ 176: x=3; trả raw=0x79EE (31214), gate=0.95257568. |
-| [180](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L180>) | <code>        177: sigmoid_sample = 16'h7a48;</code> | Địa chỉ 177: x=3.0625; trả raw=0x7A48 (31304), gate=0.95532227. |
-| [181](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L181>) | <code>        178: sigmoid_sample = 16'h7a9d;</code> | Địa chỉ 178: x=3.125; trả raw=0x7A9D (31389), gate=0.95791626. |
-| [182](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L182>) | <code>        179: sigmoid_sample = 16'h7aed;</code> | Địa chỉ 179: x=3.1875; trả raw=0x7AED (31469), gate=0.96035767. |
-| [183](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L183>) | <code>        180: sigmoid_sample = 16'h7b39;</code> | Địa chỉ 180: x=3.25; trả raw=0x7B39 (31545), gate=0.96267700. |
-| [184](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L184>) | <code>        181: sigmoid_sample = 16'h7b80;</code> | Địa chỉ 181: x=3.3125; trả raw=0x7B80 (31616), gate=0.96484375. |
-| [185](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L185>) | <code>        182: sigmoid_sample = 16'h7bc4;</code> | Địa chỉ 182: x=3.375; trả raw=0x7BC4 (31684), gate=0.96691895. |
-| [186](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L186>) | <code>        183: sigmoid_sample = 16'h7c03;</code> | Địa chỉ 183: x=3.4375; trả raw=0x7C03 (31747), gate=0.96884155. |
-| [187](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L187>) | <code>        184: sigmoid_sample = 16'h7c3f;</code> | Địa chỉ 184: x=3.5; trả raw=0x7C3F (31807), gate=0.97067261. |
-| [188](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L188>) | <code>        185: sigmoid_sample = 16'h7c78;</code> | Địa chỉ 185: x=3.5625; trả raw=0x7C78 (31864), gate=0.97241211. |
-| [189](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L189>) | <code>        186: sigmoid_sample = 16'h7cad;</code> | Địa chỉ 186: x=3.625; trả raw=0x7CAD (31917), gate=0.97402954. |
-| [190](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L190>) | <code>        187: sigmoid_sample = 16'h7ce0;</code> | Địa chỉ 187: x=3.6875; trả raw=0x7CE0 (31968), gate=0.97558594. |
-| [191](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L191>) | <code>        188: sigmoid_sample = 16'h7d0f;</code> | Địa chỉ 188: x=3.75; trả raw=0x7D0F (32015), gate=0.97702026. |
-| [192](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L192>) | <code>        189: sigmoid_sample = 16'h7d3c;</code> | Địa chỉ 189: x=3.8125; trả raw=0x7D3C (32060), gate=0.97839355. |
-| [193](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L193>) | <code>        190: sigmoid_sample = 16'h7d66;</code> | Địa chỉ 190: x=3.875; trả raw=0x7D66 (32102), gate=0.97967529. |
-| [194](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L194>) | <code>        191: sigmoid_sample = 16'h7d8d;</code> | Địa chỉ 191: x=3.9375; trả raw=0x7D8D (32141), gate=0.98086548. |
-| [195](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L195>) | <code>        192: sigmoid_sample = 16'h7db3;</code> | Địa chỉ 192: x=4; trả raw=0x7DB3 (32179), gate=0.98202515. |
-| [196](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L196>) | <code>        193: sigmoid_sample = 16'h7dd6;</code> | Địa chỉ 193: x=4.0625; trả raw=0x7DD6 (32214), gate=0.98309326. |
-| [197](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L197>) | <code>        194: sigmoid_sample = 16'h7df7;</code> | Địa chỉ 194: x=4.125; trả raw=0x7DF7 (32247), gate=0.98410034. |
-| [198](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L198>) | <code>        195: sigmoid_sample = 16'h7e16;</code> | Địa chỉ 195: x=4.1875; trả raw=0x7E16 (32278), gate=0.98504639. |
-| [199](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L199>) | <code>        196: sigmoid_sample = 16'h7e33;</code> | Địa chỉ 196: x=4.25; trả raw=0x7E33 (32307), gate=0.98593140. |
-| [200](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L200>) | <code>        197: sigmoid_sample = 16'h7e4f;</code> | Địa chỉ 197: x=4.3125; trả raw=0x7E4F (32335), gate=0.98678589. |
-| [201](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L201>) | <code>        198: sigmoid_sample = 16'h7e69;</code> | Địa chỉ 198: x=4.375; trả raw=0x7E69 (32361), gate=0.98757935. |
-| [202](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L202>) | <code>        199: sigmoid_sample = 16'h7e81;</code> | Địa chỉ 199: x=4.4375; trả raw=0x7E81 (32385), gate=0.98831177. |
-| [203](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L203>) | <code>        200: sigmoid_sample = 16'h7e98;</code> | Địa chỉ 200: x=4.5; trả raw=0x7E98 (32408), gate=0.98901367. |
-| [204](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L204>) | <code>        201: sigmoid_sample = 16'h7eae;</code> | Địa chỉ 201: x=4.5625; trả raw=0x7EAE (32430), gate=0.98968506. |
-| [205](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L205>) | <code>        202: sigmoid_sample = 16'h7ec2;</code> | Địa chỉ 202: x=4.625; trả raw=0x7EC2 (32450), gate=0.99029541. |
-| [206](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L206>) | <code>        203: sigmoid_sample = 16'h7ed5;</code> | Địa chỉ 203: x=4.6875; trả raw=0x7ED5 (32469), gate=0.99087524. |
-| [207](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L207>) | <code>        204: sigmoid_sample = 16'h7ee7;</code> | Địa chỉ 204: x=4.75; trả raw=0x7EE7 (32487), gate=0.99142456. |
-| [208](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L208>) | <code>        205: sigmoid_sample = 16'h7ef8;</code> | Địa chỉ 205: x=4.8125; trả raw=0x7EF8 (32504), gate=0.99194336. |
-| [209](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L209>) | <code>        206: sigmoid_sample = 16'h7f08;</code> | Địa chỉ 206: x=4.875; trả raw=0x7F08 (32520), gate=0.99243164. |
-| [210](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L210>) | <code>        207: sigmoid_sample = 16'h7f17;</code> | Địa chỉ 207: x=4.9375; trả raw=0x7F17 (32535), gate=0.99288940. |
-| [211](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L211>) | <code>        208: sigmoid_sample = 16'h7f25;</code> | Địa chỉ 208: x=5; trả raw=0x7F25 (32549), gate=0.99331665. |
-| [212](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L212>) | <code>        209: sigmoid_sample = 16'h7f32;</code> | Địa chỉ 209: x=5.0625; trả raw=0x7F32 (32562), gate=0.99371338. |
-| [213](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L213>) | <code>        210: sigmoid_sample = 16'h7f3e;</code> | Địa chỉ 210: x=5.125; trả raw=0x7F3E (32574), gate=0.99407959. |
-| [214](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L214>) | <code>        211: sigmoid_sample = 16'h7f4a;</code> | Địa chỉ 211: x=5.1875; trả raw=0x7F4A (32586), gate=0.99444580. |
-| [215](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L215>) | <code>        212: sigmoid_sample = 16'h7f55;</code> | Địa chỉ 212: x=5.25; trả raw=0x7F55 (32597), gate=0.99478149. |
-| [216](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L216>) | <code>        213: sigmoid_sample = 16'h7f5f;</code> | Địa chỉ 213: x=5.3125; trả raw=0x7F5F (32607), gate=0.99508667. |
-| [217](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L217>) | <code>        214: sigmoid_sample = 16'h7f69;</code> | Địa chỉ 214: x=5.375; trả raw=0x7F69 (32617), gate=0.99539185. |
-| [218](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L218>) | <code>        215: sigmoid_sample = 16'h7f72;</code> | Địa chỉ 215: x=5.4375; trả raw=0x7F72 (32626), gate=0.99566650. |
-| [219](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L219>) | <code>        216: sigmoid_sample = 16'h7f7b;</code> | Địa chỉ 216: x=5.5; trả raw=0x7F7B (32635), gate=0.99594116. |
-| [220](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L220>) | <code>        217: sigmoid_sample = 16'h7f83;</code> | Địa chỉ 217: x=5.5625; trả raw=0x7F83 (32643), gate=0.99618530. |
-| [221](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L221>) | <code>        218: sigmoid_sample = 16'h7f8a;</code> | Địa chỉ 218: x=5.625; trả raw=0x7F8A (32650), gate=0.99639893. |
-| [222](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L222>) | <code>        219: sigmoid_sample = 16'h7f91;</code> | Địa chỉ 219: x=5.6875; trả raw=0x7F91 (32657), gate=0.99661255. |
-| [223](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L223>) | <code>        220: sigmoid_sample = 16'h7f98;</code> | Địa chỉ 220: x=5.75; trả raw=0x7F98 (32664), gate=0.99682617. |
-| [224](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L224>) | <code>        221: sigmoid_sample = 16'h7f9e;</code> | Địa chỉ 221: x=5.8125; trả raw=0x7F9E (32670), gate=0.99700928. |
-| [225](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L225>) | <code>        222: sigmoid_sample = 16'h7fa4;</code> | Địa chỉ 222: x=5.875; trả raw=0x7FA4 (32676), gate=0.99719238. |
-| [226](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L226>) | <code>        223: sigmoid_sample = 16'h7faa;</code> | Địa chỉ 223: x=5.9375; trả raw=0x7FAA (32682), gate=0.99737549. |
-| [227](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L227>) | <code>        224: sigmoid_sample = 16'h7faf;</code> | Địa chỉ 224: x=6; trả raw=0x7FAF (32687), gate=0.99752808. |
-| [228](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L228>) | <code>        225: sigmoid_sample = 16'h7fb4;</code> | Địa chỉ 225: x=6.0625; trả raw=0x7FB4 (32692), gate=0.99768066. |
-| [229](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L229>) | <code>        226: sigmoid_sample = 16'h7fb8;</code> | Địa chỉ 226: x=6.125; trả raw=0x7FB8 (32696), gate=0.99780273. |
-| [230](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L230>) | <code>        227: sigmoid_sample = 16'h7fbd;</code> | Địa chỉ 227: x=6.1875; trả raw=0x7FBD (32701), gate=0.99795532. |
-| [231](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L231>) | <code>        228: sigmoid_sample = 16'h7fc1;</code> | Địa chỉ 228: x=6.25; trả raw=0x7FC1 (32705), gate=0.99807739. |
-| [232](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L232>) | <code>        229: sigmoid_sample = 16'h7fc5;</code> | Địa chỉ 229: x=6.3125; trả raw=0x7FC5 (32709), gate=0.99819946. |
-| [233](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L233>) | <code>        230: sigmoid_sample = 16'h7fc8;</code> | Địa chỉ 230: x=6.375; trả raw=0x7FC8 (32712), gate=0.99829102. |
-| [234](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L234>) | <code>        231: sigmoid_sample = 16'h7fcc;</code> | Địa chỉ 231: x=6.4375; trả raw=0x7FCC (32716), gate=0.99841309. |
-| [235](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L235>) | <code>        232: sigmoid_sample = 16'h7fcf;</code> | Địa chỉ 232: x=6.5; trả raw=0x7FCF (32719), gate=0.99850464. |
-| [236](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L236>) | <code>        233: sigmoid_sample = 16'h7fd2;</code> | Địa chỉ 233: x=6.5625; trả raw=0x7FD2 (32722), gate=0.99859619. |
-| [237](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L237>) | <code>        234: sigmoid_sample = 16'h7fd5;</code> | Địa chỉ 234: x=6.625; trả raw=0x7FD5 (32725), gate=0.99868774. |
-| [238](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L238>) | <code>        235: sigmoid_sample = 16'h7fd7;</code> | Địa chỉ 235: x=6.6875; trả raw=0x7FD7 (32727), gate=0.99874878. |
-| [239](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L239>) | <code>        236: sigmoid_sample = 16'h7fda;</code> | Địa chỉ 236: x=6.75; trả raw=0x7FDA (32730), gate=0.99884033. |
-| [240](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L240>) | <code>        237: sigmoid_sample = 16'h7fdc;</code> | Địa chỉ 237: x=6.8125; trả raw=0x7FDC (32732), gate=0.99890137. |
-| [241](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L241>) | <code>        238: sigmoid_sample = 16'h7fde;</code> | Địa chỉ 238: x=6.875; trả raw=0x7FDE (32734), gate=0.99896240. |
-| [242](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L242>) | <code>        239: sigmoid_sample = 16'h7fe0;</code> | Địa chỉ 239: x=6.9375; trả raw=0x7FE0 (32736), gate=0.99902344. |
-| [243](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L243>) | <code>        240: sigmoid_sample = 16'h7fe2;</code> | Địa chỉ 240: x=7; trả raw=0x7FE2 (32738), gate=0.99908447. |
-| [244](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L244>) | <code>        241: sigmoid_sample = 16'h7fe4;</code> | Địa chỉ 241: x=7.0625; trả raw=0x7FE4 (32740), gate=0.99914551. |
-| [245](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L245>) | <code>        242: sigmoid_sample = 16'h7fe6;</code> | Địa chỉ 242: x=7.125; trả raw=0x7FE6 (32742), gate=0.99920654. |
-| [246](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L246>) | <code>        243: sigmoid_sample = 16'h7fe7;</code> | Địa chỉ 243: x=7.1875; trả raw=0x7FE7 (32743), gate=0.99923706. |
-| [247](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L247>) | <code>        244: sigmoid_sample = 16'h7fe9;</code> | Địa chỉ 244: x=7.25; trả raw=0x7FE9 (32745), gate=0.99929810. |
-| [248](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L248>) | <code>        245: sigmoid_sample = 16'h7fea;</code> | Địa chỉ 245: x=7.3125; trả raw=0x7FEA (32746), gate=0.99932861. |
-| [249](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L249>) | <code>        246: sigmoid_sample = 16'h7feb;</code> | Địa chỉ 246: x=7.375; trả raw=0x7FEB (32747), gate=0.99935913. |
-| [250](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L250>) | <code>        247: sigmoid_sample = 16'h7fed;</code> | Địa chỉ 247: x=7.4375; trả raw=0x7FED (32749), gate=0.99942017. |
-| [251](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L251>) | <code>        248: sigmoid_sample = 16'h7fee;</code> | Địa chỉ 248: x=7.5; trả raw=0x7FEE (32750), gate=0.99945068. |
-| [252](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L252>) | <code>        249: sigmoid_sample = 16'h7fef;</code> | Địa chỉ 249: x=7.5625; trả raw=0x7FEF (32751), gate=0.99948120. |
-| [253](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L253>) | <code>        250: sigmoid_sample = 16'h7ff0;</code> | Địa chỉ 250: x=7.625; trả raw=0x7FF0 (32752), gate=0.99951172. |
-| [254](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L254>) | <code>        251: sigmoid_sample = 16'h7ff1;</code> | Địa chỉ 251: x=7.6875; trả raw=0x7FF1 (32753), gate=0.99954224. |
-| [255](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L255>) | <code>        252: sigmoid_sample = 16'h7ff2;</code> | Địa chỉ 252: x=7.75; trả raw=0x7FF2 (32754), gate=0.99957275. |
-| [256](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L256>) | <code>        253: sigmoid_sample = 16'h7ff3;</code> | Địa chỉ 253: x=7.8125; trả raw=0x7FF3 (32755), gate=0.99960327. |
-| [257](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L257>) | <code>        254: sigmoid_sample = 16'h7ff4;</code> | Địa chỉ 254: x=7.875; trả raw=0x7FF4 (32756), gate=0.99963379. |
-| [258](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L258>) | <code>        255: sigmoid_sample = 16'h7ff4;</code> | Địa chỉ 255: x=7.9375; trả raw=0x7FF4 (32756), gate=0.99963379. |
-| [259](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L259>) | <code>        256: sigmoid_sample = 16'h7ff5;</code> | Địa chỉ 256: x=8; trả raw=0x7FF5 (32757), gate=0.99966431. |
-| [260](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L260>) | <code>        default: sigmoid_sample = 16'h0000;</code> | Địa chỉ ngoài 0x000…0x100 trả mẫu fallback của function; FSM sigmoid hợp lệ giới hạn chỉ số trong miền bảng. |
-| [261](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L261>) | <code>    endcase</code> | Kết thúc các nhánh case; default phía trên xử lý lựa chọn không khớp nếu có. |
-| [262](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L262>) | <code>endfunction</code> | Kết thúc function; giá trị trả được gán vào tên function trong thân hàm. |
+| Dòng | Code gốc | Giải thích |
+|---|---|---|
+| [1](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L1>) | <code>`ifndef SIGMOID_SAMPLE_SVH</code> | Module LUT tổ hợp portable, case table tường minh; không register hay memory access trong function. |
+| [2](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L2>) | <code>`define SIGMOID_SAMPLE_SVH</code> | Module LUT tổ hợp portable, case table tường minh; không register hay memory access trong function. |
+| [3](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L3>) | <code>module sigmoid_sample(input logic [8:0] index, output logic [15:0] value);</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [4](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L4>) | <code>    always_comb begin</code> | Module LUT tổ hợp portable, case table tường minh; không register hay memory access trong function. |
+| [5](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L5>) | <code>    case(index)</code> | Module LUT tổ hợp portable, case table tường minh; không register hay memory access trong function. |
+| [6](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L6>) | <code>        0: value = 16&#x27;h000b;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [7](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L7>) | <code>        1: value = 16&#x27;h000c;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [8](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L8>) | <code>        2: value = 16&#x27;h000c;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [9](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L9>) | <code>        3: value = 16&#x27;h000d;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [10](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L10>) | <code>        4: value = 16&#x27;h000e;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [11](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L11>) | <code>        5: value = 16&#x27;h000f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [12](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L12>) | <code>        6: value = 16&#x27;h0010;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [13](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L13>) | <code>        7: value = 16&#x27;h0011;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [14](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L14>) | <code>        8: value = 16&#x27;h0012;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [15](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L15>) | <code>        9: value = 16&#x27;h0013;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [16](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L16>) | <code>        10: value = 16&#x27;h0015;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [17](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L17>) | <code>        11: value = 16&#x27;h0016;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [18](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L18>) | <code>        12: value = 16&#x27;h0017;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [19](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L19>) | <code>        13: value = 16&#x27;h0019;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [20](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L20>) | <code>        14: value = 16&#x27;h001a;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [21](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L21>) | <code>        15: value = 16&#x27;h001c;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [22](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L22>) | <code>        16: value = 16&#x27;h001e;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [23](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L23>) | <code>        17: value = 16&#x27;h0020;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [24](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L24>) | <code>        18: value = 16&#x27;h0022;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [25](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L25>) | <code>        19: value = 16&#x27;h0024;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [26](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L26>) | <code>        20: value = 16&#x27;h0026;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [27](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L27>) | <code>        21: value = 16&#x27;h0029;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [28](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L28>) | <code>        22: value = 16&#x27;h002b;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [29](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L29>) | <code>        23: value = 16&#x27;h002e;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [30](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L30>) | <code>        24: value = 16&#x27;h0031;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [31](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L31>) | <code>        25: value = 16&#x27;h0034;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [32](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L32>) | <code>        26: value = 16&#x27;h0038;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [33](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L33>) | <code>        27: value = 16&#x27;h003b;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [34](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L34>) | <code>        28: value = 16&#x27;h003f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [35](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L35>) | <code>        29: value = 16&#x27;h0043;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [36](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L36>) | <code>        30: value = 16&#x27;h0048;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [37](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L37>) | <code>        31: value = 16&#x27;h004c;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [38](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L38>) | <code>        32: value = 16&#x27;h0051;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [39](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L39>) | <code>        33: value = 16&#x27;h0056;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [40](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L40>) | <code>        34: value = 16&#x27;h005c;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [41](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L41>) | <code>        35: value = 16&#x27;h0062;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [42](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L42>) | <code>        36: value = 16&#x27;h0068;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [43](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L43>) | <code>        37: value = 16&#x27;h006f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [44](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L44>) | <code>        38: value = 16&#x27;h0076;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [45](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L45>) | <code>        39: value = 16&#x27;h007d;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [46](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L46>) | <code>        40: value = 16&#x27;h0085;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [47](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L47>) | <code>        41: value = 16&#x27;h008e;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [48](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L48>) | <code>        42: value = 16&#x27;h0097;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [49](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L49>) | <code>        43: value = 16&#x27;h00a1;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [50](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L50>) | <code>        44: value = 16&#x27;h00ab;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [51](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L51>) | <code>        45: value = 16&#x27;h00b6;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [52](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L52>) | <code>        46: value = 16&#x27;h00c2;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [53](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L53>) | <code>        47: value = 16&#x27;h00ce;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [54](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L54>) | <code>        48: value = 16&#x27;h00db;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [55](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L55>) | <code>        49: value = 16&#x27;h00e9;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [56](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L56>) | <code>        50: value = 16&#x27;h00f8;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [57](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L57>) | <code>        51: value = 16&#x27;h0108;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [58](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L58>) | <code>        52: value = 16&#x27;h0119;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [59](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L59>) | <code>        53: value = 16&#x27;h012b;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [60](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L60>) | <code>        54: value = 16&#x27;h013e;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [61](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L61>) | <code>        55: value = 16&#x27;h0152;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [62](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L62>) | <code>        56: value = 16&#x27;h0168;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [63](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L63>) | <code>        57: value = 16&#x27;h017f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [64](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L64>) | <code>        58: value = 16&#x27;h0197;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [65](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L65>) | <code>        59: value = 16&#x27;h01b1;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [66](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L66>) | <code>        60: value = 16&#x27;h01cd;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [67](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L67>) | <code>        61: value = 16&#x27;h01ea;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [68](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L68>) | <code>        62: value = 16&#x27;h0209;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [69](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L69>) | <code>        63: value = 16&#x27;h022a;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [70](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L70>) | <code>        64: value = 16&#x27;h024d;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [71](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L71>) | <code>        65: value = 16&#x27;h0273;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [72](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L72>) | <code>        66: value = 16&#x27;h029a;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [73](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L73>) | <code>        67: value = 16&#x27;h02c4;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [74](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L74>) | <code>        68: value = 16&#x27;h02f1;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [75](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L75>) | <code>        69: value = 16&#x27;h0320;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [76](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L76>) | <code>        70: value = 16&#x27;h0353;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [77](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L77>) | <code>        71: value = 16&#x27;h0388;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [78](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L78>) | <code>        72: value = 16&#x27;h03c1;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [79](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L79>) | <code>        73: value = 16&#x27;h03fd;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [80](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L80>) | <code>        74: value = 16&#x27;h043c;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [81](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L81>) | <code>        75: value = 16&#x27;h0480;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [82](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L82>) | <code>        76: value = 16&#x27;h04c7;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [83](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L83>) | <code>        77: value = 16&#x27;h0513;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [84](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L84>) | <code>        78: value = 16&#x27;h0563;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [85](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L85>) | <code>        79: value = 16&#x27;h05b8;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [86](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L86>) | <code>        80: value = 16&#x27;h0612;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [87](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L87>) | <code>        81: value = 16&#x27;h0671;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [88](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L88>) | <code>        82: value = 16&#x27;h06d6;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [89](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L89>) | <code>        83: value = 16&#x27;h0740;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [90](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L90>) | <code>        84: value = 16&#x27;h07b1;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [91](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L91>) | <code>        85: value = 16&#x27;h0828;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [92](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L92>) | <code>        86: value = 16&#x27;h08a5;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [93](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L93>) | <code>        87: value = 16&#x27;h092a;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [94](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L94>) | <code>        88: value = 16&#x27;h09b6;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [95](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L95>) | <code>        89: value = 16&#x27;h0a49;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [96](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L96>) | <code>        90: value = 16&#x27;h0ae5;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [97](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L97>) | <code>        91: value = 16&#x27;h0b88;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [98](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L98>) | <code>        92: value = 16&#x27;h0c34;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [99](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L99>) | <code>        93: value = 16&#x27;h0cea;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [100](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L100>) | <code>        94: value = 16&#x27;h0da8;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [101](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L101>) | <code>        95: value = 16&#x27;h0e70;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [102](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L102>) | <code>        96: value = 16&#x27;h0f42;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [103](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L103>) | <code>        97: value = 16&#x27;h101e;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [104](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L104>) | <code>        98: value = 16&#x27;h1105;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [105](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L105>) | <code>        99: value = 16&#x27;h11f7;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [106](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L106>) | <code>        100: value = 16&#x27;h12f3;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [107](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L107>) | <code>        101: value = 16&#x27;h13fb;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [108](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L108>) | <code>        102: value = 16&#x27;h150f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [109](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L109>) | <code>        103: value = 16&#x27;h162e;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [110](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L110>) | <code>        104: value = 16&#x27;h175a;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [111](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L111>) | <code>        105: value = 16&#x27;h1891;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [112](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L112>) | <code>        106: value = 16&#x27;h19d5;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [113](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L113>) | <code>        107: value = 16&#x27;h1b25;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [114](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L114>) | <code>        108: value = 16&#x27;h1c81;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [115](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L115>) | <code>        109: value = 16&#x27;h1dea;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [116](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L116>) | <code>        110: value = 16&#x27;h1f5f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [117](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L117>) | <code>        111: value = 16&#x27;h20e0;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [118](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L118>) | <code>        112: value = 16&#x27;h226d;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [119](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L119>) | <code>        113: value = 16&#x27;h2405;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [120](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L120>) | <code>        114: value = 16&#x27;h25a9;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [121](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L121>) | <code>        115: value = 16&#x27;h2758;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [122](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L122>) | <code>        116: value = 16&#x27;h2911;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [123](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L123>) | <code>        117: value = 16&#x27;h2ad4;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [124](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L124>) | <code>        118: value = 16&#x27;h2ca0;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [125](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L125>) | <code>        119: value = 16&#x27;h2e76;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [126](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L126>) | <code>        120: value = 16&#x27;h3053;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [127](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L127>) | <code>        121: value = 16&#x27;h3238;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [128](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L128>) | <code>        122: value = 16&#x27;h3424;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [129](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L129>) | <code>        123: value = 16&#x27;h3615;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [130](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L130>) | <code>        124: value = 16&#x27;h380b;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [131](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L131>) | <code>        125: value = 16&#x27;h3a04;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [132](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L132>) | <code>        126: value = 16&#x27;h3c01;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [133](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L133>) | <code>        127: value = 16&#x27;h3e00;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [134](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L134>) | <code>        128: value = 16&#x27;h4000;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [135](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L135>) | <code>        129: value = 16&#x27;h4200;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [136](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L136>) | <code>        130: value = 16&#x27;h43ff;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [137](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L137>) | <code>        131: value = 16&#x27;h45fc;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [138](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L138>) | <code>        132: value = 16&#x27;h47f5;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [139](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L139>) | <code>        133: value = 16&#x27;h49eb;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [140](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L140>) | <code>        134: value = 16&#x27;h4bdc;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [141](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L141>) | <code>        135: value = 16&#x27;h4dc8;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [142](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L142>) | <code>        136: value = 16&#x27;h4fad;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [143](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L143>) | <code>        137: value = 16&#x27;h518a;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [144](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L144>) | <code>        138: value = 16&#x27;h5360;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [145](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L145>) | <code>        139: value = 16&#x27;h552c;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [146](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L146>) | <code>        140: value = 16&#x27;h56ef;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [147](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L147>) | <code>        141: value = 16&#x27;h58a8;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [148](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L148>) | <code>        142: value = 16&#x27;h5a57;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [149](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L149>) | <code>        143: value = 16&#x27;h5bfb;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [150](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L150>) | <code>        144: value = 16&#x27;h5d93;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [151](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L151>) | <code>        145: value = 16&#x27;h5f20;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [152](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L152>) | <code>        146: value = 16&#x27;h60a1;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [153](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L153>) | <code>        147: value = 16&#x27;h6216;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [154](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L154>) | <code>        148: value = 16&#x27;h637f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [155](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L155>) | <code>        149: value = 16&#x27;h64db;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [156](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L156>) | <code>        150: value = 16&#x27;h662b;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [157](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L157>) | <code>        151: value = 16&#x27;h676f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [158](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L158>) | <code>        152: value = 16&#x27;h68a6;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [159](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L159>) | <code>        153: value = 16&#x27;h69d2;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [160](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L160>) | <code>        154: value = 16&#x27;h6af1;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [161](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L161>) | <code>        155: value = 16&#x27;h6c05;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [162](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L162>) | <code>        156: value = 16&#x27;h6d0d;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [163](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L163>) | <code>        157: value = 16&#x27;h6e09;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [164](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L164>) | <code>        158: value = 16&#x27;h6efb;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [165](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L165>) | <code>        159: value = 16&#x27;h6fe2;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [166](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L166>) | <code>        160: value = 16&#x27;h70be;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [167](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L167>) | <code>        161: value = 16&#x27;h7190;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [168](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L168>) | <code>        162: value = 16&#x27;h7258;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [169](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L169>) | <code>        163: value = 16&#x27;h7316;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [170](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L170>) | <code>        164: value = 16&#x27;h73cc;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [171](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L171>) | <code>        165: value = 16&#x27;h7478;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [172](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L172>) | <code>        166: value = 16&#x27;h751b;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [173](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L173>) | <code>        167: value = 16&#x27;h75b7;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [174](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L174>) | <code>        168: value = 16&#x27;h764a;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [175](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L175>) | <code>        169: value = 16&#x27;h76d6;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [176](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L176>) | <code>        170: value = 16&#x27;h775b;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [177](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L177>) | <code>        171: value = 16&#x27;h77d8;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [178](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L178>) | <code>        172: value = 16&#x27;h784f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [179](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L179>) | <code>        173: value = 16&#x27;h78c0;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [180](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L180>) | <code>        174: value = 16&#x27;h792a;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [181](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L181>) | <code>        175: value = 16&#x27;h798f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [182](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L182>) | <code>        176: value = 16&#x27;h79ee;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [183](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L183>) | <code>        177: value = 16&#x27;h7a48;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [184](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L184>) | <code>        178: value = 16&#x27;h7a9d;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [185](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L185>) | <code>        179: value = 16&#x27;h7aed;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [186](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L186>) | <code>        180: value = 16&#x27;h7b39;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [187](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L187>) | <code>        181: value = 16&#x27;h7b80;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [188](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L188>) | <code>        182: value = 16&#x27;h7bc4;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [189](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L189>) | <code>        183: value = 16&#x27;h7c03;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [190](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L190>) | <code>        184: value = 16&#x27;h7c3f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [191](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L191>) | <code>        185: value = 16&#x27;h7c78;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [192](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L192>) | <code>        186: value = 16&#x27;h7cad;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [193](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L193>) | <code>        187: value = 16&#x27;h7ce0;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [194](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L194>) | <code>        188: value = 16&#x27;h7d0f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [195](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L195>) | <code>        189: value = 16&#x27;h7d3c;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [196](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L196>) | <code>        190: value = 16&#x27;h7d66;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [197](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L197>) | <code>        191: value = 16&#x27;h7d8d;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [198](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L198>) | <code>        192: value = 16&#x27;h7db3;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [199](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L199>) | <code>        193: value = 16&#x27;h7dd6;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [200](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L200>) | <code>        194: value = 16&#x27;h7df7;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [201](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L201>) | <code>        195: value = 16&#x27;h7e16;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [202](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L202>) | <code>        196: value = 16&#x27;h7e33;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [203](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L203>) | <code>        197: value = 16&#x27;h7e4f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [204](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L204>) | <code>        198: value = 16&#x27;h7e69;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [205](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L205>) | <code>        199: value = 16&#x27;h7e81;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [206](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L206>) | <code>        200: value = 16&#x27;h7e98;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [207](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L207>) | <code>        201: value = 16&#x27;h7eae;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [208](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L208>) | <code>        202: value = 16&#x27;h7ec2;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [209](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L209>) | <code>        203: value = 16&#x27;h7ed5;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [210](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L210>) | <code>        204: value = 16&#x27;h7ee7;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [211](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L211>) | <code>        205: value = 16&#x27;h7ef8;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [212](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L212>) | <code>        206: value = 16&#x27;h7f08;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [213](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L213>) | <code>        207: value = 16&#x27;h7f17;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [214](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L214>) | <code>        208: value = 16&#x27;h7f25;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [215](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L215>) | <code>        209: value = 16&#x27;h7f32;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [216](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L216>) | <code>        210: value = 16&#x27;h7f3e;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [217](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L217>) | <code>        211: value = 16&#x27;h7f4a;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [218](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L218>) | <code>        212: value = 16&#x27;h7f55;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [219](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L219>) | <code>        213: value = 16&#x27;h7f5f;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [220](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L220>) | <code>        214: value = 16&#x27;h7f69;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [221](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L221>) | <code>        215: value = 16&#x27;h7f72;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [222](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L222>) | <code>        216: value = 16&#x27;h7f7b;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [223](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L223>) | <code>        217: value = 16&#x27;h7f83;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [224](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L224>) | <code>        218: value = 16&#x27;h7f8a;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [225](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L225>) | <code>        219: value = 16&#x27;h7f91;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [226](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L226>) | <code>        220: value = 16&#x27;h7f98;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [227](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L227>) | <code>        221: value = 16&#x27;h7f9e;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [228](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L228>) | <code>        222: value = 16&#x27;h7fa4;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [229](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L229>) | <code>        223: value = 16&#x27;h7faa;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [230](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L230>) | <code>        224: value = 16&#x27;h7faf;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [231](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L231>) | <code>        225: value = 16&#x27;h7fb4;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [232](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L232>) | <code>        226: value = 16&#x27;h7fb8;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [233](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L233>) | <code>        227: value = 16&#x27;h7fbd;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [234](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L234>) | <code>        228: value = 16&#x27;h7fc1;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [235](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L235>) | <code>        229: value = 16&#x27;h7fc5;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [236](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L236>) | <code>        230: value = 16&#x27;h7fc8;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [237](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L237>) | <code>        231: value = 16&#x27;h7fcc;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [238](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L238>) | <code>        232: value = 16&#x27;h7fcf;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [239](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L239>) | <code>        233: value = 16&#x27;h7fd2;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [240](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L240>) | <code>        234: value = 16&#x27;h7fd5;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [241](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L241>) | <code>        235: value = 16&#x27;h7fd7;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [242](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L242>) | <code>        236: value = 16&#x27;h7fda;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [243](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L243>) | <code>        237: value = 16&#x27;h7fdc;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [244](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L244>) | <code>        238: value = 16&#x27;h7fde;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [245](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L245>) | <code>        239: value = 16&#x27;h7fe0;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [246](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L246>) | <code>        240: value = 16&#x27;h7fe2;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [247](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L247>) | <code>        241: value = 16&#x27;h7fe4;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [248](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L248>) | <code>        242: value = 16&#x27;h7fe6;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [249](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L249>) | <code>        243: value = 16&#x27;h7fe7;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [250](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L250>) | <code>        244: value = 16&#x27;h7fe9;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [251](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L251>) | <code>        245: value = 16&#x27;h7fea;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [252](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L252>) | <code>        246: value = 16&#x27;h7feb;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [253](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L253>) | <code>        247: value = 16&#x27;h7fed;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [254](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L254>) | <code>        248: value = 16&#x27;h7fee;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [255](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L255>) | <code>        249: value = 16&#x27;h7fef;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [256](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L256>) | <code>        250: value = 16&#x27;h7ff0;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [257](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L257>) | <code>        251: value = 16&#x27;h7ff1;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [258](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L258>) | <code>        252: value = 16&#x27;h7ff2;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [259](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L259>) | <code>        253: value = 16&#x27;h7ff3;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [260](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L260>) | <code>        254: value = 16&#x27;h7ff4;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [261](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L261>) | <code>        255: value = 16&#x27;h7ff4;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [262](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L262>) | <code>        256: value = 16&#x27;h7ff5;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [263](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L263>) | <code>        default: value = 16&#x27;h0000;</code> | Entry được làm tròn từ công thức ở tiêu đề; default bảo vệ chỉ số ngoài miền. |
+| [264](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L264>) | <code>    endcase</code> | Module LUT tổ hợp portable, case table tường minh; không register hay memory access trong function. |
+| [265](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L265>) | <code>    end</code> | Module LUT tổ hợp portable, case table tường minh; không register hay memory access trong function. |
+| [266](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L266>) | <code>endmodule</code> | Module LUT tổ hợp portable, case table tường minh; không register hay memory access trong function. |
+| [267](<../../../Verilog%20Source%20code/sigmoid_lut.svh#L267>) | <code>`endif</code> | Module LUT tổ hợp portable, case table tường minh; không register hay memory access trong function. |
