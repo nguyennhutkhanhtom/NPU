@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-04",
+  "authorization": "User requested unused legacy/helper cleanup; remove generated inactive Quartus databases after preserving evidence",
+  "status": "PASS",
+  "scope": "Only db/incremental_db in six retired isolated Quartus checkouts",
+  "removed": [
+    {
+      "path": "D:\\2151097_Nguyen Nhut Khanh\\quartus_logic5\\db",
+      "files": 121,
+      "bytes": 308158749
+    },
+    {
+      "path": "D:\\2151097_Nguyen Nhut Khanh\\quartus_logic5\\incremental_db",
+      "files": 21,
+      "bytes": 58879608
+    },
+    {
+      "path": "D:\\2151097_Nguyen Nhut Khanh\\quartus_logic6\\db",
+      "files": 121,
+      "bytes": 308175194
+    },
+    {
+      "path": "D:\\2151097_Nguyen Nhut Khanh\\quartus_logic6\\incremental_db",
+      "files": 21,
+      "bytes": 58879580
+    },
+    {
+      "path": "D:\\2151097_Nguyen Nhut Khanh\\quartus_logic7\\db",
+      "files": 121,
+      "bytes": 308354665
+    },
+    {
+      "path": "D:\\2151097_Nguyen Nhut Khanh\\quartus_logic7\\incremental_db",
+      "files": 21,
+      "bytes": 58792331
+    },
+    {
+      "path": "D:\\2151097_Nguyen Nhut Khanh\\quartus_explicit1\\db",
+      "files": 135,
+      "bytes": 30102907
+    },
+    {
+      "path": "D:\\2151097_Nguyen Nhut Khanh\\quartus_explicit1\\incremental_db",
+      "files": 3,
+      "bytes": 22902
+    },
+    {
+      "path": "D:\\2151097_Nguyen Nhut Khanh\\quartus_explicit2\\db",
+      "files": 126,
+      "bytes": 310012082
+    },
+    {
+      "path": "D:\\2151097_Nguyen Nhut Khanh\\quartus_explicit2\\incremental_db",
+      "files": 21,
+      "bytes": 58941317
+    },
+    {
+      "path": "D:\\2151097_Nguyen Nhut Khanh\\quartus_pipeline1\\db",
+      "files": 128,
+      "bytes": 305514306
+    },
+    {
+      "path": "D:\\2151097_Nguyen Nhut Khanh\\quartus_pipeline1\\incremental_db",
+      "files": 21,
+      "bytes": 58383910
+    }
+  ],
+  "total_bytes": 1864217551,
+  "evidence_check": "Six original source ZIPs and all archived report/command hashes verified before deletion; explicit1 cancellation retained",
+  "preserved": "All RTL/configuration, output_files, source/report archives, current fanout1 database, unit/model library/checkpoint caches and Git history",
+  "active_exclusion": {
+    "project": "quartus_fanout1/llm_soc",
+    "fitter_pid": 14028,
+    "supervisor_pid": 11928
+  },
+  "reproduction": "Recreate old db with archived source ZIP/config and original commands under a fresh timing tag"
+}
