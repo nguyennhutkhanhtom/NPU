@@ -21,7 +21,7 @@ synthesizable tasks, hidden sequential ownership and variable/unbounded loops.
 All 61 request helpers are inline FSM updates; substantial replicated datapaths
 and pipeline stages use generate blocks. LUTs are explicit combinational modules.
 
-The current 34-source candidate is `quartus_pipeline1/llm_soc`, timing tag
+The verified 34-source RTL was first built as `quartus_pipeline1/llm_soc`, timing tag
 `fullrtl100_release1`. SIMD payload stages run from captured operands without
 wide valid enables; two explicit standard FFs condition internal reset release.
 Assertions remain immediate and release takes two rising edges. [All seven unit groups](../../tests/full_rtl/evidence/pipeline3_all_units/results.json) PASS0warnings and
@@ -78,3 +78,5 @@ Current verification is recorded in [timing evidence](../verification/timing/REA
 and [unit instructions](../../tests/full_rtl/README.md). Older PASS results apply
 only to their archived source hashes. Application remains gated until the
 current full-top fit/timing and all seven unit/graph groups pass.
+
+The same34RTL assets have since completed [fanout1 fitting](../verification/timing/fullrtl100_fanout1/manifest.json):98.63MHz,18/20checks PASS, setup/hold still FAIL at slow85. No100MHz claim is made. Quartus serves as the EDA demonstration backend. ASIC-portable architecture, explicit register ownership and a replaceable SRAM leaf are the design focus. Board integration and FPGA peripheral development are outside the present scope. Physical fanout and I/O delay assignments belong only to this backend; ASIC synthesis/STA must use the selected standard-cell libraries and SRAM views.

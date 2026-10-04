@@ -4,6 +4,23 @@
 
 Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL dựa trên critical path. Phần full graph dùng Cyclone V C9; các snapshot legacy bên dưới dùng thiết bị riêng được ghi trong manifest. Các phép đo là FPGA demo, chưa xác nhận ASIC signoff.
 
+## Fanout1 result: 98.63 MHz, setup/hold FAIL
+
+[Manifest](fullrtl100_fanout1/manifest.json), [source archive](fullrtl100_fanout1/source_archive.json) and [current seven units](../../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match34RTL assets. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD; SDC remains10ns with input0.5..2ns/output setup2ns/hold0.5ns and no exceptions. Extraction completed17:28:31 on04Oct2026. Map0errors12warnings, fit0errors4warnings, STA0errors1warning332148. Resources51919ALM/48086FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. All UCP counts0.18of20checks PASS; application gate rejects98.63MHz.
+
+| Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
+|---|---:|---:|---:|---:|---:|
+| slow_1100mv_85c | -0.139/-0.268 | -0.102/-0.578 | 2.898/0 | 0.936/0 | 3.600/0 |
+| slow_1100mv_0c | 0.112/0 | 0.231/0 | 2.752/0 | 1.219/0 | 3.543/0 |
+| fast_1100mv_85c | 3.321/0 | 0.128/0 | 4.537/0 | 0.642/0 | 3.798/0 |
+| fast_1100mv_0c | 4.032/0 | 0.115/0 | 6.320/0 | 0.583/0 | 3.788/0 |
+
+[Setup paths](fullrtl100_fanout1/slow_1100mv_85c_setup.rpt) now contain two violations: k_write_address_q[3] to cache request groups7/6, data9.858/9.854ns, zero logic levels;9.243ns routing on the worst path. The preceding vector/cache-enable/scalar failures no longer appear as negative paths in this fit. [Hold](fullrtl100_fanout1/slow_1100mv_85c_hold.rpt) has nine negative endpoints on host_wdata bits14/13/27/6/24/23, including duplicated FFs. Worst-.102ns:3.950ns input data delay versus4.552ns capture-clock delay plus the0.5ns minimum input budget. Fitted input D3_1 setting is6. Recovery/removal pass all corners. Constraints and RTL have not changed; closure remains incomplete.
+
+The archived manifest has STA error/warning totals null because the recorder accepted only plural `warnings`, while the real report says `1 warning`. The raw report/log prove0errors1warning; the immutable manifest is preserved. `tools/timing/test_record.py` verifies the repaired parser against these actual singular/plural reports and rejects incomplete reports. Initial test read failed on a report degree-symbol byte; decoding now matches the recorder's UTF-8 replacement policy. This parser fix changes no timing result.
+
+Quartus is the EDA demonstration backend. Pin standards, physical fanout/delay settings and the chosen device characterize this backend; they do not define ASIC RTL architecture or establish board readiness. No FPGA board bring-up work is required. ASIC migration keeps compute/control RTL and replaces SRAM technology binding plus library/physical constraints; ASIC STA and signoff need actual libraries and SRAM views.
+
 ## Release1 result: 91.61 MHz, setup/hold FAIL
 
 [Manifest](fullrtl100_release1/manifest.json), [source archive](fullrtl100_release1/source_archive.json) and [seven-group regression](../../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match the exact34RTL assets. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD, unchanged10ns SDC and I/O budgets. A&S0errors/12warnings, fit0errors/4warnings, STA0errors/2timing warnings. Fitted51900ALM/48234FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. All unconstrained counts0. Extraction completed15:55:47 on04Oct2026. Synthesis and fitting PASS do not imply timing PASS; application remains blocked.
@@ -18,12 +35,6 @@ Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL d�
 The standard-FF reset conditioner fixes recovery/removal at every corner. Continuous SIMD payload registers preserve nine-clock response and exact numeric results; all seven synthetic tests PASS with0compile/runtimewarnings, including4229462compute clocks/three selected tokens/16layer executions. This is not trained text generation.
 
 [Worst setup](fullrtl100_release1/slow_1100mv_85c_setup.rpt): write_vector_addr_q[2] to u_vectors/g_request[5]/write_address_q[2],10.624ns data/10.285ns routing/one logic level. Other negative paths are cache write_pending_q[0] to lane write enables, v_address_q to vector groups and scalar_group_q to write_vector_q. [Recommendations](fullrtl100_release1/slow_1100mv_85c_recommendations.txt) identify these paths and control inter-path competition. [Hold](fullrtl100_release1/slow_1100mv_85c_hold.rpt) fails host_wdata21/19 to host_data_q by0.023/0.006ns; Optimize Hold Timing already uses All Paths. Next experiment limits address/cache-mask/scalar driver fanout through FPGA mapping assignments. RTL, transaction latency and constraints stay unchanged; this is a hypothesis until a fresh full fit is measured.
-
-The fresh physical candidate `fullrtl100_fanout1` uses the same34RTL assets and
-unchanged SDC, device and seed. Its QSF adds MAX_FANOUT2 on vector read/write
-addresses and MAX_FANOUT4 on cache write-pending/scalar drivers. [A&S archive](../synthesis/fanout1/manifest.json)
-PASS0errors12warnings; Fitter/all-corner timing are pending. Current all-seven
-PASS still matches the unchanged RTL and test inputs. No100MHz claim is made.
 
 ## Explicit2 result: 93.28 MHz, setup/removal FAIL
 

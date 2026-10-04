@@ -85,7 +85,7 @@ def first_timing_path(text: str) -> dict | None:
 
 
 def stage_counts(text: str) -> dict:
-    totals = re.findall(r"was successful\.\s+(\d+) errors,\s+(\d+) warnings", text)
+    totals = re.findall(r"was successful\.\s+(\d+) errors?,\s+(\d+) warnings?\b", text)
     diagnostics = [
         {"kind": kind, "id": int(identifier), "message": message.strip()}
         for kind, identifier, message in re.findall(
