@@ -1,0 +1,48 @@
+[
+  {
+    "arguments": [
+      "--read_settings_files=on",
+      "--write_settings_files=off",
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ],
+    "started_at_utc": "2026-10-04T14:05:41.8410261Z",
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_map.exe",
+    "stage": "map"
+  },
+  {
+    "arguments": [
+      "--read_settings_files=on",
+      "--write_settings_files=off",
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ],
+    "started_at_utc": "2026-10-04T14:14:31.9261449Z",
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_fit.exe",
+    "stage": "fit"
+  },
+  {
+    "arguments": [
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ],
+    "started_at_utc": "2026-10-04T15:10:08.9802481Z",
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_sta.exe",
+    "stage": "sta"
+  },
+  {
+    "arguments": [
+      "-t",
+      "D:\\2151097_Nguyen Nhut Khanh\\tools\\timing\\extract.tcl",
+      "D:\\2151097_Nguyen Nhut Khanh\\docs\\verification\\timing\\fullrtl100_cache1",
+      "sdc",
+      "D:\\2151097_Nguyen Nhut Khanh\\quartus_cache1\\llm_soc"
+    ],
+    "started_at_utc": "2026-10-04T15:12:18.7867104Z",
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_sta.exe",
+    "stage": "extract"
+  }
+]

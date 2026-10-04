@@ -1,0 +1,244 @@
+Statistics: 40 0 3613 1 0 2.679
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][4]~DUPLICATE 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][5]~DUPLICATE 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][5] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][4] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][2]~DUPLICATE 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][1]~DUPLICATE 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][4] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][5]~DUPLICATE 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][2] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][1] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][1] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][5] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][10]~DUPLICATE 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+op[84]~DUPLICATE lane_round_q[6][25] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][25] 0.591978 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][47] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][47]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+scalar_round_q[19] g_scalar_output[7].low_data_q[19] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[19]}}}
+op[84]~DUPLICATE lane_round_q[6][46] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][45] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][47] 0.546442 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][47]~DUPLICATE 0.546442 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][46]~DUPLICATE 0.546442 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][46] 0.546442 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[4][37] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][48] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][48] 0.546442 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][43] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][42] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][44]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][44] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][50] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][56] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[4][46] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[4][46]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[4][45] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][49] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][28] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][26] 0.523673 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][43] 0.546442 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][4]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][5]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][5] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][4] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][2]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][1]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][4] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][5]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][2] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][1] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][1] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][5] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][10]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+op[84]~DUPLICATE lane_round_q[6][25] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][25] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][47] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][47]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+scalar_round_q[19] g_scalar_output[7].low_data_q[19] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[84]~DUPLICATE lane_round_q[6][46] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][45] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][47] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][47]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][46]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][46] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[4][37] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][48] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][48] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][43] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][42] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][44]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][44] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][50] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][56] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[4][46] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[4][46]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[4][45] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][49] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][28] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][26] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][43] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][4]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][5]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][5] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][4] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][2]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][1]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][4] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][5]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][2] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][1] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][1] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][5] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][10]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+op[84]~DUPLICATE lane_round_q[6][25] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][25] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][25] 0.591978 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][25] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][47] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][47] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][47]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][47]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+scalar_round_q[19] g_scalar_output[7].low_data_q[19] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[19]}}}
+scalar_round_q[19] g_scalar_output[7].low_data_q[19] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[84]~DUPLICATE lane_round_q[6][46] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][46] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][45] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][45] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][47] 0.546442 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][47] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][47]~DUPLICATE 0.546442 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][47]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][46]~DUPLICATE 0.546442 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][46]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][46] 0.546442 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][46] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[4][37] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[4][37] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][48] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][48] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][48] 0.546442 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][48] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][43] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][43] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][42] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][42] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][44]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][44]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][44] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][44] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][50] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][50] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][56] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][56] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[4][46] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[4][46] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[4][46]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[4][46]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[4][45] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[4][45] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][49] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][49] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[6][28] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[6][28] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][26] 0.523673 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][26] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[84]~DUPLICATE lane_round_q[9][43] 0.546442 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[84]~DUPLICATE} lane_round_q~3}}
+op[84]~DUPLICATE lane_round_q[9][43] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][4]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][4]~DUPLICATE 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][4]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][5]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][5]~DUPLICATE 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][5]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][5] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][5] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][5] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][4] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][4] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][4] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][2]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][2]~DUPLICATE 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][2]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][1]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][1]~DUPLICATE 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][1]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][4] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][4] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][4] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][5]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][5]~DUPLICATE 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][5]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][2] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][2] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][2] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][1] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][1] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|a_q[18][1] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][1] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][1] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][1] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][5] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][5] 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[18][5] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][10]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n reset_release:u_reset|core_rst_n~CLKENA0 llm_math:u_math|always156~0}}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][10]~DUPLICATE 0.776655 {Global Routing in Path} {recommendation {{Remove global routing resources}} {Global Nodes} reset_release:u_reset|core_rst_n~CLKENA0}
+reset_release:u_reset|core_rst_n llm_math:u_math|b_q[13][10]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

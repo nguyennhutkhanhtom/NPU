@@ -82,4 +82,4 @@ I/O environment and library corners; complete DFT and physical signoff with
 those technologies. Quartus QSF device, pin, fanout and delay assignments belong
 only to the demonstration backend. No board integration is part of this work.
 
-Cache1 changes only compute-side cache payload capture, preserving leaf/adapter geometry, latency, collisions and reset. Its all seven groups and exact-current vendor-free full-top run0 PASS; full timing pending. The preceding attention1 elaboration and unit tags remain immutable.
+Cache1 changes only compute-side cache payload capture, preserving leaf/adapter geometry, latency, collisions and reset. Its all seven groups and exact-current vendor-free full-top run0 PASS; full timing FAIL73.97MHz/setup+recovery. The preceding attention1 elaboration and unit tags remain immutable.

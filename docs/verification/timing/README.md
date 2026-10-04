@@ -4,7 +4,22 @@
 
 Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL dựa trên critical path. Phần full graph dùng Cyclone V C9; các snapshot legacy bên dưới dùng thiết bị riêng được ghi trong manifest. Các phép đo là FPGA demo, chưa xác nhận ASIC signoff.
 
-Current `fullrtl100_cache1` separates32continuously clocked KV payload slices from the binary operand held at B_INPUT0, removing O_K_WAIT/k_valid from the shared768bit capture. Early attention clear remains. QSF requests global routing for core_rst_n; RTL reset2FF/immediate host_rdata zero and SDC10ns are unchanged. [A&S](../synthesis/cache1/manifest.json) PASS0errors12warnings; [all seven units](../../../tests/full_rtl/evidence/cache1_all_units/results.json) PASS0warnings, graph4229462compute clocks/three RTL-selected tokens/causal checked. [Vendor-free elaboration](../portable_elaboration_cache1/results.json) PASS0errors0warnings/run0. Fresh fit/all20timing checks RUNNING; no performance improvement or current100MHz PASS claimed. Confirm actual global-routing assignment application in the fitted report.
+## Cache1 result: 73.97 MHz, setup/recovery FAIL
+
+[Manifest](fullrtl100_cache1/manifest.json), [source ZIP](fullrtl100_cache1/source_archive.json) and [all seven units](../../../tests/full_rtl/evidence/cache1_all_units/results.json) match34RTL/3configuration hashes, verified against the current source before any next change. Extraction completed22:14:10 on04Oct2026. QuartusLite25.1std Build1129/CycloneV5CGXFC9E6F35C7/seed1/SPEED/STANDARD; SDC10ns and original I/O budgets unchanged, no exceptions. Map0errors12warnings/fit0errors4warnings/STA0errors2warnings332148. Fit52417ALM/49186FF/1186RAMblocks/9515648bits/186pins, DSP/PLL/DLL/HSSI0. UCP0;16/20checks PASS. Synthesis/fitting PASS, timing FAIL; strict application gate rejects73.97MHz.
+
+| Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
+|---|---:|---:|---:|---:|---:|
+| slow_1100mv_85c | -3.519/-41006.030 | 0.252/0.000 | -0.938/-7.276 | 1.267/0.000 | 3.600/0.000 |
+| slow_1100mv_0c | -2.753/-22915.773 | 0.241/0.000 | -0.413/-3.066 | 1.718/0.000 | 3.548/0.000 |
+| fast_1100mv_85c | 2.679/0.000 | 0.130/0.000 | 3.590/0.000 | 1.339/0.000 | 3.795/0.000 |
+| fast_1100mv_0c | 3.572/0.000 | 0.119/0.000 | 4.369/0.000 | 1.085/0.000 | 3.773/0.000 |
+
+[Setup](fullrtl100_cache1/slow_1100mv_85c_setup.rpt) now fails core_rst_n -> SIMD a_q13bit2, data10.124ns/routing8.995ns/two logic levels/clock skew-3.115ns. [Recommendations](fullrtl100_cache1/slow_1100mv_85c_recommendations.txt) explicitly identify Global Routing in Path and recommend removing global routing resources at core_rst_n~CLKENA0, also duplication/inter-path competition. The [Fitter](fullrtl100_cache1/llm_soc.fit.rpt) shows the forced GLOBAL_SIGNAL request applied to6106async/enable/synchronous-reset loads onGCLK1; the previous fit used automatic global routing for1290async loads and nonglobal routing for4502enable/synchronous-reset loads. This broad forced routing is a failed backend candidate. Remove that request for the next measured fit while preserving the verified cache payload RTL, all-seven numeric results, two-FF reset and immediate host-response zero contract. No architecture/test/SDC relaxation is justified.
+
+[Recovery](fullrtl100_cache1/slow_1100mv_85c_recovery.rpt) fails core_rst_n -> eight host_rdata FFs, worst-.938ns/data8.341ns/skew-2.317ns. Slow0recovery also fails; hold/removal/pulse PASS every corner. Global routing does not imply a timing benefit. [Vendor-free elaboration](../portable_elaboration_cache1/results.json) PASS24module units/14names/0errors0warnings/run0 is exact-current behavioral SRAM elaboration, not foundry synthesis/signoff or pretrained inference.
+
+Twelve synthesis warnings retain bounded sigmoid index10027, unused SRAM ports287013, output RAM forwarding276020 and constant debug outputs13024/13410. Four fitter warnings are292013optional LogicLock license,15714/169085unassigned125pins(no board bring-up requested), and176251Fast Output Register wildcard destinations: constant/invalid debug bits cannot pack as output FFs; report176252namesinstr_debug/pc_debug, while56actualoutputFFsarepacked. These notices are retained, not suppressed; measured timing332148is a failure requiring correction.
 
 ## Attention1 result: 92.19 MHz, setup/recovery FAIL
 
