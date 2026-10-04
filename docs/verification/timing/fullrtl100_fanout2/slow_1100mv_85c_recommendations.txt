@@ -1,0 +1,218 @@
+Statistics: 40 0 3868 1 40 -0.345
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+position_q[2] attention_acc_q[16][39] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][31] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][27] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][25] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][21] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][23] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][35] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][38] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][37] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][36]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][35]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][34] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][33] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][32] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][30] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][29] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][28] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][26] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][24] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][23]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][22] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][20] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][21]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][20]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][36] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][19]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][17] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][15]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][11] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][7] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][5] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][3] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][1] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][13] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][18] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][16] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][14] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][13]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][12] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+position_q[2] attention_acc_q[16][39] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][31] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][27] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][25] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][21] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][23] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][35] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][38] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][37] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][36]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][35]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][34] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][33] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][32] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][30] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][29] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][28] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][26] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][24] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][23]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][22] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][20] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][21]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][20]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][36] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][19]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][17] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][15]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][11] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][9] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][7] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][5] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][3] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][1] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][13] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][18] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][16] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][14] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][13]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][12] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+position_q[2] attention_acc_q[16][39] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][39] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][31] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][31] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][27] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][27] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][25] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][25] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][21] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][21] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][23] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][23] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][35] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][35] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][38] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][38] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][37] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][37] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][36]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][36]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][35]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][35]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][34] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][34] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][33] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][33] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][32] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][32] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][30] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][30] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][29] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][29] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][28] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][28] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][26] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][26] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][24] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][24] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][23]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][23]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][22] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][22] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][20] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][20] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][21]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][21]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][20]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][20]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[16][36] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[16][36] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][19]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][19]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][17] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][17] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][15]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][15]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][11] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][11] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][9] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][7] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][7] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][5] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][5] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][3] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][3] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][1] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][1] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][13] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][13] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][18] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][18] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][16] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][16] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][14] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][14] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][13]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][13]~DUPLICATE 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+position_q[2] attention_acc_q[21][12] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{position_q[2]} Equal227~0}}
+position_q[2] attention_acc_q[21][12] 0.671884 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

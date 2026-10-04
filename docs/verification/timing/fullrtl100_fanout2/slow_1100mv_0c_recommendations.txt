@@ -1,0 +1,276 @@
+Statistics: 40 0 4052 0 11 -0.116
+
+Heuristic: Chained Adders
+From To Score Heuristic
+div:u_div|remainder[17] scalar_round_q[62] 0.562565 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+matrix_row_q[1] linear_acc_q[27] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[26]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[25]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[24]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[23]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[22] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[21]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[20]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[30] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[30]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[38] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[36] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[35] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[34] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[32]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[31]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[32] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[26] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[20] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[24] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[36]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[28] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[28]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[29]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[29] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[37] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[33] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[23] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+op[78] op[77]~SynDup_77DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_77 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_78DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_78 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_8 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_32DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_32 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_80 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_53 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_80DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_86 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[17] scalar_round_q[62] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[27] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[26]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[25]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[24]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[23]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[22] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[21]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[20]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[30] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[30]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[38] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[36] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[35] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[34] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[32]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[31]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[32] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[26] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[20] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[24] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[36]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[28] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[28]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[29]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[29] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[37] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[33] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[23] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+op[78] op[77]~SynDup_77DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_77DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_77 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_77 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_78DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_78DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_78 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_78 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_8 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_8 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_32DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_32DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_32 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_32 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_80 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_80 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_53 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_53 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_80DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_80DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[78] op[77]~SynDup_86 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_86 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[17] scalar_round_q[62] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[17] scalar_round_q[62] 0.562565 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[17] scalar_round_q[62] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[27] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[27] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[27] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[26]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[26]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[26]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[25]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[25]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[25]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[24]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[24]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[24]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[23]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[23]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[23]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[22] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[22] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[22] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[21]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[21]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[21]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[20]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[20]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[20]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[30] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[30] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[30] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[30]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[30]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[30]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[38] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[38] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[38] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[36] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[36] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[36] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[35] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[35] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[35] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[34] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[34] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[34] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[32]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[32]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[32]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[31]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[31]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[31]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[32] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[32] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[32] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[26] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[26] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[26] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[20] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[20] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[20] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[24] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[24] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[24] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[36]~DUPLICATE 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[36]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[36]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[28] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[28] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[28] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[28]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[28]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[28]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[29]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[29]~DUPLICATE 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[29]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[29] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[29] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[29] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[37] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[37] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[37] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[33] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[33] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[33] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+matrix_row_q[1] linear_acc_q[23] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[23] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{matrix_row_q[1]}}}
+matrix_row_q[1] linear_acc_q[23] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+op[78] op[77]~SynDup_77DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_77 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_78DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_78 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_8 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_32DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_32 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_80 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_53 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_80DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[78] op[77]~SynDup_86 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+div:u_div|remainder[17] scalar_round_q[62] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+matrix_row_q[1] linear_acc_q[27] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[26]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[25]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[24]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[23]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[22] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[21]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[20]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[30] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[30]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[38] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[36] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[35] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[34] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[32]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[31]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[32] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[26] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[20] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[24] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[36]~DUPLICATE 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[28] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[28]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[29]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[29] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[37] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[33] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+matrix_row_q[1] linear_acc_q[23] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

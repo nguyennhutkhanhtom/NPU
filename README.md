@@ -8,7 +8,7 @@ correctness và timing. [Timing full top](docs/verification/timing/README.md)
 ghi đầy đủ lịch sử, constraints và critical paths. Parameter/KV/vector dùng
 IP RAM M10K qua adapter thay được bằng SRAM ASIC; đây là vendor IP duy nhất.
 Bản hiện tại34source có cả bảy nhóm regression PASS, gồm kiểm thử RAM thật và graph
-tự sinh token từ fixture. Fitting hoàn tất, timing fanout1 FAIL98,63MHz; chưa có bằng chứng full top
+tự sinh token từ fixture. Fitting hoàn tất, timing fanout2 FAIL96,67MHz; chưa có bằng chứng full top
 đạt100MHz. Application pretrained chờ timing mọi corner đạt cho đúng source.
 
 Revision hiện tại thay toàn bộ phép nhân datapath full/legacy bằng
@@ -20,7 +20,7 @@ standard cells. Full-top A&S bằng Quartus Lite25.1std PASS0errors/12warnings;
 setup/hold/removal còn vi phạm. Logic6 cũng FAIL99,07MHz;logic7 FAIL96,04MHz. [Bảy nhóm unit](tests/full_rtl/evidence/logic6q5_all_units/results.json)
 đã PASS cho snapshot35source cũ,0warnings. Bản 33assets đã chuyển
 task/pipeline/LUT sang [RTL tường minh](docs/design/rtl_style.md); [cả 7 nhóm regression PASS](tests/full_rtl/evidence/explicit3_all_units/results.json), timing mới FAIL93,28MHz/setup/removal,
-Bản hiện tại34assets bỏ SIMD payload enable dư thừa và dùng hai FF reset release; cả bảy nhóm regression PASS. Timing fanout1 FAIL98,63MHz/setup+hold; recovery/removal đạt mọi corner. Chưa có100MHz PASS hoặc pretrained application.
+Bản hiện tại34assets bỏ SIMD payload enable dư thừa và dùng hai FF reset release; cả bảy nhóm regression PASS. Timing fanout2 FAIL96,67MHz/setup+hold; recovery/removal đạt mọi corner. Chưa có100MHz PASS hoặc pretrained application.
 
 Core instruction-driven `matmulfree` và các kết quả dưới đây được giữ làm
 tài liệu của kiến trúc trước. Timing hoặc demo hybrid của core này không

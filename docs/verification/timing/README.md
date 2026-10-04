@@ -4,18 +4,22 @@
 
 Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL dựa trên critical path. Phần full graph dùng Cyclone V C9; các snapshot legacy bên dưới dùng thiết bị riêng được ghi trong manifest. Các phép đo là FPGA demo, chưa xác nhận ASIC signoff.
 
-## Fanout1 result: 98.63 MHz, setup/hold FAIL
+## Fanout2 result: 96.67 MHz, setup/hold FAIL
 
-The next candidate `quartus_fanout2/llm_soc`, tag `fullrtl100_fanout2`,
-adds MAX_FANOUT2 on k_write_address_q and D3_DELAY7 on host_wdata.
-[A&S archive](../synthesis/fanout2/manifest.json) PASS0errors12warnings18:38:49;
-Fitter/all-corner timing pending. The same34RTL assets still match all seven
-unit groups. SDC/device/seed/interface latency unchanged. The input physical
-delay request follows the device's [D3 programmable-delay capability](https://www.intel.com/programmable/technical-pdfs/683801.pdf)
-and the documented [QSF assignment form](https://cdrdv2-public.intel.com/654623/an474.pdf);
-implementation must be confirmed in the actual CycloneV Fitter delay-chain
-summary. No timing improvement is claimed before that report. These are
-backend settings, outside portable RTL; no new IP is instantiated.
+[Manifest](fullrtl100_fanout2/manifest.json), [source ZIP](fullrtl100_fanout2/source_archive.json) and [unchanged seven-group regression](../../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match34RTL/3configuration hashes. Extraction complete19:29:55 on04Oct2026. Same CycloneV5CGXFC9E6F35C7/QuartusLite25.1std Build1129/seed1/SPEED/STANDARD,10ns SDC and I/O budgets. Map0errors12warnings, fit0errors4warnings, STA0errors2warnings332148. Resources51888ALM/48214FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. UCP0.17/20checks PASS. Synthesis/fitting PASS, timing FAIL; no pretrained application.
+
+| Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
+|---|---:|---:|---:|---:|---:|
+| slow_1100mv_85c | -0.345/-62.291 | -0.093/-0.153 | 2.654/0.000 | 1.190/0.000 | 3.600/0.000 |
+| slow_1100mv_0c | -0.116/-0.834 | 0.235/0.000 | 2.977/0.000 | 1.118/0.000 | 3.543/0.000 |
+| fast_1100mv_85c | 3.493/0.000 | 0.128/0.000 | 4.474/0.000 | 0.592/0.000 | 3.801/0.000 |
+| fast_1100mv_0c | 4.023/0.000 | 0.118/0.000 | 6.054/0.000 | 0.541/0.000 | 3.790/0.000 |
+
+The physical cache write-address fanout and host_wdata D3 setting7 requests were applied. [Fit report](fullrtl100_fanout2/llm_soc.fit.rpt) shows D3_0 or D3_1 setting7 on all32host_wdata inputs; placement chose different row/column I/O paths. Host_wdata no longer has negative hold paths. Hold now fails host_addr20/11/15 by.093/.042/.018ns, with address input D3 setting6. Physical delay settings are demo-backend bindings, not portable RTL or arithmetic/control IP; SDC is unchanged. The device's [programmable-delay capability](https://www.intel.com/programmable/technical-pdfs/683801.pdf) and [QSF assignment form](https://cdrdv2-public.intel.com/654623/an474.pdf) are described separately from this measured implementation.
+
+[Setup](fullrtl100_fanout2/slow_1100mv_85c_setup.rpt) now fails position_q[2] -> attention_acc_q[16],10.070nsdata/8.246nsrouting/four logic levels; all40listed endpoints negative, TNS-62.291ns. The [recommendations](fullrtl100_fanout2/slow_1100mv_85c_recommendations.txt) identify position/equality control duplication. Source currently clears all32S56accumulators in A_EXP_STORE only when time_q==position_q. No accumulator is consumed during score/exponent generation. A portable next fix can clear once in A_QUERY at each head's entry, before scores, removing the position comparator from this wide clear cone without adding state/cycle. This requires all-seven regression and fresh hardware gates; no performance improvement is claimed until verified.
+
+## Fanout1 result: 98.63 MHz, setup/hold FAIL
 
 [Manifest](fullrtl100_fanout1/manifest.json), [source archive](fullrtl100_fanout1/source_archive.json) and [current seven units](../../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match34RTL assets. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD; SDC remains10ns with input0.5..2ns/output setup2ns/hold0.5ns and no exceptions. Extraction completed17:28:31 on04Oct2026. Map0errors12warnings, fit0errors4warnings, STA0errors1warning332148. Resources51919ALM/48086FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. All UCP counts0.18of20checks PASS; application gate rejects98.63MHz.
 
@@ -129,7 +133,7 @@ Its [source/config ZIP](fullrtl100_explicit1/source_archive.json) and
 [cancellation](fullrtl100_explicit1/cancellation.json) are retained. The current
 candidate explicitly keeps the former unsigned task argument contract.
 
-The12 synthesis warnings include the bounded scalar-group LUT index10027,
+The12 synthesis warnings include the bounded sigmoid-group input mux index10027,
 unused write-A/read-B ports287013, token-output RAM read/write forwarding276020,
 and constant pc_debug7 output13024/13410. Existing boundary/protocol/numeric
 tests verify the intended behavior; no warning is suppressed. Fitter292013

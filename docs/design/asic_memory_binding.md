@@ -10,6 +10,12 @@ and select its source in the ASIC file list. Keep the existing adapter branch
 and client interfaces. The `USE_QUARTUS_MEMORY` name currently selects this
 leaf branch; it does not require Quartus arithmetic or control logic.
 
+The core has one `clk`. Its host request/data signals must meet that clock's
+setup/hold contract and stay stable through the handshake. The RTL provides
+no independent host clock or data CDC bridge. ASIC integration with a host in
+another clock domain must provide that bridge upstream; the two reset-release
+FFs synchronize reset deassertion, not host data.
+
 The portable branch (`USE_QUARTUS_MEMORY=0`) uses inferred `sram_word_tile`
 arrays. [Full-top elaboration evidence](../verification/portable_elaboration1/results.json)
 passes with no vendor memory library loaded,24 module design units,14 unique
