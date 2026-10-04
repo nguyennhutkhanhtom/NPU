@@ -17,7 +17,8 @@ Source `cache1` đã [A&S PASS, 0 errors/12 warnings](docs/verification/synthesi
 và [vendor-free elaboration PASS](docs/verification/portable_elaboration_cache1/results.json).
 Graph synthetic chạy 4.229.462 clock, chọn ba token bằng RTL và đạt causal checks.
 Fitting đã PASS; [timing `fullrtl100_cache1`](docs/verification/timing/fullrtl100_cache1/manifest.json) FAIL 73,97 MHz/setup+recovery.
-Chưa có bằng chứng full top đạt 100 MHz.
+Bản backend `cache2` bỏ yêu cầu ép global theo recommendation; RTL/tests/SDC giữ nguyên,
+[A&S mới PASS](docs/verification/synthesis/cache2/manifest.json), đang chạy lại full fit/timing. Chưa có bằng chứng full top đạt 100 MHz.
 [Timing trước đó](docs/verification/timing/fullrtl100_attention1/manifest.json) FAIL 92,19 MHz.
 Application pretrained chờ exact-current timing mọi corner/slack/TNS/UCP đạt.
 Numeric/token matching và chất lượng đoạn văn được đánh giá riêng.

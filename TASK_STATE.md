@@ -1,6 +1,6 @@
 # NPU resume checkpoint
 
-Updated 2026-10-04 22:16 Asia/Saigon. Repo/reports/hashes are authoritative. Preserve valid changes and immutable evidence; no reset/revert.
+Updated 2026-10-04 22:25 Asia/Saigon. Repo/reports/hashes are authoritative. Preserve valid changes and immutable evidence; no reset/revert.
 
 ## Goal and rules
 
@@ -14,7 +14,7 @@ Pretrained export/application/CPU checkpoint inference requires exact-current al
 
 LLM source SHA5abac9ed9dde98138c4e5928fe7638e302ca4bf9a49b38eeafd373826a10fb9e,1036lines. Separate cache_operand_q from second_q:32generated plain FF slices sample k_data continuously; A_KEY/A_WEIGHT consume after O_K_WAIT/k_valid, same accepted response edge as before. second_q only captures binary vector input at B_INPUT0. Removes wide shared cache-enable/mux; adds768payload FF bits, no reset/enable on them. No FSM state, clock, latency, arithmetic or expected-value change. Early attention accumulator clear at A_QUERY remains.
 
-QSF adds GLOBAL_SIGNAL "GLOBAL CLOCK" to u_reset|core_rst_n, a backend reset-routing request only. Keep two standard reset FFs, two-edge release and immediate host_rdata zero/cancellation contract; protocol explicitly checks zero1ns after reset assertion. No IP instantiation/generated clock/SDC exception. Must check actual assignment application in Fitter/global signal report and all recovery/removal corners; routing benefit unproven.
+Completed cache1 QSF had GLOBAL_SIGNAL "GLOBAL CLOCK" at u_reset|core_rst_n, a backend reset-routing request only. Keep two standard reset FFs, two-edge release and immediate host_rdata zero/cancellation contract; protocol explicitly checks zero1ns after reset assertion. No IP instantiation/generated clock/SDC exception. Actual broad global routing applied but failed; current cache2 QSF removes that request per measured recommendations.
 
 Timing exec19892 completed22:14:10, all Quartus processes closed. [Manifest](docs/verification/timing/fullrtl100_cache1/manifest.json) current34RTL/3config/all reports/commands/37ZIP and all-seven source/test/log hashes verified before next change. ZIP SHA9924684480f285ec0c9ae4de3865d05994fb7907db724305cac5f90b3b0e8bef. Device5CGXFC9E6F35C7/Quartus25.1std Build1129/seed1/SPEED/STANDARD; SDC10ns/IObudgets unchanged. Map0/12,fit0/4,STA0/2timingwarnings332148,extract0. Fitelapsed55m33/resources52417ALM/49186FF/1186RAMblocks/9515648bits/186pins/DSP-PLL-DLL-HSSI0; UCP0/16of20PASS. Strict gate rejects73.97MHz.
 
@@ -47,7 +47,7 @@ Measured setup op6/O_K_WAIT -> second_q341,data10.568/routing9.314/onelevel/skew
 
 ## Commits, cleanup and application
 
-Latest pushed35704b0 cache1 all-seven/vendor-free/docs;41eea1a cache1 AS/six-unit/structure/docs; preceding b9699a7 full attention1 timingFAIL; b3d3033 all-seven/portable/docs,9a512d8 policy/docs,a2fa161 early-clear/A&S/six units. Current cache1 completed timingFAIL/archive/docs awaiting index check/commit/push before the next QSF change. No weights/vendor libraries/large build DB/secrets in repo. Isolated quartus_cache*/ projects ignored; active DB retained.
+Latest pushed70c794d full cache1 timingFAIL73.97/recommendations/docs;35704b0 cache1 all-seven/vendor-free/docs;41eea1a cache1 AS/six-unit/structure/docs; preceding b9699a7 full attention1 timingFAIL; b3d3033 all-seven/portable/docs,9a512d8 policy/docs,a2fa161 early-clear/A&S/six units. Cache1 timing source/config/report/ZIP hashes passed both workspace and index checks before commit and QSF edit. Current cache2 routing-only backend comparison is uncommitted/running. No weights/vendor libraries/large build DB/secrets in repo. Isolated quartus_cache*/ projects ignored; active DB retained.
 
 Unused helpers archived/removed with SHA ZIP; reachable legacy/test sources retained. Inactive12Quartus DB directories/1864217551bytes removed only after six historical ZIP/report hash checks; all reports/active DB/model cache retained. [Cleanup record](docs/history/quartus_database_cleanup_20261004.json).
 
@@ -66,6 +66,6 @@ python docs/source_guide/validate.py
 
 Python C:/Users/khanh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe; Questa/Quartus bins C:/altera_lite/25.1std/questa_fse/win64 and quartus/bin64. Unsigned helpers blocked by Windows Application Control; no bypass. Single active Questa simulation license.
 
-1. Verify/index commit/push completed fullrtl100_cache1 timingFAIL73.97/archive/docs while canonical source/config still match. No running jobs now.
-2. Remove failed forced-global QSF request per actual recommendations; keep all34RTL/eighttests unchanged/all-sevenPASS. Copy canonical3configuration to fresh ignored backend project/tag and run full map/fit/STA/extract. Archive fresh ZIP/hashes; no tests need rerunning absent source changes. Inspect every corner/recovery/resource/UCP; no relaxed constraints.
+1. Current timing exec11326 RUNNING, quartus_cache2/llm_soc/tag fullrtl100_cache2; map10812 closed PASS0errors12warnings22:23:58/elapsed5m41, Fitter22564 active22:24. [A&S archive](docs/verification/synthesis/cache2/manifest.json)34RTL/3configuration/37ZIP hashes verified. No Questa process. CanonicalQSF removes only forcedGLOBALrequest plus explanatory comments;34RTL/eighttestinputs/10nsSDC unchanged and verified against cache1 all-seven snapshot. Do not launch another build or edit frozen inputs.
+2. [Cache2 source/config ZIP](docs/verification/timing/fullrtl100_cache2/source_archive.json)37members SHA8ff7093e55604550dae31f3f12b4718fa45f6eb6a0ba4a87d1b5bb380c9cf7cf. Initial raw-byte SDC precheck failed CRLF-vs-LF only; corrected canonical-LF comparison PASS/currentcanonical3cfg match initialsnapshot. Quartus recorder also uses canonicalLF; constraints unchanged. A&S archived; archive fresh fullreports when complete; check actual routing/corners/UCP/resources/warnings. Tests unchanged, no rerun needed absent RTL/test edits.
 3. Only exact-current all-seven+full100MHz gates permit pinned NanoFable actual RTL paragraph/reference; assess matching separately from coherence, then second compatible language model when supported.

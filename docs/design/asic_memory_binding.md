@@ -83,3 +83,5 @@ those technologies. Quartus QSF device, pin, fanout and delay assignments belong
 only to the demonstration backend. No board integration is part of this work.
 
 Cache1 changes only compute-side cache payload capture, preserving leaf/adapter geometry, latency, collisions and reset. Its all seven groups and exact-current vendor-free full-top run0 PASS; full timing FAIL73.97MHz/setup+recovery. The preceding attention1 elaboration and unit tags remain immutable.
+
+Backend cache2 removes the forced-global QSF routing request after cache1 recommendations identified its failing path. No RTL, test input, SRAM contract or SDC change; exact cache1 seven-group/vendor-free PASS remains applicable to the same source. Fresh full synthesis/fit/all-corner timing is running; no application gate is open.

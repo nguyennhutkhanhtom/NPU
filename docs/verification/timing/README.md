@@ -4,6 +4,8 @@
 
 Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL dựa trên critical path. Phần full graph dùng Cyclone V C9; các snapshot legacy bên dưới dùng thiết bị riêng được ghi trong manifest. Các phép đo là FPGA demo, chưa xác nhận ASIC signoff.
 
+Current `fullrtl100_cache2` keeps the exact cache1 RTL/all-seven-PASS source and original10nsSDC. It removes only the failed forced GLOBAL_SIGNAL request, following cache1's actual recommendations; reset hardware/latency/host contract and input delay requests remain unchanged. [Fresh A&S](../synthesis/cache2/manifest.json) PASS0errors12warnings22:23:58/elapsed5m41. Full fit/STA/extract is running on ignored quartus_cache2/llm_soc. [Source/config ZIP](fullrtl100_cache2/source_archive.json) matches34RTL/3canonical configurations. No current timing100MHz or pretrained application PASS; do not rerun unchanged tests just for backend routing.
+
 ## Cache1 result: 73.97 MHz, setup/recovery FAIL
 
 [Manifest](fullrtl100_cache1/manifest.json), [source ZIP](fullrtl100_cache1/source_archive.json) and [all seven units](../../../tests/full_rtl/evidence/cache1_all_units/results.json) match34RTL/3configuration hashes, verified against the current source before any next change. Extraction completed22:14:10 on04Oct2026. QuartusLite25.1std Build1129/CycloneV5CGXFC9E6F35C7/seed1/SPEED/STANDARD; SDC10ns and original I/O budgets unchanged, no exceptions. Map0errors12warnings/fit0errors4warnings/STA0errors2warnings332148. Fit52417ALM/49186FF/1186RAMblocks/9515648bits/186pins, DSP/PLL/DLL/HSSI0. UCP0;16/20checks PASS. Synthesis/fitting PASS, timing FAIL; strict application gate rejects73.97MHz.
