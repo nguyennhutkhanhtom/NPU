@@ -15,7 +15,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
         G_UP, G_SILU, G_GMUL, G_DOWN, G_MADD, G_NEXT, G_FNORM, G_HEAD,
         G_ADVANCE, G_DONE} graph_t;
     graph_t graph;
-    localparam int OP_COUNT = 96;
+    localparam int OP_COUNT = 102;
     localparam int O_IDLE_IDX = 0;
     localparam int O_P_REQ_IDX = 1;
     localparam int O_P_WAIT_IDX = 2;
@@ -112,6 +112,12 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     localparam int SG_CLAMP_IDX = 93;
     localparam int SG_GROUP_IDX = 94;
     localparam int SG_PICK_IDX = 95;
+    localparam int SC_PAIR_IDX = 96;
+    localparam int SC_SUM_IDX = 97;
+    localparam int L_DECODE_IDX = 98;
+    localparam int A_EXP_DELTA_IDX = 99;
+    localparam int L_FLAGS_IDX = 100;
+    localparam int A_FLAGS_IDX = 101;
     typedef enum logic [OP_COUNT - 1:0] {
         O_IDLE = OP_COUNT'(1) << O_IDLE_IDX,
         O_P_REQ = OP_COUNT'(1) << O_P_REQ_IDX,
@@ -208,7 +214,13 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
         SC_MULTIPLY = OP_COUNT'(1) << SC_MULTIPLY_IDX,
         SG_CLAMP = OP_COUNT'(1) << SG_CLAMP_IDX,
         SG_GROUP = OP_COUNT'(1) << SG_GROUP_IDX,
-        SG_PICK = OP_COUNT'(1) << SG_PICK_IDX
+        SG_PICK = OP_COUNT'(1) << SG_PICK_IDX,
+        SC_PAIR = OP_COUNT'(1) << SC_PAIR_IDX,
+        SC_SUM = OP_COUNT'(1) << SC_SUM_IDX,
+        L_DECODE = OP_COUNT'(1) << L_DECODE_IDX,
+        A_EXP_DELTA = OP_COUNT'(1) << A_EXP_DELTA_IDX,
+        L_FLAGS = OP_COUNT'(1) << L_FLAGS_IDX,
+        A_FLAGS = OP_COUNT'(1) << A_FLAGS_IDX
     } op_t;
     op_t op, return_p, return_v, return_k, return_m, return_w, return_scalar;
     logic op_done, launch, core_running, op_fault_q;
@@ -244,7 +256,11 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     logic signed [63:0] scalar_product_q, scalar_round_q;
     logic signed [38:0] scalar_a_q;
     logic signed [24:0] scalar_b_q;
+    logic signed [47:0] scalar_partial_q [0:2];
+    logic signed [55:0] scalar_pair_q;
     logic signed [23:0] scalar_group_q [0:7];
+    logic [7:0] scalar_clip_high_q, scalar_clip_low_q;
+    logic [1:0] ternary_code_q [0:31];
     logic signed [63:0] lane_raw_q [0:31], lane_round_q [0:31];
     logic [63:0] square_sum_q, root_input_q;
     // epsilon >=42950 makes root>=207, so rounded 2^32/root fits U25.
@@ -257,6 +273,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     logic [31:0] probability_sum_q;
     logic [32:0] exp_difference_q;
     logic [36:0] exp_interpolation_q;
+    logic [24:0] exp_delta_q;
     logic divide_negative_q;
 
     function automatic logic [6:0] op_index(input op_t value);
@@ -525,7 +542,10 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                     op[E_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd8);
                     op[L_INPUT_IDX] : begin
                         math_a_q[lane] <= vector_q[lane * 24 +: 24];
-                        case (weights_q[chunk_q[1:0] * 64 + lane * 2 +: 2])
+                        ternary_code_q[lane] <= weights_q[chunk_q[1:0] * 64 + lane * 2 +: 2];
+                    end
+                    op[L_DECODE_IDX] : begin
+                        case (ternary_code_q[lane])
                             2'b01 : math_b_q[lane] <= 1;
                             2'b11 : math_b_q[lane] <= -32'sd1;
                             default : math_b_q[lane] <= 0;
@@ -610,10 +630,19 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     for (scalar_group = 0; scalar_group < 8; scalar_group = scalar_group + 1) begin : g_scalar_output
         // Each group has a distinct lane-qualified enable, so these payloads
         // remain local without vendor attributes in the compute datapath.
+        logic signed [23:0] low_data_q;
+        always_ff @(posedge clk)
+            if (rst_n && ((op[L_FLAGS_IDX] && matrix_row_q[4:2] == 3'(scalar_group)) ||
+                          (op[A_FLAGS_IDX] && lane_q[4:2] == 3'(scalar_group)))) begin
+                low_data_q <= scalar_round_q[23:0];
+                scalar_clip_high_q[scalar_group] <= scalar_round_q > 64'sd8388607;
+                scalar_clip_low_q[scalar_group] <= scalar_round_q < -64'sd8388608;
+            end
         always_ff @(posedge clk)
             if (rst_n && ((op[L_SAT_IDX] && matrix_row_q[4:2] == 3'(scalar_group)) ||
                           (op[A_SAT_IDX] && lane_q[4:2] == 3'(scalar_group))))
-                scalar_group_q[scalar_group] <= llm_sat24(scalar_round_q);
+                scalar_group_q[scalar_group] <= scalar_clip_high_q[scalar_group] ? 24'sh7fffff :
+                    scalar_clip_low_q[scalar_group] ? 24'sh800000 : low_data_q;
     end
     endgenerate
 
@@ -713,8 +742,9 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                 op[L_WEIGHT_IDX] : begin weights_q <= parameter_word_q; read_vector(source_q, chunk_q, L_INPUT); end
                 op[L_INPUT_IDX] : begin
                     if (reserved_weight) begin op_fault_q <= 1; op <= O_FINISH; end
-                    else run_math(L_MAC);
+                    else op <= L_DECODE;
                 end
+                op[L_DECODE_IDX] : run_math(L_MAC);
                 op[L_MAC_IDX] : begin
                     linear_acc_q <= linear_acc_q + math_sum[38:0];
                     if (chunk_q + 1 >= matrix_chunks_q) op <= L_COEFF;
@@ -728,11 +758,25 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                     scalar_a_q <= linear_acc_q; scalar_b_q <= $signed({1'b0, coefficient_q});
                     return_scalar <= L_ROUND; op <= SC_MULTIPLY;
                 end
-                op[SC_MULTIPLY_IDX] : begin scalar_product_q <= scalar_a_q * scalar_b_q; op <= return_scalar; end
-                op[L_ROUND_IDX] : begin scalar_round_q <= rne_shift64(scalar_product_q, 6'd24); op <= L_SAT; end
+                op[SC_MULTIPLY_IDX] : begin
+                    scalar_partial_q[0] <= scalar_a_q * $signed({1'b0, scalar_b_q[7:0]});
+                    scalar_partial_q[1] <= scalar_a_q * $signed({1'b0, scalar_b_q[15:8]});
+                    scalar_partial_q[2] <= scalar_a_q * $signed(scalar_b_q[24:16]);
+                    op <= SC_PAIR;
+                end
+                op[SC_PAIR_IDX] : begin
+                    scalar_pair_q <= 56'(scalar_partial_q[0]) + (56'(scalar_partial_q[1]) <<< 8);
+                    op <= SC_SUM;
+                end
+                op[SC_SUM_IDX] : begin
+                    scalar_product_q <= 64'(scalar_pair_q) + (64'(scalar_partial_q[2]) <<< 16);
+                    op <= return_scalar;
+                end
+                op[L_ROUND_IDX] : begin scalar_round_q <= rne_shift64(scalar_product_q, 6'd24); op <= L_FLAGS; end
+                op[L_FLAGS_IDX] : op <= L_SAT;
                 op[L_SAT_IDX] : begin
                     op <= L_STORE;
-                    if (scalar_round_q > 8388607 || scalar_round_q < -8388608) overflow_out <= 1;
+                    if (scalar_clip_high_q[matrix_row_q[4:2]] || scalar_clip_low_q[matrix_row_q[4:2]]) overflow_out <= 1;
                 end
                 op[L_STORE_IDX] : begin
                     write_vector(destination_q, matrix_row_q[8:5], 32'b1 << matrix_row_q[4:0], E_PACK);
@@ -832,10 +876,11 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                         exp_hi_q <= llm_exp_sample({1'b0, exp_difference_q[19:12]});
                         exp_lo_q <= llm_exp_sample({1'b0, exp_difference_q[19:12]} + 1'b1);
                     end
-                    op <= A_EXP_MUL;
+                    op <= A_EXP_DELTA;
                 end
+                op[A_EXP_DELTA_IDX] : begin exp_delta_q <= exp_hi_q - exp_lo_q; op <= A_EXP_MUL; end
                 op[A_EXP_MUL_IDX] : begin
-                    exp_interpolation_q <= (exp_hi_q - exp_lo_q) * exp_difference_q[11:0]; op <= A_EXP_STORE;
+                    exp_interpolation_q <= exp_delta_q * exp_difference_q[11:0]; op <= A_EXP_STORE;
                 end
                 op[A_EXP_STORE_IDX] : begin
                     probability_memory[time_q] <= exp_hi_q - 25'((exp_interpolation_q + 37'd2048) >> 12);
@@ -863,8 +908,9 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                 op[A_DIV_WAIT_IDX] : if (div_done) begin
                     scalar_round_q <= divide_negative_q ?
                         -$signed(div_quotient + {63'h0, divide_round_up}) :
-                        $signed(div_quotient + {63'h0, divide_round_up}); op <= A_SAT;
+                        $signed(div_quotient + {63'h0, divide_round_up}); op <= A_FLAGS;
                 end
+                op[A_FLAGS_IDX] : op <= A_SAT;
                 op[A_SAT_IDX] : op <= A_PACK;
                 op[A_PACK_IDX] : begin
                     if (lane_q == 31) write_vector(5, {2'b0, head_q}, 32'hffffffff, A_QUERY);

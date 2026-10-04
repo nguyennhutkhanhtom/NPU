@@ -2,7 +2,7 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [llm_parameter_ram.sv](<../../../Verilog%20Source%20code/llm_parameter_ram.sv>). **Số dòng:** 87. **SHA-256:** `3c17e9823f3c0cf6dd926efd2e1fb9b85a0180e27137541a43b1f415251499c4`.
+**Source:** [llm_parameter_ram.sv](<../../../Verilog%20Source%20code/llm_parameter_ram.sv>). **Số dòng:** 87. **SHA-256:** `b4258f0ff8379b54672ae3b285af10d4f6c10a52bc2f463cfa5225988cd1959c`.
 
 ## Khối này làm gì?
 
@@ -119,7 +119,7 @@ Host response chỉ hợp lệ khi active, loại read/write và địa chỉ v�
     generate
     for (lane = 0; lane < 8; lane = lane + 1) begin : g_ram_lane
         (* dont_merge *) logic [ADDR_W - 1:0] read_address_local_q, write_address_q;
-        logic [31:0] write_data_q;
+        (* dont_merge *) logic [31:0] write_data_q;
         logic read_enable_q, write_enable_q;
         always_ff @(posedge clk) begin
             read_address_local_q <= read_address;

@@ -127,7 +127,7 @@ the adapter. Compute/control equations and public latency remain unchanged.
 | `llm_parameter_ram` | Compute four edges for DEPTH≤4096, five for current24576 rows; host lane selection adds one edge before frontend response | Host writes acknowledge after leaf commit; cancelled host reads cannot produce stale valid response |
 | `pipelined_word_ram` | Three edges up to four tiles, four edges for more tiles; one request per clock | Capture at first edge, leaf commit second edge; old-data collision at common accepted cycle |
 | `sram_256_wrapper` | Two edges from adapter request to valid; host lane/address tags reject stale response | 8 × 32-bit mask; host write priority |
-| `llm_math` | Seven subsequent edges after accepting start to done | Busy starts ignored; reset cancels valid pipeline |
+| `llm_math` | Nine subsequent edges after accepting start to done (byte-product revision) | Busy starts ignored; reset cancels valid pipeline |
 
 The FPGA branch instantiates 72 whole-bank RAM IPs: eight parameter lanes,
 32 KV lanes and 32 vector lanes. Quartus handles internal M10K banking; the RTL
@@ -221,7 +221,7 @@ fanout4 still crosses the device. Keep this regression evidence and the earlier
 92.22MHz snapshot; further locality/clock/I/O work is required.
 Native graph executable was blocked by Windows Application Control;
 ModelSim with `-L altera_mf_ver` is used for the current FPGA memory configuration.
-Six units PASS; the actual-IP full graph is still running.
+Six units PASS for memoryip2; its actual-IP graph was cancelled for the next measured timing revision.
 `fullrtl100_memoryip2` synthesis/fit completed, timingFAIL87.49MHz. `memoryip1` preserves a QSF parser failure for unsupported MAX_DSP_BLOCKS;
 the retry keeps AUTO_DSP_RECOGNITION OFF and DSP_BLOCK_BALANCING LOGIC ELEMENTS.
 FAST_OUTPUT_REGISTER is restored; SDC remains unchanged. No pretrained
@@ -229,3 +229,70 @@ application has run. A&S reports0errors/13warnings and0DSP/0PLL;
 Fit confirms0DSP/0PLL,29115ALM/34716registers/1187M10K.
 All hold/recovery/removal/pulse checksPASS and unconstrained0; setupFAIL at
 Slow85−1.430/TNS−157.190ns and Slow0−1.253/TNS−250.719ns. No100MHz claim.
+
+
+## Current byte-product timing candidate
+
+The memory-IP milestone is committed/pushed as d3825b2: fit0DSP/0PLL and
+87.49MHz timingFAIL for its archived source. The active source now preserves
+per-bank write payload FF copies only at the replaceable memory boundary.
+SIMD uses S24×U8/S8 byte products (S33), pair sumsS41 and productS56 before
+the same balanced S61 reduction. Valid length10 gives exact9-clock done;
+503S128 transactions/9reset phases and all513LUT entries PASS. Numeric
+expectations are unchanged. Shared scalar S39×S25 uses low U8/U8 and high S9
+partialsS48, pairS56 and reconstructed S64 over three states; SC_PAIR/SC_SUM
+append two states, total98, preserving all prior state indices. Operators
+add128independent S128 signed-extreme/random scalar checks. Graph numeric/token,
+visits and causal assertions stay unchanged; compute watchdog changes4M→5M
+for the additional stages, with100ms total bound (196619host commands≤19edges
+plus5M compute clocks<90ms). All six unit groups PASS; operators17/checks3076/
+scalar128. Bytes1 fitting completes0errors/4warnings, with0DSP/0PLL, but timing
+FAIL89.60MHz (setup/hold). Its graph was cancelled to apply the reported fixes;
+no functional assertion failure or seven-group acceptance was recorded.
+The obsolete memoryip2 graph was cancelled for this necessary timing revision;
+its six completed groups/logs remain archived. No application has run.
+
+## Current control/locality timing candidate
+
+`fullrtl100_control1` keeps the same device,10ns SDC and all numeric formulas.
+Four states append to102total: L_DECODE, A_EXP_DELTA, L_FLAGS and A_FLAGS.
+Ternary input capture selects a U2 code; the next edge decodes it to S32 before
+math start. Reserved10 still faults at L_INPUT. Exp LUT endpoints feed a U25
+registered difference before U25×U12 interpolation; half-up rounding is unchanged.
+Each scalar output group captures high/low saturation predicates and low24,
+then selects S24 on a separate edge. Linear overflow reads the selected group's
+flags; attention preserves its original overflow behavior. Payload flags are
+unreset but each consumer follows its matching capture state. The extra states
+remain within the existing5M compute/100ms graph bound; no expected values or
+token/phase/causal assertions change. Memory-only dont_merge now also preserves
+group and IP read/write enables. Memory latency and reset contract are unchanged.
+
+```mermaid
+flowchart LR
+    WEIGHT[Weights and chunk] --> CODE[Registered U2 code per lane]
+    CODE --> DECODE[Registered ternary S32]
+    DECODE --> MATH[Portable SIMD byte pipeline]
+    LUT[Exp endpoints U25] --> DELTA[Registered U25 delta]
+    DELTA --> INTERP[Registered U37 interpolation]
+    ROUND[Scalar RNE S64] --> FLAGS[Private group flags and low24]
+    FLAGS --> CLAMP[Registered group S24 clamp]
+    CLAMP --> VECTOR[Selected vector lane]
+```
+
+QSF selects an ordinary LVDS input buffer for clk, feeding direct GCLK without
+PLL, DLL, SERDES or ALTLVDS. This requires a100MHz differential source and a
+physical clk(n) companion pin, recorded by Fitter. Output electrical contract
+remains2.5V/16mA/fast slew. Actual board pins/termination are not specified;
+the FPGA demo cannot claim board or ASIC signoff. The input-buffer delay benefit
+was a hypothesis; control1 fit reaches92.75MHz but fails setup/hold/recovery,
+with ordinary output clock/pad and reset routing now critical. Input receiver
+0.907ns is essentially unchanged from earlier0.917ns. Fit31573ALM/42133FF/
+1187M10K/128pins/DSP-PLL-DLL-HSSI0. Six groupsPASS including3460operatorchecks,
+scalar128/clamp128. Graph cancelled for a necessary measured host mux fix;
+its log and all six groups remain archived, no assertion failure or seven-group
+PASS claimed. See timing hub for all corners. See the
+[clock input handbook](https://docs.altera.com/r/docs/683375/current/cyclone-v-device-handbook-volume-1-device-interfaces-and-integration/dedicated-clock-input-pins)
+and [differential pin guide](https://docs.altera.com/r/docs/683492/18.1/intel-quartus-prime-standard-edition-user-guide-design-constraints/assigning-differential-pins).
+Only altsyncram is explicitly instantiated vendor IP. Quartus may lower portable
+arithmetic operators to internal LPM representations; those are synthesized into
+ordinary logic cells, with forbidden DSP/PLL/DLL/HSSI counts checked in fit.summary.

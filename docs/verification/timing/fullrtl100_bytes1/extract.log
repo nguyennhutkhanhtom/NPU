@@ -1,0 +1,174 @@
+Info: *******************************************************************
+Info: Running Quartus Prime Timing Analyzer
+    Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
+    Info: Copyright (C) 2018  Intel Corporation. All rights reserved.
+    Info: Your use of Intel Corporation's design tools, logic functions 
+    Info: and other software and tools, and its AMPP partner logic 
+    Info: functions, and any output files from any of the foregoing 
+    Info: (including device programming or simulation files), and any 
+    Info: associated documentation or information are expressly subject 
+    Info: to the terms and conditions of the Intel Program License 
+    Info: Subscription Agreement, the Intel Quartus Prime License Agreement,
+    Info: the Intel FPGA IP License Agreement, or other applicable license
+    Info: agreement, including, without limitation, that your use is for
+    Info: the sole purpose of programming logic devices manufactured by
+    Info: Intel and sold by Intel or its authorized distributors.  Please
+    Info: refer to the applicable agreement for further details.
+    Info: Processing started: Fri Oct 02 05:11:13 2026
+Info: Command: quartus_sta -t "D:\2151097_Nguyen Nhut Khanh\tools\timing\extract.tcl" "D:\2151097_Nguyen Nhut Khanh\docs\verification\timing\fullrtl100_bytes1" sdc "D:\2151097_Nguyen Nhut Khanh\quartus\llm_soc"
+Info: Quartus(args): {D:\2151097_Nguyen Nhut Khanh\docs\verification\timing\fullrtl100_bytes1} sdc {D:\2151097_Nguyen Nhut Khanh\quartus\llm_soc}
+Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Info (21077): Low junction temperature is 0 degrees C
+Info (21077): High junction temperature is 85 degrees C
+Info (332104): Reading SDC File: 'llm_soc.sdc'
+Info (332151): Clock uncertainty is not calculated until you update the timing netlist.
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332101): Design is fully constrained for setup requirements
+Info (332101): Design is fully constrained for hold requirements
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 40 setup paths (40 violated).  Worst case slack is -1.161
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/slow_1100mv_85c_setup.rpt}
+Info (332115): Report Timing: Found 40 hold paths (4 violated).  Worst case slack is -0.085
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/slow_1100mv_85c_hold.rpt}
+Info (332115): Report Timing: Found 40 recovery paths (0 violated).  Worst case slack is 5.044
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/slow_1100mv_85c_recovery.rpt}
+Info (332115): Report Timing: Found 40 removal paths (0 violated).  Worst case slack is 0.267
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/slow_1100mv_85c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 40 results (0 violated).  Worst case slack is 3.600
+    Info (332113): Targets: *
+    Info (332113): -nworst: 40
+    Info (332113): -detail: full_path
+TIMING_CORNER_EXTRACTED: slow_1100mv_85c
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 40 setup paths (40 violated).  Worst case slack is -0.702
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/slow_1100mv_0c_setup.rpt}
+Info (332115): Report Timing: Found 40 hold paths (0 violated).  Worst case slack is 0.234
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/slow_1100mv_0c_hold.rpt}
+Info (332115): Report Timing: Found 40 recovery paths (0 violated).  Worst case slack is 5.156
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/slow_1100mv_0c_recovery.rpt}
+Info (332115): Report Timing: Found 40 removal paths (0 violated).  Worst case slack is 0.185
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/slow_1100mv_0c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 40 results (0 violated).  Worst case slack is 3.548
+    Info (332113): Targets: *
+    Info (332113): -nworst: 40
+    Info (332113): -detail: full_path
+TIMING_CORNER_EXTRACTED: slow_1100mv_0c
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 40 setup paths (0 violated).  Worst case slack is 2.790
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/fast_1100mv_85c_setup.rpt}
+Info (332115): Report Timing: Found 40 hold paths (0 violated).  Worst case slack is 0.129
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/fast_1100mv_85c_hold.rpt}
+Info (332115): Report Timing: Found 40 recovery paths (0 violated).  Worst case slack is 6.406
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/fast_1100mv_85c_recovery.rpt}
+Info (332115): Report Timing: Found 40 removal paths (0 violated).  Worst case slack is 0.516
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/fast_1100mv_85c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 40 results (0 violated).  Worst case slack is 3.798
+    Info (332113): Targets: *
+    Info (332113): -nworst: 40
+    Info (332113): -detail: full_path
+TIMING_CORNER_EXTRACTED: fast_1100mv_85c
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 40 setup paths (0 violated).  Worst case slack is 3.672
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/fast_1100mv_0c_setup.rpt}
+Info (332115): Report Timing: Found 40 hold paths (0 violated).  Worst case slack is 0.111
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/fast_1100mv_0c_hold.rpt}
+Info (332115): Report Timing: Found 40 recovery paths (0 violated).  Worst case slack is 6.416
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/fast_1100mv_0c_recovery.rpt}
+Info (332115): Report Timing: Found 40 removal paths (0 violated).  Worst case slack is 0.511
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1/fast_1100mv_0c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 40 results (0 violated).  Worst case slack is 3.788
+    Info (332113): Targets: *
+    Info (332113): -nworst: 40
+    Info (332113): -detail: full_path
+TIMING_CORNER_EXTRACTED: fast_1100mv_0c
+TIMING_EXTRACTION_PASS: D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_bytes1 (sdc)
+Info (23030): Evaluation of Tcl script D:\2151097_Nguyen Nhut Khanh\tools\timing\extract.tcl was successful
+Info: Quartus Prime Timing Analyzer was successful. 0 errors, 0 warnings
+    Info: Peak virtual memory: 6318 megabytes
+    Info: Processing ended: Fri Oct 02 05:12:44 2026
+    Info: Elapsed time: 00:01:31
+    Info: Total CPU time (on all processors): 00:02:09

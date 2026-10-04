@@ -11,8 +11,14 @@ host output trước có năm nhóm units PASS; tag `fullrtl100_group2` fitting 
 nhưng timing FAIL81,53MHz, gồm setup và hold. Hiện parameter/KV/vector dùng
 IP RAM M10K qua adapter thay được bằng SRAM ASIC. Không dùng DSP/PLL hay
 compute IP khác. Kiểm thử IP thực tế PASS158checks; regression bảy nhóm
-đang chạy graph đầy đủ. Build `fullrtl100_memoryip2` synthesis/fit PASS,
-0DSP/0PLL, nhưng timing FAIL87,49MHz; còn setup ở hai slow corners.
+đang xác minh revision pipeline mới. Milestone `d3825b2` đã push;
+`fullrtl100_memoryip2` synthesis/fit PASS,
+0DSP/0PLL, nhưng timing FAIL87,49MHz. Bản byte-product tiếp theo
+`fullrtl100_bytes1` đạt89,60MHz, vẫn FAIL setup/hold. `fullrtl100_control1`
+có sáu nhóm units PASS, fit0DSP/PLL/DLL/HSSI, nhưng timing FAIL92,75MHz gồm
+setup/hold/recovery. Pipeline chọn ternary, exp delta, clamp và enable KV cục bộ
+đã được kiểm chứng bằng units; full graph còn pending. Clock LVDS thông thường
+đi trực tiếp tới GCLK, không PLL/SERDES, chưa giải quyết clock/pad/reset timing.
 Application pretrained chờ đủ gate source/config hiện tại và unit tests.
 
 Core instruction-driven `matmulfree` và các kết quả dưới đây được giữ làm
@@ -38,7 +44,7 @@ Bản ngày **01/10/2026** pass **10 mục regression** và demo Quartus Analysi
 
 [NanoFable-1M-ternary](docs/demos/language.md): CPU chạy **3 prompt × 32 token greedy**, lặp lại cho cùng kết quả. RTL pass **168 lượt linear ternary thực**, đối chiếu **33.792 output S32**. Sinh văn bản toàn graph chạy trên CPU; NPU kiểm chứng các linear được stream từng tầng, chưa chạy toàn model.
 
-RTL dùng một implementation cho mô phỏng và synthesis, không phụ thuộc nhánh macro hay primitive Quartus. Mục tiêu là ASIC; A&S và timing FPGA là các bước demo tổng hợp và critical path; xem [constraint/Fmax](docs/verification/timing/README.md). Chưa có xác nhận binding SRAM PDK, STA hoặc PPA ASIC.
+RTL compute dùng một implementation cho mô phỏng và synthesis, không phụ thuộc nhánh macro hay primitive Quartus; adapter bộ nhớ FPGA chứa altsyncram. Mục tiêu là ASIC; A&S và timing FPGA là các bước demo tổng hợp và critical path; xem [constraint/Fmax](docs/verification/timing/README.md). Chưa có xác nhận binding SRAM PDK, STA hoặc PPA ASIC.
 
 ## Chạy lại
 

@@ -2,7 +2,7 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [pipelined_word_ram.sv](<../../../Verilog%20Source%20code/pipelined_word_ram.sv>). **Số dòng:** 110. **SHA-256:** `671e4627b8c4fa5af0235cdca60aa9f49857e3b1758d57124ce3134ed3470f37`.
+**Source:** [pipelined_word_ram.sv](<../../../Verilog%20Source%20code/pipelined_word_ram.sv>). **Số dòng:** 111. **SHA-256:** `cfceddad12c059b47558b9be28974f6f5085e62fb2a29978d406120c14de354f`.
 
 ## Khối này làm gì?
 
@@ -74,8 +74,9 @@ Valid phải đi cùng dữ liệu. wr_valid xuất hiện khi leaf write thực
 ```systemverilog
     if (USE_QUARTUS_MEMORY) begin : g_ip
         logic [ADDR_W - 1:0] read_address_q, write_address_q;
-        logic [WIDTH - 1:0] write_data_q, raw_data, response_q;
-        logic read_enable_q, write_enable_q;
+        (* dont_merge *) logic [WIDTH - 1:0] write_data_q;
+        logic [WIDTH - 1:0] raw_data, response_q;
+        (* dont_merge *) logic read_enable_q, write_enable_q;
         always_ff @(posedge clk) begin
             read_address_q <= rd_addr; write_address_q <= wr_addr;
             write_data_q <= wr_data;
@@ -98,15 +99,15 @@ Valid phải đi cùng dữ liệu. wr_valid xuất hiện khi leaf write thực
         end
     end else begin : g_model
     for (tile = 0; tile < TILES; tile = tile + 1) begin : g_tile
-        localparam int TILE_ROWS = (ROWS - tile * 1024 < 1024) ? ROWS - tile * 1024 : 1024;
 ```
 
 Một altsyncram toàn bank, không tạo decoder/mux tile trong compute RTL. Request E1, raw read/write E2, response E3; bank lớn thêm E4. Queued write bị hủy khi reset trước E2.
 
-### [Dòng 60–110: Portable ASIC behavior model](<../../../Verilog%20Source%20code/pipelined_word_ram.sv#L60>)
+### [Dòng 60–111: Portable ASIC behavior model](<../../../Verilog%20Source%20code/pipelined_word_ram.sv#L60>)
 
-<!-- source-range:60:110 -->
+<!-- source-range:60:111 -->
 ```systemverilog
+        localparam int TILE_ROWS = (ROWS - tile * 1024 < 1024) ? ROWS - tile * 1024 : 1024;
         (* dont_merge *) logic [9:0] read_address_q, write_address_q;
         logic [WIDTH - 1:0] write_data_q;
         logic read_enable_q, write_enable_q;

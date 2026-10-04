@@ -40,7 +40,7 @@ module tb_llm_operators;
         end
     end
     endgenerate
-    integer checks=0,transactions=0,clocks;
+    integer checks=0,transactions=0,clocks,scalar_checks=0,clamp_checks=0;
     logic signed [127:0] expected,acc,value;
     logic [255:0] packed_parameter;
     logic [767:0] packed_vector;
@@ -99,6 +99,36 @@ module tb_llm_operators;
         release dut.graph;
         @(negedge clk);rst_n=0;host_en=0;seed_v=0;seed_p=0;seed_k=0;
         repeat(3) @(negedge clk);
+    endtask
+    task automatic check_scalar_clamp(input logic signed [63:0] x,
+                                      input integer group_id,input bit attention);
+        reset_fixture();
+        @(negedge clk);rst_n=1;
+        dut.scalar_round_q=x;
+        dut.matrix_row_q=9'(group_id*4);dut.lane_q=5'(group_id*4);
+        dut.op=attention ? dut.A_FLAGS : dut.L_FLAGS;
+        repeat(2) @(negedge clk);
+        if(dut.op!==(attention ? dut.A_PACK : dut.L_STORE))
+            $fatal(1,"Scalar clamp pipeline latency");
+        if(dut.scalar_group_q[group_id]!==clamp24(128'(x)))
+            $fatal(1,"Scalar clamp group=%0d x=%h expected=%h actual=%h",group_id,x,clamp24(128'(x)),dut.scalar_group_q[group_id]);
+        if(overflow_out!==(attention ? 1'b0 : (x>8388607 || x< -8388608)))
+            $fatal(1,"Scalar clamp selected-group overflow flag");
+        clamp_checks++;checks+=3;
+    endtask
+    task automatic check_scalar(input logic signed [38:0] x,
+                                input logic signed [24:0] y);
+        logic signed [127:0] reference_product;
+        reset_fixture();
+        @(negedge clk);rst_n=1;
+        dut.scalar_a_q=x;dut.scalar_b_q=y;
+        dut.return_scalar=dut.O_IDLE;dut.op=dut.SC_MULTIPLY;
+        reference_product=128'(x)*128'(y);
+        repeat(3) @(negedge clk);
+        if(dut.op!==dut.O_IDLE) $fatal(1,"Scalar pipeline latency");
+        if(dut.scalar_product_q!==reference_product[63:0])
+            $fatal(1,"Scalar product x=%h y=%h expected=%h actual=%h",x,y,reference_product,dut.scalar_product_q);
+        scalar_checks++;checks+=2;
     endtask
     task automatic seed_vector_row(input integer address,input logic [767:0] data,input bit cache);
         seed_addr=12'(address);seed_vector=data;seed_v=!cache;seed_k=cache;
@@ -162,6 +192,30 @@ module tb_llm_operators;
     endtask
     initial begin
         $readmemh("Verilog Source code/sigmoid_257.mem",sigmoid_lut);
+        // Independent S128 multiplication covers byte carries and sign edges
+        // of the new S39 x S25 three-stage scalar engine.
+        check_scalar(39'sh4000000000,25'sh1000000);
+        check_scalar(39'sh3fffffffff,25'sh0ffffff);
+        check_scalar(39'sh4000000000,25'sh0ffffff);
+        check_scalar(39'sh3fffffffff,25'sh1000000);
+        check_scalar(-39'sd1,25'sd1);
+        check_scalar(39'sh4000000000,-25'sd1);
+        check_scalar(39'sd0,25'sh1000000);
+        check_scalar(-39'sd16385,25'sd11585);
+        repeat(120) check_scalar(39'({$urandom,$urandom}),25'($urandom));
+        // Private group flags remain unreset. Alternate overflow and ordinary
+        // values across all groups to detect stale flags or incorrect owners.
+        for(integer g=0;g<8;g++)
+            for(integer a=0;a<2;a++) begin
+                check_scalar_clamp(64'sh7fffffffffffffff,g,1'(a));
+                check_scalar_clamp(64'sd0,g,1'(a));
+                check_scalar_clamp(64'sh8000000000000000,g,1'(a));
+                check_scalar_clamp(-64'sd1,g,1'(a));
+                check_scalar_clamp(64'sd8388607,g,1'(a));
+                check_scalar_clamp(64'sd8388608,g,1'(a));
+                check_scalar_clamp(-64'sd8388608,g,1'(a));
+                check_scalar_clamp(-64'sd8388609,g,1'(a));
+            end
         reset_fixture();
         seed_parameter_row(23045,{8{scale}});
         for(integer row=0;row<4;row++) begin
@@ -399,7 +453,7 @@ module tb_llm_operators;
         begin_operator(1);
         if(!dut.op_fault_q || !error) $fatal(1,"Reserved full-graph ternary code did not fault");
         checks++;
-        $display("LLM_OPERATORS_PASS operators=%0d checks=%0d reference=S128 fixtures=synthetic",transactions,checks);$finish;
+        $display("LLM_OPERATORS_PASS operators=%0d checks=%0d scalar_cases=%0d clamp_cases=%0d reference=S128 fixtures=synthetic",transactions,checks,scalar_checks,clamp_checks);$finish;
     end
     initial begin #20000000;$fatal(1,"LLM_OPERATORS_TIMEOUT");end
 endmodule

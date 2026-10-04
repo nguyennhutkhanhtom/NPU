@@ -1,5 +1,5 @@
 {
-  "verified_date": "2026-10-01",
+  "verified_date": "2026-10-02",
   "mermaid_version": "11.17.2",
   "scope": "Mermaid parse and render of every diagram in docs Markdown and the repository README. This records diagram evidence only; RTL regression and synthesis evidence are recorded separately.",
   "diagrams": [
@@ -37,6 +37,15 @@
       "width": 544,
       "height": 2027,
       "nodes": 17,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/design/full_rtl_language.md",
+      "ordinal": 1,
+      "source_sha256": "4408753b90111039f2ea43c869fe8a3f109b1763dfa56af1291132df1e6deb73",
+      "width": 1096,
+      "height": 294,
+      "nodes": 11,
       "status": "rendered"
     },
     {
@@ -177,10 +186,10 @@
     {
       "file": "docs/source_guide/blocks/llm_math.sv.md",
       "ordinal": 0,
-      "source_sha256": "e79798ef0e7384babd329d962264a162fca7a1cd13e5ce04980b01e5534464ab",
-      "width": 476,
-      "height": 450,
-      "nodes": 7,
+      "source_sha256": "885f5edc56cc5b2e6c9600a81081d3528c412b37b51d3b0795091f29721c6d2c",
+      "width": 541,
+      "height": 676,
+      "nodes": 9,
       "status": "rendered"
     },
     {
@@ -204,7 +213,7 @@
     {
       "file": "docs/source_guide/blocks/llm_soc.sv.md",
       "ordinal": 0,
-      "source_sha256": "5365bb66af92ae82b9ea71825d2f686db8f3d39fbc87bf250d8d4747c6c038a5",
+      "source_sha256": "5c4856f2589b9ea9a9acbf0c2e5458b69963905eb0d79271a46610d3fd053db8",
       "width": 747,
       "height": 498,
       "nodes": 8,

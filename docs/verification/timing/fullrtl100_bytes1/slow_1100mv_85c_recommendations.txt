@@ -1,0 +1,112 @@
+Statistics: 40 0 3156 0 40 -1.161
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[31].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[30].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[29].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[27].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+chunk_q[1]~DUPLICATE math_b_q[5][25] 0.432600 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{chunk_q[1]~DUPLICATE} Mux10~0}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[24].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[20].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[26].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+chunk_q[1]~DUPLICATE math_b_q[5][24] 0.432600 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{chunk_q[1]~DUPLICATE} Mux10~0}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[25].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+instr_debug[11]~reg0 instr_debug[11] 0.300085 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[31].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[30].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[29].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[27].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+chunk_q[1]~DUPLICATE math_b_q[5][25] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[24].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[20].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[26].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+chunk_q[1]~DUPLICATE math_b_q[5][24] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[25].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+scalar_round_q[48] scalar_group_q[6][16] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+scalar_round_q[48] scalar_group_q[5][16] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[31].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[31].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[30].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[30].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[29].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[29].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[27].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[27].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+chunk_q[1]~DUPLICATE math_b_q[5][25] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+chunk_q[1]~DUPLICATE math_b_q[5][25] 0.432600 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{chunk_q[1]~DUPLICATE} Mux10~0}}
+chunk_q[1]~DUPLICATE math_b_q[5][25] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[24].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[24].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[20].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[20].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[26].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[26].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+chunk_q[1]~DUPLICATE math_b_q[5][24] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+chunk_q[1]~DUPLICATE math_b_q[5][24] 0.432600 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{chunk_q[1]~DUPLICATE} Mux10~0}}
+chunk_q[1]~DUPLICATE math_b_q[5][24] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 4}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[25].read_enable_q 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_bank_ram:u_cache|group_read_enable_q[0]}}}
+llm_bank_ram:u_cache|group_read_enable_q[0] llm_bank_ram:u_cache|g_bank[25].read_enable_q 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+scalar_round_q[48] scalar_group_q[6][16] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+scalar_round_q[48] scalar_group_q[6][16] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+scalar_round_q[48] scalar_group_q[5][16] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+scalar_round_q[48] scalar_group_q[5][16] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+instr_debug[11]~reg0 instr_debug[11] 0.300085 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+chunk_q[1]~DUPLICATE math_b_q[5][25] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+chunk_q[1]~DUPLICATE math_b_q[5][24] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+scalar_round_q[48] scalar_group_q[6][16] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+scalar_round_q[48] scalar_group_q[5][16] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

@@ -10,6 +10,7 @@ import json
 import math
 import sys
 from hashlib import sha256
+from datetime import datetime, timezone
 from check_gate import check_gate
 
 HERE = Path(__file__).resolve().parent
@@ -27,6 +28,10 @@ def main():
     parser.add_argument("--min-new", type=int, default=64)
     args = parser.parse_args()
     timing = check_gate(args.timing)
+    runner_names = ("application_tb.sv", "run_application.ps1", "check_gate.py",
+                    "export_checkpoint.py", "finalize_application.py")
+    runner_hashes = {name: sha256((HERE/name).read_bytes()).hexdigest() for name in runner_names}
+    timing_digest = sha256(args.timing.read_bytes()).hexdigest()
     if not (1 <= args.new_tokens <= 127 and 0 <= args.temperature <= 255
             and 0 <= args.min_new <= 128 and 0 <= args.seed <= 0xffffffff):
         parser.error('new-tokens must be 1..127, temperature 0..255, min-new 0..128 and seed U32')
@@ -195,9 +200,17 @@ def main():
     reference = {"checkpoint_sha256":expected_sha,"prompt":args.prompt,"prompt_ids":prompt,
                  "new_tokens":args.new_tokens,"temperature":args.temperature,"seed":args.seed or 1,
                  "min_new":args.min_new,"expected_ids":output,"expected_text":tokenizer.decode(output),
-                 "timing_manifest":str(args.timing),"fmax_mhz":timing['metrics']['worst_restricted_fmax_mhz']}
-    (build/"reference.json").write_text(json.dumps(reference,indent=2)+"\n")
+                 "timing_manifest":str(args.timing),"fmax_mhz":timing['metrics']['worst_restricted_fmax_mhz'],
+                 "prepared_utc":datetime.now(timezone.utc).isoformat(),
+                 "timing_manifest_sha256":timing_digest,"rtl_sources":timing["rtl_sources"],
+                 "runner_sources":runner_hashes}
     (build/"config.svh").write_text(f"localparam integer PROMPT_COUNT={len(prompt)}, MAX_NEW={args.new_tokens}, EXPECTED_COUNT={len(output)}, TEMPERATURE={args.temperature}, SEED={args.seed or 1}, MIN_NEW={args.min_new};\n")
+    reference["input_files"] = {name: sha256((build/name).read_bytes()).hexdigest()
+                                for name in ("parameter.mem", "prompt.mem", "expected.mem", "config.svh")}
+    assert runner_hashes == {name: sha256((HERE/name).read_bytes()).hexdigest() for name in runner_names}, "Application sources changed during export/reference"
+    check_gate(args.timing)
+    assert sha256(args.timing.read_bytes()).hexdigest() == timing_digest, "Timing evidence changed during export"
+    (build/"reference.json").write_text(json.dumps(reference,indent=2)+"\n")
     print(f"FULL_RTL_REFERENCE_READY: prompt={len(prompt)} continuation={len(output)}")
 
 

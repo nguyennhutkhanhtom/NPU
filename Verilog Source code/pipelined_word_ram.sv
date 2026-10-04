@@ -32,8 +32,9 @@ module pipelined_word_ram #(
     generate
     if (USE_QUARTUS_MEMORY) begin : g_ip
         logic [ADDR_W - 1:0] read_address_q, write_address_q;
-        logic [WIDTH - 1:0] write_data_q, raw_data, response_q;
-        logic read_enable_q, write_enable_q;
+        (* dont_merge *) logic [WIDTH - 1:0] write_data_q;
+        logic [WIDTH - 1:0] raw_data, response_q;
+        (* dont_merge *) logic read_enable_q, write_enable_q;
         always_ff @(posedge clk) begin
             read_address_q <= rd_addr; write_address_q <= wr_addr;
             write_data_q <= wr_data;

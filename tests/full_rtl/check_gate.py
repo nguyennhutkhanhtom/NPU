@@ -27,7 +27,8 @@ def check_gate(manifest_path: Path) -> dict:
         "Fitted resource report changed since timing evidence"
     fit_summary = fit_path.read_text()
     import re
-    for resource in ("DSP Blocks", "PLLs"):
+    for resource in ("DSP Blocks", "PLLs", "DLLs", "HSSI RX PCSs",
+                     "HSSI PMA RX Deserializers", "HSSI TX PCSs", "HSSI PMA TX Serializers"):
         count = re.search(r"^Total " + resource + r"\s*:\s*(\d+)", fit_summary, re.MULTILINE)
         assert count and int(count[1]) == 0, f"Disallowed fitted {resource}"
     assert metrics["worst_restricted_fmax_mhz"] >= 100, "Fmax is below 100 MHz"

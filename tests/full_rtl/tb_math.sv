@@ -19,12 +19,12 @@ module tb_llm_math;
         end
         @(negedge clk);start=1;
         @(negedge clk);start=0;clocks=0;
-        while(!done && clocks<10) begin
+        while(!done && clocks<12) begin
             for(integer i=0;i<32;i++) begin a[i]=$urandom;b[i]=$urandom;end
             start=clocks==1; // Busy requests must not replace this transaction.
             @(negedge clk);start=0;clocks++;
         end
-        if(!done || clocks!=7) $fatal(1,"SIMD latency clocks=%0d",clocks);
+        if(!done || clocks!=9) $fatal(1,"SIMD latency clocks=%0d",clocks);
         if(sum!==expected_sum[60:0]) $fatal(1,"SIMD sum expected=%h actual=%h",expected_sum,sum);
         for(integer i=0;i<32;i++)
             if(product[i]!==expected_product[i][55:0]) $fatal(1,"SIMD product lane=%0d",i);
@@ -56,7 +56,7 @@ module tb_llm_math;
             for(integer i=0;i<32;i++) begin a[i]=$urandom;b[i]=$urandom;end
             check();
         end
-        for(integer phase=0;phase<7;phase++) begin
+        for(integer phase=0;phase<9;phase++) begin
             @(negedge clk);start=1;
             @(negedge clk);start=0;
             repeat(phase) @(negedge clk);
@@ -64,7 +64,7 @@ module tb_llm_math;
             repeat(2) @(negedge clk);rst_n=1;
             repeat(10) begin @(negedge clk);if(busy || done) $fatal(1,"SIMD canceled response");end
         end
-        $display("LLM_MATH_PASS transactions=%0d reset_phases=7 table_checks=%0d reference=S128",checks,table_checks);$finish;
+        $display("LLM_MATH_PASS transactions=%0d reset_phases=9 table_checks=%0d reference=S128",checks,table_checks);$finish;
     end
     initial begin #1000000;$fatal(1,"LLM_MATH_TIMEOUT");end
 endmodule

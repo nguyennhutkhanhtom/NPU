@@ -62,7 +62,7 @@ module llm_parameter_ram #(
     generate
     for (lane = 0; lane < 8; lane = lane + 1) begin : g_ram_lane
         (* dont_merge *) logic [ADDR_W - 1:0] read_address_local_q, write_address_q;
-        logic [31:0] write_data_q;
+        (* dont_merge *) logic [31:0] write_data_q;
         logic read_enable_q, write_enable_q;
         always_ff @(posedge clk) begin
             read_address_local_q <= read_address;

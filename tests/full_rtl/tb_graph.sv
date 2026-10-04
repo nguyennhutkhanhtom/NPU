@@ -64,7 +64,9 @@ module tb_llm_graph;
         transaction(1,32'h00400010,0);transaction(1,32'h00400018,0);
         transaction(1,32'h0040000c,1);
         if(!running) $fatal(1,"Synthetic graph did not start");
-        while(running && clocks<4000000) begin
+        // Byte-product stages add two clocks per SIMD/scalar operation. Keep
+        // all numeric/token/causal assertions; only the pipeline budget changes.
+        while(running && clocks<5000000) begin
             @(negedge clk);clocks++;
             if(clocks%500000==0) $display("LLM_GRAPH_PROGRESS clocks=%0d position=%0d generated=%0d",clocks,dut.position_q,dut.generated_q);
         end
@@ -84,5 +86,6 @@ module tb_llm_graph;
         $display("LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=%0d host_commands=%0d fixtures=synthetic",clocks,commands);
         $finish;
     end
-    initial begin #60000000;$fatal(1,"LLM_GRAPH_TIMEOUT");end
+    // 196619 host commands, <=19edges each, plus <=5M compute clocks <90ms.
+    initial begin #100000000;$fatal(1,"LLM_GRAPH_TIMEOUT");end
 endmodule

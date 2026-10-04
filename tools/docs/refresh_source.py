@@ -59,11 +59,13 @@ NEW = {
          (25, "Group request distribution", "Địa chỉ/data payload chốt không enable mux. SRAM-only dont_merge giữ locality; read/write enables reset để hủy queued requests."),
          (48, "Lane banks and response", "Leaf old-data collision theo cùng accepted cycle. Lane-valid có cùng latency; output dùng lane0 valid để xác nhận cả row.")]),
     "llm_math.sv": (
-        "SIMD signed multiply và reduction", "32 tích S24×S32 tạo S56; cây cộng cân bằng mở rộng đến S61. Input chốt khi start và không busy. Payload không reset; pipeline valid reset để hủy transaction.",
-        "IN[32 pairs S24 and S32] --> CAP[Input registers]\n    CAP --> MUL[32 registered products S56]\n    MUL --> TREE[Five registered reduction levels]\n    TREE --> SUM[Sum S61]\n    CTRL[8-bit validity pipeline] -.-> CAP\n    CTRL -.-> TREE\n    CTRL --> DONE[busy and done]",
+        "SIMD byte-product pipeline và reduction", "32 tích S24×S32 tạo S56 bằng partial products byte: ba byte thấp U8, byte cao S8. Partial S33, cặp S41, ghép product S56 rồi cây cộng cân bằng tới S61. Done chín cạnh sau cạnh nhận start. Chỉ dùng logic cells; input chốt khi start và không busy. Payload không reset; pipeline valid reset hủy transaction.",
+        "IN[32 pairs S24 and S32] --> CAP[Input registers]\n    CAP --> MUL[Four byte products per lane S33]\n    MUL --> PAIR[Registered pair sums S41]\n    PAIR --> PRODUCT[Registered product S56]\n    PRODUCT --> TREE[Five registered reduction levels]\n    TREE --> SUM[Sum S61]\n    CTRL[10-bit validity pipeline] -.-> CAP\n    CTRL -.-> TREE\n    CTRL --> DONE[busy and done after nine clocks]",
         [(1, "Interface and payload", "Dải product và sum đủ cho signed extremes; payload chỉ hợp lệ sau transaction đã hoàn thành."),
-         (19, "Control pipeline", "busy là OR valid; request trong busy bị bỏ qua. done tại valid_q[7], bảy cạnh sau cạnh nhận start."),
-         (27, "Arithmetic stages", "Casts giữ dấu và tăng một bit mỗi mức reduction. product giữ nguyên cho client dùng kết quả từng lane.")]),
+         (12, "Widths and control pipeline", "busy là OR valid; request trong busy bị bỏ qua. done tại valid_q[9], chín cạnh sau cạnh nhận start. Signed casts giữ sign extension."),
+         (27, "Operand capture and byte multiplication", "Các byte thấp có leadingzero trước signed cast; byte cao giữ dấu. Partial products giữ đủ S33 trước shift."),
+         (39, "Pair and product reconstruction", "Hai pair dùng shift8/S41; product ghép shift16/S56. Không truncate intermediate trước khi dấu và độ rộng đã đúng."),
+         (48, "Balanced reduction", "Mỗi level tăng một bit; S61 chứa tổng32tích. Numeric expectations S128 giữ nguyên, chỉ latency/reset coverage đổi7→9.")]),
     "llm_pkg.sv": (
         "Layout, saturation và sampler", "Hằng số graph cố định NanoFable, địa chỉ parameter rows, S24 saturation, sign extension và xorshift32. LUT exp/Gumbel được include thành logic portable.",
         "LAYOUT[Fixed graph and SRAM offsets] --> CTRL[llm_soc]\n    SAT[S24 saturation and S56 extension] --> MATH[Numeric datapath]\n    EXP[Exponential LUT] --> ATT[Softmax]\n    RANDOM[Xorshift32 and Gumbel LUT] --> HEAD[Token selection]",
@@ -102,7 +104,7 @@ for source in sorted(RTL.iterdir()):
     digest = sha256(raw).hexdigest()
     document = GUIDE / "blocks" / (source.name + ".md")
     entry = entries.get(source.name)
-    if entry and source.name not in {'scale_compose.sv', 'llm_bank_ram.sv', 'llm_parameter_ram.sv', 'pipelined_word_ram.sv', 'quartus_word_ram.sv'}:
+    if entry and source.name not in {'scale_compose.sv', 'llm_bank_ram.sv', 'llm_parameter_ram.sv', 'pipelined_word_ram.sv', 'quartus_word_ram.sv', 'llm_math.sv'}:
         doc = document.read_text(encoding="utf-8")
         if source.suffix in {".sv", ".v"}:
             pattern = re.compile(r"### \[Dòng (\d+)–(\d+): (.*?)\]\(<([^>]+)>\)\n\n<!-- source-range:\d+:\d+ -->\n```systemverilog\n(.*?)\n```", re.S)

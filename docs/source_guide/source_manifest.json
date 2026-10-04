@@ -1,5 +1,5 @@
 {
-  "snapshot_date": "2026-10-01",
+  "snapshot_date": "2026-10-02",
   "files": [
     {
       "file": "matmulfree.sv",
@@ -262,8 +262,8 @@
       "file": "llm_bank_ram.sv",
       "path": "Verilog Source code/llm_bank_ram.sv",
       "document": "blocks/llm_bank_ram.sv.md",
-      "sha256": "bc44a55ec28b6e2a361e714638055345ad1a657c4c63f6c59c5f296bcc8735d5",
-      "lines": 74
+      "sha256": "c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb",
+      "lines": 76
     },
     {
       "file": "llm_exp_lut.svh",
@@ -280,12 +280,12 @@
       "lines": 262
     },
     {
-      "groups": 3,
+      "groups": 5,
       "file": "llm_math.sv",
       "path": "Verilog Source code/llm_math.sv",
       "document": "blocks/llm_math.sv.md",
-      "sha256": "d249f138a627eee4075377f3de9c5ed2fcd5888160968b6b6b8a78092f749f3a",
-      "lines": 46
+      "sha256": "05e4e6323015e0c2ec10199a3749b3f877470cb7806aa2d61780861e63650892",
+      "lines": 61
     },
     {
       "groups": 3,
@@ -300,15 +300,15 @@
       "file": "llm_soc.sv",
       "path": "Verilog Source code/llm_soc.sv",
       "document": "blocks/llm_soc.sv.md",
-      "sha256": "70e7444fe5ce22d5dfbd4a45c83c5dd9eb7eb30b7180daed474195878b7e277f",
-      "lines": 962
+      "sha256": "8e3730384ea43cbb7b6c1d413bd7df56668bd24a55d517b0994eae963a057cb3",
+      "lines": 1008
     },
     {
       "groups": 4,
       "file": "llm_parameter_ram.sv",
       "path": "Verilog Source code/llm_parameter_ram.sv",
       "document": "blocks/llm_parameter_ram.sv.md",
-      "sha256": "3c17e9823f3c0cf6dd926efd2e1fb9b85a0180e27137541a43b1f415251499c4",
+      "sha256": "b4258f0ff8379b54672ae3b285af10d4f6c10a52bc2f463cfa5225988cd1959c",
       "lines": 87
     },
     {
@@ -316,8 +316,8 @@
       "file": "pipelined_word_ram.sv",
       "path": "Verilog Source code/pipelined_word_ram.sv",
       "document": "blocks/pipelined_word_ram.sv.md",
-      "sha256": "671e4627b8c4fa5af0235cdca60aa9f49857e3b1758d57124ce3134ed3470f37",
-      "lines": 110
+      "sha256": "cfceddad12c059b47558b9be28974f6f5085e62fb2a29978d406120c14de354f",
+      "lines": 111
     },
     {
       "groups": 3,

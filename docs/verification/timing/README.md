@@ -4,7 +4,83 @@
 
 Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL dựa trên critical path. Phần full graph dùng Cyclone V C9; các snapshot legacy bên dưới dùng thiết bị riêng được ghi trong manifest. Các phép đo là FPGA demo, chưa xác nhận ASIC signoff.
 
-## Current memory-IP result: synthesis/fit PASS, timing FAIL87.49MHz
+## Control1 result:92.75MHz, setup/hold/recovery FAIL
+
+Fresh tag `fullrtl100_control1` records41RTL+3config inputs before compile.
+It preserves memory group/IP enable copies at the adapter boundary and appends
+four pipeline states for ternary decode, exp difference and scalar clamp flags.
+Numeric formulas and expected tokens are unchanged. Ordinary LVDS clock input
+buffer feeds direct GCLK; no PLL/DLL/SERDES/ALTLVDS IP. Device5CGXFC9E6F35C7,
+seed1/SPEED/STANDARD and10ns/allI/O SDC are unchanged. QSF electrical clock
+contract changes to100MHz differential input; fit must record clk/clk(n) pins.
+Source hashes/reports must prove any timing improvement. A&S completed08:25:47,
+0errors/13warnings; mapDSP/PLL/DLL/HSSI0. Fit0errors/6warnings,31573ALM/42133FF/
+1187M10K/9519744memorybits/128pins, DSP/PLL/DLL/HSSI0. STA0errors/2warnings,
+but **timingFAIL92.75MHz**. All six units
+PASS, including17operators/3460checks/scalar128/clamp128; archived in
+[control1 six-group evidence](../../../tests/full_rtl/evidence/control1_six_units/results.json).
+Actual-IP full graph started08:41:21, then was cancelled for the measured host
+address-owner mux fix; log/cancellation record and six PASS groups retained.
+No assertion failure or seven-group acceptance is claimed. No pretrained application has run.
+
+| Corner1.1V | Setup slack/TNS | Hold slack/TNS | Recovery slack/TNS | Removal | Pulse |
+|---|---:|---:|---:|---:|---:|
+| Slow85°C | −0.769/−28.611ns | −0.152/−0.499ns | −1.288/−7.565ns | 4.156ns | 3.541ns |
+| Slow0°C | −0.782/−26.071ns | 0.235/0 | −0.910/−5.311ns | 3.743ns | 3.507ns |
+| Fast85°C | 3.094/0 | 0.128/0 | 3.020/0 | 2.317ns | 3.877ns |
+| Fast0°C | 3.417/0 | 0.046/0 | 3.421/0 | 1.957ns | 3.872ns |
+
+All otherTNS0; unconstrained0. [Manifest/source archive](fullrtl100_control1/manifest.json)
+and52unique report/archive hashes plus commandsSHA verified. [Worst setup](fullrtl100_control1/slow_1100mv_0c_setup.rpt)
+is host_rdata31 output: clock6.048ns+data2.634ns vs7.900ns requirement. LVDS input
+receiver0.907ns is essentially the same as earlier single-ended0.917ns; the
+physical global/IO clock route remains dominant, so the LVDS hypothesis did not
+close I/O. PinpairV28/V27,bank5B,GCLK11, no clock IP. [Slow85 setup](fullrtl100_control1/slow_1100mv_85c_setup.rpt)
+also shows host_en→parameter address FF13.158ns; raw request drives the address
+mux. Since host/core accesses are exclusive, select address by registered core
+rd_en and retain raw host cancellation on request/valid controls.
+[Recovery](fullrtl100_control1/slow_1100mv_85c_recovery.rpt) fails because reset
+data route14ns reaches packed IO FFs. New16406/16469 warning refers to rst_n at
+W27→GCLK15 non-dedicated global routing, not clk. Evaluate legal reset pin/global
+placement and actual ordinary I/O cell/clock-path delays before next full fit.
+Probe measurements are characterization only, never the full graph100MHz gate.
+SDC canonical-LF SHA256 remains
+`aa4dc1a48cfd2aabd01770a0eb010b14a2abdfe2cfc9d69968a89b1172ccd181`;
+Quartus may rewrite CRLF without changing constraints (record.py canonicalizes
+config EOL only; RTL hashes remain byte-exact).
+
+## Byte-product result:89.60MHz, setup and hold FAIL
+
+[Bytes1 manifest](fullrtl100_bytes1/manifest.json) archives the exact41RTL/QSF/QPF/SDC
+for SIMD9-clock/scalar3-stage products and local parameter payload copies.
+A&S0/13,fit0/4,STA0/2;31618ALM/41942registers/1187M10K/0DSP/0PLL. Slow85
+setup−1.161ns/TNS−18.601ns, hold−0.085ns/TNS−0.140ns; Slow0setup−0.702ns/
+TNS−16.318ns,hold0.234ns. Fast85setup2.790/hold0.129;Fast0setup3.672/hold0.111.
+Recovery/removal/pulse allPASS,TNS0;unconstrained0. No100MHz acceptance.
+Six unitsPASS, including503math cases/reset9 and17operators/3076checks/scalar128.
+Full graph was cancelled for the measured follow-up RTL; its log and cancellation
+record are preserved with the six completed groups. No assertion failure or
+seven-group acceptance is claimed for bytes1.
+
+The previous scalar/SIMD multiplier and parameter-payload paths no longer lead
+the failing list. Worst now: merged KV group_read_enable0→lane31.enable10.919ns;
+Quartus recommends duplicate source nodes. Also chunk1→math_b5 highbits10.227ns
+(variable ternary selection plus decode), exp_lo→interpolation10.130ns (subtract
+plusmultiply), scalar_round48→scalar_group16 (64-bit clamp predicate). Packed
+output IO clock/pad setup remains around−0.38ns; host input hold worst−0.085ns.
+Preserve group enables within the memory boundary and pipeline the measured
+selection/delta/clamp cones. Evaluate a true differential LVDS clock input
+buffer with direct GCLK routing; **no PLL or SERDES IP** and unchanged10ns/I/O
+budgets. This changes the demo electrical clock contract; physical negative
+companion pin must be recorded by the fit report.
+[Cyclone V clock pins](https://docs.altera.com/r/docs/683375/current/cyclone-v-device-handbook-volume-1-device-interfaces-and-integration/dedicated-clock-input-pins)
+support differential or single-ended clocks; [true LVDS buffers](https://docs.altera.com/r/docs/683375/current/cyclone-v-device-handbook-volume-1-device-interfaces-and-integration/true-lvds-buffers-in-cyclone-v-devices)
+exist in row/column IOs. Compiler automatically adds the companion pin per the
+[Standard Edition guide](https://docs.altera.com/r/docs/683492/18.1/intel-quartus-prime-standard-edition-user-guide-design-constraints/assigning-differential-pins).
+Those are ordinary IO buffers, not an instantiated compute/clock IP. No board
+pinout has been supplied; this remains FPGA demo evidence, not board signoff.
+
+## Memory-IP milestone: synthesis/fit PASS, timing FAIL87.49MHz
 
 [Memoryip2 manifest](fullrtl100_memoryip2/manifest.json) records exact41RTL assets,
 QPF/QSF/SDC and final Quartus18.1 reports for llm_soc/5CGXFC9E6F35C7.
@@ -29,7 +105,12 @@ show parameter lane3 write_data duplicate to lane6 IP request register11.147ns;
 11.055ns and SIMD input→product10.77ns. Memory payload FF copies are identical
 and merge across banks; evaluate preserving local copies at this memory-only
 boundary. Pipeline the measured wide scalar/SIMD logic-cell multipliers; do not
-add DSP/PLL or relax unchanged10ns SDC. Those follow-up edits are not yet applied.
+add DSP/PLL or relax unchanged10ns SDC. Those follow-up edits are now applied in fullrtl100_bytes1: memory-only
+dont_merge write payloads; SIMD byte products/pair sums with9-clock done;
+scalar partial/pair/product over3states. Its A&S0/13 reports0DSP/0PLL;
+fit completes but timingFAIL89.60MHz; all six unitsPASS, graph later cancelled.
+Numeric expected data
+remains unchanged; reset coverage grows7→9 and128scalar S128 cases are added.
 
 [A&S evidence](../memory_ip/results.json) records0errors/13warnings. Six287013
 warnings are unused data_b/rden_a in generated write-onlyA/read-onlyB models.
@@ -40,8 +121,9 @@ constant debug FAST_OUTPUT destinations; all56nonconstant output FFs packed.
 STA0errors/2warnings332148 are actual setup failure. All logs retained.
 [Memoryip1 failure](fullrtl100_memoryip1/failure.json) preserves unsupported
 MAX_DSP_BLOCKS QSF parser errors and exact44assets; memoryip2 removes only that
-invalid assignment. Current six units PASS; actual-IP full graph still running,
-so application remains blocked. Earlier102-DSP builds below are historical.
+invalid assignment. Six unitsPASS belong to memoryip2; its graph was cancelled for the measured
+timing fixes. Bytes1 sixgroupsPASS, graph cancelled for further measured fixes;
+application remains blocked. Earlier102-DSP builds below are historical.
 
 ## Full language graph: synthesis và fitting PASS, timing FAIL
 

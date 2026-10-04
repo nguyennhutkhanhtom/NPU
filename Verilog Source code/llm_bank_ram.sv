@@ -34,12 +34,14 @@ module llm_bank_ram #(
     generate
     for (group_id = 0; group_id < GROUPS; group_id = group_id + 1) begin : g_request
         (* dont_merge *) logic [ADDR_W - 1:0] read_address_q, write_address_q;
+        (* dont_merge *) logic read_enable_q;
         assign group_read_address_q[group_id] = read_address_q;
         assign group_write_address_q[group_id] = write_address_q;
+        assign group_read_enable_q[group_id] = read_enable_q;
         always_ff @(posedge clk) begin read_address_q <= rd_addr; write_address_q <= wr_addr; end
         always_ff @(posedge clk or negedge rst_n)
-            if (!rst_n) group_read_enable_q[group_id] <= 0;
-            else group_read_enable_q[group_id] <= rd_en;
+            if (!rst_n) read_enable_q <= 0;
+            else read_enable_q <= rd_en;
     end
     always_ff @(posedge clk) group_write_data_q <= wr_data;
     always_ff @(posedge clk or negedge rst_n)

@@ -44,16 +44,18 @@ Bản rà soát ngày **01/10/2026** pass **10 mục regression**, compile **0 e
 
 [Demo NanoFable](demos/language.md) bổ sung sinh văn bản trên CPU và 168 lượt replay linear ternary thực trên RTL; toàn model chưa chạy trên NPU.
 
-Top mới `llm_soc` triển khai toàn graph và SRAM trên RTL. A&S của snapshot
-`fullrtl100_tiled` đã fitting thành công nhưng timing FAIL 70,41 MHz.
-`fullrtl100_pipeline2` đạt83,58MHz; `local1` đạt84,49MHz. `fullrtl100_tree2`
-A&S PASS0/6, fitting PASS0/29, timing vẫn FAIL91,28MHz; sáu nhóm unit đã PASS
-đúng source snapshot đó. Current select RTL dùng96one-hot states, SRAM pipeline
-và hai tầng chọn lane sigmoid; native graph PASS16layer executions/3tokenRTL,
-sáu nhóm unit đã PASS cho snapshot `fullrtl100_select3`, nhưng timing FAIL92,22MHz.
-Bản `fullrtl100_group2` có năm nhóm units PASS, fitting PASS0/3 nhưng timing
-FAIL81,53MHz gồm setup/hold; full graph ModelSim còn chạy. Xem timing hub/checkpoint
-cho source/config hashes, warnings và kết quả mọi corner.
+Top `llm_soc` triển khai toàn graph và SRAM trên RTL. IP Quartus duy nhất được
+instantiate là altsyncram M10K, sau adapter thay được bằng SRAM ASIC; compute
+dùng RTL portable/logic cells. Milestone `d3825b2` đã push: synthesis/fit PASS,
+0DSP/0PLL nhưng timing FAIL87,49MHz. Bản byte-product tiếp theo có sáu nhóm
+units PASS, fit0DSP/0PLL và timing FAIL89,60MHz/setup+hold. Full graph của hai
+bản đó được hủy để sửa theo critical paths, không có assertion failure hay
+kết luận bảy nhóm PASS. `fullrtl100_control1` có sáu nhóm units PASS, fit0DSP/PLL/
+DLL/HSSI nhưng timing FAIL92,75MHz gồm setup/hold/recovery; graph đã được hủy
+để sửa host mux theo report. Source có102state, pipeline ternary/exp/clamp,
+enable SRAM cục bộ. Clock LVDS qua buffer/GCLK thường, không PLL/SERDES, chưa
+giải quyết I/O timing. Xem [timing hub](verification/timing/README.md)
+và [checkpoint](../TASK_STATE.md) cho source/config hashes, warnings và mọi corner.
 Application pretrained tiếp tục bị chặn đến khi source/config hiện tại đạt đủ gate.
 
 Code trích dẫn, dòng và SHA-256 trong source guide được đối chiếu bởi [validator](source_guide/validate.py); [validation.json](source_guide/validation.json) ghi kết quả. Sau khi sửa RTL, cập nhật chú giải rồi chạy:

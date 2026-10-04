@@ -26,6 +26,12 @@ application gate unless they match the current main RTL and timing evidence.
 The application host supplies checkpoint words, prompt token IDs and generation
 configuration. RTL owns attention, KV cache, head and autoregressive selection.
 The independent CPU integer model supplies expected values solely for verification.
+Application preparation records source/runner hashes and all four generated
+input files. Finalization rejects stale compile/runtime logs, changed inputs,
+unreviewed warnings and missing actual Intel RAM-model loading. PASS means
+RTL/reference continuation IDs match; text quality is explicitly NOT_ASSESSED
+until the actual RTL-decoded paragraph is reviewed. No application or checkpoint
+reference inference is run before the hardware/unit gate.
 
 ```powershell
 ./tests/full_rtl/run_units.ps1
@@ -71,3 +77,22 @@ Quartus uses a C9 device to verify packing and timing. The replaceable memory
 adapter isolates altsyncram M10K from compute RTL. AUTO_DSP_RECOGNITION OFF
 and DSP_BLOCK_BALANCING LOGIC ELEMENTS prohibit DSP inference; the application
 gate also requires actual fit summary DSP=0 and PLL=0.
+
+
+Current arithmetic timing revision pipelines SIMD byte products and pair sums:
+exact done latency9 clocks, reset coverage9 phases,503transactions and unchanged
+S128 expected products/sums. Scalar S39×S25 product has3 arithmetic stages;
+128extra independent signed-extreme/random checks supplement all17operators.
+The graph retains every numeric/token/causal/visit check and196619host commands;
+only the stage-count watchdog changes4M→5M compute clocks and100ms total.
+Bytes1 hardware completed0DSP/0PLL but FAIL89.60MHz/setup+hold; its six groups
+PASS, graph cancelled for measured control/locality fixes. Current tag
+fullrtl100_control1 adds ternary-code capture, exp-delta and scalar-clamp pipeline
+states (102onehotstates), memory-local enables and direct LVDS input clock buffer.
+Operators also add128clamp cases: all eight groups, linear/attention, S64 extremes,
+S24 endpoints and adjacent values, alternating overflow/plain values to detect
+stale private flags. All existing numerical expectations remain unchanged.
+Control1 sixgroupsPASS:17operators/3460checks/scalar128/clamp128,0runtimewarnings.
+Fit0DSP/PLL/DLL/HSSI but timingFAIL92.75MHz/setup-hold-recovery. Graph cancelled
+for the next measured host mux fix; sixgroups/logs archived separately. Fresh
+unit/fullgraph and all-corner timing proof are required; application remains gated.

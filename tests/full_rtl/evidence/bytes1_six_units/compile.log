@@ -1,0 +1,84 @@
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+Start time: 04:44:47 on Oct 02,2026
+vlog -sv -svinputport=var -work D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work "+incdir+D:\2151097_Nguyen Nhut Khanh\Verilog Source code" -f D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\sources.f -l D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\compile.log 
+-- Compiling package npu_pkg
+-- Compiling package llm_pkg
+-- Compiling module acc_mul
+-- Compiling module addsub
+-- Importing package npu_pkg
+-- Compiling module sram_word_tile
+-- Compiling module banked_word_ram
+-- Compiling module ctrl_unit
+-- Compiling module de_reg
+-- Compiling module descriptor_file
+-- Compiling module div
+-- Compiling module em_reg
+-- Compiling module exp_row
+-- Compiling module fd_reg
+-- Compiling module hazard_detect
+-- Compiling module ins_mem
+-- Compiling module llm_bank_ram
+-- Compiling module llm_math
+-- Compiling module llm_parameter_ram
+-- Compiling module llm_soc
+-- Importing package llm_pkg
+-- Compiling module matmul_wrap
+-- Compiling module matmulfree
+-- Compiling module mem_burst
+-- Compiling module mem_mapping
+-- Compiling module mul
+-- Compiling module mw_reg
+-- Compiling module norm_dispatch
+-- Compiling module isqrt_u64
+-- Compiling module norm
+-- Compiling module PC
+-- Compiling module pipelined_word_ram
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv(86): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv(87): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv(87): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv(89): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv(101): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv(102): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv(102): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv(103): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+-- Compiling module postscale
+-- Compiling module postscale_finish
+-- Compiling module quartus_word_ram
+-- Compiling module register
+-- Compiling module rowwise_dispatch
+-- Compiling module rowwise_op
+-- Compiling module scale_compose
+-- Compiling module sigmoid
+-- Compiling module sram_256_wrapper
+-- Compiling module ternary_mul
+-- Compiling module tb_llm_graph
+-- Compiling module tb_llm_math
+-- Compiling module memory_ip_case
+-- Compiling module tb_quartus_memory
+-- Compiling module tb_llm_operators
+-- Compiling module tb_llm_protocol
+-- Compiling module tb_llm_ram
+-- Compiling module tb_llm_selection
+
+Top level modules:
+	addsub
+	ctrl_unit
+	de_reg
+	em_reg
+	exp_row
+	fd_reg
+	hazard_detect
+	matmul_wrap
+	mem_burst
+	mul
+	mw_reg
+	postscale
+	tb_llm_graph
+	tb_llm_math
+	tb_quartus_memory
+	tb_llm_operators
+	tb_llm_protocol
+	tb_llm_ram
+	tb_llm_selection
+End time: 04:44:47 on Oct 02,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 8

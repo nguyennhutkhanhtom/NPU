@@ -2,7 +2,7 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [llm_bank_ram.sv](<../../../Verilog%20Source%20code/llm_bank_ram.sv>). **Số dòng:** 74. **SHA-256:** `bc44a55ec28b6e2a361e714638055345ad1a657c4c63f6c59c5f296bcc8735d5`.
+**Source:** [llm_bank_ram.sv](<../../../Verilog%20Source%20code/llm_bank_ram.sv>). **Số dòng:** 76. **SHA-256:** `c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb`.
 
 ## Khối này làm gì?
 
@@ -74,25 +74,27 @@ Client dùng rd_valid; operator phải chờ wr_busy hạ trước báo done. La
     generate
     for (group_id = 0; group_id < GROUPS; group_id = group_id + 1) begin : g_request
         (* dont_merge *) logic [ADDR_W - 1:0] read_address_q, write_address_q;
+        (* dont_merge *) logic read_enable_q;
         assign group_read_address_q[group_id] = read_address_q;
         assign group_write_address_q[group_id] = write_address_q;
+        assign group_read_enable_q[group_id] = read_enable_q;
         always_ff @(posedge clk) begin read_address_q <= rd_addr; write_address_q <= wr_addr; end
         always_ff @(posedge clk or negedge rst_n)
-            if (!rst_n) group_read_enable_q[group_id] <= 0;
-            else group_read_enable_q[group_id] <= rd_en;
+            if (!rst_n) read_enable_q <= 0;
+            else read_enable_q <= rd_en;
     end
     always_ff @(posedge clk) group_write_data_q <= wr_data;
     always_ff @(posedge clk or negedge rst_n)
-        if (!rst_n) group_write_mask_q <= 0;
-        else group_write_mask_q <= wr_mask;
 ```
 
 Địa chỉ/data payload chốt không enable mux. SRAM-only dont_merge giữ locality; read/write enables reset để hủy queued requests.
 
-### [Dòng 48–74: Lane banks and response](<../../../Verilog%20Source%20code/llm_bank_ram.sv#L48>)
+### [Dòng 48–76: Lane banks and response](<../../../Verilog%20Source%20code/llm_bank_ram.sv#L48>)
 
-<!-- source-range:48:74 -->
+<!-- source-range:48:76 -->
 ```systemverilog
+        if (!rst_n) group_write_mask_q <= 0;
+        else group_write_mask_q <= wr_mask;
     for (lane = 0; lane < LANES; lane = lane + 1) begin : g_bank
         // SRAM-adapter placement policy only: retain local address copies
         // rather than merging them back into one full-cache fanout driver.

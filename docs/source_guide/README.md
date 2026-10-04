@@ -20,7 +20,7 @@
 
 </details>
 
-**Bản đối chiếu RTL độc lập tool cập nhật ngày 01/10/2026.** Tài liệu giải thích source trong `Verilog Source code`, sau đợt tích hợp và refactor ASIC. Bản sao `npu_asic_v2` đã được loại bỏ; tài liệu này chỉ đối chiếu source chính.
+**Bản đối chiếu source cập nhật ngày 02/10/2026.** Code excerpts, hashes và diagrams bao phủ source hiện tại; kết quả regression/timing phải đọc theo đúng snapshot riêng. Tài liệu giải thích source trong `Verilog Source code`, sau đợt tích hợp và refactor ASIC. Bản sao `npu_asic_v2` đã được loại bỏ; tài liệu này chỉ đối chiếu source chính.
 
 **Đã đồng bộ với source hiện tại:** code trích dẫn, số dòng, SHA-256 và sơ đồ NORM/RNE/ternary/instruction/SRAM/descriptor/host. [Rà soát design ngày 01/10](../reviews/design_review.md) ghi thay đổi và số liệu trước/sau. [README source chính](<../design/interfaces.md>) quy định interface; [báo cáo Quartus](../verification/timing/README.md) lưu kết quả Analysis & Synthesis và timing FPGA. Manifest tài liệu và hash regression trong `tests/results.json` có mục đích kiểm tra khác nhau.
 
