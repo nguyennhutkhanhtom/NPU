@@ -92,7 +92,7 @@ before score/exponent generation. Previously their late clear in
 `A_EXP_STORE` depended on `time_q == position_q`, creating a wide equality
 control cone to32S56registers. No accumulator is consumed before value
 reduction, so the clear can move earlier without adding a state or clock.
-[Current attention1 all-seven regression](../../tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three selected tokens/16layer executions. Full-top attention1 timing FAIL92.19MHz/setup+recovery; no trained application has run under this gate.
+[Preceding attention1 all-seven regression](../../tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three selected tokens/16layer executions. Full-top attention1 timing FAIL92.19MHz/setup+recovery; no trained application has run under this gate.
 
 The host memory map and request/response protocol are defined in the
 [full RTL test guide](../../tests/full_rtl/README.md). The ISA-driven legacy
@@ -378,4 +378,4 @@ remain blocked by the hardware/all-seven gate.
 
 See [coding rules and structural ownership](rtl_style.md). Request/address/return-state updates are visible in the FSM, SIMD/tag pipelines use generate blocks, and LUTs are explicit combinational instances. Latencies/numeric values are unchanged. Earlier35-source unit/timing evidence is historical; current33-source gates must be rerun.
 
-Current cache1 separates generated continuous KV payload FFs from the held binary operand. Consumers still follow cache valid; no FSM state/clock/latency/expected-value change. [Six groups](../../tests/full_rtl/evidence/cache1_six_units/results.json) PASS0warnings; graph/fresh full timing pending. Host reset still clears response immediately; QSF global-routing request is backend-only, not compute/control IP or ASIC signoff. Preceding unit/portable/timing evidence applies to its archived attention1 source.
+Current cache1 separates generated continuous KV payload FFs from the held binary operand. Consumers still follow cache valid; no FSM state/clock/latency/expected-value change. [Seven groups](../../tests/full_rtl/evidence/cache1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions/causal checked; fresh full timing pending. Host reset still clears response immediately; QSF global-routing request is backend-only, not compute/control IP or ASIC signoff. [Current vendor-free elaboration](../verification/portable_elaboration_cache1/results.json) PASS24module units/14names/0errors0warnings, run0/no weights/inference. Preceding timing evidence applies to its archived attention1 source; no current100MHz or trained application PASS.

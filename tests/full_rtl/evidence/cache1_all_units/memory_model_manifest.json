@@ -1,0 +1,34 @@
+{
+  "scope": "Actual RAM simulation model only; no application execution",
+  "quartus_version": "25.1std.0 Build 1129 10/21/2025 SC Lite Edition",
+  "source": "C:\\altera_lite\\25.1std\\quartus\\eda\\sim_lib\\altera_mf.v",
+  "source_sha256": "2ae09f97f9606626da216e9eb91007beec3ebbe023c5b9415be472417fe49d5e",
+  "library": "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver",
+  "compiler_sha256": {
+    "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlib.exe": "cdf08c2c3665d020ac32a1a56da88687cc7b03e6d8ca32149243f6d07b707350",
+    "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlog.exe": "f3419a63d42323f11a61627a690dfc4f4877f7fa892a13cedffb4ddff83bc5d5"
+  },
+  "commands": [
+    [
+      "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlib.exe",
+      "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver"
+    ],
+    [
+      "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlog.exe",
+      "-work",
+      "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver",
+      "C:\\altera_lite\\25.1std\\quartus\\eda\\sim_lib\\altera_mf.v",
+      "-l",
+      "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\compile.log"
+    ]
+  ],
+  "compile_sha256": "20d08364edcfe5c0297826619a84151b7a764912a61d0d5001dbfe92226f0177",
+  "objects_sha256": {
+    "_info": "afeb4994ce35d5dbb484740a634db23c79969c1878b8c2ad7cde9f37d11c4cab",
+    "_lib.qdb": "ee8b849c2f3344d8a4e348eb72d3f25a2605c1f0b5c4b7944e4489da0354ffaa",
+    "_lib1_0.qdb": "38d68ede54d428b8ef95325610c8feaf8b9337aa69e7f73cb148f18b2e6137d7",
+    "_lib1_0.qpg": "85212b314a082c54f1f714a3baea253ca06b84321649e9f8e2521ce406af9bce",
+    "_lib1_0.qtl": "261fab8c6e922696d654402aaa001a92c9d3fc15376cf0166f37966172ebde50",
+    "_vmake": "d287f8a335408d3f94fea840ad628f2cbed3775952c49131049ef8f60fd337c9"
+  }
+}

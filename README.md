@@ -1,26 +1,25 @@
 # NPU ternary và graph ngôn ngữ trên RTL
 
 Top hiện tại [`llm_soc`](docs/design/full_rtl_language.md) tự chạy toàn graph
-NanoFable: 4 transformer layers, affine RMSNorm, attention/KV, SwiGLU, tied
-head, selection và vòng autoregressive. Host chỉ nạp dữ liệu/config/prompt.
-SRAM gồm 768 KiB parameter, 384 KiB KV và 9 KiB vectors; area là ưu tiên sau
-correctness và timing. [Timing full top](docs/verification/timing/README.md)
-ghi đầy đủ lịch sử, constraints và critical paths. Parameter/KV/vector dùng
-IP RAM M10K qua adapter thay được bằng SRAM ASIC; đây là vendor IP duy nhất.
-Bản trước fix clear attention có cả bảy nhóm regression PASS, gồm kiểm thử RAM thật và graph
-tự sinh token từ fixture. Fitting hoàn tất, timing fanout2 FAIL96,67MHz; chưa có bằng chứng full top
-đạt100MHz. Application pretrained chờ timing mọi corner đạt cho đúng source.
+NanoFable: embedding, affine RMSNorm, Q/K/V/O, RoPE, KV cache, causal attention,
+softmax, SwiGLU, residual, final norm, language head, token selection và vòng
+autoregressive. Host chỉ nạp dữ liệu/config/prompt và tokenizer/decode.
+SRAM gồm 768 KiB parameter, 384 KiB KV và 9 KiB vectors.
 
-Revision hiện tại thay toàn bộ phép nhân datapath full/legacy bằng
-[`logic_mul`](docs/source_guide/blocks/logic_mul.sv.md): AND/XOR/OR, dịch và cộng,
-không dùng toán tử nhân/chia hoặc arithmetic IP. Divider/sqrt dùng dịch/trừ.
-[ASIC portability](docs/design/asic_portability.md) quy định boundary SRAM và
-standard cells. Full-top A&S bằng Quartus Lite25.1std PASS0errors/12warnings;
-`fullrtl100_logic5` fit PASS0DSP/PLL/DLL/HSSI nhưng timing FAIL99,07MHz:
-setup/hold/removal còn vi phạm. Logic6 cũng FAIL99,07MHz;logic7 FAIL96,04MHz. [Bảy nhóm unit](tests/full_rtl/evidence/logic6q5_all_units/results.json)
-đã PASS cho snapshot35source cũ,0warnings. Bản 33assets đã chuyển
-task/pipeline/LUT sang [RTL tường minh](docs/design/rtl_style.md); [cả 7 nhóm regression PASS](tests/full_rtl/evidence/explicit3_all_units/results.json), timing mới FAIL93,28MHz/setup/removal,
-Bản trước fix clear attention34assets bỏ SIMD payload enable dư thừa và dùng hai FF reset release; cả bảy nhóm regression PASS. Timing fanout2 FAIL96,67MHz/setup+hold; recovery/removal đạt mọi corner. Chưa có100MHz PASS hoặc pretrained application.
+Compute/control là RTL portable: FF, mux, comparator, bitwise, cộng/trừ và dịch.
+Nhân dùng [`logic_mul`](docs/source_guide/blocks/logic_mul.sv.md), chia/sqrt dùng
+dịch/trừ; không có runtime toán tử nhân/chia hoặc IP compute/control Quartus.
+Chỉ SRAM technology leaf chứa `altsyncram`, sau [adapter thay bằng SRAM ASIC](docs/design/asic_memory_binding.md).
+Quartus là backend demo EDA; không có mục tiêu bring-up board FPGA hoặc ASIC signoff.
+
+Source `cache1` đã [A&S PASS, 0 errors/12 warnings](docs/verification/synthesis/cache1/manifest.json),
+[cả 7 nhóm test PASS, 0 warnings](tests/full_rtl/evidence/cache1_all_units/results.json)
+và [vendor-free elaboration PASS](docs/verification/portable_elaboration_cache1/results.json).
+Graph synthetic chạy 4.229.462 clock, chọn ba token bằng RTL và đạt causal checks.
+Fitting/timing `fullrtl100_cache1` đang chạy; chưa có bằng chứng full top đạt 100 MHz.
+[Timing trước đó](docs/verification/timing/fullrtl100_attention1/manifest.json) FAIL 92,19 MHz.
+Application pretrained chờ exact-current timing mọi corner/slack/TNS/UCP đạt.
+Numeric/token matching và chất lượng đoạn văn được đánh giá riêng.
 
 Core instruction-driven `matmulfree` và các kết quả dưới đây được giữ làm
 tài liệu của kiến trúc trước. Timing hoặc demo hybrid của core này không
@@ -68,5 +67,3 @@ Xem [cài đặt và chọn test](tests/README.md), [demo checkpoint](tests/mode
 | `quartus` | Project demo A&S; không quyết định kiến trúc ASIC |
 
 Preceding attention1 source clears accumulators at each head entry; [all seven groups](tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions. Full-top attention1 timing FAIL92.19MHz/setup+recovery; hold PASS every corner. No trained application gate is open.
-
-Current cache1 splits continuously sampled KV payload from the held binary vector operand. [Six groups](tests/full_rtl/evidence/cache1_six_units/results.json) PASS0compile/runtimewarnings; graph and fresh full timing RUNNING. The two-FF reset/immediate host response-zero contract is unchanged; global-reset routing is requested only in QSF, with no SDC exception or RTL IP. No current all-seven/timing PASS.

@@ -16,7 +16,7 @@ no independent host clock or data CDC bridge. ASIC integration with a host in
 another clock domain must provide that bridge upstream; the two reset-release
 FFs synchronize reset deassertion, not host data.
 
-The portable branch (`USE_QUARTUS_MEMORY=0`) uses inferred `sram_word_tile` arrays. [Preceding attention1 full-top elaboration evidence](../verification/portable_elaboration_attention1/results.json) PASS for the exact attention1 source, no vendor memory library loaded,24module design units/14unique names/0errors/0warnings. The binding report contains no `altsyncram` or vendor datapath. This was `run 0`, with no weights or inference; it proves elaboration independence from the vendor memory model. It does not select a foundry macro or establish ASIC synthesis, timing or physical signoff. [Preceding evidence](../verification/portable_elaboration1/results.json) remains immutable.
+The portable branch (`USE_QUARTUS_MEMORY=0`) uses inferred `sram_word_tile` arrays. [Current cache1 full-top elaboration evidence](../verification/portable_elaboration_cache1/results.json) PASS for the exact cache1 source, no vendor memory library loaded,24module design units/14unique names/0errors/0warnings. The binding report contains no `altsyncram` or vendor datapath. This was `run 0`, with no weights or inference; it proves elaboration independence from the vendor memory model. It does not select a foundry macro or establish ASIC synthesis, timing or physical signoff. [Preceding evidence](../verification/portable_elaboration1/results.json) remains immutable.
 
 ## Leaf contract and clients
 
@@ -39,7 +39,7 @@ Latencies count the accepting edge as edge1. The word adapter uses read3edges
 for<=4096rows and4otherwise; write commit at edge2. Group/lane request stages
 account for the bank adapter latencies above. Throughput and collision behavior
 are checked against independent expected data and the actual Quartus model in
-the [preceding attention1 seven-group archive](../../tests/full_rtl/evidence/attention1_all_units/results.json).
+the [current cache1 seven-group archive](../../tests/full_rtl/evidence/cache1_all_units/results.json).
 Changing macro ports, read latency or collision semantics requires adapting
 this boundary and rerunning those checks. An undefined collision response cannot
 be declared equivalent to OLD_DATA. Macro selection must account for that rule
@@ -82,4 +82,4 @@ I/O environment and library corners; complete DFT and physical signoff with
 those technologies. Quartus QSF device, pin, fanout and delay assignments belong
 only to the demonstration backend. No board integration is part of this work.
 
-Cache1 changes only compute-side cache payload capture, preserving leaf/adapter geometry, latency, collisions and reset. Its six units PASS; full graph/timing pending. The vendor-free full-top run0 evidence above predates this source change and cannot be called an exact-current elaboration result.
+Cache1 changes only compute-side cache payload capture, preserving leaf/adapter geometry, latency, collisions and reset. Its all seven groups and exact-current vendor-free full-top run0 PASS; full timing pending. The preceding attention1 elaboration and unit tags remain immutable.

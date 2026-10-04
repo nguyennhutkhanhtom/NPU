@@ -18,7 +18,7 @@ Core instruction-driven trước được mô tả riêng tại [kiến trúc le
 | Tra cứu core 32 PE và chương trình legacy | [Kiến trúc và bảng bit](design/architecture.md) | [Instruction, descriptor và host](design/interfaces.md) |
 | Sửa một module RTL | [Mục lục từng file](source_guide/blocks/README.md) | [Các cải tiến và hợp đồng hiện hành](reviews/design_review.md) |
 | Chuyển sang ASIC và kiểm tra policy IP | [ASIC portability](design/asic_portability.md) | [Cây nhân bit](source_guide/blocks/logic_mul.sv.md), [SRAM binding](source_guide/blocks/quartus_word_ram.sv.md) |
-| Thay SRAM technology leaf và kiểm tra bộ nhớ nhỏ | [ASIC memory binding](design/asic_memory_binding.md) | [Elaboration không nạp vendor RAM](verification/portable_elaboration1/results.json) |
+| Thay SRAM technology leaf và kiểm tra bộ nhớ nhỏ | [ASIC memory binding](design/asic_memory_binding.md) | [Elaboration không nạp vendor RAM](verification/portable_elaboration_cache1/results.json) |
 | Kiểm tra coding style RTL | [Explicit RTL và register ownership](design/rtl_style.md) | [Repository rules](../AGENTS.md) |
 | Chạy test, xem synthesis hoặc timing | [Regression và demo synthesis](verification/README.md) | [Critical path và Fmax post-fit](verification/timing/README.md) |
 | Chạy model có checkpoint | [Full RTL application](../tests/full_rtl/README.md) | [Model candidates](demos/candidates.md), [asset setup NanoFable](../tests/language_demo/README.md) |
@@ -49,8 +49,8 @@ Top hiện tại là **`llm_soc`**, chạy toàn graph sinh token trên RTL. Com
 |---|---|
 | Source hiện tại `cache1`, 34 assets | Tách KV payload FF liên tục khỏi operand binary giữ; [A&S PASS, 0 errors/12 warnings](verification/synthesis/cache1/manifest.json). Reset/latency/state và phép toán giữ nguyên. |
 | Coding policy source hiện tại | [Inventory và rà soát theo hash](verification/rtl_policy_cache1/results.json): không có runtime nhân/chia, task synthesizable hoặc IP compute/control. Đây là source review, không phải timing/functional proof. |
-| Unit source hiện tại | [6 nhóm PASS](../tests/full_rtl/evidence/cache1_six_units/results.json), compile/runtime 0 warnings; graph source cache1 đang chạy. Bản trước [7 nhóm attention1 PASS](../tests/full_rtl/evidence/attention1_all_units/results.json) có hash khác. |
-| Portable full-top bản attention1 | [Elaboration PASS](verification/portable_elaboration_attention1/results.json), không binding vendor, 24 module units/14 tên, 0 errors/0 warnings. `run 0`, không weights/inference; chưa phải ASIC synthesis/signoff. |
+| Unit source hiện tại | [7 nhóm PASS](../tests/full_rtl/evidence/cache1_all_units/results.json), compile/runtime 0 warnings; graph 4.229.462 clock, ba token RTL chọn, 16 lượt layer, causal checks đạt. |
+| Portable full-top source cache1 | [Elaboration PASS](verification/portable_elaboration_cache1/results.json), không binding vendor, 24 module units/14 tên, 0 errors/0 warnings. `run 0`, không weights/inference; chưa phải ASIC synthesis/signoff. |
 | Timing source hiện tại | Fitter `fullrtl100_cache1` đang chạy, SDC 10 ns giữ nguyên. [Attention1 trước đó FAIL 92,19 MHz](verification/timing/fullrtl100_attention1/manifest.json); [critical paths và sửa đổi hiện tại](verification/timing/README.md). |
 | Source trước thay đổi clear attention | [7 nhóm PASS](../tests/full_rtl/evidence/pipeline3_all_units/results.json); [full-top fanout2 timing FAIL 96,67 MHz](verification/timing/fullrtl100_fanout2/manifest.json), setup/hold còn lỗi. Recovery/removal/pulse đạt mọi corner; không có unconstrained paths. |
 | Pretrained application toàn graph | Chưa chạy theo gate hiện hành. Chỉ chạy sau khi đúng source/config đạt cả 7 nhóm và post-fit ≥100 MHz, mọi corner/slack/TNS/UCP đạt. Numeric matching và chất lượng đoạn văn được đánh giá riêng. |
