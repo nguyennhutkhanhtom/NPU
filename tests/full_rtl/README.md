@@ -27,12 +27,24 @@ survives reset while queued operations/validity are canceled. Protocol tests
 check both release edges and immediate cancellation. Operator fixtures complete
 reset release before setting numeric inputs or internal operation state. Expected
 values and operation latency checks remain unchanged.
+
+The installed Questa Starter nodelocked license permits one running simulation
+session. Finish the active regression before starting another simulation or an
+optimizer profile. Quartus fitting can run independently. The first isolated
+`-O5` profile was [refused before design loading](evidence/opt5_profile_license_denied/results.json);
+no optimizer speed or numeric result is claimed from that attempt.
 `-RtlDir` permits isolated candidates; candidate hashes cannot pass the trained
 application gate unless they match the current main RTL and timing evidence.
 
 The application host supplies checkpoint words, prompt token IDs and generation
 configuration. RTL owns attention, KV cache, head and autoregressive selection.
 The independent CPU integer model supplies expected values solely for verification.
+The application testbench observes each completed RTL token through a read-only
+monitor and stops immediately on an unexpected count or token mismatch. Final
+host reads still check every returned token and write `rtl_tokens.txt`. Expected
+IDs never drive a DUT port or internal state. The monitor has a
+[compile-only check](evidence/application_monitor_compile/results.json); its
+trained application run remains blocked until the full hardware/unit gate passes.
 Application preparation records source/runner hashes and all four generated
 input files. Finalization rejects stale compile/runtime logs, changed inputs,
 unreviewed warnings and missing actual Intel RAM-model loading. PASS means

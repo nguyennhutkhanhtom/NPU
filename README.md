@@ -20,7 +20,7 @@ standard cells. Full-top A&S bằng Quartus Lite25.1std PASS0errors/12warnings;
 setup/hold/removal còn vi phạm. Logic6 cũng FAIL99,07MHz;logic7 FAIL96,04MHz. [Bảy nhóm unit](tests/full_rtl/evidence/logic6q5_all_units/results.json)
 đã PASS cho snapshot35source cũ,0warnings. Bản 33assets đã chuyển
 task/pipeline/LUT sang [RTL tường minh](docs/design/rtl_style.md); [cả 7 nhóm regression PASS](tests/full_rtl/evidence/explicit3_all_units/results.json), timing mới FAIL93,28MHz/setup/removal,
-Candidate mới34assets bỏ SIMD payload enable dư thừa và dùng hai FF reset release; regression/timing đang chạy lại. Chưa có100MHz PASS hoặc pretrained application.
+Bản hiện tại34assets bỏ SIMD payload enable dư thừa và dùng hai FF reset release; cả bảy nhóm regression PASS. Timing release1 FAIL91,61MHz/setup+hold; recovery/removal đạt mọi corner. Chưa có100MHz PASS hoặc pretrained application.
 
 Core instruction-driven `matmulfree` và các kết quả dưới đây được giữ làm
 tài liệu của kiến trúc trước. Timing hoặc demo hybrid của core này không

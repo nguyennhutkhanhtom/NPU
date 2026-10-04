@@ -7,6 +7,16 @@
 application vì gate timing >=100 MHz chưa đạt. Dùng [runner có gate](../../tests/full_rtl/README.md)
 cho các lần chạy tiếp theo; CPU continuation dưới đây không phải demo RTL.
 
+Metadata hiện dùng khớp các SHA trong [manifest đã pin](../../tests/language_demo/upstream_manifest.json):
+root checkpoint là seed1, 4 layers/128 channels/4 heads/vocabulary4096; model
+được train với context512, còn cấu hình RTL lưu128positions. [Model card đã pin](https://huggingface.co/adrahmana/NanoFable-1M-ternary/blob/8bb40dbf501bbad4a12a11c5697e5ad239744539/README.md)
+công bố seed0 như một training replica cùng kiến trúc, đồng thời báo các tiêu
+chí coherence/fluency chưa đạt ngưỡng của tác giả. Numeric/token matching sau
+export phải được ghi riêng với chất lượng đoạn văn RTL thực sự trả về.
+Runner hiện pin seed1; seed0 chưa export/run và một training replica không chứng
+minh hỗ trợ kiến trúc model thứ hai. Chỉ chạy checkpoint tiếp theo khi hardware
+gates cho source/config hiện tại đạt và exporter kiểm chứng cấu hình phù hợp.
+
 Demo dùng checkpoint đã train **NanoFable-1M-ternary**: chạy toàn graph sinh văn bản trên CPU, sau đó kiểm chứng các linear ternary thật bằng core RTL hiện hành. **168 lượt RTL PASS, 33.792 đầu ra S32 khớp bit-exact với reference số nguyên**, compile và simulation đều **0 error/0 warning**. Toàn graph sinh văn bản chưa chạy trên RTL.
 
 ## Checkpoint và graph

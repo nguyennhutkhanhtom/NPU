@@ -24,9 +24,9 @@ and pipeline stages use generate blocks. LUTs are explicit combinational modules
 The current 34-source candidate is `quartus_pipeline1/llm_soc`, timing tag
 `fullrtl100_release1`. SIMD payload stages run from captured operands without
 wide valid enables; two explicit standard FFs condition internal reset release.
-Assertions remain immediate and release takes two rising edges. [Six unit groups](../../tests/full_rtl/evidence/pipeline3_six_units/results.json) PASS0warnings and
+Assertions remain immediate and release takes two rising edges. [All seven unit groups](../../tests/full_rtl/evidence/pipeline3_all_units/results.json) PASS0warnings and
 [synthesis](../verification/synthesis/release1/manifest.json) PASS0errors12warnings.
-Graph/fit/timing gates remain pending. No additional technology IP or clock
+Graph PASS for this source. Fit/timing gates remain pending. No additional technology IP or clock
 is introduced; all recovery/removal checks remain constrained.
 
 The [preceding seven-unit run](../../tests/full_rtl/evidence/logic6q5_all_units/results.json)

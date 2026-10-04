@@ -1,8 +1,79 @@
 {
-  "status": "RUNNING",
-  "scope": "Synthetic units and graph only",
-  "started_utc": "2026-10-04T07:53:39.4412281Z",
+  "status": "PASS",
+  "scope": "Synthetic arithmetic/protocol/operators; graph required for application gate",
   "rtl_dir": "D:\\2151097_Nguyen Nhut Khanh\\Verilog Source code",
+  "verified_utc": "2026-10-04T08:46:48.0192863Z",
+  "tests": {
+    "tb_quartus_memory": "# QUARTUS_MEMORY_PASS banks=4 checks=158 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained",
+    "tb_llm_math": "# LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128",
+    "tb_llm_ram": "# LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3",
+    "tb_llm_protocol": "# LLM_PROTOCOL_PASS transactions=29 cancellations=12 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2",
+    "tb_llm_selection": "# SELECT_EDGE_PASS checks=14 minimum_score_ties=2 excluded=5 stable_ties=2",
+    "tb_llm_operators": "# LLM_OPERATORS_PASS operators=17 checks=3460 scalar_cases=128 clamp_cases=128 reference=S128 fixtures=synthetic",
+    "tb_llm_graph": "# LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=4229462 host_commands=196619 fixtures=synthetic"
+  },
+  "evidence": {
+    "tb_quartus_memory": {
+      "log": "tests/full_rtl/build/tb_quartus_memory.log",
+      "sha256": "8a81d8edd4a07cc119bc5040805d69b883ecb36e84f797ed70085b7c119ab1ff",
+      "design_units": {
+        "file": "tests/full_rtl/build/pipeline3_tb_quartus_memory_design_units.json",
+        "sha256": "9de8e34959f520f5e125a5c775975fafae2290958687b34d2e3fe8d987ee5c37"
+      }
+    },
+    "tb_llm_math": {
+      "log": "tests/full_rtl/build/tb_llm_math.log",
+      "sha256": "32f2bd36321015f1e4da7a76f902a7b496d40ac7091a7e1bcf069f24eb80b831",
+      "design_units": {
+        "file": "tests/full_rtl/build/pipeline3_tb_llm_math_design_units.json",
+        "sha256": "a293fa5f66ced45a0e7444bb732f6c97bd2a63fd33e387674c8a41c05207e7a0"
+      }
+    },
+    "tb_llm_ram": {
+      "log": "tests/full_rtl/build/tb_llm_ram.log",
+      "sha256": "bbcd6377c80a1c2961d2497eb3e67b0630cadaf3d1859c1b303b76f71e5b3a70",
+      "design_units": {
+        "file": "tests/full_rtl/build/pipeline3_tb_llm_ram_design_units.json",
+        "sha256": "892822b6c72221a3df50add36756eca2cafdd00113e196b04d8fd478367be01f"
+      }
+    },
+    "tb_llm_protocol": {
+      "log": "tests/full_rtl/build/tb_llm_protocol.log",
+      "sha256": "40693c49492cd2459896761eeb00b5d397432ab7cd5acfe6051d15cac2e6f3de",
+      "design_units": {
+        "file": "tests/full_rtl/build/pipeline3_tb_llm_protocol_design_units.json",
+        "sha256": "4f3372a24660c0cb41dbb258751584646091c078b0ae2e8d6dc1df5aed69ec9a"
+      }
+    },
+    "tb_llm_selection": {
+      "log": "tests/full_rtl/build/tb_llm_selection.log",
+      "sha256": "95a08db7f5c723f79b56af8c9a674f02a80461bc0f11992a0e5bce76bed9be79",
+      "design_units": {
+        "file": "tests/full_rtl/build/pipeline3_tb_llm_selection_design_units.json",
+        "sha256": "1408238a3f4ebfb47dc96382cf67a7aea798697607201f3f454268d8cf8a61b6"
+      }
+    },
+    "tb_llm_operators": {
+      "log": "tests/full_rtl/build/tb_llm_operators.log",
+      "sha256": "dda36690e326fa5a6d5541c6462f988f9758ae8180249a2ddd73eaa82795a39d",
+      "design_units": {
+        "file": "tests/full_rtl/build/pipeline3_tb_llm_operators_design_units.json",
+        "sha256": "0acfbc3122d1c98e75aeaa32a63da691331adce356644dc7891654571df8a855"
+      }
+    },
+    "tb_llm_graph": {
+      "log": "tests/full_rtl/build/tb_llm_graph.log",
+      "sha256": "94b9505701683c5545c181cbe2324dda2273d723672204c5611402596176ad0a",
+      "design_units": {
+        "file": "tests/full_rtl/build/pipeline3_tb_llm_graph_design_units.json",
+        "sha256": "05efbb36962b7970eb2c05248729393d4d44a2a61722d1aedc713ccda8f26c1c"
+      }
+    }
+  },
+  "runner_sources": {
+    "tests/full_rtl/memory_model.py": "501824c2466a31956c120cd574da1b9dbb3d7cdce43893023c499a9fffdf366e"
+  },
+  "memory_model_manifest": "tests/full_rtl/build/questa25_model/manifest.json",
   "rtl_sources": {
     "acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
     "banked_word_ram.sv": "bb7a3bb83e0aef84c030403bcd675e4853f190ea79d9851ad742a5a0d02d2409",

@@ -1,6 +1,6 @@
 # NPU resume checkpoint
 
-Updated 2026-10-04 15:02 Asia/Saigon. Repo, raw reports and hashes are authoritative. Preserve valid changes and immutable evidence; no reset/revert.
+Updated 2026-10-04 16:06 Asia/Saigon. Repo, raw reports and hashes are authoritative. Preserve valid changes and immutable evidence; no reset/revert.
 
 ## Goal and binding rules
 
@@ -10,20 +10,20 @@ Full graph and autoregressive selection on RTL. CPU loads weights/config/prompt 
 
 ## Current verified milestone
 
-- main: pushed milestone `49e9b72`. Earlier milestones retained. No trained application or CPU checkpoint inference has run.
+- main: pushed milestone `0fd04be`. Earlier milestones retained. No trained application or CPU checkpoint inference has run.
 - Preceding verified snapshot: 33 RTL assets. Unused legacy controllers/helpers removed with stale QSF/source-guide entries; valid legacy tests retained. All 61 request/math/write task calls are visible FSM assignments; generated pipelines have one register owner. LUTs are combinational modules. Unsigned buffer/row casts preserve the former task argument contract. No added numeric/transaction latency.
 - [All seven preceding groups PASS](tests/full_rtl/evidence/explicit3_all_units/results.json), completed 14:30:22: Questa2025.2 + official Quartus25.1 RAM; compile/runtime 0 warnings. Graph: prompt2, RTL-selected tokens3, layer executions16, causal checks, 4,229,462 compute clocks, 196,619 host commands. Synthetic fixture, not trained text. Archive has seven logs/binding reports, start/source/test/helper/model hashes and reproduction inputs. Six-group partial tag retained unchanged.
 - [A&S PASS](docs/verification/synthesis/explicit2/manifest.json): current 33 RTL + 3 config files, 0 errors/12 warnings, completed13:37:42. This is not timing PASS.
 - [Legacy ten groups PASS](tests/evidence/explicit2_legacy_units/results.json), 13:17:30, 0 runtime warnings. Archive is the pre-address-fix snapshot; the later llm_soc-only fix does not affect reachable legacy RTL.
 - [Docs validation](docs/source_guide/validation.json): 34 assets/30 main diagrams/15 detail diagrams/150 groups/4523 RTL lines/1059 LUT lines/51 rendered diagrams/1861 links. Link validation rerun after documentation edits; no diagram source changed.
 
-## Active current candidate: 34 assets, gates pending
+## Current verified source: 34 assets, timing FAIL
 
 - Added reset_release: two explicit standard FFs, async assertion/two-edge sync release. All llm_soc internal reset consumers use core_rst_n. No IP/clock/exception added.
 - SIMD partial/pair/product/reduction/sum payload FFs run continuously from captured operands. Start/busy/done/9-clock response and numeric widths unchanged; no wide valid_q enable.
-- Timing fullrtl100_release1 RUNNING, exec85577, supervisor45288/map34380 completed14:58:51, fitter36936 active, isolated quartus_pipeline1/llm_soc. Snapshot34RTL+3config and source ZIP37members archived. [A&S archive](docs/verification/synthesis/release1/manifest.json) PASS0errors12warnings. Canonical QSF differs only by reset_release source assignment; SDC unchanged. Do not edit RTL/config or duplicate build.
-- All-seven regression pipeline3 RUNNING, exec63509, work pipeline3_questa_work, official Questa2025.2/RAM25.1. Compile0errors0warnings; all six groups PASS, operators17/checks3460/scalar128/clamp128 completed14:58:02, graph38048 (supervisor42936) RUNNING. [Six-group archive](tests/full_rtl/evidence/pipeline3_six_units/results.json). Do not edit its eight test inputs/run_units/memory_model until done. Initial snapshot tests/full_rtl/build/pipeline3_modelsim_start.json.
-- Pipeline1 failed elaboration: mechanical reset rename changed seven child port names. Archived pipeline1_port_binding_failed, fixed .rst_n(core_rst_n). Pipeline2 operator fixture FAIL: seeded token before the new release edges reset it to0. Archived pipeline2_reset_fixture_failed; fixture now releases reset fully before deposits/seeding. Same expected values and exact arithmetic latency checks. All17operators now PASS confirms fixture fix; graph pending.
+- [Timing release1](docs/verification/timing/fullrtl100_release1/manifest.json) complete15:55:48, all jobs closed. Exact34RTL+3config hashes verified, ZIP37members. A&S0/12, fit0/4, STA0/2, Fmax91.61MHz FAIL. Slow85 setup-.916/TNS-3.387, hold-.023/-.029; slow0 setup-.400/-.629; other17checks PASS/UCP0. Recovery/removal now PASS every corner. Resources51900ALM/48234FF/1186RAM/9515648bits/186pins, DSP/PLL/DLL/HSSI0. SDC unchanged; no trained application.
+- All-seven regression pipeline3 PASS, exec63509, work pipeline3_questa_work, official Questa2025.2/RAM25.1. Compile0errors0warnings; all six groups PASS, operators17/checks3460/scalar128/clamp128 completed14:58:02, graph PASS15:46:47, compute clocks4229462/prompt2/tokens3/layer executions16/causal checked/hostcommands196619,0runtimewarnings; graph session closed. [All-seven archive](tests/full_rtl/evidence/pipeline3_all_units/results.json). Eight test inputs and helper/model/log hashes match archived evidence. Initial snapshot tests/full_rtl/build/pipeline3_modelsim_start.json.
+- Pipeline1 failed elaboration: mechanical reset rename changed seven child port names. Archived pipeline1_port_binding_failed, fixed .rst_n(core_rst_n). Pipeline2 operator fixture FAIL: seeded token before the new release edges reset it to0. Archived pipeline2_reset_fixture_failed; fixture now releases reset fully before deposits/seeding. Same expected values and exact arithmetic latency checks. All17operators and graph PASS confirm fixture fix.
 
 ## Complete preceding timing gate: FAIL
 
@@ -34,8 +34,8 @@ Quartus Lite25.1std.0 Build1129; CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD. S
 ## Facts, failures and hypotheses
 
 - [Timing hub](docs/verification/timing/README.md): logic5/6 both FAIL99.07MHz; logic7 FAIL96.04MHz. Setup/hold/removal failures, UCP0, DSP/PLL/DLL/HSSI0. All source/config/raw report tags retained. Logic7 source_hashes_verified=false after unused-source deletion; historical evidence only.
-- Prior measured paths: cache/control fanout, host input hold, raw reset removal to packed output FFs. Current worst setup is u_math.valid_q[0] to partial_q, data10.458ns/routing9.749ns/zero logic levels. Hold now passes all corners. Next fix: remove redundant wide payload enables while preserving captured-input/done contract; explicit two-FF async-assert/sync-release reset conditioner. Both fixes are implemented in the active candidate; fresh full gates are pending.
-- Explicit1 compile failure and cancelled timing, explicit2 signed-address operator failure, legacy ROM-format/test-interface failures are archived. Fixes preserve expected numeric values; current seven groups PASS.
+- Current measured setup: write_vector_addr_q[2] -> vector group5 address,10.624ns data/10.285ns routing/one logic level. Other negative paths cache write_pending[0]->lane enables, vector read address->groups, scalar_group->write_vector. Hold fails host_wdata21/19->host_data_q. Reset release and SIMD enable fixes are verified; do not redo them. Next candidate: physical fanout limits on measured address/cache/scalar drivers, unchanged RTL/SDC. Optimize Hold Timing already All Paths. Closure remains a hypothesis until new full fit.
+- Explicit1 compile failure and cancelled timing, explicit2 signed-address operator failure, legacy ROM-format/test-interface failures are archived. Fixes preserve expected numeric values; preceding seven groups PASS.
 - Synthesis warnings: bounded generated LUT index10027, unused SRAM ports287013, intended token RAM forwarding276020, constant debug outputs13024/13410. Fitter license/pin/constant-output warnings explained in timing hub; timing332148 must be fixed.
 
 ## Tools and reproduction
@@ -53,9 +53,11 @@ python docs/source_guide/validate.py
 ./tests/full_rtl/run_application.ps1 -TimingManifest docs/verification/timing/PASS_TAG/manifest.json
 ```
 
+Optional -O5 SIMD profile initially refused the active-session license; retry after graph completion PASS503/9reset/513LUT/1536bit checks,0warnings,29s versus default28s. No speed gain demonstrated; default optimizer unchanged. Application early-token observer compile-only PASS, no trained export/run. Pinned model metadata SHA verified; seed0 is a training replica and not yet tested.
+
 ## Next priorities
 
-1. Finish pipeline3 regression and release1 full-top hardware gates. Archive partial/final results before any new edits; verify all source/config/model/report hashes.
+1. Preserve verified release1 FAIL and pipeline3 all-seven PASS, commit/push milestone. Run fresh fanout physical candidate after closed-job check; unchanged RTL can reuse current seven-group PASS.
 2. If FAIL, fix measured paths with portable RTL and rerun affected tests/full gates under fresh tags. Never infer timing PASS from synthesis PASS.
 3. Validate current docs links/excerpts/render, archive and commit/push verified milestones. No large build artifacts/model/vendor libraries/secrets.
 4. After gates: pinned NanoFable actual RTL generation, numeric/token comparison and decoded paragraph quality review; second compatible model when supported and hardware gates pass.

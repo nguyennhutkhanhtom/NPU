@@ -1,0 +1,10 @@
+Questa Altera Starter FPGA Edition-64 vlog 2025.2 Compiler 2025.05 May 31 2025
+Start time: 15:43:58 on Oct 04,2026
+vlog -sv -svinputport=var -work tests/full_rtl/build/opt5_questa_work "+incdir+D:/2151097_Nguyen Nhut Khanh/Verilog Source code" "+incdir+D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/build/application_compile_probe" tests/full_rtl/application_tb.sv -l tests/full_rtl/build/application_compile_probe/compile.log 
+** Note: (vlog-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+-- Compiling module tb_full_rtl_application
+
+Top level modules:
+	tb_full_rtl_application
+End time: 15:43:58 on Oct 04,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0

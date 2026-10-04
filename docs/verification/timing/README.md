@@ -4,6 +4,21 @@
 
 Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL dựa trên critical path. Phần full graph dùng Cyclone V C9; các snapshot legacy bên dưới dùng thiết bị riêng được ghi trong manifest. Các phép đo là FPGA demo, chưa xác nhận ASIC signoff.
 
+## Release1 result: 91.61 MHz, setup/hold FAIL
+
+[Manifest](fullrtl100_release1/manifest.json), [source archive](fullrtl100_release1/source_archive.json) and [seven-group regression](../../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match the exact34RTL assets. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD, unchanged10ns SDC and I/O budgets. A&S0errors/12warnings, fit0errors/4warnings, STA0errors/2timing warnings. Fitted51900ALM/48234FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. All unconstrained counts0. Extraction completed15:55:47 on04Oct2026. Synthesis and fitting PASS do not imply timing PASS; application remains blocked.
+
+| Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
+|---|---:|---:|---:|---:|---:|
+| slow_1100mv_85c | -0.916/-3.387 | -0.023/-0.029 | 2.085/0 | 1.423/0 | 3.600/0 |
+| slow_1100mv_0c | -0.400/-0.629 | 0.234/0 | 2.482/0 | 1.358/0 | 3.543/0 |
+| fast_1100mv_85c | 2.979/0 | 0.129/0 | 4.476/0 | 0.676/0 | 3.799/0 |
+| fast_1100mv_0c | 3.931/0 | 0.118/0 | 4.736/0 | 0.616/0 | 3.789/0 |
+
+The standard-FF reset conditioner fixes recovery/removal at every corner. Continuous SIMD payload registers preserve nine-clock response and exact numeric results; all seven synthetic tests PASS with0compile/runtimewarnings, including4229462compute clocks/three selected tokens/16layer executions. This is not trained text generation.
+
+[Worst setup](fullrtl100_release1/slow_1100mv_85c_setup.rpt): write_vector_addr_q[2] to u_vectors/g_request[5]/write_address_q[2],10.624ns data/10.285ns routing/one logic level. Other negative paths are cache write_pending_q[0] to lane write enables, v_address_q to vector groups and scalar_group_q to write_vector_q. [Recommendations](fullrtl100_release1/slow_1100mv_85c_recommendations.txt) identify these paths and control inter-path competition. [Hold](fullrtl100_release1/slow_1100mv_85c_hold.rpt) fails host_wdata21/19 to host_data_q by0.023/0.006ns; Optimize Hold Timing already uses All Paths. Next experiment limits address/cache-mask/scalar driver fanout through FPGA mapping assignments. RTL, transaction latency and constraints stay unchanged; this is a hypothesis until a fresh full fit is measured.
+
 ## Explicit2 result: 93.28 MHz, setup/removal FAIL
 
 [Manifest](fullrtl100_explicit2/manifest.json) and [source archive](fullrtl100_explicit2/source_archive.json) identify the exact 33 RTL assets and three configuration files. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD and unchanged10ns SDC. Map PASS0errors/12warnings, fit PASS0errors/4warnings, STA completes0errors/2timing warnings. Fitted52189ALM/48316FF/1186RAMblocks/9515648memorybits/186pins; DSP/PLL/DLL/HSSI0. All UCP counts0. [Seven unit groups](../../../tests/full_rtl/evidence/explicit3_all_units/results.json) PASS for this exact source. The application gate correctly rejects Fmax below100MHz; no pretrained application/reference ran.
@@ -18,13 +33,6 @@ Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL d�
 [Worst setup](fullrtl100_explicit2/slow_1100mv_85c_setup.rpt): `llm_math:u_math|valid_q[0]` to `partial_q[9][2][29]`,10.458ns data delay,9.749ns routing, zero logic levels. [Recommendations](fullrtl100_explicit2/slow_1100mv_85c_recommendations.txt) identify inter-path competition and recommend duplicating this enable. Payload values already have captured operands and a validity pipeline; removing redundant wide payload enables is a portable alternative to technology-specific duplication. Operation acceptance and done latency must stay unchanged and be regressed.
 
 Hold now passes every corner. [Removal](fullrtl100_explicit2/slow_1100mv_0c_removal.rpt) still fails raw reset release to output FFs. An explicit standard-FF reset conditioner with asynchronous assertion and two-edge synchronous release is the next candidate; this is a proposed architectural fix, not timing proof. All paths remain constrained and no false/multicycle exception is added.
-
-The current candidate `quartus_pipeline1/llm_soc` is running under fresh tag
-`fullrtl100_release1`, with34assets including `reset_release`. It removes the
-measured high-fanout SIMD payload enable and conditions raw reset with two
-explicit standard FFs. Source/configuration are locked while it builds; SDC,
-device, seed and I/O budgets are unchanged. Fresh regression `pipeline3` is
-required; previous all-seven PASS applies to33assets only.
 
 ## Logic5 result: 99.07 MHz, setup/hold/removal FAIL
 
@@ -483,5 +491,5 @@ quartus_sta -t tools/timing/extract.tcl docs/verification/timing/constrained sdc
 Portable bit-product arithmetic, ordinary registers/control and replaceable
 SRAM binding remain the implementation policy. The preceding35-source graph
 unit PASS is archived in [logic6q5](../../../tests/full_rtl/evidence/logic6q5_all_units/results.json).
-The changed33-source refactor needs fresh hardware and seven-group verification.
+The current34-source snapshot has all-seven PASS and release1 timing FAIL91.61MHz; fresh physical closure is required.
 See [checkpoint](../../../TASK_STATE.md) for active jobs and reproduction commands.
