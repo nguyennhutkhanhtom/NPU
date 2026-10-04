@@ -1,5 +1,7 @@
 // Shared fixed-point SIMD arithmetic for autonomous language inference.
-// Payload registers are valid only while the control pipeline is active.
+// Captured operands stay stable until the next accepted transaction. Payload
+// stages run continuously; only valid_q defines a response. This removes a
+// high-fanout enable from each wide pipeline stage without changing latency.
 module llm_math (
     input logic clk, rst_n, start,
     input logic signed [23:0] a [0:31],
@@ -39,34 +41,32 @@ module llm_math (
     for (pipe_lane = 0; pipe_lane < 32; pipe_lane = pipe_lane + 1) begin : g_lane_pipeline
         always_ff @(posedge clk) begin
             if (rst_n && start && !busy) begin a_q[pipe_lane] <= a[pipe_lane]; b_q[pipe_lane] <= b[pipe_lane]; end
-            if (valid_q[1]) begin
-                pair_q[pipe_lane][0] <= 41'(partial_q[pipe_lane][0]) + (41'(partial_q[pipe_lane][1]) <<< 8);
-                pair_q[pipe_lane][1] <= 41'(partial_q[pipe_lane][2]) + (41'(partial_q[pipe_lane][3]) <<< 8);
-            end
-            if (valid_q[2]) product[pipe_lane] <= 56'(pair_q[pipe_lane][0]) + (56'(pair_q[pipe_lane][1]) <<< 16);
+            pair_q[pipe_lane][0] <= 41'(partial_q[pipe_lane][0]) + (41'(partial_q[pipe_lane][1]) <<< 8);
+            pair_q[pipe_lane][1] <= 41'(partial_q[pipe_lane][2]) + (41'(partial_q[pipe_lane][3]) <<< 8);
+            product[pipe_lane] <= 56'(pair_q[pipe_lane][0]) + (56'(pair_q[pipe_lane][1]) <<< 16);
         end
         for (pipe_part = 0; pipe_part < 4; pipe_part = pipe_part + 1) begin : g_partial_register
             always_ff @(posedge clk)
-                if (valid_q[0]) partial_q[pipe_lane][pipe_part] <= partial_comb[pipe_lane][pipe_part];
+                partial_q[pipe_lane][pipe_part] <= partial_comb[pipe_lane][pipe_part];
         end
     end
     for (reduction_node = 0; reduction_node < 16; reduction_node = reduction_node + 1) begin : g_reduce1
         always_ff @(posedge clk)
-            if (valid_q[3]) level1[reduction_node] <= 57'(product[2 * reduction_node]) + 57'(product[2 * reduction_node + 1]);
+            level1[reduction_node] <= 57'(product[2 * reduction_node]) + 57'(product[2 * reduction_node + 1]);
     end
     for (reduction_node = 0; reduction_node < 8; reduction_node = reduction_node + 1) begin : g_reduce2
         always_ff @(posedge clk)
-            if (valid_q[4]) level2[reduction_node] <= 58'(level1[2 * reduction_node]) + 58'(level1[2 * reduction_node + 1]);
+            level2[reduction_node] <= 58'(level1[2 * reduction_node]) + 58'(level1[2 * reduction_node + 1]);
     end
     for (reduction_node = 0; reduction_node < 4; reduction_node = reduction_node + 1) begin : g_reduce3
         always_ff @(posedge clk)
-            if (valid_q[5]) level3[reduction_node] <= 59'(level2[2 * reduction_node]) + 59'(level2[2 * reduction_node + 1]);
+            level3[reduction_node] <= 59'(level2[2 * reduction_node]) + 59'(level2[2 * reduction_node + 1]);
     end
     for (reduction_node = 0; reduction_node < 2; reduction_node = reduction_node + 1) begin : g_reduce4
         always_ff @(posedge clk)
-            if (valid_q[6]) level4[reduction_node] <= 60'(level3[2 * reduction_node]) + 60'(level3[2 * reduction_node + 1]);
+            level4[reduction_node] <= 60'(level3[2 * reduction_node]) + 60'(level3[2 * reduction_node + 1]);
     end
     endgenerate
     always_ff @(posedge clk)
-        if (valid_q[7]) sum <= 61'(level4[0]) + 61'(level4[1]);
+        sum <= 61'(level4[0]) + 61'(level4[1]);
 endmodule

@@ -2,11 +2,11 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [llm_math.sv](<../../../Verilog%20Source%20code/llm_math.sv>). **Số dòng:** 72. **SHA-256:** `6d65c6134ca7c81dafdca8dbd5e0ee5a0349cb0d9276466017efd0a8f5e07fc8`.
+**Source:** [llm_math.sv](<../../../Verilog%20Source%20code/llm_math.sv>). **Số dòng:** 72. **SHA-256:** `9d4d44be0bfe5d44cb196ffdc5e812710640989fb43f23adbcb62a0e48bae8ed`.
 
 ## Khối này làm gì?
 
-32 tích S24×S32 tạo S56 bằng partial products byte: ba byte thấp U8, byte cao S8. Partial S33, cặp S41, ghép product S56 rồi cây cộng cân bằng tới S61. Done chín cạnh sau cạnh nhận start. Chỉ dùng logic cells; input chốt khi start và không busy. Payload không reset; pipeline valid reset hủy transaction.
+32 tích S24×S32 tạo S56 bằng partial products byte: ba byte thấp U8, byte cao S8. Partial S33, cặp S41, ghép product S56 rồi cây cộng cân bằng tới S61. Done chín cạnh sau cạnh nhận start. Chỉ dùng logic cells; input chốt khi start và không busy. Payload không reset và mọi stage chạy liên tục từ input đã chốt; valid reset hủy transaction. Không có enable rộng từ valid_q đến partial/reduction FF.
 
 ## Sơ đồ kiến trúc
 
@@ -19,13 +19,12 @@ flowchart TB
     PRODUCT --> TREE[Five registered reduction levels]
     TREE --> SUM[Sum S61]
     CTRL[10-bit validity pipeline] -.-> CAP
-    CTRL -.-> TREE
     CTRL --> DONE[busy and done after nine clocks]
 ```
 
 ## Cách hoạt động chi tiết
 
-32 tích S24×S32 tạo S56 bằng partial products byte: ba byte thấp U8, byte cao S8. Partial S33, cặp S41, ghép product S56 rồi cây cộng cân bằng tới S61. Done chín cạnh sau cạnh nhận start. Chỉ dùng logic cells; input chốt khi start và không busy. Payload không reset; pipeline valid reset hủy transaction.
+32 tích S24×S32 tạo S56 bằng partial products byte: ba byte thấp U8, byte cao S8. Partial S33, cặp S41, ghép product S56 rồi cây cộng cân bằng tới S61. Done chín cạnh sau cạnh nhận start. Chỉ dùng logic cells; input chốt khi start và không busy. Payload không reset và mọi stage chạy liên tục từ input đã chốt; valid reset hủy transaction. Không có enable rộng từ valid_q đến partial/reduction FF.
 
 ## Các nhóm logic trong source
 
@@ -34,7 +33,9 @@ flowchart TB
 <!-- source-range:1:11 -->
 ```systemverilog
 // Shared fixed-point SIMD arithmetic for autonomous language inference.
-// Payload registers are valid only while the control pipeline is active.
+// Captured operands stay stable until the next accepted transaction. Payload
+// stages run continuously; only valid_q defines a response. This removes a
+// high-fanout enable from each wide pipeline stage without changing latency.
 module llm_math (
     input logic clk, rst_n, start,
     input logic signed [23:0] a [0:31],
@@ -42,8 +43,6 @@ module llm_math (
     output logic busy, done,
     output logic signed [55:0] product [0:31],
     output logic signed [60:0] sum
-);
-    // Bit-product compressor trees and pair sums split arithmetic across edges.
 ```
 
 Dải product và sum đủ cho signed extremes; payload chỉ hợp lệ sau transaction đã hoàn thành.
@@ -52,6 +51,8 @@ Dải product và sum đủ cho signed extremes; payload chỉ hợp lệ sau tr
 
 <!-- source-range:12:26 -->
 ```systemverilog
+);
+    // Bit-product compressor trees and pair sums split arithmetic across edges.
     logic [9:0] valid_q;
     logic signed [23:0] a_q [0:31];
     logic signed [31:0] b_q [0:31];
@@ -65,8 +66,6 @@ Dải product và sum đủ cho signed extremes; payload chỉ hợp lệ sau tr
                 (.a(a_q[mul_lane]), .b(b_q[mul_lane][(mul_part << 3) +: 8]), .product(partial_comb[mul_lane][mul_part]));
         end
     end
-    endgenerate
-    logic signed [40:0] pair_q [0:31][0:1];
 ```
 
 busy là OR valid; request trong busy bị bỏ qua. done tại valid_q[9], chín cạnh sau cạnh nhận start. Signed casts giữ sign extension.
@@ -75,6 +74,8 @@ busy là OR valid; request trong busy bị bỏ qua. done tại valid_q[9], chí
 
 <!-- source-range:27:38 -->
 ```systemverilog
+    endgenerate
+    logic signed [40:0] pair_q [0:31][0:1];
     logic signed [56:0] level1 [0:15];
     logic signed [57:0] level2 [0:7];
     logic signed [58:0] level3 [0:3];
@@ -85,8 +86,6 @@ busy là OR valid; request trong busy bị bỏ qua. done tại valid_q[9], chí
         if (!rst_n) valid_q <= 0;
         else valid_q <= {valid_q[8:0], start && !busy};
     end
-    genvar pipe_lane, pipe_part, reduction_node;
-    generate
 ```
 
 Các byte thấp có leadingzero trước signed cast; byte cao giữ dấu. Partial products giữ đủ S33 trước shift.
@@ -95,14 +94,14 @@ Các byte thấp có leadingzero trước signed cast; byte cao giữ dấu. Par
 
 <!-- source-range:39:47 -->
 ```systemverilog
+    genvar pipe_lane, pipe_part, reduction_node;
+    generate
     for (pipe_lane = 0; pipe_lane < 32; pipe_lane = pipe_lane + 1) begin : g_lane_pipeline
         always_ff @(posedge clk) begin
             if (rst_n && start && !busy) begin a_q[pipe_lane] <= a[pipe_lane]; b_q[pipe_lane] <= b[pipe_lane]; end
-            if (valid_q[1]) begin
-                pair_q[pipe_lane][0] <= 41'(partial_q[pipe_lane][0]) + (41'(partial_q[pipe_lane][1]) <<< 8);
-                pair_q[pipe_lane][1] <= 41'(partial_q[pipe_lane][2]) + (41'(partial_q[pipe_lane][3]) <<< 8);
-            end
-            if (valid_q[2]) product[pipe_lane] <= 56'(pair_q[pipe_lane][0]) + (56'(pair_q[pipe_lane][1]) <<< 16);
+            pair_q[pipe_lane][0] <= 41'(partial_q[pipe_lane][0]) + (41'(partial_q[pipe_lane][1]) <<< 8);
+            pair_q[pipe_lane][1] <= 41'(partial_q[pipe_lane][2]) + (41'(partial_q[pipe_lane][3]) <<< 8);
+            product[pipe_lane] <= 56'(pair_q[pipe_lane][0]) + (56'(pair_q[pipe_lane][1]) <<< 16);
         end
 ```
 
@@ -114,28 +113,28 @@ Hai pair dùng shift8/S41; product ghép shift16/S56. Không truncate intermedia
 ```systemverilog
         for (pipe_part = 0; pipe_part < 4; pipe_part = pipe_part + 1) begin : g_partial_register
             always_ff @(posedge clk)
-                if (valid_q[0]) partial_q[pipe_lane][pipe_part] <= partial_comb[pipe_lane][pipe_part];
+                partial_q[pipe_lane][pipe_part] <= partial_comb[pipe_lane][pipe_part];
         end
     end
     for (reduction_node = 0; reduction_node < 16; reduction_node = reduction_node + 1) begin : g_reduce1
         always_ff @(posedge clk)
-            if (valid_q[3]) level1[reduction_node] <= 57'(product[2 * reduction_node]) + 57'(product[2 * reduction_node + 1]);
+            level1[reduction_node] <= 57'(product[2 * reduction_node]) + 57'(product[2 * reduction_node + 1]);
     end
     for (reduction_node = 0; reduction_node < 8; reduction_node = reduction_node + 1) begin : g_reduce2
         always_ff @(posedge clk)
-            if (valid_q[4]) level2[reduction_node] <= 58'(level1[2 * reduction_node]) + 58'(level1[2 * reduction_node + 1]);
+            level2[reduction_node] <= 58'(level1[2 * reduction_node]) + 58'(level1[2 * reduction_node + 1]);
     end
     for (reduction_node = 0; reduction_node < 4; reduction_node = reduction_node + 1) begin : g_reduce3
         always_ff @(posedge clk)
-            if (valid_q[5]) level3[reduction_node] <= 59'(level2[2 * reduction_node]) + 59'(level2[2 * reduction_node + 1]);
+            level3[reduction_node] <= 59'(level2[2 * reduction_node]) + 59'(level2[2 * reduction_node + 1]);
     end
     for (reduction_node = 0; reduction_node < 2; reduction_node = reduction_node + 1) begin : g_reduce4
         always_ff @(posedge clk)
-            if (valid_q[6]) level4[reduction_node] <= 60'(level3[2 * reduction_node]) + 60'(level3[2 * reduction_node + 1]);
+            level4[reduction_node] <= 60'(level3[2 * reduction_node]) + 60'(level3[2 * reduction_node + 1]);
     end
     endgenerate
     always_ff @(posedge clk)
-        if (valid_q[7]) sum <= 61'(level4[0]) + 61'(level4[1]);
+        sum <= 61'(level4[0]) + 61'(level4[1]);
 endmodule
 ```
 

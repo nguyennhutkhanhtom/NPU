@@ -4,8 +4,7 @@
 
 Full top `llm_soc` có [7 nhóm unit PASS lịch sử](../../tests/full_rtl/evidence/logic6q5_all_units/results.json)
 trên snapshot35source, dùng RAM Quartus25.1 thật và Questa2025.2,0compile/runtime
-warnings. Graph có2prompt/3token doRTLchọn/16layer runs/causal checks. Source hiện
-tại33assets đã refactor theo [coding rules](../design/rtl_style.md), có [7 nhóm PASS](../../tests/full_rtl/evidence/explicit3_all_units/results.json)
+warnings. Graph có2prompt/3token doRTLchọn/16layer runs/causal checks. Snapshot33assets đã refactor theo [coding rules](../design/rtl_style.md), có [7 nhóm PASS](../../tests/full_rtl/evidence/explicit3_all_units/results.json)
 và fit hoàn tất: timing explicit2 FAIL93,28MHz/setup/removal. Logic5/6 FAIL99,07MHz;logic7 FAIL96,04MHz. Không có full-top
 100MHz PASS và chưa chạy pretrained application. [Timing hub](timing/README.md)
 ghi device, constraints, source/config hashes, critical paths và mọi corner.

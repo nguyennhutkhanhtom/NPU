@@ -123,8 +123,8 @@
     {
       "file": "docs/source_guide/blocks/llm_math.sv.md",
       "ordinal": 0,
-      "source_sha256": "885f5edc56cc5b2e6c9600a81081d3528c412b37b51d3b0795091f29721c6d2c",
-      "width": 541,
+      "source_sha256": "3127cda6b170d9acc3502bd27c8b8562fcd74639478613f521a56ab7fb397c72",
+      "width": 527,
       "height": 676,
       "nodes": 9,
       "status": "rendered"
@@ -343,6 +343,15 @@
       "width": 1147,
       "height": 346,
       "nodes": 4,
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/reset_release.sv.md",
+      "ordinal": 0,
+      "source_sha256": "5a7393ad76cc69712c67c5453ab37789d49b5d04dd8292e5368b26453f387ceb",
+      "width": 428,
+      "height": 498,
+      "nodes": 6,
       "status": "rendered"
     },
     {

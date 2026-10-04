@@ -17,6 +17,12 @@ GUIDE = ROOT / "docs/source_guide"
 RTL = ROOT / "Verilog Source code"
 
 NEW = {
+    "reset_release.sv": (
+        "Standard-FF reset release boundary", "Hai FF chuẩn dùng cùng clock: reset assert bất đồng bộ ngay, release core_rst_n sau hai cạnh lên. Không vendor IP, clock mới, timing exception hay nhánh synthesis. Raw reset chỉ tới hai FF; reset nội bộ tới controller, datapath validity và memory adapters. Storage SRAM không reset.",
+        "RST[Raw rst_n] --> FF1[First release FF async clear]\n    RST --> FF2[Second release FF async clear]\n    CLK[clk] --> FF1\n    CLK --> FF2\n    FF1 --> FF2\n    FF2 --> CORE[core_rst_n after two rising edges]\n    CORE --> CONTROL[Controller and adapter resets]",
+        [(1, "Reset contract and interface", "Assert ngay kể cả giữa clock; host phải giữ request đến ready. Reset release không tạo response hay write mới; transaction bắt đầu sau khi core_rst_n lên high."),
+         (7, "First release register", "Một always_ff sở hữu release_first_q. Cạnh lên đầu tiên sau rst_n high chỉ chốt one vào FF đầu."),
+         (12, "Final internal reset register", "Always_ff thứ hai sở hữu core_rst_n. Cạnh thứ hai chốt one từ FF đầu. Tất cả recovery/removal vẫn được STA; đây không phải ASIC signoff hay bằng chứng MTBF.")]),
     "logic_mul.sv": (
         "Portable bit-product compressor tree", "Multiplier tổ hợp từ AND/XOR/OR/NOT, dịch hằng và một bộ cộng cuối. Không dùng toán tử nhân/chia hoặc vendor arithmetic IP. A/B có signedness độc lập; OUT_W lấy modulo 2^OUT_W đúng với cắt độ rộng RTL. Callers giữ nguyên register, valid, reset và latency. Bit dấu B mang trọng số âm bằng complemented row cộng correction một; A được sign/zero extend trước khi dịch.",
         "A[Sign or zero extend A] --> BIT[AND with each B bit and constant shift]\n    B[B bits and sign bit] --> BIT\n    BIT --> CSA[XOR sum and majority carry shifted left]\n    CSA --> TREE[Compress three rows into two per level]\n    TREE --> ADD[One final carry-propagate adder]\n    ADD --> OUT[Low OUT_W product bits]",
@@ -66,8 +72,8 @@ NEW = {
          (25, "Group request distribution", "Địa chỉ/data payload chốt không enable mux. SRAM-only dont_merge giữ locality; read/write enables reset để hủy queued requests."),
          (48, "Lane banks and response", "Leaf old-data collision theo cùng accepted cycle. Lane-valid có cùng latency; output dùng lane0 valid để xác nhận cả row.")]),
     "llm_math.sv": (
-        "SIMD byte-product pipeline và reduction", "32 tích S24×S32 tạo S56 bằng partial products byte: ba byte thấp U8, byte cao S8. Partial S33, cặp S41, ghép product S56 rồi cây cộng cân bằng tới S61. Done chín cạnh sau cạnh nhận start. Chỉ dùng logic cells; input chốt khi start và không busy. Payload không reset; pipeline valid reset hủy transaction.",
-        "IN[32 pairs S24 and S32] --> CAP[Input registers]\n    CAP --> MUL[Four byte products per lane S33]\n    MUL --> PAIR[Registered pair sums S41]\n    PAIR --> PRODUCT[Registered product S56]\n    PRODUCT --> TREE[Five registered reduction levels]\n    TREE --> SUM[Sum S61]\n    CTRL[10-bit validity pipeline] -.-> CAP\n    CTRL -.-> TREE\n    CTRL --> DONE[busy and done after nine clocks]",
+        "SIMD byte-product pipeline và reduction", "32 tích S24×S32 tạo S56 bằng partial products byte: ba byte thấp U8, byte cao S8. Partial S33, cặp S41, ghép product S56 rồi cây cộng cân bằng tới S61. Done chín cạnh sau cạnh nhận start. Chỉ dùng logic cells; input chốt khi start và không busy. Payload không reset và mọi stage chạy liên tục từ input đã chốt; valid reset hủy transaction. Không có enable rộng từ valid_q đến partial/reduction FF.",
+        "IN[32 pairs S24 and S32] --> CAP[Input registers]\n    CAP --> MUL[Four byte products per lane S33]\n    MUL --> PAIR[Registered pair sums S41]\n    PAIR --> PRODUCT[Registered product S56]\n    PRODUCT --> TREE[Five registered reduction levels]\n    TREE --> SUM[Sum S61]\n    CTRL[10-bit validity pipeline] -.-> CAP\n    CTRL --> DONE[busy and done after nine clocks]",
         [(1, "Interface and payload", "Dải product và sum đủ cho signed extremes; payload chỉ hợp lệ sau transaction đã hoàn thành."),
          (12, "Widths and control pipeline", "busy là OR valid; request trong busy bị bỏ qua. done tại valid_q[9], chín cạnh sau cạnh nhận start. Signed casts giữ sign extension."),
          (27, "Operand capture and byte multiplication", "Các byte thấp có leadingzero trước signed cast; byte cao giữ dấu. Partial products giữ đủ S33 trước shift."),

@@ -8,6 +8,10 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     output logic [8:0] pc_debug,
     output logic [12:0] instr_debug
 );
+    // Raw reset reaches only the two standard FFs in this boundary. Internal
+    // state asserts reset immediately and resumes after two rising edges.
+    logic core_rst_n;
+    reset_release u_reset(.clk(clk), .rst_n(rst_n), .core_rst_n(core_rst_n));
     import npu_pkg::*;
     import llm_pkg::*;
     typedef enum logic [4:0] {G_IDLE, G_EMBED, G_ANORM, G_Q, G_K, G_V,
@@ -327,7 +331,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     logic [31:0] p_host_data;
     llm_parameter_ram #(.ADDR_W(15), .DEPTH(PARAM_ROWS),
         .USE_QUARTUS_MEMORY(USE_QUARTUS_MEMORY)) u_parameters(
-        .clk(clk), .rst_n(rst_n), .rd_en(p_read), .rd_addr(p_address_q),
+        .clk(clk), .rst_n(core_rst_n), .rd_en(p_read), .rd_addr(p_address_q),
         .rd_data(p_data), .rd_valid(p_valid),
         .host_active(host_en && !core_running && host_parameter_q),
         .host_write_req(host_en && !core_running && host_parameter_q &&
@@ -337,8 +341,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
         .host_we(host_write_q), .host_addr(host_address_q[19:2]),
         .host_wdata(host_data_q), .host_rdata(p_host_data), .host_rvalid(p_host_valid));
     assign p_read = op[O_P_REQ_IDX];
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always_ff @(posedge clk or negedge core_rst_n) begin
+        if (!core_rst_n) begin
             host_state <= H_IDLE;
             host_ready <= 0;
             host_payload_q <= 0;
@@ -405,15 +409,15 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     // H_DONE already follows payload capture. This unconditional public
     // register has valid data on the same edge as host_ready, with a simple D
     // input rather than simultaneous synchronous clear/load output controls.
-    always_ff @(posedge clk or negedge rst_n)
-        if (!rst_n) host_rdata <= 0;
+    always_ff @(posedge clk or negedge core_rst_n)
+        if (!core_rst_n) host_rdata <= 0;
         else host_rdata <= host_payload_q;
 
     logic v_read, v_valid, v_write_busy;
     logic [6:0] v_address_q;
     logic [767:0] v_data;
     llm_bank_ram #(.ROWS(96), .ADDR_W(7), .USE_QUARTUS_MEMORY(USE_QUARTUS_MEMORY)) u_vectors(
-        .clk(clk), .rst_n(rst_n), .rd_en(v_read), .rd_addr(v_address_q),
+        .clk(clk), .rst_n(core_rst_n), .rd_en(v_read), .rd_addr(v_address_q),
         .rd_data(v_data), .rd_valid(v_valid), .wr_busy(v_write_busy), .wr_addr(write_vector_addr_q),
         .wr_mask(op[O_WRITE_IDX] ? write_vector_mask_q : 32'h0), .wr_data(write_vector_q));
     assign v_read = op[O_V_REQ_IDX];
@@ -422,7 +426,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     logic [767:0] k_data;
     // Address = layer*1024 + position*8 + K/V*4 + head.
     llm_bank_ram #(.USE_QUARTUS_MEMORY(USE_QUARTUS_MEMORY)) u_cache(
-        .clk(clk), .rst_n(rst_n), .rd_en(k_read), .rd_addr(k_address_q),
+        .clk(clk), .rst_n(core_rst_n), .rd_en(k_read), .rd_addr(k_address_q),
         .rd_data(k_data), .rd_valid(k_valid), .wr_busy(k_write_busy), .wr_addr(k_write_address_q),
         .wr_mask(op[C_STORE_IDX] ? 32'hffffffff : 32'h0), .wr_data(vector_q));
     assign k_read = op[O_K_REQ_IDX];
@@ -432,20 +436,20 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     logic signed [31:0] math_b_q [0:31];
     logic signed [55:0] math_product [0:31];
     logic signed [60:0] math_sum;
-    llm_math u_math(.clk(clk), .rst_n(rst_n), .start(math_start),
+    llm_math u_math(.clk(clk), .rst_n(core_rst_n), .start(math_start),
         .a(math_a_q), .b(math_b_q), .busy(math_busy), .done(math_done),
         .product(math_product), .sum(math_sum));
     assign math_start = op[O_M_START_IDX];
     logic root_busy, root_done;
     logic [31:0] root;
-    isqrt_u64 u_root(.clk(clk), .rst_n(rst_n), .start(op[N_ROOT_IDX]),
+    isqrt_u64 u_root(.clk(clk), .rst_n(core_rst_n), .start(op[N_ROOT_IDX]),
         .radicand(root_input_q), .busy(root_busy), .done(root_done), .root(root));
     logic div_busy, div_done, div_zero;
     logic [63:0] div_numerator_q, div_quotient;
     logic [31:0] div_denominator_q, div_remainder;
     logic [32:0] twice_remainder;
     logic divide_round_up;
-    div #(.NUM_W(64), .DEN_W(32)) u_div(.clk(clk), .rst_n(rst_n),
+    div #(.NUM_W(64), .DEN_W(32)) u_div(.clk(clk), .rst_n(core_rst_n),
         .start(op[N_DIV_IDX] || op[A_DIV_IDX]), .numerator(div_numerator_q),
         .denominator(div_denominator_q), .busy(div_busy), .done(div_done),
         .div_zero(div_zero), .quotient(div_quotient), .remainder(div_remainder));
@@ -458,11 +462,11 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     logic signed [15:0] sigmoid_pick_q [0:3];
     logic [15:0] sig_y;
     logic [15:0] sigmoid_values_q [0:31];
-    sigmoid u_sig(.clk(clk), .rst_n(rst_n), .start(op[S_SIG_IDX]),
+    sigmoid u_sig(.clk(clk), .rst_n(core_rst_n), .start(op[S_SIG_IDX]),
         .x_raw(sig_x_q), .frac_bits(5'd12), .busy(sig_busy), .done(sig_done), .y_raw(sig_y));
     assign core_running = graph != G_IDLE;
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin running <= 0; ready <= 1; pc_debug <= 0; instr_debug <= 0; end
+    always_ff @(posedge clk or negedge core_rst_n) begin
+        if (!core_rst_n) begin running <= 0; ready <= 1; pc_debug <= 0; instr_debug <= 0; end
         else begin
             running <= core_running; ready <= !core_running;
             pc_debug <= {2'b0, position_q}; instr_debug <= {1'b0, graph, op_debug_index};
@@ -478,8 +482,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
         else gain_address = 15'(GAIN_BASE + (int'(layer_id) << 4) + (phase == G_MNORM ? 8 : 0) + (int'(row_id) << 1));
     endfunction
 
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always_ff @(posedge clk or negedge core_rst_n) begin
+        if (!core_rst_n) begin
             graph <= G_IDLE; layer_q <= 0; position_q <= 0; generated_q <= 0;
             token_q <= 0; error <= 0;
         end else begin
@@ -545,7 +549,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     generate
     for (lane = 0; lane < 32; lane = lane + 1) begin : g_simd
         always_ff @(posedge clk) begin
-            if (rst_n) begin
+            if (core_rst_n) begin
                 unique case (1'b1)
                     op[E_DATA_IDX] : begin
                         math_a_q[lane] <= 24'($signed(parameter_word_q[lane * 8 +: 8]));
@@ -628,7 +632,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
         // unrelated arithmetic states outside this cone avoids a wide priority
         // decoder feeding every workspace bit.
         always_ff @(posedge clk) begin
-            if (rst_n) begin
+            if (core_rst_n) begin
                 if (op[E_CLAMP_IDX] || op[N_CLAMP_IDX] || op[R_CLAMP_IDX] ||
                     op[B_CLAMP_IDX] || op[S_CLAMP_IDX])
                     write_vector_q[lane * 24 +: 24] <= llm_sat24(lane_round_q[lane]);
@@ -645,14 +649,14 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
         // remain local without vendor attributes in the compute datapath.
         logic signed [23:0] low_data_q;
         always_ff @(posedge clk)
-            if (rst_n && ((op[L_FLAGS_IDX] && matrix_row_q[4:2] == 3'(scalar_group)) ||
+            if (core_rst_n && ((op[L_FLAGS_IDX] && matrix_row_q[4:2] == 3'(scalar_group)) ||
                           (op[A_FLAGS_IDX] && lane_q[4:2] == 3'(scalar_group)))) begin
                 low_data_q <= scalar_round_q[23:0];
                 scalar_clip_high_q[scalar_group] <= scalar_round_q > 64'sd8388607;
                 scalar_clip_low_q[scalar_group] <= scalar_round_q < -64'sd8388608;
             end
         always_ff @(posedge clk)
-            if (rst_n && ((op[L_SAT_IDX] && matrix_row_q[4:2] == 3'(scalar_group)) ||
+            if (core_rst_n && ((op[L_SAT_IDX] && matrix_row_q[4:2] == 3'(scalar_group)) ||
                           (op[A_SAT_IDX] && lane_q[4:2] == 3'(scalar_group))))
                 scalar_group_q[scalar_group] <= scalar_clip_high_q[scalar_group] ? 24'sh7fffff :
                     scalar_clip_low_q[scalar_group] ? 24'sh800000 : low_data_q;
@@ -660,7 +664,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     endgenerate
 
     always_ff @(posedge clk) begin
-        if (rst_n) begin
+        if (core_rst_n) begin
             if (op[O_K_WAIT_IDX] && k_valid) second_q <= k_data;
             else if (op[B_INPUT0_IDX]) second_q <= vector_q;
             if (op[SG_PICK_IDX]) sig_x_q <= sigmoid_pick_q[int'(lane_q[4:3])];
@@ -671,7 +675,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     generate
     for (sigmoid_group = 0; sigmoid_group < 4; sigmoid_group = sigmoid_group + 1) begin : g_sigmoid_pick
         always_ff @(posedge clk)
-            if (rst_n && op[SG_GROUP_IDX])
+            if (core_rst_n && op[SG_GROUP_IDX])
                 sigmoid_pick_q[sigmoid_group] <= sigmoid_inputs_q[sigmoid_group * 8 + int'(lane_q[2:0])];
     end
     endgenerate
@@ -679,7 +683,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     // Payloads are assigned before their operation consumes them. Reset only
     // cancels the operation pipeline and clears architectural status.
     always_ff @(posedge clk) begin
-        if (rst_n) begin
+        if (core_rst_n) begin
             op_done <= 0;
             if (launch && graph == G_IDLE) begin overflow_out <= 0; random_q <= seed_q; op_fault_q <= 0; end
             unique case (1'b1)

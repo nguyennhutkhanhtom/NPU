@@ -11,7 +11,7 @@ generate geometry and constant bit-slice offsets are elaboration arithmetic,
 not hardware multipliers or dividers. Runtime power-of-two address/word-count
 calculations use explicit shifts; small constant address factors use shift/add.
 
-The current candidate is `quartus_explicit2/llm_soc`, with 33 source assets
+The preceding candidate is `quartus_explicit2/llm_soc`, with 33 source assets
 after removing the unused `ctrl_unit` and `hazard_detect`. Its QSF/QPF/SDC
 matches the canonical full-top project. [Synthesis](../verification/synthesis/explicit2/manifest.json)
 passed0errors/12warnings and [all seven units](../../tests/full_rtl/evidence/explicit3_all_units/results.json)
@@ -20,6 +20,14 @@ were unchanged through fitting; [timing](../verification/timing/fullrtl100_expli
 synthesizable tasks, hidden sequential ownership and variable/unbounded loops.
 All 61 request helpers are inline FSM updates; substantial replicated datapaths
 and pipeline stages use generate blocks. LUTs are explicit combinational modules.
+
+The current 34-source candidate is `quartus_pipeline1/llm_soc`, timing tag
+`fullrtl100_release1`. SIMD payload stages run from captured operands without
+wide valid enables; two explicit standard FFs condition internal reset release.
+Assertions remain immediate and release takes two rising edges. [Six unit groups](../../tests/full_rtl/evidence/pipeline3_six_units/results.json) PASS0warnings and
+[synthesis](../verification/synthesis/release1/manifest.json) PASS0errors12warnings.
+Graph/fit/timing gates remain pending. No additional technology IP or clock
+is introduced; all recovery/removal checks remain constrained.
 
 The [preceding seven-unit run](../../tests/full_rtl/evidence/logic6q5_all_units/results.json)
 passed with official Quartus25.1 RAM on Questa2025.2, zero compile/runtime

@@ -20,6 +20,13 @@ nonuniform RMSNorm and 128-position attention on the final KV tile. The graph
 test checks four layers, two-token prefill, three RTL-selected tokens and causal
 cache reads; its deterministic fixture is verification, not model quality.
 The runner records FAIL on errors and checks source/test hashes before PASS.
+
+`llm_soc` uses `reset_release`: asynchronous assertion, two rising edges before
+internal reset releases. Keep host requests asserted until ready; SRAM storage
+survives reset while queued operations/validity are canceled. Protocol tests
+check both release edges and immediate cancellation. Operator fixtures complete
+reset release before setting numeric inputs or internal operation state. Expected
+values and operation latency checks remain unchanged.
 `-RtlDir` permits isolated candidates; candidate hashes cannot pass the trained
 application gate unless they match the current main RTL and timing evidence.
 

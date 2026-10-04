@@ -72,6 +72,21 @@ with a registered balanced reduction. The sqrt, divider and sigmoid engines
 are shared. Parameters remain fixed during inference. One operator runs at a
 time and uses registered addresses before asserting SRAM enables.
 
+The `reset_release` boundary contains two explicit standard FFs. Raw `rst_n`
+asserts the internal reset immediately; `core_rst_n` becomes high after two
+rising clock edges. All internal controller/validity/adapter resets use it;
+SRAM contents are retained. Host requests remain asserted until `host_ready`.
+Simulation operator fixtures must wait for release before depositing state.
+No clock, vendor primitive or timing exception is introduced. All recovery and
+removal paths still require post-fit verification.
+
+SIMD operands are captured only on accepted `start && !busy`. Partial products,
+pair sums, products and the balanced sum pipeline then clock continuously from
+those stable operands. `valid_q` controls acceptance/busy/done, rather than wide
+payload enables. Response remains nine clocks after acceptance; canceled or
+invalid payloads must not be consumed. See [reset source](../source_guide/blocks/reset_release.sv.md)
+and [SIMD source](../source_guide/blocks/llm_math.sv.md).
+
 The host memory map and request/response protocol are defined in the
 [full RTL test guide](../../tests/full_rtl/README.md). The ISA-driven legacy
 `matmulfree` top remains a separate design, with its own host contract and

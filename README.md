@@ -7,7 +7,7 @@ SRAM gồm 768 KiB parameter, 384 KiB KV và 9 KiB vectors; area là ưu tiên s
 correctness và timing. [Timing full top](docs/verification/timing/README.md)
 ghi đầy đủ lịch sử, constraints và critical paths. Parameter/KV/vector dùng
 IP RAM M10K qua adapter thay được bằng SRAM ASIC; đây là vendor IP duy nhất.
-Source hiện tại có cả bảy nhóm regression PASS, gồm kiểm thử RAM thật và graph
+Bản 33-source trước có cả bảy nhóm regression PASS, gồm kiểm thử RAM thật và graph
 tự sinh token từ fixture. Fitting mới hoàn tất, timing explicit2 FAIL93,28MHz; chưa có bằng chứng full top
 đạt100MHz. Application pretrained chờ timing mọi corner đạt cho đúng source.
 
@@ -18,9 +18,9 @@ không dùng toán tử nhân/chia hoặc arithmetic IP. Divider/sqrt dùng dị
 standard cells. Full-top A&S bằng Quartus Lite25.1std PASS0errors/12warnings;
 `fullrtl100_logic5` fit PASS0DSP/PLL/DLL/HSSI nhưng timing FAIL99,07MHz:
 setup/hold/removal còn vi phạm. Logic6 cũng FAIL99,07MHz;logic7 FAIL96,04MHz. [Bảy nhóm unit](tests/full_rtl/evidence/logic6q5_all_units/results.json)
-đã PASS cho snapshot35source cũ,0warnings. Source hiện tại33assets đã chuyển
+đã PASS cho snapshot35source cũ,0warnings. Bản 33assets đã chuyển
 task/pipeline/LUT sang [RTL tường minh](docs/design/rtl_style.md); [cả 7 nhóm regression PASS](tests/full_rtl/evidence/explicit3_all_units/results.json), timing mới FAIL93,28MHz/setup/removal,
-chưa có100MHz PASS hoặc pretrained application.
+Candidate mới34assets bỏ SIMD payload enable dư thừa và dùng hai FF reset release; regression/timing đang chạy lại. Chưa có100MHz PASS hoặc pretrained application.
 
 Core instruction-driven `matmulfree` và các kết quả dưới đây được giữ làm
 tài liệu của kiến trúc trước. Timing hoặc demo hybrid của core này không

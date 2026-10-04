@@ -19,6 +19,13 @@ Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL d�
 
 Hold now passes every corner. [Removal](fullrtl100_explicit2/slow_1100mv_0c_removal.rpt) still fails raw reset release to output FFs. An explicit standard-FF reset conditioner with asynchronous assertion and two-edge synchronous release is the next candidate; this is a proposed architectural fix, not timing proof. All paths remain constrained and no false/multicycle exception is added.
 
+The current candidate `quartus_pipeline1/llm_soc` is running under fresh tag
+`fullrtl100_release1`, with34assets including `reset_release`. It removes the
+measured high-fanout SIMD payload enable and conditions raw reset with two
+explicit standard FFs. Source/configuration are locked while it builds; SDC,
+device, seed and I/O budgets are unchanged. Fresh regression `pipeline3` is
+required; previous all-seven PASS applies to33assets only.
+
 ## Logic5 result: 99.07 MHz, setup/hold/removal FAIL
 
 `fullrtl100_logic5` is the complete `llm_soc`, built from35 RTL/source assets
@@ -73,7 +80,7 @@ the workspace comparison; it cannot gate the changed current source.
 | fast_1100mv_85c | 3.527/0.0 | 0.128/0.0 | 6.564/0.0 | 0.351/0.0 | 3.799/0.0 |
 | fast_1100mv_0c | 4.024/0.0 | 0.119/0.0 | 6.564/0.0 | 0.357/0.0 | 3.789/0.0 |
 
-The current `fullrtl100_explicit2` uses33sources after structural RTL cleanup,
+The completed `fullrtl100_explicit2` uses33sources after structural RTL cleanup,
 no synthesizable tasks/unbounded loops, explicit pipeline/LUT ownership. QSF
 removes the four ignored delay settings and adds MAX_FANOUT16 on onehot op bits,
 targeting the measured control path. SRAM remains the only explicit vendor IP.

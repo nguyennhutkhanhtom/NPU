@@ -211,7 +211,7 @@
       "file": "llm_math.sv",
       "path": "Verilog Source code/llm_math.sv",
       "document": "blocks/llm_math.sv.md",
-      "sha256": "6d65c6134ca7c81dafdca8dbd5e0ee5a0349cb0d9276466017efd0a8f5e07fc8",
+      "sha256": "9d4d44be0bfe5d44cb196ffdc5e812710640989fb43f23adbcb62a0e48bae8ed",
       "lines": 72
     },
     {
@@ -227,8 +227,8 @@
       "file": "llm_soc.sv",
       "path": "Verilog Source code/llm_soc.sv",
       "document": "blocks/llm_soc.sv.md",
-      "sha256": "b57f1f0d7185f57c29f30dea319ef7861f7ad2d47bff03e07a5afb12e25d2e31",
-      "lines": 1027
+      "sha256": "568811a3c366672ad57db38241f5f0344987f1390b0df1922f5eb835039fb14b",
+      "lines": 1031
     },
     {
       "groups": 4,
@@ -261,6 +261,14 @@
       "document": "blocks/logic_mul.sv.md",
       "sha256": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
       "lines": 74
+    },
+    {
+      "groups": 3,
+      "file": "reset_release.sv",
+      "path": "Verilog Source code/reset_release.sv",
+      "document": "blocks/reset_release.sv.md",
+      "sha256": "2720ef4c4b21a68bf193c24cdb60f574ee8b272f36862a953c1cf060f14361a2",
+      "lines": 15
     }
   ],
   "cleanup_date": "2026-09-30",
