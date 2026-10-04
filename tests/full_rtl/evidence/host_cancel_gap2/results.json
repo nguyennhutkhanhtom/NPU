@@ -1,0 +1,91 @@
+{
+  "status": "PASS",
+  "scope": "Additional synthetic host-only cancellation/commit/ACK contract; no graph/checkpoint/application execution.",
+  "marker": "# HOST_CANCEL_CONTRACT_PASS phases=7 checks=14 pre_execute_cancel=1 accepted_write_commits=6 own_commit_before_ack=7",
+  "idle_edges": 2,
+  "rtl_sources": {
+    "acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
+    "banked_word_ram.sv": "bb7a3bb83e0aef84c030403bcd675e4853f190ea79d9851ad742a5a0d02d2409",
+    "descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+    "div.sv": "ddb1191f9879b7d3643d82a544ea14c30e7df999a3af5d913f354259363aa228",
+    "ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+    "llm_bank_ram.sv": "c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb",
+    "llm_exp_lut.svh": "7aafb64bcea808bcb74387c174c808784433bb941f2e9e2f815bcbeb9b1a5c6e",
+    "llm_gumbel_lut.svh": "870d129c9722a00efb733f0a6fbcad493e069447877de57a123db9d9b4adbec8",
+    "llm_math.sv": "9d4d44be0bfe5d44cb196ffdc5e812710640989fb43f23adbcb62a0e48bae8ed",
+    "llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
+    "llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
+    "llm_soc.sv": "568811a3c366672ad57db38241f5f0344987f1390b0df1922f5eb835039fb14b",
+    "logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
+    "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+    "matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
+    "mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+    "mul.sv": "fdca97fe654f877cd33e7eb934d3869a6e754bd9a4d9d128f228d9c17add646e",
+    "norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+    "norm.sv": "045a18b3d7152a114705cf85f87396eb1d080193dbb867b6791f37e278f17f36",
+    "npu_pkg.sv": "18385ff77706c505eb7c947c5b1f056b5d6230e6971a1cc09a4d823c27a7bcfd",
+    "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+    "pipelined_word_ram.sv": "0e82266f6da5f31bd2612e4696778f9560915020f6a5a3b498dfd4acd8b6e07a",
+    "postscale.sv": "b9cb61b7014c037c408340a8042b4c0862ed46997754d9b4dee40056835e7160",
+    "quartus_word_ram.sv": "c38b8642bfb143f71bf89902b767844086f0894a16db11ebc0abe98131709a0b",
+    "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+    "reset_release.sv": "2720ef4c4b21a68bf193c24cdb60f574ee8b272f36862a953c1cf060f14361a2",
+    "rowwise_dispatch.sv": "e0f7cb0088af29afe233478a72f4ef9aab0676f2a24d56903b7f35261a6b3543",
+    "rowwise_op.sv": "ce49a16c12069b0560986f7b8cf5bd0a187ce1d409f0ce0e69515bff11e1a559",
+    "scale_compose.sv": "12c6b58896e3f71367ba1149f6f23784aa0389500aeaf3b66deb2abd198aa55b",
+    "sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
+    "sigmoid_lut.svh": "c72383f3cd3c3dadf7e8579d7d12edca2cc2d6555735dd1e9d4def6f561b73ef",
+    "sigmoid.sv": "d85cdc54ba8843c4e8aa99d4d14eb8b72edf38966aa6c09d68abd537e329fce2",
+    "sram_256_wrapper.sv": "7c17702a2fa1c9a2baed950aff5e687f2981a07206ea3582e05659c6690e968a",
+    "ternary_mul.sv": "71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f"
+  },
+  "test_source_sha256": "0b7d4f770bceae8b851a60d97297794d971071565a5a34f0b5ffe08cdb3317bd",
+  "simulator": "QuestaAlteraStarter2025.2",
+  "memory_model": {
+    "scope": "Actual RAM simulation model only; no application execution",
+    "quartus_version": "25.1std.0 Build 1129 10/21/2025 SC Lite Edition",
+    "source": "C:\\altera_lite\\25.1std\\quartus\\eda\\sim_lib\\altera_mf.v",
+    "source_sha256": "2ae09f97f9606626da216e9eb91007beec3ebbe023c5b9415be472417fe49d5e",
+    "library": "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver",
+    "compiler_sha256": {
+      "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlib.exe": "cdf08c2c3665d020ac32a1a56da88687cc7b03e6d8ca32149243f6d07b707350",
+      "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlog.exe": "f3419a63d42323f11a61627a690dfc4f4877f7fa892a13cedffb4ddff83bc5d5"
+    },
+    "commands": [
+      [
+        "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlib.exe",
+        "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver"
+      ],
+      [
+        "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlog.exe",
+        "-work",
+        "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver",
+        "C:\\altera_lite\\25.1std\\quartus\\eda\\sim_lib\\altera_mf.v",
+        "-l",
+        "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\compile.log"
+      ]
+    ],
+    "compile_sha256": "20d08364edcfe5c0297826619a84151b7a764912a61d0d5001dbfe92226f0177",
+    "objects_sha256": {
+      "_info": "afeb4994ce35d5dbb484740a634db23c79969c1878b8c2ad7cde9f37d11c4cab",
+      "_lib.qdb": "ee8b849c2f3344d8a4e348eb72d3f25a2605c1f0b5c4b7944e4489da0354ffaa",
+      "_lib1_0.qdb": "38d68ede54d428b8ef95325610c8feaf8b9337aa69e7f73cb148f18b2e6137d7",
+      "_lib1_0.qpg": "85212b314a082c54f1f714a3baea253ca06b84321649e9f8e2521ce406af9bce",
+      "_lib1_0.qtl": "261fab8c6e922696d654402aaa001a92c9d3fc15376cf0166f37966172ebde50",
+      "_vmake": "d287f8a335408d3f94fea840ad628f2cbed3775952c49131049ef8f60fd337c9"
+    }
+  },
+  "archives": {
+    "host_cancel_contract.sv": "0b7d4f770bceae8b851a60d97297794d971071565a5a34f0b5ffe08cdb3317bd",
+    "compile.log": "092e3f1cd9f8cc1d927c2c3f2b84e4daad2293f5406e3cdd7bb350c80c033fc8",
+    "simulation.log": "04953584e7147dc7b97a398ca0a087d5cf1240a6e6b90c1ceb2c54b52805010d",
+    "design_units.json": "43f00909d4cf60a5db67a224837b0bd1aebfb796e0f2a64cd401d5e7e24744a6",
+    "memory_model_manifest.json": "173ca62a91b62feb03eee8a7a769065d6e021d0852b789196661ba555be4c078",
+    "initial_command_failed.console": "b9fa3bc016491ee966d9dacdb03096f3b2ef09feb681d9a3d442389b911b83be"
+  },
+  "commands": {
+    "compile": "vlog -sv -svinputport=var -work tests/full_rtl/build/host_cancel_work +incdir=<RTL> -f tests/full_rtl/build/sources.f tests/full_rtl/host_cancel_contract.sv",
+    "simulation": "vsim -c -onfinish exit -voptargs=-duselectreport=<binding> -L tests/full_rtl/build/questa25_model/altera_mf_ver -L tests/full_rtl/build/host_cancel_work -lib tests/full_rtl/build/host_cancel_work tb_host_cancel_contract -do \"run -all; quit -f\""
+  },
+  "initial_command_note": "First command referenced nonexistent unit_sources.f and failed before compilation; retry uses actual sources.f. Both outcomes preserved."
+}

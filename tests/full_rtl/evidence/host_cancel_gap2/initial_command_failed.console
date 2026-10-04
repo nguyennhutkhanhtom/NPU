@@ -1,0 +1,7 @@
+** Error: (vlog-7) Failed to open -f file "tests/full_rtl/build/unit_sources.f" in read mode.
+No such file or directory. (errno = ENOENT)
+Questa Altera Starter FPGA Edition-64 vlog 2025.2 Compiler 2025.05 May 31 2025
+Start time: 16:23:26 on Oct 04,2026
+vlog -sv -svinputport=var -work tests/full_rtl/build/host_cancel_work "+incdir+Verilog Source code" -f tests/full_rtl/build/unit_sources.f tests/full_rtl/host_cancel_contract.sv -l D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\host_cancel_probe/compile.log 
+End time: 16:23:26 on Oct 04,2026, Elapsed time: 0:00:00
+Errors: 1, Warnings: 0

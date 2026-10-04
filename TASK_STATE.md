@@ -1,6 +1,6 @@
 # NPU resume checkpoint
 
-Updated 2026-10-04 16:12 Asia/Saigon. Repo, raw reports and hashes are authoritative. Preserve valid changes and immutable evidence; no reset/revert.
+Updated 2026-10-04 16:28 Asia/Saigon. Repo, raw reports and hashes are authoritative. Preserve valid changes and immutable evidence; no reset/revert.
 
 ## Goal and binding rules
 
@@ -10,7 +10,7 @@ Full graph and autoregressive selection on RTL. CPU loads weights/config/prompt 
 
 ## Current verified milestone
 
-- main: pushed milestone `1b87ed9` (helper cleanup); `d72a7cf` preserves current all-seven PASS + release1 FAIL. Earlier milestones retained. No trained application or CPU checkpoint inference has run.
+- main: pushed milestone `3c8ab8e` (fanout candidate A&S PASS); `1b87ed9` helper cleanup and `d72a7cf` current all-seven PASS + release1 FAIL retained. No trained application or CPU checkpoint inference has run.
 - Preceding verified snapshot: 33 RTL assets. Unused legacy controllers/helpers removed with stale QSF/source-guide entries; valid legacy tests retained. All 61 request/math/write task calls are visible FSM assignments; generated pipelines have one register owner. LUTs are combinational modules. Unsigned buffer/row casts preserve the former task argument contract. No added numeric/transaction latency.
 - [All seven preceding groups PASS](tests/full_rtl/evidence/explicit3_all_units/results.json), completed 14:30:22: Questa2025.2 + official Quartus25.1 RAM; compile/runtime 0 warnings. Graph: prompt2, RTL-selected tokens3, layer executions16, causal checks, 4,229,462 compute clocks, 196,619 host commands. Synthetic fixture, not trained text. Archive has seven logs/binding reports, start/source/test/helper/model hashes and reproduction inputs. Six-group partial tag retained unchanged.
 - [A&S PASS](docs/verification/synthesis/explicit2/manifest.json): current 33 RTL + 3 config files, 0 errors/12 warnings, completed13:37:42. This is not timing PASS.
@@ -25,6 +25,7 @@ Full graph and autoregressive selection on RTL. CPU loads weights/config/prompt 
 - All-seven regression pipeline3 PASS, exec63509, work pipeline3_questa_work, official Questa2025.2/RAM25.1. Compile0errors0warnings; all six groups PASS, operators17/checks3460/scalar128/clamp128 completed14:58:02, graph PASS15:46:47, compute clocks4229462/prompt2/tokens3/layer executions16/causal checked/hostcommands196619,0runtimewarnings; graph session closed. [All-seven archive](tests/full_rtl/evidence/pipeline3_all_units/results.json). Eight test inputs and helper/model/log hashes match archived evidence. Initial snapshot tests/full_rtl/build/pipeline3_modelsim_start.json.
 - Pipeline1 failed elaboration: mechanical reset rename changed seven child port names. Archived pipeline1_port_binding_failed, fixed .rst_n(core_rst_n). Pipeline2 operator fixture FAIL: seeded token before the new release edges reset it to0. Archived pipeline2_reset_fixture_failed; fixture now releases reset fully before deposits/seeding. Same expected values and exact arithmetic latency checks. All17operators and graph PASS confirm fixture fix.
 - [Helper cleanup](docs/history/helper_cleanup1/manifest.json): removed retired native Verilator runner/old evidence merger after caller audit; original two files retained byte-exact in SHA-verified ZIP. Current Questa runners, eight unit inputs, memory helper and all immutable test/timing evidence unchanged. LUT generator retained.
+- [Additional host-only cancellation probe](tests/full_rtl/evidence/host_cancel_gap1/results.json) PASS7phases/14checks/0warnings,16:26:17, actual RAM IP. Following write after one idle edge ACKs after its own leaf commit. Pre-execution abort prevents write; accepted write may commit despite response cancellation. Earlier two-idle-edge PASS and initial wrong-file-list command failure retained. No RTL/eight unit-input changes or trained graph execution. Numeric-width bounds added to full-graph documentation.
 
 ## Complete preceding timing gate: FAIL
 

@@ -120,6 +120,24 @@ only reads cache entries already written in that run. Reset must span a rising
 clock edge to reset the synchronous operator state as well as asynchronous
 host/graph validity controls.
 
+For the fixed supported geometry, conservative width bounds are:
+
+| Intermediate | Bound before rounding/saturation | Storage |
+|---|---|---|
+| General SIMD product/reduction | `abs(A) <= 2^23`, `abs(B) <= 2^31`; product magnitude <=`2^54`, 32-lane sum <=`2^59` | S56 product/S61 sum |
+| RMSNorm sum of128squares | <=`2^53`; mean plus42950 <`2^47` | U64 sum/root input |
+| RMSNorm reciprocal | root>=floor(sqrt(42950))=207; rounded `2^32/root` <`2^25` | U25, zero-extended into signed32 multiplier input |
+| Ternary/tied-head accumulator | longest ternary384inputs: magnitude <=`384 * 2^23`; tied head128inputs with S8 codes: <=`2^37` | S39; U24 coefficient product fits S64 |
+| RoPE two-product sum | two S24-by-S16 products: magnitude <=`2^39` | S56 products/S64 sum |
+| Softmax/weighted values | each weight <=`2^24`; 128weights sum<=`2^31`; weighted S24 sum magnitude<=`2^54` | U25 weight/U32 sum/S56 accumulation |
+
+These bounds describe arithmetic capacity, not language quality or timing closure.
+S32 attention scores and S24 activations intentionally saturate. With a valid
+causal head, at least one score equals its maximum, so exp(0)=`2^24` keeps the
+attention denominator positive. Unit tests independently exercise signed
+extremes, rounding ties, clamping and cancellation; the pretrained graph still
+requires the exact-source hardware gates and actual RTL token comparison.
+
 ## SRAM replacement boundary and latency
 
 `llm_soc.USE_QUARTUS_MEMORY=1` is the FPGA default. The adapters select
@@ -137,6 +155,14 @@ A committed word survives reset. Clients load every location before reading it.
 integration and operator fixtures. It is not the FPGA hardware configuration.
 ASIC SRAM must provide the same 1R/1W common-clock contract or compensate inside
 the adapter. Compute/control equations and public latency remain unchanged.
+
+Host cancellation before the execution edge prevents a pending write. Once
+execution accepts a write, dropping enable retires the response but does not
+promise rollback of the SRAM queue. Reset still cancels enables before leaf
+commit and retains committed words. [The additional cancellation probe](../../tests/full_rtl/evidence/host_cancel_gap1/results.json)
+checks a following write after exactly one idle edge and observes that its
+actual leaf commit occurs before its ACK. This synthetic host-only check does
+not load a checkpoint or run the language graph.
 
 | Adapter | Read contract | Write contract |
 |---|---|---|

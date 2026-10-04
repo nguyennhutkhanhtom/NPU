@@ -1,0 +1,10 @@
+Questa Altera Starter FPGA Edition-64 vlog 2025.2 Compiler 2025.05 May 31 2025
+Start time: 16:26:02 on Oct 04,2026
+vlog -sv -svinputport=var -work tests/full_rtl/build/host_cancel_work tests/full_rtl/host_cancel_contract.sv -l D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\host_cancel_probe/compile_gap1.log 
+** Note: (vlog-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+-- Compiling module tb_host_cancel_contract
+
+Top level modules:
+	tb_host_cancel_contract
+End time: 16:26:02 on Oct 04,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0

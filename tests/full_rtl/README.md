@@ -107,6 +107,27 @@ and data until `host_ready`; then deassert enable for at least one clock. All
 addresses are byte addresses aligned to four bytes. Writes while running have
 no effect. Read status to determine completion before reading output IDs.
 
+Dropping `host_en` before the execution edge cancels the write. After execution
+accepts it, dropping enable cancels its response but the accepted SRAM write
+may still commit; the host must not assume rollback. Reset cancels uncommitted
+queue entries and retains committed storage. An additional [host-only probe](host_cancel_contract.sv)
+checks all seven cancellation phases, the next request after one idle edge,
+and each new write's own leaf commit before ACK: [14checks PASS](evidence/host_cancel_gap1/results.json),
+Questa2025.2/actual Quartus25.1 RAM,0compile/runtimewarnings. The preceding
+[two-idle-edge probe](evidence/host_cancel_gap2/results.json) is retained separately.
+This does not execute the graph or checkpoint and does not alter the eight
+inputs of the current seven-group regression.
+
+After `run_units.ps1` creates `build/sources.f`, reproduce this optional probe
+from the repository root with a fresh library and binding report:
+
+```powershell
+$simBin = 'C:/altera_lite/25.1std/questa_fse/win64'
+& "$simBin/vlib.exe" tests/full_rtl/build/NEW_PROBE_WORK
+& "$simBin/vlog.exe" -sv -svinputport=var -work tests/full_rtl/build/NEW_PROBE_WORK '+incdir+Verilog Source code' -f tests/full_rtl/build/sources.f tests/full_rtl/host_cancel_contract.sv
+& "$simBin/vsim.exe" -c -onfinish exit '-voptargs=-duselectreport=tests/full_rtl/build/NEW_PROBE_BINDING.json' -L tests/full_rtl/build/questa25_model/altera_mf_ver -L tests/full_rtl/build/NEW_PROBE_WORK -lib tests/full_rtl/build/NEW_PROBE_WORK tb_host_cancel_contract -do 'run -all; quit -f'
+```
+
 | Window/register | Address | Meaning |
 |---|---:|---|
 | Parameters | `0x00000000..0x000bfffc` | 768 KiB SRAM, 32-bit host lanes |
