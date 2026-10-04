@@ -87,6 +87,14 @@ payload enables. Response remains nine clocks after acceptance; canceled or
 invalid payloads must not be consumed. See [reset source](../source_guide/blocks/reset_release.sv.md)
 and [SIMD source](../source_guide/blocks/llm_math.sv.md).
 
+Attention accumulators now clear in `A_QUERY`, once at each head's entry,
+before score/exponent generation. Previously their late clear in
+`A_EXP_STORE` depended on `time_q == position_q`, creating a wide equality
+control cone to32S56registers. No accumulator is consumed before value
+reduction, so the clear can move earlier without adding a state or clock.
+The current `attention1` regression and full-top timing gates are pending;
+preceding PASS evidence applies only to its archived source hashes.
+
 The host memory map and request/response protocol are defined in the
 [full RTL test guide](../../tests/full_rtl/README.md). The ISA-driven legacy
 `matmulfree` top remains a separate design, with its own host contract and

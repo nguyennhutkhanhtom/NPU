@@ -1,6 +1,6 @@
 # NPU resume checkpoint
 
-Updated 2026-10-04 19:34 Asia/Saigon. Repo/reports/hashes are authoritative; preserve valid changes and immutable tags, no reset/revert.
+Updated 2026-10-04 19:49 Asia/Saigon. Repo/reports/hashes are authoritative; preserve valid changes and immutable tags, no reset/revert.
 
 ## Goal and rules
 
@@ -10,12 +10,20 @@ Full autonomous language graph on RTL; CPU loads weights/config/prompt and token
 
 Pretrained export/application/reference inference requires exact-current all-seven unit/graph PASS AND full-top post-fit>=100MHz, every corner setup/hold/recovery/removal/pulse slack>=0,TNS0,UCP0. No trained application/reference inference has run under this gate.
 
-## Verified current RTL and tests
+## Current attention1 fix: gates pending
+
+Source llm_soc changes one clear assignment: A_QUERY clears attention_acc_q instead of conditional clear in A_EXP_STORE. No state/cycle/numeric formula changed. Each head enters A_QUERY before scores; accumulators only consumed after exponent generation. No vendor IP/task/function/loop added. QSF adds host_addr D3_DELAY7 for fanout2 address hold failures; SDC unchanged.
+
+RUNNING timing exec49792, isolated quartus_attention1/llm_soc, tag fullrtl100_attention1; A&S PASS0errors12warnings19:41:12, Fitter45332/supervisor30228 active. Source/config ZIP37 SHA0f9badde7a854d76f1edb6541af9f1547d132579c39342d94a14968dd43c059e. RUNNING all-seven exec25145, attention1_questa_work/EvidenceTag attention1, actualRAM25.1/Questa2025.2; initial snapshot tests/full_rtl/build/attention1_modelsim_start.json, compile0errors0warnings, allsixgroupsPASS including operators17/checks3460/scalar128/clamp128 at19:39:11; graph40192 RUNNING. Six-group archive tests/full_rtl/evidence/attention1_six_units/results.json, A&S archive docs/verification/synthesis/attention1/manifest.json. Rootunit_results currently RUNNING, not PASS. Preserve prior pipeline3 archive; no application.
+
+Source guide refreshed/excerpts/hash match34assets;51diagram hashes unchanged. Do not edit RTL/QSF/SDC or unit inputs while jobs active. Wait for current operators/graph and full fit/all20checks before claiming milestone. Latest pushed c9a83b9 records completed fanout2 FAIL; bc4f375 vendor-free elaboration/ASIC memory guide retained.
+
+## Preceding verified RTL and tests
 
 - 34RTL/source assets: explicit inline FSM requests, generated LUT/pipelines, structural bit-product arithmetic. SRAM only behind adapter; reset conditioner two standard FFs, async assertion/two-edge release. SIMD payload stages continuous from captured operands, nine-clock response unchanged. Do not redo verified fixes.
-- [Seven groups pipeline3 PASS](tests/full_rtl/evidence/pipeline3_all_units/results.json), Questa2025.2 + official Quartus25.1RAM,0compile/runtimewarnings. Math503/reset9/LUT513/bit1536; operators17/checks3460; graph4229462compute clocks/prompt2/selected tokens3/layerexec16/hostcommands196619/causal checked. Synthetic fixture, not trained text. Current34RTL/eight test inputs/helper/logs/binding hashes match archive.
+- [Seven groups pipeline3 PASS](tests/full_rtl/evidence/pipeline3_all_units/results.json), Questa2025.2 + official Quartus25.1RAM,0compile/runtimewarnings. Math503/reset9/LUT513/bit1536; operators17/checks3460; graph4229462compute clocks/prompt2/selected tokens3/layerexec16/hostcommands196619/causal checked. Synthetic fixture, not trained text. This preceding34RTL snapshot/eight test inputs/helper/logs/binding hashes match its archive; current clear-attention source is different.
 - [Optional host cancellation](tests/full_rtl/evidence/host_cancel_gap1/results.json) PASS7phases/14storagechecks with one idle edge between requests. Accepted write may commit after response cancellation; no rollback promise. Following request ACK follows its own commit. No RTL/test-input changes.
-- [Docs](docs/source_guide/validation.json) PASS34assets/30main+15detail diagrams/150groups/4523RTLlines/1059LUTentries/51rendered/1894links. Current Mermaid hashes match rendered evidence.
+- [Docs](docs/source_guide/validation.json) PASS34assets/30main+15detail diagrams/150groups/4523RTLlines/1059LUTentries/51rendered/1896links. Current Mermaid hashes match rendered evidence.
 
 ## Latest full-top timing: fanout2 FAIL96.67MHz
 
@@ -53,8 +61,10 @@ python docs/source_guide/validate.py
 ./tests/full_rtl/run_application.ps1 -TimingManifest docs/verification/timing/PASS_TAG/manifest.json
 ```
 
-1. Fanout2 complete FAIL archived, no active build. Commit/push verified result before changing source. bc4f375 contains vendor-free elaboration and ASIC SRAM binding milestone.
-2. Apply portable early attention accumulator clear; add physical host_addr D3 setting7 for measured hold. Freeze new source/config, fresh project/tag and seven-unit library; gates pending until all actual reports/tests finish. Preserve SDC, expected numeric values and evidence.
+1. Fanout2 FAIL archived/pushed c9a83b9. Current attention1 timing/unit jobs active: poll logs/processes, keep sources frozen. Archive fresh results without overwriting old tags.
+2. Verify current early attention clear numerically with all-seven tests, then all-corner timing. If FAIL target new measured paths. Preserve SDC, expected values and evidence; no pretrained run until exact-current full gates pass.
 3. Once gates pass, run pinned NanoFable actual RTL paragraph and review matching separately from coherence; second compatible language model when supported. O5 profile gave no speed gain, defaultO4 retained. Application monitor compile-only PASS, not an application run.
 
 [Portable full-top elaboration](docs/verification/portable_elaboration1/results.json) PASS18:37:16, USE_QUARTUS_MEMORY=0, no vendor library loaded/24module design units/14unique names/0errors0warnings, run0/no weights/inference. Initial shell argument split failure retained; corrected quoting only. [ASIC SRAM binding guide](docs/design/asic_memory_binding.md) records all72leaf instances, latency/reset/collision and four small arrays including inferred output/probability RAM. Behavioral elaboration is not ASIC synthesis or signoff.
+
+Source-guide refresh helper fixed trailing-blank-line boundary drift. Reset FF excerpt ownership preserved; docs/verification/doc_refresh1/results.json records36pages/manifest byte-idempotence PASS. This is a documentation helper fix only.

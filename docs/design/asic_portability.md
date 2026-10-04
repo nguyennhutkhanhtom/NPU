@@ -83,3 +83,5 @@ only to their archived source hashes. Application remains gated until the
 current full-top fit/timing and all seven unit/graph groups pass.
 
 The same34RTL assets have since completed [fanout1 fitting](../verification/timing/fullrtl100_fanout1/manifest.json):98.63MHz,18/20checks PASS, setup/hold still FAIL at slow85. No100MHz claim is made. Quartus serves as the EDA demonstration backend. ASIC-portable architecture, explicit register ownership and a replaceable SRAM leaf are the design focus. Board integration and FPGA peripheral development are outside the present scope. Physical fanout and I/O delay assignments belong only to this backend; ASIC synthesis/STA must use the selected standard-cell libraries and SRAM views.
+
+Current attention1 source moves accumulator clear to each head entry; all-seven regression and fresh full-top timing are pending. Preceding PASS results apply to their archived source hashes only.

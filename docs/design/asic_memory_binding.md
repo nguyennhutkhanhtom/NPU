@@ -17,7 +17,7 @@ another clock domain must provide that bridge upstream; the two reset-release
 FFs synchronize reset deassertion, not host data.
 
 The portable branch (`USE_QUARTUS_MEMORY=0`) uses inferred `sram_word_tile`
-arrays. [Full-top elaboration evidence](../verification/portable_elaboration1/results.json)
+arrays. [Preceding full-top elaboration evidence](../verification/portable_elaboration1/results.json)
 passes with no vendor memory library loaded,24 module design units,14 unique
 module names and0errors/0warnings. The binding report contains no `altsyncram`
 or vendor datapath. This was `run 0`, with no weights or inference; it proves

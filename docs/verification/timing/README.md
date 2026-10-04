@@ -6,6 +6,12 @@ Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL d�
 
 ## Fanout2 result: 96.67 MHz, setup/hold FAIL
 
+Current `fullrtl100_attention1` moves the accumulator clear to A_QUERY and adds
+physical host_addr D3 setting7. [A&S](../synthesis/attention1/manifest.json)
+PASS0errors12warnings; [six groups](../../../tests/full_rtl/evidence/attention1_six_units/results.json)
+PASS0warnings, including128position causal attention. Graph and fresh full-fit
+timing are RUNNING; this changed source has no all-seven/timing PASS yet.
+
 [Manifest](fullrtl100_fanout2/manifest.json), [source ZIP](fullrtl100_fanout2/source_archive.json) and [unchanged seven-group regression](../../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match34RTL/3configuration hashes. Extraction complete19:29:55 on04Oct2026. Same CycloneV5CGXFC9E6F35C7/QuartusLite25.1std Build1129/seed1/SPEED/STANDARD,10ns SDC and I/O budgets. Map0errors12warnings, fit0errors4warnings, STA0errors2warnings332148. Resources51888ALM/48214FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. UCP0.17/20checks PASS. Synthesis/fitting PASS, timing FAIL; no pretrained application.
 
 | Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |

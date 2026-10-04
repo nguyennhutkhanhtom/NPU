@@ -1,0 +1,166 @@
+{
+  "status": "SIX_GROUPS_PASS_GRAPH_RUNNING",
+  "scope": "Current 34 assets: attention accumulator clears at head entry; all test inputs/numeric expectations unchanged; not a trained application",
+  "rtl_sources": {
+    "acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
+    "banked_word_ram.sv": "bb7a3bb83e0aef84c030403bcd675e4853f190ea79d9851ad742a5a0d02d2409",
+    "descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+    "div.sv": "ddb1191f9879b7d3643d82a544ea14c30e7df999a3af5d913f354259363aa228",
+    "ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+    "llm_bank_ram.sv": "c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb",
+    "llm_exp_lut.svh": "7aafb64bcea808bcb74387c174c808784433bb941f2e9e2f815bcbeb9b1a5c6e",
+    "llm_gumbel_lut.svh": "870d129c9722a00efb733f0a6fbcad493e069447877de57a123db9d9b4adbec8",
+    "llm_math.sv": "9d4d44be0bfe5d44cb196ffdc5e812710640989fb43f23adbcb62a0e48bae8ed",
+    "llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
+    "llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
+    "llm_soc.sv": "51ef7ae59847a9b082916872fc3512dbc0d890011d5b8134c8dfccb0f8985811",
+    "logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
+    "matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
+    "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+    "mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+    "mul.sv": "fdca97fe654f877cd33e7eb934d3869a6e754bd9a4d9d128f228d9c17add646e",
+    "norm.sv": "045a18b3d7152a114705cf85f87396eb1d080193dbb867b6791f37e278f17f36",
+    "norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+    "npu_pkg.sv": "18385ff77706c505eb7c947c5b1f056b5d6230e6971a1cc09a4d823c27a7bcfd",
+    "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+    "pipelined_word_ram.sv": "0e82266f6da5f31bd2612e4696778f9560915020f6a5a3b498dfd4acd8b6e07a",
+    "postscale.sv": "b9cb61b7014c037c408340a8042b4c0862ed46997754d9b4dee40056835e7160",
+    "quartus_word_ram.sv": "c38b8642bfb143f71bf89902b767844086f0894a16db11ebc0abe98131709a0b",
+    "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+    "reset_release.sv": "2720ef4c4b21a68bf193c24cdb60f574ee8b272f36862a953c1cf060f14361a2",
+    "rowwise_dispatch.sv": "e0f7cb0088af29afe233478a72f4ef9aab0676f2a24d56903b7f35261a6b3543",
+    "rowwise_op.sv": "ce49a16c12069b0560986f7b8cf5bd0a187ce1d409f0ce0e69515bff11e1a559",
+    "scale_compose.sv": "12c6b58896e3f71367ba1149f6f23784aa0389500aeaf3b66deb2abd198aa55b",
+    "sigmoid.sv": "d85cdc54ba8843c4e8aa99d4d14eb8b72edf38966aa6c09d68abd537e329fce2",
+    "sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
+    "sigmoid_lut.svh": "c72383f3cd3c3dadf7e8579d7d12edca2cc2d6555735dd1e9d4def6f561b73ef",
+    "sram_256_wrapper.sv": "7c17702a2fa1c9a2baed950aff5e687f2981a07206ea3582e05659c6690e968a",
+    "ternary_mul.sv": "71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f"
+  },
+  "test_sources": {
+    "run_units.ps1": "28672093a173db4ea1e4e8166bc9cdbc8853151cba9063463fbf7990f54cd345",
+    "tb_graph.sv": "f3935e1049990dabcb066b7260b3363c0cce57de9567f0501c7904b51a9d26e9",
+    "tb_math.sv": "9a7befb14c6a8392952a14ea5ed858206f5287ff95eedd96716d7af9a4252ea4",
+    "tb_memory_ip.sv": "698fbbcb7199006cc49030d17a3b8d4b282d646e7ba736568bb63922dd9b149f",
+    "tb_operators.sv": "26d67ebf2a4b4d75faf6bf3ee252d268bdf96760f47b6ad7f59fb655cd93fabe",
+    "tb_protocol.sv": "417c4b8060d0f06bf845cf2d39d036c8af4d97ea8d60536715041cedd8a58cc2",
+    "tb_ram.sv": "4d40fea39efbf26f67db28c6ad4fde34f194603f57f4ee2f2fda6e0fc93ed0b1",
+    "tb_selection.sv": "9604220232f4dfe71a75f620c96159cec495ef68209ca550f06f88affe27d8f9"
+  },
+  "tests": {
+    "tb_quartus_memory": "# QUARTUS_MEMORY_PASS banks=4 checks=158 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained",
+    "tb_llm_math": "# LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128",
+    "tb_llm_ram": "# LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3",
+    "tb_llm_protocol": "# LLM_PROTOCOL_PASS transactions=29 cancellations=12 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2",
+    "tb_llm_selection": "# SELECT_EDGE_PASS checks=14 minimum_score_ties=2 excluded=5 stable_ties=2",
+    "tb_llm_operators": "# LLM_OPERATORS_PASS operators=17 checks=3460 scalar_cases=128 clamp_cases=128 reference=S128 fixtures=synthetic"
+  },
+  "evidence": {
+    "tb_quartus_memory": {
+      "log": "tests/full_rtl/evidence/attention1_six_units/tb_quartus_memory.log",
+      "sha256": "212676659df89b825c522b0c5b8cd9054b7a8280b14a52659c2339deda2550d0",
+      "design_units": {
+        "file": "tests/full_rtl/evidence/attention1_six_units/attention1_tb_quartus_memory_design_units.json",
+        "sha256": "c963d385334b4baf5adc9ae55187149a664966a30f31f38f5c4639a84003b61c"
+      }
+    },
+    "tb_llm_math": {
+      "log": "tests/full_rtl/evidence/attention1_six_units/tb_llm_math.log",
+      "sha256": "3abab85bed690031579412369ec051b0bd493a161c5a1439e5de5d7154b3f38e",
+      "design_units": {
+        "file": "tests/full_rtl/evidence/attention1_six_units/attention1_tb_llm_math_design_units.json",
+        "sha256": "1857374e4c61581d68ddba641213092b3c3f3249ef3fcb094a59e5e3c878bec2"
+      }
+    },
+    "tb_llm_ram": {
+      "log": "tests/full_rtl/evidence/attention1_six_units/tb_llm_ram.log",
+      "sha256": "eeb860d4e0b39082bc7a998b549a90ce2019247c47baed522ed1f7f03beee975",
+      "design_units": {
+        "file": "tests/full_rtl/evidence/attention1_six_units/attention1_tb_llm_ram_design_units.json",
+        "sha256": "efaf48eae43c829370ea033ae75e8f29cea83453f27acdc267e60036960f2642"
+      }
+    },
+    "tb_llm_protocol": {
+      "log": "tests/full_rtl/evidence/attention1_six_units/tb_llm_protocol.log",
+      "sha256": "c24277d77e3e356781b886ebad5267c608ae303a4ab38f4a128c2afdb7778d13",
+      "design_units": {
+        "file": "tests/full_rtl/evidence/attention1_six_units/attention1_tb_llm_protocol_design_units.json",
+        "sha256": "192e0990445e196b6009abe7991e0d6ef3a5dff70877e87266d452c370166f38"
+      }
+    },
+    "tb_llm_selection": {
+      "log": "tests/full_rtl/evidence/attention1_six_units/tb_llm_selection.log",
+      "sha256": "7d49e30cb5c5e5d1bc52cf51a0304e2165f4b2238fc47b03525ffa2d1f908e7a",
+      "design_units": {
+        "file": "tests/full_rtl/evidence/attention1_six_units/attention1_tb_llm_selection_design_units.json",
+        "sha256": "461f1a525da60da396d299e307016194d0995db2cd0e914da1b1e13c09b32e3d"
+      }
+    },
+    "tb_llm_operators": {
+      "log": "tests/full_rtl/evidence/attention1_six_units/tb_llm_operators.log",
+      "sha256": "b1a8aa59c2d1f0adb97d90f771ed335e99c26a4e2a056ed524644a948f1c7bc7",
+      "design_units": {
+        "file": "tests/full_rtl/evidence/attention1_six_units/attention1_tb_llm_operators_design_units.json",
+        "sha256": "69df72709ed93b820a4a9c4e3c40149f1c67d553a4524d6ead369dbcc87e894c"
+      }
+    }
+  },
+  "simulator": "QuestaAlteraStarter2025.2",
+  "model": {
+    "scope": "Actual RAM simulation model only; no application execution",
+    "quartus_version": "25.1std.0 Build 1129 10/21/2025 SC Lite Edition",
+    "source": "C:\\altera_lite\\25.1std\\quartus\\eda\\sim_lib\\altera_mf.v",
+    "source_sha256": "2ae09f97f9606626da216e9eb91007beec3ebbe023c5b9415be472417fe49d5e",
+    "library": "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver",
+    "compiler_sha256": {
+      "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlib.exe": "cdf08c2c3665d020ac32a1a56da88687cc7b03e6d8ca32149243f6d07b707350",
+      "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlog.exe": "f3419a63d42323f11a61627a690dfc4f4877f7fa892a13cedffb4ddff83bc5d5"
+    },
+    "commands": [
+      [
+        "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlib.exe",
+        "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver"
+      ],
+      [
+        "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlog.exe",
+        "-work",
+        "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver",
+        "C:\\altera_lite\\25.1std\\quartus\\eda\\sim_lib\\altera_mf.v",
+        "-l",
+        "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\compile.log"
+      ]
+    ],
+    "compile_sha256": "20d08364edcfe5c0297826619a84151b7a764912a61d0d5001dbfe92226f0177",
+    "objects_sha256": {
+      "_info": "afeb4994ce35d5dbb484740a634db23c79969c1878b8c2ad7cde9f37d11c4cab",
+      "_lib.qdb": "ee8b849c2f3344d8a4e348eb72d3f25a2605c1f0b5c4b7944e4489da0354ffaa",
+      "_lib1_0.qdb": "38d68ede54d428b8ef95325610c8feaf8b9337aa69e7f73cb148f18b2e6137d7",
+      "_lib1_0.qpg": "85212b314a082c54f1f714a3baea253ca06b84321649e9f8e2521ce406af9bce",
+      "_lib1_0.qtl": "261fab8c6e922696d654402aaa001a92c9d3fc15376cf0166f37966172ebde50",
+      "_vmake": "d287f8a335408d3f94fea840ad628f2cbed3775952c49131049ef8f60fd337c9"
+    }
+  },
+  "runner_sources": {
+    "tests/full_rtl/memory_model.py": "501824c2466a31956c120cd574da1b9dbb3d7cdce43893023c499a9fffdf366e"
+  },
+  "compile_sha256": "0553a9316548daf85a2ffb3955910ac625dec2b73efccb51d8a8d623c7a789b8",
+  "initial_snapshot_sha256": "d67cb6c797f1560956e294344cc0655157a2269dac031aa33c351022866fcb7a",
+  "model_manifest_sha256": "173ca62a91b62feb03eee8a7a769065d6e021d0852b789196661ba555be4c078",
+  "graph": "RUNNING: same source/tests, actual RAM25.1 binding; no PASS claimed",
+  "runtime_warnings": 0,
+  "fixture_changes": "No test source or expected value change for early attention clear. Existing reset/fixture contracts retained, no suppressed errors.",
+  "reproduction_inputs": {
+    "archive_attention1_six.py": "295776a4f05dcb439e0e8cecd2d2156b5c63bf66f6b22e3de2aebaebdfb712f5",
+    "memory_model.py": "501824c2466a31956c120cd574da1b9dbb3d7cdce43893023c499a9fffdf366e",
+    "run_units.ps1": "28672093a173db4ea1e4e8166bc9cdbc8853151cba9063463fbf7990f54cd345",
+    "tb_graph.sv": "f3935e1049990dabcb066b7260b3363c0cce57de9567f0501c7904b51a9d26e9",
+    "tb_math.sv": "9a7befb14c6a8392952a14ea5ed858206f5287ff95eedd96716d7af9a4252ea4",
+    "tb_memory_ip.sv": "698fbbcb7199006cc49030d17a3b8d4b282d646e7ba736568bb63922dd9b149f",
+    "tb_operators.sv": "26d67ebf2a4b4d75faf6bf3ee252d268bdf96760f47b6ad7f59fb655cd93fabe",
+    "tb_protocol.sv": "417c4b8060d0f06bf845cf2d39d036c8af4d97ea8d60536715041cedd8a58cc2",
+    "tb_ram.sv": "4d40fea39efbf26f67db28c6ad4fde34f194603f57f4ee2f2fda6e0fc93ed0b1",
+    "tb_selection.sv": "9604220232f4dfe71a75f620c96159cec495ef68209ca550f06f88affe27d8f9"
+  },
+  "command": "./tests/full_rtl/run_units.ps1 -SimBin C:/altera_lite/25.1std/questa_fse/win64 -Questa -MemoryModelManifest tests/full_rtl/build/questa25_model/manifest.json -TimingManifest docs/verification/timing/fullrtl100_fanout2/manifest.json -WorkLibraryName attention1_questa_work -EvidenceTag attention1",
+  "reset_release_contract": "Async assert/two rising edges to release; operator fixture waits before all deposits/seeding. Exact 2/3/9 arithmetic stage checks and independent values retained."
+}

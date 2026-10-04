@@ -7,7 +7,7 @@ SRAM gồm 768 KiB parameter, 384 KiB KV và 9 KiB vectors; area là ưu tiên s
 correctness và timing. [Timing full top](docs/verification/timing/README.md)
 ghi đầy đủ lịch sử, constraints và critical paths. Parameter/KV/vector dùng
 IP RAM M10K qua adapter thay được bằng SRAM ASIC; đây là vendor IP duy nhất.
-Bản hiện tại34source có cả bảy nhóm regression PASS, gồm kiểm thử RAM thật và graph
+Bản trước fix clear attention có cả bảy nhóm regression PASS, gồm kiểm thử RAM thật và graph
 tự sinh token từ fixture. Fitting hoàn tất, timing fanout2 FAIL96,67MHz; chưa có bằng chứng full top
 đạt100MHz. Application pretrained chờ timing mọi corner đạt cho đúng source.
 
@@ -20,7 +20,7 @@ standard cells. Full-top A&S bằng Quartus Lite25.1std PASS0errors/12warnings;
 setup/hold/removal còn vi phạm. Logic6 cũng FAIL99,07MHz;logic7 FAIL96,04MHz. [Bảy nhóm unit](tests/full_rtl/evidence/logic6q5_all_units/results.json)
 đã PASS cho snapshot35source cũ,0warnings. Bản 33assets đã chuyển
 task/pipeline/LUT sang [RTL tường minh](docs/design/rtl_style.md); [cả 7 nhóm regression PASS](tests/full_rtl/evidence/explicit3_all_units/results.json), timing mới FAIL93,28MHz/setup/removal,
-Bản hiện tại34assets bỏ SIMD payload enable dư thừa và dùng hai FF reset release; cả bảy nhóm regression PASS. Timing fanout2 FAIL96,67MHz/setup+hold; recovery/removal đạt mọi corner. Chưa có100MHz PASS hoặc pretrained application.
+Bản trước fix clear attention34assets bỏ SIMD payload enable dư thừa và dùng hai FF reset release; cả bảy nhóm regression PASS. Timing fanout2 FAIL96,67MHz/setup+hold; recovery/removal đạt mọi corner. Chưa có100MHz PASS hoặc pretrained application.
 
 Core instruction-driven `matmulfree` và các kết quả dưới đây được giữ làm
 tài liệu của kiến trúc trước. Timing hoặc demo hybrid của core này không
@@ -66,3 +66,5 @@ Xem [cài đặt và chọn test](tests/README.md), [demo checkpoint](tests/mode
 | [docs](docs/README.md) | Tài liệu thiết kế, RTL guide, verification, demo và lịch sử |
 | [tests](tests/README.md) | Regression/reference, runners và demo export |
 | `quartus` | Project demo A&S; không quyết định kiến trúc ASIC |
+
+Current attention1 source moves accumulator clear to each head entry; all-seven regression and fresh full-top timing are pending. Preceding PASS results apply to their archived source hashes only.

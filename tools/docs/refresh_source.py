@@ -131,7 +131,9 @@ for source in sorted(RTL.iterdir()):
         if source.suffix in {".sv", ".v"}:
             pattern = re.compile(r"### \[Dòng (\d+)–(\d+): (.*?)\]\(<([^>]+)>\)\n\n<!-- source-range:\d+:\d+ -->\n```systemverilog\n(.*?)\n```", re.S)
             groups = list(pattern.finditer(doc))
-            old = [line for group in groups for line in group[5].splitlines()]
+            # A group ending on a blank source line must retain that line.
+            # splitlines() drops its trailing empty member and shifts boundaries.
+            old = [line for group in groups for line in group[5].split("\n")]
             if not groups:
                 raise ValueError(f"No excerpt groups: {source.name}")
             boundary = {0: 0, len(old): len(lines)}

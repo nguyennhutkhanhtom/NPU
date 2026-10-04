@@ -600,7 +600,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                         math_a_q[lane] <= query_q[lane * 24 +: 24];
                         math_b_q[lane] <= 32'($signed(second_q[lane * 24 +: 24]));
                     end
-                    op[A_EXP_STORE_IDX] : if (time_q == position_q) attention_acc_q[lane] <= 0;
+                    op[A_QUERY_IDX] : attention_acc_q[lane] <= 0;
                     op[A_WEIGHT_IDX] : begin
                         math_a_q[lane] <= second_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, probability_q};
                     end

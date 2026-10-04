@@ -2,7 +2,7 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [llm_soc.sv](<../../../Verilog%20Source%20code/llm_soc.sv>). **Số dòng:** 1031. **SHA-256:** `568811a3c366672ad57db38241f5f0344987f1390b0df1922f5eb835039fb14b`.
+**Source:** [llm_soc.sv](<../../../Verilog%20Source%20code/llm_soc.sv>). **Số dòng:** 1031. **SHA-256:** `51ef7ae59847a9b082916872fc3512dbc0d890011d5b8134c8dfccb0f8985811`.
 
 ## Khối này làm gì?
 
@@ -689,7 +689,7 @@ Registered addresses xuất hiện trước enable. Graph xử lý mọi prompt 
                         math_a_q[lane] <= query_q[lane * 24 +: 24];
                         math_b_q[lane] <= 32'($signed(second_q[lane * 24 +: 24]));
                     end
-                    op[A_EXP_STORE_IDX] : if (time_q == position_q) attention_acc_q[lane] <= 0;
+                    op[A_QUERY_IDX] : attention_acc_q[lane] <= 0;
                     op[A_WEIGHT_IDX] : begin
                         math_a_q[lane] <= second_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, probability_q};
                     end
