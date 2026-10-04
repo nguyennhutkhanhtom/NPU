@@ -95,12 +95,10 @@ frontend response. Parameter write ACK waits for leaf commit. Tests permit
 the expected data and tokens are unchanged. `O_FINISH` waits for queued
 vector/cache writes before reporting completion.
 
-The native helper now rejects protocol/selection/graph/application/all because
-it does not supply the actual Intel RAM-IP simulation model. It never silently
-changes USE_QUARTUS_MEMORY. Use ModelSim for the FPGA configuration.
-`merge_unit_evidence.py` can combine six exact-source ModelSim units and an
-independent ModelSim graph only after source/test/log hashes and actual Intel
-RAM model loading agree. Older [select3 units](evidence/select3_units/unit_results.json)
+The current Questa runner archives all seven groups and actual Intel RAM-IP
+elaboration bindings directly. Retired native/merge helpers are preserved in
+[cleanup history](../../docs/history/helper_cleanup1/manifest.json); they have
+no current runner callers. Older [select3 units](evidence/select3_units/unit_results.json)
 verify their archived pre-IP source and cannot gate this revision. Windows
 Application Control blocks some native executables; no policy bypass is used.
 

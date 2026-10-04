@@ -7,8 +7,8 @@ SRAM gồm 768 KiB parameter, 384 KiB KV và 9 KiB vectors; area là ưu tiên s
 correctness và timing. [Timing full top](docs/verification/timing/README.md)
 ghi đầy đủ lịch sử, constraints và critical paths. Parameter/KV/vector dùng
 IP RAM M10K qua adapter thay được bằng SRAM ASIC; đây là vendor IP duy nhất.
-Bản 33-source trước có cả bảy nhóm regression PASS, gồm kiểm thử RAM thật và graph
-tự sinh token từ fixture. Fitting mới hoàn tất, timing explicit2 FAIL93,28MHz; chưa có bằng chứng full top
+Bản hiện tại34source có cả bảy nhóm regression PASS, gồm kiểm thử RAM thật và graph
+tự sinh token từ fixture. Fitting hoàn tất, timing release1 FAIL91,61MHz; chưa có bằng chứng full top
 đạt100MHz. Application pretrained chờ timing mọi corner đạt cho đúng source.
 
 Revision hiện tại thay toàn bộ phép nhân datapath full/legacy bằng

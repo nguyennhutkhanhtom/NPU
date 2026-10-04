@@ -12,6 +12,7 @@ Thiết kế đang phát triển được mô tả trong [kiến trúc hiện h�
 | [Implementation review](../reviews/implementation_review.md) | Các lỗi từ bản v2 ban đầu và quá trình tích hợp/thống nhất RTL |
 | [History archive](history.zip) | 189 tài liệu/ảnh/công cụ lịch sử từ `research` và `review`, giữ nội dung nguyên vẹn |
 | [Unused-helper cleanup 02/10/2026](unused_cleanup_20261002.json) | 11 retired execution/migration files; hashes and recoverable Git commit |
+| [Unused-helper cleanup 04/10/2026](helper_cleanup1/manifest.json) | Two retired native/merge tools; byte-exact ZIP and SHA-256, current Questa runners retained |
 | [Unused-cache cleanup 02/10/2026](cache_cleanup_20261002.json) | Six untracked retired-demo caches,1.29GB freed; current model/assets/evidence retained |
 | [Cleanup manifest](cleanup_manifest.json) | Phân loại file, SHA-256 và thông tin đối chiếu archive |
 

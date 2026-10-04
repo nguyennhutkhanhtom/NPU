@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-04",
+  "authorization": "User requested removal of unused legacy/helper files; historical evidence must remain immutable.",
+  "scope": "Two retired active tools only; no RTL, test inputs, expected values or historical reports changed.",
+  "reason": "No current run_units/run_application caller. Native helper cannot run actual-IP graph and contains unreachable application code; old merger has native/dead branches and obsolete build-log assumptions. Current Questa runner records all seven logs and elaborated IP bindings directly.",
+  "archive": "helpers.zip",
+  "archive_sha256": "ae83d0af5b5f67284d2a115235649983c5943344192b711af3763baaa4860366",
+  "files": {
+    "tools/llm/compiled_sim.py": {
+      "sha256": "2357cd619f27bc0b7b15037a15c69494630c376da4654e40f4e62a74c95f8524",
+      "bytes": 8650
+    },
+    "tools/llm/merge_unit_evidence.py": {
+      "sha256": "f35d903bf225ce1d3222eefd38e4412ca3c4131274dc9bf1cbed1e76bfd013d2",
+      "bytes": 6933
+    }
+  },
+  "retained": "LUT generator, current Questa unit/application runners, exact-source all-seven evidence and all historical immutable tags. Git and ZIP retain removed helper originals."
+}

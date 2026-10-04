@@ -17,6 +17,12 @@ Thư mục này là source đang phát triển. Top toàn graph là `llm_soc.sv`
 
 ## Nhóm source
 
+- **Toàn graph:** `llm_soc`, `llm_math`, `llm_pkg`, các bảng exp/Gumbel, và `reset_release`; compute/controller không dùng vendor IP.
+- **SRAM toàn graph:** `llm_parameter_ram`, `llm_bank_ram`, `pipelined_word_ram`; chỉ leaf `quartus_word_ram` instantiate `altsyncram`. Xem ports/latency/collision/reset trong tài liệu full graph.
+- **Số học chung:** `logic_mul` dùng cây tích bit và compressor; divider/sqrt/rounding dùng logic portable.
+
+Những nhóm bên dưới còn được top legacy instantiate và có regression riêng:
+
 - **Control:** `matmulfree`, `PC`, `ins_mem`, `descriptor_file`.
 - **NORM/scalar:** `norm_dispatch`, `norm` (gồm `isqrt_u64`), `div`, `scale_compose`.
 - **Ternary:** `ternary_mul`, `acc_mul`, `postscale`.
@@ -24,6 +30,6 @@ Thư mục này là source đang phát triển. Top toàn graph là `llm_soc.sv`
 - **Memory:** `sram_256_wrapper`, `regfile`, `mem_mapping`; synchronous read/valid, data array không reset.
 - **Kiểu dữ liệu/số học:** `npu_pkg`; compile package trước các module.
 
-Các module pipeline/DDR cũ và helper được đánh dấu trạng thái riêng trong [bảng từng file](../docs/source_guide/blocks/README.md); top hiện hành không instantiate chúng. Không dùng snapshot trong archive để compile.
+Các controller/helper không có caller đã được dọn; [bảng từng file](../docs/source_guide/blocks/README.md) chỉ dẫn source hiện có. Giữ các module legacy còn được instantiate và kiểm thử. Không dùng snapshot trong archive để compile.
 
-Chạy regression từ thư mục gốc bằng `./tests/run.ps1 -Block All`. [Hướng dẫn test](../tests/README.md) mô tả tool, tùy chọn và kết quả. Quartus chỉ dùng để demo khả năng A&S; bản này chưa xác nhận timing/PPA hoặc binding SRAM ASIC.
+Chạy regression legacy từ thư mục gốc bằng `./tests/run.ps1 -Block All`; dùng [full RTL runner](../tests/full_rtl/README.md) cho `llm_soc`. Quartus dùng để demo synthesis/fitting/timing FPGA; chưa xác nhận PPA, SRAM views hoặc signoff ASIC.
