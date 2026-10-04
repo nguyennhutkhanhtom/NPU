@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — postscale_finish sau các register trong ternary_mul; postscale giữ interface tổ hợp cho kiểm tra.
 
-**Source:** [postscale.sv](<../../../Verilog%20Source%20code/postscale.sv>). **Số dòng:** 42. **SHA-256:** `128b264863531a01bcd427066e250d3d99ad1830b68aadb1f5889629856e8d24`.
+**Source:** [postscale.sv](<../../../Verilog%20Source%20code/postscale.sv>). **Số dòng:** 46. **SHA-256:** `b9cb61b7014c037c408340a8042b4c0862ed46997754d9b4dee40056835e7160`.
 
 ## Khối này làm gì?
 
@@ -51,10 +51,11 @@ Nét liền là dữ liệu, nét đứt là format/control. Hai module trong fi
 
 ## Các nhóm logic trong source
 
-### [Dòng 1–23: Interface postscale tổ hợp](<../../../Verilog%20Source%20code/postscale.sv#L1>)
+### [Dòng 1–26: Interface postscale tổ hợp](<../../../Verilog%20Source%20code/postscale.sv#L1>)
 
-<!-- source-range:1:23 -->
+<!-- source-range:1:26 -->
 ```systemverilog
+`default_nettype none
 module postscale (
     input logic signed [17:0] acc,
     input logic [23:0] scale_m,
@@ -68,8 +69,10 @@ module postscale (
     import npu_pkg::*;
     logic signed [41:0] product;
     logic signed [41:0] rounded;
+    logic_mul #(.A_W(18), .B_W(24), .OUT_W(42), .SIGNED_A(1), .SIGNED_B(0)) u_bit_mul
+        (.a(acc), .b(scale_m), .product(product));
     always_comb begin
-        product = $signed(acc) * $signed({1'b0, scale_m});
+
         rounded = rne_shift42(product, scale_r);
     end
     postscale_finish u_finish(.rounded(rounded), .bias(bias),
@@ -82,9 +85,9 @@ endmodule
 
 **Mục đích.** Wrapper giữ accumulator/M/r/bias ports như trước. Tích S42 được RNE bằng hàm đúng độ rộng; module finish thực hiện cộng bias/clamp. Wrapper không có clock hoặc handshake.
 
-### [Dòng 24–42: Bias adder S43 và saturation dùng chung](<../../../Verilog%20Source%20code/postscale.sv#L24>)
+### [Dòng 27–46: Bias adder S43 và saturation dùng chung](<../../../Verilog%20Source%20code/postscale.sv#L27>)
 
-<!-- source-range:24:42 -->
+<!-- source-range:27:46 -->
 ```systemverilog
 // ternary datapath. An S42 rounded product plus S32 bias fits exactly in S43.
 module postscale_finish (
@@ -105,6 +108,7 @@ module postscale_finish (
          : (biased > 43'sd32767 || biased < -43'sd32768);
     end
 endmodule
+`default_nettype wire
 ```
 
 **Mục đích.** Rounded S42 cộng bias S32 trong S43. Hai output được clamp song song; output_s32 chọn miền kiểm tra overflow. Engine registered và wrapper tổ hợp dùng đúng một implementation finish.

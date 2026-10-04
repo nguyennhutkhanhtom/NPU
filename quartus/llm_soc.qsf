@@ -42,33 +42,24 @@ set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/quartus_w
 # Memory IP is the sole vendor macro. Arithmetic maps into ordinary logic cells.
 set_global_assignment -name AUTO_DSP_RECOGNITION OFF
 set_global_assignment -name DSP_BLOCK_BALANCING "LOGIC ELEMENTS"
-# Ordinary differential input buffer feeds the direct global clock; no PLL,
-# SERDES or ALTLVDS IP. Fitter creates the physical clk(n) companion pin.
-# Demo requires a 100-MHz LVDS clock source; the 10-ns SDC is unchanged.
-set_instance_assignment -name IO_STANDARD LVDS -to clk
-# Demo electrical contract: 2.5-V single-ended outputs, 16-mA drive, fast slew.
-# Physical driver selection reduces pad delay; timing constraints are unchanged.
-set_instance_assignment -name IO_STANDARD "2.5 V" -to "host_rdata[*]"
-set_instance_assignment -name IO_STANDARD "2.5 V" -to "host_ready"
-set_instance_assignment -name IO_STANDARD "2.5 V" -to "running"
-set_instance_assignment -name IO_STANDARD "2.5 V" -to "ready"
-set_instance_assignment -name IO_STANDARD "2.5 V" -to "pc_debug[*]"
-set_instance_assignment -name IO_STANDARD "2.5 V" -to "instr_debug[*]"
-set_instance_assignment -name IO_STANDARD "2.5 V" -to "error"
-set_instance_assignment -name IO_STANDARD "2.5 V" -to "overflow_out"
-set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "host_rdata[*]"
-set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "host_ready"
-set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "running"
-set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "ready"
-set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "pc_debug[*]"
-set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "instr_debug[*]"
-set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "error"
-set_instance_assignment -name CURRENT_STRENGTH_NEW 16MA -to "overflow_out"
-set_instance_assignment -name SLEW_RATE 1 -to "host_rdata[*]"
-set_instance_assignment -name SLEW_RATE 1 -to "host_ready"
-set_instance_assignment -name SLEW_RATE 1 -to "running"
-set_instance_assignment -name SLEW_RATE 1 -to "ready"
-set_instance_assignment -name SLEW_RATE 1 -to "pc_debug[*]"
-set_instance_assignment -name SLEW_RATE 1 -to "instr_debug[*]"
-set_instance_assignment -name SLEW_RATE 1 -to "error"
-set_instance_assignment -name SLEW_RATE 1 -to "overflow_out"
+# Ordinary clock input and dedicated reset routing; no clock-generation IP.
+# Differential SDR output buffers reduce pad delay. Each output has a physical
+# negative companion; external host must receive a parallel LVDS bus. No
+# ALTLVDS, serializer, SERDES or PLL is used. This is a demo electrical contract,
+# not an assigned board pinout. The existing SDC remains unchanged.
+set_instance_assignment -name IO_STANDARD LVDS -to "host_rdata[*]"
+set_instance_assignment -name IO_STANDARD LVDS -to "host_ready"
+set_instance_assignment -name IO_STANDARD LVDS -to "running"
+set_instance_assignment -name IO_STANDARD LVDS -to "ready"
+set_instance_assignment -name IO_STANDARD LVDS -to "pc_debug[*]"
+set_instance_assignment -name IO_STANDARD LVDS -to "instr_debug[*]"
+set_instance_assignment -name IO_STANDARD LVDS -to "error"
+set_instance_assignment -name IO_STANDARD LVDS -to "overflow_out"
+
+# Portable gate-level bit-product tree, shared by full and legacy arithmetic.
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/logic_mul.sv"
+
+set_location_assignment PIN_AC18 -to clk
+set_location_assignment PIN_V28 -to rst_n
+set_instance_assignment -name IO_STANDARD "2.5 V" -to rst_n
+set_instance_assignment -name IO_STANDARD "2.5 V" -to clk

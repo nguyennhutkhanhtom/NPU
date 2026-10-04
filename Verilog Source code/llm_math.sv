@@ -8,11 +8,21 @@ module llm_math (
     output logic signed [55:0] product [0:31],
     output logic signed [60:0] sum
 );
-    // Byte products and pair sums split the logic-cell multiplier across edges.
+    // Bit-product compressor trees and pair sums split arithmetic across edges.
     logic [9:0] valid_q;
     logic signed [23:0] a_q [0:31];
     logic signed [31:0] b_q [0:31];
     logic signed [32:0] partial_q [0:31][0:3];
+    wire [32:0] partial_comb [0:31][0:3];
+    genvar mul_lane, mul_part;
+    generate
+    for (mul_lane = 0; mul_lane < 32; mul_lane = mul_lane + 1) begin : g_mul_lane
+        for (mul_part = 0; mul_part < 4; mul_part = mul_part + 1) begin : g_byte
+            logic_mul #(.A_W(24), .B_W(8), .OUT_W(33), .SIGNED_A(1), .SIGNED_B(mul_part == 3)) u_mul
+                (.a(a_q[mul_lane]), .b(b_q[mul_lane][(mul_part << 3) +: 8]), .product(partial_comb[mul_lane][mul_part]));
+        end
+    end
+    endgenerate
     logic signed [40:0] pair_q [0:31][0:1];
     logic signed [56:0] level1 [0:15];
     logic signed [57:0] level2 [0:7];
@@ -32,9 +42,8 @@ module llm_math (
             end
         if (valid_q[0])
             for (int i = 0; i < 32; i = i + 1) begin
-                for (int part = 0; part < 3; part = part + 1)
-                    partial_q[i][part] <= a_q[i] * $signed({1'b0, b_q[i][part * 8 +: 8]});
-                partial_q[i][3] <= a_q[i] * $signed(b_q[i][31:24]);
+                for (int part = 0; part < 4; part = part + 1)
+                    partial_q[i][part] <= partial_comb[i][part];
             end
         if (valid_q[1])
             for (int i = 0; i < 32; i = i + 1) begin

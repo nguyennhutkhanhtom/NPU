@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — core chính.
 
-**Source:** [matmulfree.sv](<../../../Verilog%20Source%20code/matmulfree.sv>). **Số dòng:** 572. **SHA-256:** `6b18f26a9779be75adcba42f83dabc1bdf5d225c2ab378d712e7950afb127c12`.
+**Source:** [matmulfree.sv](<../../../Verilog%20Source%20code/matmulfree.sv>). **Số dòng:** 572. **SHA-256:** `0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475`.
 
 ## Khối này làm gì?
 
@@ -543,7 +543,7 @@ Control/descriptor cần hai cạnh lên; SRAM/imem cần bốn cạnh lên từ
         for (integer i = 0; i < 8; i = i + 1) begin
             if (q_valid[i]) begin
                 if (ranges_overlap(int'(d_src0.base_word), ws_words(d_src0),
-                    int'(q_base[i]), (int'(q_length[i]) + 31) / 32))
+                    int'(q_base[i]), ((int'(q_length[i]) + 31) >> 5)))
                     input_has_runtime_scale = 1'b1;
             end
         end
@@ -568,7 +568,7 @@ Control/descriptor cần hai cạnh lên; SRAM/imem cần bốn cạnh lên từ
             for (integer i = 0;i < 8;i = i + 1) begin
                 if (q_valid[i]) begin
                     if (ws_wr_en && int'(ws_wr_addr) >= int'(q_base[i]) &&
-                        int'(ws_wr_addr) < int'(q_base[i]) + (int'(q_length[i]) + 31) / 32) q_valid[i] <= 0;
+                        int'(ws_wr_addr) < int'(q_base[i]) + ((int'(q_length[i]) + 31) >> 5)) q_valid[i] <= 0;
                     if (host_ws && host_we && !running && int'(host_addr[12:5]) >= int'(q_base[i]) &&
 ```
 
@@ -583,7 +583,7 @@ Control/descriptor cần hai cạnh lên; SRAM/imem cần bốn cạnh lên từ
 
 <!-- source-range:344:379 -->
 ```systemverilog
-                        int'(host_addr[12:5]) < int'(q_base[i]) + (int'(q_length[i]) + 31) / 32) q_valid[i] <= 0;
+                        int'(host_addr[12:5]) < int'(q_base[i]) + ((int'(q_length[i]) + 31) >> 5)) q_valid[i] <= 0;
                 end
             end
             if (host_desc && host_we && !running) q_valid <= 0;

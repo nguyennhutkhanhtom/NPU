@@ -1,3 +1,4 @@
+`default_nettype none
 module postscale (
     input logic signed [17:0] acc,
     input logic [23:0] scale_m,
@@ -11,8 +12,10 @@ module postscale (
     import npu_pkg::*;
     logic signed [41:0] product;
     logic signed [41:0] rounded;
+    logic_mul #(.A_W(18), .B_W(24), .OUT_W(42), .SIGNED_A(1), .SIGNED_B(0)) u_bit_mul
+        (.a(acc), .b(scale_m), .product(product));
     always_comb begin
-        product = $signed(acc) * $signed({1'b0, scale_m});
+
         rounded = rne_shift42(product, scale_r);
     end
     postscale_finish u_finish(.rounded(rounded), .bias(bias),
@@ -40,3 +43,4 @@ module postscale_finish (
          : (biased > 43'sd32767 || biased < -43'sd32768);
     end
 endmodule
+`default_nettype wire

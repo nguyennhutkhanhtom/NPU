@@ -53,11 +53,15 @@ module ternary_mul (
     logic signed [15:0] y16;
     logic scale_ov;
     logic signed [41:0] scale_product_q, scale_rounded_q;
+    wire [41:0] scale_product_comb;
+    logic_mul #(.A_W(18), .B_W(24), .OUT_W(42), .SIGNED_A(1), .SIGNED_B(0)) u_bit_mul
+        (.a(accumulator_q), .b(matrix_desc_q.scale_m), .product(scale_product_comb));
+
     // Payload registers have no asynchronous reset. SCALE is reachable only
     // after both stages have captured this row; reset cancels the control FSM.
     always_ff @(posedge clk) begin
         if (rst_n && state == SCALE_PRODUCT)
-            scale_product_q <= $signed(accumulator_q) * $signed({1'b0, matrix_desc_q.scale_m});
+            scale_product_q <= scale_product_comb;
         if (rst_n && state == SCALE_ROUND)
             scale_rounded_q <= rne_shift42(scale_product_q, matrix_desc_q.scale_r);
     end
@@ -75,7 +79,7 @@ module ternary_mul (
     // Validated K is 1..512, so each row occupies one to four weight words.
     // Shift/add bounds checking and a row pointer avoid two address multipliers.
     always_comb begin
-        weight_stride_next = 3'((int'(mat_desc.k_len) + 127) / 128);
+        weight_stride_next = 3'(((int'(mat_desc.k_len) + 127) >> 7));
         case (weight_stride_next)
             3'd1 : weight_extent = {2'b0, mat_desc.n_rows};
             3'd2 : weight_extent = {1'b0, mat_desc.n_rows, 1'b0};
@@ -93,7 +97,7 @@ module ternary_mul (
             logic [1:0] w;
             a = q_word[i * 8 +: 8];
             w = w_word[weight_bit_base + i * 2 +: 2];
-            if ((input_chunk_q * 32 + i) >= matrix_desc_q.k_len) terms[i] = 9'sh000;
+            if (((int'(input_chunk_q) << 5) + i) >= matrix_desc_q.k_len) terms[i] = 9'sh000;
             else begin
                 if (w == 2'b10) reserved_weight = 1;
                 case (w)
@@ -203,7 +207,7 @@ module ternary_mul (
                         q_desc.length != mat_desc.k_len || out_desc.length != mat_desc.n_rows ||
                         mat_desc.scale_r > 47 ||
                         int'(mat_desc.weight_base) + int'(weight_extent) > 1024 ||
-                        (!mat_desc.reserved[1] && int'(mat_desc.bias_base) + (int'(mat_desc.n_rows) + 7) / 8 > 1024) ||
+                        (!mat_desc.reserved[1] && int'(mat_desc.bias_base) + ((int'(mat_desc.n_rows) + 7) >> 3) > 1024) ||
                         ranges_overlap(int'(q_desc.base_word), ws_words(q_desc), int'(out_desc.base_word), ws_words(out_desc))) begin
                         format_error <= 1;
                         state <= FINISH;
@@ -248,7 +252,7 @@ module ternary_mul (
                 end
                 REQ_BIAS : state <= WAIT_BIAS;
                 WAIT_BIAS : if (param_rd_valid) begin
-                    bias <= param_rd_data[(output_row_q[2:0] * 32) +: 32];
+                    bias <= param_rd_data[((int'(output_row_q[2:0]) << 5)) +: 32];
                     state <= SCALE_PRODUCT;
                 end
                 SCALE_PRODUCT : state <= SCALE_ROUND;
@@ -256,7 +260,7 @@ module ternary_mul (
                 SCALE : begin
                     overflow <= overflow | scale_ov;
                     if (matrix_desc_q.output_s32) begin
-                        pack_buf[pack_count * 32 +: 32] <= y32;
+                        pack_buf[(int'(pack_count) << 5) +: 32] <= y32;
                         if (pack_count == 7 || output_row_q + 1 >= matrix_desc_q.n_rows) state <= WRITE;
                         else begin
                             pack_count <= pack_count + 1'b1;
@@ -266,7 +270,7 @@ module ternary_mul (
                             state <= REQ_CHUNK;
                         end
                     end else begin
-                        pack_buf[pack_count * 16 +: 16] <= y16;
+                        pack_buf[(int'(pack_count) << 4) +: 16] <= y16;
                         if (pack_count == 15 || output_row_q + 1 >= matrix_desc_q.n_rows) state <= WRITE;
                         else begin
                             pack_count <= pack_count + 1'b1;

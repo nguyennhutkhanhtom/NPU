@@ -1,0 +1,18 @@
+# vsim -c -onfinish exit -L altera_mf_ver -L D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work -lib D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work -l D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\tb_quartus_memory.log tb_quartus_memory -do "run -all; quit -f" 
+# Start time: 07:56:57 on Oct 04,2026
+# Loading sv_std.std
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.tb_quartus_memory
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.memory_ip_case
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.pipelined_word_ram
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.sram_word_tile
+# Loading D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\work.quartus_word_ram
+# Loading altera_mf_ver.altsyncram
+# Loading altera_mf_ver.altsyncram_body
+# Loading altera_mf_ver.ALTERA_DEVICE_FAMILIES
+# Loading altera_mf_ver.ALTERA_MF_MEMORY_INITIALIZATION
+# run -all
+# QUARTUS_MEMORY_PASS banks=4 checks=158 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_memory_ip.sv(88)
+#    Time: 2230 ns  Iteration: 1  Instance: /tb_quartus_memory
+# End time: 07:56:57 on Oct 04,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0

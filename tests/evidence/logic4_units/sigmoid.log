@@ -1,0 +1,13 @@
+# vsim -c -onfinish exit -l D:\2151097_Nguyen Nhut Khanh\tests\sim\sigmoid.log tests/sim/work.tb_sigmoid -do "run -all; quit -f" 
+# Start time: 08:03:55 on Oct 04,2026
+# Loading sv_std.std
+# Loading tests/sim/work.tb_sigmoid
+# Loading tests/sim/work.npu_pkg
+# Loading tests/sim/work.sigmoid
+# Loading tests/sim/work.logic_mul
+# run -all
+# SIGMOID_PASS cases=1638400 formats=25 protocol_checks=2 pipeline_reset_phases=6
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/tb_all.sv(560)
+#    Time: 131073480 ns  Iteration: 1  Instance: /tb_sigmoid
+# End time: 08:05:33 on Oct 04,2026, Elapsed time: 0:01:38
+# Errors: 0, Warnings: 0

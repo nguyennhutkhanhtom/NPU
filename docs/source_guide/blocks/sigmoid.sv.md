@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — gọi từ rowwise_op.
 
-**Source:** [sigmoid.sv](<../../../Verilog%20Source%20code/sigmoid.sv>). **Số dòng:** 102. **SHA-256:** `76a443665caa32e2bc61cf0dc3e330e39f25444deac28ff42b01793791e16348`.
+**Source:** [sigmoid.sv](<../../../Verilog%20Source%20code/sigmoid.sv>). **Số dòng:** 106. **SHA-256:** `d00693c9bf91ee834e49d75e276bc4fdca8af3b594fcf4b20a98a033c7b600a7`.
 
 ## Khối này làm gì?
 
@@ -58,9 +58,9 @@ MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ
 
 Các đoạn dưới đây bao phủ nguyên văn toàn bộ source hiện tại, theo thứ tự dòng.
 
-### [Dòng 1–30: Giao diện và ROM lookup dùng chung](<../../../Verilog%20Source%20code/sigmoid.sv#L1>)
+### [Dòng 1–34: Giao diện và ROM lookup dùng chung](<../../../Verilog%20Source%20code/sigmoid.sv#L1>)
 
-<!-- source-range:1:30 -->
+<!-- source-range:1:34 -->
 ```systemverilog
 module sigmoid (
     input logic clk, rst_n, start,
@@ -80,6 +80,10 @@ module sigmoid (
     logic signed [44:0] grid, x_extended;
     logic [9:0] difference_q;
     logic [33:0] product_q;
+    wire [33:0] product_comb;
+    logic_mul #(.A_W(24), .B_W(10), .OUT_W(34), .SIGNED_A(0), .SIGNED_B(0)) u_bit_mul
+        (.a(fraction_q), .b(difference_q), .product(product_comb));
+
     logic [16:0] integer_q;
     logic [23:0] remainder_q;
     logic round_up;
@@ -98,9 +102,9 @@ module sigmoid (
 
 **Tín hiệu chính.** `x_raw`, `frac_bits`, `index_q/index_next`, `fraction_q/fraction_next`, `rom_address/rom_data`, `y0/y1`, `busy/done/y_raw`.
 
-### [Dòng 31–67: Tọa độ và nội suy RNE](<../../../Verilog%20Source%20code/sigmoid.sv#L31>)
+### [Dòng 35–71: Tọa độ và nội suy RNE](<../../../Verilog%20Source%20code/sigmoid.sv#L35>)
 
-<!-- source-range:31:67 -->
+<!-- source-range:35:71 -->
 ```systemverilog
     always_comb begin
         // S16 at F_t=0..24 needs at most 45 signed coordinate bits,
@@ -122,7 +126,7 @@ module sigmoid (
         // Adjacent samples in the fixed LUT differ by at most 512.
         // Ten unsigned bits retain the exact slope, including the peak step.
     end
-    // Registered DSP operands/product; rounding uses the parity of the whole
+    // Registered logic-tree operands/product; rounding uses the parity of the whole
     // interpolated integer, not only the fractional increment.
     assign round_up = remainder_q > 24'h800000 ||
         (remainder_q == 24'h800000 && integer_q[0]);
@@ -132,7 +136,7 @@ module sigmoid (
             if (state == READ0) y0 <= rom_data;
             if (state == READ1) y1 <= rom_data;
             if (state == SLOPE) difference_q <= 10'(y1 - y0);
-            if (state == MULTIPLY) product_q <= difference_q * fraction_q;
+            if (state == MULTIPLY) product_q <= product_comb;
             if (state == ADD) begin
                 integer_q <= {1'b0, y0} + {7'h0, product_q[33:24]};
                 remainder_q <= product_q[23:0];
@@ -168,9 +172,9 @@ flowchart TB
     RNE --> Y["U16/F15 output storage"]
 ```
 
-### [Dòng 68–102: FSM lấy hai mẫu và chốt output](<../../../Verilog%20Source%20code/sigmoid.sv#L68>)
+### [Dòng 72–106: FSM lấy hai mẫu và chốt output](<../../../Verilog%20Source%20code/sigmoid.sv#L72>)
 
-<!-- source-range:68:102 -->
+<!-- source-range:72:106 -->
 ```systemverilog
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

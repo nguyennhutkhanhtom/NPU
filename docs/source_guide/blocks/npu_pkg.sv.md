@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — package chung.
 
-**Source:** [npu_pkg.sv](<../../../Verilog%20Source%20code/npu_pkg.sv>). **Số dòng:** 128. **SHA-256:** `f2914bb24c72644edbf2b57e5eabad9a4f3dbf88d2dd72b79285ccdf8e2b2d86`.
+**Source:** [npu_pkg.sv](<../../../Verilog%20Source%20code/npu_pkg.sv>). **Số dòng:** 128. **SHA-256:** `18385ff77706c505eb7c947c5b1f056b5d6230e6971a1cc09a4d823c27a7bcfd`.
 
 ## Khối này làm gì?
 
@@ -242,7 +242,7 @@ flowchart TB
 
     function automatic integer ws_words(input ws_desc_t d);
         case (d.fmt)
-            FMT_S8 : ws_words = (int'(d.length) + 31) / 32;
+            FMT_S8 : ws_words = ((int'(d.length) + 31) >> 5);
 ```
 
 **Mục đích.** Shift dương chia và RNE; shift âm nhân lũy thừa hai. Caller phải bảo đảm miền shift và operand không tràn.
@@ -256,8 +256,8 @@ flowchart TB
 
 <!-- source-range:113:128 -->
 ```systemverilog
-            FMT_S16, FMT_U16 : ws_words = (int'(d.length) + 15) / 16;
-            default : ws_words = (int'(d.length) + 7) / 8;
+            FMT_S16, FMT_U16 : ws_words = ((int'(d.length) + 15) >> 4);
+            default : ws_words = ((int'(d.length) + 7) >> 3);
         endcase
     endfunction
 

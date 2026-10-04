@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — datapath rowwise.
 
-**Source:** [rowwise_op.sv](<../../../Verilog%20Source%20code/rowwise_op.sv>). **Số dòng:** 240. **SHA-256:** `e9bdb936eb5a29bb8226d1d072b7f81e534b23f48d17fc7c493eabeacb9f6ad6`.
+**Source:** [rowwise_op.sv](<../../../Verilog%20Source%20code/rowwise_op.sv>). **Số dòng:** 248. **SHA-256:** `ce49a16c12069b0560986f7b8cf5bd0a187ce1d409f0ce0e69515bff11e1a559`.
 
 ## Khối này làm gì?
 
@@ -140,9 +140,9 @@ module rowwise_op (
 **Cách hoạt động.** source_a_q/source_b_q/state_word_q giữ giao dịch, result_shift_q S7 giữ shift và operation_q giữ opcode.
 
 
-### [Dòng 40–60: Payload số học và cờ](<../../../Verilog%20Source%20code/rowwise_op.sv#L40>)
+### [Dòng 40–68: Payload số học và cờ](<../../../Verilog%20Source%20code/rowwise_op.sv#L40>)
 
-<!-- source-range:40:60 -->
+<!-- source-range:40:68 -->
 ```systemverilog
 
     logic signed [16:0] lane_a[0:1], lane_b[0:1];
@@ -154,6 +154,14 @@ module rowwise_op (
     // outputs have registers, so lane selection and sign correction are
     // separate from multiplication. Arithmetic payloads need no reset.
     logic [31:0] magnitude_product_q[0:1];
+    wire [31:0] magnitude_product_comb[0:1];
+    genvar mul_lane;
+    generate
+    for (mul_lane = 0; mul_lane < 2; mul_lane = mul_lane + 1) begin : g_bit_mul
+        logic_mul #(.A_W(16), .B_W(16), .OUT_W(32), .SIGNED_A(0), .SIGNED_B(0)) u_mul
+            (.a(magnitude_a_q[mul_lane]), .b(magnitude_b_q[mul_lane]), .product(magnitude_product_comb[mul_lane]));
+    end
+    endgenerate
     logic [1:0] product_negative_q, lane_valid_q;
     logic signed [31:0] product[0:1];
     logic signed [32:0] recurrent_sum;
@@ -172,18 +180,18 @@ module rowwise_op (
 **Cách hoạt động.** product_negative_q khôi phục dấu sau multiplier; lane_valid_q và source_format_error_q đi cùng batch, không đọc lại input ngoài.
 
 
-### [Dòng 61–90: Chọn lane, magnitude và tổng REC](<../../../Verilog%20Source%20code/rowwise_op.sv#L61>)
+### [Dòng 69–98: Chọn lane, magnitude và tổng REC](<../../../Verilog%20Source%20code/rowwise_op.sv#L69>)
 
-<!-- source-range:61:90 -->
+<!-- source-range:69:98 -->
 ```systemverilog
-        candidate = source_a_q[element_index_q * 16 +: 16];
-        old_state = state_word_q[element_index_q * 16 +: 16];
-        gate = source_b_q[element_index_q * 16 +: 16];
+        candidate = source_a_q[(int'(element_index_q) << 4) +: 16];
+        old_state = state_word_q[(int'(element_index_q) << 4) +: 16];
+        gate = source_b_q[(int'(element_index_q) << 4) +: 16];
         complement = 16'h8000 - gate;
         source_format_error = 1'b0;
         for (integer j = 0; j < 2; j = j + 1) begin
-            lane_a[j] = source_a_unsigned_q ? $signed({1'b0, source_a_q[(element_index_q + j) * 16 +: 16]}) : $signed(source_a_q[(element_index_q + j) * 16 +: 16]);
-            lane_b[j] = source_b_unsigned_q ? $signed({1'b0, source_b_q[(element_index_q + j) * 16 +: 16]}) : $signed(source_b_q[(element_index_q + j) * 16 +: 16]);
+            lane_a[j] = source_a_unsigned_q ? $signed({1'b0, source_a_q[((int'(element_index_q) + j) << 4) +: 16]}) : $signed(source_a_q[((int'(element_index_q) + j) << 4) +: 16]);
+            lane_b[j] = source_b_unsigned_q ? $signed({1'b0, source_b_q[((int'(element_index_q) + j) << 4) +: 16]}) : $signed(source_b_q[((int'(element_index_q) + j) << 4) +: 16]);
             multiply_a[j] = '0;
             multiply_b[j] = '0;
             if (operation_q == OP_MUL && element_index_q + j < element_count_q) begin
@@ -213,9 +221,9 @@ module rowwise_op (
 **Cách hoạt động.** Các kết quả tổ hợp chỉ được consume ở LOAD hoặc RAW tương ứng. Gate raw lớn hơn 0x8000 báo format_error; ReLU có quy tắc signed riêng.
 
 
-### [Dòng 91–132: Chốt operand, product, raw result và RNE](<../../../Verilog%20Source%20code/rowwise_op.sv#L91>)
+### [Dòng 99–140: Chốt operand, product, raw result và RNE](<../../../Verilog%20Source%20code/rowwise_op.sv#L99>)
 
-<!-- source-range:91:132 -->
+<!-- source-range:99:140 -->
 ```systemverilog
     // uninitialized arithmetic registers cannot reach architectural outputs.
     always_ff @(posedge clk) begin
@@ -227,7 +235,7 @@ module rowwise_op (
         if (rst_n && busy) begin
             case (state)
                 LOAD : begin
-                    sig_x_q <= source_a_q[element_index_q * 16 +: 16];
+                    sig_x_q <= source_a_q[(int'(element_index_q) << 4) +: 16];
                     source_format_error_q <= source_format_error;
                     for (integer j = 0; j < 2; j = j + 1) begin
                         lane_a_q[j] <= lane_a[j];
@@ -239,7 +247,7 @@ module rowwise_op (
                     end
                 end
                 MULTIPLY : for (integer j = 0; j < 2; j = j + 1)
-                    magnitude_product_q[j] <= magnitude_a_q[j] * magnitude_b_q[j];
+                    magnitude_product_q[j] <= magnitude_product_comb[j];
                 RAW : for (integer j = 0; j < 2; j = j + 1) begin
                     case (operation_q)
                         OP_ADD : raw_value_q[j] <= 33'(lane_a_q[j]) + 33'(lane_b_q[j]);
@@ -288,34 +296,34 @@ flowchart TB
 ```
 
 
-### [Dòng 133–164: Saturation, tail và pack](<../../../Verilog%20Source%20code/rowwise_op.sv#L133>)
+### [Dòng 141–172: Saturation, tail và pack](<../../../Verilog%20Source%20code/rowwise_op.sv#L141>)
 
-<!-- source-range:133:164 -->
+<!-- source-range:141:172 -->
 ```systemverilog
         lane_format_error = source_format_error_q;
         for (integer j = 0; j < 2; j = j + 1) begin
             if (lane_valid_q[j]) begin
                 if (destination_unsigned_q && operation_q != OP_RELU) begin
                     if (scaled_q[j] < 0) begin
-                        result_buffer_next[(element_index_q + j) * 16 +: 16] = 0;
+                        result_buffer_next[((int'(element_index_q) + j) << 4) +: 16] = 0;
                         lane_overflow = 1'b1;
                     end else if (scaled_q[j] > 64'sh0000_0000_0000_8000) begin
-                        result_buffer_next[(element_index_q + j) * 16 +: 16] = 16'h8000;
+                        result_buffer_next[((int'(element_index_q) + j) << 4) +: 16] = 16'h8000;
                         lane_overflow = 1'b1;
-                    end else result_buffer_next[(element_index_q + j) * 16 +: 16] = scaled_q[j][15:0];
+                    end else result_buffer_next[((int'(element_index_q) + j) << 4) +: 16] = scaled_q[j][15:0];
                 end else begin
-                    result_buffer_next[(element_index_q + j) * 16 +: 16] = sat_s16(scaled_q[j]);
+                    result_buffer_next[((int'(element_index_q) + j) << 4) +: 16] = sat_s16(scaled_q[j]);
                     if (scaled_q[j] > 64'sh0000_0000_0000_7fff || scaled_q[j] < - 64'sh0000_0000_0000_8000) lane_overflow = 1'b1;
                 end
             end
         end
         if (operation_q == OP_SIG) begin
             result_buffer_next = result_buffer_q;
-            result_buffer_next[element_index_q * 16 +: 16] = sig_y;
+            result_buffer_next[(int'(element_index_q) << 4) +: 16] = sig_y;
         end
         if (operation_q == OP_REC) begin
             result_buffer_next = result_buffer_q;
-            result_buffer_next[element_index_q * 16 +: 16] = sat_s16(scaled_q[0]);
+            result_buffer_next[(int'(element_index_q) << 4) +: 16] = sat_s16(scaled_q[0]);
             lane_overflow = scaled_q[0] > 64'sh0000_0000_0000_7fff || scaled_q[0] < - 64'sh0000_0000_0000_8000;
         end
     end
@@ -331,9 +339,9 @@ flowchart TB
 **Cách hoạt động.** result_buffer_next mặc định giữ buffer hiện tại, lane_overflow được gom. Tail không được ghi và buffer khởi tạo zero ở start.
 
 
-### [Dòng 165–183: Reset control và output](<../../../Verilog%20Source%20code/rowwise_op.sv#L165>)
+### [Dòng 173–191: Reset control và output](<../../../Verilog%20Source%20code/rowwise_op.sv#L173>)
 
-<!-- source-range:165:183 -->
+<!-- source-range:173:191 -->
 ```systemverilog
             done <= 0;
             overflow <= 0;
@@ -361,9 +369,9 @@ flowchart TB
 **Cách hoạt động.** Không cần reset payload để bảo đảm output kiến trúc sạch: IDLE không consume và giao dịch mới phải qua LOAD/MULTIPLY/RAW/ROUND.
 
 
-### [Dòng 184–207: Nhận start và từ chối cấu hình](<../../../Verilog%20Source%20code/rowwise_op.sv#L184>)
+### [Dòng 192–215: Nhận start và từ chối cấu hình](<../../../Verilog%20Source%20code/rowwise_op.sv#L192>)
 
-<!-- source-range:184:207 -->
+<!-- source-range:192:215 -->
 ```systemverilog
                 destination_unsigned_q <= dst_unsigned;
                 element_count_q <= valid_elems;
@@ -396,9 +404,9 @@ flowchart TB
 **Cách hoạt động.** Shift của REC cố định 15; MUL dùng F_A+F_B−F_dst; ADD/SUB/ReLU dùng F_A−F_dst. Dải signed 7 bit đủ các format được phép.
 
 
-### [Dòng 208–224: Tiến pha và handshake SIG](<../../../Verilog%20Source%20code/rowwise_op.sv#L208>)
+### [Dòng 216–232: Tiến pha và handshake SIG](<../../../Verilog%20Source%20code/rowwise_op.sv#L216>)
 
-<!-- source-range:208:224 -->
+<!-- source-range:216:232 -->
 ```systemverilog
                     ROUND : state <= PACK;
                     SIG_WAIT : if (sig_done) begin
@@ -424,9 +432,9 @@ flowchart TB
 **Cách hoạt động.** sig_x_q giữ ổn định khi sigmoid busy. LOAD tận dụng khoảng trống done/start giữa các lane; latency SIG tăng một clock mỗi word so với bản trước.
 
 
-### [Dòng 225–240: PACK, gom cờ và kết thúc](<../../../Verilog%20Source%20code/rowwise_op.sv#L225>)
+### [Dòng 233–248: PACK, gom cờ và kết thúc](<../../../Verilog%20Source%20code/rowwise_op.sv#L233>)
 
-<!-- source-range:225:240 -->
+<!-- source-range:233:248 -->
 ```systemverilog
                         if (element_index_q + (operation_q == OP_REC ? 1 : 2) >= element_count_q || lane_format_error) begin
                             result_word <= result_buffer_next;

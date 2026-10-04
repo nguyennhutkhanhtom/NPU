@@ -12,8 +12,12 @@ module scale_compose (
     typedef enum logic [2:0] {IDLE, MULTIPLY, SELECT_SHIFT, SHIFT, DIV_START, DIV_WAIT, FINISH} state_t;
     state_t state;
     logic [47:0] numerator_base;
-    logic [5:0] base_r, candidate;
+    wire [47:0] product_comb;
     logic [23:0] factor_q, quant_q;
+    logic_mul #(.A_W(24), .B_W(24), .OUT_W(48), .SIGNED_A(0), .SIGNED_B(0)) u_bit_mul
+        (.a(factor_q), .b(quant_q), .product(product_comb));
+
+    logic [5:0] base_r, candidate;
     logic [47:0] positive_fit;
     logic signed [6:0] selected_shift, shift_q;
     logic signed [7:0] target_r;
@@ -49,7 +53,7 @@ module scale_compose (
         rounded = {1'b0, quotient} + {48'h0000_0000_0000, round_up};
     end
     always_ff @(posedge clk) begin
-        if (rst_n && state == MULTIPLY) numerator_base <= factor_q * quant_q;
+        if (rst_n && state == MULTIPLY) numerator_base <= product_comb;
         if (rst_n && state == SHIFT) begin
             if (shift_q >= 0) begin
                 numerator <= numerator_base << $unsigned(shift_q);

@@ -65,3 +65,5 @@
 **/node_modules/
 /tools/docs/.npm-cache/
 /tools/docs/output/
+# Isolated Quartus database; canonical QSF/QPF/SDC are copied byte-exact.
+/quartus_logic5/

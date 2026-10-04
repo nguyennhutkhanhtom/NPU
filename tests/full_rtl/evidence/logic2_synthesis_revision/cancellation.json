@@ -1,0 +1,5 @@
+{
+  "status": "CANCELLED_FOR_SYNTHESIS_STYLE",
+  "reason": "Quartus 25.1 requires explicit generate regions. Five groups passed; operators cancelled without assertion failure. Graph pending.",
+  "utc": "2026-10-04T00:55:50.3317309Z"
+}

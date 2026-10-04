@@ -1,0 +1,5 @@
+{
+  "status": "CANCELLED_FOR_WARNING_FIX",
+  "reason": "Remove dead instance with implicit 1-bit nets in legacy postscale_finish; no expected-value changes.",
+  "utc": "2026-10-04T01:02:51.0097625Z"
+}

@@ -17,6 +17,13 @@ GUIDE = ROOT / "docs/source_guide"
 RTL = ROOT / "Verilog Source code"
 
 NEW = {
+    "logic_mul.sv": (
+        "Portable bit-product compressor tree", "Multiplier tổ hợp từ AND/XOR/OR/NOT, dịch hằng và một bộ cộng cuối. Không dùng toán tử nhân/chia hoặc vendor arithmetic IP. A/B có signedness độc lập; OUT_W lấy modulo 2^OUT_W đúng với cắt độ rộng RTL. Callers giữ nguyên register, valid, reset và latency. Bit dấu B mang trọng số âm bằng complemented row cộng correction một; A được sign/zero extend trước khi dịch.",
+        "A[Sign or zero extend A] --> BIT[AND with each B bit and constant shift]\n    B[B bits and sign bit] --> BIT\n    BIT --> CSA[XOR sum and majority carry shifted left]\n    CSA --> TREE[Compress three rows into two per level]\n    TREE --> ADD[One final carry-propagate adder]\n    ADD --> OUT[Low OUT_W product bits]",
+        [(1, "Contract and independent signedness", "Payload combinational, không reset/handshake riêng. ASIC map cùng module vào standard cells; không cần technology branch."),
+         (16, "Elaboration geometry", "Đếm rows bằng loop hằng, không tạo divider hay counter runtime. Các genvar tạo hierarchy cố định."),
+         (38, "Partial products and carry-save compression", "Unsigned bits góp A dịch trái; signed top bit góp -A dịch trái. Correction bù cộng một; compressor giữ tổng modulo và không có carry chain ngang mỗi level."),
+         (72, "Final sum", "Hai rows còn lại cộng bằng adder thông thường; OUT_W phải dương. Cắt bit cao có chủ ý, caller chịu trách nhiệm saturation/RNE sau product.")]),
     "quartus_word_ram.sv": (
         "FPGA memory technology binding", "IP duy nhất của Quartus trong graph là altsyncram M10K. Một read và một write dùng chung clock, raw read một cạnh; OLD_DATA khi cùng địa chỉ. Storage/output không reset, không khởi tạo. ASIC thay module này phía sau adapter, giữ nguyên interface và contract.",
         "WR[Write address data enable] --> IP[altsyncram M10K 1R 1W]\n    RD[Read address enable] --> IP\n    CLK[Common clock] --> IP\n    IP --> Q[Raw read after one edge]\n    CONTRACT[OLD_DATA and no storage reset] -.-> IP",
@@ -93,6 +100,15 @@ def save(path, text):
 
 manifest = json.loads((GUIDE / "source_manifest.json").read_text(encoding="utf-8"))
 entries = {entry["file"]: entry for entry in manifest["files"]}
+removed = [name for name in entries if not (RTL / name).is_file()]
+for name in removed:
+    del entries[name]
+    document = GUIDE / "blocks" / (name + ".md")
+    # Delete only an exact obsolete source-guide page under the guide directory.
+    if document.resolve().parent != (GUIDE / "blocks").resolve():
+        raise ValueError("Invalid obsolete source-guide path")
+    if document.is_file():
+        document.unlink()
 for source in sorted(RTL.iterdir()):
     if source.suffix not in {".sv", ".v", ".svh", ".mem"}:
         continue
@@ -155,6 +171,8 @@ manifest["files"] = list(entries.values())
 save(GUIDE / "source_manifest.json", json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
 index_path = GUIDE / 'blocks/README.md'
 index = index_path.read_text(encoding='utf-8')
+for name in removed:
+    index = re.sub(r'^\| \[' + re.escape(name) + r'\].*\n', '', index, flags=re.M)
 for name, entry in entries.items():
     row_pattern = re.compile(r'^\| \[' + re.escape(name) + r'\].*$', re.M)
     found = row_pattern.search(index)

@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — chung cho parameter và workspace.
 
-**Source:** [sram_256_wrapper.sv](<../../../Verilog%20Source%20code/sram_256_wrapper.sv>). **Số dòng:** 101. **SHA-256:** `71f041b5cb800a98075849e16376a2723b952795f4b1bb3503daf96b44a13138`.
+**Source:** [sram_256_wrapper.sv](<../../../Verilog%20Source%20code/sram_256_wrapper.sv>). **Số dòng:** 101. **SHA-256:** `7c17702a2fa1c9a2baed950aff5e687f2981a07206ea3582e05659c6690e968a`.
 
 ## Khối này làm gì?
 
@@ -133,7 +133,7 @@ module sram_256_wrapper #(
 
     assign rd_data = read_row_q;
     assign rd_valid = read_valid_q && !response_host_q;
-    assign host_rdata = read_row_q[response_lane_q * 32 +: 32];
+    assign host_rdata = read_row_q[(int'(response_lane_q) << 5) +: 32];
     // Both pipeline stages must belong to the current held request. A write
     // or idle cycle invalidates an earlier response, including the same address.
     assign host_rvalid = host_en && !host_we && read_valid_q && response_host_q &&

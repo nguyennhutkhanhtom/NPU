@@ -26,7 +26,10 @@ module llm_parameter_ram #(
     logic host_read_valid_q, host_write_valid_q;
     logic [ADDR_W + 2:0] response_address_q;
     wire read_request = rd_en || host_read_req;
-    wire [ADDR_W - 1:0] read_address = host_read_req ? host_addr[ADDR_W + 2:3] : rd_addr;
+    // Host and compute reads are mutually exclusive under top arbitration.
+    // The registered compute owner selects payload; raw host cancellation
+    // affects validity/enables without driving the wide address mux.
+    wire [ADDR_W - 1:0] read_address = rd_en ? rd_addr : host_addr[ADDR_W + 2:3];
     assign rd_data = read_row;
     assign rd_valid = read_valid_q[LAST_READ] && !read_host_q[LAST_READ];
     assign host_rvalid = host_active && (host_we ? host_write_valid_q :
@@ -55,7 +58,7 @@ module llm_parameter_ram #(
             read_address_q[stage] <= read_address_q[stage - 1];
         if (read_valid_q[LAST_READ] && read_host_q[LAST_READ]) begin
             response_address_q <= read_address_q[LAST_READ];
-            host_rdata <= read_row[read_address_q[LAST_READ][2:0] * 32 +: 32];
+            host_rdata <= read_row[(int'(read_address_q[LAST_READ][2:0]) << 5) +: 32];
         end
     end
     genvar lane;

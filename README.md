@@ -21,6 +21,16 @@ setup/hold/recovery. Pipeline chọn ternary, exp delta, clamp và enable KV c�
 đi trực tiếp tới GCLK, không PLL/SERDES, chưa giải quyết clock/pad/reset timing.
 Application pretrained chờ đủ gate source/config hiện tại và unit tests.
 
+Revision hiện tại thay toàn bộ phép nhân datapath full/legacy bằng
+[`logic_mul`](docs/source_guide/blocks/logic_mul.sv.md): AND/XOR/OR, dịch và cộng,
+không dùng toán tử nhân/chia hoặc arithmetic IP. Divider/sqrt dùng dịch/trừ.
+[ASIC portability](docs/design/asic_portability.md) quy định boundary SRAM và
+standard cells. Full-top A&S bằng Quartus Lite25.1std PASS0errors/12warnings;
+Fitter/all-corner STA của `fullrtl100_logic5` còn pending. Legacy regression
+đúng35source hashes PASS10nhóm với0runtimewarnings. QSF hiện dùng clock2.5V
+và output LVDS parallel qua buffer thường, không serializer/PLL; yêu cầu host
+receiver differential. Chưa có bằng chứng full-top đạt100MHz.
+
 Core instruction-driven `matmulfree` và các kết quả dưới đây được giữ làm
 tài liệu của kiến trúc trước. Timing hoặc demo hybrid của core này không
 thay thế bằng chứng toàn graph.

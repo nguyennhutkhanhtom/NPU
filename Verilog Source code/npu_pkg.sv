@@ -109,9 +109,9 @@ package npu_pkg;
 
     function automatic integer ws_words(input ws_desc_t d);
         case (d.fmt)
-            FMT_S8 : ws_words = (int'(d.length) + 31) / 32;
-            FMT_S16, FMT_U16 : ws_words = (int'(d.length) + 15) / 16;
-            default : ws_words = (int'(d.length) + 7) / 8;
+            FMT_S8 : ws_words = ((int'(d.length) + 31) >> 5);
+            FMT_S16, FMT_U16 : ws_words = ((int'(d.length) + 15) >> 4);
+            default : ws_words = ((int'(d.length) + 7) >> 3);
         endcase
     endfunction
 

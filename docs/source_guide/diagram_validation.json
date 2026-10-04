@@ -1,5 +1,5 @@
 {
-  "verified_date": "2026-10-02",
+  "verified_date": "2026-10-04",
   "mermaid_version": "11.17.2",
   "scope": "Mermaid parse and render of every diagram in docs Markdown and the repository README. This records diagram evidence only; RTL regression and synthesis evidence are recorded separately.",
   "diagrams": [
@@ -67,15 +67,6 @@
       "status": "rendered"
     },
     {
-      "file": "docs/source_guide/blocks/addsub.sv.md",
-      "ordinal": 0,
-      "source_sha256": "c59b3173072d7d666961d0291728c6230af9bfb50a26e3e2a55b7fd1ee728c34",
-      "width": 1127,
-      "height": 258,
-      "nodes": 10,
-      "status": "rendered"
-    },
-    {
       "file": "docs/source_guide/blocks/banked_word_ram.sv.md",
       "ordinal": 0,
       "source_sha256": "d6591f4e583d695fc4b52fb1fa1490e8c8db066916e0fce9e2ec79400bdefaf5",
@@ -91,15 +82,6 @@
       "width": 672,
       "height": 415,
       "nodes": 8,
-      "status": "rendered"
-    },
-    {
-      "file": "docs/source_guide/blocks/de_reg.sv.md",
-      "ordinal": 0,
-      "source_sha256": "ac2c1090da0df1a472d8562aeaf5f6e6dad31d57355a84c3e7c805bff67ef99f",
-      "width": 880,
-      "height": 282,
-      "nodes": 5,
       "status": "rendered"
     },
     {
@@ -127,33 +109,6 @@
       "width": 1011,
       "height": 670,
       "nodes": 8,
-      "status": "rendered"
-    },
-    {
-      "file": "docs/source_guide/blocks/em_reg.sv.md",
-      "ordinal": 0,
-      "source_sha256": "3699ffc3975f593013b286a10f630b956d7bdece918b2a6827f6ffe1ae1dda6d",
-      "width": 880,
-      "height": 306,
-      "nodes": 5,
-      "status": "rendered"
-    },
-    {
-      "file": "docs/source_guide/blocks/exp.sv.md",
-      "ordinal": 0,
-      "source_sha256": "5cc14bd3b310215f80790ebc0be6af9f513c08548924ff27d3feb307455945d9",
-      "width": 447,
-      "height": 200,
-      "nodes": 3,
-      "status": "rendered"
-    },
-    {
-      "file": "docs/source_guide/blocks/fd_reg.sv.md",
-      "ordinal": 0,
-      "source_sha256": "9f7562ae2130ddbfb899c0d50f5ccab37aeacb73b809a8f1392ca204a1d72430",
-      "width": 873,
-      "height": 258,
-      "nodes": 5,
       "status": "rendered"
     },
     {
@@ -220,6 +175,15 @@
       "status": "rendered"
     },
     {
+      "file": "docs/source_guide/blocks/logic_mul.sv.md",
+      "ordinal": 0,
+      "source_sha256": "6ec7fcdb48990e8fc368ed9677e1d58bf002ba6658bc38b18c76a0f129290784",
+      "width": 444,
+      "height": 611,
+      "nodes": 7,
+      "status": "rendered"
+    },
+    {
       "file": "docs/source_guide/blocks/matmul_wrap.sv.md",
       "ordinal": 0,
       "source_sha256": "b9d5087dfe8351cfe031e2aeb15534f88027bbda2baf8e7ea08f7e35aa22a3d6",
@@ -256,24 +220,6 @@
       "status": "rendered"
     },
     {
-      "file": "docs/source_guide/blocks/mem_burst.v.md",
-      "ordinal": 0,
-      "source_sha256": "28c8398ea901b9f332f049b21b4b6c66ccea384cf577cdd26a7107fdfec84f53",
-      "width": 1549,
-      "height": 898,
-      "nodes": 7,
-      "status": "rendered"
-    },
-    {
-      "file": "docs/source_guide/blocks/mem_burst.v.md",
-      "ordinal": 1,
-      "source_sha256": "5f6dd12ce449d7b6a165ea64eef13e954b9bc5645e7728b45d30df03dcce9e5e",
-      "width": 1378,
-      "height": 454,
-      "nodes": 9,
-      "status": "rendered"
-    },
-    {
       "file": "docs/source_guide/blocks/mem_mapping.sv.md",
       "ordinal": 0,
       "source_sha256": "32285283e3cfa9411aa0bbc869c85ccb3ba84c626395c126ce77c7a0b36d9e69",
@@ -289,15 +235,6 @@
       "width": 733,
       "height": 742,
       "nodes": 13,
-      "status": "rendered"
-    },
-    {
-      "file": "docs/source_guide/blocks/mw_reg.sv.md",
-      "ordinal": 0,
-      "source_sha256": "20d600a30793bb8361f133f01354d542158302da90abd75dbfb17b006a9a205b",
-      "width": 880,
-      "height": 282,
-      "nodes": 5,
       "status": "rendered"
     },
     {

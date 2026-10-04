@@ -4,7 +4,7 @@
 
 **Trạng thái:** Đang dùng — điều phối rowwise.
 
-**Source:** [rowwise_dispatch.sv](<../../../Verilog%20Source%20code/rowwise_dispatch.sv>). **Số dòng:** 166. **SHA-256:** `4fb73e52c6fc0afe70277b9e1d5a8817cbac0d1465e691d8801581c5444d1ae2`.
+**Source:** [rowwise_dispatch.sv](<../../../Verilog%20Source%20code/rowwise_dispatch.sv>). **Số dòng:** 166. **SHA-256:** `e0f7cb0088af29afe233478a72f4ef9aab0676f2a24d56903b7f35261a6b3543`.
 
 ## Khối này làm gì?
 
@@ -126,7 +126,7 @@ module rowwise_dispatch (
         if (dst_desc.fmt == FMT_U16 && dst_desc.frac_bits != 15) invalid = 1;
         if (a_desc.base_word != dst_desc.base_word &&
             ranges_overlap(int'(a_desc.base_word), ws_words(a_desc), int'(dst_desc.base_word), ws_words(dst_desc))) invalid = 1;
-        valid_elems = (int'(source_a_desc_q.length) - int'(word_index_q) * 16 >= 16) ? 5'd16 : 5'(int'(source_a_desc_q.length) - int'(word_index_q) * 16);
+        valid_elems = (int'(source_a_desc_q.length) - (int'(word_index_q) << 4) >= 16) ? 5'd16 : 5'(int'(source_a_desc_q.length) - (int'(word_index_q) << 4));
     end
 ```
 
@@ -248,7 +248,7 @@ module rowwise_dispatch (
                     destination_desc_q <= dst_desc;
                     operation_q <= op;
                     word_index_q <= 0;
-                    word_count_q <= 8'((int'(a_desc.length) + 15) / 16);
+                    word_count_q <= 8'(((int'(a_desc.length) + 15) >> 4));
                     busy <= 1;
                     overflow <= 0;
                     format_error <= invalid;

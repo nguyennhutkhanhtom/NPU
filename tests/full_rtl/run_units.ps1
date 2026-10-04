@@ -1,5 +1,7 @@
 param([string]$SimBin='C:/intelFPGA/20.1/modelsim_ase/win32aloem',
-      [string]$RtlDir='Verilog Source code')
+      [string]$RtlDir='Verilog Source code',
+      [switch]$UnitsOnly,
+      [ValidatePattern('^[a-z][a-z0-9_-]{0,63}$')][string]$EvidenceTag='')
 $ErrorActionPreference='Stop'
 $repo=Split-Path (Split-Path $PSScriptRoot)
 $build=Join-Path $PSScriptRoot 'build'
@@ -13,8 +15,13 @@ $testHashes=[ordered]@{}
 Get-ChildItem -LiteralPath $PSScriptRoot -File | Where-Object {$_.Name -like 'tb_*.sv' -or $_.Name -eq 'run_units.ps1'} | Sort-Object Name | ForEach-Object {
     $testHashes[$_.Name]=(Get-FileHash -LiteralPath $_.FullName).Hash.ToLower()
 }
-[ordered]@{status='RUNNING';scope='Synthetic units and graph only';rtl_dir=$rtl;rtl_sources=$hashes;test_sources=$testHashes} |
+$startedUtc=[DateTime]::UtcNow
+if (!$EvidenceTag) {$EvidenceTag='run_'+$startedUtc.ToString('yyyyMMdd_HHmmss')}
+$initialSnapshot=Join-Path $build ($EvidenceTag+'_modelsim_start.json')
+if (Test-Path -LiteralPath $initialSnapshot) {throw 'Initial evidence tag already exists; choose a new EvidenceTag'}
+[ordered]@{status='RUNNING';scope='Synthetic units and graph only';started_utc=$startedUtc.ToString('o');rtl_dir=$rtl;rtl_sources=$hashes;test_sources=$testHashes} |
     ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $PSScriptRoot 'unit_results.json') -Encoding utf8
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'unit_results.json') -Destination $initialSnapshot
 $evidence=[ordered]@{}
 try {
 $packages=@('npu_pkg.sv','llm_pkg.sv')
@@ -28,7 +35,9 @@ $library=Join-Path $build 'work'
 if($LASTEXITCODE -ne 0) {throw 'Cannot create unit test library'}
 & "$SimBin/vlog.exe" -sv -svinputport=var -work $library "+incdir+$rtl" -f $list -l (Join-Path $build 'compile.log') *> (Join-Path $build 'compile.console')
 if($LASTEXITCODE -ne 0) {Get-Content (Join-Path $build 'compile.log') -Tail 15;throw 'Unit compile failed'}
-foreach($top in @('tb_quartus_memory','tb_llm_math','tb_llm_ram','tb_llm_protocol','tb_llm_selection','tb_llm_operators','tb_llm_graph')) {
+$tops=@('tb_quartus_memory','tb_llm_math','tb_llm_ram','tb_llm_protocol','tb_llm_selection','tb_llm_operators')
+if (!$UnitsOnly) {$tops += 'tb_llm_graph'}
+foreach($top in $tops) {
     $log=Join-Path $build "$top.log"
     & "$SimBin/vsim.exe" -c -onfinish exit -L altera_mf_ver -L $library -lib $library -l $log $top -do 'run -all; quit -f' *> "$log.console"
     if($LASTEXITCODE -ne 0 -or !(Select-String -LiteralPath $log -Pattern '_PASS' -Quiet) -or (Select-String -LiteralPath $log -Pattern '^# \*\* (Fatal|Error)' -Quiet)) {
@@ -43,7 +52,8 @@ Get-ChildItem -LiteralPath $rtl -File | Where-Object {$_.Extension -in '.sv','.v
 Get-ChildItem -LiteralPath $PSScriptRoot -File | Where-Object {$_.Name -like 'tb_*.sv' -or $_.Name -eq 'run_units.ps1'} | Sort-Object Name | ForEach-Object {
     if($testHashes[$_.Name] -ne (Get-FileHash -LiteralPath $_.FullName).Hash.ToLower()) {throw 'Test sources changed during unit testing'}
 }
-[ordered]@{status='PASS';scope='Synthetic arithmetic/protocol/operators/autonomous graph; no pretrained application';rtl_dir=$rtl;verified_utc=[DateTime]::UtcNow.ToString('o');tests=$evidence;rtl_sources=$hashes;test_sources=$testHashes} |
+$status=if ($UnitsOnly) {'SIX_GROUPS_PASS_GRAPH_PENDING'} else {'PASS'}
+[ordered]@{status=$status;scope='Synthetic arithmetic/protocol/operators; graph required for application gate';rtl_dir=$rtl;verified_utc=[DateTime]::UtcNow.ToString('o');tests=$evidence;rtl_sources=$hashes;test_sources=$testHashes} |
     ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $PSScriptRoot 'unit_results.json') -Encoding utf8
 } catch {
     [ordered]@{status='FAIL';failure=$_.Exception.Message;verified_utc=[DateTime]::UtcNow.ToString('o');rtl_dir=$rtl;tests=$evidence;rtl_sources=$hashes;test_sources=$testHashes} |

@@ -1,0 +1,5 @@
+{
+  "status": "CANCELLED_ORPHAN_BUILD",
+  "reason": "Previous fitter child had started just before supervisor cancellation. Both owned jobs stopped; next build uses a fresh isolated project database.",
+  "utc": "2026-10-04T01:06:10.6768222Z"
+}

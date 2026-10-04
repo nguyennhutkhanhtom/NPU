@@ -34,3 +34,6 @@ docs/verification/timing/** -text
 docs/verification/memory_ip/** -text -whitespace
 tests/full_rtl/evidence/** -text -whitespace
 tests/full_rtl/unit_results.json -text -whitespace
+tests/evidence/** -text -whitespace
+docs/verification/io_cells/** -text -whitespace
+docs/verification/synthesis/** -text -whitespace

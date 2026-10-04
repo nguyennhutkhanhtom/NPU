@@ -162,16 +162,23 @@ module norm (
     logic signed [23:0] zr0, zr1;
     logic signed [24:0] multiply_a [0:1], multiply_b [0:1];
     logic signed [24:0] multiply_a_q [0:1], multiply_b_q [0:1];
-    logic signed [47:0] arithmetic_product [0:1];
+    wire signed [47:0] arithmetic_product [0:1];
+    genvar arithmetic_lane;
+    generate
+    for (arithmetic_lane = 0; arithmetic_lane < 2; arithmetic_lane = arithmetic_lane + 1) begin : g_bit_mul
+        logic_mul #(.A_W(25), .B_W(25), .OUT_W(48), .SIGNED_A(1), .SIGNED_B(1)) u_mul
+            (.a(multiply_a_q[arithmetic_lane]), .b(multiply_b_q[arithmetic_lane]), .product(arithmetic_product[arithmetic_lane]));
+    end
+    endgenerate
     logic signed [47:0] arithmetic_product_q [0:1];
     logic signed [63:0] arithmetic_rounded [0:1];
     logic signed [63:0] arithmetic_rounded_q [0:1];
     logic [5:0] arithmetic_shift, arithmetic_shift_q;
     always_comb begin
-        x0 = read_buf[lane * 16 +: 16];
-        x1 = read_buf[(lane + 1) * 16 +: 16];
-        zr0 = read_buf[lane * 32 +: 24];
-        zr1 = read_buf[(lane + 1) * 32 +: 24];
+        x0 = read_buf[(int'(lane) << 4) +: 16];
+        x1 = read_buf[((int'(lane) + 1) << 4) +: 16];
+        zr0 = read_buf[(int'(lane) << 5) +: 24];
+        zr1 = read_buf[((int'(lane) + 1) << 5) +: 24];
         // The three passes share two multipliers and two RNE paths. Register
         // the read mux outputs, products and rounded values separately so a
         // lane selection cannot feed multiply, RNE and absmax in one cycle.
@@ -205,7 +212,7 @@ module norm (
         endcase
         for (integer j = 0; j < 2; j = j + 1) begin
             // S24 * U24 fits S48; the extra operand bit preserves U24's sign.
-            arithmetic_product[j] = multiply_a_q[j] * multiply_b_q[j];
+
             arithmetic_rounded[j] = rne_shift64(
                 {{16{arithmetic_product_q[j][47]}}, arithmetic_product_q[j]}, arithmetic_shift_q);
         end
@@ -425,11 +432,11 @@ module norm (
                     sum_sq <= 0;
                     state <= P1_REQ;
                     if (k_len == 0 || k_len > K_MAX || delta_raw == 0 ||
-                        int'(x_base) + (int'(k_len) + 15) / 16 > 256 ||
-                        int'(z_base) + (int'(k_len) + 7) / 8 > 256 ||
-                        int'(q_base) + (int'(k_len) + 31) / 32 > 256 ||
-                        ranges_overlap(int'(x_base), (int'(k_len) + 15) / 16, int'(z_base), (int'(k_len) + 7) / 8) ||
-                        ranges_overlap(int'(q_base), (int'(k_len) + 31) / 32, int'(z_base), (int'(k_len) + 7) / 8)) begin
+                        int'(x_base) + ((int'(k_len) + 15) >> 4) > 256 ||
+                        int'(z_base) + ((int'(k_len) + 7) >> 3) > 256 ||
+                        int'(q_base) + ((int'(k_len) + 31) >> 5) > 256 ||
+                        ranges_overlap(int'(x_base), ((int'(k_len) + 15) >> 4), int'(z_base), ((int'(k_len) + 7) >> 3)) ||
+                        ranges_overlap(int'(q_base), ((int'(k_len) + 31) >> 5), int'(z_base), ((int'(k_len) + 7) >> 3))) begin
                         format_error <= 1;
                         state <= FINISH;
                     end
@@ -495,7 +502,7 @@ module norm (
                 end
                 CNORM_DIV_START : state <= CNORM_DIV_WAIT;
                 CNORM_DIV_WAIT : if (div_done) begin
-                    norm_m <= div_q[23:0] + (({1'b0, div_rem} * 2 > rms_r) || (({1'b0, div_rem} * 2 == rms_r) && div_q[0]));
+                    norm_m <= div_q[23:0] + ((({1'b0, div_rem} << 1) > rms_r) || ((({1'b0, div_rem} << 1) == rms_r) && div_q[0]));
                     word_index <= 0;
                     lane <= 0;
                     pack_buf <= 0;
@@ -517,11 +524,11 @@ module norm (
                     if ((idx0 < vector_length_q && (z_round0 > 64'sh0000_0000_007f_ffff || z_round0 < - 64'sh0000_0000_0080_0000)) ||
                         (idx1 < vector_length_q && (z_round1 > 64'sh0000_0000_007f_ffff || z_round1 < - 64'sh0000_0000_0080_0000))) overflow <= 1;
                     if (idx0 < vector_length_q) begin
-                        pack_buf[pack_count * 32 +: 32] <= {{8{z0[23]}}, z0};
+                        pack_buf[(int'(pack_count) << 5) +: 32] <= {{8{z0[23]}}, z0};
                         if (absz0 > absmax) absmax <= absz0;
                     end
                     if (idx1 < vector_length_q) begin
-                        pack_buf[(pack_count + 1) * 32 +: 32] <= {{8{z1[23]}}, z1};
+                        pack_buf[((int'(pack_count) + 1) << 5) +: 32] <= {{8{z1[23]}}, z1};
                         if (absz1 > absmax && absz1 > absz0) absmax <= absz1;
                     end
                     if (pack_count >= 6 || idx1 >= vector_length_q - 1) begin
@@ -563,7 +570,7 @@ module norm (
                 end
                 CQUANT_DIV_START : state <= CQUANT_DIV_WAIT;
                 CQUANT_DIV_WAIT : if (div_done) begin
-                    quant_m <= div_q[23:0] + (({1'b0, div_rem} * 2 > quant_d) || (({1'b0, div_rem} * 2 == quant_d) && div_q[0]));
+                    quant_m <= div_q[23:0] + ((({1'b0, div_rem} << 1) > quant_d) || ((({1'b0, div_rem} << 1) == quant_d) && div_q[0]));
                     word_index <= 0;
                     lane <= 0;
                     pack_buf <= 0;
@@ -581,8 +588,8 @@ module norm (
                 P3_MUL : state <= P3_ROUND;
                 P3_ROUND : state <= P3_PROC;
                 P3_PROC : begin
-                    if (({word_index, 3'b0} + lane) < vector_length_q) pack_buf[pack_count * 8 +: 8] <= q0;
-                    if (({word_index, 3'b0} + lane + 1) < vector_length_q) pack_buf[(pack_count + 1) * 8 +: 8] <= q1;
+                    if (({word_index, 3'b0} + lane) < vector_length_q) pack_buf[(int'(pack_count) << 3) +: 8] <= q0;
+                    if (({word_index, 3'b0} + lane + 1) < vector_length_q) pack_buf[((int'(pack_count) + 1) << 3) +: 8] <= q1;
                     if (pack_count >= 30 || ({word_index, 3'b0} + lane + 1) >= vector_length_q - 1) state <= P3_WRITE;
                     else if (lane == 6) begin
                         word_index <= word_index + 1'b1;

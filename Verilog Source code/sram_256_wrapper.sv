@@ -48,7 +48,7 @@ module sram_256_wrapper #(
 
     assign rd_data = read_row_q;
     assign rd_valid = read_valid_q && !response_host_q;
-    assign host_rdata = read_row_q[response_lane_q * 32 +: 32];
+    assign host_rdata = read_row_q[(int'(response_lane_q) << 5) +: 32];
     // Both pipeline stages must belong to the current held request. A write
     // or idle cycle invalidates an earlier response, including the same address.
     assign host_rvalid = host_en && !host_we && read_valid_q && response_host_q &&

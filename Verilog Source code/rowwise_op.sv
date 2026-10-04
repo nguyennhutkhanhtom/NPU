@@ -47,6 +47,14 @@ module rowwise_op (
     // outputs have registers, so lane selection and sign correction are
     // separate from multiplication. Arithmetic payloads need no reset.
     logic [31:0] magnitude_product_q[0:1];
+    wire [31:0] magnitude_product_comb[0:1];
+    genvar mul_lane;
+    generate
+    for (mul_lane = 0; mul_lane < 2; mul_lane = mul_lane + 1) begin : g_bit_mul
+        logic_mul #(.A_W(16), .B_W(16), .OUT_W(32), .SIGNED_A(0), .SIGNED_B(0)) u_mul
+            (.a(magnitude_a_q[mul_lane]), .b(magnitude_b_q[mul_lane]), .product(magnitude_product_comb[mul_lane]));
+    end
+    endgenerate
     logic [1:0] product_negative_q, lane_valid_q;
     logic signed [31:0] product[0:1];
     logic signed [32:0] recurrent_sum;
@@ -58,14 +66,14 @@ module rowwise_op (
     logic lane_overflow, lane_format_error;
 
     always_comb begin
-        candidate = source_a_q[element_index_q * 16 +: 16];
-        old_state = state_word_q[element_index_q * 16 +: 16];
-        gate = source_b_q[element_index_q * 16 +: 16];
+        candidate = source_a_q[(int'(element_index_q) << 4) +: 16];
+        old_state = state_word_q[(int'(element_index_q) << 4) +: 16];
+        gate = source_b_q[(int'(element_index_q) << 4) +: 16];
         complement = 16'h8000 - gate;
         source_format_error = 1'b0;
         for (integer j = 0; j < 2; j = j + 1) begin
-            lane_a[j] = source_a_unsigned_q ? $signed({1'b0, source_a_q[(element_index_q + j) * 16 +: 16]}) : $signed(source_a_q[(element_index_q + j) * 16 +: 16]);
-            lane_b[j] = source_b_unsigned_q ? $signed({1'b0, source_b_q[(element_index_q + j) * 16 +: 16]}) : $signed(source_b_q[(element_index_q + j) * 16 +: 16]);
+            lane_a[j] = source_a_unsigned_q ? $signed({1'b0, source_a_q[((int'(element_index_q) + j) << 4) +: 16]}) : $signed(source_a_q[((int'(element_index_q) + j) << 4) +: 16]);
+            lane_b[j] = source_b_unsigned_q ? $signed({1'b0, source_b_q[((int'(element_index_q) + j) << 4) +: 16]}) : $signed(source_b_q[((int'(element_index_q) + j) << 4) +: 16]);
             multiply_a[j] = '0;
             multiply_b[j] = '0;
             if (operation_q == OP_MUL && element_index_q + j < element_count_q) begin
@@ -98,7 +106,7 @@ module rowwise_op (
         if (rst_n && busy) begin
             case (state)
                 LOAD : begin
-                    sig_x_q <= source_a_q[element_index_q * 16 +: 16];
+                    sig_x_q <= source_a_q[(int'(element_index_q) << 4) +: 16];
                     source_format_error_q <= source_format_error;
                     for (integer j = 0; j < 2; j = j + 1) begin
                         lane_a_q[j] <= lane_a[j];
@@ -110,7 +118,7 @@ module rowwise_op (
                     end
                 end
                 MULTIPLY : for (integer j = 0; j < 2; j = j + 1)
-                    magnitude_product_q[j] <= magnitude_a_q[j] * magnitude_b_q[j];
+                    magnitude_product_q[j] <= magnitude_product_comb[j];
                 RAW : for (integer j = 0; j < 2; j = j + 1) begin
                     case (operation_q)
                         OP_ADD : raw_value_q[j] <= 33'(lane_a_q[j]) + 33'(lane_b_q[j]);
@@ -135,25 +143,25 @@ module rowwise_op (
             if (lane_valid_q[j]) begin
                 if (destination_unsigned_q && operation_q != OP_RELU) begin
                     if (scaled_q[j] < 0) begin
-                        result_buffer_next[(element_index_q + j) * 16 +: 16] = 0;
+                        result_buffer_next[((int'(element_index_q) + j) << 4) +: 16] = 0;
                         lane_overflow = 1'b1;
                     end else if (scaled_q[j] > 64'sh0000_0000_0000_8000) begin
-                        result_buffer_next[(element_index_q + j) * 16 +: 16] = 16'h8000;
+                        result_buffer_next[((int'(element_index_q) + j) << 4) +: 16] = 16'h8000;
                         lane_overflow = 1'b1;
-                    end else result_buffer_next[(element_index_q + j) * 16 +: 16] = scaled_q[j][15:0];
+                    end else result_buffer_next[((int'(element_index_q) + j) << 4) +: 16] = scaled_q[j][15:0];
                 end else begin
-                    result_buffer_next[(element_index_q + j) * 16 +: 16] = sat_s16(scaled_q[j]);
+                    result_buffer_next[((int'(element_index_q) + j) << 4) +: 16] = sat_s16(scaled_q[j]);
                     if (scaled_q[j] > 64'sh0000_0000_0000_7fff || scaled_q[j] < - 64'sh0000_0000_0000_8000) lane_overflow = 1'b1;
                 end
             end
         end
         if (operation_q == OP_SIG) begin
             result_buffer_next = result_buffer_q;
-            result_buffer_next[element_index_q * 16 +: 16] = sig_y;
+            result_buffer_next[(int'(element_index_q) << 4) +: 16] = sig_y;
         end
         if (operation_q == OP_REC) begin
             result_buffer_next = result_buffer_q;
-            result_buffer_next[element_index_q * 16 +: 16] = sat_s16(scaled_q[0]);
+            result_buffer_next[(int'(element_index_q) << 4) +: 16] = sat_s16(scaled_q[0]);
             lane_overflow = scaled_q[0] > 64'sh0000_0000_0000_7fff || scaled_q[0] < - 64'sh0000_0000_0000_8000;
         end
     end

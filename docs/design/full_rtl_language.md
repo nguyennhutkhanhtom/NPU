@@ -35,8 +35,11 @@ The Quartus memory demo uses Cyclone V `5CGXFC9E6F35C7`; fit and
 timing must verify the actual memory packing. The FPGA backend now uses explicit
 `altsyncram` M10K IP for parameters, KV and vectors. Compute/control stay portable
 SystemVerilog; only the memory technology binding contains a vendor primitive.
-No PLL, DSP hardblock or other compute IP is permitted. Multiplication, division,
-sqrt and sigmoid map to ordinary logic cells; add/subtract may use carry cells.
+No PLL, DSP hardblock or other compute IP is permitted. Multiplication uses the
+explicit bit-product compressor tree in `logic_mul`, without an arithmetic
+multiply operator. Division and square root use shift/subtract RTL. Sigmoid
+interpolation uses the same logic tree; add/subtract may use ordinary carry
+cells. See [ASIC portability](asic_portability.md) for the technology boundary.
 
 ## Graph and execution interfaces
 
@@ -293,6 +296,25 @@ its log and all six groups remain archived, no assertion failure or seven-group
 PASS claimed. See timing hub for all corners. See the
 [clock input handbook](https://docs.altera.com/r/docs/683375/current/cyclone-v-device-handbook-volume-1-device-interfaces-and-integration/dedicated-clock-input-pins)
 and [differential pin guide](https://docs.altera.com/r/docs/683492/18.1/intel-quartus-prime-standard-edition-user-guide-design-constraints/assigning-differential-pins).
-Only altsyncram is explicitly instantiated vendor IP. Quartus may lower portable
-arithmetic operators to internal LPM representations; those are synthesized into
-ordinary logic cells, with forbidden DSP/PLL/DLL/HSSI counts checked in fit.summary.
+The preceding control1 results describe an archived revision. The current
+`fullrtl100_logic3` candidate replaces all full and legacy datapath multiplication
+operators with the portable `logic_mul` bit-product tree. Existing product
+registers, RNE, clipping, valid/reset and handshake latencies remain intact.
+Runtime power-of-two address/word-count arithmetic uses explicit shifts;
+compile-time geometry and generate slice offsets remain constant expressions.
+The host/core parameter address mux now selects by registered compute `rd_en`,
+under the existing mutually exclusive ownership contract, with host cancellation
+still checked on enable/valid tags.
+
+The installed tool is now Quartus Lite25.1std, not the18.1 binary from the old
+checkpoint. New source/config/report hashes and all corners must be verified.
+Current QSF uses ordinary2.5V clock inputAC18, resetV28 and parallel SDR LVDS
+output buffers; each output has a physical negative companion. No ALTLVDS,
+serializer, PLL or other compute IP is instantiated. This requires a differential
+host receiver; board routing/termination and ASIC signoff are not established.
+The original10ns SDC and input/output budgets are unchanged.
+
+Preflight math passed503SIMDtransactions,9resetphases,513LUTchecks and1536
+exhaustive small-width bit-product checks, including all signedness combinations,
+truncation and one-bit signed operands. Current-source full regression and
+post-fit timing are pending; trained application remains blocked by these gates.

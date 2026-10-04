@@ -4,7 +4,7 @@
 
 **Trạng thái:** Helper — không instantiate trong top hiện tại.
 
-**Source:** [mul.sv](<../../../Verilog%20Source%20code/mul.sv>). **Số dòng:** 22. **SHA-256:** `63bb267b9cc884ee766f94a0fda1039cb5ed61bb6f6002bfa356a3f6423bcbac`.
+**Source:** [mul.sv](<../../../Verilog%20Source%20code/mul.sv>). **Số dòng:** 43. **SHA-256:** `fdca97fe654f877cd33e7eb934d3869a6e754bd9a4d9d128f228d9c17add646e`.
 
 ## Khối này làm gì?
 
@@ -48,9 +48,9 @@ b_s17 giữ đúng sign hoặc zero-extend gate. Tích p33 được RNE theo rsh
 Source được chia theo chức năng. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, nhưng phần giải thích tập trung vào quan hệ giữa các câu lệnh thay vì lặp lại từng dấu ngoặc, khai báo hoặc phép gán.
 
 
-### [Dòng 1–13: Giao diện và intermediate](<../../../Verilog%20Source%20code/mul.sv#L1>)
+### [Dòng 1–15: Giao diện và intermediate](<../../../Verilog%20Source%20code/mul.sv#L1>)
 
-<!-- source-range:1:13 -->
+<!-- source-range:1:15 -->
 ```systemverilog
 module mul (
     input logic signed [15:0] a,
@@ -65,6 +65,8 @@ module mul (
     logic signed [16:0] b_s17;
     logic signed [32:0] p33;
     logic signed [63:0] rounded;
+    logic_mul #(.A_W(16), .B_W(17), .OUT_W(33), .SIGNED_A(1), .SIGNED_B(1)) u_bit_mul
+        (.a(a), .b(b_s17), .product(p33));
 ```
 
 **Mục đích.** b_unsigned quyết định cách diễn giải cùng16 bit của b.
@@ -74,17 +76,36 @@ module mul (
 **Tín hiệu và dữ liệu chính.** `a`: operand A; `b`: operand B; `b_unsigned`: B là gate unsigned; `rshift`: số bit chia lũy thừa 2 trước saturation; `product`: tích trung gian trước rescale; `result`: kết quả đã saturation; và 4 tín hiệu phụ khác trong đoạn code.
 
 
-### [Dòng 14–22: Multiply/round/clamp](<../../../Verilog%20Source%20code/mul.sv#L14>)
+### [Dòng 16–43: Multiply/round/clamp](<../../../Verilog%20Source%20code/mul.sv#L16>)
 
-<!-- source-range:14:22 -->
+<!-- source-range:16:43 -->
 ```systemverilog
     always_comb begin
         b_s17 = b_unsigned ? $signed({1'b0, b}) : $signed({b[15], b});
-        p33 = $signed(a) * b_s17;
+
         product = p33[31:0];
         rounded = rne_shift64({{31{p33[32]}}, p33}, rshift);
         overflow = (rounded > 64'sh0000_0000_0000_7fff) || (rounded < - 64'sh0000_0000_0000_8000) || (b_unsigned && b > 16'h8000);
         result = sat_s16(rounded);
+    end
+endmodule
+
+// Small arithmetic cell retained here after consolidating legacy helper files.
+// Used by the arithmetic regression; no technology binding is required.
+module addsub (
+    input logic signed [15:0] a, b,
+    input logic sub,
+    output logic signed [16:0] wide,
+    output logic signed [15:0] result,
+    output logic overflow
+);
+    import npu_pkg::*;
+    logic signed [16:0] b_ext;
+    always_comb begin
+        b_ext = {b[15], b};
+        wide = {a[15], a} + (sub ? -b_ext : b_ext);
+        overflow = wide[16] ^ wide[15];
+        result = sat_s16({{47{wide[16]}}, wide});
     end
 endmodule
 ```

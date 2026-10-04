@@ -47,7 +47,7 @@ module rowwise_dispatch (
         if (dst_desc.fmt == FMT_U16 && dst_desc.frac_bits != 15) invalid = 1;
         if (a_desc.base_word != dst_desc.base_word &&
             ranges_overlap(int'(a_desc.base_word), ws_words(a_desc), int'(dst_desc.base_word), ws_words(dst_desc))) invalid = 1;
-        valid_elems = (int'(source_a_desc_q.length) - int'(word_index_q) * 16 >= 16) ? 5'd16 : 5'(int'(source_a_desc_q.length) - int'(word_index_q) * 16);
+        valid_elems = (int'(source_a_desc_q.length) - (int'(word_index_q) << 4) >= 16) ? 5'd16 : 5'(int'(source_a_desc_q.length) - (int'(word_index_q) << 4));
     end
     rowwise_op u_alu(
         .clk(clk),
@@ -117,7 +117,7 @@ module rowwise_dispatch (
                     destination_desc_q <= dst_desc;
                     operation_q <= op;
                     word_index_q <= 0;
-                    word_count_q <= 8'((int'(a_desc.length) + 15) / 16);
+                    word_count_q <= 8'(((int'(a_desc.length) + 15) >> 4));
                     busy <= 1;
                     overflow <= 0;
                     format_error <= invalid;

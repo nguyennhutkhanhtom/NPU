@@ -16,6 +16,10 @@ module sigmoid (
     logic signed [44:0] grid, x_extended;
     logic [9:0] difference_q;
     logic [33:0] product_q;
+    wire [33:0] product_comb;
+    logic_mul #(.A_W(24), .B_W(10), .OUT_W(34), .SIGNED_A(0), .SIGNED_B(0)) u_bit_mul
+        (.a(fraction_q), .b(difference_q), .product(product_comb));
+
     logic [16:0] integer_q;
     logic [23:0] remainder_q;
     logic round_up;
@@ -48,7 +52,7 @@ module sigmoid (
         // Adjacent samples in the fixed LUT differ by at most 512.
         // Ten unsigned bits retain the exact slope, including the peak step.
     end
-    // Registered DSP operands/product; rounding uses the parity of the whole
+    // Registered logic-tree operands/product; rounding uses the parity of the whole
     // interpolated integer, not only the fractional increment.
     assign round_up = remainder_q > 24'h800000 ||
         (remainder_q == 24'h800000 && integer_q[0]);
@@ -58,7 +62,7 @@ module sigmoid (
             if (state == READ0) y0 <= rom_data;
             if (state == READ1) y1 <= rom_data;
             if (state == SLOPE) difference_q <= 10'(y1 - y0);
-            if (state == MULTIPLY) product_q <= difference_q * fraction_q;
+            if (state == MULTIPLY) product_q <= product_comb;
             if (state == ADD) begin
                 integer_q <= {1'b0, y0} + {7'h0, product_q[33:24]};
                 remainder_q <= product_q[23:0];

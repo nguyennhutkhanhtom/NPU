@@ -2,7 +2,7 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [scale_compose.sv](<../../../Verilog%20Source%20code/scale_compose.sv>). **Số dòng:** 144. **SHA-256:** `99062a47596ae9093442d217ac6451cb554a9c0f55bcee98d3144fa683bad054`.
+**Source:** [scale_compose.sv](<../../../Verilog%20Source%20code/scale_compose.sv>). **Số dòng:** 148. **SHA-256:** `5167e3e60711d85109a139c7619a27025e295110ec480308738d1de166151f64`.
 
 ## Khối này làm gì?
 
@@ -46,8 +46,12 @@ module scale_compose (
     typedef enum logic [2:0] {IDLE, MULTIPLY, SELECT_SHIFT, SHIFT, DIV_START, DIV_WAIT, FINISH} state_t;
     state_t state;
     logic [47:0] numerator_base;
-    logic [5:0] base_r, candidate;
+    wire [47:0] product_comb;
     logic [23:0] factor_q, quant_q;
+    logic_mul #(.A_W(24), .B_W(24), .OUT_W(48), .SIGNED_A(0), .SIGNED_B(0)) u_bit_mul
+        (.a(factor_q), .b(quant_q), .product(product_comb));
+
+    logic [5:0] base_r, candidate;
     logic [47:0] positive_fit;
     logic signed [6:0] selected_shift, shift_q;
     logic signed [7:0] target_r;
@@ -57,10 +61,6 @@ module scale_compose (
     logic [24:0] remainder;
     logic div_busy, div_done, div_zero;
     logic [48:0] rounded;
-    logic [25:0] twice_rem;
-    logic round_up;
-    // RNE(n/d) fits U24 iff n < (2^24 - 1/2)*d. Test every
-    // nonnegative shift in parallel with constant thresholds; the fit vector
 ```
 
 Valid factors dùng factor_r≤47 và quant_d khác zero. factor_m=0 trả zero hợp lệ. Control dùng MULTIPLY, SELECT_SHIFT và SHIFT trước DIV_START.
@@ -69,6 +69,10 @@ Valid factors dùng factor_r≤47 và quant_d khác zero. factor_m=0 trả zero 
 
 <!-- source-range:30:53 -->
 ```systemverilog
+    logic [25:0] twice_rem;
+    logic round_up;
+    // RNE(n/d) fits U24 iff n < (2^24 - 1/2)*d. Test every
+    // nonnegative shift in parallel with constant thresholds; the fit vector
     // is a prefix of ones. Its boundary identifies the largest fitting shift.
     localparam logic [46:0] COEFFICIENT_LIMIT = 47'h7eff_ffc0_8000;
     always_comb begin
@@ -89,10 +93,6 @@ Valid factors dùng factor_r≤47 và quant_d khác zero. factor_m=0 trả zero 
         round_up = (twice_rem > {1'b0, denominator}) ||
             ((twice_rem == {1'b0, denominator}) && quotient[0]);
         rounded = {1'b0, quotient} + {48'h0000_0000_0000, round_up};
-    end
-    always_ff @(posedge clk) begin
-        if (rst_n && state == MULTIPLY) numerator_base <= factor_q * quant_q;
-        if (rst_n && state == SHIFT) begin
 ```
 
 positive_fit là prefix ones. COEFFICIENT_LIMIT=0x7EFF_FFC0_8000; strict inequality loại tie U24_max+1/2. Boundary encoder chọn shift mà không tạo chuỗi decrement.
@@ -101,6 +101,10 @@ positive_fit là prefix ones. COEFFICIENT_LIMIT=0x7EFF_FFC0_8000; strict inequal
 
 <!-- source-range:54:67 -->
 ```systemverilog
+    end
+    always_ff @(posedge clk) begin
+        if (rst_n && state == MULTIPLY) numerator_base <= product_comb;
+        if (rst_n && state == SHIFT) begin
             if (shift_q >= 0) begin
                 numerator <= numerator_base << $unsigned(shift_q);
                 denominator <= 25'h07f_0000;
@@ -111,10 +115,6 @@ positive_fit là prefix ones. COEFFICIENT_LIMIT=0x7EFF_FFC0_8000; strict inequal
         end
     end
     // Every launch has shift >= -2. A fitting positive shift gives n < limit;
-    // a negative shift leaves the U48 product unchanged and d <= 127*65536*4.
-    div #(.NUM_W(48),
-        .DEN_W(25)) u_div(
-        .clk(clk),
 ```
 
 Multiply không asynchronous reset; control bảo đảm capture trước use. Shift âm tối thiểu −2, nên denominator không vượt U25.
@@ -123,15 +123,15 @@ Multiply không asynchronous reset; control bảo đảm capture trước use. S
 
 <!-- source-range:68:76 -->
 ```systemverilog
+    // a negative shift leaves the U48 product unchanged and d <= 127*65536*4.
+    div #(.NUM_W(48),
+        .DEN_W(25)) u_div(
+        .clk(clk),
         .rst_n(rst_n),
         .start(state == DIV_START),
         .numerator(numerator),
         .denominator(denominator),
         .busy(div_busy),
-        .done(div_done),
-        .div_zero(div_zero),
-        .quotient(quotient),
-        .remainder(remainder));
 ```
 
 Một lần chia 48 bước. Quotient U48, remainder U25; twice_rem U26 và rounded U49 giữ carry để RNE ties-even.
@@ -140,6 +140,10 @@ Một lần chia 48 bước. Quotient U48, remainder U25; twice_rem U26 và roun
 
 <!-- source-range:77:116 -->
 ```systemverilog
+        .done(div_done),
+        .div_zero(div_zero),
+        .quotient(quotient),
+        .remainder(remainder));
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= IDLE;
@@ -176,18 +180,18 @@ Một lần chia 48 bước. Quotient U48, remainder U25; twice_rem U26 và roun
                         state <= FINISH;
                     end else begin
                         candidate <= (target_r > 47) ? 6'd47 : target_r[5:0];
-                        shift_q <= (target_r > 47) ?
-                            (7'sd47 - $signed({1'b0, base_r})) : selected_shift;
-                        state <= SHIFT;
-                    end
 ```
 
 Target r=base_r+selected_shift. Nếu target>47, clamp r về47 và điều chỉnh shift; target âm hoặc input sai báo format_error.
 
-### [Dòng 117–144: Result and completion](<../../../Verilog%20Source%20code/scale_compose.sv#L117>)
+### [Dòng 117–148: Result and completion](<../../../Verilog%20Source%20code/scale_compose.sv#L117>)
 
-<!-- source-range:117:144 -->
+<!-- source-range:117:148 -->
 ```systemverilog
+                        shift_q <= (target_r > 47) ?
+                            (7'sd47 - $signed({1'b0, base_r})) : selected_shift;
+                        state <= SHIFT;
+                    end
                 end
                 SHIFT : state <= DIV_START;
                 DIV_START : state <= DIV_WAIT;

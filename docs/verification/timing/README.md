@@ -374,3 +374,26 @@ quartus_sta -t tools/timing/extract.tcl docs/verification/timing/constrained sdc
 ---
 
 [Về verification](../README.md) · [Rowwise RTL](../../source_guide/blocks/rowwise_op.sv.md) · [Design review](../../reviews/design_review.md)
+# Current portable bit-product candidate
+
+`fullrtl100_logic3` is the current full-top candidate on Cyclone V
+`5CGXFC9E6F35C7`, Quartus Lite25.1std.0 Build1129. The installed18.1 executable
+from the old checkpoint is absent. New reports therefore record the actual
+tool version; older18.1 timing belongs to its archived source/config.
+All multiplication datapaths now instantiate `logic_mul` built from bitwise
+compressors, shifts and one final adder. Divider/sqrt remain shift/subtract.
+The memory primitive remains isolated `altsyncram`. SDC is unchanged10ns with
+the original I/O budgets and no exceptions. QSF uses ordinary single-ended
+clockAC18/resetV28 and parallel SDR LVDS outputs, requiring physical companion
+pins and an external differential host receiver; no ALTLVDS/SERDES/PLL.
+
+`fullrtl100_logic2` preserves the synthesis FAIL caused by implicit generate
+syntax. ModelSim accepted it; Quartus25.1 required explicit generate regions.
+The current retry declares genvars and generate/endgenerate explicitly.
+Six current-source unit groups passed, including17operators/3460checks/scalar128/
+clamp128, all runtime0warnings. The actual-IP graph is still pending. A&S passed
+0errors/12warnings; its [separate synthesis archive](../synthesis/logic4/manifest.json)
+has35source hashes, exact source/configZIP and raw map reportSHA.
+No fitted100MHz result is claimed while this build is in progress. See
+[ASIC portability](../../design/asic_portability.md) and [checkpoint](../../../TASK_STATE.md).
+

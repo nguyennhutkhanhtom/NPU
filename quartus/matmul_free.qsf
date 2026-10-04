@@ -56,22 +56,15 @@ set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/PC.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/npu_pkg.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/norm_dispatch.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/norm.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/mw_reg.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/mul.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/mem_mapping.sv"
-set_global_assignment -name VERILOG_FILE "../Verilog Source code/mem_burst.v"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/matmulfree.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/matmul_wrap.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/ins_mem.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/hazard_detect.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/fd_reg.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/exp.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/em_reg.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/div.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/descriptor_file.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/de_reg.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/ctrl_unit.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/addsub.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/acc_mul.sv"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
@@ -104,3 +97,9 @@ set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_
 set_global_assignment -name SDC_FILE matmul_free.sdc
 set_global_assignment -name SEED 1
 set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
+
+# Portable gate-level bit-product tree, shared by full and legacy arithmetic.
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/logic_mul.sv"
+set_global_assignment -name AUTO_DSP_RECOGNITION OFF
+set_global_assignment -name DSP_BLOCK_BALANCING "LOGIC ELEMENTS"
+set_global_assignment -name AUTO_SHIFT_REGISTER_RECOGNITION OFF

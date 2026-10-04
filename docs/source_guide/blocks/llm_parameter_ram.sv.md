@@ -2,7 +2,7 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [llm_parameter_ram.sv](<../../../Verilog%20Source%20code/llm_parameter_ram.sv>). **Số dòng:** 87. **SHA-256:** `b4258f0ff8379b54672ae3b285af10d4f6c10a52bc2f463cfa5225988cd1959c`.
+**Source:** [llm_parameter_ram.sv](<../../../Verilog%20Source%20code/llm_parameter_ram.sv>). **Số dòng:** 90. **SHA-256:** `268039f8c72c7d8b461901cfb60c4a2c7d62b8de042ea322c2b554a4636a9538`.
 
 ## Khối này làm gì?
 
@@ -59,7 +59,7 @@ module llm_parameter_ram #(
     logic host_read_valid_q, host_write_valid_q;
     logic [ADDR_W + 2:0] response_address_q;
     wire read_request = rd_en || host_read_req;
-    wire [ADDR_W - 1:0] read_address = host_read_req ? host_addr[ADDR_W + 2:3] : rd_addr;
+    // Host and compute reads are mutually exclusive under top arbitration.
 ```
 
 Compute và host truy cập độc quyền do top arbitration. Host data/config không phải intermediate graph.
@@ -68,6 +68,9 @@ Compute và host truy cập độc quyền do top arbitration. Host data/config 
 
 <!-- source-range:30:50 -->
 ```systemverilog
+    // The registered compute owner selects payload; raw host cancellation
+    // affects validity/enables without driving the wide address mux.
+    wire [ADDR_W - 1:0] read_address = rd_en ? rd_addr : host_addr[ADDR_W + 2:3];
     assign rd_data = read_row;
     assign rd_valid = read_valid_q[LAST_READ] && !read_host_q[LAST_READ];
     assign host_rvalid = host_active && (host_we ? host_write_valid_q :
@@ -86,9 +89,6 @@ Compute và host truy cập độc quyền do top arbitration. Host data/config 
                 read_host_q[stage] <= read_host_q[stage - 1];
             end
             host_read_valid_q <= read_valid_q[LAST_READ] && read_host_q[LAST_READ] &&
-                host_active && !host_we && host_addr == read_address_q[LAST_READ];
-            host_write_valid_q <= (|lane_write_valid) && host_active && host_we;
-        end
 ```
 
 Host response chỉ hợp lệ khi active, loại read/write và địa chỉ vẫn khớp. ACK write theo wr_valid từ leaf, tránh báo xong trước commit.
@@ -97,6 +97,9 @@ Host response chỉ hợp lệ khi active, loại read/write và địa chỉ v�
 
 <!-- source-range:51:60 -->
 ```systemverilog
+                host_active && !host_we && host_addr == read_address_q[LAST_READ];
+            host_write_valid_q <= (|lane_write_valid) && host_active && host_we;
+        end
     end
     always_ff @(posedge clk) begin
         read_address_q[0] <= host_addr;
@@ -104,17 +107,17 @@ Host response chỉ hợp lệ khi active, loại read/write và địa chỉ v�
             read_address_q[stage] <= read_address_q[stage - 1];
         if (read_valid_q[LAST_READ] && read_host_q[LAST_READ]) begin
             response_address_q <= read_address_q[LAST_READ];
-            host_rdata <= read_row[read_address_q[LAST_READ][2:0] * 32 +: 32];
-        end
-    end
 ```
 
 Địa chỉ/lane đi cùng latency suy ra theo DEPTH; output host register tách tile reduction khỏi pin host_rdata.
 
-### [Dòng 61–87: Local lane banks](<../../../Verilog%20Source%20code/llm_parameter_ram.sv#L61>)
+### [Dòng 61–90: Local lane banks](<../../../Verilog%20Source%20code/llm_parameter_ram.sv#L61>)
 
-<!-- source-range:61:87 -->
+<!-- source-range:61:90 -->
 ```systemverilog
+            host_rdata <= read_row[(int'(read_address_q[LAST_READ][2:0]) << 5) +: 32];
+        end
+    end
     genvar lane;
     generate
     for (lane = 0; lane < 8; lane = lane + 1) begin : g_ram_lane

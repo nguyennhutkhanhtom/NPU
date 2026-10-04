@@ -17,6 +17,7 @@ Core instruction-driven trước được mô tả riêng tại [kiến trúc le
 | Nạp parameter/config/prompt cho top hiện tại | [Host và memory map toàn graph](design/full_rtl_language.md) | [Gated application runner](../tests/full_rtl/README.md) |
 | Tra cứu core 32 PE và chương trình legacy | [Kiến trúc và bảng bit](design/architecture.md) | [Instruction, descriptor và host](design/interfaces.md) |
 | Sửa một module RTL | [Mục lục từng file](source_guide/blocks/README.md) | [Các cải tiến và hợp đồng hiện hành](reviews/design_review.md) |
+| Chuyển sang ASIC và kiểm tra policy IP | [ASIC portability](design/asic_portability.md) | [Cây nhân bit](source_guide/blocks/logic_mul.sv.md), [SRAM binding](source_guide/blocks/quartus_word_ram.sv.md) |
 | Chạy test, xem synthesis hoặc timing | [Regression và demo synthesis](verification/README.md) | [Critical path và Fmax post-fit](verification/timing/README.md) |
 | Chạy model có checkpoint | [Full RTL application](../tests/full_rtl/README.md) | [Model candidates](demos/candidates.md), [asset setup NanoFable](../tests/language_demo/README.md) |
 | Tra cứu các quyết định và lỗi cũ | [Báo cáo tích hợp](reviews/implementation_review.md) | [Lịch sử, thesis và bài báo](history/README.md) |
@@ -56,6 +57,11 @@ DLL/HSSI nhưng timing FAIL92,75MHz gồm setup/hold/recovery; graph đã đư�
 enable SRAM cục bộ. Clock LVDS qua buffer/GCLK thường, không PLL/SERDES, chưa
 giải quyết I/O timing. Xem [timing hub](verification/timing/README.md)
 và [checkpoint](../TASK_STATE.md) cho source/config hashes, warnings và mọi corner.
+Mốc control1 đã commit/push `5e621c4`. Source hiện tại thay tất cả phép nhân
+datapath full/legacy bằng cây tích bit portable, không dùng toán tử nhân/chia hay
+arithmetic IP. Quartus thực tế hiện cài25.1std; build `fullrtl100_logic3` và unit
+operators đang chạy. QSF mới dùng clock2.5V/AC18, resetV28 và output LVDS thường,
+không serializer/PLL. Legacy regression đúng source mới đã PASS10nhóm.
 Application pretrained tiếp tục bị chặn đến khi source/config hiện tại đạt đủ gate.
 
 Code trích dẫn, dòng và SHA-256 trong source guide được đối chiếu bởi [validator](source_guide/validate.py); [validation.json](source_guide/validation.json) ghi kết quả. Sau khi sửa RTL, cập nhật chú giải rồi chạy:

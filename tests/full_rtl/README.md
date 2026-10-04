@@ -96,3 +96,18 @@ Control1 sixgroupsPASS:17operators/3460checks/scalar128/clamp128,0runtimewarning
 Fit0DSP/PLL/DLL/HSSI but timingFAIL92.75MHz/setup-hold-recovery. Graph cancelled
 for the next measured host mux fix; sixgroups/logs archived separately. Fresh
 unit/fullgraph and all-corner timing proof are required; application remains gated.
+# Test scheduling for portable logic multiplication
+
+`./tests/full_rtl/run_units.ps1 -UnitsOnly -EvidenceTag NEW_UNUSED_TAG` runs the
+six arithmetic/memory/protocol/operator groups while fitting is in progress.
+Its success status is `SIX_GROUPS_PASS_GRAPH_PENDING`, never aggregate `PASS`.
+Default execution still runs all seven groups, including the autonomous graph;
+`check_gate.py` still requires all seven PASS for the exact current source.
+The runner saves an immutable initial hash snapshot before compilation under
+`build/TAG_modelsim_start.json`. Tags cannot overwrite an existing snapshot.
+No expected values or testcases are relaxed by changing execution order.
+
+The math group exhausts 1536 small-width signedness/truncation/one-bit products
+against independent testbench arithmetic, then retains the existing 503 SIMD
+transactions, reset cancellation and LUT checks. Arithmetic operators are
+permitted in independent testbench/reference code only, not hardware datapaths.
