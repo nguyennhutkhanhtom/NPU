@@ -1,6 +1,6 @@
 # NPU resume checkpoint
 
-Updated 2026-10-04 18:35 Asia/Saigon. Repo/reports/hashes are authoritative; preserve valid changes and immutable tags, no reset/revert.
+Updated 2026-10-04 18:41 Asia/Saigon. Repo/reports/hashes are authoritative; preserve valid changes and immutable tags, no reset/revert.
 
 ## Goal and rules
 
@@ -15,7 +15,7 @@ Pretrained export/application/reference inference requires exact-current all-sev
 - 34RTL/source assets: explicit inline FSM requests, generated LUT/pipelines, structural bit-product arithmetic. SRAM only behind adapter; reset conditioner two standard FFs, async assertion/two-edge release. SIMD payload stages continuous from captured operands, nine-clock response unchanged. Do not redo verified fixes.
 - [Seven groups pipeline3 PASS](tests/full_rtl/evidence/pipeline3_all_units/results.json), Questa2025.2 + official Quartus25.1RAM,0compile/runtimewarnings. Math503/reset9/LUT513/bit1536; operators17/checks3460; graph4229462compute clocks/prompt2/selected tokens3/layerexec16/hostcommands196619/causal checked. Synthetic fixture, not trained text. Current34RTL/eight test inputs/helper/logs/binding hashes match archive.
 - [Optional host cancellation](tests/full_rtl/evidence/host_cancel_gap1/results.json) PASS7phases/14storagechecks with one idle edge between requests. Accepted write may commit after response cancellation; no rollback promise. Following request ACK follows its own commit. No RTL/test-input changes.
-- [Docs](docs/source_guide/validation.json) PASS34assets/30main+15detail diagrams/150groups/4523RTLlines/1059LUTentries/51rendered/1877links. Current Mermaid hashes match rendered evidence.
+- [Docs](docs/source_guide/validation.json) PASS34assets/30main+15detail diagrams/150groups/4523RTLlines/1059LUTentries/51rendered/1888links. Current Mermaid hashes match rendered evidence.
 
 ## Full-top latest timing: fanout1 FAIL98.63MHz
 
@@ -31,7 +31,7 @@ Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD. S
 
 ## Cleanup and commits
 
-Latest pushed main86b1c52: inactive Quartus DB cleanup12directories/1864217551bytes; all six historical ZIP/report hashes verified, outputs/evidence/activeDB/weights/model cache retained. [Cleanup record](docs/history/quartus_database_cleanup_20261004.json). Prior unused helper originals preserved in [SHA-verified ZIP](docs/history/helper_cleanup1/manifest.json); current runners and legacy reachable modules retained. No large weights/build artifacts/vendor libraries/secrets committed.
+Latest verified timing/parser milestone pushed main d6e5377. Prior86b1c52: inactive Quartus DB cleanup12directories/1864217551bytes; all six historical ZIP/report hashes verified, outputs/evidence/activeDB/weights/model cache retained. [Cleanup record](docs/history/quartus_database_cleanup_20261004.json). Prior unused helper originals preserved in [SHA-verified ZIP](docs/history/helper_cleanup1/manifest.json); current runners and legacy reachable modules retained. No large weights/build artifacts/vendor libraries/secrets committed.
 
 ## Reproduction and next steps
 
@@ -47,6 +47,8 @@ python docs/source_guide/validate.py
 ./tests/full_rtl/run_application.ps1 -TimingManifest docs/verification/timing/PASS_TAG/manifest.json
 ```
 
-1. Archive/commit/push fanout1 completed FAIL and parser/doc milestone. No active build at this checkpoint.
+1. Fanout1 FAIL/parser milestone pushed d6e5377. Fanout2 RUNNING exec33458/supervisor34520/Fitter24204, isolated quartus_fanout2/llm_soc. A&S PASS0errors12warnings18:38:49; all-corner timing pending. Adds MAX_FANOUT2 k_write_address_q and D3_DELAY7 host_wdata. RTL34/SDC unchanged, ZIP37 SHA007317b7a4370f35bc904a591652ccf55915a2bf2e197b326bc0415c8fb3a8ef. Do not edit RTL/QSF/SDC or launch another build while runner active. Read logs/processes before continuation.
 2. Target measured remaining routes: cache write-address fanout, host-input physical hold delay; unchanged RTL can reuse exact-current seven groups. Any RTL change requires full new unit/graph gates. Preserve SDC and evidence, fresh project/tag. Physical closure remains a hypothesis until all-corner fit.
 3. Once gates pass, run pinned NanoFable actual RTL paragraph and review matching separately from coherence; second compatible language model when supported. O5 profile gave no speed gain, defaultO4 retained. Application monitor compile-only PASS, not an application run.
+
+[Portable full-top elaboration](docs/verification/portable_elaboration1/results.json) PASS18:37:16, USE_QUARTUS_MEMORY=0, no vendor library loaded/24module design units/14unique names/0errors0warnings, run0/no weights/inference. Initial shell argument split failure retained; corrected quoting only. [ASIC SRAM binding guide](docs/design/asic_memory_binding.md) records all72leaf instances, latency/reset/collision and four small arrays including inferred output/probability RAM. Behavioral elaboration is not ASIC synthesis or signoff.

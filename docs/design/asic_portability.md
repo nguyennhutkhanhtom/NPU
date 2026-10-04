@@ -2,6 +2,9 @@
 
 [Documentation hub](../README.md) · [Full RTL graph](full_rtl_language.md) · [Arithmetic source](../source_guide/blocks/logic_mul.sv.md) · [Memory boundary](../source_guide/blocks/quartus_word_ram.sv.md)
 
+[ASIC SRAM binding guide](asic_memory_binding.md) records leaf/client contracts,
+all smaller inferred arrays and vendor-memory-free full-top elaboration evidence.
+
 The current compute and control RTL uses registers, muxes, comparisons, bitwise
 logic, shifts, addition/subtraction, counters and FSMs. It instantiates no vendor
 arithmetic, DSP, MAC, divider, square-root, FIFO, PLL, shift-register, floating-point

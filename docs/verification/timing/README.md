@@ -6,6 +6,17 @@ Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL d�
 
 ## Fanout1 result: 98.63 MHz, setup/hold FAIL
 
+The next candidate `quartus_fanout2/llm_soc`, tag `fullrtl100_fanout2`,
+adds MAX_FANOUT2 on k_write_address_q and D3_DELAY7 on host_wdata.
+[A&S archive](../synthesis/fanout2/manifest.json) PASS0errors12warnings18:38:49;
+Fitter/all-corner timing pending. The same34RTL assets still match all seven
+unit groups. SDC/device/seed/interface latency unchanged. The input physical
+delay request follows the device's [D3 programmable-delay capability](https://www.intel.com/programmable/technical-pdfs/683801.pdf)
+and the documented [QSF assignment form](https://cdrdv2-public.intel.com/654623/an474.pdf);
+implementation must be confirmed in the actual CycloneV Fitter delay-chain
+summary. No timing improvement is claimed before that report. These are
+backend settings, outside portable RTL; no new IP is instantiated.
+
 [Manifest](fullrtl100_fanout1/manifest.json), [source archive](fullrtl100_fanout1/source_archive.json) and [current seven units](../../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match34RTL assets. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD; SDC remains10ns with input0.5..2ns/output setup2ns/hold0.5ns and no exceptions. Extraction completed17:28:31 on04Oct2026. Map0errors12warnings, fit0errors4warnings, STA0errors1warning332148. Resources51919ALM/48086FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. All UCP counts0.18of20checks PASS; application gate rejects98.63MHz.
 
 | Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |

@@ -1,0 +1,13 @@
+Reading pref.tcl
+
+# 2025.2
+
+# ** Note: (vsim-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# vsim -c -onfinish exit -lib tests/full_rtl/build/portable_elab_work -voptargs="-duselectreport=tests/full_rtl/build/portable_elaboration1/design_units" .json -l tests/full_rtl/build/portable_elaboration1/elaborate.log llm_soc -do "run 0; quit -f" -gUSE_QUARTUS_MEMORY=0 
+# Start time: 18:36:47 on Oct 04,2026
+# ** Error (suppressible): (vsim-19) Failed to access library '' at "".
+# Invalid argument. (errno = EINVAL)
+# Error loading design
+Error loading design
+# End time: 18:36:47 on Oct 04,2026, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
