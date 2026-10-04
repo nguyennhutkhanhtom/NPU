@@ -1,6 +1,6 @@
 # NPU resume checkpoint
 
-Updated 2026-10-04 20:40 Asia/Saigon. Repo/reports/hashes are authoritative; preserve valid changes and immutable tags, no reset/revert.
+Updated 2026-10-04 21:01 Asia/Saigon. Repo/reports/hashes are authoritative; preserve valid changes and immutable tags, no reset/revert.
 
 ## Goal and rules
 
@@ -10,7 +10,7 @@ Full autonomous language graph on RTL; CPU loads weights/config/prompt and token
 
 Pretrained export/application/reference inference requires exact-current all-seven unit/graph PASS AND full-top post-fit>=100MHz, every corner setup/hold/recovery/removal/pulse slack>=0,TNS0,UCP0. No trained application/reference inference has run under this gate.
 
-## Current attention1: all-seven PASS, timing pending
+## Current attention1: all-seven PASS, timing FAIL92.19MHz
 
 Source llm_soc SHA51ef7ae59847a9b082916872fc3512dbc0d890011d5b8134c8dfccb0f8985811: A_QUERY clears attention_acc_q once per head, replacing the conditional A_EXP_STORE clear. No state/cycle/formula change. Source/config ZIP37 SHA0f9badde7a854d76f1edb6541af9f1547d132579c39342d94a14968dd43c059e. QSF host_addr D3_DELAY7 targets measured fanout2 hold failures; SDC unchanged.
 
@@ -18,11 +18,13 @@ All-seven exec25145 completed20:35:33; compile/runtime0warnings, actualRAM25.1/Q
 
 [Current portable elaboration](docs/verification/portable_elaboration_attention1/results.json) PASS20:37:14, reuses verified all-seven library, USE_QUARTUS_MEMORY=0/no vendor library binding/24module units/14names/0errors0warnings. run0/no weights/inference, behavioral SRAM backend, not ASIC synthesis/signoff. Compile/log/commands/DU/source hashes archived. Preceding portable_elaboration1 retained.
 
-Timing exec49792 still RUNNING, quartus_attention1/llm_soc/tag fullrtl100_attention1/Fitter45332/supervisor30228. A&S0errors12warnings; placement succeeded and routing ended20:37, final fit reports/STA/extraction pending. Keep RTL/QSF/SDC/unit inputs frozen. No100MHz PASS or pretrained application yet. Read all20corner checks/UCP/critical paths/recommendations/resources/warnings, verify archives before any edit.
+Timing exec49792 completed20:52:43; all Quartus jobs closed. [Attention1 manifest](docs/verification/timing/fullrtl100_attention1/manifest.json) source/config/ZIP37/reports/commands/currentseven hashes verified. Map0errors12warnings/fit0errors4warnings/STA0errors2timingwarnings. Device5CGXFC9E6F35C7/Quartus25.1std Build1129/seed1/SPEED/STANDARD, SDC10ns unchanged. Fmax92.19MHz FAIL,17/20checks PASS,UCP0,52799ALM/48311FF/1186of1220RAM/9515648bits/186pins/DSP-PLL-DLL-HSSI0. Slow85 setup-.847/TNS-43.132,recovery-.122/-.739; slow0setup-.369/-6.553; other17checks nonnegative/TNS0. Hold now PASS every corner. No trained application; strict gate explicitly rejects Fmax.
+
+Measured next targets: O_K_WAIT/op6 -> second_q341,data10.568/routing9.314/onelevel; parameter lane3write_data6 stage also-.579. Recovery core_rst_n->host_rdata11/12/6/9/13/3/7/2,data10.614/routing9.504. Preserve early-clear fix/all-seven proof and reset2FF/asynczero contract. Candidate: separate continuously sampled KV operand from held binary vector operand, removing cache enable/mux from shared payload; keep FSM/latency/test expectations. QSF global-routing reset request only, actual application/corners must be measured, no SDC exceptions. No candidate edit yet; archive completed timing before mutation.
 
 Docs PASS34assets/30main+15detail/150groups/4523RTLlines/1059LUTentries/51renders/1905links. Hub/ASIC page simplified for EDA backend scope. [Policy review](docs/verification/rtl_policy_attention1/results.json) exact34hashes/41generate+13small static+2elaboration loops/13pure runtime+2geometry functions;61arithmetic-symbol statements reviewed as constant geometry/index factors. Manual/lexical review, not functional/timing proof. [Git check](docs/verification/rtl_policy_attention1_git/results.json) records initial metadata-byte check failure from CRLF-to-LF staging, identical payload and matching helper/rules/source hashes; old archive not rewritten.
 
-Latest pushed9a512d8 policy/docs, a2fa161 early-clear/A&S/six-unit source milestone; c9a83b9 fanout2 FAIL and bc4f375 ASIC SRAM guide preserved. Current all-seven/portable docs awaiting milestone commit after verification. No source/config edit during either job.
+Latest pushedb3d3033 currentall-seven/portable/docs,9a512d8 policy/docs,a2fa161 early-clear/A&S/six-unit source milestone; c9a83b9 fanout2 FAIL and bc4f375 ASIC SRAM guide preserved. Completed attention1 timing awaiting archive milestone commit. No source/config edit during either job.
 
 ## Preceding verified RTL and tests
 
@@ -67,8 +69,8 @@ python docs/source_guide/validate.py
 ./tests/full_rtl/run_application.ps1 -TimingManifest docs/verification/timing/PASS_TAG/manifest.json
 ```
 
-1. Fanout2 FAIL archived/pushed c9a83b9. Current attention1 all-seven PASS; timing active: poll logs/processes, keep sources frozen. Archive fresh results without overwriting old tags.
-2. All-seven verifies early attention clear, same4229462graph clocks. Finish all-corner timing. If FAIL target new measured paths. Preserve SDC, expected values and evidence; no pretrained run until exact-current full gates pass.
+1. Fanout2 FAIL archived/pushed c9a83b9. Current attention1 all-seven/portable PASS; timingFAIL archived for commit, jobs closed. Archive fresh results without overwriting old tags.
+2. Preserve early clear verified byall-seven/same4229462clocks. Implement measured KV payload/reset-routing candidate under fresh tags, then all-seven/full timing again. If FAIL target new measured paths. Preserve SDC, expected values and evidence; no pretrained run until exact-current full gates pass.
 3. Once gates pass, run pinned NanoFable actual RTL paragraph and review matching separately from coherence; second compatible language model when supported. O5 profile gave no speed gain, defaultO4 retained. Application monitor compile-only PASS, not an application run.
 
 [Portable full-top elaboration](docs/verification/portable_elaboration1/results.json) PASS18:37:16, USE_QUARTUS_MEMORY=0, no vendor library loaded/24module design units/14unique names/0errors0warnings, run0/no weights/inference. Initial shell argument split failure retained; corrected quoting only. [ASIC SRAM binding guide](docs/design/asic_memory_binding.md) records all72leaf instances, latency/reset/collision and four small arrays including inferred output/probability RAM. Behavioral elaboration is not ASIC synthesis or signoff.

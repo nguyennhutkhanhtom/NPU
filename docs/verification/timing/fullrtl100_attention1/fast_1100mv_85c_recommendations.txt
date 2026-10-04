@@ -1,0 +1,282 @@
+Statistics: 40 0 6623 0 0 3.006
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a16~portb_address_reg10 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10]}}}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a80~portb_address_reg10 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10]}}}
+op[6]~DUPLICATE second_q[662] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[662]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[564]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[657] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[659] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[564] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[656] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[566] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[595] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[647] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[668] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[664] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[616] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[755] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[650] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[590] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a32~portb_address_reg10 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10]}}}
+op[6]~DUPLICATE second_q[341] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[605] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[561] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a0~portb_address_reg10 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10]}}}
+op[6]~DUPLICATE second_q[640] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[630] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[665] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[649] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[679] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[638] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[756] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[699] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[638]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[637] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[634] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[635] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[636] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[628] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+llm_parameter_ram:u_parameters|g_ram_lane[3].write_data_q[6] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip.write_data_q[6] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a16~portb_address_reg10 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a80~portb_address_reg10 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[6]~DUPLICATE second_q[662] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[662]~DUPLICATE 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[564]~DUPLICATE 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[657] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[659] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[564] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[656] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[566] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[595] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[647] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[668] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[664] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[616] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[755] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[650] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[590] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a32~portb_address_reg10 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[6]~DUPLICATE second_q[341] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[605] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[561] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a0~portb_address_reg10 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[6]~DUPLICATE second_q[640] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[630] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[665] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[649] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[17] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[176] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[679] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[638] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[756] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[699] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[638]~DUPLICATE 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[637] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[634] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[635] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[636] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[628] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+llm_parameter_ram:u_parameters|g_ram_lane[3].write_data_q[6] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip.write_data_q[6] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a16~portb_address_reg10 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10]}}}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a16~portb_address_reg10 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a80~portb_address_reg10 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10]}}}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a80~portb_address_reg10 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[6]~DUPLICATE second_q[662] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[662] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[662] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[662]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[662]~DUPLICATE 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[662]~DUPLICATE 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[564]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[564]~DUPLICATE 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[564]~DUPLICATE 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[657] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[657] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[657] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[659] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[659] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[659] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[564] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[564] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[564] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[656] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[656] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[656] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[566] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[566] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[566] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[595] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[595] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[595] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[647] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[647] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[647] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[668] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[668] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[668] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[664] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[664] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[664] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[616] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[616] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[616] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[755] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[755] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[755] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[650] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[650] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[650] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[590] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[590] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[590] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a32~portb_address_reg10 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10]}}}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a32~portb_address_reg10 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[6]~DUPLICATE second_q[341] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[341] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[341] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[605] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[605] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[605] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[561] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[561] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[561] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a0~portb_address_reg10 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10]}}}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip.read_address_q[10] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_4a72:auto_generated|ram_block1a0~portb_address_reg10 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[6]~DUPLICATE second_q[640] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[640] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[640] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[630] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[630] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[630] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[665] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[665] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[665] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[649] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[649] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[649] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[17] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[17] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[176] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[176] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[679] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[679] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[679] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[638] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[638] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[638] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[756] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[756] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[756] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[699] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[699] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[699] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[638]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[638]~DUPLICATE 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[638]~DUPLICATE 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[637] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[637] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[637] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[634] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[634] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[634] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[635] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[635] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[635] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[636] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[636] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[636] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[6]~DUPLICATE second_q[628] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[6]~DUPLICATE}}}
+op[6]~DUPLICATE second_q[628] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[628] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic
+op[6]~DUPLICATE second_q[662] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[662]~DUPLICATE 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[564]~DUPLICATE 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[657] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[659] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[564] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[656] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[566] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[595] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[647] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[668] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[664] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[616] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[755] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[650] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[590] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[341] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[605] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[561] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[640] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[630] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[665] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[649] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[17] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[176] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[679] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[638] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[756] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[699] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[638]~DUPLICATE 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[637] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[634] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[635] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[636] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}
+op[6]~DUPLICATE second_q[628] 1.000000 {Uses Sync Control Rather Than Data} {recommendation {{Disable multiplexer restructuring during synthesis}}}

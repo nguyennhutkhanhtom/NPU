@@ -67,4 +67,4 @@ Xem [cài đặt và chọn test](tests/README.md), [demo checkpoint](tests/mode
 | [tests](tests/README.md) | Regression/reference, runners và demo export |
 | `quartus` | Project demo A&S; không quyết định kiến trúc ASIC |
 
-Current attention1 source clears accumulators at each head entry; [all seven groups](tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions. Fresh full-top timing is still pending; no trained application gate is open.
+Current attention1 source clears accumulators at each head entry; [all seven groups](tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions. Full-top attention1 timing FAIL92.19MHz/setup+recovery; hold PASS every corner. No trained application gate is open.

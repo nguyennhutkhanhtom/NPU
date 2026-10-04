@@ -1,0 +1,1758 @@
+TBBmalloc: skip allocation functions replacement in ucrtbase.dll: unknown prologue for function _msize
+Info: *******************************************************************
+Info: Running Quartus Prime Timing Analyzer
+    Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
+    Info: Copyright (C) 2025  Altera Corporation. All rights reserved.
+    Info: Your use of Altera Corporation's design tools, logic functions 
+    Info: and other software and tools, and any partner logic 
+    Info: functions, and any output files from any of the foregoing 
+    Info: (including device programming or simulation files), and any 
+    Info: associated documentation or information are expressly subject 
+    Info: to the terms and conditions of the Altera Program License 
+    Info: Subscription Agreement, the Altera Quartus Prime License Agreement,
+    Info: the Altera IP License Agreement, or other applicable license
+    Info: agreement, including, without limitation, that your use is for
+    Info: the sole purpose of programming logic devices manufactured by
+    Info: Altera and sold by Altera or its authorized distributors.  Please
+    Info: refer to the Altera Software License Subscription Agreements 
+    Info: on the Quartus Prime software download page.
+    Info: Processing started: Sun Oct  4 20:50:17 2026
+Info: Command: quartus_sta -t "D:\2151097_Nguyen Nhut Khanh\tools\timing\extract.tcl" "D:\2151097_Nguyen Nhut Khanh\docs\verification\timing\fullrtl100_attention1" sdc "D:\2151097_Nguyen Nhut Khanh\quartus_attention1\llm_soc"
+Info: Quartus(args): {D:\2151097_Nguyen Nhut Khanh\docs\verification\timing\fullrtl100_attention1} sdc {D:\2151097_Nguyen Nhut Khanh\quartus_attention1\llm_soc}
+Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Info (21077): Low junction temperature is 0 degrees C
+Info (21077): High junction temperature is 85 degrees C
+Info (332104): Reading SDC File: 'llm_soc.sdc'
+Info (332151): Clock uncertainty is not calculated until you update the timing netlist.
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332101): Design is fully constrained for setup requirements
+Info (332101): Design is fully constrained for hold requirements
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 40 setup paths (40 violated).  Worst case slack is -0.847
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/slow_1100mv_85c_setup.rpt}
+Info (332115): Report Timing: Found 40 hold paths (0 violated).  Worst case slack is 0.090
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/slow_1100mv_85c_hold.rpt}
+Info (332115): Report Timing: Found 40 recovery paths (8 violated).  Worst case slack is -0.122
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/slow_1100mv_85c_recovery.rpt}
+Info (332115): Report Timing: Found 40 removal paths (0 violated).  Worst case slack is 0.910
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/slow_1100mv_85c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 40 results (0 violated).  Worst case slack is 3.600
+    Info (332113): Targets: *
+    Info (332113): -nworst: 40
+    Info (332113): -detail: full_path
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.456
+    Info (332115): -through [get_pins {second_q[341]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.456 
+    Info (332115):    Slack        : 6.456 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[14].u_storage|g_ip.response_q[5]
+    Info (332115):    To Node      : second_q[341]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.284
+    Info (332115):    Data Delay   : 3.160
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.663
+    Info (332115): -through [get_pins {second_q[605]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.663 
+    Info (332115):    Slack        : 7.663 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[25].u_storage|g_ip.response_q[5]
+    Info (332115):    To Node      : second_q[605]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.246
+    Info (332115):    Data Delay   : 1.991
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.341
+    Info (332115): -through [get_pins {second_q[640]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.341 
+    Info (332115):    Slack        : 7.341 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[16]
+    Info (332115):    To Node      : second_q[640]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.290
+    Info (332115):    Data Delay   : 2.269
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.153
+    Info (332115): -through [get_pins {second_q[630]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.153 
+    Info (332115):    Slack        : 7.153 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[6]
+    Info (332115):    To Node      : second_q[630]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.291
+    Info (332115):    Data Delay   : 2.456
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.276
+    Info (332115): -through [get_pins {second_q[662]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.276 
+    Info (332115):    Slack        : 7.276 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[662]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.318
+    Info (332115):    Data Delay   : 2.306
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.281
+    Info (332115): -through [get_pins {second_q[662]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.281 
+    Info (332115):    Slack        : 7.281 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[662]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.316
+    Info (332115):    Data Delay   : 2.303
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.158
+    Info (332115): -through [get_pins {second_q[657]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.158 
+    Info (332115):    Slack        : 6.158 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[9]
+    Info (332115):    To Node      : second_q[657]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.319
+    Info (332115):    Data Delay   : 3.423
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.290
+    Info (332115): -through [get_pins {second_q[659]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.290 
+    Info (332115):    Slack        : 5.290 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[11]
+    Info (332115):    To Node      : second_q[659]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.318
+    Info (332115):    Data Delay   : 4.292
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.012
+    Info (332115): -through [get_pins {second_q[656]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.012 
+    Info (332115):    Slack        : 7.012 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[8]
+    Info (332115):    To Node      : second_q[656]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.317
+    Info (332115):    Data Delay   : 2.571
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.718
+    Info (332115): -through [get_pins {second_q[564]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.718 
+    Info (332115):    Slack        : 5.718 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[23].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[564]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.301
+    Info (332115):    Data Delay   : 3.881
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.819
+    Info (332115): -through [get_pins {second_q[561]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.819 
+    Info (332115):    Slack        : 7.819 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[23].u_storage|g_ip.response_q[9]
+    Info (332115):    To Node      : second_q[561]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.271
+    Info (332115):    Data Delay   : 1.810
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.718
+    Info (332115): -through [get_pins {second_q[564]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.718 
+    Info (332115):    Slack        : 5.718 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[23].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[564]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.301
+    Info (332115):    Data Delay   : 3.881
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.542
+    Info (332115): -through [get_pins {second_q[590]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.542 
+    Info (332115):    Slack        : 8.542 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[24].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[590]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.264
+    Info (332115):    Data Delay   : 1.094
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.964
+    Info (332115): -through [get_pins {second_q[595]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.964 
+    Info (332115):    Slack        : 6.964 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[24].u_storage|g_ip.response_q[19]
+    Info (332115):    To Node      : second_q[595]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.330
+    Info (332115):    Data Delay   : 2.606
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.268
+    Info (332115): -through [get_pins {second_q[647]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.268 
+    Info (332115):    Slack        : 7.268 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[23]
+    Info (332115):    To Node      : second_q[647]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.278
+    Info (332115):    Data Delay   : 2.354
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.861
+    Info (332115): -through [get_pins {second_q[668]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.861 
+    Info (332115):    Slack        : 5.861 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[20]
+    Info (332115):    To Node      : second_q[668]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.336
+    Info (332115):    Data Delay   : 3.703
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.676
+    Info (332115): -through [get_pins {second_q[664]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.676 
+    Info (332115):    Slack        : 6.676 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[16]
+    Info (332115):    To Node      : second_q[664]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.329
+    Info (332115):    Data Delay   : 2.895
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.125
+    Info (332115): -through [get_pins {second_q[616]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.125 
+    Info (332115):    Slack        : 5.125 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[25].u_storage|g_ip.response_q[16]
+    Info (332115):    To Node      : second_q[616]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.331
+    Info (332115):    Data Delay   : 4.444
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.490
+    Info (332115): -through [get_pins {second_q[566]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.490 
+    Info (332115):    Slack        : 6.490 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[23].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[566]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.295
+    Info (332115):    Data Delay   : 3.115
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.705
+    Info (332115): -through [get_pins {second_q[650]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.705 
+    Info (332115):    Slack        : 5.705 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[2]
+    Info (332115):    To Node      : second_q[650]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.318
+    Info (332115):    Data Delay   : 3.877
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.124
+    Info (332115): -through [get_pins {second_q[755]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.124 
+    Info (332115):    Slack        : 8.124 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[31].u_storage|g_ip.response_q[11]
+    Info (332115):    To Node      : second_q[755]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.281
+    Info (332115):    Data Delay   : 1.495
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.523
+    Info (332115): -through [get_pins {second_q[660]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.523 
+    Info (332115):    Slack        : 6.523 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[660]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.319
+    Info (332115):    Data Delay   : 3.058
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.359
+    Info (332115): -through [get_pins {second_q[665]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.359 
+    Info (332115):    Slack        : 5.359 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[17]
+    Info (332115):    To Node      : second_q[665]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.333
+    Info (332115):    Data Delay   : 4.208
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.400
+    Info (332115): -through [get_pins {second_q[649]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.400 
+    Info (332115):    Slack        : 7.400 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[1]
+    Info (332115):    To Node      : second_q[649]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.325
+    Info (332115):    Data Delay   : 2.175
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.829
+    Info (332115): -through [get_pins {second_q[655]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.829 
+    Info (332115):    Slack        : 7.829 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[7]
+    Info (332115):    To Node      : second_q[655]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.273
+    Info (332115):    Data Delay   : 1.798
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.940
+    Info (332115): -through [get_pins {second_q[638]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.940 
+    Info (332115):    Slack        : 5.940 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[638]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.280
+    Info (332115):    Data Delay   : 3.680
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.940
+    Info (332115): -through [get_pins {second_q[638]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.940 
+    Info (332115):    Slack        : 5.940 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[638]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.280
+    Info (332115):    Data Delay   : 3.680
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.880
+    Info (332115): -through [get_pins {second_q[679]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.880 
+    Info (332115):    Slack        : 8.880 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[28].u_storage|g_ip.response_q[7]
+    Info (332115):    To Node      : second_q[679]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.249
+    Info (332115):    Data Delay   : 0.771
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.388
+    Info (332115): -through [get_pins {second_q[637]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.388 
+    Info (332115):    Slack        : 6.388 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[13]
+    Info (332115):    To Node      : second_q[637]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.278
+    Info (332115):    Data Delay   : 3.234
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.065
+    Info (332115): -through [get_pins {second_q[634]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.065 
+    Info (332115):    Slack        : 6.065 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[10]
+    Info (332115):    To Node      : second_q[634]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.339
+    Info (332115):    Data Delay   : 3.496
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.775
+    Info (332115): -through [get_pins {second_q[635]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.775 
+    Info (332115):    Slack        : 6.775 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[11]
+    Info (332115):    To Node      : second_q[635]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.281
+    Info (332115):    Data Delay   : 2.844
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.554
+    Info (332115): -through [get_pins {second_q[636]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.554 
+    Info (332115):    Slack        : 6.554 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[636]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.279
+    Info (332115):    Data Delay   : 3.067
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.109
+    Info (332115): -through [get_pins {second_q[628]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.109 
+    Info (332115):    Slack        : 7.109 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[4]
+    Info (332115):    To Node      : second_q[628]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.286
+    Info (332115):    Data Delay   : 2.505
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.109
+    Info (332115): -through [get_pins {second_q[661]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.109 
+    Info (332115):    Slack        : 6.109 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[13]
+    Info (332115):    To Node      : second_q[661]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.324
+    Info (332115):    Data Delay   : 3.467
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.690
+    Info (332115): -through [get_pins {second_q[756]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.690 
+    Info (332115):    Slack        : 6.690 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[31].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[756]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.321
+    Info (332115):    Data Delay   : 2.889
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.918
+    Info (332115): -through [get_pins {second_q[699]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.918 
+    Info (332115):    Slack        : 6.918 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[29].u_storage|g_ip.response_q[3]
+    Info (332115):    To Node      : second_q[699]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.318
+    Info (332115):    Data Delay   : 2.664
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.372
+    Info (332115): -through [get_pins {second_q[187]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.372 
+    Info (332115):    Slack        : 8.372 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[7].u_storage|g_ip.response_q[19]
+    Info (332115):    To Node      : second_q[187]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.273
+    Info (332115):    Data Delay   : 1.255
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.131
+    Info (332115): -through [get_pins {second_q[597]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.131 
+    Info (332115):    Slack        : 8.131 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[24].u_storage|g_ip.response_q[21]
+    Info (332115):    To Node      : second_q[597]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.256
+    Info (332115):    Data Delay   : 1.513
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.267
+    Info (332115): -through [get_pins {second_q[593]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.267 
+    Info (332115):    Slack        : 8.267 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[24].u_storage|g_ip.response_q[17]
+    Info (332115):    To Node      : second_q[593]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.325
+    Info (332115):    Data Delay   : 1.308
+TIMING_CORNER_EXTRACTED: slow_1100mv_85c
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 40 setup paths (37 violated).  Worst case slack is -0.369
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/slow_1100mv_0c_setup.rpt}
+Info (332115): Report Timing: Found 40 hold paths (0 violated).  Worst case slack is 0.241
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/slow_1100mv_0c_hold.rpt}
+Info (332115): Report Timing: Found 40 recovery paths (0 violated).  Worst case slack is 0.124
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/slow_1100mv_0c_recovery.rpt}
+Info (332115): Report Timing: Found 40 removal paths (0 violated).  Worst case slack is 3.532
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/slow_1100mv_0c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 40 results (0 violated).  Worst case slack is 3.548
+    Info (332113): Targets: *
+    Info (332113): -nworst: 40
+    Info (332113): -detail: full_path
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.279
+    Info (332115): -through [get_pins {second_q[662]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.279 
+    Info (332115):    Slack        : 7.279 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[662]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.354
+    Info (332115):    Data Delay   : 2.267
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.285
+    Info (332115): -through [get_pins {second_q[662]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.285 
+    Info (332115):    Slack        : 7.285 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[662]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.350
+    Info (332115):    Data Delay   : 2.265
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.509
+    Info (332115): -through [get_pins {second_q[341]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.509 
+    Info (332115):    Slack        : 6.509 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[14].u_storage|g_ip.response_q[5]
+    Info (332115):    To Node      : second_q[341]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.327
+    Info (332115):    Data Delay   : 3.064
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.357
+    Info (332115): -through [get_pins {second_q[640]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.357 
+    Info (332115):    Slack        : 7.357 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[16]
+    Info (332115):    To Node      : second_q[640]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.334
+    Info (332115):    Data Delay   : 2.209
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.171
+    Info (332115): -through [get_pins {second_q[630]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.171 
+    Info (332115):    Slack        : 7.171 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[6]
+    Info (332115):    To Node      : second_q[630]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.335
+    Info (332115):    Data Delay   : 2.394
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.657
+    Info (332115): -through [get_pins {second_q[605]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.657 
+    Info (332115):    Slack        : 7.657 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[25].u_storage|g_ip.response_q[5]
+    Info (332115):    To Node      : second_q[605]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.289
+    Info (332115):    Data Delay   : 1.954
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.146
+    Info (332115): -through [get_pins {second_q[657]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.146 
+    Info (332115):    Slack        : 6.146 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[9]
+    Info (332115):    To Node      : second_q[657]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.353
+    Info (332115):    Data Delay   : 3.401
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.325
+    Info (332115): -through [get_pins {second_q[659]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.325 
+    Info (332115):    Slack        : 5.325 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[11]
+    Info (332115):    To Node      : second_q[659]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.354
+    Info (332115):    Data Delay   : 4.221
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.029
+    Info (332115): -through [get_pins {second_q[656]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.029 
+    Info (332115):    Slack        : 7.029 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[8]
+    Info (332115):    To Node      : second_q[656]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.352
+    Info (332115):    Data Delay   : 2.519
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.746
+    Info (332115): -through [get_pins {second_q[564]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.746 
+    Info (332115):    Slack        : 5.746 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[23].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[564]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.347
+    Info (332115):    Data Delay   : 3.807
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.746
+    Info (332115): -through [get_pins {second_q[564]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.746 
+    Info (332115):    Slack        : 5.746 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[23].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[564]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.347
+    Info (332115):    Data Delay   : 3.807
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.977
+    Info (332115): -through [get_pins {second_q[595]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.977 
+    Info (332115):    Slack        : 6.977 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[24].u_storage|g_ip.response_q[19]
+    Info (332115):    To Node      : second_q[595]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.371
+    Info (332115):    Data Delay   : 2.552
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.267
+    Info (332115): -through [get_pins {second_q[647]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.267 
+    Info (332115):    Slack        : 7.267 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[23]
+    Info (332115):    To Node      : second_q[647]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.331
+    Info (332115):    Data Delay   : 2.302
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.856
+    Info (332115): -through [get_pins {second_q[668]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.856 
+    Info (332115):    Slack        : 5.856 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[20]
+    Info (332115):    To Node      : second_q[668]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.377
+    Info (332115):    Data Delay   : 3.667
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.709
+    Info (332115): -through [get_pins {second_q[664]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.709 
+    Info (332115):    Slack        : 6.709 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[16]
+    Info (332115):    To Node      : second_q[664]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.370
+    Info (332115):    Data Delay   : 2.821
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.158
+    Info (332115): -through [get_pins {second_q[616]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.158 
+    Info (332115):    Slack        : 5.158 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[25].u_storage|g_ip.response_q[16]
+    Info (332115):    To Node      : second_q[616]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.370
+    Info (332115):    Data Delay   : 4.372
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.829
+    Info (332115): -through [get_pins {second_q[561]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.829 
+    Info (332115):    Slack        : 7.829 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[23].u_storage|g_ip.response_q[9]
+    Info (332115):    To Node      : second_q[561]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.314
+    Info (332115):    Data Delay   : 1.757
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.504
+    Info (332115): -through [get_pins {second_q[590]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.504 
+    Info (332115):    Slack        : 8.504 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[24].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[590]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.305
+    Info (332115):    Data Delay   : 1.091
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.563
+    Info (332115): -through [get_pins {second_q[566]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.563 
+    Info (332115):    Slack        : 6.563 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[23].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[566]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.339
+    Info (332115):    Data Delay   : 2.998
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.782
+    Info (332115): -through [get_pins {second_q[650]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.782 
+    Info (332115):    Slack        : 5.782 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[2]
+    Info (332115):    To Node      : second_q[650]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.354
+    Info (332115):    Data Delay   : 3.764
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.119
+    Info (332115): -through [get_pins {second_q[755]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.119 
+    Info (332115):    Slack        : 8.119 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[31].u_storage|g_ip.response_q[11]
+    Info (332115):    To Node      : second_q[755]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.321
+    Info (332115):    Data Delay   : 1.460
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.548
+    Info (332115): -through [get_pins {second_q[660]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.548 
+    Info (332115):    Slack        : 6.548 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[660]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.359
+    Info (332115):    Data Delay   : 2.993
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.467
+    Info (332115): -through [get_pins {second_q[665]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.467 
+    Info (332115):    Slack        : 5.467 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[17]
+    Info (332115):    To Node      : second_q[665]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.371
+    Info (332115):    Data Delay   : 4.062
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.402
+    Info (332115): -through [get_pins {second_q[649]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.402 
+    Info (332115):    Slack        : 7.402 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[1]
+    Info (332115):    To Node      : second_q[649]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.361
+    Info (332115):    Data Delay   : 2.137
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.943
+    Info (332115): -through [get_pins {second_q[638]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.943 
+    Info (332115):    Slack        : 5.943 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[638]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.336
+    Info (332115):    Data Delay   : 3.621
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 5.943
+    Info (332115): -through [get_pins {second_q[638]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 5.943 
+    Info (332115):    Slack        : 5.943 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[638]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.336
+    Info (332115):    Data Delay   : 3.621
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.819
+    Info (332115): -through [get_pins {second_q[679]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.819 
+    Info (332115):    Slack        : 8.819 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[28].u_storage|g_ip.response_q[7]
+    Info (332115):    To Node      : second_q[679]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.285
+    Info (332115):    Data Delay   : 0.796
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.745
+    Info (332115): -through [get_pins {second_q[655]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.745 
+    Info (332115):    Slack        : 7.745 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[7]
+    Info (332115):    To Node      : second_q[655]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.317
+    Info (332115):    Data Delay   : 1.838
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.439
+    Info (332115): -through [get_pins {second_q[637]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.439 
+    Info (332115):    Slack        : 6.439 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[13]
+    Info (332115):    To Node      : second_q[637]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.335
+    Info (332115):    Data Delay   : 3.126
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.130
+    Info (332115): -through [get_pins {second_q[634]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.130 
+    Info (332115):    Slack        : 6.130 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[10]
+    Info (332115):    To Node      : second_q[634]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.382
+    Info (332115):    Data Delay   : 3.388
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.800
+    Info (332115): -through [get_pins {second_q[635]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.800 
+    Info (332115):    Slack        : 6.800 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[11]
+    Info (332115):    To Node      : second_q[635]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.338
+    Info (332115):    Data Delay   : 2.762
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.495
+    Info (332115): -through [get_pins {second_q[636]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.495 
+    Info (332115):    Slack        : 6.495 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[636]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.336
+    Info (332115):    Data Delay   : 3.069
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.107
+    Info (332115): -through [get_pins {second_q[628]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.107 
+    Info (332115):    Slack        : 7.107 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[4]
+    Info (332115):    To Node      : second_q[628]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.343
+    Info (332115):    Data Delay   : 2.450
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.097
+    Info (332115): -through [get_pins {second_q[661]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.097 
+    Info (332115):    Slack        : 6.097 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[13]
+    Info (332115):    To Node      : second_q[661]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.366
+    Info (332115):    Data Delay   : 3.437
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.120
+    Info (332115): -through [get_pins {second_q[17]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.120 
+    Info (332115):    Slack        : 7.120 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[0].u_storage|g_ip.response_q[17]
+    Info (332115):    To Node      : second_q[17]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.356
+    Info (332115):    Data Delay   : 2.424
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.279
+    Info (332115): -through [get_pins {second_q[176]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.279 
+    Info (332115):    Slack        : 7.279 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[7].u_storage|g_ip.response_q[8]
+    Info (332115):    To Node      : second_q[176]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.384
+    Info (332115):    Data Delay   : 2.237
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.742
+    Info (332115): -through [get_pins {second_q[756]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.742 
+    Info (332115):    Slack        : 6.742 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[31].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[756]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.357
+    Info (332115):    Data Delay   : 2.801
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.869
+    Info (332115): -through [get_pins {second_q[699]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.869 
+    Info (332115):    Slack        : 6.869 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[29].u_storage|g_ip.response_q[3]
+    Info (332115):    To Node      : second_q[699]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.355
+    Info (332115):    Data Delay   : 2.676
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.341
+    Info (332115): -through [get_pins {second_q[187]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.341 
+    Info (332115):    Slack        : 8.341 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[7].u_storage|g_ip.response_q[19]
+    Info (332115):    To Node      : second_q[187]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.316
+    Info (332115):    Data Delay   : 1.243
+TIMING_CORNER_EXTRACTED: slow_1100mv_0c
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 40 setup paths (0 violated).  Worst case slack is 3.006
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/fast_1100mv_85c_setup.rpt}
+Info (332115): Report Timing: Found 40 hold paths (0 violated).  Worst case slack is 0.137
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/fast_1100mv_85c_hold.rpt}
+Info (332115): Report Timing: Found 40 recovery paths (0 violated).  Worst case slack is 4.694
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/fast_1100mv_85c_recovery.rpt}
+Info (332115): Report Timing: Found 40 removal paths (0 violated).  Worst case slack is 2.202
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/fast_1100mv_85c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 40 results (0 violated).  Worst case slack is 3.799
+    Info (332113): Targets: *
+    Info (332113): -nworst: 40
+    Info (332113): -detail: full_path
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.380
+    Info (332115): -through [get_pins {second_q[662]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.380 
+    Info (332115):    Slack        : 8.380 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[662]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.193
+    Info (332115):    Data Delay   : 1.327
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.381
+    Info (332115): -through [get_pins {second_q[662]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.381 
+    Info (332115):    Slack        : 8.381 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[662]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.193
+    Info (332115):    Data Delay   : 1.326
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.248
+    Info (332115): -through [get_pins {second_q[564]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.248 
+    Info (332115):    Slack        : 7.248 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[23].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[564]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.205
+    Info (332115):    Data Delay   : 2.447
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.764
+    Info (332115): -through [get_pins {second_q[657]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.764 
+    Info (332115):    Slack        : 7.764 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[9]
+    Info (332115):    To Node      : second_q[657]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.192
+    Info (332115):    Data Delay   : 1.944
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.067
+    Info (332115): -through [get_pins {second_q[659]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.067 
+    Info (332115):    Slack        : 7.067 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[11]
+    Info (332115):    To Node      : second_q[659]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.191
+    Info (332115):    Data Delay   : 2.642
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.248
+    Info (332115): -through [get_pins {second_q[564]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.248 
+    Info (332115):    Slack        : 7.248 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[23].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[564]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.205
+    Info (332115):    Data Delay   : 2.447
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.221
+    Info (332115): -through [get_pins {second_q[656]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.221 
+    Info (332115):    Slack        : 8.221 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[8]
+    Info (332115):    To Node      : second_q[656]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.189
+    Info (332115):    Data Delay   : 1.490
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.693
+    Info (332115): -through [get_pins {second_q[566]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.693 
+    Info (332115):    Slack        : 7.693 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[23].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[566]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.200
+    Info (332115):    Data Delay   : 2.007
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.162
+    Info (332115): -through [get_pins {second_q[595]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.162 
+    Info (332115):    Slack        : 8.162 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[24].u_storage|g_ip.response_q[19]
+    Info (332115):    To Node      : second_q[595]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.201
+    Info (332115):    Data Delay   : 1.537
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.313
+    Info (332115): -through [get_pins {second_q[647]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.313 
+    Info (332115):    Slack        : 8.313 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[23]
+    Info (332115):    To Node      : second_q[647]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.188
+    Info (332115):    Data Delay   : 1.399
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.478
+    Info (332115): -through [get_pins {second_q[668]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.478 
+    Info (332115):    Slack        : 7.478 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[20]
+    Info (332115):    To Node      : second_q[668]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.209
+    Info (332115):    Data Delay   : 2.213
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.977
+    Info (332115): -through [get_pins {second_q[664]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.977 
+    Info (332115):    Slack        : 7.977 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[16]
+    Info (332115):    To Node      : second_q[664]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.200
+    Info (332115):    Data Delay   : 1.723
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.928
+    Info (332115): -through [get_pins {second_q[616]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.928 
+    Info (332115):    Slack        : 6.928 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[25].u_storage|g_ip.response_q[16]
+    Info (332115):    To Node      : second_q[616]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.205
+    Info (332115):    Data Delay   : 2.767
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.825
+    Info (332115): -through [get_pins {second_q[755]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.825 
+    Info (332115):    Slack        : 8.825 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[31].u_storage|g_ip.response_q[11]
+    Info (332115):    To Node      : second_q[755]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.195
+    Info (332115):    Data Delay   : 0.880
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.194
+    Info (332115): -through [get_pins {second_q[650]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.194 
+    Info (332115):    Slack        : 7.194 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[2]
+    Info (332115):    To Node      : second_q[650]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.190
+    Info (332115):    Data Delay   : 2.516
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 9.081
+    Info (332115): -through [get_pins {second_q[590]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 9.081 
+    Info (332115):    Slack        : 9.081 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[24].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[590]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.185
+    Info (332115):    Data Delay   : 0.634
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.683
+    Info (332115): -through [get_pins {second_q[341]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.683 
+    Info (332115):    Slack        : 7.683 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[14].u_storage|g_ip.response_q[5]
+    Info (332115):    To Node      : second_q[341]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.197
+    Info (332115):    Data Delay   : 2.020
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.482
+    Info (332115): -through [get_pins {second_q[605]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.482 
+    Info (332115):    Slack        : 8.482 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[25].u_storage|g_ip.response_q[5]
+    Info (332115):    To Node      : second_q[605]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.173
+    Info (332115):    Data Delay   : 1.245
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.617
+    Info (332115): -through [get_pins {second_q[561]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.617 
+    Info (332115):    Slack        : 8.617 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[23].u_storage|g_ip.response_q[9]
+    Info (332115):    To Node      : second_q[561]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.187
+    Info (332115):    Data Delay   : 1.096
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.298
+    Info (332115): -through [get_pins {second_q[640]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.298 
+    Info (332115):    Slack        : 8.298 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[16]
+    Info (332115):    To Node      : second_q[640]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.202
+    Info (332115):    Data Delay   : 1.400
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.153
+    Info (332115): -through [get_pins {second_q[630]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.153 
+    Info (332115):    Slack        : 8.153 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[6]
+    Info (332115):    To Node      : second_q[630]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.202
+    Info (332115):    Data Delay   : 1.545
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 6.896
+    Info (332115): -through [get_pins {second_q[665]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 6.896 
+    Info (332115):    Slack        : 6.896 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[17]
+    Info (332115):    To Node      : second_q[665]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.208
+    Info (332115):    Data Delay   : 2.796
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.457
+    Info (332115): -through [get_pins {second_q[649]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.457 
+    Info (332115):    Slack        : 8.457 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[27].u_storage|g_ip.response_q[1]
+    Info (332115):    To Node      : second_q[649]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.203
+    Info (332115):    Data Delay   : 1.240
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.404
+    Info (332115): -through [get_pins {second_q[17]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.404 
+    Info (332115):    Slack        : 8.404 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[0].u_storage|g_ip.response_q[17]
+    Info (332115):    To Node      : second_q[17]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.198
+    Info (332115):    Data Delay   : 1.298
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.275
+    Info (332115): -through [get_pins {second_q[176]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.275 
+    Info (332115):    Slack        : 8.275 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[7].u_storage|g_ip.response_q[8]
+    Info (332115):    To Node      : second_q[176]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.212
+    Info (332115):    Data Delay   : 1.413
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 9.312
+    Info (332115): -through [get_pins {second_q[679]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 9.312 
+    Info (332115):    Slack        : 9.312 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[28].u_storage|g_ip.response_q[7]
+    Info (332115):    To Node      : second_q[679]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.181
+    Info (332115):    Data Delay   : 0.407
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.426
+    Info (332115): -through [get_pins {second_q[638]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.426 
+    Info (332115):    Slack        : 7.426 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[638]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.183
+    Info (332115):    Data Delay   : 2.291
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.865
+    Info (332115): -through [get_pins {second_q[756]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.865 
+    Info (332115):    Slack        : 7.865 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[31].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[756]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.196
+    Info (332115):    Data Delay   : 1.839
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.283
+    Info (332115): -through [get_pins {second_q[699]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.283 
+    Info (332115):    Slack        : 8.283 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[29].u_storage|g_ip.response_q[3]
+    Info (332115):    To Node      : second_q[699]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.193
+    Info (332115):    Data Delay   : 1.424
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.426
+    Info (332115): -through [get_pins {second_q[638]~DUPLICATE|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.426 
+    Info (332115):    Slack        : 7.426 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[14]
+    Info (332115):    To Node      : second_q[638]~DUPLICATE
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.183
+    Info (332115):    Data Delay   : 2.291
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.688
+    Info (332115): -through [get_pins {second_q[637]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.688 
+    Info (332115):    Slack        : 7.688 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[13]
+    Info (332115):    To Node      : second_q[637]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.182
+    Info (332115):    Data Delay   : 2.030
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.533
+    Info (332115): -through [get_pins {second_q[634]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.533 
+    Info (332115):    Slack        : 7.533 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[10]
+    Info (332115):    To Node      : second_q[634]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.205
+    Info (332115):    Data Delay   : 2.162
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.967
+    Info (332115): -through [get_pins {second_q[635]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.967 
+    Info (332115):    Slack        : 7.967 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[11]
+    Info (332115):    To Node      : second_q[635]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.189
+    Info (332115):    Data Delay   : 1.744
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 7.991
+    Info (332115): -through [get_pins {second_q[636]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 7.991 
+    Info (332115):    Slack        : 7.991 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[12]
+    Info (332115):    To Node      : second_q[636]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.181
+    Info (332115):    Data Delay   : 1.728
+Info (332115): Report Timing: Found 1 setup paths (0 violated).  Worst case slack is 8.231
+    Info (332115): -through [get_pins {second_q[628]|d}]
+    Info (332115): -setup
+    Info (332115): -summary
+    Info (332115): -stdout
+Info (332115): Path #1: Setup slack is 8.231 
+    Info (332115):    Slack        : 8.231 
+    Info (332115):    From Node    : llm_bank_ram:u_cache|pipelined_word_ram:g_bank[26].u_storage|g_ip.response_q[4]
+    Info (332115):    To Node      : second_q[628]
+    Info (332115):    Launch Clock : clk
+    Info (332115):    Latch Clock  : clk
+    Info (332115):    Relationship : 10.000
+    Info (332115):    Clock Skew   : -0.189
+    Info (332115):    Data Delay   : 1.480
+TIMING_CORNER_EXTRACTED: fast_1100mv_85c
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 40 setup paths (0 violated).  Worst case slack is 3.934
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/fast_1100mv_0c_setup.rpt}
+Info (332115): Report Timing: Found 40 hold paths (0 violated).  Worst case slack is 0.110
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/fast_1100mv_0c_hold.rpt}
+Info (332115): Report Timing: Found 40 recovery paths (0 violated).  Worst case slack is 5.327
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/fast_1100mv_0c_recovery.rpt}
+Info (332115): Report Timing: Found 40 removal paths (0 violated).  Worst case slack is 0.668
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 40
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1/fast_1100mv_0c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 40 results (0 violated).  Worst case slack is 3.789
+    Info (332113): Targets: *
+    Info (332113): -nworst: 40
+    Info (332113): -detail: full_path
+TIMING_CORNER_EXTRACTED: fast_1100mv_0c
+TIMING_EXTRACTION_PASS: D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/fullrtl100_attention1 (sdc)
+Info (23030): Evaluation of Tcl script D:\2151097_Nguyen Nhut Khanh\tools\timing\extract.tcl was successful
+Info: Quartus Prime Timing Analyzer was successful. 0 errors, 0 warnings
+    Info: Peak virtual memory: 6799 megabytes
+    Info: Processing ended: Sun Oct  4 20:52:42 2026
+    Info: Elapsed time: 00:02:25
+    Info: Total CPU time (on all processors): 00:03:40

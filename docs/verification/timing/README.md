@@ -4,12 +4,24 @@
 
 Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL dựa trên critical path. Phần full graph dùng Cyclone V C9; các snapshot legacy bên dưới dùng thiết bị riêng được ghi trong manifest. Các phép đo là FPGA demo, chưa xác nhận ASIC signoff.
 
-## Fanout2 result: 96.67 MHz, setup/hold FAIL
+## Attention1 result: 92.19 MHz, setup/recovery FAIL
 
-Current `fullrtl100_attention1` moves the accumulator clear to A_QUERY and adds
-physical host_addr D3 setting7. [A&S](../synthesis/attention1/manifest.json)
-PASS0errors12warnings; [all seven groups](../../../tests/full_rtl/evidence/attention1_all_units/results.json)
-PASS0warnings, including128position causal attention and full graph4229462compute clocks/three selected tokens. Fresh full-fit timing is RUNNING; no timing PASS yet.
+[Manifest](fullrtl100_attention1/manifest.json), [source ZIP](fullrtl100_attention1/source_archive.json) and [seven-group regression](../../../tests/full_rtl/evidence/attention1_all_units/results.json) match34RTL/3configuration hashes. Extraction completed20:52:43 on04Oct2026. QuartusLite25.1std Build1129/CycloneV5CGXFC9E6F35C7/seed1/SPEED/STANDARD; SDC10ns,input0.5..2ns/outputsetup2ns/hold0.5ns,no exceptions. Map0errors12warnings, fit0errors4warnings, STA0errors2warnings332148. Resources52799ALM/48311FF/1186of1220RAMblocks/9515648bits/186pins, DSP/PLL/DLL/HSSI0. UCP0;17/20checks PASS. Synthesis/fitting PASS, timing FAIL; strict application gate rejects92.19MHz.
+
+| Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
+|---|---:|---:|---:|---:|---:|
+| slow_1100mv_85c | -0.847/-43.132 | 0.090/0.000 | -0.122/-0.739 | 0.910/0.000 | 3.600/0.000 |
+| slow_1100mv_0c | -0.369/-6.553 | 0.241/0.000 | 0.124/0.000 | 3.532/0.000 | 3.548/0.000 |
+| fast_1100mv_85c | 3.006/0.000 | 0.137/0.000 | 4.694/0.000 | 2.202/0.000 | 3.799/0.000 |
+| fast_1100mv_0c | 3.934/0.000 | 0.110/0.000 | 5.327/0.000 | 0.668/0.000 | 3.789/0.000 |
+
+[Setup](fullrtl100_attention1/slow_1100mv_85c_setup.rpt) now fails O_K_WAIT/op[6]~DUPLICATE -> second_q[341],10.568nsdata/9.314nsrouting/one logic level/skew-.179ns. All40listed paths negative, TNS-43.132ns; the RAM write-data stage for parameter lane3 also appears at-.579ns. [Recommendations](fullrtl100_attention1/slow_1100mv_85c_recommendations.txt) identify duplication/inter-path competition at this shared cache-capture enable. The early attention clear is numerically verified, same4229462graph clocks; preserve it. A portable next candidate separates continuously sampled KV payload from the binary vector operand, removing O_K_WAIT/k_valid from the wide shared payload capture. Consumers still follow the cache-valid FSM; no clock/state/test-expectation change is intended. This remains a hypothesis until fresh gates pass.
+
+[Recovery](fullrtl100_attention1/slow_1100mv_85c_recovery.rpt) fails core_rst_n -> eight host_rdata FFs, worst-.122ns/data10.614ns/routing9.504ns. Keep the verified two-FF reset release and immediate zero/cancellation contract; the protocol test explicitly checks host_rdata=0 one ns after assertion. A reset global-routing assignment in QSF is a backend candidate, consistent with [Quartus control-signal global routing](https://www.intel.com/programmable/technical-pdfs/qps-ugs.pdf) and the [Global Signal option](https://resources.altera.com/quartushelp/17.1/mapIdTopics/mwh1465427363197.htm). It introduces no RTL IP, generated clock or timing exception; actual application of the assignment and every recovery/removal corner must be checked in the next fit.
+
+Hold now PASS at every corner; host_addr/host_wdata D3 setting7 requests remain backend-only. The full design occupies97%ofM10K blocks, despite76%logical block-memory bits; preserve actual resource/report counts rather than assuming spare RAM packing. Remaining12map warnings are bounded sigmoid index10027, unused SRAM IP ports287013, inferred output RAM forwarding276020 and constant debug outputs13024/13410; no suppression. Four fitter warnings remain the LogicLock license292013 and unassigned-pin15714/169085 notices, with no LogicLock or board pinout requested. Current [vendor-free elaboration](../portable_elaboration_attention1/results.json) PASS is behavioral run0, not ASIC synthesis/signoff.
+
+## Fanout2 result: 96.67 MHz, setup/hold FAIL
 
 [Manifest](fullrtl100_fanout2/manifest.json), [source ZIP](fullrtl100_fanout2/source_archive.json) and [unchanged seven-group regression](../../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match34RTL/3configuration hashes. Extraction complete19:29:55 on04Oct2026. Same CycloneV5CGXFC9E6F35C7/QuartusLite25.1std Build1129/seed1/SPEED/STANDARD,10ns SDC and I/O budgets. Map0errors12warnings, fit0errors4warnings, STA0errors2warnings332148. Resources51888ALM/48214FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. UCP0.17/20checks PASS. Synthesis/fitting PASS, timing FAIL; no pretrained application.
 
