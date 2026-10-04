@@ -256,7 +256,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     endgenerate
     assign reserved_weight = |reserved_weight_lane;
     logic [511:0] table_q;
-    logic [767:0] vector_q, second_q, write_vector_q, query_q;
+    logic [767:0] vector_q, second_q, cache_operand_q, write_vector_q, query_q;
     logic [6:0] write_vector_addr_q;
     logic [31:0] write_vector_mask_q;
     logic signed [38:0] linear_acc_q;
@@ -548,6 +548,12 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     genvar lane, scalar_group;
     generate
     for (lane = 0; lane < 32; lane = lane + 1) begin : g_simd
+        // Cache payload is held by the RAM response until the next read.
+        // A_KEY/A_WEIGHT follow O_K_WAIT with k_valid, so this plain FF
+        // has captured the accepted response before either consumes it.
+        // Binary vector operations own second_q independently.
+        always_ff @(posedge clk)
+            cache_operand_q[lane * 24 +: 24] <= k_data[lane * 24 +: 24];
         always_ff @(posedge clk) begin
             if (core_rst_n) begin
                 unique case (1'b1)
@@ -598,11 +604,11 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                     op[R_ROUND_IDX], op[S_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd15);
                     op[A_KEY_IDX] : begin
                         math_a_q[lane] <= query_q[lane * 24 +: 24];
-                        math_b_q[lane] <= 32'($signed(second_q[lane * 24 +: 24]));
+                        math_b_q[lane] <= 32'($signed(cache_operand_q[lane * 24 +: 24]));
                     end
                     op[A_QUERY_IDX] : attention_acc_q[lane] <= 0;
                     op[A_WEIGHT_IDX] : begin
-                        math_a_q[lane] <= second_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, probability_q};
+                        math_a_q[lane] <= cache_operand_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, probability_q};
                     end
                     op[A_ACC_IDX] : attention_acc_q[lane] <= attention_acc_q[lane] + math_product[lane];
                     op[B_INPUT1_IDX] : begin
@@ -665,8 +671,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
 
     always_ff @(posedge clk) begin
         if (core_rst_n) begin
-            if (op[O_K_WAIT_IDX] && k_valid) second_q <= k_data;
-            else if (op[B_INPUT0_IDX]) second_q <= vector_q;
+            if (op[B_INPUT0_IDX]) second_q <= vector_q;
             if (op[SG_PICK_IDX]) sig_x_q <= sigmoid_pick_q[int'(lane_q[4:3])];
         end
     end

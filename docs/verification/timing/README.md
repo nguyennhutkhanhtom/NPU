@@ -4,6 +4,8 @@
 
 Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL dựa trên critical path. Phần full graph dùng Cyclone V C9; các snapshot legacy bên dưới dùng thiết bị riêng được ghi trong manifest. Các phép đo là FPGA demo, chưa xác nhận ASIC signoff.
 
+Current `fullrtl100_cache1` separates32continuously clocked KV payload slices from the binary operand held at B_INPUT0, removing O_K_WAIT/k_valid from the shared768bit capture. Early attention clear remains. QSF requests global routing for core_rst_n; RTL reset2FF/immediate host_rdata zero and SDC10ns are unchanged. [A&S](../synthesis/cache1/manifest.json) PASS0errors12warnings; [six units](../../../tests/full_rtl/evidence/cache1_six_units/results.json) PASS0warnings. Fresh graph/fit/all20timing checks RUNNING; no performance improvement or current all-seven PASS claimed. Confirm actual global-routing assignment application in the fitted report.
+
 ## Attention1 result: 92.19 MHz, setup/recovery FAIL
 
 [Manifest](fullrtl100_attention1/manifest.json), [source ZIP](fullrtl100_attention1/source_archive.json) and [seven-group regression](../../../tests/full_rtl/evidence/attention1_all_units/results.json) match34RTL/3configuration hashes. Extraction completed20:52:43 on04Oct2026. QuartusLite25.1std Build1129/CycloneV5CGXFC9E6F35C7/seed1/SPEED/STANDARD; SDC10ns,input0.5..2ns/outputsetup2ns/hold0.5ns,no exceptions. Map0errors12warnings, fit0errors4warnings, STA0errors2warnings332148. Resources52799ALM/48311FF/1186of1220RAMblocks/9515648bits/186pins, DSP/PLL/DLL/HSSI0. UCP0;17/20checks PASS. Synthesis/fitting PASS, timing FAIL; strict application gate rejects92.19MHz.

@@ -227,8 +227,8 @@
       "file": "llm_soc.sv",
       "path": "Verilog Source code/llm_soc.sv",
       "document": "blocks/llm_soc.sv.md",
-      "sha256": "51ef7ae59847a9b082916872fc3512dbc0d890011d5b8134c8dfccb0f8985811",
-      "lines": 1031
+      "sha256": "5abac9ed9dde98138c4e5928fe7638e302ca4bf9a49b38eeafd373826a10fb9e",
+      "lines": 1036
     },
     {
       "groups": 4,

@@ -150,10 +150,10 @@
     {
       "file": "docs/source_guide/blocks/llm_soc.sv.md",
       "ordinal": 0,
-      "source_sha256": "5c4856f2589b9ea9a9acbf0c2e5458b69963905eb0d79271a46610d3fd053db8",
-      "width": 747,
+      "source_sha256": "73a534b00ff5610251417e648bc2ce89c6212e298971fd71157425aa351f9d6d",
+      "width": 947,
       "height": 498,
-      "nodes": 8,
+      "nodes": 10,
       "status": "rendered"
     },
     {

@@ -2,7 +2,7 @@
 
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [llm_soc.sv](<../../../Verilog%20Source%20code/llm_soc.sv>). **Số dòng:** 1031. **SHA-256:** `51ef7ae59847a9b082916872fc3512dbc0d890011d5b8134c8dfccb0f8985811`.
+**Source:** [llm_soc.sv](<../../../Verilog%20Source%20code/llm_soc.sv>). **Số dòng:** 1036. **SHA-256:** `5abac9ed9dde98138c4e5928fe7638e302ca4bf9a49b38eeafd373826a10fb9e`.
 
 ## Khối này làm gì?
 
@@ -17,8 +17,13 @@ flowchart TB
     TOKENS --> GRAPH[Graph FSM and 102 one-hot operator states]
     GRAPH --> SIMD[32-lane math plus sqrt divide sigmoid]
     PARAM --> SIMD
-    VECTOR[Vector SRAM] <--> SIMD
-    KV[KV cache SRAM] <--> SIMD
+    VECTOR[Vector SRAM] --> SECOND[Held binary vector operand]
+    VECTOR --> SIMD
+    SECOND --> SIMD
+    SIMD --> VECTOR
+    KV[KV cache SRAM] --> CACHE[32 generated cache payload FF groups]
+    CACHE --> SIMD
+    SIMD --> KV
     SIMD --> GRAPH
     GRAPH --> OUTPUT[RTL-selected output token buffer]
 ```
@@ -48,6 +53,14 @@ báo format fault. Reset phải bao phủ một cạnh lên để hủy operator
 Host FSM chốt transaction payload nội bộ. Public host_rdata là register luôn
 chốt payload ở mỗi cạnh; H_DONE báo ACK ở cùng cạnh dữ liệu đã chốt. Không thêm
 latency ACK quan sát được; reset vẫn xóa response và hủy transaction.
+
+`cache_operand_q` chốt `k_data` liên tục trong32lane generate, không enable/reset
+payload. `A_KEY`/`A_WEIGHT` chỉ tiêu thụ sau `O_K_WAIT && k_valid`; SRAM đã giữ
+response hợp lệ và FF đã chốt trước cạnh tiêu thụ. `second_q` giữ operand đầu
+của residual/SwiGLU và chỉ ghi tại `B_INPUT0`. Tách hai owner bỏ cache-enable/mux
+khỏi bus768bit dùng chung, không thêm state/clock/latency hay đổi phép toán.
+Reset hủy control/validity; payload chưa hợp lệ không được tiêu thụ. Bản cache1
+đang chạy lại regression và full timing; PASS trước đó là source attention1.
 
 ## Các nhóm logic trong source
 
@@ -313,7 +326,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     endgenerate
     assign reserved_weight = |reserved_weight_lane;
     logic [511:0] table_q;
-    logic [767:0] vector_q, second_q, write_vector_q, query_q;
+    logic [767:0] vector_q, second_q, cache_operand_q, write_vector_q, query_q;
     logic [6:0] write_vector_addr_q;
     logic [31:0] write_vector_mask_q;
     logic signed [38:0] linear_acc_q;
@@ -628,15 +641,21 @@ Vector/KV và parameter read valid năm cạnh qua request/response pipeline. Ho
 
 Registered addresses xuất hiện trước enable. Graph xử lý mọi prompt position, bốn layer mỗi position, rồi chọn token và quay lại embedding.
 
-### [Dòng 546–683: Per-lane datapath](<../../../Verilog%20Source%20code/llm_soc.sv#L546>)
+### [Dòng 546–688: Per-lane datapath](<../../../Verilog%20Source%20code/llm_soc.sv#L546>)
 
-<!-- source-range:546:683 -->
+<!-- source-range:546:688 -->
 ```systemverilog
     // synthesis. The FSM carries enables and addresses, while each lane owns
     // its arithmetic payload and its portion of the workspace write bus.
     genvar lane, scalar_group;
     generate
     for (lane = 0; lane < 32; lane = lane + 1) begin : g_simd
+        // Cache payload is held by the RAM response until the next read.
+        // A_KEY/A_WEIGHT follow O_K_WAIT with k_valid, so this plain FF
+        // has captured the accepted response before either consumes it.
+        // Binary vector operations own second_q independently.
+        always_ff @(posedge clk)
+            cache_operand_q[lane * 24 +: 24] <= k_data[lane * 24 +: 24];
         always_ff @(posedge clk) begin
             if (core_rst_n) begin
                 unique case (1'b1)
@@ -687,11 +706,11 @@ Registered addresses xuất hiện trước enable. Graph xử lý mọi prompt 
                     op[R_ROUND_IDX], op[S_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd15);
                     op[A_KEY_IDX] : begin
                         math_a_q[lane] <= query_q[lane * 24 +: 24];
-                        math_b_q[lane] <= 32'($signed(second_q[lane * 24 +: 24]));
+                        math_b_q[lane] <= 32'($signed(cache_operand_q[lane * 24 +: 24]));
                     end
                     op[A_QUERY_IDX] : attention_acc_q[lane] <= 0;
                     op[A_WEIGHT_IDX] : begin
-                        math_a_q[lane] <= second_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, probability_q};
+                        math_a_q[lane] <= cache_operand_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, probability_q};
                     end
                     op[A_ACC_IDX] : attention_acc_q[lane] <= attention_acc_q[lane] + math_product[lane];
                     op[B_INPUT1_IDX] : begin
@@ -754,8 +773,7 @@ Registered addresses xuất hiện trước enable. Graph xử lý mọi prompt 
 
     always_ff @(posedge clk) begin
         if (core_rst_n) begin
-            if (op[O_K_WAIT_IDX] && k_valid) second_q <= k_data;
-            else if (op[B_INPUT0_IDX]) second_q <= vector_q;
+            if (op[B_INPUT0_IDX]) second_q <= vector_q;
             if (op[SG_PICK_IDX]) sig_x_q <= sigmoid_pick_q[int'(lane_q[4:3])];
         end
     end
@@ -774,9 +792,9 @@ Registered addresses xuất hiện trước enable. Graph xử lý mọi prompt 
 
 Constant slices giúp synthesis thấy từng lane. RNE và saturation dùng helper portable; signedness cần tường minh cho bit slices.
 
-### [Dòng 684–738: Operator launch and memory handshakes](<../../../Verilog%20Source%20code/llm_soc.sv#L684>)
+### [Dòng 689–743: Operator launch and memory handshakes](<../../../Verilog%20Source%20code/llm_soc.sv#L689>)
 
-<!-- source-range:684:738 -->
+<!-- source-range:689:743 -->
 ```systemverilog
     // cancels the operation pipeline and clears architectural status.
     always_ff @(posedge clk) begin
@@ -837,9 +855,9 @@ Constant slices giúp synthesis thấy từng lane. RNE và saturation dùng hel
 
 O_IDLE chọn source/destination theo graph; request/wait states đợi SRAM hoặc arithmetic response; O_WRITE ghi lane mask.
 
-### [Dòng 739–816: Embedding and ternary linears](<../../../Verilog%20Source%20code/llm_soc.sv#L739>)
+### [Dòng 744–821: Embedding and ternary linears](<../../../Verilog%20Source%20code/llm_soc.sv#L744>)
 
-<!-- source-range:739:816 -->
+<!-- source-range:744:821 -->
 ```systemverilog
                 end
                 op[E_DATA_IDX] : begin
@@ -923,9 +941,9 @@ O_IDLE chọn source/destination theo graph; request/wait states đợi SRAM ho�
 
 Embedding S8×U24/F24 tới S24/F16. Linear accumulate S39, multiply coefficient rồi RNE24, write từng output lane.
 
-### [Dòng 817–868: Affine RMSNorm and RoPE](<../../../Verilog%20Source%20code/llm_soc.sv#L817>)
+### [Dòng 822–873: Affine RMSNorm and RoPE](<../../../Verilog%20Source%20code/llm_soc.sv#L822>)
 
-<!-- source-range:817:868 -->
+<!-- source-range:822:873 -->
 ```systemverilog
                 op[N_SQUARE_IDX] : begin
                     begin return_m <= N_ACC; op <= O_M_START; end
@@ -983,9 +1001,9 @@ Embedding S8×U24/F24 tới S24/F16. Linear accumulate S39, multiply coefficient
 
 Mean-square, epsilon, floor sqrt, rounded reciprocal và signed gains. RoPE ghép hai nửa 16 channel bằng cos/sin S16/F15.
 
-### [Dòng 869–955: KV and causal attention](<../../../Verilog%20Source%20code/llm_soc.sv#L869>)
+### [Dòng 874–960: KV and causal attention](<../../../Verilog%20Source%20code/llm_soc.sv#L874>)
 
-<!-- source-range:869:955 -->
+<!-- source-range:874:960 -->
 ```systemverilog
                 end
                 op[C_STORE_IDX] : if (row_q == 7) op <= O_FINISH;
@@ -1078,9 +1096,9 @@ Mean-square, epsilon, floor sqrt, rounded reciprocal và signed gains. RoPE ghé
 
 Địa chỉ cache layer/position/KV/head. Softmax trừ max, exp LUT interpolation, weighted values và rounded divide.
 
-### [Dòng 956–990: Residual and SwiGLU](<../../../Verilog%20Source%20code/llm_soc.sv#L956>)
+### [Dòng 961–995: Residual and SwiGLU](<../../../Verilog%20Source%20code/llm_soc.sv#L961>)
 
-<!-- source-range:956:990 -->
+<!-- source-range:961:995 -->
 ```systemverilog
                     end else op <= B_ADD_CLAMP;
                 end
@@ -1121,9 +1139,9 @@ Mean-square, epsilon, floor sqrt, rounded reciprocal và signed gains. RoPE ghé
 
 Residual saturates S24; gate activation dùng sigmoid S16/F12, rồi multiply up branch và down projection.
 
-### [Dòng 991–1031: Language head and sampling](<../../../Verilog%20Source%20code/llm_soc.sv#L991>)
+### [Dòng 996–1036: Language head and sampling](<../../../Verilog%20Source%20code/llm_soc.sv#L996>)
 
-<!-- source-range:991:1031 -->
+<!-- source-range:996:1036 -->
 ```systemverilog
                 end
                 op[H_WEIGHT_IDX] : begin weights_q <= parameter_word_q; begin v_address_q <= 7'(((int'($unsigned(3'(1))) << 3) + (int'($unsigned(3'(1))) << 2)) + int'($unsigned(4'(chunk_q)))); return_v <= H_INPUT; op <= O_V_REQ; end end

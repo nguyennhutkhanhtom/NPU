@@ -377,3 +377,5 @@ remain blocked by the hardware/all-seven gate.
 ## Explicit RTL refactor
 
 See [coding rules and structural ownership](rtl_style.md). Request/address/return-state updates are visible in the FSM, SIMD/tag pipelines use generate blocks, and LUTs are explicit combinational instances. Latencies/numeric values are unchanged. Earlier35-source unit/timing evidence is historical; current33-source gates must be rerun.
+
+Current cache1 separates generated continuous KV payload FFs from the held binary operand. Consumers still follow cache valid; no FSM state/clock/latency/expected-value change. [Six groups](../../tests/full_rtl/evidence/cache1_six_units/results.json) PASS0warnings; graph/fresh full timing pending. Host reset still clears response immediately; QSF global-routing request is backend-only, not compute/control IP or ASIC signoff. Preceding unit/portable/timing evidence applies to its archived attention1 source.

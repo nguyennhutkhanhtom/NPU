@@ -1,0 +1,878 @@
+{
+  "status": "SOURCE_REVIEW_PASS",
+  "scope": "Manual source review with lexical inventory of the exact cache1 snapshot; not a SystemVerilog parser, functional proof, synthesis, timing, ASIC signoff or application gate.",
+  "rtl_sources": {
+    "acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
+    "banked_word_ram.sv": "bb7a3bb83e0aef84c030403bcd675e4853f190ea79d9851ad742a5a0d02d2409",
+    "descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+    "div.sv": "ddb1191f9879b7d3643d82a544ea14c30e7df999a3af5d913f354259363aa228",
+    "ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+    "llm_bank_ram.sv": "c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb",
+    "llm_exp_lut.svh": "7aafb64bcea808bcb74387c174c808784433bb941f2e9e2f815bcbeb9b1a5c6e",
+    "llm_gumbel_lut.svh": "870d129c9722a00efb733f0a6fbcad493e069447877de57a123db9d9b4adbec8",
+    "llm_math.sv": "9d4d44be0bfe5d44cb196ffdc5e812710640989fb43f23adbcb62a0e48bae8ed",
+    "llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
+    "llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
+    "llm_soc.sv": "5abac9ed9dde98138c4e5928fe7638e302ca4bf9a49b38eeafd373826a10fb9e",
+    "logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
+    "matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
+    "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+    "mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+    "mul.sv": "fdca97fe654f877cd33e7eb934d3869a6e754bd9a4d9d128f228d9c17add646e",
+    "norm.sv": "045a18b3d7152a114705cf85f87396eb1d080193dbb867b6791f37e278f17f36",
+    "norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+    "npu_pkg.sv": "18385ff77706c505eb7c947c5b1f056b5d6230e6971a1cc09a4d823c27a7bcfd",
+    "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+    "pipelined_word_ram.sv": "0e82266f6da5f31bd2612e4696778f9560915020f6a5a3b498dfd4acd8b6e07a",
+    "postscale.sv": "b9cb61b7014c037c408340a8042b4c0862ed46997754d9b4dee40056835e7160",
+    "quartus_word_ram.sv": "c38b8642bfb143f71bf89902b767844086f0894a16db11ebc0abe98131709a0b",
+    "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+    "reset_release.sv": "2720ef4c4b21a68bf193c24cdb60f574ee8b272f36862a953c1cf060f14361a2",
+    "rowwise_dispatch.sv": "e0f7cb0088af29afe233478a72f4ef9aab0676f2a24d56903b7f35261a6b3543",
+    "rowwise_op.sv": "ce49a16c12069b0560986f7b8cf5bd0a187ce1d409f0ce0e69515bff11e1a559",
+    "scale_compose.sv": "12c6b58896e3f71367ba1149f6f23784aa0389500aeaf3b66deb2abd198aa55b",
+    "sigmoid.sv": "d85cdc54ba8843c4e8aa99d4d14eb8b72edf38966aa6c09d68abd537e329fce2",
+    "sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
+    "sigmoid_lut.svh": "c72383f3cd3c3dadf7e8579d7d12edca2cc2d6555735dd1e9d4def6f561b73ef",
+    "sram_256_wrapper.sv": "7c17702a2fa1c9a2baed950aff5e687f2981a07206ea3582e05659c6690e968a",
+    "ternary_mul.sv": "71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f"
+  },
+  "rules_sha256": "7f8ce56784cd84b30d283587e8d18aa4efb50b33c6d86c23b6c28b58548e51aa",
+  "review": {
+    "runtime_arithmetic": "Bit-product compressor trees, shift/subtract divider and radicand/trial-subtract integer square root; registers, muxes, comparisons, bitwise, add/subtract, shifts. All listed multiplication/division symbols reviewed as elaboration-only.",
+    "functions": "13 runtime pure combinational helpers, two elaboration-only geometry functions. No FSM, handshake, memory access, pipeline or sequential register ownership in functions.",
+    "ownership": "llm_soc requests/FSM updates inline; SIMD lanes and reduction pipeline registers generated. Cache payload FFs sample continuously per generated lane; binary vector operand has its own B_INPUT0 owner. Consumers follow the cache-valid FSM; no hidden handshake or additional stage. Small procedural loops bound two lanes, four mux members or eight legacy metadata slots. No variable/unbounded loops or synthesizable task.",
+    "technology": "Only quartus_word_ram instantiates altsyncram; memory adapters document latency/collision/reset. dont_merge hints confined to memory adapters. Physical QSF settings are EDA backend binding."
+  },
+  "loops": [
+    {
+      "file": "acc_mul.sv",
+      "line": 15,
+      "source": "for (level = 0; level <= LEVELS; level = level + 1) begin : g_level",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "acc_mul.sv",
+      "line": 19,
+      "source": "for (n = 0; n < COUNT; n = n + 1) begin : g_node",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "banked_word_ram.sv",
+      "line": 34,
+      "source": "for (tile = 0; tile < TILES; tile = tile + 1) begin : g_tile",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "banked_word_ram.sv",
+      "line": 49,
+      "source": "for (mux_tile = 0; mux_tile < TILES; mux_tile = mux_tile + 1) begin : g_read_mux",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "descriptor_file.sv",
+      "line": 46,
+      "source": "for (entry = 0; entry < 8; entry = entry + 1) begin : g_descriptor",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "descriptor_file.sv",
+      "line": 57,
+      "source": "for (word_index = 0; word_index < 3; word_index = word_index + 1) begin : g_word",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_bank_ram.sv",
+      "line": 35,
+      "source": "for (group_id = 0; group_id < GROUPS; group_id = group_id + 1) begin : g_request",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_bank_ram.sv",
+      "line": 50,
+      "source": "for (lane = 0; lane < LANES; lane = lane + 1) begin : g_bank",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_math.sv",
+      "line": 21,
+      "source": "for (mul_lane = 0; mul_lane < 32; mul_lane = mul_lane + 1) begin : g_mul_lane",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_math.sv",
+      "line": 22,
+      "source": "for (mul_part = 0; mul_part < 4; mul_part = mul_part + 1) begin : g_byte",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_math.sv",
+      "line": 41,
+      "source": "for (pipe_lane = 0; pipe_lane < 32; pipe_lane = pipe_lane + 1) begin : g_lane_pipeline",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_math.sv",
+      "line": 48,
+      "source": "for (pipe_part = 0; pipe_part < 4; pipe_part = pipe_part + 1) begin : g_partial_register",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_math.sv",
+      "line": 53,
+      "source": "for (reduction_node = 0; reduction_node < 16; reduction_node = reduction_node + 1) begin : g_reduce1",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_math.sv",
+      "line": 57,
+      "source": "for (reduction_node = 0; reduction_node < 8; reduction_node = reduction_node + 1) begin : g_reduce2",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_math.sv",
+      "line": 61,
+      "source": "for (reduction_node = 0; reduction_node < 4; reduction_node = reduction_node + 1) begin : g_reduce3",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_math.sv",
+      "line": 65,
+      "source": "for (reduction_node = 0; reduction_node < 2; reduction_node = reduction_node + 1) begin : g_reduce4",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_parameter_ram.sv",
+      "line": 58,
+      "source": "for (stage = 1; stage < READ_LATENCY; stage = stage + 1) begin : g_read_stage",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_parameter_ram.sv",
+      "line": 71,
+      "source": "for (lane = 0; lane < 8; lane = lane + 1) begin : g_ram_lane",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 252,
+      "source": "for (weight_lane = 0; weight_lane < 32; weight_lane = weight_lane + 1) begin : g_weight_check",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 311,
+      "source": "for (debug_bit = 0; debug_bit < 7; debug_bit = debug_bit + 1) begin : g_debug_bit",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 313,
+      "source": "for (debug_state = 0; debug_state < OP_COUNT; debug_state = debug_state + 1) begin : g_state",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 550,
+      "source": "for (lane = 0; lane < 32; lane = lane + 1) begin : g_simd",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 653,
+      "source": "for (scalar_group = 0; scalar_group < 8; scalar_group = scalar_group + 1) begin : g_scalar_output",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 681,
+      "source": "for (sigmoid_group = 0; sigmoid_group < 4; sigmoid_group = sigmoid_group + 1) begin : g_sigmoid_pick",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "logic_mul.sv",
+      "line": 21,
+      "source": "for (integer step = 0; step < ROWS; step = step + 1)",
+      "classification": "constant elaboration geometry; ROWS bound"
+    },
+    {
+      "file": "logic_mul.sv",
+      "line": 31,
+      "source": "for (integer step = 0; step < ROWS; step = step + 1)",
+      "classification": "constant elaboration geometry; ROWS bound"
+    },
+    {
+      "file": "logic_mul.sv",
+      "line": 42,
+      "source": "for (level = 0; level <= LEVELS; level = level + 1) begin : g_level",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "logic_mul.sv",
+      "line": 46,
+      "source": "for (bit_id = 0; bit_id < B_W; bit_id = bit_id + 1) begin : g_bit",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "logic_mul.sv",
+      "line": 56,
+      "source": "for (group_id = 0; group_id < GROUPS; group_id = group_id + 1) begin : g_group",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "logic_mul.sv",
+      "line": 65,
+      "source": "for (tail = 0; tail < PREVIOUS - GROUPS - (GROUPS << 1); tail = tail + 1) begin : g_tail",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "matmulfree.sv",
+      "line": 314,
+      "source": "for (integer i = 0; i < 8; i = i + 1) begin",
+      "bound": 8,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "matmulfree.sv",
+      "line": 339,
+      "source": "for (integer i = 0;i < 8;i = i + 1) begin",
+      "bound": 8,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "matmulfree.sv",
+      "line": 358,
+      "source": "for (slot = 0; slot < 8; slot = slot + 1) begin : g_quant_metadata",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "norm.sv",
+      "line": 168,
+      "source": "for (arithmetic_lane = 0; arithmetic_lane < 2; arithmetic_lane = arithmetic_lane + 1) begin : g_bit_mul",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "norm.sv",
+      "line": 213,
+      "source": "for (integer j = 0; j < 2; j = j + 1) begin",
+      "bound": 2,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "norm.sv",
+      "line": 234,
+      "source": "for (integer j = 0; j < 2; j = j + 1) begin",
+      "bound": 2,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "norm.sv",
+      "line": 241,
+      "source": "for (integer j = 0; j < 2; j = j + 1)",
+      "bound": 2,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "norm.sv",
+      "line": 245,
+      "source": "for (integer j = 0; j < 2; j = j + 1)",
+      "bound": 2,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "norm.sv",
+      "line": 257,
+      "source": "for (norm_bit = 0; norm_bit < 32; norm_bit = norm_bit + 1) begin : g_norm_shift",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "norm.sv",
+      "line": 262,
+      "source": "for (quant_bit = 0; quant_bit < 24; quant_bit = quant_bit + 1) begin : g_quant_shift",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "pipelined_word_ram.sv",
+      "line": 59,
+      "source": "for (tile = 0; tile < TILES; tile = tile + 1) begin : g_tile",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "pipelined_word_ram.sv",
+      "line": 83,
+      "source": "for (group_id = 0; group_id < GROUPS; group_id = group_id + 1) begin : g_response",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "pipelined_word_ram.sv",
+      "line": 88,
+      "source": "for (int member = 0; member < 4; member = member + 1)",
+      "bound": 4,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "pipelined_word_ram.sv",
+      "line": 104,
+      "source": "for (response_group = 0; response_group < GROUPS; response_group = response_group + 1) begin : g_mux",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "rowwise_op.sv",
+      "line": 53,
+      "source": "for (mul_lane = 0; mul_lane < 2; mul_lane = mul_lane + 1) begin : g_bit_mul",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "rowwise_op.sv",
+      "line": 74,
+      "source": "for (integer j = 0; j < 2; j = j + 1) begin",
+      "bound": 2,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "rowwise_op.sv",
+      "line": 111,
+      "source": "for (integer j = 0; j < 2; j = j + 1) begin",
+      "bound": 2,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "rowwise_op.sv",
+      "line": 120,
+      "source": "MULTIPLY : for (integer j = 0; j < 2; j = j + 1)",
+      "bound": 2,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "rowwise_op.sv",
+      "line": 122,
+      "source": "RAW : for (integer j = 0; j < 2; j = j + 1) begin",
+      "bound": 2,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "rowwise_op.sv",
+      "line": 131,
+      "source": "ROUND : for (integer j = 0; j < 2; j = j + 1)",
+      "bound": 2,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "rowwise_op.sv",
+      "line": 142,
+      "source": "for (integer j = 0; j < 2; j = j + 1) begin",
+      "bound": 2,
+      "classification": "small static procedural hardware"
+    },
+    {
+      "file": "scale_compose.sv",
+      "line": 39,
+      "source": "for (fit_shift = 0; fit_shift < 48; fit_shift = fit_shift + 1) begin : g_fit_shift",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "sram_256_wrapper.sv",
+      "line": 64,
+      "source": "for (lane = 0; lane < 8; lane = lane + 1) begin : g_ram_lane",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "ternary_mul.sv",
+      "line": 96,
+      "source": "for (decode_lane = 0; decode_lane < 32; decode_lane = decode_lane + 1) begin : g_decode",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "ternary_mul.sv",
+      "line": 118,
+      "source": "for (g = 0; g < 4; g = g + 1) begin : g_reduce",
+      "classification": "generate structural replication"
+    },
+    {
+      "file": "ternary_mul.sv",
+      "line": 119,
+      "source": "for (lane = 0; lane < 8; lane = lane + 1) begin : g_lane",
+      "classification": "generate structural replication"
+    }
+  ],
+  "functions": [
+    {
+      "file": "llm_pkg.sv",
+      "line": 10,
+      "source": "function automatic logic signed [23:0] llm_sat24(input logic signed [63:0] x);",
+      "classification": "small pure combinational helper"
+    },
+    {
+      "file": "llm_pkg.sv",
+      "line": 16,
+      "source": "function automatic logic signed [63:0] llm_extend56(input logic signed [55:0] x);",
+      "classification": "small pure combinational helper"
+    },
+    {
+      "file": "llm_pkg.sv",
+      "line": 20,
+      "source": "function automatic logic [31:0] llm_random_next(input logic [31:0] previous);",
+      "classification": "small pure combinational helper"
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 476,
+      "source": "function automatic logic [14:0] matrix_meta(input logic [1:0] layer_id, input logic [2:0] matrix_id);",
+      "classification": "small pure combinational helper"
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 479,
+      "source": "function automatic logic [14:0] gain_address(input graph_t phase, input logic [1:0] layer_id,",
+      "classification": "small pure combinational helper"
+    },
+    {
+      "file": "logic_mul.sv",
+      "line": 17,
+      "source": "function automatic integer rows_at(input integer level);",
+      "classification": "constant elaboration geometry"
+    },
+    {
+      "file": "logic_mul.sv",
+      "line": 26,
+      "source": "function automatic integer tree_depth();",
+      "classification": "constant elaboration geometry"
+    },
+    {
+      "file": "npu_pkg.sv",
+      "line": 48,
+      "source": "function automatic logic signed [15:0] sat_s16(input logic signed [63:0] x);",
+      "classification": "small pure combinational helper"
+    },
+    {
+      "file": "npu_pkg.sv",
+      "line": 54,
+      "source": "function automatic logic signed [31:0] sat_s32(input logic signed [63:0] x);",
+      "classification": "small pure combinational helper"
+    },
+    {
+      "file": "npu_pkg.sv",
+      "line": 62,
+      "source": "function automatic logic signed [63:0] rne_shift64(",
+      "classification": "small pure combinational helper"
+    },
+    {
+      "file": "npu_pkg.sv",
+      "line": 85,
+      "source": "function automatic logic signed [41:0] rne_shift42(",
+      "classification": "small pure combinational helper"
+    },
+    {
+      "file": "npu_pkg.sv",
+      "line": 103,
+      "source": "function automatic logic signed [63:0] scale_shift64(",
+      "classification": "small pure combinational helper"
+    },
+    {
+      "file": "npu_pkg.sv",
+      "line": 110,
+      "source": "function automatic integer ws_words(input ws_desc_t d);",
+      "classification": "small pure combinational helper"
+    },
+    {
+      "file": "npu_pkg.sv",
+      "line": 118,
+      "source": "function automatic logic ws_valid(input ws_desc_t d);",
+      "classification": "small pure combinational helper"
+    },
+    {
+      "file": "npu_pkg.sv",
+      "line": 123,
+      "source": "function automatic logic ranges_overlap(input integer a, input integer an,",
+      "classification": "small pure combinational helper"
+    }
+  ],
+  "arithmetic_symbols": [
+    {
+      "file": "acc_mul.sv",
+      "line": 10,
+      "source": "localparam int LEAVES = 2 ** LEVELS;",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "acc_mul.sv",
+      "line": 24,
+      "source": "assign node[n] = $signed(g_level[level - 1].node[2 * n]) +",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "acc_mul.sv",
+      "line": 25,
+      "source": "$signed(g_level[level - 1].node[2 * n + 1]);",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "banked_word_ram.sv",
+      "line": 29,
+      "source": "localparam int TILES = (ROWS + 1023) / 1024;",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "banked_word_ram.sv",
+      "line": 35,
+      "source": "localparam int TILE_ROWS = (ROWS - tile * 1024 < 1024) ? ROWS - tile * 1024 : 1024;",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "descriptor_file.sv",
+      "line": 59,
+      "source": "assign matrix_bits[word_index * 32 +: 32] = word_q;",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_bank_ram.sv",
+      "line": 14,
+      "source": "output logic [LANES * WIDTH - 1:0] rd_data,",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_bank_ram.sv",
+      "line": 18,
+      "source": "input logic [LANES * WIDTH - 1:0] wr_data",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_bank_ram.sv",
+      "line": 21,
+      "source": "localparam int GROUPS = (LANES + GROUP_LANES - 1) / GROUP_LANES;",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_bank_ram.sv",
+      "line": 24,
+      "source": "logic [LANES * WIDTH - 1:0] group_write_data_q;",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_bank_ram.sv",
+      "line": 59,
+      "source": "read_enable_q <= group_read_enable_q[lane / GROUP_LANES];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_bank_ram.sv",
+      "line": 64,
+      "source": "read_address_q <= group_read_address_q[lane / GROUP_LANES];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_bank_ram.sv",
+      "line": 65,
+      "source": "write_address_q <= group_write_address_q[lane / GROUP_LANES];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_bank_ram.sv",
+      "line": 66,
+      "source": "write_data_q <= group_write_data_q[lane * WIDTH +: WIDTH];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_bank_ram.sv",
+      "line": 72,
+      "source": ".rd_data(rd_data[lane * WIDTH +: WIDTH]), .rd_valid(lane_read_valid[lane]), .wr_valid());",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_math.sv",
+      "line": 55,
+      "source": "level1[reduction_node] <= 57'(product[2 * reduction_node]) + 57'(product[2 * reduction_node + 1]);",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_math.sv",
+      "line": 59,
+      "source": "level2[reduction_node] <= 58'(level1[2 * reduction_node]) + 58'(level1[2 * reduction_node + 1]);",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_math.sv",
+      "line": 63,
+      "source": "level3[reduction_node] <= 59'(level2[2 * reduction_node]) + 59'(level2[2 * reduction_node + 1]);",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_math.sv",
+      "line": 67,
+      "source": "level4[reduction_node] <= 60'(level3[2 * reduction_node]) + 60'(level3[2 * reduction_node + 1]);",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_parameter_ram.sv",
+      "line": 91,
+      "source": ".rd_data(read_row[lane * 32 +: 32]), .rd_valid(lane_read_valid[lane]),",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 254,
+      "source": "weights_q[(int'(chunk_q[1:0]) << 6) + weight_lane * 2 +: 2] == 2'b10;",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 556,
+      "source": "cache_operand_q[lane * 24 +: 24] <= k_data[lane * 24 +: 24];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 561,
+      "source": "math_a_q[lane] <= 24'($signed(parameter_word_q[lane * 8 +: 8]));",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 567,
+      "source": "math_a_q[lane] <= vector_q[lane * 24 +: 24];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 568,
+      "source": "ternary_code_q[lane] <= weights_q[(int'(chunk_q[1:0]) << 6) + lane * 2 +: 2];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 578,
+      "source": "math_a_q[lane] <= vector_q[lane * 24 +: 24];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 579,
+      "source": "math_b_q[lane] <= 32'($signed(vector_q[lane * 24 +: 24]));",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 582,
+      "source": "math_a_q[lane] <= vector_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, reciprocal_q};",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 588,
+      "source": "math_b_q[lane] <= 32'($signed(table_q[lane * 16 +: 16]));",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 592,
+      "source": "math_a_q[lane] <= vector_q[lane * 24 +: 24];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 593,
+      "source": "math_b_q[lane] <= 32'($signed(table_q[(lane % 16) * 32 +: 16]));",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 597,
+      "source": "math_a_q[lane] <= vector_q[((lane + 16) % 32) * 24 +: 24];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 599,
+      "source": "-$signed(32'($signed(table_q[(lane % 16) * 32 + 16 +: 16]))) :",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 600,
+      "source": "32'($signed(table_q[(lane % 16) * 32 + 16 +: 16]));",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 606,
+      "source": "math_a_q[lane] <= query_q[lane * 24 +: 24];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 607,
+      "source": "math_b_q[lane] <= 32'($signed(cache_operand_q[lane * 24 +: 24]));",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 611,
+      "source": "math_a_q[lane] <= cache_operand_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, probability_q};",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 616,
+      "source": "math_a_q[lane] <= second_q[lane * 24 +: 24];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 617,
+      "source": "math_b_q[lane] <= 32'($signed(vector_q[lane * 24 +: 24]));",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 619,
+      "source": "64'($signed(second_q[lane * 24 +: 24])) + 64'($signed(vector_q[lane * 24 +: 24]));",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 622,
+      "source": "rne_shift64(64'($signed(vector_q[lane * 24 +: 24])), 6'd4);",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 626,
+      "source": "math_a_q[lane] <= vector_q[lane * 24 +: 24];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 630,
+      "source": "math_a_q[lane] <= vector_q[lane * 24 +: 24];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 631,
+      "source": "math_b_q[lane] <= 32'($signed(weights_q[lane * 8 +: 8]));",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 644,
+      "source": "write_vector_q[lane * 24 +: 24] <= llm_sat24(lane_round_q[lane]);",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 647,
+      "source": "write_vector_q[lane * 24 +: 24] <= scalar_group_q[lane / 4];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 649,
+      "source": "write_vector_q[lane * 24 +: 24] <= llm_sat24(lane_raw_q[lane]);",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 684,
+      "source": "sigmoid_pick_q[sigmoid_group] <= sigmoid_inputs_q[sigmoid_group * 8 + int'(lane_q[2:0])];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 951,
+      "source": "v_address_q <= 7'(2 * 12 + head_q + 1); return_v <= A_QUERY; return_w <= O_V_REQ;",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "llm_soc.sv",
+      "line": 991,
+      "source": "else begin row_q <= row_q + 1'b1; v_address_q <= 7'(6 * 12 + row_q + 1); return_v <= S_INPUT; return_w <= O_V_REQ; end",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "logic_mul.sv",
+      "line": 22,
+      "source": "if (step < level) count = count - count / 3;",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "logic_mul.sv",
+      "line": 32,
+      "source": "if (count > 2) begin count = count - count / 3; depth = depth + 1; end",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "pipelined_word_ram.sv",
+      "line": 16,
+      "source": "localparam int TILES = (ROWS + 1023) / 1024;",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "pipelined_word_ram.sv",
+      "line": 17,
+      "source": "localparam int GROUPS = (TILES + 3) / 4;",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "pipelined_word_ram.sv",
+      "line": 60,
+      "source": "localparam int TILE_ROWS = (ROWS - tile * 1024 < 1024) ? ROWS - tile * 1024 : 1024;",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "pipelined_word_ram.sv",
+      "line": 89,
+      "source": "if (group_id * 4 + member < TILES)",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "pipelined_word_ram.sv",
+      "line": 90,
+      "source": "selected = selected | (tile_data[group_id * 4 + member] &",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "pipelined_word_ram.sv",
+      "line": 91,
+      "source": "{WIDTH{read_tile_q[group_id * 4 + member]}});",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "sram_256_wrapper.sv",
+      "line": 68,
+      "source": ".wr_data(write_data[lane * 32 +: 32]), .rd_data(read_row_q[lane * 32 +: 32]));",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "ternary_mul.sv",
+      "line": 97,
+      "source": "wire signed [7:0] lane_value = q_word[decode_lane * 8 +: 8];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "ternary_mul.sv",
+      "line": 98,
+      "source": "wire [1:0] lane_weight = w_word[weight_bit_base + decode_lane * 2 +: 2];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    },
+    {
+      "file": "ternary_mul.sv",
+      "line": 120,
+      "source": "assign group_terms[g][lane] = terms[g * 8 + lane];",
+      "review": "Constant geometry/index factors only; no runtime multiplication/division."
+    }
+  ],
+  "vendor_symbols": [
+    {
+      "file": "quartus_word_ram.sv",
+      "line": 15,
+      "source": "altsyncram #("
+    },
+    {
+      "file": "quartus_word_ram.sv",
+      "line": 27,
+      "source": ".power_up_uninitialized(\"TRUE\"), .lpm_type(\"altsyncram\")"
+    }
+  ],
+  "command": "python tests/full_rtl/build/archive_policy_cache1.py",
+  "inventory_helper_sha256": "241f7e66f1989387f69bd693078146837b3942ef53d820121e695f47d001824e"
+}

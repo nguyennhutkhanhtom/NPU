@@ -67,4 +67,6 @@ Xem [cài đặt và chọn test](tests/README.md), [demo checkpoint](tests/mode
 | [tests](tests/README.md) | Regression/reference, runners và demo export |
 | `quartus` | Project demo A&S; không quyết định kiến trúc ASIC |
 
-Current attention1 source clears accumulators at each head entry; [all seven groups](tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions. Full-top attention1 timing FAIL92.19MHz/setup+recovery; hold PASS every corner. No trained application gate is open.
+Preceding attention1 source clears accumulators at each head entry; [all seven groups](tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions. Full-top attention1 timing FAIL92.19MHz/setup+recovery; hold PASS every corner. No trained application gate is open.
+
+Current cache1 splits continuously sampled KV payload from the held binary vector operand. [Six groups](tests/full_rtl/evidence/cache1_six_units/results.json) PASS0compile/runtimewarnings; graph and fresh full timing RUNNING. The two-FF reset/immediate host response-zero contract is unchanged; global-reset routing is requested only in QSF, with no SDC exception or RTL IP. No current all-seven/timing PASS.

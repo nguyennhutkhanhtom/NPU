@@ -11,7 +11,7 @@ Mỗi trang gồm vai trò, sơ đồ kiến trúc tổng quan, phần giải th
 | [quartus_word_ram.sv](quartus_word_ram.sv.md) | FPGA memory technology binding | Full RTL graph | 3 | 39 |
 | [pipelined_word_ram.sv](pipelined_word_ram.sv.md) | Tile request và response pipeline | Full RTL graph | 3 | 114 |
 | [llm_parameter_ram.sv](llm_parameter_ram.sv.md) | Parameter SRAM và host commit | Full RTL graph | 4 | 95 |
-| [llm_soc.sv](llm_soc.sv.md) | Autonomous autoregressive graph | Full RTL graph | 11 | 1031 |
+| [llm_soc.sv](llm_soc.sv.md) | Autonomous autoregressive graph | Full RTL graph | 11 | 1036 |
 | [llm_pkg.sv](llm_pkg.sv.md) | Layout, saturation và sampler | Full RTL graph | 3 | 31 |
 | [llm_math.sv](llm_math.sv.md) | SIMD signed multiply và reduction | Full RTL graph | 5 | 72 |
 | [llm_gumbel_lut.svh](llm_gumbel_lut.svh.md) | LUT portable của graph | Full RTL graph | — | 267 |

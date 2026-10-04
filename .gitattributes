@@ -40,3 +40,4 @@ docs/verification/synthesis/** -text -whitespace
 docs/verification/portable_elaboration1/** -text -whitespace
 docs/verification/rtl_policy_attention1/** -text -whitespace
 docs/verification/portable_elaboration_attention1/** -text -whitespace
+docs/verification/rtl_policy_cache1/** -text -whitespace

@@ -4,9 +4,9 @@
   "main_rtl_diagrams": 30,
   "detail_diagrams": 15,
   "rtl_logic_groups": 150,
-  "rtl_source_lines_grouped": 4523,
+  "rtl_source_lines_grouped": 4528,
   "lut_entries_explained": 1059,
-  "links_checked": 1910,
+  "links_checked": 1918,
   "mermaid_diagrams_rendered": 51,
   "errors": [],
   "scope": "Documentation coverage, source excerpts, line counts, headers, hashes, local links and Mermaid render evidence. Validator only; RTL regression and Quartus synthesis evidence are recorded separately in docs/reviews/design_review.md."
