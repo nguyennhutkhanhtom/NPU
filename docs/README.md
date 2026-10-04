@@ -65,7 +65,7 @@ legacy10nhóm PASS, A&S0errors/12warnings. Quartus thực tế hiện cài25.1st
 `fullrtl100_logic5` fit PASS0DSP/PLL/DLL/HSSI, timing FAIL99,07MHz gồm setup/
 hold/removal. Logic6 cũng FAIL99,07MHz;logic7 FAIL96,04MHz. [Bảy nhóm unit](../tests/full_rtl/evidence/logic6q5_all_units/results.json)
 đã PASS cho snapshot35source cũ,0warnings. Source hiện tại33assets đã chuyển
-task/pipeline/LUT sang [RTL tường minh](design/rtl_style.md); regression và fit mới đang chạy,
+task/pipeline/LUT sang [RTL tường minh](design/rtl_style.md); [cả 7 nhóm regression PASS](../tests/full_rtl/evidence/explicit3_all_units/results.json), fit mới đang chạy,
 chưa có100MHz PASS hoặc pretrained application.
 
 Code trích dẫn, dòng và SHA-256 trong source guide được đối chiếu bởi [validator](source_guide/validate.py); [validation.json](source_guide/validation.json) ghi kết quả. Sau khi sửa RTL, cập nhật chú giải rồi chạy:

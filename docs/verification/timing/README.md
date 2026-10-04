@@ -63,8 +63,8 @@ no synthesizable tasks/unbounded loops, explicit pipeline/LUT ownership. QSF
 removes the four ignored delay settings and adds MAX_FANOUT16 on onehot op bits,
 targeting the measured control path. SRAM remains the only explicit vendor IP.
 SDC/device/seed/I/O budgets are unchanged. [A&S](../synthesis/explicit2/manifest.json)
-PASS0errors/12warnings; [six units](../../../tests/full_rtl/evidence/explicit3_six_units/results.json)
-PASS0compile/runtimewarnings. Graph and fitting are in progress; no current100MHz
+PASS0errors/12warnings; [all seven units](../../../tests/full_rtl/evidence/explicit3_all_units/results.json)
+PASS0compile/runtimewarnings, including the full synthetic graph. Fitting is in progress; no current100MHz
 PASS is claimed. The preceding explicit1 map was
 cancelled after its operator test found a signed buffer-address cast regression.
 Its [source/config ZIP](fullrtl100_explicit1/source_archive.json) and

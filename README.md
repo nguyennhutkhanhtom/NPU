@@ -29,7 +29,7 @@ standard cells. Full-top A&S bằng Quartus Lite25.1std PASS0errors/12warnings;
 `fullrtl100_logic5` fit PASS0DSP/PLL/DLL/HSSI nhưng timing FAIL99,07MHz:
 setup/hold/removal còn vi phạm. Logic6 cũng FAIL99,07MHz;logic7 FAIL96,04MHz. [Bảy nhóm unit](tests/full_rtl/evidence/logic6q5_all_units/results.json)
 đã PASS cho snapshot35source cũ,0warnings. Source hiện tại33assets đã chuyển
-task/pipeline/LUT sang [RTL tường minh](docs/design/rtl_style.md); regression và fit mới đang chạy,
+task/pipeline/LUT sang [RTL tường minh](docs/design/rtl_style.md); [cả 7 nhóm regression PASS](tests/full_rtl/evidence/explicit3_all_units/results.json), fit mới đang chạy,
 chưa có100MHz PASS hoặc pretrained application.
 
 Core instruction-driven `matmulfree` và các kết quả dưới đây được giữ làm

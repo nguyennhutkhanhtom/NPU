@@ -14,9 +14,9 @@ calculations use explicit shifts; small constant address factors use shift/add.
 The current candidate is `quartus_explicit2/llm_soc`, with 33 source assets
 after removing the unused `ctrl_unit` and `hazard_detect`. Its QSF/QPF/SDC
 matches the canonical full-top project. [Synthesis](../verification/synthesis/explicit2/manifest.json)
-passed0errors/12warnings and [six units](../../tests/full_rtl/evidence/explicit3_six_units/results.json)
-passed0compile/runtimewarnings; RTL/configuration are locked while graph and
-fitting run. The [explicit RTL rules](rtl_style.md) now prohibit
+passed0errors/12warnings and [all seven units](../../tests/full_rtl/evidence/explicit3_all_units/results.json)
+passed0compile/runtimewarnings, including the autonomous graph. RTL/configuration
+are locked while fitting runs. The [explicit RTL rules](rtl_style.md) now prohibit
 synthesizable tasks, hidden sequential ownership and variable/unbounded loops.
 All 61 request helpers are inline FSM updates; substantial replicated datapaths
 and pipeline stages use generate blocks. LUTs are explicit combinational modules.

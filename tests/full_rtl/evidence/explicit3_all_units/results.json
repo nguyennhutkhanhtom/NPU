@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "scope": "Synthetic arithmetic/protocol/operators; graph required for application gate",
+  "scope": "Exact-current 33 RTL assets and eight test inputs: all seven synthetic unit/operator/full-graph groups PASS. This is not pretrained language generation.",
   "rtl_dir": "D:\\2151097_Nguyen Nhut Khanh\\Verilog Source code",
   "verified_utc": "2026-10-04T07:30:22.1101229Z",
   "tests": {
@@ -14,58 +14,58 @@
   },
   "evidence": {
     "tb_quartus_memory": {
-      "log": "tests/full_rtl/build/tb_quartus_memory.log",
+      "log": "tests/full_rtl/evidence/explicit3_all_units/tb_quartus_memory.log",
       "sha256": "9c8a70cdf67c6eea873539d0918540a7b705279c1e0e64119ea51023d6dc9048",
       "design_units": {
-        "file": "tests/full_rtl/build/explicit3_tb_quartus_memory_design_units.json",
+        "file": "tests/full_rtl/evidence/explicit3_all_units/explicit3_tb_quartus_memory_design_units.json",
         "sha256": "1337dff4f2dd7cf0e370bb761ebbffdb3023c97aff2a39eac4541509911bf6d0"
       }
     },
     "tb_llm_math": {
-      "log": "tests/full_rtl/build/tb_llm_math.log",
+      "log": "tests/full_rtl/evidence/explicit3_all_units/tb_llm_math.log",
       "sha256": "36f6ee7c635397f90e7193ead2478b8d04a531cde6306c50f30aec1031cf85d5",
       "design_units": {
-        "file": "tests/full_rtl/build/explicit3_tb_llm_math_design_units.json",
+        "file": "tests/full_rtl/evidence/explicit3_all_units/explicit3_tb_llm_math_design_units.json",
         "sha256": "f23299a47e22fda45306ee99f240c350bf8034728c5686b5a2d1ba80d61d2413"
       }
     },
     "tb_llm_ram": {
-      "log": "tests/full_rtl/build/tb_llm_ram.log",
+      "log": "tests/full_rtl/evidence/explicit3_all_units/tb_llm_ram.log",
       "sha256": "a76a341e9884884de0100622b735371ad20f9606ca256de94fce92e03a851529",
       "design_units": {
-        "file": "tests/full_rtl/build/explicit3_tb_llm_ram_design_units.json",
+        "file": "tests/full_rtl/evidence/explicit3_all_units/explicit3_tb_llm_ram_design_units.json",
         "sha256": "047c6c953ddf96d008ec1b489cde1d05a51de1f42b6eed2913a5e1b1e216fc4c"
       }
     },
     "tb_llm_protocol": {
-      "log": "tests/full_rtl/build/tb_llm_protocol.log",
+      "log": "tests/full_rtl/evidence/explicit3_all_units/tb_llm_protocol.log",
       "sha256": "5a2c013f31c121e5d09ba71ac951842ca60c129c9222a7b590f0b50c358ce54a",
       "design_units": {
-        "file": "tests/full_rtl/build/explicit3_tb_llm_protocol_design_units.json",
+        "file": "tests/full_rtl/evidence/explicit3_all_units/explicit3_tb_llm_protocol_design_units.json",
         "sha256": "8222610377d6a6123a4efdcd39cdac49bd0aec77176e9d23224b24dd7fd231df"
       }
     },
     "tb_llm_selection": {
-      "log": "tests/full_rtl/build/tb_llm_selection.log",
+      "log": "tests/full_rtl/evidence/explicit3_all_units/tb_llm_selection.log",
       "sha256": "4864a527e48b3270b2a2ebf3e4ea79ec2226860850d4022e1a029aade4470516",
       "design_units": {
-        "file": "tests/full_rtl/build/explicit3_tb_llm_selection_design_units.json",
+        "file": "tests/full_rtl/evidence/explicit3_all_units/explicit3_tb_llm_selection_design_units.json",
         "sha256": "e670b4137ee69d9831ef18fec2e1f6fbd65817ef9e976e6e5db0694d2e79e819"
       }
     },
     "tb_llm_operators": {
-      "log": "tests/full_rtl/build/tb_llm_operators.log",
+      "log": "tests/full_rtl/evidence/explicit3_all_units/tb_llm_operators.log",
       "sha256": "4dc464eb3eab6bfe95d6c69f4a0ff6c1619c2fb8c1c7a9952b110a0e8d91f1f1",
       "design_units": {
-        "file": "tests/full_rtl/build/explicit3_tb_llm_operators_design_units.json",
+        "file": "tests/full_rtl/evidence/explicit3_all_units/explicit3_tb_llm_operators_design_units.json",
         "sha256": "adcc163714b14aabf7c1bc71b2d63fa1aaf73292c53ad61db3d6cdf1532e56d8"
       }
     },
     "tb_llm_graph": {
-      "log": "tests/full_rtl/build/tb_llm_graph.log",
+      "log": "tests/full_rtl/evidence/explicit3_all_units/tb_llm_graph.log",
       "sha256": "2e8fce5468a4728558bbbc2712edd45f1a441bb571687f3f0b26f32e228f7329",
       "design_units": {
-        "file": "tests/full_rtl/build/explicit3_tb_llm_graph_design_units.json",
+        "file": "tests/full_rtl/evidence/explicit3_all_units/explicit3_tb_llm_graph_design_units.json",
         "sha256": "cb4f3d7378e9489c27762070f03efe4ce67194f325ee14363c6220052b40eb86"
       }
     }
@@ -73,7 +73,7 @@
   "runner_sources": {
     "tests/full_rtl/memory_model.py": "501824c2466a31956c120cd574da1b9dbb3d7cdce43893023c499a9fffdf366e"
   },
-  "memory_model_manifest": "tests/full_rtl/build/questa25_model/manifest.json",
+  "memory_model_manifest": "tests/full_rtl/evidence/explicit3_all_units/memory_model_manifest.json",
   "rtl_sources": {
     "acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
     "banked_word_ram.sv": "bb7a3bb83e0aef84c030403bcd675e4853f190ea79d9851ad742a5a0d02d2409",
@@ -118,5 +118,58 @@
     "tb_protocol.sv": "ec1faaff370c195f2a216860a395e0b76e757f90ca654b893d8543a00cea578b",
     "tb_ram.sv": "4d40fea39efbf26f67db28c6ad4fde34f194603f57f4ee2f2fda6e0fc93ed0b1",
     "tb_selection.sv": "cb75edc6865b0aa51aaee6c53f419c352b68147e8b950b40dd4caeb86c05dcc3"
-  }
+  },
+  "simulator": "QuestaAlteraStarter2025.2",
+  "model": {
+    "scope": "Actual RAM simulation model only; no application execution",
+    "quartus_version": "25.1std.0 Build 1129 10/21/2025 SC Lite Edition",
+    "source": "C:\\altera_lite\\25.1std\\quartus\\eda\\sim_lib\\altera_mf.v",
+    "source_sha256": "2ae09f97f9606626da216e9eb91007beec3ebbe023c5b9415be472417fe49d5e",
+    "library": "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver",
+    "compiler_sha256": {
+      "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlib.exe": "cdf08c2c3665d020ac32a1a56da88687cc7b03e6d8ca32149243f6d07b707350",
+      "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlog.exe": "f3419a63d42323f11a61627a690dfc4f4877f7fa892a13cedffb4ddff83bc5d5"
+    },
+    "commands": [
+      [
+        "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlib.exe",
+        "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver"
+      ],
+      [
+        "C:\\altera_lite\\25.1std\\questa_fse\\win64\\vlog.exe",
+        "-work",
+        "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\altera_mf_ver",
+        "C:\\altera_lite\\25.1std\\quartus\\eda\\sim_lib\\altera_mf.v",
+        "-l",
+        "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\questa25_model\\compile.log"
+      ]
+    ],
+    "compile_sha256": "20d08364edcfe5c0297826619a84151b7a764912a61d0d5001dbfe92226f0177",
+    "objects_sha256": {
+      "_info": "afeb4994ce35d5dbb484740a634db23c79969c1878b8c2ad7cde9f37d11c4cab",
+      "_lib.qdb": "ee8b849c2f3344d8a4e348eb72d3f25a2605c1f0b5c4b7944e4489da0354ffaa",
+      "_lib1_0.qdb": "38d68ede54d428b8ef95325610c8feaf8b9337aa69e7f73cb148f18b2e6137d7",
+      "_lib1_0.qpg": "85212b314a082c54f1f714a3baea253ca06b84321649e9f8e2521ce406af9bce",
+      "_lib1_0.qtl": "261fab8c6e922696d654402aaa001a92c9d3fc15376cf0166f37966172ebde50",
+      "_vmake": "d287f8a335408d3f94fea840ad628f2cbed3775952c49131049ef8f60fd337c9"
+    }
+  },
+  "runtime_warnings": 0,
+  "compile_sha256": "f527bd5174d35ab919928444aff4a7ff6e73e789f1a32608fc8c02dc0aa6863e",
+  "initial_snapshot_sha256": "0ed0c9cdccbcfce42e956ddcab7075d390dcdc23c70ccb9e4ed87f12f024c64b",
+  "model_manifest_sha256": "173ca62a91b62feb03eee8a7a769065d6e021d0852b789196661ba555be4c078",
+  "reproduction_inputs": {
+    "archive_explicit3_all.py": "89884369e7a055d0b4f19c6c3fa1ddc7c0ca87d15d11eda54aeb75e53e7d7d40",
+    "memory_model.py": "501824c2466a31956c120cd574da1b9dbb3d7cdce43893023c499a9fffdf366e",
+    "run_units.ps1": "28672093a173db4ea1e4e8166bc9cdbc8853151cba9063463fbf7990f54cd345",
+    "tb_graph.sv": "f3935e1049990dabcb066b7260b3363c0cce57de9567f0501c7904b51a9d26e9",
+    "tb_math.sv": "9a7befb14c6a8392952a14ea5ed858206f5287ff95eedd96716d7af9a4252ea4",
+    "tb_memory_ip.sv": "698fbbcb7199006cc49030d17a3b8d4b282d646e7ba736568bb63922dd9b149f",
+    "tb_operators.sv": "0b8fc71c9e2786fd371935c68aed2b310942cd8ee2c576a9b2a288a1057daf5c",
+    "tb_protocol.sv": "ec1faaff370c195f2a216860a395e0b76e757f90ca654b893d8543a00cea578b",
+    "tb_ram.sv": "4d40fea39efbf26f67db28c6ad4fde34f194603f57f4ee2f2fda6e0fc93ed0b1",
+    "tb_selection.sv": "cb75edc6865b0aa51aaee6c53f419c352b68147e8b950b40dd4caeb86c05dcc3"
+  },
+  "command": "./tests/full_rtl/run_units.ps1 -SimBin C:/altera_lite/25.1std/questa_fse/win64 -Questa -MemoryModelManifest tests/full_rtl/build/questa25_model/manifest.json -TimingManifest docs/verification/timing/fullrtl100_logic5/manifest.json -WorkLibraryName explicit3_questa_work -EvidenceTag explicit3",
+  "timing_manifest_note": "Historical timing manifest supplies the official RAM model provenance only; it is FAIL and does not approve an application."
 }
