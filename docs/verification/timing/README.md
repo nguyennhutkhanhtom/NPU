@@ -4,6 +4,21 @@
 
 Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL dựa trên critical path. Phần full graph dùng Cyclone V C9; các snapshot legacy bên dưới dùng thiết bị riêng được ghi trong manifest. Các phép đo là FPGA demo, chưa xác nhận ASIC signoff.
 
+## Explicit2 result: 93.28 MHz, setup/removal FAIL
+
+[Manifest](fullrtl100_explicit2/manifest.json) and [source archive](fullrtl100_explicit2/source_archive.json) identify the exact 33 RTL assets and three configuration files. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD and unchanged10ns SDC. Map PASS0errors/12warnings, fit PASS0errors/4warnings, STA completes0errors/2timing warnings. Fitted52189ALM/48316FF/1186RAMblocks/9515648memorybits/186pins; DSP/PLL/DLL/HSSI0. All UCP counts0. [Seven unit groups](../../../tests/full_rtl/evidence/explicit3_all_units/results.json) PASS for this exact source. The application gate correctly rejects Fmax below100MHz; no pretrained application/reference ran.
+
+| Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
+|---|---:|---:|---:|---:|---:|
+| slow_1100mv_85c | -0.72/-29.655 | 0.249/0.0 | 5.357/0.0 | -0.136/-4.137 | 3.6/0.0 |
+| slow_1100mv_0c | -0.234/-2.973 | 0.236/0.0 | 5.386/0.0 | -0.149/-5.29 | 3.543/0.0 |
+| fast_1100mv_85c | 3.331/0.0 | 0.131/0.0 | 6.554/0.0 | 0.353/0.0 | 3.799/0.0 |
+| fast_1100mv_0c | 4.041/0.0 | 0.12/0.0 | 6.556/0.0 | 0.361/0.0 | 3.789/0.0 |
+
+[Worst setup](fullrtl100_explicit2/slow_1100mv_85c_setup.rpt): `llm_math:u_math|valid_q[0]` to `partial_q[9][2][29]`,10.458ns data delay,9.749ns routing, zero logic levels. [Recommendations](fullrtl100_explicit2/slow_1100mv_85c_recommendations.txt) identify inter-path competition and recommend duplicating this enable. Payload values already have captured operands and a validity pipeline; removing redundant wide payload enables is a portable alternative to technology-specific duplication. Operation acceptance and done latency must stay unchanged and be regressed.
+
+Hold now passes every corner. [Removal](fullrtl100_explicit2/slow_1100mv_0c_removal.rpt) still fails raw reset release to output FFs. An explicit standard-FF reset conditioner with asynchronous assertion and two-edge synchronous release is the next candidate; this is a proposed architectural fix, not timing proof. All paths remain constrained and no false/multicycle exception is added.
+
 ## Logic5 result: 99.07 MHz, setup/hold/removal FAIL
 
 `fullrtl100_logic5` is the complete `llm_soc`, built from35 RTL/source assets
@@ -64,7 +79,7 @@ removes the four ignored delay settings and adds MAX_FANOUT16 on onehot op bits,
 targeting the measured control path. SRAM remains the only explicit vendor IP.
 SDC/device/seed/I/O budgets are unchanged. [A&S](../synthesis/explicit2/manifest.json)
 PASS0errors/12warnings; [all seven units](../../../tests/full_rtl/evidence/explicit3_all_units/results.json)
-PASS0compile/runtimewarnings, including the full synthetic graph. Fitting is in progress; no current100MHz
+PASS0compile/runtimewarnings, including the full synthetic graph. Fitting completed, timing FAIL93.28MHz/setup/removal; no current100MHz
 PASS is claimed. The preceding explicit1 map was
 cancelled after its operator test found a signed buffer-address cast regression.
 Its [source/config ZIP](fullrtl100_explicit1/source_archive.json) and

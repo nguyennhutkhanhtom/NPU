@@ -1,6 +1,6 @@
 # NPU resume checkpoint
 
-Updated 2026-10-04 14:34 Asia/Saigon. Repo, raw reports and hashes are authoritative. Preserve valid changes and immutable evidence; no reset/revert.
+Updated 2026-10-04 14:46 Asia/Saigon. Repo, raw reports and hashes are authoritative. Preserve valid changes and immutable evidence; no reset/revert.
 
 ## Goal and binding rules
 
@@ -10,23 +10,23 @@ Full graph and autoregressive selection on RTL. CPU loads weights/config/prompt 
 
 ## Current verified milestone
 
-- main: pushed milestone `caed5605539f11fe0fd93dab74ead286f4cba8a1`. Earlier milestones retained. No trained application or CPU checkpoint inference has run.
+- main: pushed milestone `63c1694110fca8081adf289d38516178f497bac8`. Earlier milestones retained. No trained application or CPU checkpoint inference has run.
 - 33 RTL assets. Unused legacy controllers/helpers removed with stale QSF/source-guide entries; valid legacy tests retained. All 61 request/math/write task calls are visible FSM assignments; generated pipelines have one register owner. LUTs are combinational modules. Unsigned buffer/row casts preserve the former task argument contract. No added numeric/transaction latency.
 - [All seven current groups PASS](tests/full_rtl/evidence/explicit3_all_units/results.json), completed 14:30:22: Questa2025.2 + official Quartus25.1 RAM; compile/runtime 0 warnings. Graph: prompt2, RTL-selected tokens3, layer executions16, causal checks, 4,229,462 compute clocks, 196,619 host commands. Synthetic fixture, not trained text. Archive has seven logs/binding reports, start/source/test/helper/model hashes and reproduction inputs. Six-group partial tag retained unchanged.
 - [A&S PASS](docs/verification/synthesis/explicit2/manifest.json): current 33 RTL + 3 config files, 0 errors/12 warnings, completed13:37:42. This is not timing PASS.
 - [Legacy ten groups PASS](tests/evidence/explicit2_legacy_units/results.json), 13:17:30, 0 runtime warnings. Archive is the pre-address-fix snapshot; the later llm_soc-only fix does not affect reachable legacy RTL.
-- [Docs validation](docs/source_guide/validation.json): 33 assets/29 main diagrams/15 detail diagrams/147 groups/4504 RTL lines/1059 LUT lines/50 rendered diagrams. Rerun link validation after the current documentation edits.
+- [Docs validation](docs/source_guide/validation.json): 33 assets/29 main diagrams/15 detail diagrams/147 groups/4504 RTL lines/1059 LUT lines/50 rendered diagrams. Link validation rerun after documentation edits; no diagram source changed.
 
-## Active job: do not duplicate or edit its inputs
+## Complete current timing gate: FAIL
 
-`fullrtl100_explicit2`, exec58640, supervisor35692, Fitter20468, isolated quartus_explicit2/llm_soc. Started13:22; placement/routing complete14:33, final fitter/STA pending. 33 RTL/QSF/QPF/SDC locked, source ZIP36 members already archived. Canonical config matches isolated config.
+[fullrtl100_explicit2](docs/verification/timing/fullrtl100_explicit2/manifest.json) completed14:44:42; no active Quartus/Questa job remains. Exact 33 RTL + three config files verified against initial snapshot and all-seven unit archive. Source ZIP36 members/report/command hashes verified. Map0errors12warnings/fit0errors4warnings/STA0errors2timing warnings. Fmax93.28MHz; slow85 setup-.720/TNS-29.655, removal-.136/-4.137; slow0 setup-.234/-2.973, removal-.149/-5.290. Other16checks PASS/UCP0. 52189ALM/48316FF/1186RAMblocks/9515648bits/186pins, DSP/PLL/DLL/HSSI0. Application gate explicitly rejected Fmax below100MHz; no application ran.
 
 Quartus Lite25.1std.0 Build1129; CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD. SDC10ns/input0.5..2ns/outputsetup2ns/hold0.5ns, no exceptions; LF SHA aa4dc1a48cfd2aabd01770a0eb010b14a2abdfe2cfc9d69968a89b1172ccd181. QSF cache MAX_FANOUT2/op MAX_FANOUT16, physical duplication/high-fanout delay enabled; four unsupported input delay assignments removed. Ordinary clock/reset/SDR LVDS pins, no PLL/SERDES. Board pinout/termination not verified.
 
 ## Facts, failures and hypotheses
 
 - [Timing hub](docs/verification/timing/README.md): logic5/6 both FAIL99.07MHz; logic7 FAIL96.04MHz. Setup/hold/removal failures, UCP0, DSP/PLL/DLL/HSSI0. All source/config/raw report tags retained. Logic7 source_hashes_verified=false after unused-source deletion; historical evidence only.
-- Prior measured paths: cache/control fanout, host input hold, raw reset removal to packed output FFs. Current fanout settings require actual post-fit evidence. Portable reset-release conditioning is a possible next fix, not yet implemented or verified.
+- Prior measured paths: cache/control fanout, host input hold, raw reset removal to packed output FFs. Current worst setup is u_math.valid_q[0] to partial_q, data10.458ns/routing9.749ns/zero logic levels. Hold now passes all corners. Next fix: remove redundant wide payload enables while preserving captured-input/done contract; explicit two-FF async-assert/sync-release reset conditioner. Neither fix is yet implemented or verified.
 - Explicit1 compile failure and cancelled timing, explicit2 signed-address operator failure, legacy ROM-format/test-interface failures are archived. Fixes preserve expected numeric values; current seven groups PASS.
 - Synthesis warnings: bounded generated LUT index10027, unused SRAM ports287013, intended token RAM forwarding276020, constant debug outputs13024/13410. Fitter license/pin/constant-output warnings explained in timing hub; timing332148 must be fixed.
 
@@ -47,7 +47,7 @@ python docs/source_guide/validate.py
 
 ## Next priorities
 
-1. Finish current fitter/STA/all corners; verify hashes, resources, warnings and critical paths; preserve complete tag before editing RTL.
+1. Preserve/commit complete explicit2 FAIL evidence before edits. Implement measured payload-enable/reset-release fixes; document two-edge release contract.
 2. If FAIL, fix measured paths with portable RTL and rerun affected tests/full gates under fresh tags. Never infer timing PASS from synthesis PASS.
 3. Validate current docs links/excerpts/render, archive and commit/push verified milestones. No large build artifacts/model/vendor libraries/secrets.
 4. After gates: pinned NanoFable actual RTL generation, numeric/token comparison and decoded paragraph quality review; second compatible model when supported and hardware gates pass.

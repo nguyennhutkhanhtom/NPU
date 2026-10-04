@@ -5,21 +5,11 @@ NanoFable: 4 transformer layers, affine RMSNorm, attention/KV, SwiGLU, tied
 head, selection và vòng autoregressive. Host chỉ nạp dữ liệu/config/prompt.
 SRAM gồm 768 KiB parameter, 384 KiB KV và 9 KiB vectors; area là ưu tiên sau
 correctness và timing. [Timing full top](docs/verification/timing/README.md)
-đã cải thiện70,41→83,58→84,49→91,28→92,22MHz, vẫn FAIL. Snapshot
-`fullrtl100_select3` có sáu nhóm units PASS. Bản giảm fanout scalar và chốt
-host output trước có năm nhóm units PASS; tag `fullrtl100_group2` fitting PASS
-nhưng timing FAIL81,53MHz, gồm setup và hold. Hiện parameter/KV/vector dùng
-IP RAM M10K qua adapter thay được bằng SRAM ASIC. Không dùng DSP/PLL hay
-compute IP khác. Kiểm thử IP thực tế PASS158checks; regression bảy nhóm
-đang xác minh revision pipeline mới. Milestone `d3825b2` đã push;
-`fullrtl100_memoryip2` synthesis/fit PASS,
-0DSP/0PLL, nhưng timing FAIL87,49MHz. Bản byte-product tiếp theo
-`fullrtl100_bytes1` đạt89,60MHz, vẫn FAIL setup/hold. `fullrtl100_control1`
-có sáu nhóm units PASS, fit0DSP/PLL/DLL/HSSI, nhưng timing FAIL92,75MHz gồm
-setup/hold/recovery. Pipeline chọn ternary, exp delta, clamp và enable KV cục bộ
-đã được kiểm chứng bằng units; full graph còn pending. Clock LVDS thông thường
-đi trực tiếp tới GCLK, không PLL/SERDES, chưa giải quyết clock/pad/reset timing.
-Application pretrained chờ đủ gate source/config hiện tại và unit tests.
+ghi đầy đủ lịch sử, constraints và critical paths. Parameter/KV/vector dùng
+IP RAM M10K qua adapter thay được bằng SRAM ASIC; đây là vendor IP duy nhất.
+Source hiện tại có cả bảy nhóm regression PASS, gồm kiểm thử RAM thật và graph
+tự sinh token từ fixture. Fitting mới hoàn tất, timing explicit2 FAIL93,28MHz; chưa có bằng chứng full top
+đạt100MHz. Application pretrained chờ timing mọi corner đạt cho đúng source.
 
 Revision hiện tại thay toàn bộ phép nhân datapath full/legacy bằng
 [`logic_mul`](docs/source_guide/blocks/logic_mul.sv.md): AND/XOR/OR, dịch và cộng,
@@ -29,7 +19,7 @@ standard cells. Full-top A&S bằng Quartus Lite25.1std PASS0errors/12warnings;
 `fullrtl100_logic5` fit PASS0DSP/PLL/DLL/HSSI nhưng timing FAIL99,07MHz:
 setup/hold/removal còn vi phạm. Logic6 cũng FAIL99,07MHz;logic7 FAIL96,04MHz. [Bảy nhóm unit](tests/full_rtl/evidence/logic6q5_all_units/results.json)
 đã PASS cho snapshot35source cũ,0warnings. Source hiện tại33assets đã chuyển
-task/pipeline/LUT sang [RTL tường minh](docs/design/rtl_style.md); [cả 7 nhóm regression PASS](tests/full_rtl/evidence/explicit3_all_units/results.json), fit mới đang chạy,
+task/pipeline/LUT sang [RTL tường minh](docs/design/rtl_style.md); [cả 7 nhóm regression PASS](tests/full_rtl/evidence/explicit3_all_units/results.json), timing mới FAIL93,28MHz/setup/removal,
 chưa có100MHz PASS hoặc pretrained application.
 
 Core instruction-driven `matmulfree` và các kết quả dưới đây được giữ làm

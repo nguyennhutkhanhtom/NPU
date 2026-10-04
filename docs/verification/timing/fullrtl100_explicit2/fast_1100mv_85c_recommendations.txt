@@ -1,0 +1,180 @@
+Statistics: 40 0 3923 0 0 3.331
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+write_vector_addr_q[1] llm_bank_ram:u_vectors|g_request[5].write_address_q[1] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{write_vector_addr_q[1]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][46] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][55] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][41] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][37] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][36] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][38] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][40] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][39] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][45] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][44] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][43] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][42] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][48] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][47] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][49] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][54] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][53] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][52] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][51] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][50] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+write_vector_addr_q[1] llm_bank_ram:u_vectors|g_request[5].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[1].u_storage|rd_data[12] parameter_word_q[44] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[1].u_storage|rd_data[12] parameter_word_q[44]~DUPLICATE 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[1].u_storage|rd_data[18] parameter_word_q[50] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][46] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][55] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][41] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][37] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][36] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][38] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][40] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][39] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][45] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][44] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][43] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][42] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][48] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][47] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][49] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][54] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][53] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][52] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][51] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][50] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+rst_n rotation_cos_q[21][45] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][55] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][53] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][51] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][49] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][47] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][46] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][43] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][42] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][41] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][54] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][52] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][50] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][48] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][44] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][40] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+write_vector_addr_q[1] llm_bank_ram:u_vectors|g_request[5].write_address_q[1] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{write_vector_addr_q[1]}}}
+write_vector_addr_q[1] llm_bank_ram:u_vectors|g_request[5].write_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[1].u_storage|rd_data[12] parameter_word_q[44] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[1].u_storage|rd_data[12] parameter_word_q[44]~DUPLICATE 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[1].u_storage|rd_data[18] parameter_word_q[50] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][46] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][46] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][55] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][55] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][41] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][41] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][37] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][37] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][36] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][36] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][38] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][38] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][40] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][40] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][39] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][39] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][45] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][45] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][44] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][44] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][43] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][43] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][42] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][42] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][48] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][48] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][47] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][47] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][49] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][49] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][54] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][54] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][53] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][53] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][52] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][52] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][51] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][51] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][50] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{llm_math:u_math|valid_q[2]}}}
+llm_math:u_math|valid_q[2] llm_math:u_math|product[15][50] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+rst_n rotation_cos_q[21][45] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][55] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][53] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][51] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][49] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][47] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][46] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][43] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][42] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][41] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][54] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][52] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][50] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][48] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][44] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+rst_n rotation_cos_q[21][40] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

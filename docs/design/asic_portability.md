@@ -16,7 +16,7 @@ after removing the unused `ctrl_unit` and `hazard_detect`. Its QSF/QPF/SDC
 matches the canonical full-top project. [Synthesis](../verification/synthesis/explicit2/manifest.json)
 passed0errors/12warnings and [all seven units](../../tests/full_rtl/evidence/explicit3_all_units/results.json)
 passed0compile/runtimewarnings, including the autonomous graph. RTL/configuration
-are locked while fitting runs. The [explicit RTL rules](rtl_style.md) now prohibit
+were unchanged through fitting; [timing](../verification/timing/fullrtl100_explicit2/manifest.json) FAIL93.28MHz/setup/removal. The [explicit RTL rules](rtl_style.md) now prohibit
 synthesizable tasks, hidden sequential ownership and variable/unbounded loops.
 All 61 request helpers are inline FSM updates; substantial replicated datapaths
 and pipeline stages use generate blocks. LUTs are explicit combinational modules.
