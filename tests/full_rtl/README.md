@@ -180,3 +180,5 @@ The math group exhausts 1536 small-width signedness/truncation/one-bit products
 against independent testbench arithmetic, then retains the existing 503 SIMD
 transactions, reset cancellation and LUT checks. Arithmetic operators are
 permitted in independent testbench/reference code only, not hardware datapaths.
+
+Current attention1 [seven-group archive](evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings after moving accumulator clear to head entry; full graph4229462compute clocks, three RTL-selected tokens,16layer executions and causal checks. [Vendor-free full-top elaboration](../../docs/verification/portable_elaboration_attention1/results.json) also PASS, run0/no weights/inference. Fresh full-top timing remains pending; application gate is closed.

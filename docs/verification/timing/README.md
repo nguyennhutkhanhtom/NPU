@@ -8,9 +8,8 @@ Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL d�
 
 Current `fullrtl100_attention1` moves the accumulator clear to A_QUERY and adds
 physical host_addr D3 setting7. [A&S](../synthesis/attention1/manifest.json)
-PASS0errors12warnings; [six groups](../../../tests/full_rtl/evidence/attention1_six_units/results.json)
-PASS0warnings, including128position causal attention. Graph and fresh full-fit
-timing are RUNNING; this changed source has no all-seven/timing PASS yet.
+PASS0errors12warnings; [all seven groups](../../../tests/full_rtl/evidence/attention1_all_units/results.json)
+PASS0warnings, including128position causal attention and full graph4229462compute clocks/three selected tokens. Fresh full-fit timing is RUNNING; no timing PASS yet.
 
 [Manifest](fullrtl100_fanout2/manifest.json), [source ZIP](fullrtl100_fanout2/source_archive.json) and [unchanged seven-group regression](../../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match34RTL/3configuration hashes. Extraction complete19:29:55 on04Oct2026. Same CycloneV5CGXFC9E6F35C7/QuartusLite25.1std Build1129/seed1/SPEED/STANDARD,10ns SDC and I/O budgets. Map0errors12warnings, fit0errors4warnings, STA0errors2warnings332148. Resources51888ALM/48214FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. UCP0.17/20checks PASS. Synthesis/fitting PASS, timing FAIL; no pretrained application.
 
@@ -23,11 +22,11 @@ timing are RUNNING; this changed source has no all-seven/timing PASS yet.
 
 The physical cache write-address fanout and host_wdata D3 setting7 requests were applied. [Fit report](fullrtl100_fanout2/llm_soc.fit.rpt) shows D3_0 or D3_1 setting7 on all32host_wdata inputs; placement chose different row/column I/O paths. Host_wdata no longer has negative hold paths. Hold now fails host_addr20/11/15 by.093/.042/.018ns, with address input D3 setting6. Physical delay settings are demo-backend bindings, not portable RTL or arithmetic/control IP; SDC is unchanged. The device's [programmable-delay capability](https://www.intel.com/programmable/technical-pdfs/683801.pdf) and [QSF assignment form](https://cdrdv2-public.intel.com/654623/an474.pdf) are described separately from this measured implementation.
 
-[Setup](fullrtl100_fanout2/slow_1100mv_85c_setup.rpt) now fails position_q[2] -> attention_acc_q[16],10.070nsdata/8.246nsrouting/four logic levels; all40listed endpoints negative, TNS-62.291ns. The [recommendations](fullrtl100_fanout2/slow_1100mv_85c_recommendations.txt) identify position/equality control duplication. Source currently clears all32S56accumulators in A_EXP_STORE only when time_q==position_q. No accumulator is consumed during score/exponent generation. A portable next fix can clear once in A_QUERY at each head's entry, before scores, removing the position comparator from this wide clear cone without adding state/cycle. This requires all-seven regression and fresh hardware gates; no performance improvement is claimed until verified.
+[Setup](fullrtl100_fanout2/slow_1100mv_85c_setup.rpt) now fails position_q[2] -> attention_acc_q[16],10.070nsdata/8.246nsrouting/four logic levels; all40listed endpoints negative, TNS-62.291ns. The [recommendations](fullrtl100_fanout2/slow_1100mv_85c_recommendations.txt) identify position/equality control duplication. The archived fanout2 source clears all32S56accumulators in A_EXP_STORE only when time_q==position_q. No accumulator is consumed during score/exponent generation. The attention1 candidate clears once in A_QUERY at each head's entry, before scores, removing the position comparator from this wide clear cone without adding state/cycle. This requires all-seven regression and fresh hardware gates; no performance improvement is claimed until verified.
 
 ## Fanout1 result: 98.63 MHz, setup/hold FAIL
 
-[Manifest](fullrtl100_fanout1/manifest.json), [source archive](fullrtl100_fanout1/source_archive.json) and [current seven units](../../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match34RTL assets. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD; SDC remains10ns with input0.5..2ns/output setup2ns/hold0.5ns and no exceptions. Extraction completed17:28:31 on04Oct2026. Map0errors12warnings, fit0errors4warnings, STA0errors1warning332148. Resources51919ALM/48086FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. All UCP counts0.18of20checks PASS; application gate rejects98.63MHz.
+[Manifest](fullrtl100_fanout1/manifest.json), [source archive](fullrtl100_fanout1/source_archive.json) and [preceding seven units](../../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match34RTL assets. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD; SDC remains10ns with input0.5..2ns/output setup2ns/hold0.5ns and no exceptions. Extraction completed17:28:31 on04Oct2026. Map0errors12warnings, fit0errors4warnings, STA0errors1warning332148. Resources51919ALM/48086FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. All UCP counts0.18of20checks PASS; application gate rejects98.63MHz.
 
 | Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
 |---|---:|---:|---:|---:|---:|

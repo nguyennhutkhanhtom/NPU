@@ -67,4 +67,4 @@ Xem [cài đặt và chọn test](tests/README.md), [demo checkpoint](tests/mode
 | [tests](tests/README.md) | Regression/reference, runners và demo export |
 | `quartus` | Project demo A&S; không quyết định kiến trúc ASIC |
 
-Current attention1 source moves accumulator clear to each head entry; all-seven regression and fresh full-top timing are pending. Preceding PASS results apply to their archived source hashes only.
+Current attention1 source clears accumulators at each head entry; [all seven groups](tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions. Fresh full-top timing is still pending; no trained application gate is open.

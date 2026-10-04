@@ -14,32 +14,7 @@ generate geometry and constant bit-slice offsets are elaboration arithmetic,
 not hardware multipliers or dividers. Runtime power-of-two address/word-count
 calculations use explicit shifts; small constant address factors use shift/add.
 
-The preceding candidate is `quartus_explicit2/llm_soc`, with 33 source assets
-after removing the unused `ctrl_unit` and `hazard_detect`. Its QSF/QPF/SDC
-matches the canonical full-top project. [Synthesis](../verification/synthesis/explicit2/manifest.json)
-passed0errors/12warnings and [all seven units](../../tests/full_rtl/evidence/explicit3_all_units/results.json)
-passed0compile/runtimewarnings, including the autonomous graph. RTL/configuration
-were unchanged through fitting; [timing](../verification/timing/fullrtl100_explicit2/manifest.json) FAIL93.28MHz/setup/removal. The [explicit RTL rules](rtl_style.md) now prohibit
-synthesizable tasks, hidden sequential ownership and variable/unbounded loops.
-All 61 request helpers are inline FSM updates; substantial replicated datapaths
-and pipeline stages use generate blocks. LUTs are explicit combinational modules.
-
-The verified 34-source RTL was first built as `quartus_pipeline1/llm_soc`, timing tag
-`fullrtl100_release1`. SIMD payload stages run from captured operands without
-wide valid enables; two explicit standard FFs condition internal reset release.
-Assertions remain immediate and release takes two rising edges. [All seven unit groups](../../tests/full_rtl/evidence/pipeline3_all_units/results.json) PASS0warnings and
-[synthesis](../verification/synthesis/release1/manifest.json) PASS0errors12warnings.
-Graph PASS for this source. Fit PASS; timing FAIL91.61MHz/setup+hold, while recovery/removal PASS at all corners. No additional technology IP or clock
-is introduced; all recovery/removal checks remain constrained.
-
-The [preceding seven-unit run](../../tests/full_rtl/evidence/logic6q5_all_units/results.json)
-passed with official Quartus25.1 RAM on Questa2025.2, zero compile/runtime
-warnings, for its archived35-source snapshot. Its synthetic graph generated
-three RTL-selected tokens after two-token prefill and16layer executions.
-These results cannot gate the changed source. Logic5/6 both fitted99.07MHz
-but failed setup/hold/removal. Logic7 fitted96.04MHz and also failed;
-its requested input delay chains were ignored by the actual Fitter.
-No current100MHz timing PASS or trained application is claimed.
+The [explicit RTL rules](rtl_style.md) prohibit synthesizable tasks, hidden sequential ownership and variable/unbounded loops. All61former request helpers are inline FSM updates. Significant replication and pipeline stages use generate blocks; LUTs are explicit combinational modules. SIMD payload stages run from captured operands, with a nine-clock response contract. Two standard FFs assert internal reset immediately and release it after two rising edges. The [current policy review](../verification/rtl_policy_attention1/results.json) records the exact34-source snapshot and reviewed loop/function/arithmetic inventory.
 
 `logic_mul` has independently selected signedness for A and B. A is extended to
 the output width, then each B bit masks a constant-shifted row. The signed top
@@ -53,7 +28,7 @@ two-bit radicand steps and trial subtraction. No synthesis-specific compute
 branches select a different algorithm.
 
 The only explicit vendor primitive is `altsyncram`, confined to
-`quartus_word_ram`. FPGA clients access it through `pipelined_word_ram` and the
+`quartus_word_ram`. Clients access it through `pipelined_word_ram` and the
 bank/parameter adapters. ASIC integration replaces the memory technology leaf
 with the selected foundry SRAM and matches its contract: common-clock 1R/1W,
 one raw read edge, OLD_DATA for a simultaneous same-address read/write, and no
@@ -69,19 +44,11 @@ QSF disables DSP and automatic shift-register recognition. QSF I/O standards,
 pin locations and packed output-register requests are FPGA physical bindings,
 not portable RTL or arithmetic IP.
 
-The current candidate uses a single-ended 2.5-V 100-MHz clock on AC18,
-reset on V28, and ordinary SDR LVDS output buffers. Every output has a physical
-negative companion; an external host must receive this parallel differential
-bus. There is no serializer, ALTLVDS or PLL. Board routing/termination has not
-been supplied. The SDC remains 10 ns with the original input/output budgets,
-no false paths and no multicycle paths. The output choice is based on a small
-I/O characterization; full-top all-corner fitting must independently pass.
+Quartus is the EDA demonstration backend. Device, pin, I/O standard, fanout and physical-delay assignments stay in its QSF; they do not become ASIC datapath/control dependencies. The demo SDC remains10ns with the original input/output budgets, no false paths or multicycle paths. FPGA board routing, termination and peripheral bring-up are outside this work. Actual ASIC synthesis/STA uses the selected standard-cell libraries, SRAM views and physical constraints.
 
 Current verification is recorded in [timing evidence](../verification/timing/README.md)
 and [unit instructions](../../tests/full_rtl/README.md). Older PASS results apply
 only to their archived source hashes. Application remains gated until the
 current full-top fit/timing and all seven unit/graph groups pass.
 
-The same34RTL assets have since completed [fanout1 fitting](../verification/timing/fullrtl100_fanout1/manifest.json):98.63MHz,18/20checks PASS, setup/hold still FAIL at slow85. No100MHz claim is made. Quartus serves as the EDA demonstration backend. ASIC-portable architecture, explicit register ownership and a replaceable SRAM leaf are the design focus. Board integration and FPGA peripheral development are outside the present scope. Physical fanout and I/O delay assignments belong only to this backend; ASIC synthesis/STA must use the selected standard-cell libraries and SRAM views.
-
-Current attention1 source moves accumulator clear to each head entry; all-seven regression and fresh full-top timing are pending. Preceding PASS results apply to their archived source hashes only.
+The current `attention1` source clears attention accumulators at each head entry, removing the conditional late-clear cone measured in the preceding fit. [Synthesis](../verification/synthesis/attention1/manifest.json) PASS0errors/12warnings; [all seven current groups](../../tests/full_rtl/evidence/attention1_all_units/results.json) PASS0warnings, including full graph4229462compute clocks. [Current vendor-free elaboration](../verification/portable_elaboration_attention1/results.json) also PASS0errors/0warnings. Fresh all-corner timing is still running. The preceding [fanout2 fit](../verification/timing/fullrtl100_fanout2/manifest.json) fails96.67MHz/setup+hold. Historical results and critical paths remain in the timing hub. No current100MHz or trained application PASS is claimed.

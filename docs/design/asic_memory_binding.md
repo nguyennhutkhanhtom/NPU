@@ -16,13 +16,7 @@ no independent host clock or data CDC bridge. ASIC integration with a host in
 another clock domain must provide that bridge upstream; the two reset-release
 FFs synchronize reset deassertion, not host data.
 
-The portable branch (`USE_QUARTUS_MEMORY=0`) uses inferred `sram_word_tile`
-arrays. [Preceding full-top elaboration evidence](../verification/portable_elaboration1/results.json)
-passes with no vendor memory library loaded,24 module design units,14 unique
-module names and0errors/0warnings. The binding report contains no `altsyncram`
-or vendor datapath. This was `run 0`, with no weights or inference; it proves
-elaboration independence from the vendor memory model. It does not select a
-foundry macro or establish ASIC synthesis, timing or physical signoff.
+The portable branch (`USE_QUARTUS_MEMORY=0`) uses inferred `sram_word_tile` arrays. [Current full-top elaboration evidence](../verification/portable_elaboration_attention1/results.json) PASS for the exact attention1 source, no vendor memory library loaded,24module design units/14unique names/0errors/0warnings. The binding report contains no `altsyncram` or vendor datapath. This was `run 0`, with no weights or inference; it proves elaboration independence from the vendor memory model. It does not select a foundry macro or establish ASIC synthesis, timing or physical signoff. [Preceding evidence](../verification/portable_elaboration1/results.json) remains immutable.
 
 ## Leaf contract and clients
 
@@ -45,7 +39,7 @@ Latencies count the accepting edge as edge1. The word adapter uses read3edges
 for<=4096rows and4otherwise; write commit at edge2. Group/lane request stages
 account for the bank adapter latencies above. Throughput and collision behavior
 are checked against independent expected data and the actual Quartus model in
-the [current seven-group archive](../../tests/full_rtl/evidence/pipeline3_all_units/results.json).
+the [current seven-group archive](../../tests/full_rtl/evidence/attention1_all_units/results.json).
 Changing macro ports, read latency or collision semantics requires adapting
 this boundary and rerunning those checks. An undefined collision response cannot
 be declared equivalent to OLD_DATA. Macro selection must account for that rule

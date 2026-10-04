@@ -1,6 +1,6 @@
 # NPU resume checkpoint
 
-Updated 2026-10-04 20:04 Asia/Saigon. Repo/reports/hashes are authoritative; preserve valid changes and immutable tags, no reset/revert.
+Updated 2026-10-04 20:40 Asia/Saigon. Repo/reports/hashes are authoritative; preserve valid changes and immutable tags, no reset/revert.
 
 ## Goal and rules
 
@@ -10,15 +10,19 @@ Full autonomous language graph on RTL; CPU loads weights/config/prompt and token
 
 Pretrained export/application/reference inference requires exact-current all-seven unit/graph PASS AND full-top post-fit>=100MHz, every corner setup/hold/recovery/removal/pulse slack>=0,TNS0,UCP0. No trained application/reference inference has run under this gate.
 
-## Current attention1 fix: gates pending
+## Current attention1: all-seven PASS, timing pending
 
-Source llm_soc changes one clear assignment: A_QUERY clears attention_acc_q instead of conditional clear in A_EXP_STORE. No state/cycle/numeric formula changed. Each head enters A_QUERY before scores; accumulators only consumed after exponent generation. No vendor IP/task/function/loop added. QSF adds host_addr D3_DELAY7 for fanout2 address hold failures; SDC unchanged.
+Source llm_soc SHA51ef7ae59847a9b082916872fc3512dbc0d890011d5b8134c8dfccb0f8985811: A_QUERY clears attention_acc_q once per head, replacing the conditional A_EXP_STORE clear. No state/cycle/formula change. Source/config ZIP37 SHA0f9badde7a854d76f1edb6541af9f1547d132579c39342d94a14968dd43c059e. QSF host_addr D3_DELAY7 targets measured fanout2 hold failures; SDC unchanged.
 
-RUNNING timing exec49792, isolated quartus_attention1/llm_soc, tag fullrtl100_attention1; A&S PASS0errors12warnings19:41:12, Fitter45332/supervisor30228 active. Source/config ZIP37 SHA0f9badde7a854d76f1edb6541af9f1547d132579c39342d94a14968dd43c059e. RUNNING all-seven exec25145, attention1_questa_work/EvidenceTag attention1, actualRAM25.1/Questa2025.2; initial snapshot tests/full_rtl/build/attention1_modelsim_start.json, compile0errors0warnings, allsixgroupsPASS including operators17/checks3460/scalar128/clamp128 at19:39:11; graph40192 RUNNING. Six-group archive tests/full_rtl/evidence/attention1_six_units/results.json, A&S archive docs/verification/synthesis/attention1/manifest.json. Rootunit_results currently RUNNING, not PASS. Preserve prior pipeline3 archive; no application.
+All-seven exec25145 completed20:35:33; compile/runtime0warnings, actualRAM25.1/Questa2025.2, current34assets/eighttestinputs/helper/model/logs/binding hashes verified. [Archive](tests/full_rtl/evidence/attention1_all_units/results.json): math503/reset9/LUT513/bit1536; operators17/checks3460/scalar128/clamp128/fullcontext128attention; graph4229462compute clocks/prompt2/selectedtokens3/layerexec16/hostcommands196619/causal checked. No expected values or testcase relaxed; clear move adds no clock. Rootunit_results PASS. Six-group/start evidence stays immutable.
 
-Source guide refreshed/excerpts/hash match34assets;51diagram hashes unchanged. Do not edit RTL/QSF/SDC or unit inputs while jobs active. Wait for current graph and full fit/all20checks before claiming milestone. Latest pushed a2fa161 records early attention clear/A&S/six units; c9a83b9 completed fanout2 FAIL and bc4f375 vendor-free elaboration/ASIC memory guide retained.
+[Current portable elaboration](docs/verification/portable_elaboration_attention1/results.json) PASS20:37:14, reuses verified all-seven library, USE_QUARTUS_MEMORY=0/no vendor library binding/24module units/14names/0errors0warnings. run0/no weights/inference, behavioral SRAM backend, not ASIC synthesis/signoff. Compile/log/commands/DU/source hashes archived. Preceding portable_elaboration1 retained.
 
-Current source policy review docs/verification/rtl_policy_attention1/results.json: exact34hashes,41generate/13small static procedural/2elaboration loops,13pure runtime helpers/2geometry functions. All61arithmetic-symbol statements reviewed as elaboration/index geometry, vendor symbols SRAM leaf only. Manual review plus lexical inventory, not a functional/timing proof. Docs hub simplified; validator PASS34assets/51renders/1901links. Graph passed1Mcompute clocks by20:03; still RUNNING.
+Timing exec49792 still RUNNING, quartus_attention1/llm_soc/tag fullrtl100_attention1/Fitter45332/supervisor30228. A&S0errors12warnings; placement succeeded and routing ended20:37, final fit reports/STA/extraction pending. Keep RTL/QSF/SDC/unit inputs frozen. No100MHz PASS or pretrained application yet. Read all20corner checks/UCP/critical paths/recommendations/resources/warnings, verify archives before any edit.
+
+Docs PASS34assets/30main+15detail/150groups/4523RTLlines/1059LUTentries/51renders/1905links. Hub/ASIC page simplified for EDA backend scope. [Policy review](docs/verification/rtl_policy_attention1/results.json) exact34hashes/41generate+13small static+2elaboration loops/13pure runtime+2geometry functions;61arithmetic-symbol statements reviewed as constant geometry/index factors. Manual/lexical review, not functional/timing proof. [Git check](docs/verification/rtl_policy_attention1_git/results.json) records initial metadata-byte check failure from CRLF-to-LF staging, identical payload and matching helper/rules/source hashes; old archive not rewritten.
+
+Latest pushed9a512d8 policy/docs, a2fa161 early-clear/A&S/six-unit source milestone; c9a83b9 fanout2 FAIL and bc4f375 ASIC SRAM guide preserved. Current all-seven/portable docs awaiting milestone commit after verification. No source/config edit during either job.
 
 ## Preceding verified RTL and tests
 
@@ -47,7 +51,7 @@ Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD. S
 
 ## Cleanup and commits
 
-Latest source/six-unit milestone pushed main a2fa161; preceding timing/parser d6e5377 preserved. Prior86b1c52: inactive Quartus DB cleanup12directories/1864217551bytes; all six historical ZIP/report hashes verified, outputs/evidence/activeDB/weights/model cache retained. [Cleanup record](docs/history/quartus_database_cleanup_20261004.json). Prior unused helper originals preserved in [SHA-verified ZIP](docs/history/helper_cleanup1/manifest.json); current runners and legacy reachable modules retained. No large weights/build artifacts/vendor libraries/secrets committed.
+Latest policy/docs milestone pushed main9a512d8; source/six-unit a2fa161 and preceding timing/parser d6e5377 preserved. Prior86b1c52: inactive Quartus DB cleanup12directories/1864217551bytes; all six historical ZIP/report hashes verified, outputs/evidence/activeDB/weights/model cache retained. [Cleanup record](docs/history/quartus_database_cleanup_20261004.json). Prior unused helper originals preserved in [SHA-verified ZIP](docs/history/helper_cleanup1/manifest.json); current runners and legacy reachable modules retained. No large weights/build artifacts/vendor libraries/secrets committed.
 
 ## Reproduction and next steps
 
@@ -63,8 +67,8 @@ python docs/source_guide/validate.py
 ./tests/full_rtl/run_application.ps1 -TimingManifest docs/verification/timing/PASS_TAG/manifest.json
 ```
 
-1. Fanout2 FAIL archived/pushed c9a83b9. Current attention1 timing/unit jobs active: poll logs/processes, keep sources frozen. Archive fresh results without overwriting old tags.
-2. Verify current early attention clear numerically with all-seven tests, then all-corner timing. If FAIL target new measured paths. Preserve SDC, expected values and evidence; no pretrained run until exact-current full gates pass.
+1. Fanout2 FAIL archived/pushed c9a83b9. Current attention1 all-seven PASS; timing active: poll logs/processes, keep sources frozen. Archive fresh results without overwriting old tags.
+2. All-seven verifies early attention clear, same4229462graph clocks. Finish all-corner timing. If FAIL target new measured paths. Preserve SDC, expected values and evidence; no pretrained run until exact-current full gates pass.
 3. Once gates pass, run pinned NanoFable actual RTL paragraph and review matching separately from coherence; second compatible language model when supported. O5 profile gave no speed gain, defaultO4 retained. Application monitor compile-only PASS, not an application run.
 
 [Portable full-top elaboration](docs/verification/portable_elaboration1/results.json) PASS18:37:16, USE_QUARTUS_MEMORY=0, no vendor library loaded/24module design units/14unique names/0errors0warnings, run0/no weights/inference. Initial shell argument split failure retained; corrected quoting only. [ASIC SRAM binding guide](docs/design/asic_memory_binding.md) records all72leaf instances, latency/reset/collision and four small arrays including inferred output/probability RAM. Behavioral elaboration is not ASIC synthesis or signoff.

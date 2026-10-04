@@ -92,8 +92,7 @@ before score/exponent generation. Previously their late clear in
 `A_EXP_STORE` depended on `time_q == position_q`, creating a wide equality
 control cone to32S56registers. No accumulator is consumed before value
 reduction, so the clear can move earlier without adding a state or clock.
-The current `attention1` regression and full-top timing gates are pending;
-preceding PASS evidence applies only to its archived source hashes.
+[Current attention1 all-seven regression](../../tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three selected tokens/16layer executions. Full-top timing remains pending; no trained application has run under this gate.
 
 The host memory map and request/response protocol are defined in the
 [full RTL test guide](../../tests/full_rtl/README.md). The ISA-driven legacy

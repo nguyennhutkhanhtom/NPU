@@ -49,7 +49,8 @@ Top hiện tại là **`llm_soc`**, chạy toàn graph sinh token trên RTL. Com
 |---|---|
 | Source hiện tại `attention1`, 34 assets | Clear accumulator attention tại đầu mỗi head; [A&S PASS, 0 errors/12 warnings](verification/synthesis/attention1/manifest.json). |
 | Coding policy source hiện tại | [Inventory và rà soát theo hash](verification/rtl_policy_attention1/results.json): không có runtime nhân/chia, task synthesizable hoặc IP compute/control. Đây là source review, không phải timing/functional proof. |
-| Unit source hiện tại | [6 nhóm PASS](../tests/full_rtl/evidence/attention1_six_units/results.json), compile/runtime 0 warnings; graph đang chạy. Chưa có kết luận cả 7 nhóm PASS. |
+| Unit source hiện tại | [7 nhóm PASS](../tests/full_rtl/evidence/attention1_all_units/results.json), compile/runtime 0 warnings; graph 4.229.462 compute clocks, 3 token tự chọn và 16 lượt layer. |
+| Portable full-top hiện tại | [Elaboration PASS](verification/portable_elaboration_attention1/results.json), không binding vendor, 24 module units/14 tên, 0 errors/0 warnings. `run 0`, không weights/inference; chưa phải ASIC synthesis/signoff. |
 | Timing source hiện tại | Fitter đang chạy với SDC 10 ns giữ nguyên; chưa có timing PASS. Theo dõi [checkpoint](../TASK_STATE.md) và [timing hub](verification/timing/README.md). |
 | Source trước thay đổi clear attention | [7 nhóm PASS](../tests/full_rtl/evidence/pipeline3_all_units/results.json); [full-top fanout2 timing FAIL 96,67 MHz](verification/timing/fullrtl100_fanout2/manifest.json), setup/hold còn lỗi. Recovery/removal/pulse đạt mọi corner; không có unconstrained paths. |
 | Pretrained application toàn graph | Chưa chạy theo gate hiện hành. Chỉ chạy sau khi đúng source/config đạt cả 7 nhóm và post-fit ≥100 MHz, mọi corner/slack/TNS/UCP đạt. Numeric matching và chất lượng đoạn văn được đánh giá riêng. |

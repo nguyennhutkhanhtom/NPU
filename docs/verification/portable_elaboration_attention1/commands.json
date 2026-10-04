@@ -1,0 +1,19 @@
+{
+  "executable": "C:/altera_lite/25.1std/questa_fse/win64/vsim.exe",
+  "arguments": [
+    "-c",
+    "-onfinish",
+    "exit",
+    "-lib",
+    "tests/full_rtl/build/attention1_questa_work",
+    "-voptargs=-duselectreport=tests/full_rtl/build/portable_attention1/design_units.json",
+    "-gUSE_QUARTUS_MEMORY=0",
+    "-l",
+    "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\portable_attention1\\elaborate.log",
+    "llm_soc",
+    "-do",
+    "run 0; quit -f"
+  ],
+  "started_at_utc": "2026-10-04T13:37:00.9667062Z",
+  "compiled_unit_evidence": "tests/full_rtl/evidence/attention1_all_units/results.json"
+}
