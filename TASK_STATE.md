@@ -1,6 +1,6 @@
 # NPU resume checkpoint
 
-Updated 2026-10-04 16:06 Asia/Saigon. Repo, raw reports and hashes are authoritative. Preserve valid changes and immutable evidence; no reset/revert.
+Updated 2026-10-04 16:12 Asia/Saigon. Repo, raw reports and hashes are authoritative. Preserve valid changes and immutable evidence; no reset/revert.
 
 ## Goal and binding rules
 
@@ -10,7 +10,7 @@ Full graph and autoregressive selection on RTL. CPU loads weights/config/prompt 
 
 ## Current verified milestone
 
-- main: pushed milestone `d72a7cf` (current all-seven PASS + release1 FAIL evidence). Earlier milestones retained. No trained application or CPU checkpoint inference has run.
+- main: pushed milestone `1b87ed9` (helper cleanup); `d72a7cf` preserves current all-seven PASS + release1 FAIL. Earlier milestones retained. No trained application or CPU checkpoint inference has run.
 - Preceding verified snapshot: 33 RTL assets. Unused legacy controllers/helpers removed with stale QSF/source-guide entries; valid legacy tests retained. All 61 request/math/write task calls are visible FSM assignments; generated pipelines have one register owner. LUTs are combinational modules. Unsigned buffer/row casts preserve the former task argument contract. No added numeric/transaction latency.
 - [All seven preceding groups PASS](tests/full_rtl/evidence/explicit3_all_units/results.json), completed 14:30:22: Questa2025.2 + official Quartus25.1 RAM; compile/runtime 0 warnings. Graph: prompt2, RTL-selected tokens3, layer executions16, causal checks, 4,229,462 compute clocks, 196,619 host commands. Synthetic fixture, not trained text. Archive has seven logs/binding reports, start/source/test/helper/model hashes and reproduction inputs. Six-group partial tag retained unchanged.
 - [A&S PASS](docs/verification/synthesis/explicit2/manifest.json): current 33 RTL + 3 config files, 0 errors/12 warnings, completed13:37:42. This is not timing PASS.
@@ -58,7 +58,7 @@ Optional -O5 SIMD profile initially refused the active-session license; retry af
 
 ## Next priorities
 
-Physical candidate `fullrtl100_fanout1` RUNNING, exec87573, isolated `quartus_fanout1/llm_soc`. Adds MAX_FANOUT2 vector read/write address, MAX_FANOUT4 cache write-pending/scalar group drivers. RTL34 and SDC unchanged; current all-seven PASS still matches. Snapshot/ZIP37members retained. Do not edit RTL/QSF/SDC or launch another build while runner is active. Hypothesis only; host hold and all20checks need fresh fitting. All release1 jobs closed before launch.
+Physical candidate `fullrtl100_fanout1` RUNNING, exec87573, supervisor11928, isolated `quartus_fanout1/llm_soc`. Adds MAX_FANOUT2 vector read/write address, MAX_FANOUT4 cache write-pending/scalar group drivers. RTL34 and SDC unchanged; current all-seven PASS still matches. [A&S archive](docs/verification/synthesis/fanout1/manifest.json) PASS0errors12warnings16:10:22, elapsed6m19. Quartus mapped vector/cache fanout assignments; Fitter active. Snapshot/ZIP37members retained. Do not edit RTL/QSF/SDC or launch another build while runner is active. Hypothesis only; host hold and all20checks need fresh fitting. All release1 jobs closed before launch.
 
 1. Preserve verified release1 FAIL and pipeline3 all-seven PASS, commit/push milestone. Run fresh fanout physical candidate after closed-job check; unchanged RTL can reuse current seven-group PASS.
 2. If FAIL, fix measured paths with portable RTL and rerun affected tests/full gates under fresh tags. Never infer timing PASS from synthesis PASS.

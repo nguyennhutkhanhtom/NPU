@@ -19,6 +19,12 @@ The standard-FF reset conditioner fixes recovery/removal at every corner. Contin
 
 [Worst setup](fullrtl100_release1/slow_1100mv_85c_setup.rpt): write_vector_addr_q[2] to u_vectors/g_request[5]/write_address_q[2],10.624ns data/10.285ns routing/one logic level. Other negative paths are cache write_pending_q[0] to lane write enables, v_address_q to vector groups and scalar_group_q to write_vector_q. [Recommendations](fullrtl100_release1/slow_1100mv_85c_recommendations.txt) identify these paths and control inter-path competition. [Hold](fullrtl100_release1/slow_1100mv_85c_hold.rpt) fails host_wdata21/19 to host_data_q by0.023/0.006ns; Optimize Hold Timing already uses All Paths. Next experiment limits address/cache-mask/scalar driver fanout through FPGA mapping assignments. RTL, transaction latency and constraints stay unchanged; this is a hypothesis until a fresh full fit is measured.
 
+The fresh physical candidate `fullrtl100_fanout1` uses the same34RTL assets and
+unchanged SDC, device and seed. Its QSF adds MAX_FANOUT2 on vector read/write
+addresses and MAX_FANOUT4 on cache write-pending/scalar drivers. [A&S archive](../synthesis/fanout1/manifest.json)
+PASS0errors12warnings; Fitter/all-corner timing are pending. Current all-seven
+PASS still matches the unchanged RTL and test inputs. No100MHz claim is made.
+
 ## Explicit2 result: 93.28 MHz, setup/removal FAIL
 
 [Manifest](fullrtl100_explicit2/manifest.json) and [source archive](fullrtl100_explicit2/source_archive.json) identify the exact 33 RTL assets and three configuration files. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD and unchanged10ns SDC. Map PASS0errors/12warnings, fit PASS0errors/4warnings, STA completes0errors/2timing warnings. Fitted52189ALM/48316FF/1186RAMblocks/9515648memorybits/186pins; DSP/PLL/DLL/HSSI0. All UCP counts0. [Seven unit groups](../../../tests/full_rtl/evidence/explicit3_all_units/results.json) PASS for this exact source. The application gate correctly rejects Fmax below100MHz; no pretrained application/reference ran.
