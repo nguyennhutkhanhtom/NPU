@@ -1,62 +1,41 @@
-# banked_word_ram.sv — SRAM tiles và mux đọc
+# banked_word_ram.sv
 
-[Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
+[Documentation](../../README.md) → [Source guide](../full_graph.md) → [RTL index](README.md)
 
-**Source:** [banked_word_ram.sv](<../../../Verilog%20Source%20code/banked_word_ram.sv>). **Số dòng:** 55. **SHA-256:** `bb7a3bb83e0aef84c030403bcd675e4853f190ea79d9851ad742a5a0d02d2409`.
+**Source:** [banked_word_ram.sv](<../../../Verilog%20Source%20code/banked_word_ram.sv>). **Số dòng:** 39. **SHA-256:** `3f62befc5ff4942b92708e1fca7c54e61ae64781839e2efd2e6108ed0cc9a08e`.
 
 ## Khối này làm gì?
 
-Một read port đồng bộ và một write port độc lập, old-data khi cùng địa chỉ. Mỗi tile tối đa 1024 word; read_tile_q giữ tag để mux output đúng tile. Nội dung và output không reset; client dùng valid riêng. ASIC macro hoặc Quartus IP có thể thay sram_word_tile sau cùng hợp đồng.
+Legacy three-pass RMS normalization and quantization. Two shared structural multipliers, one divider and the separately defined isqrt_u64 serve the explicit pass controller. Workspace scratch and final quantized values are packed in 256-bit words.
 
 ## Sơ đồ kiến trúc
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
     REQ[Read and write requests] --> TILE[1024-word leaf SRAM]
     REQ --> TAG[Registered tile selection]
     TILE --> MUX[One-hot data reduction]
     TAG --> MUX
     MUX --> OUT[Read data after one edge]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 ## Cách hoạt động chi tiết
 
-Một read port đồng bộ và một write port độc lập, old-data khi cùng địa chỉ. Mỗi tile tối đa 1024 word; read_tile_q giữ tag để mux output đúng tile. Nội dung và output không reset; client dùng valid riêng. ASIC macro hoặc Quartus IP có thể thay sram_word_tile sau cùng hợp đồng.
+Legacy three-pass RMS normalization and quantization. Two shared structural multipliers, one divider and the separately defined isqrt_u64 serve the explicit pass controller. Workspace scratch and final quantized values are packed in 256-bit words.
 
 ## Các nhóm logic trong source
 
-### [Dòng 1–20: Leaf SRAM](<../../../Verilog%20Source%20code/banked_word_ram.sv#L1>)
+### [Dòng 1–15: Portable bank interface and tile geometry](<../../../Verilog%20Source%20code/banked_word_ram.sv#L1>)
 
-<!-- source-range:1:20 -->
+<!-- source-range:1:15 -->
 ```systemverilog
 // Portable SRAM organization with bounded, reusable word-bank instances.
 // Tiling keeps memory elaboration and address routing local as depth grows.
-module sram_word_tile #(
-    parameter int WIDTH = 32,
-    parameter int ROWS = 1024
-) (
-    input logic clk, rd_en, wr_en,
-    input logic [9:0] rd_addr, wr_addr,
-    input logic [WIDTH - 1:0] wr_data,
-    output logic [WIDTH - 1:0] rd_data
-);
-    logic [WIDTH - 1:0] memory [0:ROWS - 1];
-    always_ff @(posedge clk) begin
-        if (wr_en) memory[wr_addr] <= wr_data;
-        if (rd_en) rd_data <= memory[rd_addr];
-    end
-endmodule
-
 module banked_word_ram #(
     parameter int WIDTH = 32,
-```
-
-Hai nonblocking assignment trả dữ liệu trước write khi read/write cùng địa chỉ. Không initialize hoặc reset memory.
-
-### [Dòng 21–33: Bank organization](<../../../Verilog%20Source%20code/banked_word_ram.sv#L21>)
-
-<!-- source-range:21:33 -->
-```systemverilog
     parameter int ROWS = 4096,
     parameter int ADDR_W = $clog2(ROWS)
 ) (
@@ -68,16 +47,14 @@ Hai nonblocking assignment trả dữ liệu trước write khi read/write cùng
     localparam int TILES = (ROWS + 1023) / 1024;
     logic [WIDTH - 1:0] tile_data [0:TILES - 1];
     logic [TILES - 1:0] read_tile_q;
-    genvar tile;
-    generate
 ```
 
-Chia ROWS thành tile; tile cuối có thể ngắn hơn. ADDR_W phải đủ cho ROWS và client chỉ phát địa chỉ hợp lệ.
+### [Dòng 16–29: Generated SRAM leaves and read tags](<../../../Verilog%20Source%20code/banked_word_ram.sv#L16>)
 
-### [Dòng 34–49: Tile decoding](<../../../Verilog%20Source%20code/banked_word_ram.sv#L34>)
-
-<!-- source-range:34:49 -->
+<!-- source-range:16:29 -->
 ```systemverilog
+    genvar tile;
+    generate
     for (tile = 0; tile < TILES; tile = tile + 1) begin : g_tile
         localparam int TILE_ROWS = (ROWS - tile * 1024 < 1024) ? ROWS - tile * 1024 : 1024;
         sram_word_tile #(.WIDTH(WIDTH), .ROWS(TILE_ROWS)) u_tile(
@@ -90,18 +67,16 @@ Chia ROWS thành tile; tile cuối có thể ngắn hơn. ADDR_W phải đủ ch
     end
     endgenerate
     wire [WIDTH - 1:0] read_mux [0:TILES];
+```
+
+### [Dòng 30–39: Read reduction network](<../../../Verilog%20Source%20code/banked_word_ram.sv#L30>)
+
+<!-- source-range:30:39 -->
+```systemverilog
     genvar mux_tile;
     assign read_mux[0] = '0;
     generate
     for (mux_tile = 0; mux_tile < TILES; mux_tile = mux_tile + 1) begin : g_read_mux
-```
-
-High address bits chọn tile, low 10 bits chọn word; tag đọc được chốt cùng cạnh với SRAM.
-
-### [Dòng 50–55: Read output](<../../../Verilog%20Source%20code/banked_word_ram.sv#L50>)
-
-<!-- source-range:50:55 -->
-```systemverilog
         assign read_mux[mux_tile + 1] = read_mux[mux_tile] |
             (tile_data[mux_tile] & {WIDTH{read_tile_q[mux_tile]}});
     end
@@ -109,5 +84,3 @@ High address bits chọn tile, low 10 bits chọn word; tag đọc được ch�
     assign rd_data = read_mux[TILES];
 endmodule
 ```
-
-OR của các output được mask bằng tag one-hot. Latency logic là một cạnh; mux cuối vẫn phải đáp ứng STA.

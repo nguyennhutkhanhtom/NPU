@@ -1,76 +1,58 @@
-# llm_soc.sv — Autonomous autoregressive graph
+# llm_soc.sv
 
-[Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
+[Documentation](../../README.md) → [Source guide](../full_graph.md) → [RTL index](README.md)
 
-**Source:** [llm_soc.sv](<../../../Verilog%20Source%20code/llm_soc.sv>). **Số dòng:** 1036. **SHA-256:** `5abac9ed9dde98138c4e5928fe7638e302ca4bf9a49b38eeafd373826a10fb9e`.
+**Source:** [llm_soc.sv](<../../../Verilog%20Source%20code/llm_soc.sv>). **Số dòng:** 1349. **SHA-256:** `ac72d0ab7f58a4647168fbeb7d7454c73ed1df195229b8587071a98d16a57543`.
 
 ## Khối này làm gì?
 
-Host chỉ cấp parameter words, prompt IDs và cấu hình. Graph FSM chạy prefill và decode qua bốn transformer block rồi head; operator FSM điều phối SRAM, SIMD, sqrt, divide và sigmoid. Xem full_rtl_language.md cho memory map và numeric contracts.
+Autonomous fixed-point graph. The parent owns host transactions, graph/operator states, operand routing, vector writes, scaling, softmax/value passes and token selection. Linear, head, QK-score and normalization engines have explicit interfaces; arithmetic and SRAM resources remain shared through parent muxes.
 
 ## Sơ đồ kiến trúc
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-    HOST[32-bit registered host] --> PARAM[Parameter SRAM]
-    HOST --> TOKENS[Prompt and generation config]
-    TOKENS --> GRAPH[Graph FSM and 102 one-hot operator states]
-    GRAPH --> SIMD[32-lane math plus sqrt divide sigmoid]
-    PARAM --> SIMD
-    VECTOR[Vector SRAM] --> SECOND[Held binary vector operand]
-    VECTOR --> SIMD
-    SECOND --> SIMD
-    SIMD --> VECTOR
-    KV[KV cache SRAM] --> CACHE[32 generated cache payload FF groups]
-    CACHE --> SIMD
-    SIMD --> KV
-    SIMD --> GRAPH
-    GRAPH --> OUTPUT[RTL-selected output token buffer]
+ H["Host request / held acknowledgement<br/>32-bit address and data"] --> F["Registered host frontend<br/>Prompt / configuration / token output"]
+ F <--> P["u_parameters<br/>24576 rows x 256 bits"]
+ G["Parent graph and operator FSMs<br/>112 one-hot operator bits"] --> R["Parent request and operand muxes"]
+ R <--> P
+ R <--> V["u_vectors<br/>96 rows x 768 bits"]
+ R <--> K["u_cache<br/>4096 rows x 768 bits"]
+ G --> L["u_linear_engine<br/>Two-word prefetch / ternary_dot32"]
+ G --> E["u_head_engine<br/>Four ordered int8 chunks"]
+ G --> A["u_attention_engine<br/>Causal QK scores and maximum"]
+ L <-->|"Parameter request / data / valid"| R
+ E <-->|"Parameter request / capture / issue"| R
+ A <-->|"KV request / capture / issue"| R
+ R <--> C["Parent input cache<br/>12 rows x 768 bits"]
+ R <--> M["u_math STREAMING=1<br/>32 S24 x S32 lanes"]
+ G <--> N["u_attention_normalize<br/>Four lanes: shared + three private dividers"]
+ N <-->|"Lane 0 request / quotient / remainder"| D["u_div<br/>RMS reciprocal or attention lane 0"]
+ G <--> Q["u_root and four sigmoid instances"]
+ G --> O["Parent scaling / sampling<br/>Output token buffer"]
+ F -.->|"Launch / status"| G
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 ## Cách hoạt động chi tiết
 
-Host chỉ cấp parameter words, prompt IDs và cấu hình. Graph FSM chạy prefill và decode qua bốn transformer block rồi head; operator FSM điều phối SRAM, SIMD, sqrt, divide và sigmoid. Xem full_rtl_language.md cho memory map và numeric contracts.
-
-Per-lane payload chốt raw S64, RNE S64 và S24 clamp ở các bước riêng để tách
-critical path. Linear và attention chốt saturation scalar theo tám nhóm, mỗi
-nhóm bốn lane có enable riêng để giảm fanout/routing, rồi chỉ cập nhật lane
-được chọn; các lane không ghi được giữ và write mask bảo vệ SRAM. Reciprocal
-U25 có upper-bound từ epsilon/root. `A_SCALE` cast part-select sang signed để
-giữ score âm. Reset chỉ hủy control, không clear payload. Các thay đổi không
-thay công thức hoặc expected numeric values; latency tăng theo FSM handshake.
-Operator dùng 102 trạng thái one-hot với reverse-case decode. Shared scalar
-multiplier S39×S25 dùng partial byte products, pair sum và product S64 qua ba
-state. Mã ternary được chốt trước decode; exp delta được chốt trước nhân nội
-suy. Clamp scalar chốt predicates/low24 riêng theo nhóm trước mux S24, giữ
-owner lane và overflow flag của linear. Payload/flags không reset; FSM phải
-capture trước use. Vector/KV adapter có
-request pipeline group/lane/tile và read valid năm cạnh; parameter read năm
-cạnh, host lane selection thêm một cạnh. O_FINISH chờ mọi write drain trước
-op_done. Sigmoid chuẩn bị RNE4 song song, clamp S16 rồi chọn lane qua hai tầng mux có register (8:1 và4:1); không gộp chọn lane với rounding/clamp. Các payload second_q và write_vector_q chỉ decode state thực sự ghi chúng. Selection khởi tạo
-token thấp nhất hợp lệ để tie S32_MIN không trả token bị mask; mã ternary `10`
-báo format fault. Reset phải bao phủ một cạnh lên để hủy operator state.
-Host FSM chốt transaction payload nội bộ. Public host_rdata là register luôn
-chốt payload ở mỗi cạnh; H_DONE báo ACK ở cùng cạnh dữ liệu đã chốt. Không thêm
-latency ACK quan sát được; reset vẫn xóa response và hủy transaction.
-
-`cache_operand_q` chốt `k_data` liên tục trong32lane generate, không enable/reset
-payload. `A_KEY`/`A_WEIGHT` chỉ tiêu thụ sau `O_K_WAIT && k_valid`; SRAM đã giữ
-response hợp lệ và FF đã chốt trước cạnh tiêu thụ. `second_q` giữ operand đầu
-của residual/SwiGLU và chỉ ghi tại `B_INPUT0`. Tách hai owner bỏ cache-enable/mux
-khỏi bus768bit dùng chung, không thêm state/clock/latency hay đổi phép toán.
-Reset hủy control/validity; payload chưa hợp lệ không được tiêu thụ. Bản cache1
-đang chạy lại regression và full timing; PASS trước đó là source attention1.
+Autonomous fixed-point graph. The parent owns host transactions, graph/operator states, operand routing, vector writes, scaling, softmax/value passes and token selection. Linear, head, QK-score and normalization engines have explicit interfaces; arithmetic and SRAM resources remain shared through parent muxes.
 
 ## Các nhóm logic trong source
 
-### [Dòng 1–327: Interface and FSM state](<../../../Verilog%20Source%20code/llm_soc.sv#L1>)
+### [Dòng 1–300: Top interface, reset and graph/operator declarations](<../../../Verilog%20Source%20code/llm_soc.sv#L1>)
 
-<!-- source-range:1:327 -->
+<!-- source-range:1:300 -->
 ```systemverilog
 // Autonomous fixed-point NanoFable inference. The host loads parameters and
 // prompt IDs; this controller owns prefill, attention, head and decode.
-module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
+    parameter bit PERF_COUNTERS = 0,
+    parameter bit ENABLE_DEBUG_INDEX = 0,
+    parameter int ATTN_DIV_LANES = 4,
+    parameter int SIGMOID_LANES = 4) (
     input logic clk, rst_n, host_en, host_we,
     input logic [31:0] host_addr, host_wdata,
     output logic [31:0] host_rdata,
@@ -78,6 +60,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     output logic [8:0] pc_debug,
     output logic [12:0] instr_debug
 );
+    genvar input_lane, sig_lane, phase, cache_row;
     // Raw reset reaches only the two standard FFs in this boundary. Internal
     // state asserts reset immediately and resumes after two rising edges.
     logic core_rst_n;
@@ -89,7 +72,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
         G_UP, G_SILU, G_GMUL, G_DOWN, G_MADD, G_NEXT, G_FNORM, G_HEAD,
         G_ADVANCE, G_DONE} graph_t;
     graph_t graph;
-    localparam int OP_COUNT = 102;
+    localparam int OP_COUNT = 112;
     localparam int O_IDLE_IDX = 0;
     localparam int O_P_REQ_IDX = 1;
     localparam int O_P_WAIT_IDX = 2;
@@ -192,6 +175,16 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     localparam int A_EXP_DELTA_IDX = 99;
     localparam int L_FLAGS_IDX = 100;
     localparam int A_FLAGS_IDX = 101;
+    localparam int SC_ROUTE_IDX = 102;
+    localparam int L_PRELOAD_IDX = 103;
+    localparam int H_PRELOAD_IDX = 104;
+    localparam int L_DOT_WAIT_IDX = 105;
+    localparam int H_STREAM_WAIT_IDX = 106;
+    localparam int A_STREAM_WAIT_IDX = 107;
+    localparam int N_DIV_ROUND_IDX = 108;
+    localparam int A_NORM_WAIT_IDX = 109;
+    localparam int L_ROW_START_IDX = 110;
+    localparam int L_ROW_WAIT_IDX = 111;
     typedef enum logic [OP_COUNT - 1:0] {
         O_IDLE = OP_COUNT'(1) << O_IDLE_IDX,
         O_P_REQ = OP_COUNT'(1) << O_P_REQ_IDX,
@@ -294,9 +287,31 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
         L_DECODE = OP_COUNT'(1) << L_DECODE_IDX,
         A_EXP_DELTA = OP_COUNT'(1) << A_EXP_DELTA_IDX,
         L_FLAGS = OP_COUNT'(1) << L_FLAGS_IDX,
-        A_FLAGS = OP_COUNT'(1) << A_FLAGS_IDX
+        A_FLAGS = OP_COUNT'(1) << A_FLAGS_IDX,
+        L_PRELOAD = OP_COUNT'(1) << L_PRELOAD_IDX,
+        H_PRELOAD = OP_COUNT'(1) << H_PRELOAD_IDX,
+        L_DOT_WAIT = OP_COUNT'(1) << L_DOT_WAIT_IDX,
+        H_STREAM_WAIT = OP_COUNT'(1) << H_STREAM_WAIT_IDX,
+        A_STREAM_WAIT = OP_COUNT'(1) << A_STREAM_WAIT_IDX,
+        N_DIV_ROUND = OP_COUNT'(1) << N_DIV_ROUND_IDX,
+        A_NORM_WAIT = OP_COUNT'(1) << A_NORM_WAIT_IDX,
+        L_ROW_START = OP_COUNT'(1) << L_ROW_START_IDX,
+        L_ROW_WAIT = OP_COUNT'(1) << L_ROW_WAIT_IDX,
+        SC_ROUTE = OP_COUNT'(1) << SC_ROUTE_IDX
     } op_t;
-    op_t op, return_p, return_v, return_k, return_m, return_w, return_scalar;
+    op_t op;
+    typedef enum logic [3:0] { RET_P_E_DATA, RET_P_E_SCALE, RET_P_H_SCALE, RET_P_H_WEIGHT, RET_P_L_META, RET_P_L_WEIGHT, RET_P_N_GAIN0, RET_P_N_GAIN1, RET_P_R_TABLE0, RET_P_R_TABLE1 } p_return_t;
+    p_return_t return_p;
+    typedef enum logic [3:0] { RET_V_A_QUERY, RET_V_B_INPUT0, RET_V_B_INPUT1, RET_V_C_INPUT, RET_V_H_PRELOAD, RET_V_L_PRELOAD, RET_V_N_INPUT, RET_V_N_SQUARE, RET_V_R_INPUT, RET_V_S_INPUT } v_return_t;
+    v_return_t return_v;
+    typedef enum logic [0:0] { RET_K_A_KEY, RET_K_A_WEIGHT } k_return_t;
+    k_return_t return_k;
+    typedef enum logic [3:0] { RET_M_A_ACC, RET_M_A_DOT, RET_M_B_CALC, RET_M_E_CALC, RET_M_H_MAC, RET_M_L_MAC, RET_M_N_ACC, RET_M_N_GAIN, RET_M_N_RECIP, RET_M_R_COS, RET_M_R_SIN, RET_M_S_PACK } m_return_t;
+    m_return_t return_m;
+    typedef enum logic [2:0] { RET_W_A_QUERY, RET_W_B_PACK, RET_W_E_PACK, RET_W_N_PACK, RET_W_O_FINISH, RET_W_O_V_REQ, RET_W_R_PACK, RET_W_L_ROW_START } w_return_t;
+    w_return_t return_w;
+    typedef enum logic [1:0] { RET_SCALAR_A_SCORE, RET_SCALAR_H_ROUND, RET_SCALAR_L_ROUND, RET_SCALAR_O_IDLE } scalar_return_t;
+    scalar_return_t return_scalar;
     logic op_done, launch, core_running, op_fault_q;
     logic [1:0] layer_q, head_q;
     logic [6:0] position_q, time_q;
@@ -307,6 +322,11 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     logic signed [63:0] sampled_score_q;
     logic [11:0] token_q, best_token_q, vocabulary_row_q;
     logic [11:0] prompt_memory [0:127], output_memory [0:127];
+    logic [6:0] token_prompt_address_q;
+    logic [2:0] token_prompt_bank_q;
+    logic [11:0] token_prompt_word_q [0:7], token_feedback_q;
+    logic token_feedback_source_q;
+    logic token_read_valid_q, token_commit_valid_q, token_valid_q;
     logic [3:0] row_q, chunk_q;
     logic [4:0] lane_q;
     logic [2:0] source_q, destination_q;
@@ -314,19 +334,24 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     logic [3:0] matrix_chunks_q;
     logic [14:0] weight_row_q;
     logic [23:0] coefficient_q;
-    logic [255:0] parameter_word_q, weights_q;
-    logic reserved_weight;
-    wire [31:0] reserved_weight_lane;
-    genvar weight_lane;
-    generate
-    for (weight_lane = 0; weight_lane < 32; weight_lane = weight_lane + 1) begin : g_weight_check
-        assign reserved_weight_lane[weight_lane] =
-            weights_q[(int'(chunk_q[1:0]) << 6) + weight_lane * 2 +: 2] == 2'b10;
-    end
-    endgenerate
-    assign reserved_weight = |reserved_weight_lane;
+    logic [255:0] parameter_word_q;
+    // One portable operand cache is shared by mutually exclusive linear/head operations.
+    logic [767:0] input_cache_q [0:11];
+    logic input_cache_valid_q, input_cache_gate_q;
+    logic [2:0] input_cache_source_q;
+    logic [3:0] input_cache_chunks_q;
+    logic [3:0] preload_chunk_q;
+    logic rope_table_valid_q;
+    logic [6:0] rope_table_position_q;
+    logic [255:0] head_scale_word_q;
     logic [511:0] table_q;
     logic [767:0] vector_q, second_q, cache_operand_q, write_vector_q, query_q;
+```
+
+### [Dòng 301–479: Scalar products, lookup instances and host frontend](<../../../Verilog%20Source%20code/llm_soc.sv#L301>)
+
+<!-- source-range:301:479 -->
+```systemverilog
     logic [6:0] write_vector_addr_q;
     logic [31:0] write_vector_mask_q;
     logic signed [38:0] linear_acc_q;
@@ -344,17 +369,23 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
 
     logic signed [55:0] scalar_pair_q;
     logic signed [23:0] scalar_group_q [0:7];
-    logic [7:0] scalar_clip_high_q, scalar_clip_low_q;
-    logic [1:0] ternary_code_q [0:31];
+    logic signed [23:0] scalar_packet_low_q;
+    logic scalar_packet_high_q, scalar_packet_lower_q, scalar_packet_linear_q;
+    logic [2:0] scalar_packet_group_q;
+    logic scalar_packet_valid_q;
+    logic signed [23:0] scalar_cluster_low_q [0:1];
+    logic [1:0] scalar_cluster_high_q, scalar_cluster_lower_q, scalar_cluster_valid_q;
+    logic [1:0] scalar_cluster_group_q [0:1];
     logic signed [63:0] lane_raw_q [0:31], lane_round_q [0:31];
+    logic [7:0] round16_group_q;
     logic [63:0] square_sum_q, root_input_q;
     // epsilon >=42950 makes root>=207, so rounded 2^32/root fits U25.
     // Avoid distributing seven redundant sign/zero bits across all SIMD lanes.
     logic [24:0] reciprocal_q;
     logic signed [55:0] rotation_cos_q [0:31];
     logic signed [55:0] attention_acc_q [0:31];
-    logic signed [31:0] score_memory [0:127], max_score_q, best_score_q;
-    logic [24:0] probability_memory [0:127], exp_hi_q, exp_lo_q, probability_q;
+    logic signed [31:0] max_score_q, best_score_q;
+    logic [24:0] exp_hi_q, exp_lo_q, probability_q;
     logic [31:0] probability_sum_q;
     logic [32:0] exp_difference_q;
     logic [36:0] exp_interpolation_q;
@@ -378,6 +409,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     wire [OP_COUNT:0] op_debug_prefix [0:6];
     genvar debug_bit, debug_state;
     generate
+    if (ENABLE_DEBUG_INDEX) begin : g_debug_enabled
     for (debug_bit = 0; debug_bit < 7; debug_bit = debug_bit + 1) begin : g_debug_bit
         assign op_debug_prefix[debug_bit][0] = 1'b0;
         for (debug_state = 0; debug_state < OP_COUNT; debug_state = debug_state + 1) begin : g_state
@@ -385,6 +417,9 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
                 op_debug_prefix[debug_bit][debug_state] | (op[debug_state] && ((debug_state >> debug_bit) & 1));
         end
         assign op_debug_index[debug_bit] = op_debug_prefix[debug_bit][OP_COUNT];
+    end
+    end else begin : g_debug_disabled
+        assign op_debug_index = 7'd0;
     end
     endgenerate
 
@@ -395,30 +430,35 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
     logic [31:0] host_payload_q;
     logic [31:0] host_address_q, host_data_q;
     logic host_write_q, host_parameter_q;
-```
-
-graph_t biểu diễn toàn graph; op_t biểu diễn micro-operations và return states. Fixed graph không có instruction CPU trong execution path.
-
-### [Dòng 328–419: Host and parameter SRAM](<../../../Verilog%20Source%20code/llm_soc.sv#L328>)
-
-<!-- source-range:328:419 -->
-```systemverilog
     logic [14:0] p_address_q;
     logic p_read, p_valid, p_host_valid;
+    logic linear_parameter_req, linear_ready, linear_busy, linear_done, linear_fault, linear_dot_issue;
+    logic [14:0] linear_parameter_address;
+    logic [3:0] linear_input_chunk;
+    logic signed [38:0] linear_dot_acc;
+    wire signed [23:0] linear_operand [0:31];
+    logic head_parameter_req, head_capture, head_math_issue, head_dot_done;
+    logic [14:0] head_parameter_address;
+    logic [1:0] head_input_chunk;
+    logic signed [38:0] head_dot_acc;
+    logic attention_k_req, attention_capture, attention_math_issue, attention_scores_done;
+    logic [11:0] attention_k_address;
+    logic signed [31:0] attention_score, attention_max;
     logic [255:0] p_data;
     logic [31:0] p_host_data;
     llm_parameter_ram #(.ADDR_W(15), .DEPTH(PARAM_ROWS),
         .USE_QUARTUS_MEMORY(USE_QUARTUS_MEMORY)) u_parameters(
-        .clk(clk), .rst_n(core_rst_n), .rd_en(p_read), .rd_addr(p_address_q),
+        .clk(clk), .rst_n(core_rst_n), .rd_en(p_read), .rd_addr(linear_parameter_req ? linear_parameter_address :
+            head_parameter_req ? head_parameter_address : p_address_q),
         .rd_data(p_data), .rd_valid(p_valid),
         .host_active(host_en && !core_running && host_parameter_q),
         .host_write_req(host_en && !core_running && host_parameter_q &&
             host_state == H_EXEC && host_write_q),
         .host_read_req(host_en && !core_running && host_parameter_q &&
-            (host_state == H_READ || host_state == H_WAIT) && !host_write_q),
+            host_state == H_READ && !host_write_q),
         .host_we(host_write_q), .host_addr(host_address_q[19:2]),
         .host_wdata(host_data_q), .host_rdata(p_host_data), .host_rvalid(p_host_valid));
-    assign p_read = op[O_P_REQ_IDX];
+    assign p_read = op[O_P_REQ_IDX] || head_parameter_req || linear_parameter_req;
     always_ff @(posedge clk or negedge core_rst_n) begin
         if (!core_rst_n) begin
             host_state <= H_IDLE;
@@ -491,18 +531,16 @@ graph_t biểu diễn toàn graph; op_t biểu diễn micro-operations và retur
         if (!core_rst_n) host_rdata <= 0;
         else host_rdata <= host_payload_q;
 
+```
+
+### [Dòng 480–579: SRAM, engine and shared arithmetic port maps](<../../../Verilog%20Source%20code/llm_soc.sv#L480>)
+
+<!-- source-range:480:579 -->
+```systemverilog
     logic v_read, v_valid, v_write_busy;
     logic [6:0] v_address_q;
     logic [767:0] v_data;
     llm_bank_ram #(.ROWS(96), .ADDR_W(7), .USE_QUARTUS_MEMORY(USE_QUARTUS_MEMORY)) u_vectors(
-```
-
-Request chốt trước decode, response giữ đến host_en hạ. Host write bị chặn trong core_running. Reset chỉ xóa control/config, không clear parameter SRAM.
-
-### [Dòng 420–474: Compute memories and arithmetic](<../../../Verilog%20Source%20code/llm_soc.sv#L420>)
-
-<!-- source-range:420:474 -->
-```systemverilog
         .clk(clk), .rst_n(core_rst_n), .rd_en(v_read), .rd_addr(v_address_q),
         .rd_data(v_data), .rd_valid(v_valid), .wr_busy(v_write_busy), .wr_addr(write_vector_addr_q),
         .wr_mask(op[O_WRITE_IDX] ? write_vector_mask_q : 32'h0), .wr_data(write_vector_q));
@@ -510,22 +548,47 @@ Request chốt trước decode, response giữ đến host_en hạ. Host write b
     logic k_read, k_valid, k_write_busy;
     logic [11:0] k_address_q, k_write_address_q;
     logic [767:0] k_data;
+    wire [11:0] k_read_address = attention_k_req ? attention_k_address : k_address_q;
     // Address = layer*1024 + position*8 + K/V*4 + head.
     llm_bank_ram #(.USE_QUARTUS_MEMORY(USE_QUARTUS_MEMORY)) u_cache(
-        .clk(clk), .rst_n(core_rst_n), .rd_en(k_read), .rd_addr(k_address_q),
+        .clk(clk), .rst_n(core_rst_n), .rd_en(k_read), .rd_addr(k_read_address),
         .rd_data(k_data), .rd_valid(k_valid), .wr_busy(k_write_busy), .wr_addr(k_write_address_q),
         .wr_mask(op[C_STORE_IDX] ? 32'hffffffff : 32'h0), .wr_data(vector_q));
-    assign k_read = op[O_K_REQ_IDX];
+    assign k_read = op[O_K_REQ_IDX] || attention_k_req;
 
-    logic math_start, math_busy, math_done;
+    logic math_start, math_busy, math_done, math_in_ready, math_product_valid, math_sum_valid;
     logic signed [23:0] math_a_q [0:31];
     logic signed [31:0] math_b_q [0:31];
     logic signed [55:0] math_product [0:31];
     logic signed [60:0] math_sum;
-    llm_math u_math(.clk(clk), .rst_n(core_rst_n), .start(math_start),
+    llm_math #(.STREAMING(1)) u_math(.clk(clk), .rst_n(core_rst_n), .start(math_start),
         .a(math_a_q), .b(math_b_q), .busy(math_busy), .done(math_done),
-        .product(math_product), .sum(math_sum));
-    assign math_start = op[O_M_START_IDX];
+        .product(math_product), .sum(math_sum), .in_ready(math_in_ready),
+        .product_valid(math_product_valid), .sum_valid(math_sum_valid));
+    assign math_start = op[O_M_START_IDX] || head_math_issue || attention_math_issue;
+    llm_head_engine u_head_engine(.clk(clk), .rst_n(core_rst_n), .start_i(op[H_SCALE_IDX]),
+        .cancel_i(op_fault_q), .vocabulary_i(vocabulary_row_q),
+        .parameter_req_o(head_parameter_req), .parameter_address_o(head_parameter_address),
+        .parameter_valid_i(p_valid), .operand_capture_o(head_capture), .math_issue_o(head_math_issue),
+        .input_chunk_o(head_input_chunk), .sum_valid_i(math_sum_valid), .sum_i(math_sum),
+        .done_o(head_dot_done), .accumulator_o(head_dot_acc));
+    llm_attention_engine u_attention_engine(.clk(clk), .rst_n(core_rst_n), .start_i(op[A_QUERY_IDX]),
+        .cancel_i(op_fault_q), .layer_i(layer_q), .head_i(head_q), .position_i(position_q),
+        .kv_req_o(attention_k_req), .kv_address_o(attention_k_address), .kv_valid_i(k_valid),
+        .operand_capture_o(attention_capture), .math_issue_o(attention_math_issue),
+        .sum_valid_i(math_sum_valid), .sum_i(math_sum), .score_address_i(time_q),
+        .score_o(attention_score), .max_score_o(attention_max), .done_o(attention_scores_done));
+    generate
+    for (input_lane = 0; input_lane < 32; input_lane = input_lane + 1) begin : g_linear_operand
+        assign linear_operand[input_lane] = input_cache_q[linear_input_chunk][input_lane * 24 +: 24];
+    end
+    endgenerate
+    llm_linear_engine u_linear_engine(.clk(clk), .rst_n(core_rst_n), .start_i(op[L_ROW_START_IDX]),
+        .cancel_i(op_fault_q), .weight_base_i(weight_row_q), .chunks_i(matrix_chunks_q),
+        .ready_o(linear_ready), .busy_o(linear_busy), .done_o(linear_done), .fault_o(linear_fault),
+        .parameter_req_o(linear_parameter_req), .parameter_address_o(linear_parameter_address),
+        .parameter_valid_i(p_valid), .parameter_data_i(p_data), .input_chunk_o(linear_input_chunk),
+        .x_i(linear_operand), .dot_issue_o(linear_dot_issue), .accumulator_o(linear_dot_acc));
     logic root_busy, root_done;
     logic [31:0] root;
     isqrt_u64 u_root(.clk(clk), .rst_n(core_rst_n), .start(op[N_ROOT_IDX]),
@@ -535,22 +598,84 @@ Request chốt trước decode, response giữ đến host_en hạ. Host write b
     logic [31:0] div_denominator_q, div_remainder;
     logic [32:0] twice_remainder;
     logic divide_round_up;
+    logic [24:0] norm_quotient_q;
+    logic norm_round_q;
+    logic attention_norm_ready, attention_norm_done, attention_div_start;
+    logic [767:0] attention_normalized;
+    wire [63:0] attention_div_numerator;
+    wire [31:0] attention_div_denominator;
+    llm_attention_normalize #(.DIV_LANES(ATTN_DIV_LANES), .USE_SHARED(1)) u_attention_normalize(
+        .clk(clk), .rst_n(core_rst_n), .start_i(op[A_LANE_IDX]), .cancel_i(op_fault_q),
+        .accumulator_i(attention_acc_q), .denominator_i(probability_sum_q),
+        .shared_busy_i(div_busy), .shared_done_i(div_done), .shared_quotient_i(div_quotient),
+        .shared_remainder_i(div_remainder), .shared_numerator_o(attention_div_numerator),
+        .shared_denominator_o(attention_div_denominator),
+        .ready_o(attention_norm_ready), .batch_start_o(attention_div_start),
+        .done_o(attention_norm_done), .vector_o(attention_normalized));
     div #(.NUM_W(64), .DEN_W(32)) u_div(.clk(clk), .rst_n(core_rst_n),
-        .start(op[N_DIV_IDX] || op[A_DIV_IDX]), .numerator(div_numerator_q),
-        .denominator(div_denominator_q), .busy(div_busy), .done(div_done),
+        .start(op[N_DIV_IDX] || attention_div_start),
+        .numerator(attention_div_start ? attention_div_numerator : div_numerator_q),
+        .denominator(attention_div_start ? attention_div_denominator : div_denominator_q), .busy(div_busy), .done(div_done),
         .div_zero(div_zero), .quotient(div_quotient), .remainder(div_remainder));
     assign twice_remainder = {div_remainder, 1'b0};
     assign divide_round_up = twice_remainder > {1'b0, div_denominator_q} ||
         (twice_remainder == {1'b0, div_denominator_q} && div_quotient[0]);
-    logic sig_busy, sig_done;
-    logic signed [15:0] sig_x_q;
+    localparam int SIGMOID_SHIFT = $clog2(SIGMOID_LANES);
+    logic [SIGMOID_LANES - 1:0] sig_busy, sig_done;
+    logic signed [15:0] sig_x_q [0:SIGMOID_LANES - 1];
     logic signed [15:0] sigmoid_inputs_q [0:31];
-    logic signed [15:0] sigmoid_pick_q [0:3];
-    logic [15:0] sig_y;
+    logic [15:0] sig_y [0:SIGMOID_LANES - 1];
     logic [15:0] sigmoid_values_q [0:31];
-    sigmoid u_sig(.clk(clk), .rst_n(core_rst_n), .start(op[S_SIG_IDX]),
-        .x_raw(sig_x_q), .frac_bits(5'd12), .busy(sig_busy), .done(sig_done), .y_raw(sig_y));
+    generate
+    for (sig_lane = 0; sig_lane < SIGMOID_LANES; sig_lane = sig_lane + 1) begin : g_sigmoid
+        sigmoid u_sig(.clk(clk), .rst_n(core_rst_n), .start(op[S_SIG_IDX]),
+            .x_raw(sig_x_q[sig_lane]), .frac_bits(5'd12), .busy(sig_busy[sig_lane]),
+            .done(sig_done[sig_lane]), .y_raw(sig_y[sig_lane]));
+        always_ff @(posedge clk)
+            if (core_rst_n && op[SG_GROUP_IDX]) sig_x_q[sig_lane] <= sigmoid_inputs_q[int'(lane_q) + sig_lane];
+    end
+    endgenerate
     assign core_running = graph != G_IDLE;
+    generate
+```
+
+### [Dòng 580–619: Optional performance counters](<../../../Verilog%20Source%20code/llm_soc.sv#L580>)
+
+<!-- source-range:580:619 -->
+```systemverilog
+    if (PERF_COUNTERS) begin : g_perf
+        logic [63:0] total_cycles, parameter_reads, vector_reads, vector_writes;
+        logic [63:0] kv_reads, kv_writes, math_starts, divider_starts, sigmoid_starts;
+        logic [63:0] graph_cycles [0:23];
+        always_ff @(posedge clk or negedge core_rst_n) begin
+            if (!core_rst_n) begin
+                total_cycles <= 0; parameter_reads <= 0; vector_reads <= 0; vector_writes <= 0;
+                kv_reads <= 0; kv_writes <= 0; math_starts <= 0; divider_starts <= 0; sigmoid_starts <= 0;
+            end else if (launch && graph == G_IDLE) begin
+                total_cycles <= 0; parameter_reads <= 0; vector_reads <= 0; vector_writes <= 0;
+                kv_reads <= 0; kv_writes <= 0; math_starts <= 0; divider_starts <= 0; sigmoid_starts <= 0;
+            end else if (core_running) begin
+                total_cycles <= total_cycles + 1'b1;
+                if (p_read) parameter_reads <= parameter_reads + 1'b1;
+                if (v_read) vector_reads <= vector_reads + 1'b1;
+                if (op[O_WRITE_IDX] && |write_vector_mask_q) vector_writes <= vector_writes + 1'b1;
+                if (k_read) kv_reads <= kv_reads + 1'b1;
+                if (op[C_STORE_IDX]) kv_writes <= kv_writes + 1'b1;
+                if (math_start) math_starts <= math_starts + 1'b1;
+                if (attention_div_start) divider_starts <= divider_starts + 64'(ATTN_DIV_LANES);
+                else if (op[N_DIV_IDX]) divider_starts <= divider_starts + 1'b1;
+                if (op[S_SIG_IDX]) sigmoid_starts <= sigmoid_starts + 64'(SIGMOID_LANES);
+            end
+        end
+        for (phase = 0; phase < 24; phase = phase + 1) begin : g_phase
+            always_ff @(posedge clk or negedge core_rst_n)
+                if (!core_rst_n) graph_cycles[phase] <= 0;
+                else if (launch && graph == G_IDLE) graph_cycles[phase] <= 0;
+                else if (core_running && graph == graph_t'(phase))
+                    graph_cycles[phase] <= graph_cycles[phase] + 1'b1;
+        end
+    end
+    endgenerate
     always_ff @(posedge clk or negedge core_rst_n) begin
         if (!core_rst_n) begin running <= 0; ready <= 1; pc_debug <= 0; instr_debug <= 0; end
         else begin
@@ -560,11 +685,9 @@ Request chốt trước decode, response giữ đến host_en hạ. Host write b
     end
 ```
 
-Vector/KV và parameter read valid năm cạnh qua request/response pipeline. Host parameter writes ACK sau leaf commit, host reads thêm lane register; SRAM payload/storage không reset. Shared SIMD có transaction valid; sqrt/div/sigmoid dùng busy/done.
+### [Dòng 620–689: Metadata addresses and graph sequencing](<../../../Verilog%20Source%20code/llm_soc.sv#L620>)
 
-### [Dòng 475–545: Pure address expressions and graph sequencing](<../../../Verilog%20Source%20code/llm_soc.sv#L475>)
-
-<!-- source-range:475:545 -->
+<!-- source-range:620:689 -->
 ```systemverilog
 
     function automatic logic [14:0] matrix_meta(input logic [1:0] layer_id, input logic [2:0] matrix_id);
@@ -579,11 +702,10 @@ Vector/KV và parameter read valid năm cạnh qua request/response pipeline. Ho
     always_ff @(posedge clk or negedge core_rst_n) begin
         if (!core_rst_n) begin
             graph <= G_IDLE; layer_q <= 0; position_q <= 0; generated_q <= 0;
-            token_q <= 0; error <= 0;
+            error <= 0;
         end else begin
             if (graph == G_IDLE && launch) begin
                 error <= 0; layer_q <= 0; position_q <= 0; generated_q <= 0;
-                token_q <= prompt_memory[0];
                 if (prompt_count_q == 0 || max_new_q == 0 ||
                     {1'b0, prompt_count_q} + {1'b0, max_new_q} > 128) error <= 1;
                 else graph <= G_EMBED;
@@ -616,7 +738,7 @@ Vector/KV và parameter read valid năm cạnh qua request/response pipeline. Ho
                 G_NEXT : begin
                     if (layer_q != 3) begin layer_q <= layer_q + 1'b1; graph <= G_ANORM; end
                     else if ({1'b0, position_q} + 1 < prompt_count_q) begin
-                        position_q <= position_q + 1'b1; token_q <= prompt_memory[position_q + 1'b1];
+                        position_q <= position_q + 1'b1;
                         layer_q <= 0; graph <= G_EMBED;
                     end else graph <= G_FNORM;
                 end
@@ -626,7 +748,7 @@ Vector/KV và parameter read valid năm cạnh qua request/response pipeline. Ho
                     if (generated_q + 1 >= max_new_q || best_token_q == 12'd1 || position_q == 127)
                         graph <= G_DONE;
                     else begin
-                        token_q <= best_token_q; position_q <= position_q + 1'b1;
+                        position_q <= position_q + 1'b1;
                         layer_q <= 0; graph <= G_EMBED;
                     end
                 end
@@ -636,19 +758,87 @@ Vector/KV và parameter read valid năm cạnh qua request/response pipeline. Ho
         end
     end
 
-    // Independent lane registers keep constant slice boundaries visible to
+    // Graph decisions only capture a token request. Local prompt selection and
 ```
 
-Registered addresses xuất hiện trước enable. Graph xử lý mọi prompt position, bốn layer mỗi position, rồi chọn token và quay lại embedding.
+### [Dòng 690–748: Prompt selection and token feedback](<../../../Verilog%20Source%20code/llm_soc.sv#L690>)
 
-### [Dòng 546–688: Per-lane datapath](<../../../Verilog%20Source%20code/llm_soc.sv#L546>)
-
-<!-- source-range:546:688 -->
+<!-- source-range:690:748 -->
 ```systemverilog
+    // token commit occupy separate edges; G_EMBED waits for token validity.
+    wire token_launch_request = graph == G_IDLE && launch && prompt_count_q != 0 &&
+        max_new_q != 0 && {1'b0, prompt_count_q} + {1'b0, max_new_q} <= 128;
+    wire token_prefill_request = graph == G_NEXT && !op_fault_q && !op_done &&
+        layer_q == 3 && {1'b0, position_q} + 1 < prompt_count_q;
+    wire token_decode_request = graph == G_ADVANCE && !op_fault_q && !op_done &&
+        generated_q + 1 < max_new_q && best_token_q != 12'd1 && position_q != 127;
+    wire token_request = token_launch_request || token_prefill_request || token_decode_request;
+    wire token_abort = op_fault_q && core_running && graph != G_DONE;
+    wire token_consume = op[O_IDLE_IDX] && !op_done && graph == G_EMBED && token_valid_q;
+    always_ff @(posedge clk or negedge core_rst_n) begin
+        if (!core_rst_n) begin
+            token_read_valid_q <= 0; token_commit_valid_q <= 0; token_valid_q <= 0;
+        end else if (token_abort) begin
+            token_read_valid_q <= 0; token_commit_valid_q <= 0; token_valid_q <= 0;
+        end else begin
+            token_read_valid_q <= token_request;
+            token_commit_valid_q <= token_read_valid_q;
+            if (token_request || token_consume) token_valid_q <= 0;
+            else if (token_commit_valid_q) token_valid_q <= 1;
+        end
+    end
+    always_ff @(posedge clk)
+        if (core_rst_n && token_request) begin
+            token_prompt_address_q <= token_prefill_request ? position_q + 1'b1 : 7'd0;
+            token_feedback_source_q <= token_decode_request;
+            if (token_decode_request) token_feedback_q <= best_token_q;
+        end
+    always_ff @(posedge clk)
+        if (core_rst_n && !token_abort && token_read_valid_q)
+            token_prompt_bank_q <= token_prompt_address_q[6:4];
+    genvar prompt_bank;
+    generate
+    for (prompt_bank = 0; prompt_bank < 8; prompt_bank = prompt_bank + 1) begin : g_prompt_read
+        always_ff @(posedge clk)
+            if (core_rst_n && !token_abort && token_read_valid_q)
+                token_prompt_word_q[prompt_bank] <= prompt_memory[{3'(prompt_bank), token_prompt_address_q[3:0]}];
+    end
+    endgenerate
+    always_ff @(posedge clk or negedge core_rst_n)
+        if (!core_rst_n) token_q <= 0;
+        else if (!token_abort && token_commit_valid_q)
+            token_q <= token_feedback_source_q ? token_feedback_q : token_prompt_word_q[token_prompt_bank_q];
+
+    // Independent lane registers keep constant slice boundaries visible to
     // synthesis. The FSM carries enables and addresses, while each lane owns
     // its arithmetic payload and its portion of the workspace write bus.
-    genvar lane, scalar_group;
+    // The wide scalar result is reduced only after full-width clamp decisions.
+    // Two registered clusters bound the distribution to four output groups.
+    always_ff @(posedge clk or negedge core_rst_n)
+        if (!core_rst_n) scalar_packet_valid_q <= 0;
+        else scalar_packet_valid_q <= op[L_FLAGS_IDX] || op[A_FLAGS_IDX];
+    always_ff @(posedge clk)
+        if (core_rst_n && (op[L_FLAGS_IDX] || op[A_FLAGS_IDX])) begin
+            scalar_packet_low_q <= scalar_round_q[23:0];
+            scalar_packet_high_q <= scalar_round_q > 64'sd8388607;
+            scalar_packet_lower_q <= scalar_round_q < -64'sd8388608;
+            scalar_packet_group_q <= op[L_FLAGS_IDX] ? matrix_row_q[4:2] : lane_q[4:2];
+            scalar_packet_linear_q <= op[L_FLAGS_IDX];
+```
+
+### [Dòng 749–858: SIMD operand capture and registered numeric stages](<../../../Verilog%20Source%20code/llm_soc.sv#L749>)
+
+<!-- source-range:749:858 -->
+```systemverilog
+        end
+    genvar lane, scalar_group, scalar_cluster, round_group;
     generate
+    // Prepare each four-lane enable on the existing raw-product capture edge.
+    for (round_group = 0; round_group < 8; round_group = round_group + 1) begin : g_round_control
+        always_ff @(posedge clk or negedge core_rst_n)
+            if (!core_rst_n) round16_group_q[round_group] <= 0;
+            else round16_group_q[round_group] <= op[N_RECIP_IDX] || op[B_CALC_IDX];
+    end
     for (lane = 0; lane < 32; lane = lane + 1) begin : g_simd
         // Cache payload is held by the RAM response until the next read.
         // A_KEY/A_WEIGHT follow O_K_WAIT with k_valid, so this plain FF
@@ -658,90 +848,88 @@ Registered addresses xuất hiện trước enable. Graph xử lý mọi prompt 
             cache_operand_q[lane * 24 +: 24] <= k_data[lane * 24 +: 24];
         always_ff @(posedge clk) begin
             if (core_rst_n) begin
-                unique case (1'b1)
-                    op[E_DATA_IDX] : begin
-                        math_a_q[lane] <= 24'($signed(parameter_word_q[lane * 8 +: 8]));
-                        math_b_q[lane] <= {8'h0, coefficient_q};
-                    end
-                    op[E_CALC_IDX] : lane_raw_q[lane] <= llm_extend56(math_product[lane]);
-                    op[E_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd8);
-                    op[L_INPUT_IDX] : begin
-                        math_a_q[lane] <= vector_q[lane * 24 +: 24];
-                        ternary_code_q[lane] <= weights_q[(int'(chunk_q[1:0]) << 6) + lane * 2 +: 2];
-                    end
-                    op[L_DECODE_IDX] : begin
-                        case (ternary_code_q[lane])
-                            2'b01 : math_b_q[lane] <= 1;
-                            2'b11 : math_b_q[lane] <= -32'sd1;
-                            default : math_b_q[lane] <= 0;
-                        endcase
-                    end
-                    op[N_SQUARE_IDX] : begin
-                        math_a_q[lane] <= vector_q[lane * 24 +: 24];
-                        math_b_q[lane] <= 32'($signed(vector_q[lane * 24 +: 24]));
-                    end
-                    op[N_INPUT_IDX] : begin
-                        math_a_q[lane] <= vector_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, reciprocal_q};
-                    end
-                    op[N_RECIP_IDX], op[N_GAIN_IDX], op[B_CALC_IDX], op[S_PACK_IDX] : lane_raw_q[lane] <= llm_extend56(math_product[lane]);
-                    op[NR_ROUND_IDX], op[B_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd16);
-                    op[NR_CLAMP_IDX] : begin
-                        math_a_q[lane] <= llm_sat24(lane_round_q[lane]);
-                        math_b_q[lane] <= 32'($signed(table_q[lane * 16 +: 16]));
-                    end
-                    op[N_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd12);
-                    op[R_INPUT_IDX] : begin
-                        math_a_q[lane] <= vector_q[lane * 24 +: 24];
-                        math_b_q[lane] <= 32'($signed(table_q[(lane % 16) * 32 +: 16]));
-                    end
-                    op[R_COS_IDX] : begin
-                        rotation_cos_q[lane] <= math_product[lane];
-                        math_a_q[lane] <= vector_q[((lane + 16) % 32) * 24 +: 24];
-                        math_b_q[lane] <= lane < 16 ?
-                            -$signed(32'($signed(table_q[(lane % 16) * 32 + 16 +: 16]))) :
-                            32'($signed(table_q[(lane % 16) * 32 + 16 +: 16]));
-                    end
-                    op[R_SIN_IDX] : lane_raw_q[lane] <=
-                        llm_extend56(rotation_cos_q[lane]) + llm_extend56(math_product[lane]);
-                    op[R_ROUND_IDX], op[S_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd15);
-                    op[A_KEY_IDX] : begin
-                        math_a_q[lane] <= query_q[lane * 24 +: 24];
-                        math_b_q[lane] <= 32'($signed(cache_operand_q[lane * 24 +: 24]));
-                    end
-                    op[A_QUERY_IDX] : attention_acc_q[lane] <= 0;
-                    op[A_WEIGHT_IDX] : begin
-                        math_a_q[lane] <= cache_operand_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, probability_q};
-                    end
-                    op[A_ACC_IDX] : attention_acc_q[lane] <= attention_acc_q[lane] + math_product[lane];
-                    op[B_INPUT1_IDX] : begin
-                        if (graph == G_GMUL) begin
-                            math_a_q[lane] <= second_q[lane * 24 +: 24];
-                            math_b_q[lane] <= 32'($signed(vector_q[lane * 24 +: 24]));
-                        end else lane_raw_q[lane] <=
-                            64'($signed(second_q[lane * 24 +: 24])) + 64'($signed(vector_q[lane * 24 +: 24]));
-                    end
-                    op[S_INPUT_IDX] : lane_round_q[lane] <=
-                        rne_shift64(64'($signed(vector_q[lane * 24 +: 24])), 6'd4);
-                    op[SG_CLAMP_IDX] : sigmoid_inputs_q[lane] <= sat_s16(lane_round_q[lane]);
-                    op[S_SIG_WAIT_IDX] : if (sig_done && lane_q == 5'(lane)) sigmoid_values_q[lane] <= sig_y;
-                    op[S_MUL_IDX] : begin
-                        math_a_q[lane] <= vector_q[lane * 24 +: 24];
-                        math_b_q[lane] <= {16'h0, sigmoid_values_q[lane]};
-                    end
-                    op[H_INPUT_IDX] : begin
-                        math_a_q[lane] <= vector_q[lane * 24 +: 24];
-                        math_b_q[lane] <= 32'($signed(weights_q[lane * 8 +: 8]));
-                    end
+                if (head_capture) math_a_q[lane] <= input_cache_q[{2'b0, head_input_chunk}][lane * 24 +: 24];
+                else if (attention_capture) math_a_q[lane] <= query_q[lane * 24 +: 24];
+                else unique case (1'b1)
+                    op[E_DATA_IDX] : math_a_q[lane] <= 24'($signed(parameter_word_q[lane * 8 +: 8]));
+                    op[N_SQUARE_IDX], op[N_INPUT_IDX], op[R_INPUT_IDX],
+                    op[S_MUL_IDX] : math_a_q[lane] <= vector_q[lane * 24 +: 24];
+                    op[NR_CLAMP_IDX] : math_a_q[lane] <= llm_sat24(lane_round_q[lane]);
+                    op[R_COS_IDX] : math_a_q[lane] <= vector_q[((lane + 16) % 32) * 24 +: 24];
+                    op[A_KEY_IDX] : math_a_q[lane] <= query_q[lane * 24 +: 24];
+                    op[A_WEIGHT_IDX] : math_a_q[lane] <= cache_operand_q[lane * 24 +: 24];
+                    op[B_INPUT1_IDX] : if (graph == G_GMUL) math_a_q[lane] <= second_q[lane * 24 +: 24];
                     default : ;
                 endcase
             end
         end
+        always_ff @(posedge clk) begin
+            if (core_rst_n) begin
+                if (head_capture) math_b_q[lane] <= 32'($signed(p_data[lane * 8 +: 8]));
+                else if (attention_capture) math_b_q[lane] <= 32'($signed(k_data[lane * 24 +: 24]));
+                else unique case (1'b1)
+                    op[E_DATA_IDX] : math_b_q[lane] <= {8'h0, coefficient_q};
+                    op[N_SQUARE_IDX] : math_b_q[lane] <= 32'($signed(vector_q[lane * 24 +: 24]));
+                    op[N_INPUT_IDX] : math_b_q[lane] <= {7'h0, reciprocal_q};
+                    op[NR_CLAMP_IDX] : math_b_q[lane] <= 32'($signed(table_q[lane * 16 +: 16]));
+                    op[R_INPUT_IDX] : math_b_q[lane] <= 32'($signed(table_q[(lane % 16) * 32 +: 16]));
+                    op[R_COS_IDX] : math_b_q[lane] <= lane < 16 ?
+                        -$signed(32'($signed(table_q[(lane % 16) * 32 + 16 +: 16]))) :
+                        32'($signed(table_q[(lane % 16) * 32 + 16 +: 16]));
+                    op[A_KEY_IDX] : math_b_q[lane] <= 32'($signed(cache_operand_q[lane * 24 +: 24]));
+                    op[A_WEIGHT_IDX] : math_b_q[lane] <= {7'h0, probability_q};
+                    op[B_INPUT1_IDX] : if (graph == G_GMUL) math_b_q[lane] <= 32'($signed(vector_q[lane * 24 +: 24]));
+                    op[S_MUL_IDX] : math_b_q[lane] <= {16'h0, sigmoid_values_q[lane]};
+                    default : ;
+                endcase
+            end
+        end
+        always_ff @(posedge clk) begin
+            if (core_rst_n) begin
+                unique case (1'b1)
+                    op[E_CALC_IDX], op[N_RECIP_IDX], op[N_GAIN_IDX], op[B_CALC_IDX],
+                    op[S_PACK_IDX] : lane_raw_q[lane] <= llm_extend56(math_product[lane]);
+                    op[R_SIN_IDX] : lane_raw_q[lane] <=
+                        llm_extend56(rotation_cos_q[lane]) + llm_extend56(math_product[lane]);
+                    op[B_INPUT1_IDX] : if (graph != G_GMUL) lane_raw_q[lane] <=
+                        64'($signed(second_q[lane * 24 +: 24])) + 64'($signed(vector_q[lane * 24 +: 24]));
+                    default : ;
+                endcase
+            end
+        end
+        always_ff @(posedge clk) begin
+            if (core_rst_n) begin
+                if (round16_group_q[lane / 4]) lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd16);
+                else unique case (1'b1)
+                    op[E_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd8);
+                    op[N_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd12);
+                    op[R_ROUND_IDX], op[S_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd15);
+                    op[S_INPUT_IDX] : lane_round_q[lane] <= rne_shift64(64'($signed(vector_q[lane * 24 +: 24])), 6'd4);
+                    default : ;
+                endcase
+            end
+        end
+        always_ff @(posedge clk)
+            if (core_rst_n && op[R_COS_IDX]) rotation_cos_q[lane] <= math_product[lane];
+        always_ff @(posedge clk)
+            if (core_rst_n) begin
+                if (op[A_QUERY_IDX]) attention_acc_q[lane] <= 0;
+                else if (op[A_ACC_IDX]) attention_acc_q[lane] <= attention_acc_q[lane] + math_product[lane];
+            end
+        always_ff @(posedge clk)
+            if (core_rst_n && op[SG_CLAMP_IDX]) sigmoid_inputs_q[lane] <= sat_s16(lane_round_q[lane]);
+        always_ff @(posedge clk)
+            if (core_rst_n && op[S_SIG_WAIT_IDX] && &sig_done &&
+                (int'(lane_q) >> SIGMOID_SHIFT) == lane / SIGMOID_LANES)
+                sigmoid_values_q[lane] <= sig_y[lane % SIGMOID_LANES];
         // Only states that write this payload control its mux/enable. Keeping
         // unrelated arithmetic states outside this cone avoids a wide priority
         // decoder feeding every workspace bit.
         always_ff @(posedge clk) begin
             if (core_rst_n) begin
-                if (op[E_CLAMP_IDX] || op[N_CLAMP_IDX] || op[R_CLAMP_IDX] ||
+                if (op[A_NORM_WAIT_IDX] && attention_norm_done)
+                    write_vector_q[lane * 24 +: 24] <= attention_normalized[lane * 24 +: 24];
+                else if (op[E_CLAMP_IDX] || op[N_CLAMP_IDX] || op[R_CLAMP_IDX] ||
                     op[B_CLAMP_IDX] || op[S_CLAMP_IDX])
                     write_vector_q[lane * 24 +: 24] <= llm_sat24(lane_round_q[lane]);
                 else if ((op[L_STORE_IDX] && matrix_row_q[4:0] == 5'(lane)) ||
@@ -752,49 +940,94 @@ Registered addresses xuất hiện trước enable. Graph xử lý mọi prompt 
             end
         end
     end
-    for (scalar_group = 0; scalar_group < 8; scalar_group = scalar_group + 1) begin : g_scalar_output
-        // Each group has a distinct lane-qualified enable, so these payloads
-        // remain local without vendor attributes in the compute datapath.
-        logic signed [23:0] low_data_q;
+```
+
+### [Dòng 859–889: Scalar completion distribution](<../../../Verilog%20Source%20code/llm_soc.sv#L859>)
+
+<!-- source-range:859:889 -->
+```systemverilog
+    for (scalar_cluster = 0; scalar_cluster < 2; scalar_cluster = scalar_cluster + 1) begin : g_scalar_cluster
+        always_ff @(posedge clk or negedge core_rst_n)
+            if (!core_rst_n) scalar_cluster_valid_q[scalar_cluster] <= 0;
+            else scalar_cluster_valid_q[scalar_cluster] <= op[SC_ROUTE_IDX] &&
+                scalar_packet_valid_q && scalar_packet_group_q[2] == 1'(scalar_cluster);
         always_ff @(posedge clk)
-            if (core_rst_n && ((op[L_FLAGS_IDX] && matrix_row_q[4:2] == 3'(scalar_group)) ||
-                          (op[A_FLAGS_IDX] && lane_q[4:2] == 3'(scalar_group)))) begin
-                low_data_q <= scalar_round_q[23:0];
-                scalar_clip_high_q[scalar_group] <= scalar_round_q > 64'sd8388607;
-                scalar_clip_low_q[scalar_group] <= scalar_round_q < -64'sd8388608;
+            if (core_rst_n && op[SC_ROUTE_IDX] && scalar_packet_valid_q &&
+                scalar_packet_group_q[2] == 1'(scalar_cluster)) begin
+                scalar_cluster_low_q[scalar_cluster] <= scalar_packet_low_q;
+                scalar_cluster_high_q[scalar_cluster] <= scalar_packet_high_q;
+                scalar_cluster_lower_q[scalar_cluster] <= scalar_packet_lower_q;
+                scalar_cluster_group_q[scalar_cluster] <= scalar_packet_group_q[1:0];
             end
+    end
+    for (scalar_group = 0; scalar_group < 8; scalar_group = scalar_group + 1) begin : g_scalar_output
         always_ff @(posedge clk)
-            if (core_rst_n && ((op[L_SAT_IDX] && matrix_row_q[4:2] == 3'(scalar_group)) ||
-                          (op[A_SAT_IDX] && lane_q[4:2] == 3'(scalar_group))))
-                scalar_group_q[scalar_group] <= scalar_clip_high_q[scalar_group] ? 24'sh7fffff :
-                    scalar_clip_low_q[scalar_group] ? 24'sh800000 : low_data_q;
+            if (core_rst_n && (op[L_SAT_IDX] || op[A_SAT_IDX]) &&
+                scalar_cluster_valid_q[scalar_group / 4] &&
+                scalar_cluster_group_q[scalar_group / 4] == 2'(scalar_group % 4))
+                scalar_group_q[scalar_group] <= scalar_cluster_high_q[scalar_group / 4] ? 24'sh7fffff :
+                    scalar_cluster_lower_q[scalar_group / 4] ? 24'sh800000 : scalar_cluster_low_q[scalar_group / 4];
     end
     endgenerate
 
     always_ff @(posedge clk) begin
         if (core_rst_n) begin
             if (op[B_INPUT0_IDX]) second_q <= vector_q;
-            if (op[SG_PICK_IDX]) sig_x_q <= sigmoid_pick_q[int'(lane_q[4:3])];
+
         end
     end
 
-    genvar sigmoid_group;
+```
+
+### [Dòng 890–929: Input-cache payload and reuse contracts](<../../../Verilog%20Source%20code/llm_soc.sv#L890>)
+
+<!-- source-range:890:929 -->
+```systemverilog
+    // Only scalar-product launch states own this held continuation register.
+    always_ff @(posedge clk)
+        if (core_rst_n) begin
+            unique case (1'b1)
+                op[L_COEFF_IDX] : return_scalar <= RET_SCALAR_L_ROUND;
+                op[A_SCALE_IDX] : return_scalar <= RET_SCALAR_A_SCORE;
+                op[H_COEFF_IDX] : return_scalar <= RET_SCALAR_H_ROUND;
+                default : ;
+            endcase
+        end
+
     generate
-    for (sigmoid_group = 0; sigmoid_group < 4; sigmoid_group = sigmoid_group + 1) begin : g_sigmoid_pick
+    for (cache_row = 0; cache_row < 12; cache_row = cache_row + 1) begin : g_input_cache
         always_ff @(posedge clk)
-            if (core_rst_n && op[SG_GROUP_IDX])
-                sigmoid_pick_q[sigmoid_group] <= sigmoid_inputs_q[sigmoid_group * 8 + int'(lane_q[2:0])];
+            if (core_rst_n && (op[L_PRELOAD_IDX] || op[H_PRELOAD_IDX]) && preload_chunk_q == 4'(cache_row))
+                input_cache_q[cache_row] <= vector_q;
     end
     endgenerate
+    wire [6:0] cache_source_base = 7'((int'(input_cache_source_q) << 3) + (int'(input_cache_source_q) << 2));
+    always_ff @(posedge clk or negedge core_rst_n) begin
+        if (!core_rst_n) begin input_cache_valid_q <= 0; rope_table_valid_q <= 0; end
+        else begin
+            if (launch || op_fault_q || (op[O_IDLE_IDX] && graph == G_HEAD) ||
+                (op[O_WRITE_IDX] && write_vector_addr_q >= cache_source_base && write_vector_addr_q < cache_source_base + 7'd12))
+                input_cache_valid_q <= 0;
+            else if (op[L_PRELOAD_IDX] && preload_chunk_q + 1'b1 >= matrix_chunks_q)
+                input_cache_valid_q <= 1;
+            if (launch || op_fault_q || op[N_GAIN0_IDX] || op[N_GAIN1_IDX]) rope_table_valid_q <= 0;
+            else if (op[R_TABLE1_IDX]) rope_table_valid_q <= graph == G_RQ;
+        end
+    end
+    always_ff @(posedge clk) begin
+        if (core_rst_n && op[L_PRELOAD_IDX] && preload_chunk_q + 1'b1 >= matrix_chunks_q) begin
+            input_cache_source_q <= source_q; input_cache_chunks_q <= matrix_chunks_q;
+            input_cache_gate_q <= graph == G_GATE;
+        end
+        if (core_rst_n && op[R_TABLE1_IDX]) rope_table_position_q <= position_q;
+    end
 
     // Payloads are assigned before their operation consumes them. Reset only
 ```
 
-Constant slices giúp synthesis thấy từng lane. RNE và saturation dùng helper portable; signedness cần tường minh cho bit slices.
+### [Dòng 930–1349: Operator control, validity and cancellation](<../../../Verilog%20Source%20code/llm_soc.sv#L930>)
 
-### [Dòng 689–743: Operator launch and memory handshakes](<../../../Verilog%20Source%20code/llm_soc.sv#L689>)
-
-<!-- source-range:689:743 -->
+<!-- source-range:930:1349 -->
 ```systemverilog
     // cancels the operation pipeline and clears architectural status.
     always_ff @(posedge clk) begin
@@ -806,76 +1039,141 @@ Constant slices giúp synthesis thấy từng lane. RNE và saturation dùng hel
                     row_q <= 0; chunk_q <= 0; head_q <= 0; time_q <= 0; lane_q <= 0;
                     source_q <= 1; destination_q <= 1; linear_acc_q <= 0;
                     case (graph)
-                        G_EMBED : begin p_address_q <= 15'(EMB_SCALE_BASE + (token_q >> 3)); return_p <= E_SCALE; op <= O_P_REQ; end
+                        G_EMBED : if (token_valid_q) begin p_address_q <= 15'(EMB_SCALE_BASE + (token_q >> 3)); return_p <= RET_P_E_SCALE; op <= O_P_REQ; end
                         G_ANORM, G_MNORM, G_FNORM : begin
-                            square_sum_q <= 0; begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(0)))); return_v <= N_SQUARE; op <= O_V_REQ; end
+                            square_sum_q <= 0; begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(0)))); return_v <= RET_V_N_SQUARE; op <= O_V_REQ; end
                         end
-                        G_Q : begin destination_q <= 2; begin p_address_q <= matrix_meta(layer_q, 0); return_p <= L_META; op <= O_P_REQ; end end
-                        G_K : begin destination_q <= 3; begin p_address_q <= matrix_meta(layer_q, 1); return_p <= L_META; op <= O_P_REQ; end end
-                        G_V : begin destination_q <= 4; begin p_address_q <= matrix_meta(layer_q, 2); return_p <= L_META; op <= O_P_REQ; end end
-                        G_O : begin source_q <= 5; begin p_address_q <= matrix_meta(layer_q, 3); return_p <= L_META; op <= O_P_REQ; end end
-                        G_GATE : begin destination_q <= 6; begin p_address_q <= matrix_meta(layer_q, 4); return_p <= L_META; op <= O_P_REQ; end end
-                        G_UP : begin destination_q <= 7; begin p_address_q <= matrix_meta(layer_q, 5); return_p <= L_META; op <= O_P_REQ; end end
-                        G_DOWN : begin source_q <= 6; begin p_address_q <= matrix_meta(layer_q, 6); return_p <= L_META; op <= O_P_REQ; end end
+                        G_Q : begin destination_q <= 2; begin p_address_q <= matrix_meta(layer_q, 0); return_p <= RET_P_L_META; op <= O_P_REQ; end end
+                        G_K : begin destination_q <= 3; begin p_address_q <= matrix_meta(layer_q, 1); return_p <= RET_P_L_META; op <= O_P_REQ; end end
+                        G_V : begin destination_q <= 4; begin p_address_q <= matrix_meta(layer_q, 2); return_p <= RET_P_L_META; op <= O_P_REQ; end end
+                        G_O : begin source_q <= 5; begin p_address_q <= matrix_meta(layer_q, 3); return_p <= RET_P_L_META; op <= O_P_REQ; end end
+                        G_GATE : begin destination_q <= 6; begin p_address_q <= matrix_meta(layer_q, 4); return_p <= RET_P_L_META; op <= O_P_REQ; end end
+                        G_UP : begin destination_q <= 7; begin p_address_q <= matrix_meta(layer_q, 5); return_p <= RET_P_L_META; op <= O_P_REQ; end end
+                        G_DOWN : begin source_q <= 6; begin p_address_q <= matrix_meta(layer_q, 6); return_p <= RET_P_L_META; op <= O_P_REQ; end end
                         G_RQ, G_RK : begin
                             source_q <= graph == G_RQ ? 3'd2 : 3'd3;
-                            begin p_address_q <= 15'(ROPE_BASE + (int'(position_q) << 1)); return_p <= R_TABLE0; op <= O_P_REQ; end
+                            if (graph == G_RK && rope_table_valid_q && rope_table_position_q == position_q) begin
+                                v_address_q <= 7'd36; return_v <= RET_V_R_INPUT; op <= O_V_REQ;
+                            end else begin p_address_q <= 15'(ROPE_BASE + (int'(position_q) << 1)); return_p <= RET_P_R_TABLE0; op <= O_P_REQ; end
                         end
-                        G_CACHE : begin v_address_q <= 7'(((int'($unsigned(3'(3))) << 3) + (int'($unsigned(3'(3))) << 2)) + int'($unsigned(4'(0)))); return_v <= C_INPUT; op <= O_V_REQ; end
+                        G_CACHE : begin v_address_q <= 7'(((int'($unsigned(3'(3))) << 3) + (int'($unsigned(3'(3))) << 2)) + int'($unsigned(4'(0)))); return_v <= RET_V_C_INPUT; op <= O_V_REQ; end
                         G_ATTENTION : begin
                             max_score_q <= 32'sh80000000; probability_sum_q <= 0;
-                            begin v_address_q <= 7'(((int'($unsigned(3'(2))) << 3) + (int'($unsigned(3'(2))) << 2)) + int'($unsigned(4'(0)))); return_v <= A_QUERY; op <= O_V_REQ; end
+                            begin v_address_q <= 7'(((int'($unsigned(3'(2))) << 3) + (int'($unsigned(3'(2))) << 2)) + int'($unsigned(4'(0)))); return_v <= RET_V_A_QUERY; op <= O_V_REQ; end
                         end
-                        G_AADD, G_MADD : begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(0)))); return_v <= B_INPUT0; op <= O_V_REQ; end
-                        G_GMUL : begin source_q <= 6; begin v_address_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(0)))); return_v <= B_INPUT0; op <= O_V_REQ; end end
-                        G_SILU : begin v_address_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(0)))); return_v <= S_INPUT; op <= O_V_REQ; end
+                        G_AADD, G_MADD : begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(0)))); return_v <= RET_V_B_INPUT0; op <= O_V_REQ; end
+                        G_GMUL : begin source_q <= 6; begin v_address_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(0)))); return_v <= RET_V_B_INPUT0; op <= O_V_REQ; end end
+                        G_SILU : begin v_address_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(0)))); return_v <= RET_V_S_INPUT; op <= O_V_REQ; end
                         G_HEAD : begin
                             vocabulary_row_q <= 0; best_score_q <= 32'sh80000000;
                             // Lowest eligible fallback also handles all-S32_MIN ties.
                             best_token_q <= generated_q >= min_new_q ? 12'd1 : 12'd3;
-                            begin p_address_q <= 15'(EMB_SCALE_BASE); return_p <= H_SCALE; op <= O_P_REQ; end
+                            preload_chunk_q <= 0; v_address_q <= 7'd12; return_v <= RET_V_H_PRELOAD; op <= O_V_REQ;
                         end
                         default : ;
                     endcase
                 end
                 op[O_P_REQ_IDX] : op <= O_P_WAIT;
-                op[O_P_WAIT_IDX] : if (p_valid) begin parameter_word_q <= p_data; op <= return_p; end
+                op[O_P_WAIT_IDX] : if (p_valid) begin parameter_word_q <= p_data; begin
+                        case (return_p)
+                            RET_P_E_DATA: op <= E_DATA;
+                            RET_P_E_SCALE: op <= E_SCALE;
+                            RET_P_H_SCALE: op <= H_SCALE;
+                            RET_P_H_WEIGHT: op <= H_WEIGHT;
+                            RET_P_L_META: op <= L_META;
+                            RET_P_L_WEIGHT: op <= L_WEIGHT;
+                            RET_P_N_GAIN0: op <= N_GAIN0;
+                            RET_P_N_GAIN1: op <= N_GAIN1;
+                            RET_P_R_TABLE0: op <= R_TABLE0;
+                            RET_P_R_TABLE1: op <= R_TABLE1;
+                            default: begin op_fault_q <= 1; op <= O_FINISH; end
+                        endcase
+                    end end
                 op[O_V_REQ_IDX] : op <= O_V_WAIT;
-                op[O_V_WAIT_IDX] : if (v_valid) begin vector_q <= v_data; op <= return_v; end
+                op[O_V_WAIT_IDX] : if (v_valid) begin vector_q <= v_data; begin
+                        case (return_v)
+                            RET_V_A_QUERY: op <= A_QUERY;
+                            RET_V_B_INPUT0: op <= B_INPUT0;
+                            RET_V_B_INPUT1: op <= B_INPUT1;
+                            RET_V_C_INPUT: op <= C_INPUT;
+                            RET_V_H_PRELOAD: op <= H_PRELOAD;
+                            RET_V_L_PRELOAD: op <= L_PRELOAD;
+                            RET_V_N_INPUT: op <= N_INPUT;
+                            RET_V_N_SQUARE: op <= N_SQUARE;
+                            RET_V_R_INPUT: op <= R_INPUT;
+                            RET_V_S_INPUT: op <= S_INPUT;
+                            default: begin op_fault_q <= 1; op <= O_FINISH; end
+                        endcase
+                    end end
                 op[O_K_REQ_IDX] : op <= O_K_WAIT;
-                op[O_K_WAIT_IDX] : if (k_valid) op <= return_k;
+                op[O_K_WAIT_IDX] : if (k_valid) begin
+                        case (return_k)
+                            RET_K_A_KEY: op <= A_KEY;
+                            RET_K_A_WEIGHT: op <= A_WEIGHT;
+                            default: begin op_fault_q <= 1; op <= O_FINISH; end
+                        endcase
+                    end
                 op[O_M_START_IDX] : op <= O_M_WAIT;
-                op[O_M_WAIT_IDX] : if (math_done) op <= return_m;
-                op[O_WRITE_IDX] : op <= return_w;
-                op[O_FINISH_IDX] : if (!v_write_busy && !k_write_busy) begin op_done <= 1; op <= O_IDLE; end
+                op[O_M_WAIT_IDX] : if (math_done) begin
+                        case (return_m)
+                            RET_M_A_ACC: op <= A_ACC;
+                            RET_M_A_DOT: op <= A_DOT;
+                            RET_M_B_CALC: op <= B_CALC;
+                            RET_M_E_CALC: op <= E_CALC;
+                            RET_M_H_MAC: op <= H_MAC;
+                            RET_M_L_MAC: op <= L_MAC;
+                            RET_M_N_ACC: op <= N_ACC;
+                            RET_M_N_GAIN: op <= N_GAIN;
+                            RET_M_N_RECIP: op <= N_RECIP;
+                            RET_M_R_COS: op <= R_COS;
+                            RET_M_R_SIN: op <= R_SIN;
+                            RET_M_S_PACK: op <= S_PACK;
+                            default: begin op_fault_q <= 1; op <= O_FINISH; end
+                        endcase
+                    end
+                op[O_WRITE_IDX] : begin
+                        case (return_w)
+                            RET_W_A_QUERY: op <= A_QUERY;
+                            RET_W_B_PACK: op <= B_PACK;
+                            RET_W_E_PACK: op <= E_PACK;
+                            RET_W_N_PACK: op <= N_PACK;
+                            RET_W_O_FINISH: op <= O_FINISH;
+                            RET_W_O_V_REQ: op <= O_V_REQ;
+                            RET_W_R_PACK: op <= R_PACK;
+                            RET_W_L_ROW_START: op <= L_ROW_START;
+                            default: begin op_fault_q <= 1; op <= O_FINISH; end
+                        endcase
+                    end
+                op[O_FINISH_IDX] : if (!v_write_busy && !k_write_busy && !linear_busy) begin op_done <= 1; op <= O_IDLE; end
                 op[E_SCALE_IDX] : begin
                     coefficient_q <= parameter_word_q[(int'(token_q[2:0]) << 5) +: 24];
-                    begin p_address_q <= {1'b0, token_q, 2'b00}; return_p <= E_DATA; op <= O_P_REQ; end
-```
-
-O_IDLE chọn source/destination theo graph; request/wait states đợi SRAM hoặc arithmetic response; O_WRITE ghi lane mask.
-
-### [Dòng 744–821: Embedding and ternary linears](<../../../Verilog%20Source%20code/llm_soc.sv#L744>)
-
-<!-- source-range:744:821 -->
-```systemverilog
+                    begin p_address_q <= {1'b0, token_q, 2'b00}; return_p <= RET_P_E_DATA; op <= O_P_REQ; end
                 end
                 op[E_DATA_IDX] : begin
-                    begin return_m <= E_CALC; op <= O_M_START; end
+                    begin return_m <= RET_M_E_CALC; op <= O_M_START; end
                 end
                 op[E_CALC_IDX] : op <= E_ROUND;
                 op[E_ROUND_IDX] : op <= E_CLAMP;
                 op[E_CLAMP_IDX] : begin
-                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= E_PACK; op <= O_WRITE; end
+                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= RET_W_E_PACK; op <= O_WRITE; end
                 end
                 op[E_PACK_IDX] : if (row_q == 3) op <= O_FINISH;
-                    else begin row_q <= row_q + 1'b1; begin p_address_q <= 15'((int'(token_q) << 2) + row_q + 1); return_p <= E_DATA; op <= O_P_REQ; end end
+                    else begin row_q <= row_q + 1'b1; begin p_address_q <= 15'((int'(token_q) << 2) + row_q + 1); return_p <= RET_P_E_DATA; op <= O_P_REQ; end end
                 op[L_META_IDX] : begin
                     weight_row_q <= parameter_word_q[14:0];
                     matrix_chunks_q <= parameter_word_q[23:20]; // K/32; validated K is 128 or 384.
                     matrix_rows_q <= parameter_word_q[34:25];
                     coefficient_q <= parameter_word_q[58:35]; matrix_row_q <= 0;
-                    begin p_address_q <= parameter_word_q[14:0]; return_p <= L_WEIGHT; op <= O_P_REQ; end
+                    if (input_cache_valid_q && input_cache_source_q == source_q &&
+                        input_cache_chunks_q == parameter_word_q[23:20] &&
+                        (((graph == G_K || graph == G_V) && !input_cache_gate_q) ||
+                         (graph == G_UP && input_cache_gate_q))) begin
+                        op <= L_ROW_START;
+                    end else begin
+                        preload_chunk_q <= 0;
+                        v_address_q <= 7'((int'(source_q) << 3) + (int'(source_q) << 2));
+                        return_v <= RET_V_L_PRELOAD; op <= O_V_REQ;
+                    end
                     if (parameter_word_q[24:15] != (graph == G_DOWN ? 10'd384 : 10'd128) ||
                         parameter_word_q[34:25] != ((graph == G_GATE || graph == G_UP) ? 10'd384 : 10'd128) ||
                         parameter_word_q[58:35] == 0 || parameter_word_q[255:59] != 0 ||
@@ -885,24 +1183,23 @@ O_IDLE chọn source/destination theo graph; request/wait states đợi SRAM ho�
                         op_fault_q <= 1; op <= O_FINISH;
                     end
                 end
-                op[L_WEIGHT_IDX] : begin weights_q <= parameter_word_q; begin v_address_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(chunk_q)))); return_v <= L_INPUT; op <= O_V_REQ; end end
-                op[L_INPUT_IDX] : begin
-                    if (reserved_weight) begin op_fault_q <= 1; op <= O_FINISH; end
-                    else op <= L_DECODE;
-                end
-                op[L_DECODE_IDX] : begin return_m <= L_MAC; op <= O_M_START; end
-                op[L_MAC_IDX] : begin
-                    linear_acc_q <= linear_acc_q + math_sum[38:0];
-                    if (chunk_q + 1 >= matrix_chunks_q) op <= L_COEFF;
-                    else begin
-                        chunk_q <= chunk_q + 1'b1;
-                        if (chunk_q[1:0] == 3) begin p_address_q <= weight_row_q + 15'((chunk_q + 1) >> 2); return_p <= L_WEIGHT; op <= O_P_REQ; end
-                        else begin v_address_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(chunk_q + 1'b1)))); return_v <= L_INPUT; op <= O_V_REQ; end
+                op[L_PRELOAD_IDX] : begin
+                    if (preload_chunk_q + 1'b1 >= matrix_chunks_q) begin
+                        op <= L_ROW_START;
+                    end else begin
+                        preload_chunk_q <= preload_chunk_q + 1'b1;
+                        v_address_q <= 7'((int'(source_q) << 3) + (int'(source_q) << 2) + preload_chunk_q + 1);
+                        return_v <= RET_V_L_PRELOAD; op <= O_V_REQ;
                     end
+                end
+                op[L_ROW_START_IDX] : if (linear_ready) op <= L_ROW_WAIT;
+                op[L_ROW_WAIT_IDX] : if (linear_done) begin
+                    if (linear_fault) begin op_fault_q <= 1; op <= O_FINISH; end
+                    else begin linear_acc_q <= linear_dot_acc; op <= L_COEFF; end
                 end
                 op[L_COEFF_IDX] : begin
                     scalar_a_q <= linear_acc_q; scalar_b_q <= $signed({1'b0, coefficient_q});
-                    return_scalar <= L_ROUND; op <= SC_MULTIPLY;
+                    op <= SC_MULTIPLY;
                 end
                 op[SC_MULTIPLY_IDX] : begin
                     scalar_partial_q[0] <= scalar_partial_comb[0];
@@ -916,43 +1213,48 @@ O_IDLE chọn source/destination theo graph; request/wait states đợi SRAM ho�
                 end
                 op[SC_SUM_IDX] : begin
                     scalar_product_q <= 64'(scalar_pair_q) + (64'(scalar_partial_q[2]) <<< 16);
-                    op <= return_scalar;
-                end
-                op[L_ROUND_IDX] : begin scalar_round_q <= rne_shift64(scalar_product_q, 6'd24); op <= L_FLAGS; end
-                op[L_FLAGS_IDX] : op <= L_SAT;
-                op[L_SAT_IDX] : begin
-                    op <= L_STORE;
-                    if (scalar_clip_high_q[matrix_row_q[4:2]] || scalar_clip_low_q[matrix_row_q[4:2]]) overflow_out <= 1;
-                end
-                op[L_STORE_IDX] : begin
-                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(destination_q))) << 3) + (int'($unsigned(3'(destination_q))) << 2)) + int'($unsigned(4'(matrix_row_q[8:5])))); write_vector_mask_q <= 32'b1 << matrix_row_q[4:0]; return_w <= E_PACK; op <= O_WRITE; end
-                    // E_PACK is replaced here by the row-specific continuation.
-                    return_w <= L_META; op <= O_WRITE;
-                    if (matrix_row_q + 1 >= matrix_rows_q) return_w <= O_FINISH;
-                    else begin
-                        matrix_row_q <= matrix_row_q + 1'b1; chunk_q <= 0; linear_acc_q <= 0;
-                        weight_row_q <= weight_row_q + 15'((matrix_chunks_q + 3) >> 2);
-                        return_w <= L_WEIGHT;
-                        p_address_q <= weight_row_q + 15'((matrix_chunks_q + 3) >> 2);
-                        return_p <= L_WEIGHT; return_w <= O_P_REQ;
+                    begin
+                        case (return_scalar)
+                            RET_SCALAR_A_SCORE: op <= A_SCORE;
+                            RET_SCALAR_H_ROUND: op <= H_ROUND;
+                            RET_SCALAR_L_ROUND: op <= L_ROUND;
+                            RET_SCALAR_O_IDLE: op <= O_IDLE;
+                            default: begin op_fault_q <= 1; op <= O_FINISH; end
+                        endcase
                     end
                 end
-```
+                op[L_ROUND_IDX] : begin scalar_round_q <= rne_shift64(scalar_product_q, 6'd24); op <= L_FLAGS; end
+                op[L_FLAGS_IDX] : op <= SC_ROUTE;
+                op[SC_ROUTE_IDX] : if (scalar_packet_valid_q)
+                    op <= scalar_packet_linear_q ? L_SAT : A_SAT;
+                op[L_SAT_IDX] : begin
+                    op <= L_STORE;
+                    if (scalar_cluster_valid_q[scalar_packet_group_q[2]] &&
+                        (scalar_cluster_high_q[scalar_packet_group_q[2]] ||
+                         scalar_cluster_lower_q[scalar_packet_group_q[2]])) overflow_out <= 1;
+                end
+                op[L_STORE_IDX] : begin
+                    // L_STORE captures the final lane; O_WRITE consumes the completed row on the next edge.
+                    if (matrix_row_q[4:0] == 31 || matrix_row_q + 1'b1 >= matrix_rows_q) begin
+                        write_vector_addr_q <= 7'((int'(destination_q) << 3) + (int'(destination_q) << 2) + int'(matrix_row_q[8:5]));
+                        write_vector_mask_q <= 32'hffffffff;
+                        op <= O_WRITE;
+                        return_w <= matrix_row_q + 1'b1 >= matrix_rows_q ? RET_W_O_FINISH : RET_W_L_ROW_START;
+                    end else op <= L_ROW_START;
+                    if (matrix_row_q + 1'b1 < matrix_rows_q) begin
+                        matrix_row_q <= matrix_row_q + 1'b1; chunk_q <= 0; linear_acc_q <= 0;
+                        weight_row_q <= weight_row_q + 15'((matrix_chunks_q + 3) >> 2);
 
-Embedding S8×U24/F24 tới S24/F16. Linear accumulate S39, multiply coefficient rồi RNE24, write từng output lane.
-
-### [Dòng 822–873: Affine RMSNorm and RoPE](<../../../Verilog%20Source%20code/llm_soc.sv#L822>)
-
-<!-- source-range:822:873 -->
-```systemverilog
+                    end
+                end
                 op[N_SQUARE_IDX] : begin
-                    begin return_m <= N_ACC; op <= O_M_START; end
+                    begin return_m <= RET_M_N_ACC; op <= O_M_START; end
                 end
                 op[N_ACC_IDX] : begin
                     square_sum_q <= square_sum_q + 64'(math_sum);
                     if (row_q == 3) begin
                         root_input_q <= ((square_sum_q + 64'(math_sum)) >> 7) + 64'd42950; op <= N_ROOT;
-                    end else begin row_q <= row_q + 1'b1; begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(row_q + 1'b1)))); return_v <= N_SQUARE; op <= O_V_REQ; end end
+                    end else begin row_q <= row_q + 1'b1; begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(row_q + 1'b1)))); return_v <= RET_V_N_SQUARE; op <= O_V_REQ; end end
                 end
                 op[N_ROOT_IDX] : op <= N_ROOT_WAIT;
                 op[N_ROOT_WAIT_IDX] : if (root_done) begin
@@ -960,77 +1262,58 @@ Embedding S8×U24/F24 tới S24/F16. Linear accumulate S39, multiply coefficient
                 end
                 op[N_DIV_IDX] : op <= N_DIV_WAIT;
                 op[N_DIV_WAIT_IDX] : if (div_done) begin
-                    reciprocal_q <= div_quotient[24:0] + {24'h0, divide_round_up}; row_q <= 0;
-                    begin p_address_q <= gain_address(graph, layer_q, 0); return_p <= N_GAIN0; op <= O_P_REQ; end
+                    norm_quotient_q <= div_quotient[24:0]; norm_round_q <= divide_round_up; op <= N_DIV_ROUND;
                 end
-                op[N_GAIN0_IDX] : begin table_q[255:0] <= parameter_word_q; begin p_address_q <= p_address_q + 1'b1; return_p <= N_GAIN1; op <= O_P_REQ; end end
-                op[N_GAIN1_IDX] : begin table_q[511:256] <= parameter_word_q; begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(row_q)))); return_v <= N_INPUT; op <= O_V_REQ; end end
+                op[N_DIV_ROUND_IDX] : begin
+                    reciprocal_q <= norm_quotient_q + {24'h0, norm_round_q}; row_q <= 0;
+                    begin p_address_q <= gain_address(graph, layer_q, 0); return_p <= RET_P_N_GAIN0; op <= O_P_REQ; end
+                end
+                op[N_GAIN0_IDX] : begin table_q[255:0] <= parameter_word_q; begin p_address_q <= p_address_q + 1'b1; return_p <= RET_P_N_GAIN1; op <= O_P_REQ; end end
+                op[N_GAIN1_IDX] : begin table_q[511:256] <= parameter_word_q; begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(row_q)))); return_v <= RET_V_N_INPUT; op <= O_V_REQ; end end
                 op[N_INPUT_IDX] : begin
-                    begin return_m <= N_RECIP; op <= O_M_START; end
+                    begin return_m <= RET_M_N_RECIP; op <= O_M_START; end
                 end
                 op[N_RECIP_IDX] : op <= NR_ROUND;
                 op[NR_ROUND_IDX] : op <= NR_CLAMP;
                 op[NR_CLAMP_IDX] : begin
-                    begin return_m <= N_GAIN; op <= O_M_START; end
+                    begin return_m <= RET_M_N_GAIN; op <= O_M_START; end
                 end
                 op[N_GAIN_IDX] : op <= N_ROUND;
                 op[N_ROUND_IDX] : op <= N_CLAMP;
                 op[N_CLAMP_IDX] : begin
-                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(1))) << 3) + (int'($unsigned(3'(1))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= N_PACK; op <= O_WRITE; end
+                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(1))) << 3) + (int'($unsigned(3'(1))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= RET_W_N_PACK; op <= O_WRITE; end
                 end
                 op[N_PACK_IDX] : if (row_q == 3) op <= O_FINISH;
-                    else begin row_q <= row_q + 1'b1; begin p_address_q <= gain_address(graph, layer_q, row_q + 1'b1); return_p <= N_GAIN0; op <= O_P_REQ; end end
-                op[R_TABLE0_IDX] : begin table_q[255:0] <= parameter_word_q; begin p_address_q <= p_address_q + 1'b1; return_p <= R_TABLE1; op <= O_P_REQ; end end
-                op[R_TABLE1_IDX] : begin table_q[511:256] <= parameter_word_q; begin v_address_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(row_q)))); return_v <= R_INPUT; op <= O_V_REQ; end end
+                    else begin row_q <= row_q + 1'b1; begin p_address_q <= gain_address(graph, layer_q, row_q + 1'b1); return_p <= RET_P_N_GAIN0; op <= O_P_REQ; end end
+                op[R_TABLE0_IDX] : begin table_q[255:0] <= parameter_word_q; begin p_address_q <= p_address_q + 1'b1; return_p <= RET_P_R_TABLE1; op <= O_P_REQ; end end
+                op[R_TABLE1_IDX] : begin table_q[511:256] <= parameter_word_q; begin v_address_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(row_q)))); return_v <= RET_V_R_INPUT; op <= O_V_REQ; end end
                 op[R_INPUT_IDX] : begin
-                    begin return_m <= R_COS; op <= O_M_START; end
+                    begin return_m <= RET_M_R_COS; op <= O_M_START; end
                 end
                 op[R_COS_IDX] : begin
-                    begin return_m <= R_SIN; op <= O_M_START; end
+                    begin return_m <= RET_M_R_SIN; op <= O_M_START; end
                 end
                 op[R_SIN_IDX] : op <= R_ROUND;
                 op[R_ROUND_IDX] : op <= R_CLAMP;
                 op[R_CLAMP_IDX] : begin
-                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= R_PACK; op <= O_WRITE; end
+                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= RET_W_R_PACK; op <= O_WRITE; end
                 end
                 op[R_PACK_IDX] : if (row_q == 3) op <= O_FINISH;
-                    else begin row_q <= row_q + 1'b1; begin v_address_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(row_q + 1'b1)))); return_v <= R_INPUT; op <= O_V_REQ; end end
+                    else begin row_q <= row_q + 1'b1; begin v_address_q <= 7'(((int'($unsigned(3'(source_q))) << 3) + (int'($unsigned(3'(source_q))) << 2)) + int'($unsigned(4'(row_q + 1'b1)))); return_v <= RET_V_R_INPUT; op <= O_V_REQ; end end
                 op[C_INPUT_IDX] : begin
                     k_write_address_q <= {layer_q, position_q, row_q[2:0]}; op <= C_STORE;
-```
-
-Mean-square, epsilon, floor sqrt, rounded reciprocal và signed gains. RoPE ghép hai nửa 16 channel bằng cos/sin S16/F15.
-
-### [Dòng 874–960: KV and causal attention](<../../../Verilog%20Source%20code/llm_soc.sv#L874>)
-
-<!-- source-range:874:960 -->
-```systemverilog
                 end
                 op[C_STORE_IDX] : if (row_q == 7) op <= O_FINISH;
                     else begin
                         row_q <= row_q + 1'b1;
-                        begin v_address_q <= 7'(((int'($unsigned(3'(row_q < 3 ? 3'd3 : 3'd4))) << 3) + (int'($unsigned(3'(row_q < 3 ? 3'd3 : 3'd4))) << 2)) + int'($unsigned(4'(4'((row_q + 1) & 3))))); return_v <= C_INPUT; op <= O_V_REQ; end
+                        begin v_address_q <= 7'(((int'($unsigned(3'(row_q < 3 ? 3'd3 : 3'd4))) << 3) + (int'($unsigned(3'(row_q < 3 ? 3'd3 : 3'd4))) << 2)) + int'($unsigned(4'(4'((row_q + 1) & 3))))); return_v <= RET_V_C_INPUT; op <= O_V_REQ; end
                     end
-                op[A_QUERY_IDX] : begin query_q <= vector_q; begin k_address_q <= {layer_q, time_q, 1'b0, head_q}; return_k <= A_KEY; op <= O_K_REQ; end end
-                op[A_KEY_IDX] : begin
-                    begin return_m <= A_DOT; op <= O_M_START; end
-                end
-                op[A_DOT_IDX] : begin scalar_round_q <= rne_shift64(64'(math_sum), 6'd16); op <= A_SCALE; end
-                op[A_SCALE_IDX] : begin
-                    scalar_a_q <= $signed(scalar_round_q[38:0]); scalar_b_q <= 25'sd11585;
-                    return_scalar <= A_SCORE; op <= SC_MULTIPLY;
-                end
-                op[A_SCORE_IDX] : begin
-                    scalar_round_q <= rne_shift64(scalar_product_q, 6'd16); op <= A_NEXT_SCORE;
-                end
-                op[A_NEXT_SCORE_IDX] : begin
-                    score_memory[time_q] <= sat_s32(scalar_round_q);
-                    if (sat_s32(scalar_round_q) > max_score_q) max_score_q <= sat_s32(scalar_round_q);
-                    if (time_q == position_q) begin time_q <= 0; op <= A_EXP_READ; end
-                    else begin time_q <= time_q + 1'b1; begin k_address_q <= {layer_q, 7'(time_q + 1'b1), 1'b0, head_q}; return_k <= A_KEY; op <= O_K_REQ; end end
+                op[A_QUERY_IDX] : begin query_q <= vector_q; op <= A_STREAM_WAIT; end
+                op[A_STREAM_WAIT_IDX] : if (attention_scores_done) begin
+                    max_score_q <= attention_max; time_q <= 0; op <= A_EXP_READ;
                 end
                 op[A_EXP_READ_IDX] : begin
-                    exp_difference_q <= 33'(max_score_q) - 33'(score_memory[time_q]); op <= A_EXP_PREP;
+                    exp_difference_q <= 33'(max_score_q) - 33'(attention_score); op <= A_EXP_PREP;
                 end
                 op[A_EXP_PREP_IDX] : begin
                     if (exp_difference_q >= 33'd1048576) begin exp_hi_q <= 0; exp_lo_q <= 0; end
@@ -1045,117 +1328,97 @@ Mean-square, epsilon, floor sqrt, rounded reciprocal và signed gains. RoPE ghé
                     exp_interpolation_q <= exp_interpolation_comb; op <= A_EXP_STORE;
                 end
                 op[A_EXP_STORE_IDX] : begin
-                    probability_memory[time_q] <= exp_hi_q - 25'((exp_interpolation_q + 37'd2048) >> 12);
+                    probability_q <= exp_hi_q - 25'((exp_interpolation_q + 37'd2048) >> 12);
                     probability_sum_q <= probability_sum_q + exp_hi_q - 32'((exp_interpolation_q + 37'd2048) >> 12);
-                    if (time_q == position_q) begin
-                        time_q <= 0;
-                        begin k_address_q <= {layer_q, 7'd0, 1'b1, head_q}; return_k <= A_VALUE; op <= O_K_REQ; end
-                    end else begin time_q <= time_q + 1'b1; op <= A_EXP_READ; end
+                    k_address_q <= {layer_q, time_q, 1'b1, head_q}; return_k <= RET_K_A_WEIGHT; op <= O_K_REQ;
                 end
-                op[A_VALUE_IDX] : begin probability_q <= probability_memory[time_q]; op <= A_WEIGHT; end
                 op[A_WEIGHT_IDX] : begin
-                    begin return_m <= A_ACC; op <= O_M_START; end
+                    begin return_m <= RET_M_A_ACC; op <= O_M_START; end
                 end
                 op[A_ACC_IDX] : begin
                     if (time_q == position_q) begin lane_q <= 0; op <= A_LANE; end
-                    else begin time_q <= time_q + 1'b1; begin k_address_q <= {layer_q, 7'(time_q + 1'b1), 1'b1, head_q}; return_k <= A_VALUE; op <= O_K_REQ; end end
+                    else begin time_q <= time_q + 1'b1; op <= A_EXP_READ; end
                 end
-                op[A_LANE_IDX] : begin
-                    divide_negative_q <= attention_acc_q[lane_q][55];
-                    div_numerator_q <= attention_acc_q[lane_q][55] ?
-                        64'(-attention_acc_q[lane_q]) : 64'(attention_acc_q[lane_q]);
-                    div_denominator_q <= probability_sum_q; op <= A_DIV;
+                op[A_LANE_IDX] : if (attention_norm_ready) op <= A_NORM_WAIT;
+                op[A_NORM_WAIT_IDX] : if (attention_norm_done) begin
+                    write_vector_addr_q <= 7'(60 + head_q); write_vector_mask_q <= 32'hffffffff; op <= O_WRITE;
+                    if (head_q == 3) return_w <= RET_W_O_FINISH;
+                    else begin
+                        head_q <= head_q + 1'b1; time_q <= 0;
+                        max_score_q <= 32'sh80000000; probability_sum_q <= 0;
+                        v_address_q <= 7'(24 + head_q + 1'b1); return_v <= RET_V_A_QUERY; return_w <= RET_W_O_V_REQ;
+                    end
                 end
-                op[A_DIV_IDX] : op <= A_DIV_WAIT;
-                op[A_DIV_WAIT_IDX] : if (div_done) begin
-                    scalar_round_q <= divide_negative_q ?
-                        -$signed(div_quotient + {63'h0, divide_round_up}) :
-                        $signed(div_quotient + {63'h0, divide_round_up}); op <= A_FLAGS;
-                end
-                op[A_FLAGS_IDX] : op <= A_SAT;
+                op[A_FLAGS_IDX] : op <= SC_ROUTE;
                 op[A_SAT_IDX] : op <= A_PACK;
                 op[A_PACK_IDX] : begin
-                    if (lane_q == 31) begin write_vector_addr_q <= 7'(((int'($unsigned(3'(5))) << 3) + (int'($unsigned(3'(5))) << 2)) + int'($unsigned(4'({2'b0, head_q})))); write_vector_mask_q <= 32'hffffffff; return_w <= A_QUERY; op <= O_WRITE; end
+                    if (lane_q == 31) begin write_vector_addr_q <= 7'(((int'($unsigned(3'(5))) << 3) + (int'($unsigned(3'(5))) << 2)) + int'($unsigned(4'({2'b0, head_q})))); write_vector_mask_q <= 32'hffffffff; return_w <= RET_W_A_QUERY; op <= O_WRITE; end
                     else begin lane_q <= lane_q + 1'b1; op <= A_LANE; end
                     if (lane_q == 31) begin
-                        if (head_q == 3) return_w <= O_FINISH;
+                        if (head_q == 3) return_w <= RET_W_O_FINISH;
                         else begin
                             head_q <= head_q + 1'b1; time_q <= 0;
                             max_score_q <= 32'sh80000000; probability_sum_q <= 0;
-                            v_address_q <= 7'(2 * 12 + head_q + 1); return_v <= A_QUERY; return_w <= O_V_REQ;
+                            v_address_q <= 7'(2 * 12 + head_q + 1); return_v <= RET_V_A_QUERY; return_w <= RET_W_O_V_REQ;
                         end
                     end
                 end
                 op[B_INPUT0_IDX] : begin
-                    begin v_address_q <= 7'(((int'($unsigned(3'(graph == G_GMUL ? 3'd7 : 3'd1))) << 3) + (int'($unsigned(3'(graph == G_GMUL ? 3'd7 : 3'd1))) << 2)) + int'($unsigned(4'(row_q)))); return_v <= B_INPUT1; op <= O_V_REQ; end
+                    begin v_address_q <= 7'(((int'($unsigned(3'(graph == G_GMUL ? 3'd7 : 3'd1))) << 3) + (int'($unsigned(3'(graph == G_GMUL ? 3'd7 : 3'd1))) << 2)) + int'($unsigned(4'(row_q)))); return_v <= RET_V_B_INPUT1; op <= O_V_REQ; end
                 end
                 op[B_INPUT1_IDX] : begin
                     if (graph == G_GMUL) begin
-                        begin return_m <= B_CALC; op <= O_M_START; end
-```
-
-Địa chỉ cache layer/position/KV/head. Softmax trừ max, exp LUT interpolation, weighted values và rounded divide.
-
-### [Dòng 961–995: Residual and SwiGLU](<../../../Verilog%20Source%20code/llm_soc.sv#L961>)
-
-<!-- source-range:961:995 -->
-```systemverilog
+                        begin return_m <= RET_M_B_CALC; op <= O_M_START; end
                     end else op <= B_ADD_CLAMP;
                 end
-                op[B_ADD_CLAMP_IDX] : begin write_vector_addr_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= B_PACK; op <= O_WRITE; end
+                op[B_ADD_CLAMP_IDX] : begin write_vector_addr_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= RET_W_B_PACK; op <= O_WRITE; end
                 op[B_CALC_IDX] : op <= B_ROUND;
                 op[B_ROUND_IDX] : op <= B_CLAMP;
                 op[B_CLAMP_IDX] : begin
-                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= B_PACK; op <= O_WRITE; end
+                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= RET_W_B_PACK; op <= O_WRITE; end
                 end
                 op[B_PACK_IDX] : if (row_q == (graph == G_GMUL ? 11 : 3)) op <= O_FINISH;
-                    else begin row_q <= row_q + 1'b1; begin v_address_q <= 7'(((int'($unsigned(3'(graph == G_GMUL ? 3'd6 : 3'd0))) << 3) + (int'($unsigned(3'(graph == G_GMUL ? 3'd6 : 3'd0))) << 2)) + int'($unsigned(4'(row_q + 1'b1)))); return_v <= B_INPUT0; op <= O_V_REQ; end end
+                    else begin row_q <= row_q + 1'b1; begin v_address_q <= 7'(((int'($unsigned(3'(graph == G_GMUL ? 3'd6 : 3'd0))) << 3) + (int'($unsigned(3'(graph == G_GMUL ? 3'd6 : 3'd0))) << 2)) + int'($unsigned(4'(row_q + 1'b1)))); return_v <= RET_V_B_INPUT0; op <= O_V_REQ; end end
                 op[S_INPUT_IDX] : begin lane_q <= 0; op <= SG_CLAMP; end
                 op[SG_CLAMP_IDX] : op <= SG_GROUP;
                 op[SG_GROUP_IDX] : op <= SG_PICK;
                 op[SG_PICK_IDX] : op <= S_SIG;
                 op[S_SIG_IDX] : op <= S_SIG_WAIT;
-                op[S_SIG_WAIT_IDX] : if (sig_done) begin
-                    if (lane_q == 31) op <= S_MUL;
+                op[S_SIG_WAIT_IDX] : if (&sig_done) begin
+                    if (int'(lane_q) + SIGMOID_LANES >= 32) begin lane_q <= 0; op <= S_MUL; end
                     else begin
-                        lane_q <= lane_q + 1'b1;
+                        lane_q <= lane_q + 5'(SIGMOID_LANES);
                         op <= SG_GROUP;
                     end
                 end
                 op[S_MUL_IDX] : begin
-                    begin return_m <= S_PACK; op <= O_M_START; end
+                    begin return_m <= RET_M_S_PACK; op <= O_M_START; end
                 end
                 op[S_PACK_IDX] : op <= S_ROUND;
                 op[S_ROUND_IDX] : op <= S_CLAMP;
                 op[S_CLAMP_IDX] : begin
-                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= B_PACK; op <= O_WRITE; end
-                    if (row_q == 11) return_w <= O_FINISH;
-                    else begin row_q <= row_q + 1'b1; v_address_q <= 7'(6 * 12 + row_q + 1); return_v <= S_INPUT; return_w <= O_V_REQ; end
+                    begin write_vector_addr_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(row_q)))); write_vector_mask_q <= 32'hffffffff; return_w <= RET_W_B_PACK; op <= O_WRITE; end
+                    if (row_q == 11) return_w <= RET_W_O_FINISH;
+                    else begin row_q <= row_q + 1'b1; v_address_q <= 7'(6 * 12 + row_q + 1); return_v <= RET_V_S_INPUT; return_w <= RET_W_O_V_REQ; end
+                end
+                op[H_PRELOAD_IDX] : begin
+                    if (preload_chunk_q == 3) begin
+                        p_address_q <= 15'(EMB_SCALE_BASE); return_p <= RET_P_H_SCALE; op <= O_P_REQ;
+                    end else begin
+                        preload_chunk_q <= preload_chunk_q + 1'b1;
+                        v_address_q <= 7'(12 + preload_chunk_q + 1); return_v <= RET_V_H_PRELOAD; op <= O_V_REQ;
+                    end
                 end
                 op[H_SCALE_IDX] : begin
-                    coefficient_q <= parameter_word_q[(int'(vocabulary_row_q[2:0]) << 5) +: 24];
-                    begin p_address_q <= {1'b0, vocabulary_row_q, 2'b00}; return_p <= H_WEIGHT; op <= O_P_REQ; end
-```
-
-Residual saturates S24; gate activation dùng sigmoid S16/F12, rồi multiply up branch và down projection.
-
-### [Dòng 996–1036: Language head and sampling](<../../../Verilog%20Source%20code/llm_soc.sv#L996>)
-
-<!-- source-range:996:1036 -->
-```systemverilog
+                    if (vocabulary_row_q[2:0] == 0) head_scale_word_q <= parameter_word_q;
+                    coefficient_q <= vocabulary_row_q[2:0] == 0 ? parameter_word_q[23:0] :
+                        head_scale_word_q[(int'(vocabulary_row_q[2:0]) << 5) +: 24];
+                    op <= H_STREAM_WAIT;
                 end
-                op[H_WEIGHT_IDX] : begin weights_q <= parameter_word_q; begin v_address_q <= 7'(((int'($unsigned(3'(1))) << 3) + (int'($unsigned(3'(1))) << 2)) + int'($unsigned(4'(chunk_q)))); return_v <= H_INPUT; op <= O_V_REQ; end end
-                op[H_INPUT_IDX] : begin
-                    begin return_m <= H_MAC; op <= O_M_START; end
-                end
-                op[H_MAC_IDX] : begin
-                    linear_acc_q <= linear_acc_q + math_sum[38:0];
-                    if (chunk_q == 3) op <= H_COEFF;
-                    else begin chunk_q <= chunk_q + 1'b1; begin p_address_q <= 15'((int'(vocabulary_row_q) << 2) + chunk_q + 1); return_p <= H_WEIGHT; op <= O_P_REQ; end end
-                end
+                op[H_STREAM_WAIT_IDX] : if (head_dot_done) begin linear_acc_q <= head_dot_acc; op <= H_COEFF; end
                 op[H_COEFF_IDX] : begin
                     scalar_a_q <= linear_acc_q; scalar_b_q <= $signed({1'b0, coefficient_q});
-                    return_scalar <= H_ROUND; op <= SC_MULTIPLY;
+                    op <= SC_MULTIPLY;
                 end
                 op[H_ROUND_IDX] : begin scalar_round_q <= rne_shift64(scalar_product_q, 6'd24); op <= H_NOISE; end
                 op[H_NOISE_IDX] : begin
@@ -1176,7 +1439,9 @@ Residual saturates S24; gate activation dùng sigmoid S16/F12, rồi multiply up
                     if (vocabulary_row_q == 4095) op <= O_FINISH;
                     else begin
                         vocabulary_row_q <= vocabulary_row_q + 1'b1; chunk_q <= 0; linear_acc_q <= 0;
-                        begin p_address_q <= 15'(EMB_SCALE_BASE + ((vocabulary_row_q + 1) >> 3)); return_p <= H_SCALE; op <= O_P_REQ; end
+                        if (vocabulary_row_q[2:0] == 7) begin
+                            p_address_q <= 15'(EMB_SCALE_BASE + ((vocabulary_row_q + 1) >> 3)); return_p <= RET_P_H_SCALE; op <= O_P_REQ;
+                        end else op <= H_SCALE;
                     end
                 end
                 default : ;
@@ -1185,7 +1450,3 @@ Residual saturates S24; gate activation dùng sigmoid S16/F12, rồi multiply up
     end
 endmodule
 ```
-
-Tied S8 embedding matrix, per-row scale, Gumbel temperature và stable lowest eligible token ID. EOS masked theo min_new; không nhận logits từ CPU.
-
-Request handshakes, address registers and return-state updates are explicit in each FSM case. There are no synthesizable tasks. See [RTL style](../../design/rtl_style.md).

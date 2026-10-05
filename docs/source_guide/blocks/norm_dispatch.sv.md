@@ -13,9 +13,9 @@ Wrapper này kiểm tra nguồn S16, đích S8, length bằng nhau và descripto
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    D["src / dst descriptors"]
+D["src / dst descriptors"]
     C["start · scratch base · epsilon · delta"]
     subgraph WRAP["norm_dispatch"]
         CHECK["Descriptor checker<br/>Bounds · S16/S8 · equal length"]
@@ -35,6 +35,8 @@ flowchart TB
     CORE -.-> STATUS
     GATE -.->|"rejected"| STATUS
     STATUS -.-> OUT["busy / done / overflow / format_error"]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ ra; decoder/demux dùng hình thang ngược lại, mở rộng về phía nhiều ngõ ra. Hình chữ nhật có các vạch ngang biểu diễn bộ nhớ hoặc bank descriptor. Các hình chữ nhật thường là datapath, thanh ghi đơn hoặc giao diện. Nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.

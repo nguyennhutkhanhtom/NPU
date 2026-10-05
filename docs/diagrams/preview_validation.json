@@ -1,0 +1,251 @@
+{
+  "date": "2026-10-05T18:10:26.912Z",
+  "scope": "SVG previews generated from the same geometry and labels as editable draw.io. Every page rendered in viewport bands; text page bounds and 18 pt fonts checked.",
+  "pages": [
+    {
+      "file": "docs/diagrams/rtl_hierarchy_00_TOP.svg",
+      "height": 924,
+      "width": 1760,
+      "texts": 21,
+      "fonts": [
+        "24px"
+      ],
+      "errors": [],
+      "screenshots": [
+        "rtl_hierarchy_00_TOP-000.png"
+      ]
+    },
+    {
+      "file": "docs/diagrams/rtl_hierarchy_01_LEVEL_1.svg",
+      "height": 5786,
+      "width": 1760,
+      "texts": 210,
+      "fonts": [
+        "24px"
+      ],
+      "errors": [],
+      "screenshots": [
+        "rtl_hierarchy_01_LEVEL_1-000.png",
+        "rtl_hierarchy_01_LEVEL_1-001.png",
+        "rtl_hierarchy_01_LEVEL_1-002.png",
+        "rtl_hierarchy_01_LEVEL_1-003.png",
+        "rtl_hierarchy_01_LEVEL_1-004.png",
+        "rtl_hierarchy_01_LEVEL_1-005.png"
+      ]
+    },
+    {
+      "file": "docs/diagrams/rtl_hierarchy_02_LEVEL_2.svg",
+      "height": 15704,
+      "width": 1760,
+      "texts": 758,
+      "fonts": [
+        "24px"
+      ],
+      "errors": [],
+      "screenshots": [
+        "rtl_hierarchy_02_LEVEL_2-000.png",
+        "rtl_hierarchy_02_LEVEL_2-001.png",
+        "rtl_hierarchy_02_LEVEL_2-002.png",
+        "rtl_hierarchy_02_LEVEL_2-003.png",
+        "rtl_hierarchy_02_LEVEL_2-004.png",
+        "rtl_hierarchy_02_LEVEL_2-005.png",
+        "rtl_hierarchy_02_LEVEL_2-006.png",
+        "rtl_hierarchy_02_LEVEL_2-007.png",
+        "rtl_hierarchy_02_LEVEL_2-008.png",
+        "rtl_hierarchy_02_LEVEL_2-009.png",
+        "rtl_hierarchy_02_LEVEL_2-010.png",
+        "rtl_hierarchy_02_LEVEL_2-011.png",
+        "rtl_hierarchy_02_LEVEL_2-012.png",
+        "rtl_hierarchy_02_LEVEL_2-013.png",
+        "rtl_hierarchy_02_LEVEL_2-014.png",
+        "rtl_hierarchy_02_LEVEL_2-015.png"
+      ]
+    },
+    {
+      "file": "docs/diagrams/rtl_hierarchy_03_LEVEL_3.svg",
+      "height": 21540,
+      "width": 1760,
+      "texts": 1034,
+      "fonts": [
+        "24px"
+      ],
+      "errors": [],
+      "screenshots": [
+        "rtl_hierarchy_03_LEVEL_3-000.png",
+        "rtl_hierarchy_03_LEVEL_3-001.png",
+        "rtl_hierarchy_03_LEVEL_3-002.png",
+        "rtl_hierarchy_03_LEVEL_3-003.png",
+        "rtl_hierarchy_03_LEVEL_3-004.png",
+        "rtl_hierarchy_03_LEVEL_3-005.png",
+        "rtl_hierarchy_03_LEVEL_3-006.png",
+        "rtl_hierarchy_03_LEVEL_3-007.png",
+        "rtl_hierarchy_03_LEVEL_3-008.png",
+        "rtl_hierarchy_03_LEVEL_3-009.png",
+        "rtl_hierarchy_03_LEVEL_3-010.png",
+        "rtl_hierarchy_03_LEVEL_3-011.png",
+        "rtl_hierarchy_03_LEVEL_3-012.png",
+        "rtl_hierarchy_03_LEVEL_3-013.png",
+        "rtl_hierarchy_03_LEVEL_3-014.png",
+        "rtl_hierarchy_03_LEVEL_3-015.png",
+        "rtl_hierarchy_03_LEVEL_3-016.png",
+        "rtl_hierarchy_03_LEVEL_3-017.png",
+        "rtl_hierarchy_03_LEVEL_3-018.png",
+        "rtl_hierarchy_03_LEVEL_3-019.png",
+        "rtl_hierarchy_03_LEVEL_3-020.png",
+        "rtl_hierarchy_03_LEVEL_3-021.png"
+      ]
+    },
+    {
+      "file": "docs/diagrams/rtl_hierarchy_04_LEVEL_4.svg",
+      "height": 34994,
+      "width": 1760,
+      "texts": 2013,
+      "fonts": [
+        "24px"
+      ],
+      "errors": [],
+      "screenshots": [
+        "rtl_hierarchy_04_LEVEL_4-000.png",
+        "rtl_hierarchy_04_LEVEL_4-001.png",
+        "rtl_hierarchy_04_LEVEL_4-002.png",
+        "rtl_hierarchy_04_LEVEL_4-003.png",
+        "rtl_hierarchy_04_LEVEL_4-004.png",
+        "rtl_hierarchy_04_LEVEL_4-005.png",
+        "rtl_hierarchy_04_LEVEL_4-006.png",
+        "rtl_hierarchy_04_LEVEL_4-007.png",
+        "rtl_hierarchy_04_LEVEL_4-008.png",
+        "rtl_hierarchy_04_LEVEL_4-009.png",
+        "rtl_hierarchy_04_LEVEL_4-010.png",
+        "rtl_hierarchy_04_LEVEL_4-011.png",
+        "rtl_hierarchy_04_LEVEL_4-012.png",
+        "rtl_hierarchy_04_LEVEL_4-013.png",
+        "rtl_hierarchy_04_LEVEL_4-014.png",
+        "rtl_hierarchy_04_LEVEL_4-015.png",
+        "rtl_hierarchy_04_LEVEL_4-016.png",
+        "rtl_hierarchy_04_LEVEL_4-017.png",
+        "rtl_hierarchy_04_LEVEL_4-018.png",
+        "rtl_hierarchy_04_LEVEL_4-019.png",
+        "rtl_hierarchy_04_LEVEL_4-020.png",
+        "rtl_hierarchy_04_LEVEL_4-021.png",
+        "rtl_hierarchy_04_LEVEL_4-022.png",
+        "rtl_hierarchy_04_LEVEL_4-023.png",
+        "rtl_hierarchy_04_LEVEL_4-024.png",
+        "rtl_hierarchy_04_LEVEL_4-025.png",
+        "rtl_hierarchy_04_LEVEL_4-026.png",
+        "rtl_hierarchy_04_LEVEL_4-027.png",
+        "rtl_hierarchy_04_LEVEL_4-028.png",
+        "rtl_hierarchy_04_LEVEL_4-029.png",
+        "rtl_hierarchy_04_LEVEL_4-030.png",
+        "rtl_hierarchy_04_LEVEL_4-031.png",
+        "rtl_hierarchy_04_LEVEL_4-032.png",
+        "rtl_hierarchy_04_LEVEL_4-033.png",
+        "rtl_hierarchy_04_LEVEL_4-034.png"
+      ]
+    },
+    {
+      "file": "docs/diagrams/rtl_hierarchy_portable_00_TOP.svg",
+      "height": 924,
+      "width": 1760,
+      "texts": 21,
+      "fonts": [
+        "24px"
+      ],
+      "errors": [],
+      "screenshots": [
+        "rtl_hierarchy_portable_00_TOP-000.png"
+      ]
+    },
+    {
+      "file": "docs/diagrams/rtl_hierarchy_portable_01_LEVEL_1.svg",
+      "height": 5786,
+      "width": 1760,
+      "texts": 210,
+      "fonts": [
+        "24px"
+      ],
+      "errors": [],
+      "screenshots": [
+        "rtl_hierarchy_portable_01_LEVEL_1-000.png",
+        "rtl_hierarchy_portable_01_LEVEL_1-001.png",
+        "rtl_hierarchy_portable_01_LEVEL_1-002.png",
+        "rtl_hierarchy_portable_01_LEVEL_1-003.png",
+        "rtl_hierarchy_portable_01_LEVEL_1-004.png",
+        "rtl_hierarchy_portable_01_LEVEL_1-005.png"
+      ]
+    },
+    {
+      "file": "docs/diagrams/rtl_hierarchy_portable_02_LEVEL_2.svg",
+      "height": 15704,
+      "width": 1760,
+      "texts": 758,
+      "fonts": [
+        "24px"
+      ],
+      "errors": [],
+      "screenshots": [
+        "rtl_hierarchy_portable_02_LEVEL_2-000.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-001.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-002.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-003.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-004.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-005.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-006.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-007.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-008.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-009.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-010.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-011.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-012.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-013.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-014.png",
+        "rtl_hierarchy_portable_02_LEVEL_2-015.png"
+      ]
+    },
+    {
+      "file": "docs/diagrams/rtl_hierarchy_portable_03_LEVEL_3.svg",
+      "height": 33929,
+      "width": 1760,
+      "texts": 1323,
+      "fonts": [
+        "24px"
+      ],
+      "errors": [],
+      "screenshots": [
+        "rtl_hierarchy_portable_03_LEVEL_3-000.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-001.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-002.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-003.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-004.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-005.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-006.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-007.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-008.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-009.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-010.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-011.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-012.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-013.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-014.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-015.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-016.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-017.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-018.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-019.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-020.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-021.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-022.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-023.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-024.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-025.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-026.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-027.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-028.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-029.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-030.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-031.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-032.png",
+        "rtl_hierarchy_portable_03_LEVEL_3-033.png"
+      ]
+    }
+  ]
+}

@@ -1,10 +1,19 @@
-# Test cho source chính
+# Hệ thống tests
 
 [Trang bắt đầu](../README.md) · [Mục lục tài liệu](../docs/README.md) · [Kết quả kiểm chứng](../docs/verification/README.md) · [Các demo model](../docs/demos/README.md)
 
-Legacy testbench nằm trong `tb_all.sv`; runner compile `../Verilog Source code`.
-[Full graph units và application](full_rtl/README.md) có testbench riêng cho
-`llm_soc`, cùng RTL nguồn. Không cần bản source v2 riêng hoặc test v1.
+## Chọn bộ kiểm chứng
+
+| Thiết kế | Entry point | Hướng dẫn |
+|---|---|---|
+| llm_soc synthetic units/graph | tests/full_rtl/run_units.ps1 | [Verification guide](../docs/verification/README.md) |
+| llm_soc model thật | tests/full_rtl/run_application.ps1 | [NanoFable từng bước](../docs/demos/language.md) |
+| matmulfree legacy | tests/run.ps1 | Các lệnh và coverage bên dưới |
+
+## Regression legacy
+
+Runner legacy compile cùng thư mục Verilog Source code và dùng tb_all.sv.
+Kết quả của bộ này thuộc core matmulfree; full graph llm_soc có bảy nhóm riêng.
 
 Runner, testbench, reference số nguyên và `results.json` được giữ trên GitHub. Cần Python 3.10 trở lên và ModelSim có `vlib.exe`, `vlog.exe`, `vsim.exe`. Python được tìm trong PATH rồi đến bundled runtime theo user profile; có thể chỉ rõ đường dẫn khi máy có nhiều bản Python:
 
@@ -62,7 +71,10 @@ Test v1 không tương thích đã được bỏ. Các ca arithmetic còn hữu 
 
 ## Demo checkpoint
 
-- [Binary-MNIST160](model_demo/README.md): setup có kiểm tra SHA-256, CPU/reference/RTL và chương trình toàn graph.
-- [Model ngôn ngữ](language_demo/README.md): checkpoint, phạm vi chạy CPU và phép so sánh các tầng linear trên RTL.
+- [NanoFable toàn graph](../docs/demos/language.md): checkpoint thật và application gate cho llm_soc.
+- [NanoFable assets](language_demo/README.md): setup, pinned files và dependencies.
+- [Demo legacy](../docs/demos/legacy/README.md): MNIST và NanoFable hybrid đã lưu.
 
-Các dependency và build cache được cài/sinh riêng trong từng thư mục demo; không nằm trên GitHub. Xem [cách render sơ đồ](../tools/docs/README.md) khi chỉnh tài liệu.
+Dependency và build cache ở local, tách khỏi source. Xem
+[trạng thái kiểm chứng](../docs/verification/optimization_status.md) trước khi
+chạy pretrained export/reference/application.

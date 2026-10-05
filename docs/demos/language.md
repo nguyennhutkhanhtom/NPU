@@ -1,94 +1,181 @@
-# NanoFable: demo model ngôn ngữ
+# Chạy NanoFable thật trên llm_soc
 
-[Project](../../README.md) → [Tài liệu](../README.md) → [Model demo](README.md) → **NanoFable**
+[Tài liệu](../README.md) → [Demo](README.md) → **NanoFable**
 
-Đây là bằng chứng hybrid trước, được giữ để tra cứu. [Full RTL graph mới](../design/full_rtl_language.md)
-đã triển khai toàn bộ computation và token selection; chưa chạy pretrained
-application vì gate timing >=100 MHz chưa đạt. Dùng [runner có gate](../../tests/full_rtl/README.md)
-cho các lần chạy tiếp theo; CPU continuation dưới đây không phải demo RTL.
+Runner dùng checkpoint **NanoFable-1M-ternary seed1** đã pin. Host nạp parameters,
+prompt và cấu hình; toàn prefill/decode, attention, head và token selection chạy
+trong mô phỏng RTL. Reference số nguyên trên CPU dùng để kiểm tra token kết quả.
 
-Metadata hiện dùng khớp các SHA trong [manifest đã pin](../../tests/language_demo/upstream_manifest.json):
-root checkpoint là seed1, 4 layers/128 channels/4 heads/vocabulary4096; model
-được train với context512, còn cấu hình RTL lưu128positions. [Model card đã pin](https://huggingface.co/adrahmana/NanoFable-1M-ternary/blob/8bb40dbf501bbad4a12a11c5697e5ad239744539/README.md)
-công bố seed0 như một training replica cùng kiến trúc, đồng thời báo các tiêu
-chí coherence/fluency chưa đạt ngưỡng của tác giả. Numeric/token matching sau
-export phải được ghi riêng với chất lượng đoạn văn RTL thực sự trả về.
-Runner hiện pin seed1; seed0 chưa export/run và một training replica không chứng
-minh hỗ trợ kiến trúc model thứ hai. Chỉ chạy checkpoint tiếp theo khi hardware
-gates cho source/config hiện tại đạt và exporter kiểm chứng cấu hình phù hợp.
+## Trước khi chạy
 
-Demo dùng checkpoint đã train **NanoFable-1M-ternary**: chạy toàn graph sinh văn bản trên CPU, sau đó kiểm chứng các linear ternary thật bằng core RTL hiện hành. **168 lượt RTL PASS, 33.792 đầu ra S32 khớp bit-exact với reference số nguyên**, compile và simulation đều **0 error/0 warning**. Toàn graph sinh văn bản chưa chạy trên RTL.
-
-## Checkpoint và graph
-
-| Thuộc tính | Cấu hình được kiểm tra |
+| Cần có | Giá trị đang dùng trên workspace này |
 |---|---|
-| Model | [adrahmana/NanoFable-1M-ternary](https://huggingface.co/adrahmana/NanoFable-1M-ternary/tree/8bb40dbf501bbad4a12a11c5697e5ad239744539) |
-| Tham số / checkpoint tensors | 1.377.408 / 38 |
-| Transformer | 4 block, width 128, 4 heads, context 512 |
-| Tokenizer | ByteLevel BPE, vocabulary 4.096 |
-| Graph | RMSNorm có gain, RoPE, causal attention, SwiGLU, residual, embedding/head tied |
-| Linear trong block | 28 tensor, mỗi weight thuộc `scale × {-1, 0, +1}`; không bias |
-| Checkpoint SHA-256 | `cfa114a8e411c25e89f8b507cb5886785f89132352743f26cd23a7cbaab863ae` |
+| Top | llm_soc; không chọn matmulfree cho application này |
+| Python | 3.11 hoặc 3.12 cho packages đã pin |
+| Simulator | Questa Altera Starter 2025.2, trong C:/altera_lite/25.1std/questa_fse/win64 |
+| RAM model | altera_mf.v của bản Quartus được timing manifest ghi nhận |
+| Checkpoint/tokenizer | tests/language_demo/upstream, SHA-256 khớp upstream_manifest.json |
+| Evidence | Cả bảy nhóm PASS và full-top all-corner timing đạt ≥100 MHz, đúng RTL/config |
 
-Checkpoint safetensors lưu weight ternary đã dequantize dưới dạng FP16. CPU nạp các giá trị đó vào graph float32 theo [hướng dẫn upstream đã pin](https://huggingface.co/adrahmana/NanoFable-1M-ternary/blob/8bb40dbf501bbad4a12a11c5697e5ad239744539/README.md), giữ tied head và kiểm tra các key checkpoint. Export giữ nguyên mã ternary và scale của tensor, không train hoặc lượng tử hóa lại weight. [Manifest](../../tests/language_demo/upstream_manifest.json) pin revision model, source và SHA-256 từng asset; [source graph](https://github.com/adit-rah/nanofable/blob/4bb4ca58421f62652f6804aa4164f5be992779e2/src/nanofable/model.py) là bản dùng trong demo.
+**Trạng thái lúc rà soát 06/10/2026:** QSF hiện tại khác `opt_fulltop7` và chưa có
+manifest hoàn tất cho lượt timing demo mới. Các bước export/reference và
+application phải chờ gate PASS. [Trang trạng thái](../verification/optimization_status.md)
+ghi evidence hiện có. Dùng một phiên Questa tại một thời điểm; runner application
+sử dụng các tên build cố định nên không chạy hai demo song song.
 
-## Luồng kiểm chứng
+## Các bước chạy
 
-```mermaid
-flowchart LR
-    A["Checkpoint và tokenizer đã pin"] --> B["CPU: toàn graph NanoFable"]
-    B --> C["3 prompt · greedy 32 token<br/>lặp lại và so token"]
-    B --> D["28 linear · 6 activation mỗi tensor<br/>prompt và continuation"]
-    D --> E["S8 absmax + scale M/r<br/>reference S32 F16"]
-    E --> F["Host nạp từng tensor<br/>TMATMUL và HALT trên RTL"]
-    F --> G["168 lượt · 33.792 đầu ra<br/>so bit-exact và flags"]
+### 1. Mở PowerShell ở repository
+
+```powershell
+Set-Location -LiteralPath 'D:/2151097_Nguyen Nhut Khanh'
+$pythonExe = 'C:/Users/khanh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'
+$simBin = 'C:/altera_lite/25.1std/questa_fse/win64'
+& $pythonExe --version
 ```
 
-Mỗi prompt cung cấp hai context: prompt ban đầu và prompt nối với 32 token sinh ra. Hook lấy activation của token cuối tại từng linear. Input được lượng tử hóa absmax/127 với nearest-even thành S8; postscale đưa tích ternary về **S32 F16**. Reference dùng tích số nguyên và RNE độc lập; host đọc lại output, trạng thái và flags của core.
+Đường dẫn trên là runtime và tools đã dùng trong workspace. Nếu đổi máy, thay
+chúng bằng installation tương ứng. `setup.ps1` yêu cầu Python 3.11/3.12.
 
-RMSNorm gain, RoPE, attention/softmax, residual, SwiGLU và embedding/head được tính trên CPU. Các lượt RTL này kiểm tra TMATMUL trên dữ liệu thật; không chứng minh NORM của core tương đương affine RMSNorm của model, cũng không kiểm tra chất lượng sinh văn bản sau export toàn graph.
+### 2. Chuẩn bị checkpoint và dependencies
 
-## Kết quả
+Nếu assets đã có, chỉ kiểm tra file:
 
-| Kiểm tra | Kết quả |
-|---|---|
-| CPU text generation | 3 prompt × 32 token mới; chạy lại từng prompt cho cùng token |
-| Linear RTL | 28 tensor × 6 activation = 168 lượt PASS |
-| Output / host checks / commands | 33.792 / 34.128 / 95.801 |
-| Compile / simulation | 0 error, 0 warning ở cả hai bước |
-| Sai số so với linear CPU float32 | Relative L2 lớn nhất 1,78%; trung bình 0,288%; absolute lớn nhất 0,02284 |
-| Tổng chu kỳ active của 168 lượt | 746.760; không phải latency toàn model ngôn ngữ |
-
-Bản chạy cuối ngày **01/10/2026 lúc 14:30:57 (UTC+7)**. Sai số ở bảng là ảnh hưởng lượng tử hóa activation và postscale tại **linear**, đo trên 168 activation đã lấy. Đầu ra RTL khớp chính xác với reference số nguyên; reference số nguyên có sai số so với CPU float32. Chưa đo perplexity hoặc đánh giá dataset ngôn ngữ.
-
-### Văn bản CPU sinh ra
-
-Greedy argmax, không sampling ngẫu nhiên, không thêm BOS ngoài token của prompt. Token IDs và toàn continuation nằm trong [results](../../tests/language_demo/results.json); các activation/reference chi tiết được tạo local trong `cpu_reference.json` khi chạy lại. Ví dụ prompt `Lily had a little cat.` cho continuation:
-
-```text
- She was very happy. She was so happy. She was so happy. She was so happy. She was so happy. She was so happy. She was
+```powershell
+& $pythonExe tests/language_demo/fetch_assets.py --check
 ```
 
-Hai prompt còn lại là `Once upon a time` và `In a small village, a boy`. Model nhỏ có lặp từ/câu và nội dung chưa mạch lạc; demo xác nhận checkpoint thực chạy được và phép linear khớp reference, không đưa ra kết luận về chất lượng model.
+Nếu thiếu assets hoặc packages, chạy setup một lần:
 
-## Memory và phạm vi chạy
+```powershell
+& tests/language_demo/setup.ps1 -Python $pythonExe
+```
 
-| Tensor trong mỗi block | K → N | Dung lượng weight 2 bit trên core |
-|---|---:|---:|
-| q, k, v, o | 128 → 128 | 4.096 byte mỗi tensor |
-| gate, up | 128 → 384 | 12.288 byte mỗi tensor |
-| down | 384 → 128 | 12.288 byte |
+Setup cài NumPy, safetensors và tokenizers vào thư mục packages riêng, rồi tải
+và kiểm tra 12 file đã pin. Bước này chưa thực thi checkpoint inference.
 
-Tổng 28 tensor chiếm **212.992 byte**, bằng 6,5 lần SRAM parameter 32 KiB; chưa tính embedding/head và phần graph còn lại. Mỗi tensor riêng lớn nhất **12.288 byte** và K lớn nhất **384**, phù hợp K≤512. Demo nạp lần lượt tensor qua host, workspace high-water **2.560 byte**. Các lần nạp/readback host không nằm trong chu kỳ active của bảng kết quả.
+### 3. Chọn manifest đúng và kiểm tra gate
 
-Để chạy toàn model trên ASIC cần giải quyết memory/streaming và các operator còn thiếu; [model candidates](candidates.md) ghi tính tương thích với core hiện tại. Số chu kỳ mô phỏng không xác nhận clock, STA hoặc PPA ASIC.
+Chỉ chọn file `manifest.json` của một lượt timing đã hoàn tất. Ví dụ dưới đây
+là đường dẫn workflow demo đang chờ; file phải tồn tại và gate phải PASS trước
+khi tiếp tục.
 
-## Application hiện tại và bằng chứng lịch sử
+```powershell
+$timingManifest = 'docs/verification/timing/nanofable_long_20261005/manifest.json'
+if (-not (Test-Path -LiteralPath $timingManifest)) {
+    throw 'Timing chưa hoàn tất. Xem status/log của workflow hoặc tạo lượt timing mới.'
+}
+& $pythonExe tests/full_rtl/check_gate.py $timingManifest
+if ($LASTEXITCODE -ne 0) { throw 'Gate chưa PASS; dừng trước export và application.' }
+```
 
-Runner hybrid cũ đã được loại bỏ. [Asset setup](../../tests/language_demo/README.md)
-giữ checkpoint/tokenizer đã pin; mọi lượt sinh token mới dùng [full RTL runner có gate](../../tests/full_rtl/README.md).
-Kết quả CPU/hybrid ở trên chỉ mô tả snapshot lịch sử, không chứng minh demo RTL toàn graph.
-Các script cũ có thể lấy lại từ commit `d9ed7921d42731a198f565785a8ae79b20c7c79e`.
+Kết quả cần thấy: `FULL_RTL_APPLICATION_GATE_PASS`. Nếu source, tests, evidence
+logs hoặc QSF/QPF/SDC không khớp, xem [cách tái kiểm chứng](../verification/README.md).
+Không đổi hash, giới hạn timing hay expected tokens để vượt gate.
 
-[Regression core](../verification/README.md) · [Demo MNIST toàn graph](mnist.md) · [ISA và host](../design/interfaces.md) · [Về mục lục demo](README.md)
+### 4. Chạy thử ngắn: 8 token greedy
+
+```powershell
+$appArgs = @{
+    TimingManifest = $timingManifest
+    Python = $pythonExe
+    SimBin = $simBin
+    Prompt = 'Once upon a time'
+    NewTokens = 8
+    MinNew = 8
+    Temperature = 0
+    Seed = 7
+}
+& tests/full_rtl/run_application.ps1 @appArgs
+```
+
+Runner kiểm tra gate, chuẩn bị RAM model, export parameter image và reference,
+compile testbench, mô phỏng rồi xác minh evidence. `MinNew=8` mask EOS trước
+8 token; `Temperature=0` dùng greedy. Bắt đầu với lượt ngắn để biết pipeline
+application hoạt động trước khi chọn continuation dài.
+
+### 5. Chạy continuation dài hơn
+
+Sau khi đã lưu kết quả lượt trước, thay các tham số trong cùng PowerShell:
+
+```powershell
+$appArgs.Prompt = 'Once upon a time, Lily found a tiny kitten.'
+$appArgs.NewTokens = 96
+$appArgs.MinNew = 64
+$appArgs.Temperature = 166
+& tests/full_rtl/run_application.ps1 @appArgs
+```
+
+Temperature là raw U8/F8: 166 tương đương khoảng 0,6484. EOS có thể kết thúc
+sau `MinNew`; không phải lần nào cũng sinh đủ `NewTokens`. Exporter kiểm tra
+`prompt token count + NewTokens ≤128`; số token của prompt không phải số từ.
+Chọn prompt tiếng Anh ngắn cho checkpoint kể chuyện này. Độ dài mô phỏng trên PC
+phụ thuộc prompt/context và số token, khác với thời gian tính theo clock phần cứng.
+
+## Đọc tiến độ và kết quả
+
+Mở terminal thứ hai ở repository nếu muốn xem log trong lúc mô phỏng:
+
+```powershell
+Get-Content -LiteralPath 'tests/full_rtl/build/application.log' -Tail 20 -Wait
+```
+
+Ctrl+C trong terminal theo dõi chỉ dừng `Get-Content`; để dừng mô phỏng, dùng
+terminal đang chạy runner. Log báo `FULL_RTL_PROGRESS` mỗi triệu compute clocks
+và `FULL_RTL_TOKEN_VERIFIED` cho token được so sánh. Runner dừng ngay khi mismatch.
+
+| File | Nội dung |
+|---|---|
+| tests/full_rtl/generated_text.md | Continuation decode từ token RTL thực tế |
+| tests/full_rtl/application_results.json | PASS, token IDs, RTL text, source/evidence hashes và text_quality |
+| tests/full_rtl/build/rtl_tokens.txt | Token IDs host đọc từ output window |
+| tests/full_rtl/build/application.log | Runtime log và FULL_RTL_APPLICATION_PASS |
+| tests/full_rtl/build/application_compile.log | Compile diagnostics |
+| tests/full_rtl/build/reference.json | Input config và continuation kỳ vọng của reference integer |
+
+Một lượt hoàn tất cần `FULL_RTL_APPLICATION_PASS` và
+`FULL_RTL_APPLICATION_EVIDENCE_PASS`. `application_results.json` ghi `status=PASS`
+khi token RTL khớp reference. Mục `text_quality=NOT_ASSESSED` cần được bổ sung
+bằng việc đọc paragraph thực tế; PASS numeric chưa xác nhận chất lượng văn bản.
+
+## Lưu kết quả trước lượt kế tiếp
+
+Runner hiện dùng chung thư mục build và output file cho các lượt application.
+Trước khi chạy lại, lưu một archive mới, ví dụ:
+
+```powershell
+$appArchive = 'tests/full_rtl/evidence/my_nanofable_20261006'
+if (Test-Path -LiteralPath $appArchive) { throw 'Chọn một tên archive chưa có.' }
+New-Item -ItemType Directory -Path $appArchive | Out-Null
+Copy-Item -LiteralPath 'tests/full_rtl/application_results.json','tests/full_rtl/generated_text.md' -Destination $appArchive
+$appFiles = @('application_compile.log','application_compile.console','application.log',
+    'application.log.console','reference.json','rtl_tokens.txt','application_design_units.json',
+    'parameter.mem','prompt.mem','expected.mem','config.svh','application_sources.f')
+foreach ($name in $appFiles) {
+    Copy-Item -LiteralPath (Join-Path 'tests/full_rtl/build' $name) -Destination $appArchive
+}
+$hashes = [ordered]@{}
+Get-ChildItem -LiteralPath $appArchive -File | ForEach-Object {
+    $hashes[$_.Name] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+$hashes | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $appArchive 'sha256.json') -Encoding utf8
+```
+
+Archive này giữ kết quả/log/input, còn timing và source snapshot được dẫn bởi
+manifest. Giữ cả RAM-model cache được application result tham chiếu. Không sửa
+archive cũ để biểu diễn một lần chạy khác.
+
+## Khi runner dừng
+
+| Thông báo / tình huống | Cách xử lý |
+|---|---|
+| Missing manifest hoặc Configuration changed after timing | Chờ/tạo full-top timing cho cấu hình hiện tại rồi kiểm tra gate |
+| RTL changed hoặc unit evidence stale | Chạy lại đúng unit/graph hoặc timing bị ảnh hưởng; giữ evidence cũ |
+| Missing pinned asset / import error | Chạy setup với Python 3.11/3.12 hoặc kiểm tra lại assets/packages |
+| License unavailable | Kết thúc phiên Questa đang dùng license trước khi mở phiên mới |
+| Prompt vượt context | Giảm prompt hoặc NewTokens; giữ tổng token ≤128 |
+| Token mismatch, timeout hoặc error | Giữ log/input/reference để debug; không đổi expected IDs hay watchdog để nhận PASS |
+
+[Host map](../design/host_interface.md) giải thích những gì testbench ghi vào DUT.
+[Báo cáo hybrid cũ](legacy/nanofable_hybrid.md) ghi CPU generation và linear-only
+RTL trước đây; kết quả đó thuộc một flow khác với application này.

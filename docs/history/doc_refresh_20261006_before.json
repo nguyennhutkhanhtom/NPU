@@ -1,0 +1,116 @@
+{
+  "captured_utc": "2026-10-05T17:12:48.095540+00:00",
+  "scope": "Human-readable docs before authorized navigation, content and style refresh",
+  "archive": "docs/history/doc_refresh_20261006_before.zip",
+  "archive_sha256": "d6031ea5984fb9b3d975bb065813dfc70c6e4526e4c3105f203c1160c412d3a1",
+  "document_sha256": {
+    "README.md": "563c05e0a0f2b1c18b2380fe8a7631224f72fa4411883566f43ab3036d70537d",
+    "TASK_STATE.md": "6c2cf4772a9b8e8b3dabb6efc7e83ed1c570b5f7713f95642676f85ed8dc4425",
+    "Verilog Source code/README.md": "e24eb36721a2f7b88dcee8fd885d00ae480145c987f9f5c249c32e5449321871",
+    "docs/README.md": "2333823c7c221298e9e021d03d8d001e402133a37cb7183a906f7bee75b046a3",
+    "docs/design/full_rtl_language.md": "32593a1b0347135b443f06e5c71178053e078ecba6660e7d032e584603c5f0da",
+    "docs/design/exact_throughput_optimization.md": "5cec40820166dddceea644fa6d5c58861cda3aec492b575ba2241f5a73175eea",
+    "docs/design/architecture.md": "f0315a4f2f60994abf39a9bfb16639331e82fce4499408b710a39cfe39bbd210",
+    "docs/design/interfaces.md": "de512e428bc26ab9f2fd66e5efbec6605008da1db567f4366343409f02c8ba5e",
+    "docs/verification/README.md": "286cd680df230789bb733c550d440d8928714c92b2ddea6f00df4aff7cae0b68",
+    "docs/verification/optimization_status.md": "61fb9a9f9cd645795c5a595ebac9d74f5ee653a8965911ff49c6a32ce605372c",
+    "docs/verification/timing/README.md": "93f48e100c0d9c836d680e88a44315d7f3fcdb4e9c097053423f799d88fb8315",
+    "docs/demos/README.md": "641b9449314057e3fbbeb0119cd4b356e6bd9b07634dfcb0b85da0bd35a00e90",
+    "docs/demos/language.md": "94692ced11efd2fa424c38acd778cb7b02f56cf501f5f62ad2e29f94359857ef",
+    "docs/demos/candidates.md": "669cc77567283149c170df2e95d421663ce6038666175d84b95d960ab6a3ca4b",
+    "docs/source_guide/README.md": "ab78c5689526bc3494902cecda5814763d9ecc12f0c6180509cd5dbca123e142",
+    "docs/source_guide/blocks/README.md": "6439b8a3a838e60a796ed3ae45ec9e240796521da3e3e609d930e0f8605fad20",
+    "docs/history/README.md": "e3fbc6be846c45e18644a092e0ddf5cac69606afa7a35f4d1055f044aee7df75",
+    "tests/README.md": "887edcca130574f0b098ccccefb8de34c303ee0d794905743aa1e42514c7461c",
+    "tests/full_rtl/README.md": "0a71dd1c2669ea0e5d8ebb5772d57b57793f51ec3e7ec19afdd6cc2c21da05c3",
+    "tests/language_demo/README.md": "379844e392168776d19831384fdc69a27668aba04afe8d136444f4aa878810d1",
+    "docs/source_guide/blocks/llm_soc.sv.md": "5dd7ae390d3da25b5572751a4bebefa55ede88dbda802da7ee31a69f759e02be",
+    "docs/source_guide/blocks/llm_math.sv.md": "08b8159fb8e36127595c1c4d3cc19710487a4d7d57b62293c5914a63995af350",
+    "docs/source_guide/blocks/norm.sv.md": "4f60de92f949c0e0a369451f421ec82eed4f06a049e76d17e9227e674ab7986c",
+    "docs/source_guide/blocks/banked_word_ram.sv.md": "b5f0a729087848b5a7ec34ff7c72d4fbc98bde93968d693d2c23c8e2bb5181ce",
+    "docs/source_guide/blocks/pipelined_word_ram.sv.md": "65a9e10f8eb1036419eeeacc693c60a7fe95b71e72766ef6771f08eba049da92"
+  },
+  "diagram_sha256": {
+    "docs/demos/mnist.png": "d160ec6daa536890e1310cb59aea7df3f06cae6fca757ebf5197a1ab60a84a78"
+  },
+  "mermaid_blocks_sha256": {
+    "docs/design/full_rtl_language.md": [
+      "04c7c471d2702ea2ee9b9d3bdde7e86bca8400814905e0545232029f8c6cfd63",
+      "64270868e07a489ef9fb323e25de507a7e596e7e27eff29a582bf29328b737a0"
+    ],
+    "docs/design/architecture.md": [
+      "79ba227296442011c7cbe501fd33258185d58d659ad8c16dd15758189a25d6e2"
+    ],
+    "docs/demos/language.md": [
+      "a04c1aaf8b29522c31eda69a199f666bacdf2af52b70fe3cd1adee7cccc7dce4"
+    ],
+    "docs/demos/candidates.md": [
+      "f9db79287e1ab7f0ed9ccd388f87daf5b3b337c186095ae03dce48b9e3c899f5"
+    ],
+    "docs/source_guide/README.md": [
+      "7fbe1adfd1dd6cf78e720923ae86b81e63bbba770a515c983442ea2e0c9c8f4d"
+    ],
+    "docs/source_guide/blocks/llm_soc.sv.md": [
+      "3a1616a1103f1729442020cdb03cd50ee5e484d8bc9cd4fdf131ccb330ecd05d"
+    ],
+    "docs/source_guide/blocks/llm_math.sv.md": [
+      "4f74ba7fdb2f02cccd48d4edec4e1ff42e7812ff25bdb6cc56502fd01fd8a5bd"
+    ],
+    "docs/source_guide/blocks/norm.sv.md": [
+      "cad79bc41c05a8d2ea14b7578b1d37a8f91ce1a6b675bb334d20db7b7cff4ae6",
+      "515e4f4f67a636408d7ec118a3bcf80cdfa4fcf62e28b897980e21c65ed71fae",
+      "87b1e524acbc30da968ce3e0b747c3dcc133bf2c1e282a5e8a47e110b1ea98af",
+      "a59d889fec63ccab94fb3f4da08679d1de0e1d3b908d14b3788df11b81a8fef4",
+      "a8f1ef59a4f02081a20336db4e8574a41b9392d85ec78586616b62b52f2dc7a1"
+    ],
+    "docs/source_guide/blocks/banked_word_ram.sv.md": [
+      "9f4ec68ffae78e92aa7d57a89a237f51f7ce7635073889edf0248b0691546b7c"
+    ],
+    "docs/source_guide/blocks/pipelined_word_ram.sv.md": [
+      "174f6bf88600260b50f1e1e23a81699097ee31d9f8eb139f4023d03eb8753f84"
+    ]
+  },
+  "rtl_sources": {
+    "acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
+    "banked_word_ram.sv": "3f62befc5ff4942b92708e1fca7c54e61ae64781839e2efd2e6108ed0cc9a08e",
+    "descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+    "div.sv": "ddb1191f9879b7d3643d82a544ea14c30e7df999a3af5d913f354259363aa228",
+    "ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+    "isqrt_u64.sv": "c20371b0abf819e3a6011c63a908c21970bba45fa4846af86584847cfe70c9e2",
+    "llm_attention_engine.sv": "4ed88adce8f72631d86adb900cb41ef264904e68e67199238ce517b0f7e2b838",
+    "llm_attention_normalize.sv": "45d2264cabef1203bc6261bd10706274fa91d8fc02552301db02ef2d8574f0dd",
+    "llm_bank_ram.sv": "c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb",
+    "llm_exp_lut.svh": "7aafb64bcea808bcb74387c174c808784433bb941f2e9e2f815bcbeb9b1a5c6e",
+    "llm_gumbel_lut.svh": "870d129c9722a00efb733f0a6fbcad493e069447877de57a123db9d9b4adbec8",
+    "llm_head_engine.sv": "54fc2ea9fd0dd045caf6bdaf9e963fd8951180026d9770576f66c25b594fd080",
+    "llm_linear_engine.sv": "db4e5b2122af2dda953ed8e31d263cb44b0ed222a851fa05773b3d8d82262266",
+    "llm_math.sv": "1280302be8a07422c547c62b470b51f43324e92519cc0d69b55dd58f94c5d0bd",
+    "llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
+    "llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
+    "llm_soc.sv": "ac72d0ab7f58a4647168fbeb7d7454c73ed1df195229b8587071a98d16a57543",
+    "logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
+    "matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
+    "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+    "mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+    "mul.sv": "fdca97fe654f877cd33e7eb934d3869a6e754bd9a4d9d128f228d9c17add646e",
+    "norm.sv": "83047edfb7ac751c38c19b15e8eed6f725b8e6f40fe63b6bdf3475cde42be8c4",
+    "norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+    "npu_pkg.sv": "18385ff77706c505eb7c947c5b1f056b5d6230e6971a1cc09a4d823c27a7bcfd",
+    "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+    "pipelined_word_ram.sv": "691f21844bfe3deae271a26e503b6d667948a70fd742d8b2d9a067039b49162a",
+    "postscale.sv": "b9cb61b7014c037c408340a8042b4c0862ed46997754d9b4dee40056835e7160",
+    "quartus_word_ram.sv": "c38b8642bfb143f71bf89902b767844086f0894a16db11ebc0abe98131709a0b",
+    "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+    "reset_release.sv": "2720ef4c4b21a68bf193c24cdb60f574ee8b272f36862a953c1cf060f14361a2",
+    "rowwise_dispatch.sv": "e0f7cb0088af29afe233478a72f4ef9aab0676f2a24d56903b7f35261a6b3543",
+    "rowwise_op.sv": "ce49a16c12069b0560986f7b8cf5bd0a187ce1d409f0ce0e69515bff11e1a559",
+    "scale_compose.sv": "12c6b58896e3f71367ba1149f6f23784aa0389500aeaf3b66deb2abd198aa55b",
+    "sigmoid.sv": "d85cdc54ba8843c4e8aa99d4d14eb8b72edf38966aa6c09d68abd537e329fce2",
+    "sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
+    "sigmoid_lut.svh": "c72383f3cd3c3dadf7e8579d7d12edca2cc2d6555735dd1e9d4def6f561b73ef",
+    "sram_256_wrapper.sv": "7c17702a2fa1c9a2baed950aff5e687f2981a07206ea3582e05659c6690e968a",
+    "sram_word_tile.sv": "fca521ff4a1c9458f1731025684d0db81a6842caf06f1762d84b51a7b1bd176c",
+    "ternary_dot32.sv": "6b0f803c23034b94874ca8a2f450408078deb77a3eaa029917d63b43efdab8d9",
+    "ternary_mul.sv": "71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f"
+  }
+}

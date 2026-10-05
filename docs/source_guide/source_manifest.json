@@ -1,5 +1,5 @@
 {
-  "snapshot_date": "2026-10-04",
+  "snapshot_date": "2026-10-06",
   "files": [
     {
       "file": "matmulfree.sv",
@@ -20,9 +20,9 @@
     {
       "file": "norm.sv",
       "path": "Verilog Source code/norm.sv",
-      "sha256": "045a18b3d7152a114705cf85f87396eb1d080193dbb867b6791f37e278f17f36",
-      "lines": 617,
-      "groups": 17,
+      "sha256": "83047edfb7ac751c38c19b15e8eed6f725b8e6f40fe63b6bdf3475cde42be8c4",
+      "lines": 556,
+      "groups": 3,
       "document": "blocks/norm.sv.md"
     },
     {
@@ -177,12 +177,12 @@
       "groups": 0
     },
     {
-      "groups": 4,
+      "groups": 3,
       "file": "banked_word_ram.sv",
       "path": "Verilog Source code/banked_word_ram.sv",
       "document": "blocks/banked_word_ram.sv.md",
-      "sha256": "bb7a3bb83e0aef84c030403bcd675e4853f190ea79d9851ad742a5a0d02d2409",
-      "lines": 55
+      "sha256": "3f62befc5ff4942b92708e1fca7c54e61ae64781839e2efd2e6108ed0cc9a08e",
+      "lines": 39
     },
     {
       "groups": 3,
@@ -207,12 +207,12 @@
       "lines": 267
     },
     {
-      "groups": 5,
+      "groups": 4,
       "file": "llm_math.sv",
       "path": "Verilog Source code/llm_math.sv",
       "document": "blocks/llm_math.sv.md",
-      "sha256": "9d4d44be0bfe5d44cb196ffdc5e812710640989fb43f23adbcb62a0e48bae8ed",
-      "lines": 72
+      "sha256": "1280302be8a07422c547c62b470b51f43324e92519cc0d69b55dd58f94c5d0bd",
+      "lines": 76
     },
     {
       "groups": 3,
@@ -223,12 +223,12 @@
       "lines": 31
     },
     {
-      "groups": 11,
+      "groups": 10,
       "file": "llm_soc.sv",
       "path": "Verilog Source code/llm_soc.sv",
       "document": "blocks/llm_soc.sv.md",
-      "sha256": "5abac9ed9dde98138c4e5928fe7638e302ca4bf9a49b38eeafd373826a10fb9e",
-      "lines": 1036
+      "sha256": "ac72d0ab7f58a4647168fbeb7d7454c73ed1df195229b8587071a98d16a57543",
+      "lines": 1349
     },
     {
       "groups": 4,
@@ -239,12 +239,12 @@
       "lines": 95
     },
     {
-      "groups": 3,
+      "groups": 4,
       "file": "pipelined_word_ram.sv",
       "path": "Verilog Source code/pipelined_word_ram.sv",
       "document": "blocks/pipelined_word_ram.sv.md",
-      "sha256": "0e82266f6da5f31bd2612e4696778f9560915020f6a5a3b498dfd4acd8b6e07a",
-      "lines": 114
+      "sha256": "691f21844bfe3deae271a26e503b6d667948a70fd742d8b2d9a067039b49162a",
+      "lines": 173
     },
     {
       "groups": 3,
@@ -269,6 +269,62 @@
       "document": "blocks/reset_release.sv.md",
       "sha256": "2720ef4c4b21a68bf193c24cdb60f574ee8b272f36862a953c1cf060f14361a2",
       "lines": 15
+    },
+    {
+      "groups": 3,
+      "file": "isqrt_u64.sv",
+      "path": "Verilog Source code/isqrt_u64.sv",
+      "document": "blocks/isqrt_u64.sv.md",
+      "sha256": "c20371b0abf819e3a6011c63a908c21970bba45fa4846af86584847cfe70c9e2",
+      "lines": 60
+    },
+    {
+      "groups": 4,
+      "file": "llm_attention_engine.sv",
+      "path": "Verilog Source code/llm_attention_engine.sv",
+      "document": "blocks/llm_attention_engine.sv.md",
+      "sha256": "4ed88adce8f72631d86adb900cb41ef264904e68e67199238ce517b0f7e2b838",
+      "lines": 70
+    },
+    {
+      "groups": 4,
+      "file": "llm_attention_normalize.sv",
+      "path": "Verilog Source code/llm_attention_normalize.sv",
+      "document": "blocks/llm_attention_normalize.sv.md",
+      "sha256": "45d2264cabef1203bc6261bd10706274fa91d8fc02552301db02ef2d8574f0dd",
+      "lines": 95
+    },
+    {
+      "groups": 3,
+      "file": "llm_head_engine.sv",
+      "path": "Verilog Source code/llm_head_engine.sv",
+      "document": "blocks/llm_head_engine.sv.md",
+      "sha256": "54fc2ea9fd0dd045caf6bdaf9e963fd8951180026d9770576f66c25b594fd080",
+      "lines": 48
+    },
+    {
+      "groups": 4,
+      "file": "llm_linear_engine.sv",
+      "path": "Verilog Source code/llm_linear_engine.sv",
+      "document": "blocks/llm_linear_engine.sv.md",
+      "sha256": "db4e5b2122af2dda953ed8e31d263cb44b0ed222a851fa05773b3d8d82262266",
+      "lines": 92
+    },
+    {
+      "groups": 2,
+      "file": "sram_word_tile.sv",
+      "path": "Verilog Source code/sram_word_tile.sv",
+      "document": "blocks/sram_word_tile.sv.md",
+      "sha256": "fca521ff4a1c9458f1731025684d0db81a6842caf06f1762d84b51a7b1bd176c",
+      "lines": 15
+    },
+    {
+      "groups": 3,
+      "file": "ternary_dot32.sv",
+      "path": "Verilog Source code/ternary_dot32.sv",
+      "document": "blocks/ternary_dot32.sv.md",
+      "sha256": "6b0f803c23034b94874ca8a2f450408078deb77a3eaa029917d63b43efdab8d9",
+      "lines": 55
     }
   ],
   "cleanup_date": "2026-09-30",

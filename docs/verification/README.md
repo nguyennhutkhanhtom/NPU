@@ -1,118 +1,115 @@
-# Kiểm chứng RTL, synthesis và timing
+# Kiểm chứng llm_soc
 
-[Project](../../README.md) → [Tài liệu](../README.md) → **Kiểm chứng**
+[Tài liệu](../README.md) → **Kiểm chứng**
 
-Full top hiện tại `llm_soc` có [7 nhóm PASS](../../tests/full_rtl/evidence/opt_final4_all/results.json),
-graph 1.066.965 compute clocks và [post-fit timing PASS](timing/opt_fulltop7/manifest.json)
-với Fmax thấp nhất 100,78 MHz, mọi slack không âm, TNS = 0 và không có path
-unconstrained. [Host cancellation](../../tests/full_rtl/evidence/opt_host1/results.json)
-và [portable elaboration](portable_elaboration_opt_final4/results.json) cũng PASS.
-[Lệnh tái hiện và trạng thái hiện tại](optimization_status.md) ·
-[Báo cáo triển khai](../reviews/rtl_change_review_v3.md).
-Chưa chạy pretrained application; Quartus là backend demo EDA, không phải ASIC signoff.
+Đọc [trạng thái mới nhất](optimization_status.md) trước khi chạy lại. Trang này
+hướng dẫn chọn đúng phạm vi: synthetic units/graph, portable elaboration,
+full-top timing hoặc application checkpoint.
 
-Checkpoint cũ có [7 nhóm unit PASS lịch sử](../../tests/full_rtl/evidence/logic6q5_all_units/results.json)
-trên snapshot35source, dùng RAM Quartus25.1 thật và Questa2025.2,0compile/runtime
-warnings. Graph có2prompt/3token doRTLchọn/16layer runs/causal checks. Snapshot33assets đã refactor theo [coding rules](../design/rtl_style.md), có [7 nhóm PASS](../../tests/full_rtl/evidence/explicit3_all_units/results.json)
-và fit hoàn tất: timing explicit2 FAIL93,28MHz/setup/removal. Logic5/6 FAIL99,07MHz;logic7 FAIL96,04MHz. Không có full-top
-100MHz PASS tại checkpoint đó và chưa chạy pretrained application. [Timing hub](timing/README.md)
-ghi device, constraints, source/config hashes, critical paths và mọi corner.
-Các số liệu legacy bên dưới thuộc `matmulfree`, không phải gate cho `llm_soc`.
+## Các mức kiểm chứng
 
-Reference số nguyên và testbench kiểm tra chức năng, số học và giao tiếp của core. Demo Quartus kiểm tra Analysis & Synthesis và timing sau placement/routing trên cùng RTL; không có nhánh compute `SYNTHESIS`/`QUARTUS_SYNTHESIS` hoặc compute/control vendor IP. IP bộ nhớ altsyncram M10K chỉ nằm sau adapter thay được bằng SRAM ASIC. Binding SRAM và mục tiêu PPA ASIC được đánh giá riêng.
+| Mức | Entry point | PASS xác nhận điều gì? |
+|---|---|---|
+| Bảy nhóm tổng hợp | tests/full_rtl/run_units.ps1 | Arithmetic, RAM, protocol, selection, operators và graph khớp fixture/reference |
+| Host cancellation | tests/full_rtl/run_host_cancel_100mhz.ps1 | Cancel/commit/ACK contract của cùng RTL |
+| Portable elaboration | tests/full_rtl/run_portable_100mhz.ps1 | Full top elaborate với USE_QUARTUS_MEMORY=0 và không binding vendor modules |
+| Full-top timing | tools/timing/run.ps1 -Project quartus/llm_soc | Fit và all-corner STA của đúng source/config |
+| Pretrained application | tests/full_rtl/run_application.ps1 | Token RTL của checkpoint thật khớp reference integer |
+| Chất lượng văn bản | Đọc generated_text.md và đánh giá riêng | Mức mạch lạc/phù hợp của paragraph thực tế |
 
-**[Timing post-fit: baseline, constraint, critical path và tối ưu Fmax](timing/README.md).** Report người dùng được giữ nguyên ở snapshot riêng; phép so sánh RTL dùng baseline với SDC và cấu hình compile tương ứng.
+Sáu nhóm non-graph chỉ có trạng thái `SIX_GROUPS_PASS_GRAPH_PENDING`.
+Application gate yêu cầu **cả bảy nhóm**, bao gồm autonomous graph. Portable
+elaboration dùng `run 0`; kết quả đó chưa phải ASIC implementation/signoff.
 
-## Regression chức năng
+## Chuẩn bị môi trường
 
-Chạy từ thư mục gốc repository:
+Các lệnh dưới đây chạy ở repository root trong PowerShell:
 
 ```powershell
-./tests/run.ps1 -Block All
+Set-Location -LiteralPath 'D:/2151097_Nguyen Nhut Khanh'
+$pythonExe = 'C:/Users/khanh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'
+$simBin = 'C:/altera_lite/25.1std/questa_fse/win64'
+$quartusBin = 'C:/altera_lite/25.1std/quartus/bin64'
 ```
 
-[Hướng dẫn test](../../tests/README.md) ghi cách chuẩn bị ModelSim, chọn từng khối và đọc logs/results. [Reference số nguyên](../../tests/reference.py) và [testbench](../../tests/tb_all.sv) dùng cùng RTL hiện hành, không có mode synthesis riêng.
+Dùng tên library và evidence tag mới cho mỗi lượt kiểm chứng. Không compile
+lại library đang được một phiên vsim sử dụng. License hiện tại cho phép một
+simulation session; Quartus là tiến trình độc lập, nhưng không sửa source/config
+khi một build đang đo chúng.
 
-| Phạm vi | Bằng chứng của bản ngày 01/10/2026 |
-|---|---|
-| Tổng regression | 10 mục PASS lúc 14:31:18, compile 0 error/0 warning |
-| Tích hợp host và scheduler | 168 ca + 30 protocol reads/11 cancellations/4 blocked regions; gồm rejected NORM sau overflow, q alias và restart không reset |
-| Rowwise registered datapath | 1.800 ca / 13.260 phần tử; 42.843 thay đổi input khi busy; reset sáu pha; reference S128 |
-| Số học scalar | 4.301 sqrt, 37.189 RNE, 900 compose cases, 5 divider profiles |
-| Postscale và sigmoid | 12.720 postscale checks; 1.638.400 input ở đủ 25 F_t |
-| Memory và vector | 1.027 instruction checks, 47 SRAM checks, add/sub/mul và accumulator profiles |
+## Chạy bảy nhóm units và graph
 
-[Design review](../reviews/design_review.md#kiểm-chứng-bản-rtl-thống-nhất) giải thích test coverage và cải tiến được kiểm tra. [Model demo](../demos/README.md) kiểm chứng thêm graph/checkpoint thực; kết quả model được ghi trong từng báo cáo riêng.
-
-## Analysis & Synthesis legacy ngày01/10/2026
-
-Lượt Ctrl+K tương đương `quartus_map` hoàn tất **14:31:44 ngày 01/10/2026**, **0 error / 0 warning**, cùng RTL đã pass regression và hai model demo. Map ghi **7.390 registers**, **11.906 ALUT**, **8.174 ALM ước tính**, **334.336 bit RAM / 7 DSP**. ALM ước tính này chưa phải số sau placement/routing. [Timing hub](timing/README.md) gắn kết quả map, Fitter và STA với source/configuration hashes.
-
-## Snapshot Analysis & Synthesis trước tối ưu timing
-
-Ngày **01/10/2026**, project `matmul_free`, top `matmulfree`, Quartus Lite 18.1, Cyclone V `5CGXFC7C7F23C8`.
-
-- Analysis & Synthesis (`quartus_map`, cùng bước Ctrl+K) thành công lúc **11:24:04: 0 error, 0 warning**.
-- Không define macro để chọn nhánh RTL; project giữ effort AUTO và tối ưu AREA.
-- Regression của snapshot trước tối ưu timing pass **9 mục kiểm tra** lúc 11:23:43, compile 0 error/0 warning. Chi tiết trong [báo cáo rà soát](../reviews/design_review.md); [manifest synthesis lịch sử](reports/synthesis.json) giữ hash RTL của snapshot này. `tests/results.json` được cập nhật cho regression hiện hành.
-
-| Chỉ số trong demo FPGA | RTL thống nhất |
-|---|---:|
-| Dedicated logic registers | 6.497 |
-| Block memory bits | 334.336 |
-| Combinational ALUTs | 11.798 |
-| Logic cells sau synthesis | 17.369 |
-| Estimate ALMs needed | 8.005 |
-| DSP blocks | 7 |
-
-Report: [synthesis](reports/quartus_synthesis.rpt), [summary](reports/quartus_synthesis.summary). So với bản thống nhất lúc 01:51, giảm 215 FF, 508 ALUT và 766 logic cells; RAM/DSP giữ nguyên. ALM là estimate sau synthesis. Report A&S này không xác nhận Fmax; số liệu sau Fitter/Timing Analyzer được ghi trong [timing hub](timing/README.md). Mapping FPGA không xác nhận PPA ASIC.
-
-[Manifest synthesis](reports/synthesis.json) ghi thời điểm, 31 source hashes, resource counts và checksum của report raw/archive. Dùng manifest cùng [results regression](../../tests/results.json) để đối chiếu đúng snapshot, thay vì dựa vào tên file report.
-
-### Chạy lại A&S
-
-Mở [project Quartus](../../quartus/matmul_free.qpf), chọn Analysis & Synthesis hoặc nhấn Ctrl+K. Có thể chạy bằng CLI khi `quartus_map` đã có trong PATH:
+RAM helper dùng một timing manifest đã lưu để nhận biết đúng bản Quartus và
+RAM model. Ví dụ `opt_fulltop7` bên dưới chỉ dùng cho việc nhận biết model;
+application vẫn phải qua gate khớp cấu hình hiện tại.
 
 ```powershell
-Push-Location quartus
-try {
-    quartus_map matmul_free --read_settings_files=on --write_settings_files=off
-} finally {
-    Pop-Location
+$ramTiming = 'docs/verification/timing/opt_fulltop7/manifest.json'
+$ramModel = 'tests/full_rtl/build/questa25_model'
+& $pythonExe tests/full_rtl/memory_model.py --timing $ramTiming --sim-bin $simBin --output $ramModel
+if ($LASTEXITCODE -ne 0) { throw 'RAM model chưa được xác minh.' }
+$unitArgs = @{
+    SimBin = $simBin
+    Python = $pythonExe
+    Questa = $true
+    MemoryModelManifest = "$ramModel/manifest.json"
+    TimingManifest = $ramTiming
+    WorkLibraryName = 'my_units_20261006'
+    EvidenceTag = 'my_units_20261006'
 }
+& tests/full_rtl/run_units.ps1 @unitArgs
 ```
 
-## Cách viết RTL đã giữ
+Result hiện hành nằm ở `tests/full_rtl/unit_results.json`; log, compile list và
+binding reports nằm trong build. Archive các kết quả quan trọng bằng
+[checkpoint helper](../../tools/optimization/README.md) trước lượt chạy kế tiếp.
+Tham số `-UnitsOnly` chỉ chạy sáu nhóm; `-OnlyTop` dùng để debug nhóm chọn riêng.
+Chúng không thay cho all-seven PASS khi mở gate.
 
-1. Descriptor dùng index hằng và FF 32 bit thay ghi slice packed struct với dynamic index, reset đầy đủ.
-2. SRAM dùng tám bank 32 bit, whole-word write/enable từng lane và synchronous read. RAM/read data không async reset; host valid so khớp request/response row/lane.
-3. Package function gán đủ biến trên mọi path. RNE dùng thương signed-floor và phần dư, giữ ties-to-even.
-4. Sized casts và shift amount rõ độ rộng; PC clear synchronous tách khỏi reset asynchronous.
-5. NORM dùng chung hai multiplier/RNE giữa ba pass; ternary weight address dùng pointer và bounds shift/add.
-6. Instruction RAM dùng một cổng synchronous chung và tag/valid. Scheduler chờ `instr_fetch_valid`; host chờ ready.
-7. Sigmoid luôn dùng ROM hằng; coordinate S45/slope U10/product U34 có bound được kiểm tra bởi reference/testbench.
-8. Sqrt dùng một subtractor U35; NORM divider U55; compose divider U48/U25 và strict RNE fit filter; rowwise gom scale/RNE.
-9. Scale metadata 336 payload bits không reset, valid reset và gate mọi consumer; generate tường minh, genvar khai báo trước vòng lặp và index hằng mô tả tám bank FF với parallel reads.
+## Portable elaboration và host probe
 
-Đây là các quy tắc coding style và hợp đồng bộ nhớ chung. Không thêm logic chọn implementation riêng của Quartus và không suppress warning để đạt kết quả.
+Portable elaboration dùng library đã compile đủ RTL; tên ví dụ khớp block trên:
 
-## Lịch sử xử lý warnings
+```powershell
+& tests/full_rtl/run_portable_100mhz.ps1 -WorkLibraryName my_units_20261006 -EvidenceTag my_portable_20261006
+& tests/full_rtl/run_host_cancel_100mhz.ps1 -WorkLibraryName my_host_20261006 -EvidenceTag my_host_20261006
+```
 
-| Chỉ số demo | Trước sửa SRAM/descriptor | Sau sửa 30/09 | Sau tối ưu 01/10, trước bỏ macro |
-|---|---:|---:|---:|
-| Warnings | 174 | 1 | 0 |
-| Dedicated logic registers | 339.651 | 13.393 | 6.712 |
-| Block memory bits | 6.656 | 334.336 | 334.336 |
-| Logic cells sau synthesis | 473.104 | 29.809 | 18.135 |
-| Estimate ALMs needed | 230.916 | 12.814 | 8.441 |
-| DSP blocks | 11 | 13 | 7 |
+Host runner hiện pin tool paths và RAM/timing-model metadata trong script.
+Kiểm tra các đường dẫn khi chuyển máy. Mỗi evidence directory giữ source hashes,
+commands và diagnostics; không ghi đè một tag đã có.
 
-Warning 276020 read-during-write/pass-through của instruction memory đã hết sau khi thống nhất cổng đọc synchronous và tag/valid. Các lượt kiểm tra cấu trúc riêng cũ dùng FAST/một CPU có warning 12473 và 286029 do cấu hình tool; không phải lỗi chức năng RTL. Lượt sandbox cũ bị lỗi mở named pipe QSYN và đã chạy lại thành công với quyền mở pipe, giữ nguyên mức tối ưu.
+## Full-top synthesis, fit và timing
 
-Trong lượt rà soát này, dynamic-index write cho cache scale không reset làm Quartus suy luận hai RAM nhỏ và báo 276020 (thêm pass-through để giữ read-during-write). Đã đổi sang enable riêng với index hằng cho mỗi slot để mô tả FF có parallel reads; lượt cuối không còn warning và RAM bits trở lại 334.336. Không dùng ramstyle/primitive hay suppress warning. Quartus 18.1 cần generate/endgenerate và genvar khai báo riêng; đây vẫn là cùng RTL SystemVerilog cho mô phỏng và synthesis.
+Luôn chỉ rõ `-Project quartus/llm_soc`; default của timing runner là project legacy.
 
-Các kết quả lịch sử không thay thế report và regression của snapshot hiện hành. Chi tiết thay đổi/latency: [rà soát design](../reviews/design_review.md).
+```powershell
+& tools/timing/run.ps1 -Project quartus/llm_soc -Tag my_timing_20261006 -QuartusBin $quartusBin -Python $pythonExe
+```
 
----
+Sau khi lượt timing hoàn tất, dùng manifest của nó với `check_gate.py`.
+[Timing guide](timing/README.md) giải thích Fmax, slack, TNS, unconstrained paths
+và những file cần giữ. [NanoFable guide](../demos/language.md) hướng dẫn application.
 
-[Đọc tiếp: model demo](../demos/README.md) · [Cải tiến design](../reviews/design_review.md) · [Về mục lục tài liệu](../README.md)
+## Khi nào cần chạy lại?
+
+| Thay đổi | Kiểm chứng bị ảnh hưởng |
+|---|---|
+| RTL hoặc LUT | Units/graph, portable elaboration khi cần, full-top timing và application |
+| Numeric reference hoặc test inputs | Nhóm test liên quan, all-seven evidence trước application |
+| QSF/QPF/SDC | Full-top timing với cấu hình mới; unit PASS có thể còn áp dụng nếu RTL/test inputs không đổi |
+| Tool/compiler/RAM model | Cache model mới và simulation/binding evidence tương ứng |
+| Prompt hoặc sampling config | Lượt application mới sau khi gate còn PASS |
+| Nội dung docs/mục lục | Rà văn phong, links và code examples; không suy ra timing hay numerical PASS mới |
+
+Evidence phải khớp raw source hashes, test hashes và log/binding report hashes.
+Không nới constraints, numeric expectations hoặc timing exceptions để biến
+một kết quả FAIL thành PASS.
+
+## Legacy và lịch sử
+
+[Core matmulfree](../../tests/README.md#regression-legacy) có runner `tests/run.ps1`
+và 10 nhóm regression riêng. Các demo MNIST/hybrid thuộc
+[demo legacy](../demos/legacy/README.md).
+[Lịch sử timing](../history/timing_development.md) và
+[lịch sử full graph](../history/full_rtl_development.md) giữ các mốc trước tối ưu.

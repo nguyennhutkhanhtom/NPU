@@ -13,9 +13,9 @@ File này giữ interface riêng cho parameter memory nhưng dùng chung `sram_2
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart LR
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    C["Ternary compute read port<br/>Data 256 bit · address 10 bit<br/>Compute write tied off in matmulfree"]
+C["Ternary compute read port<br/>Data 256 bit · address 10 bit<br/>Compute write tied off in matmulfree"]
     H["Host port<br/>Data 32 bit · word-index 13 bit"]
     subgraph WRAP["mem_mapping"]
         subgraph SRAM["sram_256_wrapper · ADDR_W=10"]
@@ -27,6 +27,8 @@ flowchart LR
     C -.->|"Read request"| PORT
     PORT -->|"Read data / valid"| C
     H <-->|"32-bit lane access + host_rvalid"| PORT
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ ra; decoder/demux dùng hình thang ngược lại, mở rộng về phía nhiều ngõ ra. Hình chữ nhật có các vạch ngang biểu diễn bộ nhớ hoặc bank descriptor. Các hình chữ nhật thường là datapath, thanh ghi đơn hoặc giao diện. Nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU. Sơ đồ đặt wrapper trong kết nối hiện tại của matmulfree: compute chỉ đọc. Cổng ghi compute vẫn có trong module nhưng bị nối hằng 0 tại top.

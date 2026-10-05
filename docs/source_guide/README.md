@@ -1,4 +1,4 @@
-# NPU ASIC hiện tại hoạt động như thế nào?
+# Hierarchy matmulfree: chú giải legacy
 
 [Project](../../README.md) → [Tài liệu](../README.md) → **Hierarchy và luồng dữ liệu**
 
@@ -20,11 +20,14 @@
 
 </details>
 
-**Bản đối chiếu source cập nhật ngày 02/10/2026.** Code excerpts, hashes và diagrams bao phủ source hiện tại; kết quả regression/timing phải đọc theo đúng snapshot riêng. Tài liệu giải thích source trong `Verilog Source code`, sau đợt tích hợp và refactor ASIC. Bản sao `npu_asic_v2` đã được loại bỏ; tài liệu này chỉ đối chiếu source chính.
+Trang này mô tả **hierarchy legacy matmulfree** và có các sơ đồ/chú giải khớp source ngày 06/10/2026.
+Thiết kế full graph hiện tại được mô tả tại [full graph overview](full_graph.md)
+và [kiến trúc llm_soc](../design/full_rtl_language.md). Danh mục hiện tại có
+[41 source/LUT assets](blocks/README.md), với trạng thái hash của từng snapshot.
 
-**Source guide đối chiếu byte code hiện tại; các kết quả regression/timing cũ thuộc snapshot riêng.** Xem [ASIC portability](../design/asic_portability.md) cho cây nhân bit và IP bộ nhớ. **Đã đồng bộ:** code trích dẫn, số dòng, SHA-256 và sơ đồ NORM/RNE/ternary/instruction/SRAM/descriptor/host. [Rà soát design ngày 01/10](../reviews/design_review.md) ghi thay đổi và số liệu trước/sau. [README source chính](<../design/interfaces.md>) quy định interface; [báo cáo Quartus](../verification/timing/README.md) lưu kết quả Analysis & Synthesis và timing FPGA. Manifest tài liệu và hash regression trong `tests/results.json` có mục đích kiểm tra khác nhau.
-
-Top legacy `matmulfree` là bộ xử lý vector nhỏ dành cho **inference với ternary weight**. Host nạp dữ liệu và chương trình; top này thực hiện các lệnh NORM, TMATMUL và các phép tính theo phần tử. Top mới [llm_soc](blocks/llm_soc.sv.md) sở hữu toàn graph sinh token và vòng autoregressive: xem [kiến trúc full RTL](../design/full_rtl_language.md). Phần dưới mô tả hierarchy legacy; mục lục từng file bao phủ cả hai top và toàn bộ35asset. Trained full-graph application vẫn chờ gate fitting/timing và unit tests của đúng source.
+Các code excerpts, số dòng và source hashes bên dưới thuộc snapshot ghi trong
+[source_manifest.json](source_manifest.json). Sơ đồ và code excerpts đã được đối chiếu lại với source hiện tại. Đọc [trạng thái kiểm chứng](../verification/optimization_status.md) cho
+PASS/fail của source/config hiện tại.
 
 ## Cách đọc
 
@@ -50,28 +53,28 @@ Tài liệu và RTL dùng hexadecimal cho giá trị gắn trực tiếp với b
 ## 2. Sơ đồ kiến trúc tổng quan đang chạy
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    HOST["Host 32 bit"]
+HOST["Host 32 bit"]
     subgraph NPU["NPU — matmulfree.sv"]
-        IF["Host interface<br/>Read request + tagged response registers<br/>Ctrl/desc: 2 cạnh · SRAM/imem: 4 cạnh<br/>Write: same-edge acceptance"]
-        subgraph CTRL["Điều khiển và cấu hình"]
+        IF["Host interface<br/>Read request + tagged response registers<br/>Ctrl/desc: 2 edges · SRAM/imem: 4 edges<br/>Write: same-edge acceptance"]
+        subgraph CTRL["Control and configuration"]
             PC["PC.sv<br/>Program counter 9 bit"]
             IM@{ shape: rect, label: "ins_mem.sv<hr/>Instruction memory 512 × 13 bit" }
-            SCH["Scheduler single-issue<br/>Opcode decode + điều phối engine"]
+            SCH["Scheduler single-issue<br/>Opcode decode and engine scheduling"]
             DESC@{ shape: rect, label: "descriptor_file.sv<hr/>8 workspace × 32-bit FF<hr/>8 matrix × 3 word × 32-bit FF" }
-            SCALE["Runtime q metadata + effective_mat<br/>scale_compose.sv + div 48/25<br/>Scale tĩnh hoặc ghép scale động<br/>Guard overlap với q có metadata"]
+            SCALE["Runtime q metadata + effective_mat<br/>scale_compose.sv + div 48/25<br/>Static scale or dynamic composition<br/>Overlap guard for quantization metadata"]
         end
-        subgraph ENG["Các engine tính toán"]
-            ROW["Row-wise vector engine<br/>rowwise_dispatch + rowwise_op<br/>Registered operand / product / RNE<br/>ADD / SUB / MUL / REC / RELU<br/>sigmoid: ROM + nội suy"]
+        subgraph ENG["Compute engines"]
+            ROW["Row-wise vector engine<br/>rowwise_dispatch + rowwise_op<br/>Registered operand / product / RNE<br/>ADD / SUB / MUL / REC / RELU<br/>sigmoid: ROM and interpolation"]
             NORM["NORM + QUANT engine<br/>norm_dispatch + norm<br/>isqrt_u64 + div 55/32<br/>Registered operand / product / RNE<br/>S16 → scratch S24/F16 → S8"]
-            TM["Ternary matmul engine<br/>ternary_mul · 32 lane chọn dấu/zero<br/>acc_mul + accumulator S18<br/>Registered product / RNE<br/>postscale_finish + bias → S16/S32"]
+            TM["Ternary matmul engine<br/>ternary_mul · 32 sign/zero selection lanes<br/>acc_mul + accumulator S18<br/>Registered product / RNE<br/>postscale_finish + bias → S16/S32"]
         end
-        REQMUX@{ shape: trap-t, label: "Workspace request mux<br/>Chọn request/write theo active_unit" }
-        RSPDEC@{ shape: trap-b, label: "Workspace response demux<br/>Phân phối read data/valid tới active engine" }
+        REQMUX@{ shape: trap-t, label: "Workspace request mux<br/>Select requests/writes using active_unit" }
+        RSPDEC@{ shape: trap-b, label: "Workspace response demux<br/>Route read data/valid to the active engine" }
         WS@{ shape: rect, label: "Workspace SRAM 8 KiB<hr/>regfile.sv: register<hr/>sram_256_wrapper ADDR_W=8<hr/>256 × 256 bit<hr/>8 bank × 32 bit" }
         PM@{ shape: rect, label: "Parameter SRAM 32 KiB<hr/>mem_mapping.sv<hr/>sram_256_wrapper ADDR_W=10<hr/>1024 × 256 bit · weight + bias<hr/>8 bank × 32 bit" }
-        IF <-->|"Nạp/đọc chương trình, descriptor, control/status"| CTRL
+        IF <-->|"Load/read program, descriptors and control/status"| CTRL
         IF <-->|"Host 32 bit · read valid/ready"| WS
         IF <-->|"Host 32 bit · read valid/ready"| PM
         PC -->|"Address"| IM
@@ -101,6 +104,8 @@ flowchart TB
         PM -->|"256 bit + valid"| TM
     end
     HOST <-->|"Address / data / handshake"| IF
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 Các hộp biểu diễn khối phần cứng hoặc giao diện; nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.
@@ -391,9 +396,9 @@ Ví dụ hai dòng `q_word <= ws_rd_data; state <= ACCUM;` cùng chạy tại m�
 
 ## 11. Phạm vi kiểm chứng của tài liệu
 
-Tài liệu đối chiếu36file `.sv/.v` và bốn asset LUT (`sigmoid_lut.svh`, `sigmoid_257.mem`, `llm_exp_lut.svh`, `llm_gumbel_lut.svh`). Mỗi trang RTL trích nguyên văn source theo nhóm logic, lưu số dòng và SHA-256. Các module legacy vẫn dùng bởi regression có trang riêng; có file không có nghĩa khối được instantiate trong top hiện tại. Các PDF/PPT thesis/paper gốc giữ làm tài liệu lịch sử.
+Tài liệu đối chiếu 37 file `.sv/.v` và bốn asset LUT (`sigmoid_lut.svh`, `sigmoid_257.mem`, `llm_exp_lut.svh`, `llm_gumbel_lut.svh`). Mỗi trang RTL trích nguyên văn source theo nhóm logic, lưu số dòng và SHA-256. Các module legacy vẫn dùng bởi regression có trang riêng; có file không có nghĩa khối được instantiate trong top hiện tại. Các PDF/PPT thesis/paper gốc giữ làm tài liệu lịch sử.
 
-Manifest hiện bao phủ40asset/155nhóm logic,4554dòng RTL và1044dòng chú giải LUT; validator kiểm tra1791links. Toàn tài liệu render57/57diagrams, trong đó36sơ đồ khối RTL. Số lượng hiện hành được ghi trong [validation.json](validation.json) và [diagram_validation.json](diagram_validation.json), gắn với hash source/diagram; chạy lại `python docs/source_guide/validate.py` sau khi sửa source hoặc sơ đồ.
+Manifest hiện bao phủ 41 RTL/LUT assets, 157 nhóm logic và 5.262 dòng source RTL. Số liệu render và link checks hiện hành nằm trong [validation.json](validation.json) và [diagram_validation.json](diagram_validation.json). Packages có sơ đồ giải thích nhưng không phải module instance trong hierarchy. Chạy lại `python docs/source_guide/validate.py` sau khi sửa source hoặc sơ đồ.
 
 Regression RTL thống nhất ngày 01/10/2026 lúc 14:31:18 pass **10 mục**, compile **0 error, 0 warning**: kiểm tra asset ROM; **168 ca host/23.827 commands** (NORM 43, ternary 65, rowwise 57, host/PC 3); 106 division, **4.301 sqrt**, 37.189 RNE, **900 coefficient cases** với tối đa 99 clock quan sát; 5 divider profiles; **12.720 postscale checks**; 1.027 instruction memory checks; **1.638.400 sigmoid inputs trên toàn bộ 25 F_t=0…24**; 3.242 addsub, 4.452 mul, 5 accumulator profiles; 47 SRAM checks; **1.800 ca rowwise / 13.260 phần tử**, reference S128, 42.843 thay đổi input khi busy và reset sáu pha. Host frontend thêm **30 protocol reads, 11 cancellations, 4 blocked regions**. Các ca mới kiểm tra rejected NORM sau overflow không reset, static TM qua descriptor alias/subrange, reset metadata và restart, divider có NUM_W=1 hoặc DEN_W>NUM_W, busy/start protocol và reset giữa giao dịch. Testbench kiểm tra arbitration và generator/test từ chối hai asset thiếu, hai asset hỏng. RTL không có assertion hoặc file I/O; các kiểm tra này nằm trong verification. Hash/result ở [tests/results.json](../../tests/results.json); chạy lại bằng `./tests/run.ps1 -Block All`, không cần macro hoặc chế độ build riêng.
 
@@ -402,7 +407,7 @@ Quartus Analysis & Synthesis demo ngày 01/10/2026 lúc 11:24:04 pass **0 error,
 RTL và verification dùng cùng hành vi bộ nhớ/ROM. [Demo checkpoint Binary-MNIST160](../demos/mnist.md) đã chạy end-to-end trên 10 ảnh mẫu, đối chiếu 40 lượt tầng và hai lần chương trình toàn graph; không thay RTL. Chưa có binding SRAM PDK, PPA ASIC hoặc accuracy toàn MNIST/model ngôn ngữ. Sharing multiplier toàn chip và exporter cho các graph khác vẫn cần triển khai.
 
 
-[Demo MNIST](../demos/mnist.md) chạy graph trên RTL; [NanoFable](../demos/language.md) chạy generation trên CPU và replay 168 linear ternary thực trên RTL. Mỗi báo cáo ghi reference, source/asset hashes và giới hạn riêng.
+[Demo MNIST](../demos/mnist.md) chạy graph trên RTL; [NanoFable hybrid legacy](../demos/legacy/nanofable_hybrid.md) chạy generation trên CPU và replay 168 linear ternary thực trên RTL. Mỗi báo cáo ghi reference, source/asset hashes và giới hạn riêng.
 
 ---
 

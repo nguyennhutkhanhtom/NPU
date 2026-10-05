@@ -11,6 +11,7 @@ Hai FF chuẩn dùng cùng clock: reset assert bất đồng bộ ngay, release 
 ## Sơ đồ kiến trúc
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
     RST[Raw rst_n] --> FF1[First release FF async clear]
     RST --> FF2[Second release FF async clear]
@@ -19,6 +20,8 @@ flowchart TB
     FF1 --> FF2
     FF2 --> CORE[core_rst_n after two rising edges]
     CORE --> CONTROL[Controller and adapter resets]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 ## Cách hoạt động chi tiết

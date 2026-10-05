@@ -1,0 +1,279 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="5786" viewBox="0 0 1760 5786">
+<rect width="100%" height="100%" fill="white"/>
+<defs><marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="black"/></marker></defs>
+<path d="M150.0,292.0 H24.0 V356.0 H161.0 V368.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V356.0 H685.0 V368.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V356.0 H1220.0 V368.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V516.0 H150.0 V528.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V516.0 H685.0 V528.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V516.0 H1220.0 V528.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V676.0 H189.0 V688.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V676.0 H703.0 V688.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V676.0 H1238.0 V688.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V836.0 H189.0 V848.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V836.0 H689.0 V848.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V836.0 H1224.0 V848.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V996.0 H150.0 V1008.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V996.0 H710.0 V1008.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V996.0 H1280.0 V1008.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V1156.0 H189.0 V1168.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V1156.0 H685.0 V1168.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V1156.0 H1301.0 V1168.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V1316.0 H150.0 V1328.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V1316.0 H685.0 V1328.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V1316.0 H1220.0 V1328.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V1476.0 H150.0 V1488.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M150.0,292.0 H24.0 V1476.0 H685.0 V1488.0" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrow)"/>
+<path d="M260.0,1752.0 H1100.0" stroke="black" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+<rect x="272.0" y="1696.0" width="816.0" height="45" fill="white"/>
+<text x="276.0" y="1724.0" font-family="Arial" font-size="24">math_sum / math_sum_valid -&gt; sum_i / sum_valid_i</text>
+<path d="M260.0,1877.0 H1100.0" stroke="black" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+<rect x="272.0" y="1821.0" width="816.0" height="45" fill="white"/>
+<text x="276.0" y="1849.0" font-family="Arial" font-size="24">math_sum / math_sum_valid -&gt; sum_i / sum_valid_i</text>
+<path d="M260.0,2002.0 H1100.0" stroke="black" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+<rect x="272.0" y="1946.0" width="816.0" height="45" fill="white"/>
+<text x="276.0" y="1974.0" font-family="Arial" font-size="24">div_busy / div_done / quotient / remainder -&gt; shared_*_i</text>
+<path d="M338.0,2127.0 H1100.0" stroke="black" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+<rect x="350.0" y="2071.0" width="738.0" height="45" fill="white"/>
+<text x="354.0" y="2099.0" font-family="Arial" font-size="24">p_data / p_valid -&gt; parameter_data_i / parameter_valid_i</text>
+<text x="42" y="48" font-family="Arial" font-size="24" fill="black" text-anchor="start">01_LEVEL_1: llm_soc / Quartus memory binding</text>
+<text x="42" y="98" font-family="Arial" font-size="24" fill="black" text-anchor="start">18 pt = 24 px. Thin arrows: instantiation. Thick arrows: traced functional ports. Dashed blocks: external library.</text>
+<text x="52" y="188" font-family="Arial" font-size="24" fill="black" text-anchor="start">Parent context: TOP</text>
+<rect x="40" y="212" width="220" height="80" fill="white" stroke="black"/>
+<text x="150.0" y="246.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">TOP</text>
+<text x="150.0" y="276.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_soc)</text>
+<rect x="40" y="368" width="242" height="80" fill="white" stroke="black"/>
+<text x="161.0" y="402.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_reset</text>
+<text x="161.0" y="432.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(reset_release)</text>
+<text x="52" y="340" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="575" y="368" width="220" height="80" fill="white" stroke="black"/>
+<text x="685.0" y="402.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_scalar_lo</text>
+<text x="685.0" y="432.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(logic_mul)</text>
+<text x="587" y="340" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="1110" y="368" width="220" height="80" fill="white" stroke="black"/>
+<text x="1220.0" y="402.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_scalar_mid</text>
+<text x="1220.0" y="432.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(logic_mul)</text>
+<text x="1122" y="340" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="40" y="528" width="220" height="80" fill="white" stroke="black"/>
+<text x="150.0" y="562.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_scalar_hi</text>
+<text x="150.0" y="592.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(logic_mul)</text>
+<text x="52" y="500" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="575" y="528" width="220" height="80" fill="white" stroke="black"/>
+<text x="685.0" y="562.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_exp_mul</text>
+<text x="685.0" y="592.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(logic_mul)</text>
+<text x="587" y="500" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="1110" y="528" width="220" height="80" fill="white" stroke="black"/>
+<text x="1220.0" y="562.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_noise_mul</text>
+<text x="1220.0" y="592.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(logic_mul)</text>
+<text x="1122" y="500" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="40" y="688" width="298" height="80" fill="white" stroke="black"/>
+<text x="189.0" y="722.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_gumbel_lookup</text>
+<text x="189.0" y="752.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_gumbel_sample)</text>
+<text x="52" y="660" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="575" y="688" width="256" height="80" fill="white" stroke="black"/>
+<text x="703.0" y="722.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_exp_hi</text>
+<text x="703.0" y="752.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_exp_sample)</text>
+<text x="587" y="660" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="1110" y="688" width="256" height="80" fill="white" stroke="black"/>
+<text x="1238.0" y="722.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_exp_lo</text>
+<text x="1238.0" y="752.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_exp_sample)</text>
+<text x="1122" y="660" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="40" y="848" width="298" height="80" fill="white" stroke="black"/>
+<text x="189.0" y="882.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_parameters</text>
+<text x="189.0" y="912.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_parameter_ram)</text>
+<text x="52" y="820" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="575" y="848" width="228" height="80" fill="white" stroke="black"/>
+<text x="689.0" y="882.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_vectors</text>
+<text x="689.0" y="912.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_bank_ram)</text>
+<text x="587" y="820" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="1110" y="848" width="228" height="80" fill="white" stroke="black"/>
+<text x="1224.0" y="882.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_cache</text>
+<text x="1224.0" y="912.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_bank_ram)</text>
+<text x="1122" y="820" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="40" y="1008" width="220" height="80" fill="white" stroke="black"/>
+<text x="150.0" y="1042.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_math</text>
+<text x="150.0" y="1072.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_math)</text>
+<text x="52" y="980" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="575" y="1008" width="270" height="80" fill="white" stroke="black"/>
+<text x="710.0" y="1042.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_head_engine</text>
+<text x="710.0" y="1072.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_head_engine)</text>
+<text x="587" y="980" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="1110" y="1008" width="340" height="80" fill="white" stroke="black"/>
+<text x="1280.0" y="1042.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_attention_engine</text>
+<text x="1280.0" y="1072.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_attention_engine)</text>
+<text x="1122" y="980" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="40" y="1168" width="298" height="80" fill="white" stroke="black"/>
+<text x="189.0" y="1202.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_linear_engine</text>
+<text x="189.0" y="1232.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_linear_engine)</text>
+<text x="52" y="1140" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="575" y="1168" width="220" height="80" fill="white" stroke="black"/>
+<text x="685.0" y="1202.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_root</text>
+<text x="685.0" y="1232.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(isqrt_u64)</text>
+<text x="587" y="1140" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="1110" y="1168" width="382" height="80" fill="white" stroke="black"/>
+<text x="1301.0" y="1202.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_attention_normalize</text>
+<text x="1301.0" y="1232.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_attention_normalize)</text>
+<text x="1122" y="1140" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="40" y="1328" width="220" height="80" fill="white" stroke="black"/>
+<text x="150.0" y="1362.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_div</text>
+<text x="150.0" y="1392.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(div)</text>
+<text x="52" y="1300" font-family="Arial" font-size="24" fill="black" text-anchor="start">Direct instance</text>
+<rect x="575" y="1328" width="220" height="80" fill="white" stroke="black"/>
+<text x="685.0" y="1362.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_sig</text>
+<text x="685.0" y="1392.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(sigmoid)</text>
+<text x="587" y="1300" font-family="Arial" font-size="24" fill="black" text-anchor="start">g_sigmoid[0]</text>
+<rect x="1110" y="1328" width="220" height="80" fill="white" stroke="black"/>
+<text x="1220.0" y="1362.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_sig</text>
+<text x="1220.0" y="1392.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(sigmoid)</text>
+<text x="1122" y="1300" font-family="Arial" font-size="24" fill="black" text-anchor="start">g_sigmoid[1]</text>
+<rect x="40" y="1488" width="220" height="80" fill="white" stroke="black"/>
+<text x="150.0" y="1522.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_sig</text>
+<text x="150.0" y="1552.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(sigmoid)</text>
+<text x="52" y="1460" font-family="Arial" font-size="24" fill="black" text-anchor="start">g_sigmoid[2]</text>
+<rect x="575" y="1488" width="220" height="80" fill="white" stroke="black"/>
+<text x="685.0" y="1522.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_sig</text>
+<text x="685.0" y="1552.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(sigmoid)</text>
+<text x="587" y="1460" font-family="Arial" font-size="24" fill="black" text-anchor="start">g_sigmoid[3]</text>
+<text x="52" y="1670" font-family="Arial" font-size="24" fill="black" text-anchor="start">Functional port connections (same instances repeated for routing clarity)</text>
+<rect x="40" y="1712" width="220" height="80" fill="white" stroke="black"/>
+<text x="150.0" y="1746.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_math</text>
+<text x="150.0" y="1776.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_math)</text>
+<rect x="1100" y="1712" width="270" height="80" fill="white" stroke="black"/>
+<text x="1235.0" y="1746.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_head_engine</text>
+<text x="1235.0" y="1776.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_head_engine)</text>
+<rect x="40" y="1837" width="220" height="80" fill="white" stroke="black"/>
+<text x="150.0" y="1871.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_math</text>
+<text x="150.0" y="1901.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_math)</text>
+<rect x="1100" y="1837" width="340" height="80" fill="white" stroke="black"/>
+<text x="1270.0" y="1871.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_attention_engine</text>
+<text x="1270.0" y="1901.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_attention_engine)</text>
+<rect x="40" y="1962" width="220" height="80" fill="white" stroke="black"/>
+<text x="150.0" y="1996.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_div</text>
+<text x="150.0" y="2026.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(div)</text>
+<rect x="1100" y="1962" width="382" height="80" fill="white" stroke="black"/>
+<text x="1291.0" y="1996.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_attention_normalize</text>
+<text x="1291.0" y="2026.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_attention_normalize)</text>
+<rect x="40" y="2087" width="298" height="80" fill="white" stroke="black"/>
+<text x="189.0" y="2121.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_parameters</text>
+<text x="189.0" y="2151.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_parameter_ram)</text>
+<rect x="1100" y="2087" width="298" height="80" fill="white" stroke="black"/>
+<text x="1249.0" y="2121.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">u_linear_engine</text>
+<text x="1249.0" y="2151.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_linear_engine)</text>
+<rect x="40" y="2212" width="1600" height="135" fill="white" stroke="black"/>
+<text x="52" y="2240" font-family="Arial" font-size="24" fill="black" text-anchor="start">Request and issue paths use parent muxes: head/linear addresses select u_parameters; QK selects u_cache;</text>
+<text x="52" y="2270" font-family="Arial" font-size="24" fill="black" text-anchor="start">head_math_issue / attention_math_issue select u_math.start and parent operand capture.</text>
+<text x="52" y="2300" font-family="Arial" font-size="24" fill="black" text-anchor="start">attention_div_start selects u_div.start and numerator/denominator. See port-map manifest and functional overview.</text>
+<rect x="30" y="2372" width="1700" height="3384" fill="white" stroke="black"/>
+<text x="42" y="2400" font-family="Arial" font-size="24" fill="black" text-anchor="start">Block Functions &amp; Interfaces</text>
+<text x="42" y="2430" font-family="Arial" font-size="24" fill="black" text-anchor="start">llm_soc: Host frontend and autonomous graph; parent muxes, operand caches, scaling, softmax/V pass,</text>
+<text x="42" y="2460" font-family="Arial" font-size="24" fill="black" text-anchor="start">vector writes and token selection.</text>
+<text x="42" y="2490" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP</text>
+<text x="42" y="2520" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: USE_QUARTUS_MEMORY=1, PERF_COUNTERS=0, ENABLE_DEBUG_INDEX=0, ATTN_DIV_LANES=4,</text>
+<text x="42" y="2550" font-family="Arial" font-size="24" fill="black" text-anchor="start">SIGMOID_LANES=4</text>
+<text x="42" y="2580" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: llm_soc.sv:3</text>
+<text x="42" y="2610" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="2640" font-family="Arial" font-size="24" fill="black" text-anchor="start">reset_release: Asynchronous reset assertion; internal release after two rising edges. clk/rst_n -&gt;</text>
+<text x="42" y="2670" font-family="Arial" font-size="24" fill="black" text-anchor="start">core_rst_n.</text>
+<text x="42" y="2700" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_reset</text>
+<text x="42" y="2730" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: reset_release.sv:3</text>
+<text x="42" y="2760" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="2790" font-family="Arial" font-size="24" fill="black" text-anchor="start">logic_mul: Combinational bit products and carry-save reduction; a/b -&gt; product. No runtime multiply</text>
+<text x="42" y="2820" font-family="Arial" font-size="24" fill="black" text-anchor="start">operator.</text>
+<text x="42" y="2850" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_scalar_lo</text>
+<text x="42" y="2880" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: Low unsigned byte of scalar_b_q multiplied by signed scalar_a_q.</text>
+<text x="42" y="2910" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: A_W=39, B_W=8, OUT_W=48, SIGNED_A=1, SIGNED_B=0</text>
+<text x="42" y="2940" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_scalar_mid</text>
+<text x="42" y="2970" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: Middle unsigned byte of scalar_b_q multiplied by signed scalar_a_q.</text>
+<text x="42" y="3000" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: A_W=39, B_W=8, OUT_W=48, SIGNED_A=1, SIGNED_B=0</text>
+<text x="42" y="3030" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_scalar_hi</text>
+<text x="42" y="3060" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: High signed nine-bit part of scalar_b_q multiplied by signed scalar_a_q.</text>
+<text x="42" y="3090" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: A_W=39, B_W=9, OUT_W=48, SIGNED_A=1, SIGNED_B=1</text>
+<text x="42" y="3120" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_exp_mul</text>
+<text x="42" y="3150" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: Softmax endpoint delta times twelve-bit interpolation fraction.</text>
+<text x="42" y="3180" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: A_W=25, B_W=12, OUT_W=37, SIGNED_A=0, SIGNED_B=0</text>
+<text x="42" y="3210" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_noise_mul</text>
+<text x="42" y="3240" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: Signed Gumbel lookup value times unsigned temperature_q.</text>
+<text x="42" y="3270" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: A_W=24, B_W=8, OUT_W=33, SIGNED_A=1, SIGNED_B=0</text>
+<text x="42" y="3300" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: logic_mul.sv:4</text>
+<text x="42" y="3330" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="3360" font-family="Arial" font-size="24" fill="black" text-anchor="start">llm_gumbel_sample: Combinational Gumbel table: index U8 -&gt; signed value S24.</text>
+<text x="42" y="3390" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_gumbel_lookup</text>
+<text x="42" y="3420" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: Gumbel lookup indexed by random_q[31:24].</text>
+<text x="42" y="3450" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: llm_gumbel_lut.svh:4</text>
+<text x="42" y="3480" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="3510" font-family="Arial" font-size="24" fill="black" text-anchor="start">llm_exp_sample: Combinational exp table: index U9 -&gt; value U25; default zero outside the table.</text>
+<text x="42" y="3540" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_exp_hi</text>
+<text x="42" y="3570" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: Exp lookup at the selected interval index.</text>
+<text x="42" y="3600" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_exp_lo</text>
+<text x="42" y="3630" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: Exp lookup at the adjacent index plus one.</text>
+<text x="42" y="3660" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: llm_exp_lut.svh:4</text>
+<text x="42" y="3690" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="3720" font-family="Arial" font-size="24" fill="black" text-anchor="start">llm_parameter_ram: Eight 32-bit lanes; compute row read / valid, host lane read and post-commit write</text>
+<text x="42" y="3750" font-family="Arial" font-size="24" fill="black" text-anchor="start">acknowledgement.</text>
+<text x="42" y="3780" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_parameters</text>
+<text x="42" y="3810" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: Parameter image: 24576 x 256 bits; host accesses 32-bit lanes, compute reads complete rows.</text>
+<text x="42" y="3840" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: ADDR_W=15, DEPTH=24576, USE_QUARTUS_MEMORY=1</text>
+<text x="42" y="3870" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: llm_parameter_ram.sv:5</text>
+<text x="42" y="3900" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="3930" font-family="Arial" font-size="24" fill="black" text-anchor="start">llm_bank_ram: Thirty-two S24 banks; rd_en/rd_addr -&gt; rd_data/rd_valid; masked writes and wr_busy</text>
+<text x="42" y="3960" font-family="Arial" font-size="24" fill="black" text-anchor="start">drain.</text>
+<text x="42" y="3990" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_vectors</text>
+<text x="42" y="4020" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: Intermediate vector workspace: 96 x 768 bits; v_address_q/v_data/v_valid and masked</text>
+<text x="42" y="4050" font-family="Arial" font-size="24" fill="black" text-anchor="start">write_vector_q.</text>
+<text x="42" y="4080" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: LANES=32, WIDTH=24, ROWS=96, ADDR_W=7, USE_QUARTUS_MEMORY=1</text>
+<text x="42" y="4110" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_cache</text>
+<text x="42" y="4140" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: Causal K/V storage: 4096 x 768 bits; attention or parent k_read_address, k_data/k_valid and</text>
+<text x="42" y="4170" font-family="Arial" font-size="24" fill="black" text-anchor="start">cache writes.</text>
+<text x="42" y="4200" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: LANES=32, WIDTH=24, ROWS=4096, ADDR_W=12, USE_QUARTUS_MEMORY=1</text>
+<text x="42" y="4230" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: llm_bank_ram.sv:5</text>
+<text x="42" y="4260" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="4290" font-family="Arial" font-size="24" fill="black" text-anchor="start">llm_math: STREAMING=1, 32 S24xS32 lanes; accept E0, product_valid E3, sum_valid E8, legacy done E9.</text>
+<text x="42" y="4320" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_math</text>
+<text x="42" y="4350" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: STREAMING=1</text>
+<text x="42" y="4380" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: llm_math.sv:5</text>
+<text x="42" y="4410" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="4440" font-family="Arial" font-size="24" fill="black" text-anchor="start">llm_head_engine: Four ordered int8 chunks per row; parameter requests and parent math issue;</text>
+<text x="42" y="4470" font-family="Arial" font-size="24" fill="black" text-anchor="start">sum_valid/sum -&gt; S39 accumulator/done.</text>
+<text x="42" y="4500" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_head_engine</text>
+<text x="42" y="4530" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: llm_head_engine.sv:3</text>
+<text x="42" y="4560" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="4590" font-family="Arial" font-size="24" fill="black" text-anchor="start">llm_attention_engine: Causal K reads and parent math issue; rounded/scaled QK scores, score array,</text>
+<text x="42" y="4620" font-family="Arial" font-size="24" fill="black" text-anchor="start">maximum and done.</text>
+<text x="42" y="4650" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_attention_engine</text>
+<text x="42" y="4680" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: llm_attention_engine.sv:4</text>
+<text x="42" y="4710" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="4740" font-family="Arial" font-size="24" fill="black" text-anchor="start">llm_linear_engine: Two-word parameter prefetch, ternary dot issue, S39 accumulation; start/ready,</text>
+<text x="42" y="4770" font-family="Arial" font-size="24" fill="black" text-anchor="start">done/fault and cancellation drain.</text>
+<text x="42" y="4800" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_linear_engine</text>
+<text x="42" y="4830" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: llm_linear_engine.sv:3</text>
+<text x="42" y="4860" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="4890" font-family="Arial" font-size="24" fill="black" text-anchor="start">isqrt_u64: 32-step unsigned floor square root: start/radicand -&gt; busy/done/root.</text>
+<text x="42" y="4920" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_root</text>
+<text x="42" y="4950" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: Parent RMS coefficient square root from root_input_q; root_busy/root_done/root return to</text>
+<text x="42" y="4980" font-family="Arial" font-size="24" fill="black" text-anchor="start">operator control.</text>
+<text x="42" y="5010" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: isqrt_u64.sv:1</text>
+<text x="42" y="5040" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="5070" font-family="Arial" font-size="24" fill="black" text-anchor="start">llm_attention_normalize: Eight four-lane batches; lane zero shared at top, three private dividers;</text>
+<text x="42" y="5100" font-family="Arial" font-size="24" fill="black" text-anchor="start">RNE/sign/clamp -&gt; vector/done.</text>
+<text x="42" y="5130" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_attention_normalize</text>
+<text x="42" y="5160" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: DIV_LANES=4, USE_SHARED=1</text>
+<text x="42" y="5190" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: llm_attention_normalize.sv:3</text>
+<text x="42" y="5220" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="5250" font-family="Arial" font-size="24" fill="black" text-anchor="start">div: Unsigned restoring shift/subtract divider: start/numerator/denominator -&gt;</text>
+<text x="42" y="5280" font-family="Arial" font-size="24" fill="black" text-anchor="start">busy/done/quotient/remainder.</text>
+<text x="42" y="5310" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.u_div</text>
+<text x="42" y="5340" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Role: Shared U64/U32 divider: parent RMS reciprocal or attention-normalizer lane zero via</text>
+<text x="42" y="5370" font-family="Arial" font-size="24" fill="black" text-anchor="start">numerator/start mux.</text>
+<text x="42" y="5400" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: NUM_W=64, DEN_W=32</text>
+<text x="42" y="5430" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: div.sv:3</text>
+<text x="42" y="5460" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="5490" font-family="Arial" font-size="24" fill="black" text-anchor="start">sigmoid: start/x_raw/frac_bits -&gt; y_raw/busy/done; one table lookup and registered interpolation.</text>
+<text x="42" y="5520" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP.g_sigmoid[0:3].u_sig (4 instances; inclusive ranges)</text>
+<text x="42" y="5550" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: sigmoid.sv:2</text>
+<text x="42" y="5580" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="5610" font-family="Arial" font-size="24" fill="black" text-anchor="start">Configuration: USE_QUARTUS_MEMORY=1, ATTN_DIV_LANES=4, SIGMOID_LANES=4.</text>
+<text x="42" y="5640" font-family="Arial" font-size="24" fill="black" text-anchor="start">PERF_COUNTERS=0 and ENABLE_DEBUG_INDEX=0. Other configurations require a separate expansion.</text>
+<text x="42" y="5670" font-family="Arial" font-size="24" fill="black" text-anchor="start">USE_SHARED=1: normalizer lane zero is connected to top u_div; only lanes 1, 2, 3 are children.</text>
+<text x="42" y="5700" font-family="Arial" font-size="24" fill="black" text-anchor="start">Packages are source context, not instances. Generate scopes are annotations, not modules.</text>
+<text x="42" y="5730" font-family="Arial" font-size="24" fill="black" text-anchor="start">Alternate memory hierarchy: see rtl_hierarchy_portable.drawio. Quartus is a demonstration backend.</text>
+</svg>

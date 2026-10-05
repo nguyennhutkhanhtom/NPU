@@ -17,6 +17,7 @@ Git. Their original QSF relative paths describe their original locations;
 do not build them in place after relocation. Use their preserved source/config
 archives and recorded commands under `docs/verification/timing` for a fresh replay.
 
-Current evidence: [all-corner timing PASS](../docs/verification/timing/opt_fulltop7/manifest.json).
+Trạng thái source/config hiện tại: [verification status](../docs/verification/optimization_status.md).
+Checkpoint đã hoàn tất: [opt_fulltop7 timing PASS](../docs/verification/timing/opt_fulltop7/manifest.json); QSF hiện tại đã khác archive này.
 Experiment locations: [historical project index](../docs/history/quartus_projects.md).
 Quartus results are an EDA demonstration, not ASIC signoff.

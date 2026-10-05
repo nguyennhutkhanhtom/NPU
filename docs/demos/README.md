@@ -1,31 +1,27 @@
-# Model demo
+# Demo model
 
-[Project](../../README.md) → [Tài liệu](../README.md) → **Model demo**
+[Tài liệu](../README.md) → **Demo**
 
-Các trang dưới đây nối checkpoint và graph với format/memory của core, rồi ghi cách kiểm chứng. Kết quả mô phỏng RTL được đối chiếu với reference số nguyên; chất lượng model gốc và sai số sau export được ghi riêng.
+## Chạy model trên llm_soc
 
-| Demo / tài liệu | Đọc để biết |
+| Bạn muốn làm gì? | Trang |
 |---|---|
-| [Binary-MNIST160](mnist.md) | Checkpoint đã train, 10 ảnh mẫu, 40 lượt tầng bit-exact, memory và chu kỳ graph |
-| [NanoFable-1M-ternary](language.md) | CPU: 3 prompt × 32 token, deterministic repeat; RTL: 168 lượt linear, 33.792 output S32 bit-exact |
-| [Model candidates](candidates.md) | Tính tương thích operator, K, memory và các cấu hình mở rộng |
+| Chạy checkpoint NanoFable thật, từng bước | [Hướng dẫn NanoFable](language.md) |
+| Kiểm tra model shape và khả năng thay checkpoint | [Tương thích model](candidates.md) |
+| Tải/kiểm tra asset đã pin | [NanoFable assets](../../tests/language_demo/README.md) |
+| Xác nhận gate trước khi chạy | [Trạng thái kiểm chứng](../verification/optimization_status.md) |
 
-## Application hiện tại
+`run_application.ps1` dùng checkpoint thật, tạo reference số nguyên để đối chiếu,
+rồi mô phỏng toàn graph trên RTL. Host cấp parameters, prompt và cấu hình.
+Output cần được đọc ở cả hai mức: token RTL/reference có khớp hay không và văn
+bản đã decode có mạch lạc hay không.
 
-Mọi application ngôn ngữ mới dùng [full RTL runner](../../tests/full_rtl/README.md)
-sau khi source hiện tại đạt synthesis, fitting, timing ≥100 MHz ở mọi corner và
-sáu nhóm unit test. [NanoFable asset setup](../../tests/language_demo/README.md) tải
-checkpoint/tokenizer đã pin; không thực thi model.
+**Tại lần cập nhật 06/10/2026:** chưa có application PASS; cấu hình QSF hiện tại
+đang chờ timing manifest khớp. Hướng dẫn đã sẵn sàng, nhưng phải qua gate trước
+khi chạy export/reference hoặc application.
 
-Runner MNIST và hybrid NanoFable cũ đã được loại bỏ. Các bảng/report ở trên giữ
-kết quả lịch sử, với CPU generation và linear-only RTL được phân biệt rõ.
-[Cleanup manifest](../history/unused_cleanup_20261002.json) ghi file/hash và commit phục hồi.
+## Kết quả demo legacy
 
-## Đọc trước khi export model mới
-
-1. [Graph và format số hiện tại](../design/full_rtl_language.md): kiểm tra model shape, operators và memory map.
-2. [Full RTL tests và application](../../tests/full_rtl/README.md): source/config hiện tại phải qua mọi hardware gate trước khi export hoặc chạy checkpoint.
-3. [Từng khối RTL](../source_guide/blocks/README.md): hiểu adapter SRAM, rounding/saturation và handshake.
-4. [Timing evidence](../verification/timing/README.md): kiểm tra đúng full top, mọi corner và source hashes.
-
-[Về mục lục tài liệu](../README.md) · [Xem design review](../reviews/design_review.md)
+[Danh mục legacy](legacy/README.md) giữ kết quả Binary-MNIST160, NanoFable hybrid
+và khảo sát model cho core matmulfree. Các số liệu này gắn với runner và source
+được ghi trong báo cáo, không được dùng làm kết quả pretrained của llm_soc.

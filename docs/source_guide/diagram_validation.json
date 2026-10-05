@@ -1,465 +1,1014 @@
 {
-  "verified_date": "2026-10-04",
+  "verified_date": "2026-10-05",
   "mermaid_version": "11.17.2",
   "scope": "Mermaid parse and render of every diagram in docs Markdown and the repository README. This records diagram evidence only; RTL regression and synthesis evidence are recorded separately.",
   "diagrams": [
     {
-      "file": "docs/demos/candidates.md",
+      "file": "docs/demos/legacy/model_candidates.md",
       "ordinal": 0,
-      "source_sha256": "099774894302fac63a7b699f48fd3a8953fc578cc88dc0f30f1c5e344e81a9a6",
-      "width": 1984,
-      "height": 232,
+      "source_sha256": "e2b309c3544c01f3564f21175c495a288ce1d59b7e41fe055e65d1918d04f247",
+      "width": 2124,
+      "height": 364,
       "nodes": 9,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
-      "file": "docs/demos/language.md",
+      "file": "docs/demos/legacy/nanofable_hybrid.md",
       "ordinal": 0,
-      "source_sha256": "178e369e07cf12b96490241074b7de7c62509ab5b822b7a5807f856ec82322b9",
-      "width": 1688,
-      "height": 224,
+      "source_sha256": "84f3e085324de3c81016fcee04bb738a7311dc756b552b3b370da64b38f1a6f8",
+      "width": 1816,
+      "height": 432,
       "nodes": 7,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/design/architecture.md",
       "ordinal": 0,
-      "source_sha256": "87261bd9ddc2e9df30efdd48096b3f88c9aa8468e90a8f4d0e074f0ad010af0b",
-      "width": 2607,
-      "height": 438,
+      "source_sha256": "61433649f7053ffc8f3ac18a5717c8f02d0acf4716e1a1faf50ec72ba9b3876f",
+      "width": 2976,
+      "height": 762,
       "nodes": 10,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
-      "file": "docs/design/full_rtl_language.md",
+      "file": "docs/design/exact_throughput_optimization.md",
       "ordinal": 0,
-      "source_sha256": "74c66c7ae5698f6d29aa90733db9b90b2cfe03c5d4df109cdf956c50215fc362",
-      "width": 544,
-      "height": 2027,
-      "nodes": 17,
-      "status": "rendered"
-    },
-    {
-      "file": "docs/design/full_rtl_language.md",
-      "ordinal": 1,
-      "source_sha256": "4408753b90111039f2ea43c869fe8a3f109b1763dfa56af1291132df1e6deb73",
-      "width": 1096,
-      "height": 294,
+      "source_sha256": "4afe907a4e52c3352284f454aa64629d5c02e50d810e869632864d43903cc441",
+      "width": 1151,
+      "height": 1350,
       "nodes": 11,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/design/full_rtl_language.md",
+      "ordinal": 0,
+      "source_sha256": "455a5b1aa7a766e37c14c7fd047e5bea7ef0b1ccd727d05c0a980102585ee62e",
+      "width": 771,
+      "height": 3682,
+      "nodes": 15,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/design/host_interface.md",
+      "ordinal": 0,
+      "source_sha256": "c2c24f32c9e2455a752d9ffc2a5b4524dca2fa2e4b9b1d944d7cd94624729284",
+      "width": 848,
+      "height": 1372,
+      "nodes": 7,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/history/full_rtl_development.md",
+      "ordinal": 0,
+      "source_sha256": "03225ff64d3ca47ca028186b76ffe3031c987d25c22ea9ee6d9c5156c0d5f0d0",
+      "width": 613,
+      "height": 2884,
+      "nodes": 17,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/history/full_rtl_development.md",
+      "ordinal": 1,
+      "source_sha256": "3a46fc4d004bf33cabd1ab0f94e4215acedf44730cdfa43a7ff8da0a183e2192",
+      "width": 1200,
+      "height": 386,
+      "nodes": 11,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/reviews/rtl_change_review_v2.md",
+      "ordinal": 0,
+      "source_sha256": "7c188ad72d3787b7123a7f5986fce99270c750652a76243bbc7764c11e829167",
+      "width": 1508,
+      "height": 154,
+      "nodes": 5,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/reviews/rtl_change_review.md",
+      "ordinal": 0,
+      "source_sha256": "91d2d72ca199d335358871be1badf4407bb5faf359e484f8e8ea6e772567dea8",
+      "width": 1816,
+      "height": 190,
+      "nodes": 6,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/acc_mul.sv.md",
       "ordinal": 0,
-      "source_sha256": "0c38f8eee8facf8129134215476a2b94b4fadb571a80c2842f45bd899e899b8d",
-      "width": 1145,
-      "height": 242,
+      "source_sha256": "3723716f9b883277b25e7cc8583491b704547454f88d4522313ff447e9e2884b",
+      "width": 1200,
+      "height": 226,
       "nodes": 4,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/acc_mul.sv.md",
       "ordinal": 1,
-      "source_sha256": "182916e32ebf84a3ac4ac4e312f50f765b8cfa3f7e3c75c9ddb7855d0b26168a",
-      "width": 503,
-      "height": 688,
-      "nodes": 6,
+      "source_sha256": "0a769a98c192e8c71e6e49060b18c197c9273745fb3c0292f5347ef66b0e4814",
+      "width": 1508,
+      "height": 190,
+      "nodes": 5,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/banked_word_ram.sv.md",
       "ordinal": 0,
-      "source_sha256": "d6591f4e583d695fc4b52fb1fa1490e8c8db066916e0fce9e2ec79400bdefaf5",
-      "width": 491,
-      "height": 337,
+      "source_sha256": "2940090f7affe37a8a94f90e33fef4fe4e6e64baecbc40da2a2e7080a3f5e956",
+      "width": 568,
+      "height": 568,
       "nodes": 5,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/descriptor_file.sv.md",
       "ordinal": 0,
-      "source_sha256": "7de8b12e5268fdc048129b221adecdf4e73140b00a5b8304f854922095ff163a",
-      "width": 1369,
-      "height": 715,
+      "source_sha256": "780d513400397b6e0092fc3e8a36a6806efec3971e1f2ebc6c751a9df02f1dff",
+      "width": 1512,
+      "height": 1173,
       "nodes": 12,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/div.sv.md",
       "ordinal": 0,
-      "source_sha256": "c3babb3d5ef79da07195583e932bf025da38772838e2285ed88253167c4df757",
-      "width": 1430,
-      "height": 904,
+      "source_sha256": "f7ee26dd43d7011e136c9160871b5bf797edc667a49577eabac803093d564cff",
+      "width": 1578,
+      "height": 1462,
       "nodes": 10,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/div.sv.md",
       "ordinal": 1,
-      "source_sha256": "b68fe6d625ce2a4cd64b80de08f0b879bb1659a8d57fed71df0213e484b1f20e",
-      "width": 1011,
-      "height": 670,
+      "source_sha256": "c907ac206ce3246b3c3f6e850fc5dfdf64810c9bc3e2201796142231dd1b0bcb",
+      "width": 1223,
+      "height": 976,
       "nodes": 8,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/ins_mem.sv.md",
       "ordinal": 0,
-      "source_sha256": "21b78f777f794a2dd36f3920e27c505ca6c98c09270440ddfeba65981971a4a2",
-      "width": 1316,
-      "height": 1084,
+      "source_sha256": "75115a609fd5d4111c99185292db68f361369acab742f690868adcacd3cc4c20",
+      "width": 1457,
+      "height": 1658,
       "nodes": 8,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/isqrt_u64.sv.md",
+      "ordinal": 0,
+      "source_sha256": "bd3fae9bf9bd4b6f9c9bdbc227101a273a4d06f05c3da3e33403a0968475b415",
+      "width": 822,
+      "height": 1048,
+      "nodes": 9,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/llm_attention_engine.sv.md",
+      "ordinal": 0,
+      "source_sha256": "aec1b5d95d2eb38ba357b0396b325f2a9f7575b09ab124e1ccbb456c587e6cb0",
+      "width": 285,
+      "height": 2008,
+      "nodes": 10,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/llm_attention_normalize.sv.md",
+      "ordinal": 0,
+      "source_sha256": "f6397fec8463d63ea466e806e202051008b089e89dec3ddfa3177cadc0005e52",
+      "width": 684,
+      "height": 1678,
+      "nodes": 10,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/llm_bank_ram.sv.md",
       "ordinal": 0,
-      "source_sha256": "b597418f5ebe3448798cfdb6984c8974bb6041e976b9e5024568b9f70885fdf0",
-      "width": 549,
-      "height": 474,
+      "source_sha256": "41f891b61b2713cf44d7b1426b8fc44938185beeb171a76f0631750f1fa0e7bd",
+      "width": 582,
+      "height": 790,
       "nodes": 7,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/llm_head_engine.sv.md",
+      "ordinal": 0,
+      "source_sha256": "5336747de102113ee2b822b5c153ffcf7929d60ac4814b621fd0940b2900e993",
+      "width": 291,
+      "height": 1756,
+      "nodes": 10,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/llm_linear_engine.sv.md",
+      "ordinal": 0,
+      "source_sha256": "6940c449a71c24022b6e31b723e5213e68ebb397ce140512a33549be8969ef3f",
+      "width": 947,
+      "height": 1822,
+      "nodes": 11,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/llm_math.sv.md",
       "ordinal": 0,
-      "source_sha256": "3127cda6b170d9acc3502bd27c8b8562fcd74639478613f521a56ab7fb397c72",
-      "width": 527,
-      "height": 676,
-      "nodes": 9,
+      "source_sha256": "92c41ccc7c202d648e65e01f7c5ce748afee91a7121ffbc7c2c512ad87707998",
+      "width": 2705,
+      "height": 432,
+      "nodes": 10,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/llm_parameter_ram.sv.md",
       "ordinal": 0,
-      "source_sha256": "bce7fbcdb2de02622a50cfe6883e9aadd287262e6355df0ba9440b235a10f235",
-      "width": 817,
-      "height": 522,
+      "source_sha256": "72d8a6699ce3fef1dc3014ef49ef4e30c8e64049eb76e2fcdeb367fab529ac12",
+      "width": 860,
+      "height": 790,
       "nodes": 9,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/llm_pkg.sv.md",
       "ordinal": 0,
-      "source_sha256": "434f5e00efddf1308b430d2c0b90dc04802bdeebcecf7be23ee2467ad7cbb23e",
-      "width": 1057,
-      "height": 183,
+      "source_sha256": "8cb5ef6da793349f4c044601486fa6cb68ceda02c26f270dc0add0b05fd48820",
+      "width": 1130,
+      "height": 232,
       "nodes": 8,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/llm_soc.sv.md",
       "ordinal": 0,
-      "source_sha256": "73a534b00ff5610251417e648bc2ce89c6212e298971fd71157425aa351f9d6d",
-      "width": 947,
-      "height": 498,
-      "nodes": 10,
+      "source_sha256": "ceb96936c2d972abd0df9ae4f615e8c980e9d5b038ebdf32130f4cd5f7d59964",
+      "width": 1953,
+      "height": 1480,
+      "nodes": 16,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/logic_mul.sv.md",
       "ordinal": 0,
-      "source_sha256": "6ec7fcdb48990e8fc368ed9677e1d58bf002ba6658bc38b18c76a0f129290784",
-      "width": 444,
-      "height": 611,
+      "source_sha256": "1c8057eb4d2d5a903224e0b243e6624623ca64292fc08f4e604aad384bafba5c",
+      "width": 558,
+      "height": 976,
       "nodes": 7,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/matmul_wrap.sv.md",
       "ordinal": 0,
-      "source_sha256": "b9d5087dfe8351cfe031e2aeb15534f88027bbda2baf8e7ea08f7e35aa22a3d6",
-      "width": 704,
-      "height": 248,
+      "source_sha256": "ba1a029a78634825e03724ef6167534f19b3a4e85564c578a24f7ddd1b1c6b66",
+      "width": 813,
+      "height": 360,
       "nodes": 6,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/matmulfree.sv.md",
       "ordinal": 0,
-      "source_sha256": "07d9b153ba8c5595dc2602a6b839aaf619896b552a467b1bd4cb428b08f926a6",
-      "width": 2831,
-      "height": 2629,
+      "source_sha256": "ae930d1b6683f240dfc65a0730e5eabdd3d194894400172f43e3dac56867c10e",
+      "width": 3337,
+      "height": 4685,
       "nodes": 14,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/matmulfree.sv.md",
       "ordinal": 1,
-      "source_sha256": "9180606eef9293b048a6feb2d5b82b4a2a4fd526dd880f3a6fe0eba3efb84893",
-      "width": 2228,
-      "height": 364,
+      "source_sha256": "3bcbfe2226486a1d99e6d9309df04748a4704e71fb53dc910b02d264795d50c6",
+      "width": 2326,
+      "height": 584,
       "nodes": 9,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/matmulfree.sv.md",
       "ordinal": 2,
-      "source_sha256": "54d96572ff9ee73754856529e7385a17f3fc28bb010934166ce07e2343dd1548",
-      "width": 1799,
-      "height": 1318,
+      "source_sha256": "bc39858dfbe2e55d691f14b64d64f389cd9eda8231cd8fd5b59cbf39a379c21e",
+      "width": 2064,
+      "height": 2056,
       "nodes": 11,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/mem_mapping.sv.md",
       "ordinal": 0,
-      "source_sha256": "32285283e3cfa9411aa0bbc869c85ccb3ba84c626395c126ce77c7a0b36d9e69",
-      "width": 1142,
-      "height": 353,
+      "source_sha256": "ec353eb748c0a705f1df554782b107803dcf4b483a6153c8f6fb694f327a47f6",
+      "width": 1188,
+      "height": 517,
       "nodes": 4,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/mul.sv.md",
       "ordinal": 0,
-      "source_sha256": "5b85c4a901ae80e13f033c68da291fd54c8390d033b0e77d615f8669dc9752a1",
-      "width": 733,
-      "height": 742,
+      "source_sha256": "11b457c39d3cb0ea69fec2e9b0daa9fba79ae87a2b3bb98fd8cabe7b0b91008e",
+      "width": 816,
+      "height": 982,
       "nodes": 13,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/norm_dispatch.sv.md",
       "ordinal": 0,
-      "source_sha256": "39e11d2afc8c3ffd2a30e9d1e113b4bfd42608e3c9978c0d3a695f359ef33f0c",
-      "width": 1352,
-      "height": 832,
+      "source_sha256": "fcec79385ba2fee891a761e45d941f76368f7b6f6158c8a5cebc88230491b910",
+      "width": 1534,
+      "height": 1384,
       "nodes": 9,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/norm.sv.md",
       "ordinal": 0,
-      "source_sha256": "930ec3ba6e4ee4177b29c8a988955b88bb1fecc7bbe00370fecd10555a777075",
-      "width": 1470,
-      "height": 1960,
+      "source_sha256": "92396db8395f627d8603e768f9e8a2e2ce10e688ff68bd86fccf1af34b8398e5",
+      "width": 1666,
+      "height": 3084,
       "nodes": 17,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/norm.sv.md",
       "ordinal": 1,
-      "source_sha256": "3190f7c2c217fe41766990a792cdf01464958588d62ab486ff9fab7d05a6a43e",
-      "width": 1235,
-      "height": 1072,
-      "nodes": 13,
+      "source_sha256": "3a4251fb8153ef34c9cdbdf984b1cc73af2d89a1cb518eda5309fb998823ea42",
+      "width": 636,
+      "height": 1234,
+      "nodes": 8,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/norm.sv.md",
       "ordinal": 2,
-      "source_sha256": "1e00bb9757d84e7b9844aa96c71328f10cae2c513a99f36bde0e1a26cdc22fc3",
-      "width": 587,
-      "height": 814,
-      "nodes": 8,
+      "source_sha256": "3656c1984eba958866062aa48167fdddcae2f48e0e33baa27f4f69d3e6b922fb",
+      "width": 992,
+      "height": 1642,
+      "nodes": 14,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/norm.sv.md",
       "ordinal": 3,
-      "source_sha256": "010334c2b8ea987bc86e8c2cd215936363b49997ada2dcddc502ef5e7ff3308a",
-      "width": 897,
-      "height": 1126,
-      "nodes": 14,
-      "status": "rendered"
-    },
-    {
-      "file": "docs/source_guide/blocks/norm.sv.md",
-      "ordinal": 4,
-      "source_sha256": "9b066e7564972a2689f095a6f3cfea7cfa5f041c94e997c53752b77c54855245",
-      "width": 801,
-      "height": 1342,
+      "source_sha256": "c3d70abc4b43e61a70990b35c42280bffd3b638ddd718757d96b73cf62198a74",
+      "width": 828,
+      "height": 1942,
       "nodes": 12,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/npu_pkg.sv.md",
       "ordinal": 0,
-      "source_sha256": "0b6e095d91f3294bbbea8f4f0461af15caedd9ce26ef767d6b9d4b69e7a9162f",
-      "width": 1262,
-      "height": 356,
+      "source_sha256": "921af89a7550037bde8cf18d3f7b43c350bf635ac3140f5d1148fdd2e14cf284",
+      "width": 1304,
+      "height": 578,
       "nodes": 6,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/npu_pkg.sv.md",
       "ordinal": 1,
-      "source_sha256": "382383bc9e5ecc18cea1504d05540302f311357be6a5078225ef9de4594e5a78",
-      "width": 505,
-      "height": 594,
+      "source_sha256": "a36901b0eb9416fc815597d547098df75210ad8f4723c72ccbe204cc06c0bd8f",
+      "width": 568,
+      "height": 970,
       "nodes": 7,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/PC.sv.md",
       "ordinal": 0,
-      "source_sha256": "9902fbe5b668a387e818b3d27ceabc3c24902e5c0a9563e25653703735221556",
-      "width": 565,
-      "height": 430,
+      "source_sha256": "d8279f7d1c854c1829a3db3760ef90b474e844c9518f2fec736a786c74ba0b23",
+      "width": 657,
+      "height": 604,
       "nodes": 7,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/pipelined_word_ram.sv.md",
       "ordinal": 0,
-      "source_sha256": "2e5e7efb1d7a239fcbfacf6c5e0d8e608270c5934410e4bebfca228a0439fafc",
-      "width": 852,
-      "height": 587,
-      "nodes": 8,
+      "source_sha256": "db024d84f7d7d73604d6f8c3b3de407a0cd236f989d3181de1f848e31d969bac",
+      "width": 798,
+      "height": 1656,
+      "nodes": 11,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/postscale.sv.md",
       "ordinal": 0,
-      "source_sha256": "87efa49a90bec79b96d09210c78b9e3f5257c46dd39281c10670da0db4ec3298",
-      "width": 1070,
-      "height": 664,
+      "source_sha256": "f0df0c66dee475206b0784ca76d6e71258a82a1106633644fb97b775372af328",
+      "width": 1288,
+      "height": 880,
       "nodes": 15,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/postscale.sv.md",
       "ordinal": 1,
-      "source_sha256": "137f4af326e09ead4d18c3bdefe5d166469361a80b686fda4c6ce0a2006a944b",
-      "width": 713,
-      "height": 498,
+      "source_sha256": "ce20dcd513ae5fd08a3a81ac437538cf22a22def1121b48d2f1ccfb5d3899230",
+      "width": 775,
+      "height": 754,
       "nodes": 12,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/quartus_word_ram.sv.md",
       "ordinal": 0,
-      "source_sha256": "7f18402145c2da6eb3e7a586525b1b4eb025116afdb6bc86066c4f271fb8a360",
-      "width": 985,
-      "height": 272,
+      "source_sha256": "c31958f54070fc6f27ce711cb496279bb5848c0afffb1b4063a9ee1a1a33bec5",
+      "width": 1111,
+      "height": 418,
       "nodes": 6,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/regfile.sv.md",
       "ordinal": 0,
-      "source_sha256": "07a7d857a05637503a662f70491f5b3b1d159ab67f31c298d516c44d946db860",
-      "width": 1147,
-      "height": 346,
+      "source_sha256": "5c3fab3f929555db2aa9928d8e8c4ebab93c6790c2125538fa49c8c8eb90be49",
+      "width": 1188,
+      "height": 490,
       "nodes": 4,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/reset_release.sv.md",
       "ordinal": 0,
-      "source_sha256": "5a7393ad76cc69712c67c5453ab37789d49b5d04dd8292e5368b26453f387ceb",
-      "width": 428,
-      "height": 498,
+      "source_sha256": "16a10bb40325ada8f3b4a0be32266b64c1e61617ed01ba0fc39048f57059cd5a",
+      "width": 469,
+      "height": 682,
       "nodes": 6,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/rowwise_dispatch.sv.md",
       "ordinal": 0,
-      "source_sha256": "917d49a29cad7d538a18f15c6df12c4b786dfe9f578dbfa642b91d7d9b945e51",
-      "width": 1207,
-      "height": 1144,
+      "source_sha256": "4c80aa53482f4546a285a06a9827e413348b7148e0bee7c3ebc3a29abe6a2170",
+      "width": 1328,
+      "height": 1756,
       "nodes": 9,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/rowwise_dispatch.sv.md",
       "ordinal": 1,
-      "source_sha256": "f58f2a7f110fedccdef13e50e805f98c443f8fa06b486a53f0f676d9098893b9",
-      "width": 1144,
-      "height": 742,
+      "source_sha256": "af21222806b29c974206d64ce9f34035ca91dbfdf0fe5ca56a35b5b9dc7349fc",
+      "width": 1323,
+      "height": 1120,
       "nodes": 7,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/rowwise_op.sv.md",
       "ordinal": 0,
-      "source_sha256": "3f0ef8a0b3169b1b50d4e706cd435f6eb55616733ba2a07a0895477b9c21b523",
-      "width": 1486,
-      "height": 2086,
+      "source_sha256": "71ff8808f998c29faba5562528d92ad07be3159ecc68d58d5a2e07c2434a2110",
+      "width": 1690,
+      "height": 3208,
       "nodes": 21,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/rowwise_op.sv.md",
       "ordinal": 1,
-      "source_sha256": "a599ef2116b09a9527225048d4973151771e2adefb53932f60d12c6e2860ad51",
-      "width": 895,
-      "height": 1046,
+      "source_sha256": "746f8dc906d7201466a60be181ca109937478583076b09aee0c2b4ccd0b699a7",
+      "width": 984,
+      "height": 1642,
       "nodes": 11,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/scale_compose.sv.md",
       "ordinal": 0,
-      "source_sha256": "24d980d0628c1bdb4c7f11138f7af835757db2b27b00f1a9a8a173eaf8a74132",
-      "width": 353,
-      "height": 813,
+      "source_sha256": "52203f98fcea45280bba47129109814543217fc05326f54814f0a7c9225b418b",
+      "width": 354,
+      "height": 1240,
       "nodes": 8,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/sigmoid.sv.md",
       "ordinal": 0,
-      "source_sha256": "d0efc705107bd396cf8cd1e77162d834ca714412fc6fe87f98c5883f6d42e8da",
-      "width": 894,
-      "height": 1210,
+      "source_sha256": "715ba50c80bd459f9f82edbf96d0df24bffcbc3ee701f9c0bce5da4ff5f5cec5",
+      "width": 1072,
+      "height": 1896,
       "nodes": 11,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/sigmoid.sv.md",
       "ordinal": 1,
-      "source_sha256": "19847ee89df63fcec97fdc3cd8af358c6e3d6a7e34eeb460c5ee11486fe997ff",
-      "width": 772,
-      "height": 1384,
+      "source_sha256": "85b410cf3bd4f839dd8be8c1897ef12744ab1539ff14d66b4ac0cf7220cb79c9",
+      "width": 845,
+      "height": 2220,
       "nodes": 13,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/sram_256_wrapper.sv.md",
       "ordinal": 0,
-      "source_sha256": "e8fc2b9d3fee26d5ff1d367cb5ca11e84793830fb64db2559cb476fe0ba5b9f1",
-      "width": 1577,
-      "height": 1518,
+      "source_sha256": "04e85f39d62771608fcae39c559dc8b8d69ca8a6b939981fb23f53f04a288da5",
+      "width": 1735,
+      "height": 2618,
       "nodes": 10,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/sram_256_wrapper.sv.md",
       "ordinal": 1,
-      "source_sha256": "eaa7d5a4da6e05a6497e057d40c26966a8be4190c65057eac1cad9eb0c57a330",
-      "width": 1577,
-      "height": 456,
+      "source_sha256": "98f50b28f65a2cb7f73c0c7d3c071bf4b761f9ba436180f05ec1e6b25462b242",
+      "width": 1755,
+      "height": 669,
       "nodes": 13,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/sram_word_tile.sv.md",
+      "ordinal": 0,
+      "source_sha256": "b5e7172e44b759a278ac521ff41773a157e8836995e0ea7255374a499596c062",
+      "width": 892,
+      "height": 216,
+      "nodes": 4,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/blocks/ternary_dot32.sv.md",
+      "ordinal": 0,
+      "source_sha256": "b1ace580c77f1e319467aa533e07a6483f19afa5b9e9d7df038f9f0fda338cc8",
+      "width": 2107,
+      "height": 361,
+      "nodes": 10,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/ternary_mul.sv.md",
       "ordinal": 0,
-      "source_sha256": "34c622d6c02d63548c8559dec83b01ddef507c925ec313a31fe14e9c0389701c",
-      "width": 1712,
-      "height": 1792,
+      "source_sha256": "e42213f15caa803af0a6a9bcab799a0240268e9d0266974a7511f1017970f2db",
+      "width": 2142,
+      "height": 2620,
       "nodes": 20,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/blocks/ternary_mul.sv.md",
       "ordinal": 1,
-      "source_sha256": "f90825898d8c3d338320935e82cb8f2a3d76ba4dbf697bbd17b6f891085f6857",
-      "width": 963,
-      "height": 838,
+      "source_sha256": "ea05cdec655fb8b067bbe04e6d9149f153840c9965ca1a0f7f3b07ff8a49363a",
+      "width": 1171,
+      "height": 1255,
       "nodes": 11,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
+      "status": "rendered"
+    },
+    {
+      "file": "docs/source_guide/full_graph.md",
+      "ordinal": 0,
+      "source_sha256": "ceb96936c2d972abd0df9ae4f615e8c980e9d5b038ebdf32130f4cd5f7d59964",
+      "width": 1953,
+      "height": 1480,
+      "nodes": 16,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     },
     {
       "file": "docs/source_guide/README.md",
       "ordinal": 0,
-      "source_sha256": "07d9b153ba8c5595dc2602a6b839aaf619896b552a467b1bd4cb428b08f926a6",
-      "width": 2831,
-      "height": 2629,
+      "source_sha256": "ae930d1b6683f240dfc65a0730e5eabdd3d194894400172f43e3dac56867c10e",
+      "width": 3337,
+      "height": 4685,
       "nodes": 14,
+      "fonts": [
+        "24px"
+      ],
+      "text_colors": [
+        "rgb(0, 0, 0)"
+      ],
+      "layout_errors": [],
       "status": "rendered"
     }
   ]

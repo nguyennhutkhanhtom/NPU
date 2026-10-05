@@ -1,43 +1,55 @@
-# Lịch sử và tài liệu gốc
+# Lịch sử và tài liệu tham chiếu
 
-[Project](../../README.md) → [Tài liệu](../README.md) → **Lịch sử**
+[Tài liệu](../README.md) → **Lịch sử**
 
-Thiết kế đang phát triển được mô tả trong [kiến trúc hiện hành](../design/architecture.md), [interface](../design/interfaces.md) và [RTL guide](../source_guide/README.md). Các mục ở đây phục vụ tra cứu các quyết định và nguồn gốc; snapshot cũ không tham gia build.
+Trạng thái workspace nằm ở [verification status](../verification/optimization_status.md).
+Các tài liệu dưới đây giữ quyết định, checkpoint hoặc báo cáo tại thời điểm viết.
+Một câu “current” trong bản lưu cần được hiểu theo thời điểm của bản đó.
 
-## Quyết định và sửa lỗi
+## Lịch sử thiết kế và kiểm chứng
 
-| Tài liệu | Phạm vi |
+| Trang | Phạm vi |
 |---|---|
-| [Design review hiện hành](../reviews/design_review.md) | Cải tiến, bit-width, reset/valid, regression và số liệu trước/sau |
-| [Implementation review](../reviews/implementation_review.md) | Các lỗi từ bản v2 ban đầu và quá trình tích hợp/thống nhất RTL |
-| [History archive](history.zip) | 189 tài liệu/ảnh/công cụ lịch sử từ `research` và `review`, giữ nội dung nguyên vẹn |
-| [Unused-helper cleanup 02/10/2026](unused_cleanup_20261002.json) | 11 retired execution/migration files; hashes and recoverable Git commit |
-| [Unused-helper cleanup 04/10/2026](helper_cleanup1/manifest.json) | Two retired native/merge tools; byte-exact ZIP and SHA-256, current Questa runners retained |
-| [Unused-cache cleanup 02/10/2026](cache_cleanup_20261002.json) | Six untracked retired-demo caches,1.29GB freed; current model/assets/evidence retained |
-| [Quartus database cleanup 04/10/2026](quartus_database_cleanup_20261004.json) | Twelve inactive db/incremental_db directories,1.864GB; six source ZIPs/report hashes verified, active fanout1 DB retained |
-| [Cleanup manifest](cleanup_manifest.json) | Phân loại file, SHA-256 và thông tin đối chiếu archive |
-| [Tối ưu throughput hiện tại](../reviews/rtl_change_review_v3.md) | RTL đã triển khai, graph nhanh 3,987 lần, unit/portable/host/timing PASS |
-| [Workspace cleanup 05/10/2026](workspace_cleanup_20261005.json) | Thu hồi 4,273 GiB cache; giữ nguyên 3.711 file được bảo vệ |
-| [Optimization implementation archive](optimization_implementation_20261005.md) | 17 file helper/staging lưu trong ZIP trước khi gỡ khỏi tools |
-| [Sắp xếp workspace 05/10/2026](workspace_arrangement_20261005.json) | 17 lần di chuyển, SHA-256 từng file tại thời điểm chuyển |
-| [Các project Quartus cũ](quartus_projects.md) | 11 project trong `quartus/archive`, config/report giữ nguyên byte |
-| [Task state lịch sử](task_state_20261004.md) | Snapshot 04/10 giữ nguyên byte; đường dẫn dùng ngữ cảnh root lúc tạo |
+| [Phát triển full graph](full_rtl_development.md) | Các bước mở rộng, memory/pipeline và operator trước bản docs mới |
+| [Timing development](timing_development.md) | Critical paths, fail/pass và đề xuất Quartus tại từng checkpoint |
+| [Runner development](full_rtl_verification_development.md) | Các mốc memory models, license, compile và synthetic tests |
+| [Review version 3](../reviews/rtl_change_review_v3.md) | Tối ưu throughput đã triển khai và các kết quả đo |
+| [Implementation review](../reviews/implementation_review.md) | Tích hợp và sửa lỗi core legacy |
+| [Demo legacy](../demos/legacy/README.md) | MNIST, NanoFable hybrid và khảo sát model cũ |
+| [Task state 04/10/2026](task_state_20261004.md) | Snapshot giữ nguyên byte; links/commands dùng ngữ cảnh root khi tạo |
+| [Project Quartus cũ](quartus_projects.md) | Vị trí 11 retired experiment folders |
 
-Archive có SHA-256 `6d7e6b88f8d28863fc03b47593b3c4d9c0a60653f910ef7289315b6310d5f9fb`. Nội dung archive được giữ nguyên khi sắp xếp lại tài liệu ngày 01/10/2026.
+## Archive và cleanup
+
+| Record | Nội dung |
+|---|---|
+| [Archive gốc](history.zip) | 189 tài liệu/ảnh/công cụ từ research và review |
+| [Cleanup manifest](cleanup_manifest.json) | Phân loại file và hashes của đợt sắp xếp ban đầu |
+| [Helper cleanup 02/10](unused_cleanup_20261002.json) | Retired execution/migration files và commit phục hồi |
+| [Helper cleanup 04/10](helper_cleanup1/manifest.json) | Hai helper cũ, ZIP byte-exact và SHA-256 |
+| [Cache cleanup 02/10](cache_cleanup_20261002.json) | Cache legacy đã xóa, giữ model assets và evidence |
+| [Quartus database cleanup 04/10](quartus_database_cleanup_20261004.json) | Database inactive đã xóa sau khi giữ source/report archives |
+| [Workspace cleanup 05/10](workspace_cleanup_20261005.json) | Thu hồi 4,273 GiB; giữ nguyên các file được bảo vệ |
+| [Implementation helper archive](optimization_implementation_20261005.md) | 17 one-shot helper/staging files đã lưu ZIP |
+| [Arrangement 05/10](workspace_arrangement_20261005.json) | Di chuyển file và kiểm tra byte hashes |
+| [Docs trước cập nhật 06/10](doc_refresh_20261006_before.zip) | 25 trang trước khi sửa nội dung/navigation; [hash record](doc_refresh_20261006_before.json) |
+| [Render-cache cleanup](render_cache_cleanup_20261002.json) | Các render cũ đã xóa; diagram assets hiện có được giữ |
+
+Archive gốc có SHA-256
+`6d7e6b88f8d28863fc03b47593b3c4d9c0a60653f910ef7289315b6310d5f9fb`.
+Source snapshots và raw verification evidence giữ tại các path ban đầu để
+report hashes và provenance tiếp tục có thể kiểm tra.
 
 ## Thesis, poster, slide và bài báo
 
-| Tài liệu gốc | Vai trò |
+| File gốc | Vai trò |
 |---|---|
-| [Thesis / DTUT-242-13](references/DTUT-242-13.pdf) | Tài liệu thesis gốc |
+| [Thesis / DTUT-242-13](references/DTUT-242-13.pdf) | Thesis gốc |
 | [Poster](<references/Nguyen Nhut Khanh_poster.pdf>) | Poster thesis |
 | [Slide](<references/Nguyen Nhut Khanh_ppt_thesis.pptx>) | Presentation thesis |
-| [Scalable MatMul-free Language Modeling v5](references/2406.02528v5.pdf) | Bài báo tham chiếu cho ternary linear, NORM và MLGRU/GLU |
+| [Scalable MatMul-free Language Modeling v5](references/2406.02528v5.pdf) | Bài báo tham chiếu cho ternary linear và MLGRU/GLU |
 
-Các file gốc được chuyển thư mục và giữ nguyên byte. [Phần so sánh với thesis](../source_guide/README.md#8-khác-gì-so-với-thesis-của-bạn) giải thích khác biệt với core hiện hành.
-
-[Cleanup render cache](render_cache_cleanup_20261002.json) ghi224PNG/SVG cũ đã xóa,
-10.393.764bytes; giữ đủ114file của57sơ đồ hiện tại. Có thể tạo lại bằng
-`node tools/docs/render.cjs`.
-
-[Về mục lục tài liệu](../README.md)
+Các file tham chiếu gốc và raw evidence giữ nguyên byte. Đợt cập nhật sơ đồ ngày
+06/10/2026 đã refresh source guide; bản tài liệu trước đợt này nằm tại
+[diagram archive](../verification/diagrams_20261006/before.zip). Những minh họa
+lịch sử vẫn được ghi rõ theo implementation của checkpoint tương ứng.

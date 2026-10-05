@@ -78,6 +78,13 @@ def markdown_anchors(path):
     return anchors
 
 links=0
+# Frozen copies retain links from their original location. Validate those links
+# against the recorded source context without rewriting immutable documents.
+archived_contexts={
+    'docs/history/task_state_20261004.md': ROOT,
+    'docs/verification/npu100_b1_baseline/ARCH_RESEARCH.md': ROOT,
+    'docs/verification/optimization_baseline/tests/README.md': ROOT/'tests/full_rtl',
+}
 for path in [ROOT/'README.md',ROOT/'Verilog Source code'/'README.md',
              ROOT/'tests'/'README.md',ROOT/'tests'/'model_demo'/'README.md',
              ROOT/'tests'/'language_demo'/'README.md',ROOT/'tools'/'docs'/'README.md',
@@ -90,7 +97,8 @@ for path in [ROOT/'README.md',ROOT/'Verilog Source code'/'README.md',
         target,_,fragment=target.partition('#')
         target=unquote(target)
         target=re.sub(r':\d+$','',target)
-        p=(Path(target) if re.match(r'^[A-Za-z]:/',target) else path.parent/target) if target else path
+        base=archived_contexts.get(path.relative_to(ROOT).as_posix(),path.parent)
+        p=(Path(target) if re.match(r'^[A-Za-z]:/',target) else base/target) if target else path
         if not p.exists(): errors.append(f'Broken link: {path.name}: {target}')
         elif fragment and p.suffix.lower()=='.md' and unquote(fragment) not in markdown_anchors(p):
             errors.append(f'Broken heading anchor: {path.relative_to(ROOT)}: {target}#{fragment}')
@@ -127,6 +135,7 @@ else:
     errors.append('Missing Mermaid render evidence')
 
 result={'snapshot_date':manifest['snapshot_date'],'source_files':len(manifest['files']),'main_rtl_diagrams':main_diagrams,'detail_diagrams':detail_diagrams,
+        'archived_link_contexts':{k:v.relative_to(ROOT).as_posix() for k,v in archived_contexts.items()},
         'rtl_logic_groups':rtl_group_count,'rtl_source_lines_grouped':rtl_grouped_lines,
         'lut_entries_explained':total,'links_checked':links,'mermaid_diagrams_rendered':rendered,'errors':errors,
         'scope':'Documentation coverage, source excerpts, line counts, headers, hashes, local links and Mermaid render evidence. Validator only; RTL regression and Quartus synthesis evidence are recorded separately in docs/reviews/design_review.md.'}

@@ -13,16 +13,16 @@ Input là S16 với F_t=0…24, output gate U16/F15. LUT có 257 mẫu từ −8
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    X["x_raw S16 + frac_bits"]
+X["x_raw S16 + frac_bits"]
     subgraph SIG["sigmoid"]
         COORD["Coordinate S45 + boundary clamp<br/>Index U9 · fraction U24"]
         CTRL["Controller + index/fraction storage"]
-        ADDR@{ shape: trap-t, label: "ROM address selector<br/>index hoặc bounded index+1" }
-        ROM@{ shape: rect, label: "Một ROM lookup dùng chung<hr/>257 × 16 bit · sigmoid_lut.svh" }
+        ADDR@{ shape: trap-t, label: "ROM address selector<br/>index or bounded index+1" }
+        ROM@{ shape: rect, label: "One shared ROM lookup<hr/>257 × 16 bit · sigmoid_lut.svh" }
         SAMPLES["Sample storage y0 / y1"]
-        INTERP["Pipeline nội suy<br/>Slope U10 → product U34 → integer sum U17<br/>RNE theo parity toàn tổng"]
+        INTERP["Interpolation pipeline<br/>Slope U10 → product U34 → integer sum U17<br/>RNE uses full integer-sum parity"]
         OUT["Output storage U16/F15"]
     end
     X --> COORD
@@ -38,6 +38,8 @@ flowchart TB
     CTRL -.->|"Output enable"| OUT
     OUT --> Y["y_raw U16/F15"]
     CTRL -.-> STATUS["busy / done"]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ ra; decoder/demux dùng hình thang ngược lại, mở rộng về phía nhiều ngõ ra. Hình chữ nhật có các vạch ngang biểu diễn bộ nhớ hoặc bank descriptor. Các hình chữ nhật thường là datapath, thanh ghi đơn hoặc giao diện. Nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.
@@ -152,9 +154,9 @@ module sigmoid (
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    X["x_raw S16 / frac_bits 0…24"] --> COORD["Coordinate conversion S45 + clamp"]
+X["x_raw S16 / frac_bits 0…24"] --> COORD["Coordinate conversion S45 + clamp"]
     COORD --> IDX["Index U9 / fraction U24 storage"]
     IDX -.-> ADDR@{ shape: trap-t, label: "Bounded index / index+1 address selector" }
     CTRL["Sample controller"] -.-> ADDR
@@ -170,6 +172,8 @@ flowchart TB
     REM --> RNE["RNE from remainder<br/>Use entire integer sum parity on ties"]
     ADD --> RNE
     RNE --> Y["U16/F15 output storage"]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 ### [Dòng 72–106: FSM lấy hai mẫu và chốt output](<../../../Verilog%20Source%20code/sigmoid.sv#L72>)

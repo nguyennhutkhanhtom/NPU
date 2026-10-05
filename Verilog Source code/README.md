@@ -1,35 +1,41 @@
-# Source RTL NPU
+# Source RTL
 
-[Project](../README.md) → [Tài liệu](../docs/README.md) → **Source RTL**
+[Project](../README.md) → [Tài liệu](../docs/README.md) → **Source**
 
-Thư mục này là source đang phát triển. Top toàn graph là `llm_soc.sv`; `matmulfree.sv` và `matmul_wrap.sv` thuộc kiến trúc legacy. Compute/control dùng cùng RTL cho mô phỏng và synthesis, không có nhánh `SYNTHESIS`/`QUARTUS_SYNTHESIS`. FPGA dùng `quartus_word_ram.sv` chứa IP `altsyncram` sau adapter `pipelined_word_ram`; đây là boundary để thay SRAM ASIC sau này. Không dùng DSP, PLL hoặc compute IP khác; arithmetic được ánh xạ sang logic cells thường.
+## Chọn top
 
-| Cần tra cứu | Tài liệu |
+| Top | Phạm vi | Tài liệu |
+|---|---|---|
+| llm_soc.sv | Graph LLM cố định: host, prefill, transformer, head và decode | [Kiến trúc hiện tại](../docs/design/full_rtl_language.md) |
+| matmulfree.sv | Core instruction-driven legacy: NORM, TMATMUL và vector ops | [Kiến trúc legacy](../docs/design/architecture.md) |
+| matmul_wrap.sv | Wrapper legacy khi chọn board top | [Chú giải snapshot](../docs/source_guide/blocks/matmul_wrap.sv.md) |
+
+## Nhóm file
+
+| Nhóm | File chính |
 |---|---|
-| Toàn graph, numeric formats và SRAM contracts | [Full RTL language](../docs/design/full_rtl_language.md) |
-| Host/tests/application của top hiện tại | [Full RTL tests](../tests/full_rtl/README.md) |
-| Opcode, descriptor, scale động, host map, LUT và build | [Interface hiện hành](../docs/design/interfaces.md) |
-| Cấu hình 32 PE, K≤512, format số và SRAM 32+8 KiB | [Kiến trúc](../docs/design/architecture.md) |
-| Engine, memory và scheduler nối với nhau thế nào | [Hierarchy và luồng dữ liệu](../docs/source_guide/README.md) |
-| Vai trò, sơ đồ và code trích dẫn của mỗi file | [Mục lục giải thích RTL](../docs/source_guide/blocks/README.md) |
-| Lỗi đã sửa, cải tiến và giới hạn ASIC | [Design review](../docs/reviews/design_review.md) |
-| Regression và demo synthesis | [Verification](../docs/verification/README.md) |
+| Graph/control | llm_soc, llm_pkg, reset_release |
+| Streaming engines | llm_linear_engine, llm_head_engine, llm_attention_engine, llm_attention_normalize |
+| Arithmetic dùng chung | llm_math, ternary_dot32, logic_mul, div, isqrt_u64, sigmoid |
+| Memory full graph | llm_parameter_ram, llm_bank_ram, pipelined_word_ram, quartus_word_ram, sram_word_tile |
+| Tables | llm_exp_lut, llm_gumbel_lut, sigmoid_lut; sigmoid_257.mem là asset đối chiếu |
+| Core legacy | matmulfree, instruction/descriptor, norm, ternary_mul, rowwise và memory wrappers |
 
-## Nhóm source
+[Source overview](../docs/source_guide/full_graph.md) giải thích trách nhiệm,
+handshake và pipeline. [Danh mục 41 assets](../docs/source_guide/blocks/README.md)
+liên kết từng file, kèm trạng thái của code-excerpt snapshot.
 
-- **Toàn graph:** `llm_soc`, `llm_linear_engine`, `llm_head_engine`, `llm_attention_engine`, `llm_attention_normalize`, `ternary_dot32`, `llm_math`, `llm_pkg`, các bảng exp/Gumbel, và `reset_release`; xem [kiến trúc tối ưu exact](../docs/design/exact_throughput_optimization.md).
-- **SRAM toàn graph:** `llm_parameter_ram`, `llm_bank_ram`, `pipelined_word_ram`; chỉ leaf `quartus_word_ram` instantiate `altsyncram`. Xem ports/latency/collision/reset trong tài liệu full graph.
-- **Số học chung:** `logic_mul` dùng cây tích bit và compressor; `div`, `isqrt_u64`, sigmoid và rounding dùng logic portable. `sram_word_tile` là file riêng cho SRAM behavioral leaf.
+## Build và ranh giới công nghệ
 
-Những nhóm bên dưới còn được top legacy instantiate và có regression riêng:
+Compute/control dùng SystemVerilog portable; phép nhân/chia được dựng từ logic,
+cộng/trừ và shifts. Chỉ quartus_word_ram instantiate altsyncram. ASIC thay
+technology leaf theo [SRAM contract](../docs/design/asic_memory_binding.md).
 
-- **Control:** `matmulfree`, `PC`, `ins_mem`, `descriptor_file`.
-- **NORM/scalar:** `norm_dispatch`, `norm`, `div`, `scale_compose`; `isqrt_u64` đã tách thành module/file dùng chung độc lập.
-- **Ternary:** `ternary_mul`, `acc_mul`, `postscale`.
-- **Vector:** `rowwise_dispatch`, `rowwise_op`, `sigmoid` và LUT hằng `sigmoid_lut.svh`; `sigmoid_257.mem` giữ cùng mẫu để generate/đối chiếu.
-- **Memory:** `sram_256_wrapper`, `regfile`, `mem_mapping`; synchronous read/valid, data array không reset.
-- **Kiểu dữ liệu/số học:** `npu_pkg`; compile package trước các module.
+Compile packages trước modules. Full-top Quartus file list nằm trong
+[llm_soc.qsf](../quartus/llm_soc.qsf); simulation runner tạo sources.f riêng.
+Giữ modules legacy còn được instantiate/kiểm thử và dùng source thư mục này,
+không compile một snapshot archive để thay current RTL.
 
-Các controller/helper không có caller đã được dọn; [bảng từng file](../docs/source_guide/blocks/README.md) chỉ dẫn source hiện có. Giữ các module legacy còn được instantiate và kiểm thử. Không dùng snapshot trong archive để compile.
-
-Chạy regression legacy từ thư mục gốc bằng `./tests/run.ps1 -Block All`; dùng [full RTL runner](../tests/full_rtl/README.md) cho `llm_soc`. Quartus dùng để demo synthesis/fitting/timing FPGA; chưa xác nhận PPA, SRAM views hoặc signoff ASIC.
+[Host interface](../docs/design/host_interface.md) ·
+[Verification](../docs/verification/README.md) ·
+[Demo NanoFable](../docs/demos/language.md)

@@ -13,9 +13,9 @@ Khối chốt tối đa 16 phần tử trong một word rồi xử lý các batc
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    IN["A / B / old state words 256 bit<br/>Format + fractional bits + valid_elems"]
+IN["A / B / old state words 256 bit<br/>Format + fractional bits + valid_elems"]
     subgraph CORE["rowwise_op — registered datapath"]
         CTRL["Opcode controller + element index<br/>LOAD / MULTIPLY / RAW / ROUND / PACK"]
         BUF["Input word buffers"]
@@ -62,6 +62,8 @@ flowchart TB
     RES --> RBUF
     RBUF --> OUT["result_word 256 bit"]
     CTRL -.-> STATUS["busy / done / overflow / format_error"]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 Nét liền là dữ liệu, nét đứt là control. MUX dùng hình thang thu hẹp về ngõ ra. Các hộp mang tên register là ranh giới clock thực trong datapath; các batch vẫn chạy tuần tự, không nhận một batch mới mỗi clock. Sơ đồ mô tả phần cứng, không phải pipeline instruction CPU.
@@ -276,6 +278,7 @@ module rowwise_op (
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
     SELECT["Lane selection + magnitude / sign"] --> INREG["LOAD registers<br/>Magnitude U16 pairs + sign + lane S17"]
     INREG --> MUL["2 shared unsigned 16 × 16 multipliers"]
@@ -293,6 +296,8 @@ flowchart TB
     CTRL -.-> RREG
     CTRL -.-> SREG
     CTRL -.-> PACK
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 

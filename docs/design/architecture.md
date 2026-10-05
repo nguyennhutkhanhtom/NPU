@@ -1,5 +1,9 @@
 # ASIC inference nhỏ với weight ternary và SRAM 256 bit
 
+> **Phạm vi legacy:** trang này mô tả core matmulfree.
+> Top hiện tại llm_soc có [kiến trúc](full_rtl_language.md) và
+> [host interface](host_interface.md) riêng.
+
 [Project](../../README.md) → [Tài liệu](../README.md) → **Kiến trúc**
 
 Trang này mô tả core instruction-driven `matmulfree` và quyết định kiến trúc
@@ -209,16 +213,17 @@ Bản đầu không cần lệnh hàm mũ hoặc chia vector tổng quát. NORM 
 ## SRAM và luồng dữ liệu
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart LR
-    H["Host: nạp model/input<br/>Đọc logits và argmax/tokenization"]
+    H["Host loads model and input<br/>Read logits; argmax and tokenization"]
     I["Host interface 32 bit<br/>SRAM read valid/ready"]
     H <--> I
-    I <-->|"Nạp/đọc; ready"| W["Parameter SRAM 32 KiB<br/>8 bank × 1024 × 32 bit<br/>Synchronous read/valid"]
-    I <-->|"Nạp/đọc; ready"| S["Workspace SRAM 8 KiB<br/>8 bank × 256 × 32 bit<br/>Synchronous read/valid<br/>X / scratch / q / state / logits"]
+    I <-->|"Load/read; ready"| W["Parameter SRAM 32 KiB<br/>8 bank × 1024 × 32 bit<br/>Synchronous read/valid"]
+    I <-->|"Load/read; ready"| S["Workspace SRAM 8 KiB<br/>8 bank × 256 × 32 bit<br/>Synchronous read/valid<br/>X / scratch / q / state / logits"]
     S --> N["NORM + QUANT<br/>2 lane + scalar units"]
-    N -->|"q S8 và scratch"| S
-    S -->|"q S8"| T["Ternary core 32 × 1<br/>32 PE → reduction → ACC18"]
-    W --> B["Weight buffer 256 bit<br/>Tái dùng tối đa 4 chunk"]
+    N -->|"q S8 and scratch"| S
+    S -->|"q S8"| T["Ternary core 32 × 1<br/>32 selectors; S12/S14 reductions; S18 accumulator"]
+    W --> B["Weight buffer 256 bit<br/>Reuse for up to four chunks"]
     B --> T
     T --> R["Postscale + bias<br/>RNE + saturation → S16/S32"]
     W -->|"Bias"| R
@@ -229,6 +234,8 @@ flowchart LR
     C -.-> T
     C -.-> V
     I -.-> C
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 Đây là sơ đồ luồng dữ liệu; scheduler chạy từng instruction, dùng workspace request mux/response demux để nối engine đang hoạt động. `q`, scratch, state và logits là các vùng trong cùng workspace 8 KiB. TMATMUL ghi S16/S32 vào workspace; rowwise đọc/ghi workspace qua lệnh riêng. Host đọc logits và thực hiện argmax/tokenization. [Sơ đồ hierarchy đầy đủ](../source_guide/README.md#2-sơ-đồ-kiến-trúc-tổng-quan-đang-chạy) thể hiện các đường control/data thực tế. Khi tính dot product ternary, workspace SRAM cấp dữ liệu `q`, còn parameter SRAM cấp weight. Các lần đọc bias, ghi đầu ra và truy cập khác phải được sắp lịch qua buffer hoặc những chu kỳ riêng; không giả định SRAM một cổng vừa đọc nhiều nguồn vừa ghi trong cùng chu kỳ.

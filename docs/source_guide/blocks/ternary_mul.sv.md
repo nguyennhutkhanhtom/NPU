@@ -13,9 +13,9 @@ Mỗi instruction tính n_rows dot product, mỗi dot product dài K. 32 PE là 
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    CFG["q / output / matrix descriptors + start"]
+CFG["q / output / matrix descriptors + start"]
     WS["Workspace port<br/>256-bit read/write"]
     PM["Parameter read port<br/>256-bit weight / bias"]
     subgraph CORE["ternary_mul"]
@@ -23,9 +23,9 @@ flowchart TB
         QB["Activation buffer<br/>32 × S8"]
         WB["Weight buffer 256 bit"]
         WSEL@{ shape: trap-t, label: "32-weight slice selector" }
-        PE@{ shape: trap-t, label: "32 ternary lanes<br/>Chọn +q / 0 / −q · mask ngoài K" }
-        RED["acc_mul<br/>Cây cộng tổ hợp 32 term S9"]
-        ACC["Bộ cộng tích lũy + accumulator S18"]
+        PE@{ shape: trap-t, label: "32 ternary lanes<br/>Select +q / zero / minus q; mask outside K" }
+        RED["acc_mul<br/>Four 8-input S12 trees and one 4-input S14 tree"]
+        ACC["S18 accumulation adder and register"]
         BIAS["Bias S32 buffer"]
         BSEL@{ shape: trap-t, label: "Bias / zero selector" }
         SMUL["Postscale multiplier<br/>S18 × U24 → S42"]
@@ -33,7 +33,7 @@ flowchart TB
         SRNE["rne_shift42<br/>Signed RNE"]
         RREG["Rounded register S42"]
         POST["postscale_finish<br/>Bias adder S43 · saturation"]
-        OUT["Output packer 256 bit<br/>S16 hoặc S32"]
+        OUT["Output packer 256 bit<br/>S16 or S32"]
     end
     CFG -.-> CTRL
     CFG -.->|"M"| SMUL
@@ -63,6 +63,8 @@ flowchart TB
     OUT -->|"Write data"| WS
     CTRL -.-> STATUS["busy / done / format_error"]
     POST -.-> OV["overflow"]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ ra; decoder/demux dùng hình thang ngược lại, mở rộng về phía nhiều ngõ ra. Hình chữ nhật có các vạch ngang biểu diễn bộ nhớ hoặc bank descriptor. Các hình chữ nhật thường là datapath, thanh ghi đơn hoặc giao diện. Nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.
@@ -254,9 +256,9 @@ module ternary_mul (
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    Q["q_word<br/>32 activations S8"] --> SIGN["32 sign-extension / negation paths<br/>+q and −q in S9"]
+Q["q_word<br/>32 activations S8"] --> SIGN["32 sign-extension / negation paths<br/>+q and −q in S9"]
     W["w_word 256 bit"] --> SEL@{ shape: trap-t, label: "Weight slice selector<br/>32 weights × 2 bit" }
     CFG["K / input chunk index"] -.-> SEL
     SEL --> DEC@{ shape: trap-b, label: "32 weight decoders + reserved-code detector" }
@@ -264,10 +266,12 @@ flowchart TB
     DEC -.-> PE
     CFG -.-> PE
     CFG -.->|"Useful-lane mask"| DEC
-    PE --> TREE["acc_mul<br/>32-term combinational adder tree"]
+    PE --> TREE["acc_mul<br/>Four S12 group trees; registered groups; S14 total tree"]
     TREE --> ACC["S18 accumulation adder + storage"]
     ACC --> POST["postscale input"]
     DEC -.-> ERR["Reserved-weight error<br/>Only for useful lanes inside K"]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 

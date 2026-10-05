@@ -11,6 +11,7 @@ Ghép factor_m/factor_r với quant_d thành result_m U24 và result_r U6. Chố
 ## Sơ đồ kiến trúc
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
     IN[U24 factors and U6 base shift] --> MUL[Registered U48 product]
     MUL --> FIT[48 constant threshold comparisons]
@@ -20,6 +21,8 @@ flowchart TB
     DIV --> RNE[Remainder RNE and range checks]
     SELECT --> OUT[Result M and r]
     RNE --> OUT
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 ## Cách hoạt động chi tiết

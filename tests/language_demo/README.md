@@ -1,25 +1,36 @@
-# NanoFable assets and historical evidence
+# Assets NanoFable đã pin
 
-[Documentation hub](../../docs/README.md) · [Full RTL application](../full_rtl/README.md) · [Historical hybrid report](../../docs/demos/language.md)
+[Tài liệu](../../docs/README.md) → [Demo NanoFable](../../docs/demos/language.md) → **Assets**
 
-This directory provides the pinned checkpoint/tokenizer and scoped dependencies
-used by the full RTL application. CPU reference computation is verification only.
-The application runner checks current synthesis, fitting, all-corner timing at
-100 MHz, six unit groups and exact source/configuration hashes before execution.
+Thư mục này cung cấp checkpoint/tokenizer và dependencies cho application
+llm_soc. Model revision, source revision, file sizes và SHA-256 nằm trong
+[upstream_manifest.json](upstream_manifest.json).
+
+## Tải hoặc kiểm tra
+
+Chạy từ repository root với Python 3.11/3.12:
 
 ```powershell
-./tests/language_demo/setup.ps1 -Python 'C:/path/to/python312/python.exe'
-# Only after all current hardware/unit gates pass:
-./tests/full_rtl/run_application.ps1 -TimingManifest docs/verification/timing/PASS_TAG/manifest.json
+$pythonExe = 'C:/Users/khanh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'
+& tests/language_demo/setup.ps1 -Python $pythonExe
 ```
 
-Setup installs NumPy2.3.5, safetensors0.6.2 and tokenizers0.22.1 under `packages/`,
-then fetches and verifies the 12 assets in [upstream_manifest.json](upstream_manifest.json).
-Checkpoint, tokenizer, upstream source, packages and build caches stay local.
-`fetch_assets.py --check` verifies existing files without downloading or running a model.
+Setup cài NumPy 2.3.5, safetensors 0.6.2 và tokenizers 0.22.1 vào packages/,
+rồi tải/kiểm tra 12 assets trong upstream/. Checkpoint và packages nằm local,
+được Git ignore. Bước setup chưa chạy model inference.
 
-The former hybrid exporter/runner/testbench has been removed: it computed the
-graph on CPU and replayed only linears on RTL. [results.json](results.json) and the
-historical report retain its scope and measurements; they cannot satisfy full RTL
-application gates. The deleted scripts remain recoverable at Git commit
-`d9ed7921d42731a198f565785a8ae79b20c7c79e`.
+Nếu file đã có, kiểm tra mà không tải lại:
+
+```powershell
+& $pythonExe tests/language_demo/fetch_assets.py --check
+```
+
+Để chạy model, mở [hướng dẫn NanoFable](../../docs/demos/language.md). Export và
+CPU reference của application chỉ chạy khi đúng source/config đã qua cả bảy
+nhóm units/graph và full-top all-corner timing gate.
+
+## Bằng chứng hybrid trước đây
+
+[results.json](results.json) và [báo cáo hybrid](../../docs/demos/legacy/nanofable_hybrid.md)
+giữ kết quả CPU generation cùng linear-only RTL của flow cũ. Runner hybrid đã
+được loại bỏ; đây là bằng chứng lịch sử, không phải application toàn graph.

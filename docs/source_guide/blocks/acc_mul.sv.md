@@ -8,21 +8,18 @@
 
 ## Khối này làm gì?
 
-Tên file có “mul”, nhưng module này chỉ reduction bằng cộng. Với NUM_INPUTS=32, cây có 32 lá và 31 nút cộng. Mỗi term S9 được sign-extend lên ACC_W=18 trước khi cộng; sum là kết quả chunk, chưa phải tổng toàn K.
+Parameterized combinational signed reduction. Sign-extend input terms, pad to a power of two and instantiate explicit generated adders. Current legacy ternary_mul uses four S9-to-S12 eight-input reductions and one S12-to-S14 four-input reduction; its S18 accumulator is outside acc_mul.
 
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart LR
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    IN["term array<br/>32 × signed S9 ở ternary core"]
-    subgraph RED["acc_mul — logic tổ hợp"]
-        EXT["Sign extension + zero padding<br/>LEAVES = power-of-two input count"]
-        TREE["Mạng cộng nhị phân cân bằng<br/>32 input: 31 bộ cộng / 5 mức logic<br/>ACC_W = 18"]
-    end
-    IN --> EXT
-    EXT --> TREE
-    TREE --> OUT["sum / partial S18"]
+ I["NUM_INPUTS signed TERM_W terms"] --> E["Sign extension to ACC_W<br/>Zero-pad unused leaves"]
+ E --> T["Generated balanced binary adders<br/>LEAVES minus one adders"]
+ T --> S["Combinational sum ACC_W bits"]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ ra; decoder/demux dùng hình thang ngược lại, mở rộng về phía nhiều ngõ ra. Hình chữ nhật có các vạch ngang biểu diễn bộ nhớ hoặc bank descriptor. Các hình chữ nhật thường là datapath, thanh ghi đơn hoặc giao diện. Nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.
@@ -102,16 +99,12 @@ endmodule
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
-flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    IN["Input term array"] --> EXT["Signed extension to ACC_W<br/>Zero-pad unused leaves"]
-    subgraph TREE["Combinational binary adder network — configuration with 32 leaves"]
-        L["16 independent two-input adders"]
-        MID["Reduction network<br/>8 + 4 + 2 two-input adders"]
-        ROOT["Root two-input adder"]
-        L --> MID
-        MID --> ROOT
-    end
-    EXT --> L
-    ROOT --> OUT["sum S18"]
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+flowchart LR
+ T["Legacy ternary terms: 32 S9"] --> G["Four u_group instances<br/>Eight inputs each; S12 sum"]
+ G --> R["Registered group_sum_q: four S12 values"]
+ R --> A["u_total: four-input reduction<br/>S14 total_sum"]
+ A --> B["Parent ternary_mul S18 accumulator"]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```

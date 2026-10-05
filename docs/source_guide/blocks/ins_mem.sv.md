@@ -13,9 +13,9 @@ Memory 512×13 bit do host nạp, không reset hoặc initialize nội dung. M�
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 45}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    H["Host: en / we / addr / write instruction"]
+H["Host: en / we / addr / write instruction"]
     F["Scheduler: fetch_en / PC"]
     subgraph IM["ins_mem"]
         MUX@{ shape: trap-t, label: "Shared read address selector<br/>Host read or fetch" }
@@ -40,6 +40,8 @@ flowchart TB
     DATA -->|"host_rinstr 13 bit"| H
     MATCH -.->|"instr_valid"| F
     MATCH -.->|"host_rvalid → frontend response register"| H
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 Nét liền là dữ liệu, nét đứt là điều khiển và địa chỉ. Memory và read data register không có reset bất đồng bộ. Sơ đồ mô tả storage logic, không quy định macro vật lý.

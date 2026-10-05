@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="924" viewBox="0 0 1760 924">
+<rect width="100%" height="100%" fill="white"/>
+<defs><marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="black"/></marker></defs>
+<text x="42" y="48" font-family="Arial" font-size="24" fill="black" text-anchor="start">00_TOP: llm_soc / Quartus memory binding</text>
+<text x="42" y="98" font-family="Arial" font-size="24" fill="black" text-anchor="start">18 pt = 24 px. Thin arrows: instantiation. Thick arrows: traced functional ports. Dashed blocks: external library.</text>
+<rect x="60" y="160" width="220" height="80" fill="white" stroke="black"/>
+<text x="170.0" y="194.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">TOP</text>
+<text x="170.0" y="224.0" font-family="Arial" font-size="24" fill="black" text-anchor="middle">(llm_soc)</text>
+<rect x="60" y="270" width="1540" height="180" fill="white" stroke="black"/>
+<text x="72" y="298" font-family="Arial" font-size="24" fill="black" text-anchor="start">External host: host_en / host_we / host_addr[31:0] / host_wdata[31:0]</text>
+<text x="72" y="328" font-family="Arial" font-size="24" fill="black" text-anchor="start">Return: host_ready / host_rdata[31:0]. Hold request until ACK; deassert enable between transactions.</text>
+<text x="72" y="358" font-family="Arial" font-size="24" fill="black" text-anchor="start">Status: running / ready / error / overflow_out. Debug: pc_debug[8:0] / instr_debug[12:0].</text>
+<text x="72" y="388" font-family="Arial" font-size="24" fill="black" text-anchor="start">Clock/reset: clk / rst_n. This is an internal request/acknowledge interface; AXI/APB are not implemented.</text>
+<rect x="30" y="480" width="1700" height="414" fill="white" stroke="black"/>
+<text x="42" y="508" font-family="Arial" font-size="24" fill="black" text-anchor="start">Block Functions &amp; Interfaces</text>
+<text x="42" y="538" font-family="Arial" font-size="24" fill="black" text-anchor="start">llm_soc: Host frontend and autonomous graph; parent muxes, operand caches, scaling, softmax/V pass,</text>
+<text x="42" y="568" font-family="Arial" font-size="24" fill="black" text-anchor="start">vector writes and token selection.</text>
+<text x="42" y="598" font-family="Arial" font-size="24" fill="black" text-anchor="start">  TOP</text>
+<text x="42" y="628" font-family="Arial" font-size="24" fill="black" text-anchor="start">  Parameters: USE_QUARTUS_MEMORY=1, PERF_COUNTERS=0, ENABLE_DEBUG_INDEX=0, ATTN_DIV_LANES=4,</text>
+<text x="42" y="658" font-family="Arial" font-size="24" fill="black" text-anchor="start">SIGMOID_LANES=4</text>
+<text x="42" y="688" font-family="Arial" font-size="24" fill="black" text-anchor="start">Source: llm_soc.sv:3</text>
+<text x="42" y="718" font-family="Arial" font-size="24" fill="black" text-anchor="start"></text>
+<text x="42" y="748" font-family="Arial" font-size="24" fill="black" text-anchor="start">Configuration: USE_QUARTUS_MEMORY=1, ATTN_DIV_LANES=4, SIGMOID_LANES=4.</text>
+<text x="42" y="778" font-family="Arial" font-size="24" fill="black" text-anchor="start">PERF_COUNTERS=0 and ENABLE_DEBUG_INDEX=0. Other configurations require a separate expansion.</text>
+<text x="42" y="808" font-family="Arial" font-size="24" fill="black" text-anchor="start">USE_SHARED=1: normalizer lane zero is connected to top u_div; only lanes 1, 2, 3 are children.</text>
+<text x="42" y="838" font-family="Arial" font-size="24" fill="black" text-anchor="start">Packages are source context, not instances. Generate scopes are annotations, not modules.</text>
+<text x="42" y="868" font-family="Arial" font-size="24" fill="black" text-anchor="start">Alternate memory hierarchy: see rtl_hierarchy_portable.drawio. Quartus is a demonstration backend.</text>
+</svg>

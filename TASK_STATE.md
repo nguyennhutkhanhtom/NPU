@@ -1,25 +1,27 @@
-# Current workspace checkpoint
+# Checkpoint workspace
 
-Updated 2026-10-05, Asia/Saigon. Sources and recorded evidence are authoritative.
-Preserve existing changes and immutable evidence; follow [AGENTS.md](AGENTS.md).
+Cập nhật **06/10/2026**, Asia/Saigon. Source, manifest và log là bằng chứng gốc;
+giữ các thay đổi đúng và evidence theo [AGENTS.md](AGENTS.md).
 
-The approved exact throughput optimization is complete. Current RTL/LUT assets
-match all-seven unit/graph, host cancellation, portable elaboration and full-top
-post-fit timing PASS evidence. Synthetic graph: 1,066,965 compute clocks versus
-4,254,046 at task start, 3.987x speedup. Minimum Fmax is 100.78 MHz at all four
-corners, nonnegative setup/hold/recovery/removal/pulse slack, TNS zero and no
-unconstrained paths. No pretrained application was executed.
+## Trạng thái cần nhớ
 
-- [Implementation report](docs/reviews/rtl_change_review_v3.md)
-- [Current evidence and reproduction commands](docs/verification/optimization_status.md)
-- [Active Quartus project](quartus/README.md)
-- [Research reference](docs/design/architecture_research.md)
-- [Retired Quartus project locations](docs/history/quartus_projects.md)
-- [Historical task state from 2026-10-04](docs/history/task_state_20261004.md)
+- Top hiện tại: llm_soc. Core matmulfree thuộc legacy.
+- 41 RTL/LUT assets khớp all-seven PASS opt_final4; graph tổng hợp 1.066.965 compute clocks.
+- opt_fulltop7 timing PASS 100,78 MHz cho configuration trong archive.
+- QSF hiện tại đã khác opt_fulltop7; application gate cần fresh timing manifest khớp.
+- Workflow nanofable_long_20261005 ghi TIMING_RUNNING; tại lần rà soát chưa có manifest hoàn tất hoặc application PASS.
 
-Current source/configuration paths are unchanged. The `opt_final4` compiled unit
-library and verified RAM model remain available. Inactive caches were removed;
-historical one-shot scripts are archived. The prior task-state file is preserved
-byte-for-byte; its links and commands use the original repository-root context.
+## Trang bắt đầu
 
-The current backend is an EDA demonstration. Quartus results are not ASIC signoff.
+| Cần làm | Trang |
+|---|---|
+| Hiểu graph và top | [Kiến trúc](docs/design/full_rtl_language.md) |
+| Chạy model thật | [NanoFable từng bước](docs/demos/language.md) |
+| Xem gate và evidence | [Trạng thái kiểm chứng](docs/verification/optimization_status.md) |
+| Chạy lại units/timing | [Verification guide](docs/verification/README.md) |
+| Đọc module | [Source overview](docs/source_guide/full_graph.md) |
+| Xem lịch sử | [History](docs/history/README.md) |
+
+Đợt cập nhật này sửa tài liệu và navigation. Sơ đồ/code excerpts giữ ở snapshot
+đã ghi, chờ cập nhật riêng. Không thay RTL, runner hoặc configuration và không
+thực thi pretrained inference trong công việc cập nhật docs.

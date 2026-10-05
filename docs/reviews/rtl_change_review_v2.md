@@ -406,11 +406,14 @@ The two sequences below are independent. T0 denotes the FLAGS edge for a scalar 
 | T3 | L_STORE/A_PACK writes the selected workspace lane | G_EMBED dispatch consumes token validity |
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart LR
     S["S64 rounded result"] --> P["Completion packet: S24 + clamp flags + tag"]
     P --> C["Two registered clusters"]
     C --> G["Eight S24 output groups"]
     G --> W["32 masked workspace lanes"]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 P1 adds one edge per linear row or attention output lane; P2 adds two edges per embedding dispatch. P3 and P4 add no operator latency. The graph's expected compute count is 4,229,462 + 24,576 + 8 = **4,254,046 clocks**; the completed regression must supply the actual count. The unchanged 5,000,000-clock watchdog remains in force.

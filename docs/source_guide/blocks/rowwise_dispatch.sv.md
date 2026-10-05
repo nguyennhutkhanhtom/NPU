@@ -13,9 +13,9 @@ Dispatcher làm việc ở mức memory và descriptor, còn rowwise_op làm s�
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    CFG["start / opcode / A, B, dst descriptors"]
+CFG["start / opcode / A, B, dst descriptors"]
     WS["Workspace read/write port 256 bit"]
     subgraph DISPATCH["rowwise_dispatch"]
         CHECK["Descriptor checker<br/>Format / scale / length / overlap"]
@@ -39,6 +39,8 @@ flowchart TB
     ALU --> WRITE
     WRITE -->|"Write data"| WS
     CTRL -.-> STATUS
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ ra; decoder/demux dùng hình thang ngược lại, mở rộng về phía nhiều ngõ ra. Hình chữ nhật có các vạch ngang biểu diễn bộ nhớ hoặc bank descriptor. Các hình chữ nhật thường là datapath, thanh ghi đơn hoặc giao diện. Nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.
@@ -275,9 +277,9 @@ module rowwise_dispatch (
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    D["Latched descriptors + opcode"] -.-> CTRL["Dispatcher controller<br/>word_index / word_count / valid_elems"]
+D["Latched descriptors + opcode"] -.-> CTRL["Dispatcher controller<br/>word_index / word_count / valid_elems"]
     D -.-> ADDR@{ shape: trap-t, label: "Workspace address selector<br/>A / B / old dst / output dst" }
     CTRL -.-> ADDR
     ADDR -.-> WS["Workspace SRAM interface"]
@@ -289,6 +291,8 @@ flowchart TB
     ALU -.->|"done / error / overflow"| CTRL
     CTRL -.->|"Write enable"| WS
     CTRL -.-> STATUS["busy / done / overflow / format_error"]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 

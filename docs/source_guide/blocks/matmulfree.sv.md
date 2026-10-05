@@ -15,28 +15,28 @@ Port host là bus đơn giản 32 bit, không phải AXI/APB. Địa chỉ host 
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    HOST["Host 32 bit"]
+HOST["Host 32 bit"]
     subgraph NPU["NPU — matmulfree.sv"]
-        IF["Host interface<br/>Read request + tagged response registers<br/>Ctrl/desc: 2 cạnh · SRAM/imem: 4 cạnh<br/>Write: same-edge acceptance"]
-        subgraph CTRL["Điều khiển và cấu hình"]
+        IF["Host interface<br/>Read request + tagged response registers<br/>Ctrl/desc: 2 edges · SRAM/imem: 4 edges<br/>Write: same-edge acceptance"]
+        subgraph CTRL["Control and configuration"]
             PC["PC.sv<br/>Program counter 9 bit"]
             IM@{ shape: rect, label: "ins_mem.sv<hr/>Instruction memory 512 × 13 bit" }
-            SCH["Scheduler single-issue<br/>Opcode decode + điều phối engine"]
+            SCH["Scheduler single-issue<br/>Opcode decode and engine scheduling"]
             DESC@{ shape: rect, label: "descriptor_file.sv<hr/>8 workspace × 32-bit FF<hr/>8 matrix × 3 word × 32-bit FF" }
-            SCALE["Runtime q metadata + effective_mat<br/>scale_compose.sv + div 48/25<br/>Scale tĩnh hoặc ghép scale động<br/>Guard overlap với q có metadata"]
+            SCALE["Runtime q metadata + effective_mat<br/>scale_compose.sv + div 48/25<br/>Static scale or dynamic composition<br/>Overlap guard for quantization metadata"]
         end
-        subgraph ENG["Các engine tính toán"]
-            ROW["Row-wise vector engine<br/>rowwise_dispatch + rowwise_op<br/>Registered operand / product / RNE<br/>ADD / SUB / MUL / REC / RELU<br/>sigmoid: ROM + nội suy"]
+        subgraph ENG["Compute engines"]
+            ROW["Row-wise vector engine<br/>rowwise_dispatch + rowwise_op<br/>Registered operand / product / RNE<br/>ADD / SUB / MUL / REC / RELU<br/>sigmoid: ROM and interpolation"]
             NORM["NORM + QUANT engine<br/>norm_dispatch + norm<br/>isqrt_u64 + div 55/32<br/>Registered operand / product / RNE<br/>S16 → scratch S24/F16 → S8"]
-            TM["Ternary matmul engine<br/>ternary_mul · 32 lane chọn dấu/zero<br/>acc_mul + accumulator S18<br/>Registered product / RNE<br/>postscale_finish + bias → S16/S32"]
+            TM["Ternary matmul engine<br/>ternary_mul · 32 sign/zero selection lanes<br/>acc_mul + accumulator S18<br/>Registered product / RNE<br/>postscale_finish + bias → S16/S32"]
         end
-        REQMUX@{ shape: trap-t, label: "Workspace request mux<br/>Chọn request/write theo active_unit" }
-        RSPDEC@{ shape: trap-b, label: "Workspace response demux<br/>Phân phối read data/valid tới active engine" }
+        REQMUX@{ shape: trap-t, label: "Workspace request mux<br/>Select requests/writes using active_unit" }
+        RSPDEC@{ shape: trap-b, label: "Workspace response demux<br/>Route read data/valid to the active engine" }
         WS@{ shape: rect, label: "Workspace SRAM 8 KiB<hr/>regfile.sv: register<hr/>sram_256_wrapper ADDR_W=8<hr/>256 × 256 bit<hr/>8 bank × 32 bit" }
         PM@{ shape: rect, label: "Parameter SRAM 32 KiB<hr/>mem_mapping.sv<hr/>sram_256_wrapper ADDR_W=10<hr/>1024 × 256 bit · weight + bias<hr/>8 bank × 32 bit" }
-        IF <-->|"Nạp/đọc chương trình, descriptor, control/status"| CTRL
+        IF <-->|"Load/read program, descriptors and control/status"| CTRL
         IF <-->|"Host 32 bit · read valid/ready"| WS
         IF <-->|"Host 32 bit · read valid/ready"| PM
         PC -->|"Address"| IM
@@ -66,6 +66,8 @@ flowchart TB
         PM -->|"256 bit + valid"| TM
     end
     HOST <-->|"Address / data / handshake"| IF
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 MUX dùng hình thang rộng ở phía nhiều ngõ vào và thu hẹp về ngõ ra; decoder/demux dùng hình thang ngược lại, mở rộng về phía nhiều ngõ ra. Hình chữ nhật có các vạch ngang biểu diễn bộ nhớ hoặc bank descriptor. Các hình chữ nhật thường là datapath, thanh ghi đơn hoặc giao diện. Nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.
@@ -222,9 +224,9 @@ module matmulfree (
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart LR
-%%{init: {"flowchart": {"nodeSpacing": 30, "rankSpacing": 45, "curve": "linear"}}}%%
-    H["Host enable / read / address"]
+H["Host enable / read / address"]
     D["Range + alignment decoder<br/>Control always · other regions idle"]
     R["Request registers<br/>Address + one-hot region + pending"]
     C["Control / descriptor data<br/>Address from request register"]
@@ -244,6 +246,8 @@ flowchart LR
     P --> O
     P -.-> A
     H -.->|"Enable / read / address"| A
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 Control/descriptor cần hai cạnh lên; SRAM/imem cần bốn cạnh lên từ sample đầu. Mux data dùng region đã chốt, output data đi từ register response. Comparator address/tag giữ ready gắn đúng giao dịch; host phải lấy data cùng ready.
@@ -832,11 +836,11 @@ Control/descriptor cần hai cạnh lên; SRAM/imem cần bốn cạnh lên từ
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 20}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    PROG["Program block<br/>PC + instruction memory"]
+PROG["Program block<br/>PC + instruction memory"]
     DESC@{ shape: rect, label: "Descriptor file<hr/>Addressable storage" }
-    subgraph CTRL["Điều khiển cấp top trong matmulfree"]
+    subgraph CTRL["Top-level matmulfree control"]
         DECODE["Instruction storage + opcode decode"]
         SCH["Single-issue scheduler"]
         STATUS["Completion/error aggregation<br/>running / ready / sticky error / overflow"]
@@ -865,6 +869,8 @@ flowchart TB
     COMP -.->|"done / error"| SCH
     COMP -->|"Composed M/r"| ESEL
     EFF -.->|"Matrix config"| ENGINE
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 

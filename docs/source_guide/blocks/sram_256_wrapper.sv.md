@@ -13,22 +13,23 @@ Compute đọc/ghi word 256 bit; host đọc/ghi một lane 32 bit. `ADDR_W=8` t
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
     C["Compute port<br/>rd_en / rd_addr · write 256 bit"]
     H["Host port<br/>host_en / host_we / row + lane · 32 bit"]
     subgraph SRAM["sram_256_wrapper"]
-        WM@{ shape: trap-t, label: "Write address/data mux<br/>Host write ưu tiên · mask 8 lane" }
-        RM@{ shape: trap-t, label: "Shared read address mux<br/>Host hoặc compute" }
+        WM@{ shape: trap-t, label: "Write address/data mux<br/>Host write priority; eight-lane mask" }
+        RM@{ shape: trap-t, label: "Shared read address mux<br/>Host or compute" }
         REQ["Request registers<br/>address / lane / host / pending"]
-        MEM@{ shape: rect, label: "8 bank RAM, mỗi bank DEPTH × 32 bit<hr/>Whole-word write + synchronous read<hr/>Không reset nội dung" }
-        DATA["read_row_q 256 bit<br/>Register dữ liệu không asynchronous reset"]
+        MEM@{ shape: rect, label: "Eight RAM banks; DEPTH x 32 bits per bank<hr/>Whole-word write + synchronous read<hr/>Storage has no reset" }
+        DATA["read_row_q 256 bit<br/>Data register has no asynchronous reset"]
         TAG["Response registers<br/>address / lane / host / valid"]
         LANE@{ shape: trap-t, label: "Host lane mux<br/>256 → 32 bit" }
-        MATCH["Kiểm tra request hiện tại<br/>Hai bộ tag khớp row + lane<br/>Host read đang được giữ" ]
+        MATCH["Current-request check<br/>Both tags match row and lane<br/>Host holds the read request" ]
     end
     C -->|"Write data"| WM
     H -->|"Write data"| WM
-    WM -->|"Address / data / write_mask mỗi bank"| MEM
+    WM -->|"Address / data / write_mask per bank"| MEM
     C -.->|"Read request"| RM
     H -.->|"Read request"| RM
     RM -.-> REQ
@@ -36,7 +37,7 @@ flowchart TB
     MEM --> DATA
     REQ -.-> TAG
     DATA -->|"rd_data 256 bit"| C
-    TAG -.->|"rd_valid khi response là compute"| C
+    TAG -.->|"rd_valid for compute-owned response"| C
     DATA --> LANE
     TAG -.->|"response_lane_q"| LANE
     LANE -->|"host_rdata 32 bit"| H
@@ -44,6 +45,8 @@ flowchart TB
     REQ -.-> MATCH
     TAG -.-> MATCH
     MATCH -.->|"host_rvalid → frontend response register"| H
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 Nét liền biểu diễn dữ liệu; nét đứt biểu diễn địa chỉ, enable và valid. Hộp RAM mô tả storage logic, không quy định SRAM macro hoặc block RAM vật lý. Reset chỉ xóa control/tag; dữ liệu chỉ được dùng khi valid.
@@ -211,23 +214,26 @@ endmodule
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart LR
     IN["Host / compute read request"] -.-> REQ["Request address / lane / host / pending FF"]
-    REQ -.-> RAM@{ shape: rect, label: "8 RAM bank × 32 bit<hr/>DEPTH word mỗi bank" }
+    REQ -.-> RAM@{ shape: rect, label: "8 RAM bank × 32 bit<hr/>DEPTH words per bank" }
     RAM --> DATA["read_row_q 256 bit"]
     REQ -.-> TAG["Response address / lane / host / valid FF"]
     DATA --> HM@{ shape: trap-t, label: "Host lane mux<br/>256 → 32 bit" }
     TAG -.-> HM
     HM --> H["host_rdata"]
-    IN -.-> VALID["Current read + hai tag khớp"]
+    IN -.-> VALID["Current read and both tags match"]
     REQ -.-> VALID
     TAG -.-> VALID
     VALID -.-> HV["host_rvalid"]
-    TAG -.-> CV["rd_valid: response không phải host"]
+    TAG -.-> CV["rd_valid: compute-owned response"]
     DATA --> C["rd_data"]
     RESET["rst_n: reset control/tag"] -.-> REQ
     RESET -.-> TAG
     CLK["clk"] -.-> DATA
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 `read_row_q` chỉ có clock và capture enable. Tag/valid bảo đảm client không tiêu thụ dữ liệu chưa hợp lệ.

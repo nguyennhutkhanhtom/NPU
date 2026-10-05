@@ -1,0 +1,122 @@
+[
+  {
+    "document": "docs/design/interfaces.md",
+    "index": 0,
+    "code": "./tests/run.ps1 -Block All\n"
+  },
+  {
+    "document": "docs/verification/README.md",
+    "index": 0,
+    "code": "Set-Location -LiteralPath 'D:/2151097_Nguyen Nhut Khanh'\n$pythonExe = 'C:/Users/khanh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'\n$simBin = 'C:/altera_lite/25.1std/questa_fse/win64'\n$quartusBin = 'C:/altera_lite/25.1std/quartus/bin64'\n"
+  },
+  {
+    "document": "docs/verification/README.md",
+    "index": 1,
+    "code": "$ramTiming = 'docs/verification/timing/opt_fulltop7/manifest.json'\n$ramModel = 'tests/full_rtl/build/questa25_model'\n& $pythonExe tests/full_rtl/memory_model.py --timing $ramTiming --sim-bin $simBin --output $ramModel\nif ($LASTEXITCODE -ne 0) { throw 'RAM model chưa được xác minh.' }\n$unitArgs = @{\n    SimBin = $simBin\n    Python = $pythonExe\n    Questa = $true\n    MemoryModelManifest = \"$ramModel/manifest.json\"\n    TimingManifest = $ramTiming\n    WorkLibraryName = 'my_units_20261006'\n    EvidenceTag = 'my_units_20261006'\n}\n& tests/full_rtl/run_units.ps1 @unitArgs\n"
+  },
+  {
+    "document": "docs/verification/README.md",
+    "index": 2,
+    "code": "& tests/full_rtl/run_portable_100mhz.ps1 -WorkLibraryName my_units_20261006 -EvidenceTag my_portable_20261006\n& tests/full_rtl/run_host_cancel_100mhz.ps1 -WorkLibraryName my_host_20261006 -EvidenceTag my_host_20261006\n"
+  },
+  {
+    "document": "docs/verification/README.md",
+    "index": 3,
+    "code": "& tools/timing/run.ps1 -Project quartus/llm_soc -Tag my_timing_20261006 -QuartusBin $quartusBin -Python $pythonExe\n"
+  },
+  {
+    "document": "docs/verification/timing/README.md",
+    "index": 0,
+    "code": "& tools/timing/run.ps1 -Project quartus/llm_soc -Tag my_timing_20261006 -QuartusBin C:/altera_lite/25.1std/quartus/bin64 -Python C:/Users/khanh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe\n"
+  },
+  {
+    "document": "docs/demos/language.md",
+    "index": 0,
+    "code": "Set-Location -LiteralPath 'D:/2151097_Nguyen Nhut Khanh'\n$pythonExe = 'C:/Users/khanh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'\n$simBin = 'C:/altera_lite/25.1std/questa_fse/win64'\n& $pythonExe --version\n"
+  },
+  {
+    "document": "docs/demos/language.md",
+    "index": 1,
+    "code": "& $pythonExe tests/language_demo/fetch_assets.py --check\n"
+  },
+  {
+    "document": "docs/demos/language.md",
+    "index": 2,
+    "code": "& tests/language_demo/setup.ps1 -Python $pythonExe\n"
+  },
+  {
+    "document": "docs/demos/language.md",
+    "index": 3,
+    "code": "$timingManifest = 'docs/verification/timing/nanofable_long_20261005/manifest.json'\nif (-not (Test-Path -LiteralPath $timingManifest)) {\n    throw 'Timing chưa hoàn tất. Xem status/log của workflow hoặc tạo lượt timing mới.'\n}\n& $pythonExe tests/full_rtl/check_gate.py $timingManifest\nif ($LASTEXITCODE -ne 0) { throw 'Gate chưa PASS; dừng trước export và application.' }\n"
+  },
+  {
+    "document": "docs/demos/language.md",
+    "index": 4,
+    "code": "$appArgs = @{\n    TimingManifest = $timingManifest\n    Python = $pythonExe\n    SimBin = $simBin\n    Prompt = 'Once upon a time'\n    NewTokens = 8\n    MinNew = 8\n    Temperature = 0\n    Seed = 7\n}\n& tests/full_rtl/run_application.ps1 @appArgs\n"
+  },
+  {
+    "document": "docs/demos/language.md",
+    "index": 5,
+    "code": "$appArgs.Prompt = 'Once upon a time, Lily found a tiny kitten.'\n$appArgs.NewTokens = 96\n$appArgs.MinNew = 64\n$appArgs.Temperature = 166\n& tests/full_rtl/run_application.ps1 @appArgs\n"
+  },
+  {
+    "document": "docs/demos/language.md",
+    "index": 6,
+    "code": "Get-Content -LiteralPath 'tests/full_rtl/build/application.log' -Tail 20 -Wait\n"
+  },
+  {
+    "document": "docs/demos/language.md",
+    "index": 7,
+    "code": "$appArchive = 'tests/full_rtl/evidence/my_nanofable_20261006'\nif (Test-Path -LiteralPath $appArchive) { throw 'Chọn một tên archive chưa có.' }\nNew-Item -ItemType Directory -Path $appArchive | Out-Null\nCopy-Item -LiteralPath 'tests/full_rtl/application_results.json','tests/full_rtl/generated_text.md' -Destination $appArchive\n$appFiles = @('application_compile.log','application_compile.console','application.log',\n    'application.log.console','reference.json','rtl_tokens.txt','application_design_units.json',\n    'parameter.mem','prompt.mem','expected.mem','config.svh','application_sources.f')\nforeach ($name in $appFiles) {\n    Copy-Item -LiteralPath (Join-Path 'tests/full_rtl/build' $name) -Destination $appArchive\n}\n$hashes = [ordered]@{}\nGet-ChildItem -LiteralPath $appArchive -File | ForEach-Object {\n    $hashes[$_.Name] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()\n}\n$hashes | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $appArchive 'sha256.json') -Encoding utf8\n"
+  },
+  {
+    "document": "tests/README.md",
+    "index": 0,
+    "code": "./tests/run.ps1 -Block All -Python 'C:/Python312/python.exe' -SimBin 'C:/intelFPGA/20.1/modelsim_ase/win32aloem'\n"
+  },
+  {
+    "document": "tests/README.md",
+    "index": 1,
+    "code": "./tests/run.ps1 -Block All\n./tests/run.ps1 -Block Norm\n./tests/run.ps1 -Block Ternary\n./tests/run.ps1 -Block Rowwise\n./tests/run.ps1 -Block AccMul\n./tests/run.ps1 -Block Sram\n./tests/run.ps1 -Block DivProfiles\n./tests/run.ps1 -Block Postscale\n"
+  },
+  {
+    "document": "tests/README.md",
+    "index": 2,
+    "code": "python tests/reference.py --check\nquartus_sh -t tests/check_synthesis.tcl\n"
+  },
+  {
+    "document": "tests/language_demo/README.md",
+    "index": 0,
+    "code": "$pythonExe = 'C:/Users/khanh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'\n& tests/language_demo/setup.ps1 -Python $pythonExe\n"
+  },
+  {
+    "document": "tests/language_demo/README.md",
+    "index": 1,
+    "code": "& $pythonExe tests/language_demo/fetch_assets.py --check\n"
+  },
+  {
+    "document": "docs/history/timing_development.md",
+    "index": 0,
+    "code": "Push-Location quartus\ntry {\n    quartus_sh --flow compile matmul_free\n} finally {\n    Pop-Location\n}\nquartus_sta -t tools/timing/extract.tcl docs/verification/timing/constrained sdc\n"
+  },
+  {
+    "document": "docs/history/full_rtl_verification_development.md",
+    "index": 0,
+    "code": "python tests/full_rtl/memory_model.py --timing docs/verification/timing/fullrtl100_logic5/manifest.json --sim-bin C:/altera_lite/25.1std/questa_fse/win64 --output tests/full_rtl/build/questa25_model\n./tests/full_rtl/run_units.ps1 -SimBin C:/altera_lite/25.1std/questa_fse/win64 -Questa -MemoryModelManifest tests/full_rtl/build/questa25_model/manifest.json -TimingManifest docs/verification/timing/fullrtl100_logic5/manifest.json -WorkLibraryName NEW_WORK -EvidenceTag NEW_UNUSED_TAG\n"
+  },
+  {
+    "document": "docs/history/full_rtl_verification_development.md",
+    "index": 1,
+    "code": "./tests/full_rtl/run_units.ps1\n./tools/timing/run.ps1 -Project quartus/llm_soc -Tag fullrtl100_final -QuartusBin C:/altera_lite/25.1std/quartus/bin64\n./tests/full_rtl/run_application.ps1 -TimingManifest docs/verification/timing/fullrtl100_final/manifest.json\n"
+  },
+  {
+    "document": "docs/history/full_rtl_verification_development.md",
+    "index": 2,
+    "code": "$simBin = 'C:/altera_lite/25.1std/questa_fse/win64'\n& \"$simBin/vlib.exe\" tests/full_rtl/build/NEW_PROBE_WORK\n& \"$simBin/vlog.exe\" -sv -svinputport=var -work tests/full_rtl/build/NEW_PROBE_WORK '+incdir+Verilog Source code' -f tests/full_rtl/build/sources.f tests/full_rtl/host_cancel_contract.sv\n& \"$simBin/vsim.exe\" -c -onfinish exit '-voptargs=-duselectreport=tests/full_rtl/build/NEW_PROBE_BINDING.json' -L tests/full_rtl/build/questa25_model/altera_mf_ver -L tests/full_rtl/build/NEW_PROBE_WORK -lib tests/full_rtl/build/NEW_PROBE_WORK tb_host_cancel_contract -do 'run -all; quit -f'\n"
+  },
+  {
+    "document": "quartus/README.md",
+    "index": 0,
+    "code": "./tools/timing/run.ps1 -Project quartus/llm_soc -Tag FRESH_TAG -QuartusBin C:/altera_lite/25.1std/quartus/bin64\n"
+  }
+]

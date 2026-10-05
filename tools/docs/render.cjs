@@ -71,11 +71,21 @@ for (const file of files) {
           const b = svg.viewBox.baseVal;
           svg.style.width = Math.ceil(b.width) + 'px';
           svg.style.height = Math.ceil(b.height) + 'px';
-          return { svg: rendered.svg, width: Math.ceil(b.width), height: Math.ceil(b.height), nodes: svg.querySelectorAll('.node').length };
+          const fonts = new Set(); const colors = new Set(); const bounds = [];
+          const labels = svg.querySelectorAll('.nodeLabel, .edgeLabel, .cluster-label');
+          for (const label of labels) {
+            const css = getComputedStyle(label); fonts.add(css.fontSize); colors.add(css.color);
+            const rect = label.getBoundingClientRect(); const outer = svg.getBoundingClientRect();
+            if (rect.width && (rect.left < outer.left-2 || rect.top < outer.top-2 || rect.right > outer.right+2 || rect.bottom > outer.bottom+2))
+              bounds.push({text:label.textContent,issue:'Label outside rendered SVG'});
+          }
+          return { svg: rendered.svg, width: Math.ceil(b.width), height: Math.ceil(b.height), nodes: svg.querySelectorAll('.node').length,
+            fonts:[...fonts], text_colors:[...colors], layout_errors:bounds };
         }, { code: d.code, key });
         fs.writeFileSync(path.join(output, key + '.svg'), result.svg);
         await page.locator('#diagram').screenshot({ path: path.join(output, key + '.png'), timeout: 15000 });
-        results.push({ file: d.file, ordinal: d.ordinal, source_sha256: crypto.createHash('sha256').update(d.code.replaceAll('\r\n', '\n')).digest('hex'), width: result.width, height: result.height, nodes: result.nodes, status: 'rendered' });
+        results.push({ file: d.file, ordinal: d.ordinal, source_sha256: crypto.createHash('sha256').update(d.code.replaceAll('\r\n', '\n')).digest('hex'), width: result.width, height: result.height, nodes: result.nodes,
+          fonts:result.fonts,text_colors:result.text_colors,layout_errors:result.layout_errors,status:'rendered' });
       } catch (error) {
         results.push({ file: d.file, ordinal: d.ordinal, status: 'failed', error: String(error) });
       }

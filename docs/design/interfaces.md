@@ -1,5 +1,9 @@
 # ISA, descriptor và host interface
 
+> **Phạm vi legacy:** trang này mô tả core matmulfree.
+> Top hiện tại llm_soc có [kiến trúc](full_rtl_language.md) và
+> [host interface](host_interface.md) riêng.
+
 [Project](../../README.md) → [Tài liệu](../README.md) → **ISA và host**
 
 Trang này mô tả ISA/host của core instruction-driven legacy. Host map và

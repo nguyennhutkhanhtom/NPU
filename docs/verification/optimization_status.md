@@ -1,50 +1,76 @@
-# Exact optimization verification status
+# Trạng thái kiểm chứng
 
-Implementation report: [version 3](../reviews/rtl_change_review_v3.md).
-Architecture: [resource and latency contracts](../design/exact_throughput_optimization.md).
+[Tài liệu](../README.md) → [Kiểm chứng](README.md) → **Trạng thái**
 
-Current RTL implements the approved exact arithmetic/control/cache/streaming changes.
-No pretrained application has been executed by this task.
-The final audit matches all 41 current RTL/LUT hashes across unit, host,
-portable and timing evidence, verifies all three backend configuration hashes,
-and confirms integrity of the 80-file final unit archive and timing report archive.
+Cập nhật ngày **06/10/2026**, múi giờ Asia/Saigon. Đây là trang tra cứu trạng thái;
+manifest, source hashes và log là bằng chứng gốc.
 
-## Completed final checks
+## Bản RTL và cấu hình hiện tại
 
-- All-seven synthetic regression: [PASS](../../tests/full_rtl/evidence/opt_final4_all/results.json),
-  library/tag `opt_final4`, zero compile/runtime warnings. Graph: 1,066,965 compute
-  clocks, 3.987x faster than the matching 4,254,046-clock baseline; same three
-  tokens, sixteen layer executions, causal checks and exact traffic totals.
-- Full-top synthesis/fit/STA: [PASS](timing/opt_fulltop7/manifest.json), minimum
-  all-corner Fmax 100.78 MHz; worst setup +0.077 ns, hold +0.115 ns. Setup,
-  hold, recovery, removal and pulse-width slack are nonnegative at all four
-  corners, every TNS is zero, and there are no unconstrained paths/ports/clocks.
-  Current source and configuration hashes are verified. SDC, device, seed,
-  ALL worker concurrency and physical delay settings match the task-start backend.
-  Fitted resources: 59,605 ALMs (+10.43%), 66,924 registers (+20.66%), 1,186
-  RAM blocks (unchanged), zero DSP blocks. Synthesis has 22 warnings, fitting
-  four retained backend warnings; STA and extraction have zero errors/warnings.
-- Current-source host cancellation: [PASS](../../tests/full_rtl/evidence/opt_host1/results.json).
-- Vendor-free elaboration: [PASS](portable_elaboration_opt_final4/results.json),
-  zero errors/warnings, no vendor memory/control/arithmetic modules loaded.
+| Mục | Kết quả ghi nhận | Phạm vi áp dụng |
+|---|---|---|
+| Bảy nhóm regression | [opt_final4: PASS](../../tests/full_rtl/evidence/opt_final4_all/results.json), 0 compile/runtime warnings | Cả 41 RTL/LUT assets vẫn khớp workspace |
+| Graph tổng hợp | 1.066.965 compute clocks; 2 prompt token, 3 token mới, 16 lượt transformer layer | Fixture tổng hợp, giữ các numeric/token/causal/traffic checks |
+| Host cancellation | [opt_host1: PASS](../../tests/full_rtl/evidence/opt_host1/results.json) | Cùng RTL; accepted write và ACK sau commit |
+| Portable elaboration | [opt_final4: PASS](portable_elaboration_opt_final4/results.json) | Cùng RTL; USE_QUARTUS_MEMORY=0, 0 errors/warnings |
+| Timing đã hoàn tất | [opt_fulltop7: PASS](timing/opt_fulltop7/manifest.json), minimum Fmax 100,78 MHz | RTL khớp; **QSF hiện tại khác QSF đã đo** |
+| Timing cho lượt demo mới | [Trạng thái workflow](../../tests/full_rtl/evidence/nanofable_long_20261005/status.json): TIMING_RUNNING | Chưa có manifest hoàn tất cho nanofable_long_20261005 lúc rà soát |
+| Application pretrained | Chưa có application_results.json PASS | Workflow vẫn chờ gate timing của cấu hình hiện tại |
 
-Intermediate checkpoints and failures are preserved in `tests/full_rtl/evidence/opt_*`
-and `docs/verification/timing/opt_fulltop*`. Partial or interrupted attempts do not
-establish all-seven PASS or timing closure.
+QSF hiện tại bổ sung metadata version/partition so với archive `opt_fulltop7`.
+Dù RTL giống nhau, runner yêu cầu cấu hình khớp chính xác; manifest cũ vì vậy
+chưa mở được gate cho application hiện tại. Không sửa hash, constraints hay
+ngưỡng kiểm tra để bỏ qua điều kiện này. Trạng thái workflow là lần ghi cuối
+của script; muốn biết tiến trình thực tế cần đọc log và trạng thái process.
 
-## Reproduction commands
+## Số liệu của checkpoint tối ưu
 
-Use fresh library names and evidence tags; existing evidence must not be overwritten.
+Các con số sau thuộc `opt_final4` và `opt_fulltop7`, với mặc định bốn divider,
+bốn sigmoid lane, performance counters và opcode debug index tắt.
 
-```powershell
-& tests/full_rtl/run_units.ps1 -SimBin C:/altera_lite/25.1std/questa_fse/win64 -Questa -MemoryModelManifest tests/full_rtl/build/questa25_model/manifest.json -TimingManifest docs/verification/timing/opt_fulltop7/manifest.json -WorkLibraryName FRESH_LIBRARY -EvidenceTag FRESH_TAG
-& tools/timing/run.ps1 -Project quartus/llm_soc -Tag fresh_timing -QuartusBin C:/altera_lite/25.1std/quartus/bin64 -Python C:/Users/khanh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe
-& tests/full_rtl/run_host_cancel_100mhz.ps1 -WorkLibraryName FRESH_HOST_LIBRARY -EvidenceTag FRESH_HOST_TAG
-& tests/full_rtl/run_portable_100mhz.ps1 -WorkLibraryName ALL_SEVEN_LIBRARY -EvidenceTag FRESH_PORTABLE_TAG
-```
+| Chỉ tiêu | Baseline task-start | Checkpoint tối ưu |
+|---|---:|---:|
+| Graph compute clocks | 4.254.046 | 1.066.965 |
+| Minimum Fmax | 98,39 MHz | 100,78 MHz |
+| Worst setup slack | -0,164 ns | +0,077 ns |
+| ALMs | 53.974 | 59.605 |
+| Registers | 55.466 | 66.924 |
+| RAM blocks | 1.186 | 1.186 |
+| DSP blocks | 0 | 0 |
 
-The exact-current hardware prerequisites for the application gate now PASS for the
-default four divider/four sigmoid lanes. No pretrained application or reference
-inference was executed. Task-specific RTL change is (828 additions + 265 deletions)
-/ 5,165 baseline code lines = 21.161665%, excluding comments, blank lines and
-pre-existing changes. Quartus results are an EDA demonstration, not ASIC signoff.
+Graph dùng ít hơn **74,92% compute clocks**, tương đương **3,987 lần** theo cùng
+benchmark. Đây là số chu kỳ tính toán, không phải thời gian mô phỏng trên PC.
+TNS của mọi check ở bốn corner trong `opt_fulltop7` bằng 0; không có path
+unconstrained. Worst hold là +0,115 ns. Margin setup +0,077 ns cần được kiểm tra
+lại khi RTL hoặc backend thay đổi.
+
+Traffic graph đã kiểm tra: 77.756 parameter reads, 1.828 vector reads,
+1.564 vector writes, 320 KV reads và 128 KV writes.
+Tỷ lệ thay đổi RTL của task tối ưu là `(828 + 265) / 5.165 × 100 = 21,16%`;
+không tính comments, dòng trống, tests, docs và thay đổi có sẵn trước task.
+
+## Điều kiện chạy model thật
+
+Trước export/reference inference và mô phỏng application, runner kiểm tra:
+
+1. Cả bảy nhóm unit/graph PASS, khớp RTL, test inputs và log/binding evidence.
+2. Full-top llm_soc post-fit đạt ít nhất 100 MHz ở cả bốn corner.
+3. Setup, hold, recovery, removal và pulse slack không âm; TNS = 0.
+4. Không có unconstrained path/clock/port; report và source/config hashes khớp.
+5. Fitted DSP, PLL, DLL và HSSI resources bằng 0 theo gate hiện tại.
+
+[Lệnh kiểm tra gate và chạy demo](../demos/language.md) có hướng dẫn đầy đủ.
+[Hướng dẫn tái kiểm chứng](README.md) ghi khi nào cần chạy lại units hoặc timing.
+Chỉ một phiên mô phỏng Questa chạy tại một thời điểm trên license đang dùng.
+
+## Evidence và tài liệu liên quan
+
+- [Implementation review version 3](../reviews/rtl_change_review_v3.md)
+- [Hợp đồng cache và streaming](../design/exact_throughput_optimization.md)
+- [Timing: cách đọc report](timing/README.md)
+- [Rà soát warnings của lượt NanoFable](warning_review_nanofable_20261005.md)
+- [Baseline source giữ nguyên](optimization_baseline/rtl/)
+
+Các checkpoint fail, canceled và intermediate vẫn được lưu trong evidence.
+Chúng phục vụ truy vết; chỉ kết quả hoàn tất và khớp source/config mới có thể
+mở gate application. Quartus là backend EDA, chưa phải ASIC signoff.

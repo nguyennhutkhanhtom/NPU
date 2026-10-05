@@ -1,55 +1,105 @@
-# Exact throughput architecture
+# Tối ưu throughput và quyền dùng tài nguyên
 
-The fixed graph remains four transformer layers, 128 channels, four 32-channel attention heads, 384 feed-forward channels, 4,096 vocabulary entries and context at most 128. Host loading, graph phase IDs, fixed-point rounding, saturation, overflow/error policy, sampling exclusions, stable lowest-ID ties and PRNG order retain their prior contracts. This change targets cycles and avoidable SRAM transactions. FPGA EDA measurements do not establish ASIC PPA or signoff.
+[Tài liệu](../README.md) → [Thiết kế](README.md) → **Throughput**
 
-## Resource ownership
+Tối ưu giữ geometry cố định của graph: bốn layer, 128 channel, bốn head,
+FFN 384 channel, vocabulary 4.096 và context 128. Mục tiêu là giảm compute clocks
+và SRAM transactions, đồng thời giữ rounding, saturation, faults, sampling ties
+và thứ tự cập nhật PRNG. Số liệu đo nằm trong [review version 3](../reviews/rtl_change_review_v3.md).
 
-`llm_soc` owns the graph, matrix metadata, normalized operand cache, coefficient scaling, vector writes, attention probability/value pass and sampling. Three bounded engines own their regular streaming passes:
+## Quyền sở hữu tài nguyên
 
-| Module | Ownership | Shared resources |
+| Owner | Công việc | Tài nguyên dùng chung |
 |---|---|---|
-| `llm_linear_engine` | One exact ternary row, two-word parameter prefetch credits, response drain and reserved-code fault | Parameter SRAM and the parent's immutable operand cache |
-| `llm_head_engine` | Four ordered int8 chunks for one vocabulary row, request/response counters and S39 accumulation | Parameter SRAM, cached final hidden vector and SIMD reduction |
-| `llm_attention_engine` | Causal Q/K requests, streamed score rounding/scaling, score storage and maximum | KV SRAM, held query and SIMD reduction |
-| `llm_attention_normalize` | Exact RNE division, sign restoration and S24 clamp in bounded batches | Lane zero shares the RMSNorm divider; three additional dividers provide four-way attention normalization |
-| `ternary_dot32` | S25 sign/zero terms and a balanced registered S30 reduction | Dedicated portable add/subtract logic |
+| llm_soc | Graph, metadata, operand cache, scaling, vector writes, probability/V pass và sampling | SRAM, SIMD và các scalar units |
+| llm_linear_engine | Một ternary row, hai-word prefetch credit, reserved-code fault và response drain | Parameter SRAM, immutable operand cache |
+| llm_head_engine | Bốn int8 chunk theo thứ tự và S39 row accumulation | Parameter SRAM, cached final hidden vector và SIMD |
+| llm_attention_engine | Q/K causal requests, score scaling, score storage và maximum | KV SRAM, held query và SIMD |
+| llm_attention_normalize | Exact RNE divide, sign restoration và S24 clamp theo batch | Lane 0 dùng chung divider RMSNorm; ba divider riêng bổ sung |
+| ternary_dot32 | S25 terms và balanced S30 reduction pipeline | Logic add/subtract riêng |
 
-Each regular pass drains its responses before the parent changes resource ownership. Parameter SRAM requests have one owner at a time. Graph regression checks this invariant and the two-word linear credit limit. Only `quartus_word_ram` explicitly instantiates vendor memory IP.
+Một pass phải drain các response trước khi parent chuyển resource ownership.
+Parameter SRAM chỉ có một owner phát request tại một thời điểm. Các test kiểm
+tra ownership và giới hạn hai-word prefetch của linear engine.
 
-The divider and sigmoid replication parameters are elaboration geometry and must
-be powers of two dividing 32: 1, 2, 4, 8, 16 or 32. This verification uses the
-approved default of four for both. Physical timing/utilization evidence applies
-to the production defaults, with performance counters and opcode debug encoding
-disabled. Other elaboration configurations require their own matched evidence.
+## Operand cache, scales và packed stores
 
-## Cache and stores
+Một register cache **12 × 768 bit = 9.216 payload bits** dùng chung cho linear
+và head. Q, O, Gate và Down preload input; Q/K/V và Gate/Up chỉ reuse khi source,
+geometry và family khớp. Producer writes, reset, launch, faults hoặc head entry
+invalidate linear cache. Head nạp lại bốn row của final-normalized vector mỗi
+lần vào pass; không thêm cache riêng cho head.
 
-One 12 x 768-bit register cache serves mutually exclusive linear/head operations. Linear preloading is mandatory for Q, O, Gate and Down. Reuse is restricted to Q/K/V and Gate/Up with matching source, geometry and family. Source writes, reset, launch, faults and head entry invalidate linear cache ownership. Head reloads the four final-normalized input rows for every invocation. The cache has 9,216 payload bits; no separate head cache is added.
+Head giữ một word scale 256 bit cho tám vocabulary row. Mỗi coefficient có
+24 bit trong slot 32 bit. Vocabulary order và PRNG updates giữ nguyên. RoPE K
+reuse bảng của Q khi position tag còn hợp lệ, đồng thời vẫn đọc K vector riêng.
+Nạp norm gains vào table storage dùng chung làm mất validity của RoPE tag.
 
-The head holds one 256-bit scale word for eight vocabulary rows. Each coefficient occupies 24 bits in a 32-bit slot. Row order and every PRNG update are retained. RoPE K reuses Q's table only when valid for the same position; it still reads its own K vector. Loading norm gains into the shared table storage invalidates the RoPE tag.
+Linear pack 32 scalar outputs vào write_vector_q. Lane 31 được capture trước
+transaction full-mask kế tiếp; completion chờ write drain. Reset probes phủ
+prefetch, in-flight dot, coefficient processing và lane cuối trước flush.
 
-Linear scalars accumulate in the existing `write_vector_q`. No SRAM transaction occurs for a partial row. Lane 31 is captured before the following full-mask transaction, and operation completion waits for memory write drain. Four reset probes cover prefetched memory, in-flight dot data, coefficient processing and the final lane before flush. Fresh execution must reproduce all independent S128 expected results.
+## SIMD streaming và replication
 
-## SIMD response protocol
+llm_math giữ mode legacy mặc định. Với STREAMING=1, `start && in_ready` có thể
+accept mỗi clock khi pipeline còn các transaction trước. Tính từ acceptance E0,
+product_valid xuất ở E3, sum_valid ở E8 và legacy done ở E9. Các response có stage
+riêng; consumer phải dùng đúng valid channel. Reset hủy validity và deassert ready.
 
-`llm_math` retains the legacy default interface and completion timing. `STREAMING=1` accepts `start && in_ready` on every clock, including while prior transactions occupy the pipeline. Reset deasserts ready and cancels validity. For an acceptance at E0, products are valid at E3, reductions at E8 and legacy `done` at E9. Separate `product_valid` and `sum_valid` signals identify their different pipeline stages. Streaming consumers use the reduction validity; one-outstanding-request operators retain their existing completion protocol. No wide product delay queue is added merely to align unrelated response channels.
+Bốn sigmoid lane xử lý batch bốn phần tử với interpolation/RNE giữ nguyên.
+Normalizer capture quotient và rounding metadata, rồi tách round, phục hồi dấu
+và clamp thành các stage register.
 
-The arithmetic regression retains 503 legacy transactions and adds sustained/sparse streaming scoreboards, ternary reserved-code/S24_MIN checks and exact normalizer tests against S128 arithmetic. Normalization captures quotient and rounding metadata, then separates rounding, sign restoration and clamp into registered stages. Four sigmoid lanes process groups of four without changing the interpolation or RNE calculations.
+ATTN_DIV_LANES và SIGMOID_LANES là elaboration parameters, hỗ trợ các lũy thừa
+hai chia hết 32: 1, 2, 4, 8, 16 hoặc 32. Evidence hiện được đo với mặc định bốn
+lane ở cả hai khối, PERF_COUNTERS=0 và ENABLE_DEBUG_INDEX=0. Geometry khác cần
+matched evidence riêng.
 
-## Expected transaction geometry
+## Transaction geometry
 
-| Per transformer layer or head invocation | Baseline | Optimized |
+| Mỗi layer hoặc head invocation | Baseline | Tối ưu |
 |---|---:|---:|
-| Linear vector reads / layer | 6,656 | 24 |
-| Linear vector write transactions / layer | 1,408 | 44 |
+| Linear vector reads / layer | 6.656 | 24 |
+| Linear vector write transactions / layer | 1.408 | 44 |
 | RoPE parameter reads / layer | 4 | 2 |
-| Head vector reads / invocation | 16,384 | 4 |
-| Head scale reads / invocation | 4,096 | 512 |
+| Head vector reads / invocation | 16.384 | 4 |
+| Head scale reads / invocation | 4.096 | 512 |
 
-Full synthetic graph expectations for two prompt tokens, three generated tokens and sixteen layer executions are 77,756 parameter reads, 1,828 vector reads, 1,564 vector write transactions, 320 KV reads and 128 KV writes. These are transaction counts, not energy or throughput estimates. Tests must match both numeric outputs and these counts. Actual cycle, area and timing measurements belong to immutable checkpoint manifests and the implementation report.
+Graph tổng hợp gồm hai prompt token, ba token mới và 16 lượt layer đã kiểm tra
+77.756 parameter reads, 1.828 vector reads, 1.564 vector writes, 320 KV reads và
+128 KV writes. Đây là transaction counts; cycle, area và timing dùng số liệu
+trong manifest của checkpoint tương ứng.
 
-## Active and legacy source isolation
+## Source và kiểm chứng
 
-`isqrt_u64` and `sram_word_tile` are standalone source files. The full-top Quartus file list no longer compiles legacy `norm`, `banked_word_ram` or `sram_256_wrapper`. The legacy modules remain available to their independent regression runner. Existing paths are retained to preserve working callers and historical source references. Reserved operator IDs are retained where earlier tests inject scalar clamp/rounding stages; they are not new graph operations.
+isqrt_u64 và sram_word_tile đã tách thành file dùng chung. Full-top Quartus file
+list không compile norm, banked_word_ram hoặc sram_256_wrapper legacy. Những
+module này vẫn được giữ cho caller và regression riêng. Operator IDs cần cho
+fixture cũ được giữ; chúng không thêm một graph operation mới.
 
-Approximate reciprocal normalization is outside this exact implementation. No timing exceptions, relaxed numeric tests or board deployment requirements are introduced. Pretrained application execution still requires exact-current seven-group PASS and full-top post-fit >=100 MHz at all four corners, all setup/hold/recovery/removal/pulse slacks nonnegative, TNS=0 and no unconstrained paths.
+Regression giữ reference S128 độc lập, kiểm tra sustained/sparse streaming,
+S24_MIN, reserved ternary code và normalization exact. Không dùng approximate
+reciprocal trong đường normalize này. [Verification status](../verification/optimization_status.md)
+ghi bằng chứng áp dụng cho workspace; application cần all-seven PASS và full-top
+timing khớp source/config trước pretrained execution.
+
+## Cache reuse and ownership
+
+This diagram summarizes parent control conditions; it does not introduce a cache module instance. The source predicates remain authoritative.
+
+```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+flowchart TB
+ S["Parent selects input source / shape / operation family"] --> T{"Valid matching operand-cache tag?"}
+ T -->|"Q/K/V or Gate/Up matching reuse"| C["Reuse 12 x 768-bit cached operands"]
+ T -->|"Miss or head entry"| L["Read vector SRAM and refill rows"]
+ L --> C
+ C --> A["Linear ternary engine or parent head SIMD operands"]
+ P["Producer write / reset / launch / fault / head transition"] -.->|"Invalidate according to parent conditions"| T
+ R["RoPE position tag"] --> K{"Q and K share the same valid table?"}
+ K -->|"Yes"| U["Reuse cached cos/sin table; read K vector separately"]
+ K -->|"No"| F["Fetch table and update position tag"]
+ G["Norm gain load"] -.->|"Invalidate shared table payload"| K
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
+```

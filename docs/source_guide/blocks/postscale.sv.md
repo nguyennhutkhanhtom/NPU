@@ -13,9 +13,9 @@ File có hai module. `postscale` giữ interface tổ hợp: accumulator S18 nh�
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
-%%{init: {"flowchart": {"subGraphTitleMargin": {"top": 8, "bottom": 35}, "nodeSpacing": 28, "rankSpacing": 42, "curve": "linear"}}}%%
-    A["acc S18"] --> MUL["Multiplier<br/>S18 × U24 → S42"]
+A["acc S18"] --> MUL["Multiplier<br/>S18 × U24 → S42"]
     M["scale_m U24"] --> MUL
     MUL --> RNE["rne_shift42<br/>Signed RNE S42"]
     R["scale_r U6"] -.-> RNE
@@ -35,6 +35,8 @@ flowchart TB
     S32 --> Y32["y_s32"]
     DET --> OV["overflow"]
     REG["ternary_mul rounded register S42<br/>Alternative caller"] --> ADD
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```
 
 Nét liền là dữ liệu, nét đứt là format/control. Hai module trong file này đều tổ hợp; product/round registers của engine nằm trong [ternary_mul](ternary_mul.sv.md), không nằm trong interface `postscale`.
@@ -116,6 +118,7 @@ endmodule
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart TB
     R["Rounded S42<br/>From wrapper or engine register"] --> EXT["Sign extension S43"]
     B["Bias S32, in output units"] --> EXT_B["Sign extension S43"]
@@ -128,4 +131,6 @@ flowchart TB
     S16 --> Y16["y_s16"]
     S32 --> Y32["y_s32"]
     DET --> OV["overflow"]
+    classDef default fill:white,stroke:black,color:black,font-size:24px;
+    linkStyle default stroke:black,color:black;
 ```

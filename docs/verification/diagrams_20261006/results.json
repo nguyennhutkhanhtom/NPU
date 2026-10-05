@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-06",
+  "status": "PASS",
+  "top": "llm_soc",
+  "source_assets_checked": 41,
+  "rtl_unchanged": true,
+  "frozen_documents_checked": 8,
+  "mermaid_diagrams_rendered": 63,
+  "hierarchy_pages_rendered": 9,
+  "pages": [
+    {
+      "configuration": "quartus",
+      "page": "00_TOP",
+      "instance_blocks": 1,
+      "current_depth_instances": 1,
+      "context_instances": 0
+    },
+    {
+      "configuration": "quartus",
+      "page": "01_LEVEL_1",
+      "instance_blocks": 32,
+      "current_depth_instances": 23,
+      "context_instances": 1
+    },
+    {
+      "configuration": "quartus",
+      "page": "02_LEVEL_2",
+      "instance_blocks": 224,
+      "current_depth_instances": 213,
+      "context_instances": 11
+    },
+    {
+      "configuration": "quartus",
+      "page": "03_LEVEL_3",
+      "instance_blocks": 328,
+      "current_depth_instances": 256,
+      "context_instances": 72
+    },
+    {
+      "configuration": "quartus",
+      "page": "04_LEVEL_4",
+      "instance_blocks": 512,
+      "current_depth_instances": 256,
+      "context_instances": 256
+    },
+    {
+      "configuration": "portable",
+      "page": "00_TOP",
+      "instance_blocks": 1,
+      "current_depth_instances": 1,
+      "context_instances": 0
+    },
+    {
+      "configuration": "portable",
+      "page": "01_LEVEL_1",
+      "instance_blocks": 32,
+      "current_depth_instances": 23,
+      "context_instances": 1
+    },
+    {
+      "configuration": "portable",
+      "page": "02_LEVEL_2",
+      "instance_blocks": 224,
+      "current_depth_instances": 213,
+      "context_instances": 11
+    },
+    {
+      "configuration": "portable",
+      "page": "03_LEVEL_3",
+      "instance_blocks": 424,
+      "current_depth_instances": 352,
+      "context_instances": 72
+    }
+  ],
+  "errors": [],
+  "visual_review": "All six Mermaid contact sheets inspected; hierarchy top, structural levels, functional connectors, generated scope labels and function panels inspected in rendered viewport bands. XML and SVG share label/geometry generation; no native diagrams.net editor screenshot was used.",
+  "limitations": "Configuration-specific reviewed expansion, not a general SV elaborator or synthesis check. Hierarchy depth pages intentionally retain every instance and require zoom/scroll at deep levels. External altsyncram is unresolved repository RTL; only the Quartus variant uses it."
+}
