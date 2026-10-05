@@ -1,0 +1,320 @@
+TBBmalloc: skip allocation functions replacement in ucrtbase.dll: unknown prologue for function _msize
+Info: *******************************************************************
+Info: Running Quartus Prime Timing Analyzer
+    Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
+    Info: Copyright (C) 2025  Altera Corporation. All rights reserved.
+    Info: Your use of Altera Corporation's design tools, logic functions 
+    Info: and other software and tools, and any partner logic 
+    Info: functions, and any output files from any of the foregoing 
+    Info: (including device programming or simulation files), and any 
+    Info: associated documentation or information are expressly subject 
+    Info: to the terms and conditions of the Altera Program License 
+    Info: Subscription Agreement, the Altera Quartus Prime License Agreement,
+    Info: the Altera IP License Agreement, or other applicable license
+    Info: agreement, including, without limitation, that your use is for
+    Info: the sole purpose of programming logic devices manufactured by
+    Info: Altera and sold by Altera or its authorized distributors.  Please
+    Info: refer to the Altera Software License Subscription Agreements 
+    Info: on the Quartus Prime software download page.
+    Info: Processing started: Mon Oct  5 12:45:54 2026
+Info: Command: quartus_sta -t "D:\2151097_Nguyen Nhut Khanh\tools\timing\extract.tcl" "D:\2151097_Nguyen Nhut Khanh\docs\verification\timing\npu100_b2" sdc "D:\2151097_Nguyen Nhut Khanh\quartus\llm_soc" 200
+Info: Quartus(args): {D:\2151097_Nguyen Nhut Khanh\docs\verification\timing\npu100_b2} sdc {D:\2151097_Nguyen Nhut Khanh\quartus\llm_soc} 200
+Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Info (21077): Low junction temperature is 0 degrees C
+Info (21077): High junction temperature is 85 degrees C
+Info (332104): Reading SDC File: 'llm_soc.sdc'
+Info (332151): Clock uncertainty is not calculated until you update the timing netlist.
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332101): Design is fully constrained for setup requirements
+Info (332101): Design is fully constrained for hold requirements
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 200 setup paths (9 violated).  Worst case slack is -0.128
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_85c_setup.rpt}
+Info (332115): Report Timing: Found 200 hold paths (0 violated).  Worst case slack is 0.240
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_85c_hold.rpt}
+Info (332115): Report Timing: Found 200 recovery paths (0 violated).  Worst case slack is 0.258
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_85c_recovery.rpt}
+Info (332115): Report Timing: Found 200 removal paths (0 violated).  Worst case slack is 1.041
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_85c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 200 results (0 violated).  Worst case slack is 3.600
+    Info (332113): Targets: *
+    Info (332113): -nworst: 200
+    Info (332113): -detail: full_path
+Info (332115): Report Timing: Found 20 setup paths (0 violated).  Worst case slack is 0.912
+    Info (332115): -from [get_registers {*scalar_round_q* *scalar_packet* *scalar_cluster*}]
+    Info (332115): -to [get_registers {*scalar_packet* *scalar_cluster* *scalar_group_q*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_85c_scalar_distribution.rpt}
+Info (332115): Report Timing: Found 20 setup paths (0 violated).  Worst case slack is 0.477
+    Info (332115): -from [get_registers {*graph* *token_prompt*}]
+    Info (332115): -to [get_registers {*token_read_valid_q* *token_prompt* token_q*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_85c_token_fetch.rpt}
+Info (332115): Report Timing: Found 20 setup paths (0 violated).  Worst case slack is 1.091
+    Info (332115): -from [get_registers {op* *round16_group_q*}]
+    Info (332115): -to [get_registers {*round16_group_q* *lane_round_q*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_85c_round_control.rpt}
+Info (332115): Report Timing: Found 3 setup paths (0 violated).  Worst case slack is 7.205
+    Info (332115): -from [get_registers {op*}]
+    Info (332115): -to [get_registers {*return_scalar*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_85c_scalar_return.rpt}
+TIMING_CORNER_EXTRACTED: slow_1100mv_85c
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 200 setup paths (2 violated).  Worst case slack is -0.164
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_0c_setup.rpt}
+Info (332115): Report Timing: Found 200 hold paths (0 violated).  Worst case slack is 0.230
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_0c_hold.rpt}
+Info (332115): Report Timing: Found 200 recovery paths (0 violated).  Worst case slack is 0.472
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_0c_recovery.rpt}
+Info (332115): Report Timing: Found 200 removal paths (0 violated).  Worst case slack is 3.620
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_0c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 200 results (0 violated).  Worst case slack is 3.548
+    Info (332113): Targets: *
+    Info (332113): -nworst: 200
+    Info (332113): -detail: full_path
+Info (332115): Report Timing: Found 20 setup paths (0 violated).  Worst case slack is 1.191
+    Info (332115): -from [get_registers {*scalar_round_q* *scalar_packet* *scalar_cluster*}]
+    Info (332115): -to [get_registers {*scalar_packet* *scalar_cluster* *scalar_group_q*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_0c_scalar_distribution.rpt}
+Info (332115): Report Timing: Found 20 setup paths (0 violated).  Worst case slack is 0.818
+    Info (332115): -from [get_registers {*graph* *token_prompt*}]
+    Info (332115): -to [get_registers {*token_read_valid_q* *token_prompt* token_q*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_0c_token_fetch.rpt}
+Info (332115): Report Timing: Found 20 setup paths (0 violated).  Worst case slack is 1.336
+    Info (332115): -from [get_registers {op* *round16_group_q*}]
+    Info (332115): -to [get_registers {*round16_group_q* *lane_round_q*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_0c_round_control.rpt}
+Info (332115): Report Timing: Found 3 setup paths (0 violated).  Worst case slack is 7.206
+    Info (332115): -from [get_registers {op*}]
+    Info (332115): -to [get_registers {*return_scalar*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/slow_1100mv_0c_scalar_return.rpt}
+TIMING_CORNER_EXTRACTED: slow_1100mv_0c
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 200 setup paths (0 violated).  Worst case slack is 3.337
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_85c_setup.rpt}
+Info (332115): Report Timing: Found 200 hold paths (0 violated).  Worst case slack is 0.129
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_85c_hold.rpt}
+Info (332115): Report Timing: Found 200 recovery paths (0 violated).  Worst case slack is 4.796
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_85c_recovery.rpt}
+Info (332115): Report Timing: Found 200 removal paths (0 violated).  Worst case slack is 2.234
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_85c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 200 results (0 violated).  Worst case slack is 3.799
+    Info (332113): Targets: *
+    Info (332113): -nworst: 200
+    Info (332113): -detail: full_path
+Info (332115): Report Timing: Found 20 setup paths (0 violated).  Worst case slack is 4.454
+    Info (332115): -from [get_registers {*scalar_round_q* *scalar_packet* *scalar_cluster*}]
+    Info (332115): -to [get_registers {*scalar_packet* *scalar_cluster* *scalar_group_q*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_85c_scalar_distribution.rpt}
+Info (332115): Report Timing: Found 20 setup paths (0 violated).  Worst case slack is 4.778
+    Info (332115): -from [get_registers {*graph* *token_prompt*}]
+    Info (332115): -to [get_registers {*token_read_valid_q* *token_prompt* token_q*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_85c_token_fetch.rpt}
+Info (332115): Report Timing: Found 20 setup paths (0 violated).  Worst case slack is 4.794
+    Info (332115): -from [get_registers {op* *round16_group_q*}]
+    Info (332115): -to [get_registers {*round16_group_q* *lane_round_q*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_85c_round_control.rpt}
+Info (332115): Report Timing: Found 3 setup paths (0 violated).  Worst case slack is 8.478
+    Info (332115): -from [get_registers {op*}]
+    Info (332115): -to [get_registers {*return_scalar*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_85c_scalar_return.rpt}
+TIMING_CORNER_EXTRACTED: fast_1100mv_85c
+Info (21077): Core supply voltage is 1.1V
+Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Timing Analyzer to see clock uncertainties.
+Info (332115): Report Timing: Found 200 setup paths (0 violated).  Worst case slack is 3.859
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_0c_setup.rpt}
+Info (332115): Report Timing: Found 200 hold paths (0 violated).  Worst case slack is 0.119
+    Info (332115): -hold
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_0c_hold.rpt}
+Info (332115): Report Timing: Found 200 recovery paths (0 violated).  Worst case slack is 5.526
+    Info (332115): -recovery
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_0c_recovery.rpt}
+Info (332115): Report Timing: Found 200 removal paths (0 violated).  Worst case slack is 0.677
+    Info (332115): -removal
+    Info (332115): -nworst 1
+    Info (332115): -npaths 200
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_0c_removal.rpt}
+Info (332113): Report Minimum Pulse Width: Found 200 results (0 violated).  Worst case slack is 3.788
+    Info (332113): Targets: *
+    Info (332113): -nworst: 200
+    Info (332113): -detail: full_path
+Info (332115): Report Timing: Found 20 setup paths (0 violated).  Worst case slack is 5.173
+    Info (332115): -from [get_registers {*scalar_round_q* *scalar_packet* *scalar_cluster*}]
+    Info (332115): -to [get_registers {*scalar_packet* *scalar_cluster* *scalar_group_q*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_0c_scalar_distribution.rpt}
+Info (332115): Report Timing: Found 20 setup paths (0 violated).  Worst case slack is 5.381
+    Info (332115): -from [get_registers {*graph* *token_prompt*}]
+    Info (332115): -to [get_registers {*token_read_valid_q* *token_prompt* token_q*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_0c_token_fetch.rpt}
+Info (332115): Report Timing: Found 20 setup paths (0 violated).  Worst case slack is 5.404
+    Info (332115): -from [get_registers {op* *round16_group_q*}]
+    Info (332115): -to [get_registers {*round16_group_q* *lane_round_q*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_0c_round_control.rpt}
+Info (332115): Report Timing: Found 3 setup paths (0 violated).  Worst case slack is 8.615
+    Info (332115): -from [get_registers {op*}]
+    Info (332115): -to [get_registers {*return_scalar*}]
+    Info (332115): -setup
+    Info (332115): -nworst 1
+    Info (332115): -npaths 20
+    Info (332115): -show_routing
+    Info (332115): -detail full_path
+    Info (332115): -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2/fast_1100mv_0c_scalar_return.rpt}
+TIMING_CORNER_EXTRACTED: fast_1100mv_0c
+TIMING_EXTRACTION_PASS: D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/npu100_b2 (sdc)
+Info (23030): Evaluation of Tcl script D:\2151097_Nguyen Nhut Khanh\tools\timing\extract.tcl was successful
+Info: Quartus Prime Timing Analyzer was successful. 0 errors, 0 warnings
+    Info: Peak virtual memory: 6971 megabytes
+    Info: Processing ended: Mon Oct  5 12:49:05 2026
+    Info: Elapsed time: 00:03:11
+    Info: Total CPU time (on all processors): 00:04:03

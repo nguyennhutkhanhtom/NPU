@@ -1,0 +1,168 @@
+Statistics: 40 0 4665 0 0 3.262
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+host_en host_data_q[15] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+host_en host_data_q[16] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+vector_q[383] input_cache_q[6][383] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[383]}}}
+host_en host_data_q[26] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+host_en host_data_q[20] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+vector_q[377] input_cache_q[3][377] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[377]}}}
+vector_q[377] input_cache_q[2][377] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[377]}}}
+vector_q[377] input_cache_q[0][377] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[377]}}}
+vector_q[440] input_cache_q[8][440] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[440]}}}
+vector_q[440] input_cache_q[6][440] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[440]}}}
+vector_q[464] input_cache_q[6][464] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[464]}}}
+vector_q[425] input_cache_q[11][425] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[425]}}}
+vector_q[440] input_cache_q[3][440] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[440]}}}
+vector_q[440] input_cache_q[0][440] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[440]}}}
+vector_q[440] input_cache_q[2][440] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[440]}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+host_en host_data_q[15] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[16] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[383] input_cache_q[6][383] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[26] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[20] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[377] input_cache_q[3][377] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[377] input_cache_q[2][377] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[21].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|rd_data[23] math_b_q[26][17] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[11].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[20].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[10].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[9].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[22].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[8].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|rd_data[23] math_b_q[26][24] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[377] input_cache_q[0][377] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|rd_data[23] math_b_q[26][25] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[4].u_storage|rd_data[31] llm_linear_engine:u_linear_engine|fifo_q[0][159] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[4].u_storage|rd_data[31] llm_linear_engine:u_linear_engine|fifo_q[1][159] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[440] input_cache_q[8][440] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[440] input_cache_q[6][440] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[464] input_cache_q[6][464] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[425] input_cache_q[11][425] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[440] input_cache_q[3][440] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+host_en seed_q[18] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[1] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[0] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[16] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[17] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[15] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[20] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[26] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[19] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[21] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[14] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|rd_data[23] math_b_q[26][19] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[440] input_cache_q[0][440] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[440] input_cache_q[2][440] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|rd_data[23] math_b_q[26][15] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+host_en host_data_q[15] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+host_en host_data_q[15] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[16] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+host_en host_data_q[16] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[383] input_cache_q[6][383] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[383]}}}
+vector_q[383] input_cache_q[6][383] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[26] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+host_en host_data_q[26] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[20] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+host_en host_data_q[20] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[377] input_cache_q[3][377] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[377]}}}
+vector_q[377] input_cache_q[3][377] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[377] input_cache_q[2][377] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[377]}}}
+vector_q[377] input_cache_q[2][377] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[21].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|rd_data[23] math_b_q[26][17] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[11].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[20].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[10].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[9].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[22].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[9] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[8].read_address_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|rd_data[23] math_b_q[26][24] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[377] input_cache_q[0][377] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[377]}}}
+vector_q[377] input_cache_q[0][377] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|rd_data[23] math_b_q[26][25] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[4].u_storage|rd_data[31] llm_linear_engine:u_linear_engine|fifo_q[0][159] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[4].u_storage|rd_data[31] llm_linear_engine:u_linear_engine|fifo_q[1][159] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[440] input_cache_q[8][440] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[440]}}}
+vector_q[440] input_cache_q[8][440] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[440] input_cache_q[6][440] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[440]}}}
+vector_q[440] input_cache_q[6][440] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[464] input_cache_q[6][464] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[464]}}}
+vector_q[464] input_cache_q[6][464] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[425] input_cache_q[11][425] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[425]}}}
+vector_q[425] input_cache_q[11][425] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[440] input_cache_q[3][440] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[440]}}}
+vector_q[440] input_cache_q[3][440] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+host_en seed_q[18] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[1] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[0] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[16] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[17] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[15] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[20] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[26] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[19] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[21] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en seed_q[14] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|rd_data[23] math_b_q[26][19] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[440] input_cache_q[0][440] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[440]}}}
+vector_q[440] input_cache_q[0][440] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+vector_q[440] input_cache_q[2][440] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{vector_q[440]}}}
+vector_q[440] input_cache_q[2][440] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|rd_data[23] math_b_q[26][15] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

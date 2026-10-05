@@ -1,0 +1,1 @@
+Stopped before synthesis completed: later pre-existing NUM_PARALLEL_PROCESSORS ALL overrode the inserted worker limit. No timing result. Duplicate assignment removed for next attempt.

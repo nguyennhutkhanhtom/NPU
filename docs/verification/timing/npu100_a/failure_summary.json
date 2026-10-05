@@ -1,0 +1,6 @@
+{
+  "status": "SYNTHESIS_FAIL_NO_FREQUENCY",
+  "reason": "Quartus syntax errors 10170 at inline genvar declarations; initial frozen source archive retained",
+  "runner": "./tools/timing/run.ps1 -Project quartus/llm_soc -Tag npu100_a -QuartusBin C:/altera_lite/25.1std/quartus/bin64 -Python C:/Users/khanh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "map_log_sha256": "ab48ac816ccea03bab9f1e97802a5dae51095b5affe05c8b750c38767054e2e9"
+}

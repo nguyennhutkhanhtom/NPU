@@ -4,7 +4,21 @@
 
 Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL dựa trên critical path. Phần full graph dùng Cyclone V C9; các snapshot legacy bên dưới dùng thiết bị riêng được ghi trong manifest. Các phép đo là FPGA demo, chưa xác nhận ASIC signoff.
 
-Current `fullrtl100_cache2` keeps the exact cache1 RTL/all-seven-PASS source and original10nsSDC. It removes only the failed forced GLOBAL_SIGNAL request, following cache1's actual recommendations; reset hardware/latency/host contract and input delay requests remain unchanged. [Fresh A&S](../synthesis/cache2/manifest.json) PASS0errors12warnings22:23:58/elapsed5m41. Full fit/STA/extract is running on ignored quartus_cache2/llm_soc. [Source/config ZIP](fullrtl100_cache2/source_archive.json) matches34RTL/3canonical configurations. No current timing100MHz or pretrained application PASS; do not rerun unchanged tests just for backend routing.
+Current full-top [opt_fulltop7](opt_fulltop7/manifest.json) passes all-corner
+post-fit timing: minimum Fmax 100.78 MHz, worst setup +0.077 ns and hold +0.115 ns;
+all setup/hold/recovery/removal/pulse slacks are nonnegative, every TNS is zero,
+and all unconstrained path/port/clock counts are zero. Current source and backend
+configuration hashes are verified. See [implementation report](../../reviews/rtl_change_review_v3.md)
+and [reproduction commands](../optimization_status.md). No pretrained application
+was executed. The active project is `quartus/llm_soc`; retired local projects
+are indexed in [history](../../history/quartus_projects.md).
+
+The following sections describe historical source/configuration checkpoints.
+`fullrtl100_cache2` retains the then-current cache1 RTL/all-seven-PASS source and
+original 10 ns SDC, removing only the failed forced GLOBAL_SIGNAL request.
+[A&S](../synthesis/cache2/manifest.json) passes with zero errors and twelve warnings;
+[completed timing](fullrtl100_cache2/manifest.json) and
+[source/config ZIP](fullrtl100_cache2/source_archive.json) retain that candidate's evidence.
 
 ## Cache1 result: 73.97 MHz, setup/recovery FAIL
 

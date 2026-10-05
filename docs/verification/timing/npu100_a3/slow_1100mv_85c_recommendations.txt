@@ -1,0 +1,216 @@
+Statistics: 40 0 3895 0 40 -0.971
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+scalar_round_q[9]~DUPLICATE g_scalar_output[4].low_data_q[9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[9]~DUPLICATE}}}
+scalar_round_q[9]~DUPLICATE g_scalar_output[6].low_data_q[9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[9]~DUPLICATE}}}
+graph[3]~DUPLICATE token_q[9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE} position_q~5}}
+graph[3]~DUPLICATE token_q[3] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE} position_q~5}}
+graph[3]~DUPLICATE token_q[8] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE}}}
+op[80] lane_round_q[9][18] 0.796894 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[9][11] 0.796894 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[8][11] 0.683052 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[8][10] 0.683052 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[9][24] 0.796894 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][39] 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[8][22] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[8][21] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+graph[3]~DUPLICATE token_q[4] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE} position_q~5}}
+graph[3]~DUPLICATE token_q[7] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE}}}
+graph[3]~DUPLICATE token_q[11] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE}}}
+op[80] lane_round_q[10][46] 0.842431 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][5] 0.933504 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][47] 0.842431 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][41] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+graph[3]~DUPLICATE token_q[5] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE} position_q~5}}
+op[80] lane_round_q[10][37] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][56] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][42] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][43] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][44] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[79]~DUPLICATE return_scalar[20] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[79]~DUPLICATE} WideOr474~0 WideOr476}}
+op[80] lane_round_q[10][36] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[79]~DUPLICATE return_scalar[46] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[79]~DUPLICATE} WideOr474~0 WideOr476}}
+op[79]~DUPLICATE return_scalar[73] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[79]~DUPLICATE} WideOr474~0 WideOr476}}
+op[80] lane_round_q[10][40] 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+graph[3]~DUPLICATE token_q[1] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE} position_q~5}}
+op[80] lane_round_q[10][33] 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][34] 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][48] 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][45] 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+scalar_round_q[9]~DUPLICATE g_scalar_output[4].low_data_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+scalar_round_q[9]~DUPLICATE g_scalar_output[6].low_data_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+graph[3]~DUPLICATE token_q[9] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+graph[3]~DUPLICATE token_q[3] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+graph[3]~DUPLICATE token_q[8] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[9][18] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[9][11] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[8][11] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[8][10] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[9][24] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][39] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[8][22] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[8][21] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+graph[3]~DUPLICATE token_q[4] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[15][25] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[15][26] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+graph[3]~DUPLICATE token_q[7] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+graph[3]~DUPLICATE token_q[11] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[10][46] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][5] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][47] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][41] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+graph[3]~DUPLICATE token_q[5] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[10][37] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][56] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][42] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][43] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][44] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[79]~DUPLICATE return_scalar[20] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[10][36] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[79]~DUPLICATE return_scalar[46] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[79]~DUPLICATE return_scalar[73] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[10][40] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[15][20] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[15][21] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+graph[3]~DUPLICATE token_q[1] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[10][33] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][34] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][48] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][45] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+scalar_round_q[9]~DUPLICATE g_scalar_output[4].low_data_q[9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[9]~DUPLICATE}}}
+scalar_round_q[9]~DUPLICATE g_scalar_output[4].low_data_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+scalar_round_q[9]~DUPLICATE g_scalar_output[6].low_data_q[9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{scalar_round_q[9]~DUPLICATE}}}
+scalar_round_q[9]~DUPLICATE g_scalar_output[6].low_data_q[9] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+graph[3]~DUPLICATE token_q[9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE} position_q~5}}
+graph[3]~DUPLICATE token_q[9] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+graph[3]~DUPLICATE token_q[3] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE} position_q~5}}
+graph[3]~DUPLICATE token_q[3] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+graph[3]~DUPLICATE token_q[8] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE}}}
+graph[3]~DUPLICATE token_q[8] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[9][18] 0.796894 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[9][18] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[9][11] 0.796894 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[9][11] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[8][11] 0.683052 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[8][11] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[8][10] 0.683052 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[8][10] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[9][24] 0.796894 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[9][24] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][39] 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][39] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[8][22] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[8][22] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[8][21] 0.705820 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[8][21] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+graph[3]~DUPLICATE token_q[4] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE} position_q~5}}
+graph[3]~DUPLICATE token_q[4] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[15][25] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[15][26] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+graph[3]~DUPLICATE token_q[7] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE}}}
+graph[3]~DUPLICATE token_q[7] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+graph[3]~DUPLICATE token_q[11] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE}}}
+graph[3]~DUPLICATE token_q[11] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[10][46] 0.842431 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][46] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][5] 0.933504 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][5] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][47] 0.842431 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][47] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][41] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][41] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+graph[3]~DUPLICATE token_q[5] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE} position_q~5}}
+graph[3]~DUPLICATE token_q[5] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[10][37] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][37] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][56] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][56] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][42] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][42] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][43] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][43] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][44] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][44] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[79]~DUPLICATE return_scalar[20] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[79]~DUPLICATE return_scalar[20] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[79]~DUPLICATE} WideOr474~0 WideOr476}}
+op[79]~DUPLICATE return_scalar[20] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[10][36] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][36] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[79]~DUPLICATE return_scalar[46] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[79]~DUPLICATE return_scalar[46] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[79]~DUPLICATE} WideOr474~0 WideOr476}}
+op[79]~DUPLICATE return_scalar[46] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[79]~DUPLICATE return_scalar[73] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[79]~DUPLICATE return_scalar[73] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[79]~DUPLICATE} WideOr474~0 WideOr476}}
+op[79]~DUPLICATE return_scalar[73] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[10][40] 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][40] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[15][20] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[15][21] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+graph[3]~DUPLICATE token_q[1] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{graph[3]~DUPLICATE} position_q~5}}
+graph[3]~DUPLICATE token_q[1] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[80] lane_round_q[10][33] 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][33] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][34] 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][34] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][48] 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][48] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[80] lane_round_q[10][45] 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[80]} WideOr318~0}}
+op[80] lane_round_q[10][45] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+op[79]~DUPLICATE return_scalar[20] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[79]~DUPLICATE return_scalar[46] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[79]~DUPLICATE return_scalar[73] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

@@ -1,0 +1,13 @@
+{
+  "status": "P1_OPERATOR_PASS",
+  "recorded_utc": "2026-10-05T02:14:04.1780599Z",
+  "marker": "# LLM_OPERATORS_PASS operators=17 checks=3460 scalar_cases=128 clamp_cases=128 reference=S128 fixtures=synthetic",
+  "prior_failure": "npu100_b1_p1_failed",
+  "correction": "Use force/release phase injection to propagate to optimized state consumers; numerical and phase assertions retained",
+  "files": {
+    "llm_soc.sv": "4f5a9e7f4216269e65e78657f39c3acd336142c4692beadde03be7e04f417aa5",
+    "npu100_b1_p1_force_compile.log": "4a832b7f52c619b9f20a892744ec9ecceadef0a9e226f3e985d2723b71ddfc55",
+    "npu100_b1_p1_force.log": "94b25990c5e0ac67a3433f0eb3c879eb05fc29d459b54bcef345e20f24308ba4",
+    "tb_operators.sv": "322fe79bc4dacbc4ca30fee5604b92ad661d0cdb395fc03167db1e1af75a8d64"
+  }
+}

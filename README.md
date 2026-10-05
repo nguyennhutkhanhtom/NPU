@@ -12,15 +12,22 @@ dịch/trừ; không có runtime toán tử nhân/chia hoặc IP compute/control
 Chỉ SRAM technology leaf chứa `altsyncram`, sau [adapter thay bằng SRAM ASIC](docs/design/asic_memory_binding.md).
 Quartus là backend demo EDA; không có mục tiêu bring-up board FPGA hoặc ASIC signoff.
 
-Source `cache1` đã [A&S PASS, 0 errors/12 warnings](docs/verification/synthesis/cache1/manifest.json),
-[cả 7 nhóm test PASS, 0 warnings](tests/full_rtl/evidence/cache1_all_units/results.json)
-và [vendor-free elaboration PASS](docs/verification/portable_elaboration_cache1/results.json).
-Graph synthetic chạy 4.229.462 clock, chọn ba token bằng RTL và đạt causal checks.
-Fitting đã PASS; [timing `fullrtl100_cache1`](docs/verification/timing/fullrtl100_cache1/manifest.json) FAIL 73,97 MHz/setup+recovery.
-Bản backend `cache2` bỏ yêu cầu ép global theo recommendation; RTL/tests/SDC giữ nguyên,
-[A&S mới PASS](docs/verification/synthesis/cache2/manifest.json), đang chạy lại full fit/timing. Chưa có bằng chứng full top đạt 100 MHz.
-[Timing trước đó](docs/verification/timing/fullrtl100_attention1/manifest.json) FAIL 92,19 MHz.
-Application pretrained chờ exact-current timing mọi corner/slack/TNS/UCP đạt.
+Bản hiện tại triển khai [tối ưu bit-exact](docs/design/exact_throughput_optimization.md):
+cache operand/scale, packed stores, ternary dot, bounded prefetch, streaming head/QK,
+fused probability/V, bốn divider và bốn sigmoid lane. [Cả bảy nhóm đã PASS](tests/full_rtl/evidence/opt_final4_all/results.json)
+với 0 compile/runtime warnings; graph chạy **1.066.965 compute clocks**, giảm
+**74,92%** so với baseline và giữ nguyên ba token. [Vendor-free elaboration PASS](docs/verification/portable_elaboration_opt_final4/results.json).
+[Full-top post-fit timing PASS](docs/verification/timing/opt_fulltop7/manifest.json):
+Fmax thấp nhất **100,78 MHz** ở cả bốn corner, worst setup **+0,077 ns**,
+mọi slack không âm, TNS = 0, không có path unconstrained; hash RTL/cấu hình khớp.
+Tài nguyên fit tăng **10,43% ALM**, **20,66% register**; RAM blocks giữ nguyên,
+DSP = 0. Xem
+[trạng thái và lệnh tái hiện](docs/verification/optimization_status.md).
+Baseline được giữ nguyên trong `docs/verification/optimization_baseline`:
+graph 4.254.046 compute clocks, cả bảy nhóm PASS; [timing `npu100_b2`](docs/verification/timing/npu100_b2/manifest.json)
+FAIL 98,39 MHz, worst setup -0,164 ns; đây là bằng chứng lịch sử trước tối ưu.
+Bản mặc định bốn divider/bốn sigmoid lane đã đạt các điều kiện kiểm chứng phần cứng
+exact-current unit/graph và timing; task này chưa chạy application pretrained.
 Numeric/token matching và chất lượng đoạn văn được đánh giá riêng.
 
 Core instruction-driven `matmulfree` và các kết quả dưới đây được giữ làm
@@ -38,7 +45,7 @@ RTL SystemVerilog cho inference số nguyên: **32 PE ternary**, activation S8, 
 | Sơ đồ và code từng khối | [RTL guide](docs/source_guide/README.md) · [Mục lục module](docs/source_guide/blocks/README.md) |
 | Chạy test, synthesis và timing | [Verification](docs/verification/README.md) · [Critical path và Fmax](docs/verification/timing/README.md) |
 | Model demo | [MNIST và ngôn ngữ](docs/demos/README.md) |
-| Các thay đổi và tài liệu gốc | [Design review](docs/reviews/design_review.md) · [Lịch sử](docs/history/README.md) |
+| Các thay đổi và tài liệu gốc | [Các báo cáo review](docs/reviews/README.md) · [Lịch sử](docs/history/README.md) |
 
 ## Kết quả core trước
 
@@ -66,6 +73,9 @@ Xem [cài đặt và chọn test](tests/README.md), [demo checkpoint](tests/mode
 | [Verilog Source code](<Verilog Source code/README.md>) | Source RTL hiện hành và LUT hằng |
 | [docs](docs/README.md) | Tài liệu thiết kế, RTL guide, verification, demo và lịch sử |
 | [tests](tests/README.md) | Regression/reference, runners và demo export |
-| `quartus` | Project demo A&S; không quyết định kiến trúc ASIC |
+| [quartus](quartus/README.md) | Backend đang dùng; project thử nghiệm cũ trong `quartus/archive/` |
+| [tools/optimization](tools/optimization/README.md) | Công cụ lưu checkpoint và tính tỷ lệ thay đổi RTL |
 
-Preceding attention1 source clears accumulators at each head entry; [all seven groups](tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions. Full-top attention1 timing FAIL92.19MHz/setup+recovery; hold PASS every corner. No trained application gate is open.
+Các báo cáo `rtl_change_review*.md` nằm trong [docs/reviews](docs/reviews/README.md),
+tài liệu nghiên cứu nằm tại [docs/design/architecture_research.md](docs/design/architecture_research.md).
+Xem [TASK_STATE.md](TASK_STATE.md) để tới evidence và lệnh kiểm chứng hiện tại.

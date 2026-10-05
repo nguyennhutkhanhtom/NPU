@@ -1,0 +1,213 @@
+TBBmalloc: skip allocation functions replacement in ucrtbase.dll: unknown prologue for function _msize
+Info: *******************************************************************
+Info: Running Quartus Prime Analysis & Synthesis
+    Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
+    Info: Copyright (C) 2025  Altera Corporation. All rights reserved.
+    Info: Your use of Altera Corporation's design tools, logic functions 
+    Info: and other software and tools, and any partner logic 
+    Info: functions, and any output files from any of the foregoing 
+    Info: (including device programming or simulation files), and any 
+    Info: associated documentation or information are expressly subject 
+    Info: to the terms and conditions of the Altera Program License 
+    Info: Subscription Agreement, the Altera Quartus Prime License Agreement,
+    Info: the Altera IP License Agreement, or other applicable license
+    Info: agreement, including, without limitation, that your use is for
+    Info: the sole purpose of programming logic devices manufactured by
+    Info: Altera and sold by Altera or its authorized distributors.  Please
+    Info: refer to the Altera Software License Subscription Agreements 
+    Info: on the Quartus Prime software download page.
+    Info: Processing started: Mon Oct  5 16:01:48 2026
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off llm_soc -c llm_soc
+Warning (12473): User specified to use only one processors but 16 processors were detected which could be used to decrease run time.
+Info (12021): Found 1 design units, including 0 entities, in source file /2151097_nguyen nhut khanh/verilog source code/npu_pkg.sv
+    Info (12022): Found design unit 1: npu_pkg (SystemVerilog) File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/npu_pkg.sv Line: 1
+Info (12021): Found 3 design units, including 2 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_pkg.sv
+    Info (12022): Found design unit 1: llm_pkg (SystemVerilog) File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_pkg.sv Line: 1
+    Info (12023): Found entity 1: llm_exp_sample File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_exp_lut.svh Line: 4
+    Info (12023): Found entity 2: llm_gumbel_sample File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_gumbel_lut.svh Line: 4
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/div.sv
+    Info (12023): Found entity 1: div File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/div.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_bank_ram.sv
+    Info (12023): Found entity 1: llm_bank_ram File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_bank_ram.sv Line: 5
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/pipelined_word_ram.sv
+    Info (12023): Found entity 1: pipelined_word_ram File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv Line: 4
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_parameter_ram.sv
+    Info (12023): Found entity 1: llm_parameter_ram File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_parameter_ram.sv Line: 5
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_math.sv
+    Info (12023): Found entity 1: llm_math File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_math.sv Line: 5
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/reset_release.sv
+    Info (12023): Found entity 1: reset_release File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/reset_release.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_soc.sv
+    Info (12023): Found entity 1: llm_soc File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 3
+Info (12021): Found 2 design units, including 2 entities, in source file /2151097_nguyen nhut khanh/verilog source code/sigmoid.sv
+    Info (12023): Found entity 1: sigmoid_sample File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/sigmoid_lut.svh Line: 3
+    Info (12023): Found entity 2: sigmoid File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/sigmoid.sv Line: 2
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/quartus_word_ram.sv
+    Info (12023): Found entity 1: quartus_word_ram File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/quartus_word_ram.sv Line: 5
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/logic_mul.sv
+    Info (12023): Found entity 1: logic_mul File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/logic_mul.sv Line: 4
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/ternary_dot32.sv
+    Info (12023): Found entity 1: ternary_dot32 File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/ternary_dot32.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_head_engine.sv
+    Info (12023): Found entity 1: llm_head_engine File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_head_engine.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_attention_engine.sv
+    Info (12023): Found entity 1: llm_attention_engine File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_attention_engine.sv Line: 4
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_attention_normalize.sv
+    Info (12023): Found entity 1: llm_attention_normalize File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_attention_normalize.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_linear_engine.sv
+    Info (12023): Found entity 1: llm_linear_engine File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_linear_engine.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/isqrt_u64.sv
+    Info (12023): Found entity 1: isqrt_u64 File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/isqrt_u64.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/sram_word_tile.sv
+    Info (12023): Found entity 1: sram_word_tile File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/sram_word_tile.sv Line: 1
+Info (12127): Elaborating entity "llm_soc" for the top level hierarchy
+Warning (10036): Verilog HDL or VHDL warning at llm_soc.sv(282): object "chunk_q" assigned a value but never read File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 282
+Warning (10027): Verilog HDL or VHDL warning at the llm_soc.sv(726): index expression is not wide enough to address all of the elements in the array File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 726
+Warning (10027): Verilog HDL or VHDL warning at the llm_soc.sv(767): index expression is not wide enough to address all of the elements in the array File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 767
+Info (12128): Elaborating entity "reset_release" for hierarchy "reset_release:u_reset" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 19
+Info (12128): Elaborating entity "logic_mul" for hierarchy "logic_mul:u_scalar_lo" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 310
+Info (12128): Elaborating entity "logic_mul" for hierarchy "logic_mul:u_scalar_hi" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 314
+Info (12128): Elaborating entity "logic_mul" for hierarchy "logic_mul:u_exp_mul" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 341
+Info (12128): Elaborating entity "logic_mul" for hierarchy "logic_mul:u_noise_mul" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 345
+Info (12128): Elaborating entity "llm_gumbel_sample" for hierarchy "llm_gumbel_sample:u_gumbel_lookup" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 348
+Info (12128): Elaborating entity "llm_exp_sample" for hierarchy "llm_exp_sample:u_exp_hi" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 349
+Info (12128): Elaborating entity "llm_parameter_ram" for hierarchy "llm_parameter_ram:u_parameters" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 406
+Info (12128): Elaborating entity "pipelined_word_ram" for hierarchy "llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[0].u_storage" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_parameter_ram.sv Line: 92
+Info (12128): Elaborating entity "quartus_word_ram" for hierarchy "llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[0].u_storage|quartus_word_ram:g_ip_tiled.g_tile[0].u_storage" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv Line: 60
+Info (12128): Elaborating entity "altsyncram" for hierarchy "llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[0].u_storage|quartus_word_ram:g_ip_tiled.g_tile[0].u_storage|altsyncram:u_memory" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/quartus_word_ram.sv Line: 38
+Info (12130): Elaborated megafunction instantiation "llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[0].u_storage|quartus_word_ram:g_ip_tiled.g_tile[0].u_storage|altsyncram:u_memory" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/quartus_word_ram.sv Line: 38
+Info (12133): Instantiated megafunction "llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[0].u_storage|quartus_word_ram:g_ip_tiled.g_tile[0].u_storage|altsyncram:u_memory" with the following parameter: File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/quartus_word_ram.sv Line: 38
+    Info (12134): Parameter "intended_device_family" = "Cyclone V"
+    Info (12134): Parameter "operation_mode" = "DUAL_PORT"
+    Info (12134): Parameter "ram_block_type" = "M10K"
+    Info (12134): Parameter "width_a" = "32"
+    Info (12134): Parameter "width_b" = "32"
+    Info (12134): Parameter "widthad_a" = "10"
+    Info (12134): Parameter "widthad_b" = "10"
+    Info (12134): Parameter "numwords_a" = "1024"
+    Info (12134): Parameter "numwords_b" = "1024"
+    Info (12134): Parameter "width_byteena_a" = "1"
+    Info (12134): Parameter "width_byteena_b" = "1"
+    Info (12134): Parameter "address_reg_b" = "CLOCK0"
+    Info (12134): Parameter "rdcontrol_reg_b" = "CLOCK0"
+    Info (12134): Parameter "outdata_reg_b" = "UNREGISTERED"
+    Info (12134): Parameter "outdata_aclr_b" = "NONE"
+    Info (12134): Parameter "clock_enable_input_a" = "BYPASS"
+    Info (12134): Parameter "clock_enable_input_b" = "BYPASS"
+    Info (12134): Parameter "clock_enable_output_a" = "BYPASS"
+    Info (12134): Parameter "clock_enable_output_b" = "BYPASS"
+    Info (12134): Parameter "read_during_write_mode_mixed_ports" = "OLD_DATA"
+    Info (12134): Parameter "power_up_uninitialized" = "TRUE"
+    Info (12134): Parameter "lpm_type" = "altsyncram"
+Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_o572.tdf
+    Info (12023): Found entity 1: altsyncram_o572 File: D:/2151097_Nguyen Nhut Khanh/quartus/db/altsyncram_o572.tdf Line: 28
+Info (12128): Elaborating entity "altsyncram_o572" for hierarchy "llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[0].u_storage|quartus_word_ram:g_ip_tiled.g_tile[0].u_storage|altsyncram:u_memory|altsyncram_o572:auto_generated" File: c:/altera_lite/25.1std/quartus/libraries/megafunctions/altsyncram.tdf Line: 792
+Warning (287013): Variable or input pin "data_b" is defined but never used. File: D:/2151097_Nguyen Nhut Khanh/quartus/db/altsyncram_o572.tdf Line: 34
+Warning (287013): Variable or input pin "rden_a" is defined but never used. File: D:/2151097_Nguyen Nhut Khanh/quartus/db/altsyncram_o572.tdf Line: 36
+Info (12128): Elaborating entity "llm_bank_ram" for hierarchy "llm_bank_ram:u_vectors" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 486
+Info (12128): Elaborating entity "pipelined_word_ram" for hierarchy "llm_bank_ram:u_vectors|pipelined_word_ram:g_bank[0].u_storage" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_bank_ram.sv Line: 72
+Info (12128): Elaborating entity "quartus_word_ram" for hierarchy "llm_bank_ram:u_vectors|pipelined_word_ram:g_bank[0].u_storage|quartus_word_ram:g_ip.u_storage" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv Line: 108
+Info (12128): Elaborating entity "altsyncram" for hierarchy "llm_bank_ram:u_vectors|pipelined_word_ram:g_bank[0].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/quartus_word_ram.sv Line: 38
+Info (12130): Elaborated megafunction instantiation "llm_bank_ram:u_vectors|pipelined_word_ram:g_bank[0].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/quartus_word_ram.sv Line: 38
+Info (12133): Instantiated megafunction "llm_bank_ram:u_vectors|pipelined_word_ram:g_bank[0].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory" with the following parameter: File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/quartus_word_ram.sv Line: 38
+    Info (12134): Parameter "intended_device_family" = "Cyclone V"
+    Info (12134): Parameter "operation_mode" = "DUAL_PORT"
+    Info (12134): Parameter "ram_block_type" = "M10K"
+    Info (12134): Parameter "width_a" = "24"
+    Info (12134): Parameter "width_b" = "24"
+    Info (12134): Parameter "widthad_a" = "7"
+    Info (12134): Parameter "widthad_b" = "7"
+    Info (12134): Parameter "numwords_a" = "96"
+    Info (12134): Parameter "numwords_b" = "96"
+    Info (12134): Parameter "width_byteena_a" = "1"
+    Info (12134): Parameter "width_byteena_b" = "1"
+    Info (12134): Parameter "address_reg_b" = "CLOCK0"
+    Info (12134): Parameter "rdcontrol_reg_b" = "CLOCK0"
+    Info (12134): Parameter "outdata_reg_b" = "UNREGISTERED"
+    Info (12134): Parameter "outdata_aclr_b" = "NONE"
+    Info (12134): Parameter "clock_enable_input_a" = "BYPASS"
+    Info (12134): Parameter "clock_enable_input_b" = "BYPASS"
+    Info (12134): Parameter "clock_enable_output_a" = "BYPASS"
+    Info (12134): Parameter "clock_enable_output_b" = "BYPASS"
+    Info (12134): Parameter "read_during_write_mode_mixed_ports" = "OLD_DATA"
+    Info (12134): Parameter "power_up_uninitialized" = "TRUE"
+    Info (12134): Parameter "lpm_type" = "altsyncram"
+Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_mt62.tdf
+    Info (12023): Found entity 1: altsyncram_mt62 File: D:/2151097_Nguyen Nhut Khanh/quartus/db/altsyncram_mt62.tdf Line: 28
+Info (12128): Elaborating entity "altsyncram_mt62" for hierarchy "llm_bank_ram:u_vectors|pipelined_word_ram:g_bank[0].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_mt62:auto_generated" File: c:/altera_lite/25.1std/quartus/libraries/megafunctions/altsyncram.tdf Line: 792
+Warning (287013): Variable or input pin "data_b" is defined but never used. File: D:/2151097_Nguyen Nhut Khanh/quartus/db/altsyncram_mt62.tdf Line: 34
+Warning (287013): Variable or input pin "rden_a" is defined but never used. File: D:/2151097_Nguyen Nhut Khanh/quartus/db/altsyncram_mt62.tdf Line: 36
+Info (12128): Elaborating entity "llm_bank_ram" for hierarchy "llm_bank_ram:u_cache" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 496
+Info (12128): Elaborating entity "pipelined_word_ram" for hierarchy "llm_bank_ram:u_cache|pipelined_word_ram:g_bank[0].u_storage" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_bank_ram.sv Line: 72
+Info (12128): Elaborating entity "quartus_word_ram" for hierarchy "llm_bank_ram:u_cache|pipelined_word_ram:g_bank[0].u_storage|quartus_word_ram:g_ip.u_storage" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv Line: 108
+Info (12128): Elaborating entity "altsyncram" for hierarchy "llm_bank_ram:u_cache|pipelined_word_ram:g_bank[0].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/quartus_word_ram.sv Line: 38
+Info (12130): Elaborated megafunction instantiation "llm_bank_ram:u_cache|pipelined_word_ram:g_bank[0].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/quartus_word_ram.sv Line: 38
+Info (12133): Instantiated megafunction "llm_bank_ram:u_cache|pipelined_word_ram:g_bank[0].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory" with the following parameter: File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/quartus_word_ram.sv Line: 38
+    Info (12134): Parameter "intended_device_family" = "Cyclone V"
+    Info (12134): Parameter "operation_mode" = "DUAL_PORT"
+    Info (12134): Parameter "ram_block_type" = "M10K"
+    Info (12134): Parameter "width_a" = "24"
+    Info (12134): Parameter "width_b" = "24"
+    Info (12134): Parameter "widthad_a" = "12"
+    Info (12134): Parameter "widthad_b" = "12"
+    Info (12134): Parameter "numwords_a" = "4096"
+    Info (12134): Parameter "numwords_b" = "4096"
+    Info (12134): Parameter "width_byteena_a" = "1"
+    Info (12134): Parameter "width_byteena_b" = "1"
+    Info (12134): Parameter "address_reg_b" = "CLOCK0"
+    Info (12134): Parameter "rdcontrol_reg_b" = "CLOCK0"
+    Info (12134): Parameter "outdata_reg_b" = "UNREGISTERED"
+    Info (12134): Parameter "outdata_aclr_b" = "NONE"
+    Info (12134): Parameter "clock_enable_input_a" = "BYPASS"
+    Info (12134): Parameter "clock_enable_input_b" = "BYPASS"
+    Info (12134): Parameter "clock_enable_output_a" = "BYPASS"
+    Info (12134): Parameter "clock_enable_output_b" = "BYPASS"
+    Info (12134): Parameter "read_during_write_mode_mixed_ports" = "OLD_DATA"
+    Info (12134): Parameter "power_up_uninitialized" = "TRUE"
+    Info (12134): Parameter "lpm_type" = "altsyncram"
+Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_m672.tdf
+    Info (12023): Found entity 1: altsyncram_m672 File: D:/2151097_Nguyen Nhut Khanh/quartus/db/altsyncram_m672.tdf Line: 28
+Info (12128): Elaborating entity "altsyncram_m672" for hierarchy "llm_bank_ram:u_cache|pipelined_word_ram:g_bank[0].u_storage|quartus_word_ram:g_ip.u_storage|altsyncram:u_memory|altsyncram_m672:auto_generated" File: c:/altera_lite/25.1std/quartus/libraries/megafunctions/altsyncram.tdf Line: 792
+Warning (287013): Variable or input pin "data_b" is defined but never used. File: D:/2151097_Nguyen Nhut Khanh/quartus/db/altsyncram_m672.tdf Line: 34
+Warning (287013): Variable or input pin "rden_a" is defined but never used. File: D:/2151097_Nguyen Nhut Khanh/quartus/db/altsyncram_m672.tdf Line: 36
+Info (12128): Elaborating entity "llm_math" for hierarchy "llm_math:u_math" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 507
+Info (10008): Verilog HDL or VHDL information: EDA Netlist Writer cannot regroup multidimensional array "partial_q" into its bus
+Info (10008): Verilog HDL or VHDL information: EDA Netlist Writer cannot regroup multidimensional array "partial_comb" into its bus
+Info (10008): Verilog HDL or VHDL information: EDA Netlist Writer cannot regroup multidimensional array "pair_q" into its bus
+Info (12128): Elaborating entity "logic_mul" for hierarchy "llm_math:u_math|logic_mul:g_mul_lane[0].g_byte[3].u_mul" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_math.sv Line: 24
+Info (12128): Elaborating entity "llm_head_engine" for hierarchy "llm_head_engine:u_head_engine" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 514
+Info (12128): Elaborating entity "llm_attention_engine" for hierarchy "llm_attention_engine:u_attention_engine" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 520
+Info (12128): Elaborating entity "logic_mul" for hierarchy "llm_attention_engine:u_attention_engine|logic_mul:u_scale" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_attention_engine.sv Line: 30
+Info (12128): Elaborating entity "llm_linear_engine" for hierarchy "llm_linear_engine:u_linear_engine" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 531
+Info (12128): Elaborating entity "ternary_dot32" for hierarchy "llm_linear_engine:u_linear_engine|ternary_dot32:u_dot" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_linear_engine.sv Line: 41
+Info (12128): Elaborating entity "isqrt_u64" for hierarchy "isqrt_u64:u_root" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 535
+Info (12128): Elaborating entity "llm_attention_normalize" for hierarchy "llm_attention_normalize:u_attention_normalize" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 554
+Info (12128): Elaborating entity "div" for hierarchy "llm_attention_normalize:u_attention_normalize|div:g_divider[1].g_private.u_div" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_attention_normalize.sv Line: 66
+Info (12128): Elaborating entity "sigmoid" for hierarchy "sigmoid:g_sigmoid[0].u_sig" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 573
+Info (12128): Elaborating entity "logic_mul" for hierarchy "sigmoid:g_sigmoid[0].u_sig|logic_mul:u_bit_mul" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/sigmoid.sv Line: 21
+Info (12128): Elaborating entity "sigmoid_sample" for hierarchy "sigmoid:g_sigmoid[0].u_sig|sigmoid_sample:u_lookup" File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/sigmoid.sv Line: 34
+Warning (276020): Inferred RAM node "output_memory_rtl_0" from synchronous design logic.  Pass-through logic has been added to match the read-during-write behavior of the original design.
+Warning (276020): Inferred RAM node "llm_attention_engine:u_attention_engine|score_memory_rtl_0" from synchronous design logic.  Pass-through logic has been added to match the read-during-write behavior of the original design.
+Internal Error: Sub-system: QSYN, File: /quartus/synth/qsyn/qsyn_cmd.cpp, Line: 1539
+FAILED at opening pipe ul_pipertl0a42604
+Stack Trace:
+    0x136d7: QSYN_FRAMEWORK::execute + 0x237 (quartus_map)
+    0x108ab: qexe_do_grunt + 0x10b (comp_qexe)
+    0x16e90: qexe_run + 0x310 (comp_qexe)
+    0x18012: qexe_standard_main + 0xb2 (comp_qexe)
+    0x1b94e: qsyn_main + 0x55e (quartus_map)
+    0x12208: msg_main_thread + 0x18 (CCL_MSG)
+    0x13b18: msg_thread_wrapper + 0x78 (CCL_MSG)
+    0x15f13: mem_thread_wrapper + 0x73 (ccl_mem)
+    0x11a41: msg_exe_main + 0xa1 (CCL_MSG)
+    0x2c957: __scrt_common_main_seh + 0x10b (quartus_map)
+    0x2cd86: BaseThreadInitThunk + 0x16 (KERNEL32)
+    0xacaeb: RtlUserThreadStart + 0x2b (ntdll)
+
+End-trace
+
+Error: Quartus Prime Analysis & Synthesis was unsuccessful. 0 errors, 12 warnings
+    Error: Peak virtual memory: 6096 megabytes
+    Error: Processing ended: Mon Oct  5 16:03:40 2026
+    Error: Elapsed time: 00:01:52
+    Error: Total CPU time (on all processors): 00:01:39

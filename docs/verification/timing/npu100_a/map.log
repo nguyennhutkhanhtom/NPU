@@ -1,0 +1,65 @@
+TBBmalloc: skip allocation functions replacement in ucrtbase.dll: unknown prologue for function _msize
+Info: *******************************************************************
+Info: Running Quartus Prime Analysis & Synthesis
+    Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
+    Info: Copyright (C) 2025  Altera Corporation. All rights reserved.
+    Info: Your use of Altera Corporation's design tools, logic functions 
+    Info: and other software and tools, and any partner logic 
+    Info: functions, and any output files from any of the foregoing 
+    Info: (including device programming or simulation files), and any 
+    Info: associated documentation or information are expressly subject 
+    Info: to the terms and conditions of the Altera Program License 
+    Info: Subscription Agreement, the Altera Quartus Prime License Agreement,
+    Info: the Altera IP License Agreement, or other applicable license
+    Info: agreement, including, without limitation, that your use is for
+    Info: the sole purpose of programming logic devices manufactured by
+    Info: Altera and sold by Altera or its authorized distributors.  Please
+    Info: refer to the Altera Software License Subscription Agreements 
+    Info: on the Quartus Prime software download page.
+    Info: Processing started: Mon Oct  5 00:45:02 2026
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off llm_soc -c llm_soc
+Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Info (12021): Found 1 design units, including 0 entities, in source file /2151097_nguyen nhut khanh/verilog source code/npu_pkg.sv
+    Info (12022): Found design unit 1: npu_pkg (SystemVerilog) File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/npu_pkg.sv Line: 1
+Info (12021): Found 2 design units, including 2 entities, in source file /2151097_nguyen nhut khanh/verilog source code/banked_word_ram.sv
+    Info (12023): Found entity 1: sram_word_tile File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/banked_word_ram.sv Line: 3
+    Info (12023): Found entity 2: banked_word_ram File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/banked_word_ram.sv Line: 19
+Info (12021): Found 3 design units, including 2 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_pkg.sv
+    Info (12022): Found design unit 1: llm_pkg (SystemVerilog) File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_pkg.sv Line: 1
+    Info (12023): Found entity 1: llm_exp_sample File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_exp_lut.svh Line: 4
+    Info (12023): Found entity 2: llm_gumbel_sample File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_gumbel_lut.svh Line: 4
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/div.sv
+    Info (12023): Found entity 1: div File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/div.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_bank_ram.sv
+    Info (12023): Found entity 1: llm_bank_ram File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_bank_ram.sv Line: 5
+Error (10170): Verilog HDL syntax error at pipelined_word_ram.sv(64) near text: "genvar";  expecting an identifier ("genvar" is a reserved keyword ). Check for and fix any syntax errors that appear immediately before or at the specified keyword. The Intel FPGA Knowledge Database contains many articles with specific details on how to resolve this error. Visit the Knowledge Database at https://www.altera.com/support/support-resources/knowledge-base/search.html and search for this specific error message number. File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv Line: 64
+Error (10170): Verilog HDL syntax error at pipelined_word_ram.sv(79) near text: "genvar";  expecting an identifier ("genvar" is a reserved keyword ). Check for and fix any syntax errors that appear immediately before or at the specified keyword. The Intel FPGA Knowledge Database contains many articles with specific details on how to resolve this error. Visit the Knowledge Database at https://www.altera.com/support/support-resources/knowledge-base/search.html and search for this specific error message number. File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv Line: 79
+Error (10170): Verilog HDL syntax error at pipelined_word_ram.sv(86) near text: "genvar";  expecting an identifier ("genvar" is a reserved keyword ). Check for and fix any syntax errors that appear immediately before or at the specified keyword. The Intel FPGA Knowledge Database contains many articles with specific details on how to resolve this error. Visit the Knowledge Database at https://www.altera.com/support/support-resources/knowledge-base/search.html and search for this specific error message number. File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv Line: 86
+Error (10112): Ignored design unit "pipelined_word_ram" at pipelined_word_ram.sv(4) due to previous errors File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/pipelined_word_ram.sv Line: 4
+Info (12021): Found 0 design units, including 0 entities, in source file /2151097_nguyen nhut khanh/verilog source code/pipelined_word_ram.sv
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_parameter_ram.sv
+    Info (12023): Found entity 1: llm_parameter_ram File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_parameter_ram.sv Line: 5
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_math.sv
+    Info (12023): Found entity 1: llm_math File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_math.sv Line: 5
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/reset_release.sv
+    Info (12023): Found entity 1: reset_release File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/reset_release.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/llm_soc.sv
+    Info (12023): Found entity 1: llm_soc File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 3
+Info (12021): Found 2 design units, including 2 entities, in source file /2151097_nguyen nhut khanh/verilog source code/norm.sv
+    Info (12023): Found entity 1: isqrt_u64 File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/norm.sv Line: 1
+    Info (12023): Found entity 2: norm File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/norm.sv Line: 65
+Info (12021): Found 2 design units, including 2 entities, in source file /2151097_nguyen nhut khanh/verilog source code/sigmoid.sv
+    Info (12023): Found entity 1: sigmoid_sample File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/sigmoid_lut.svh Line: 3
+    Info (12023): Found entity 2: sigmoid File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/sigmoid.sv Line: 2
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/sram_256_wrapper.sv
+    Info (12023): Found entity 1: sram_256_wrapper File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/sram_256_wrapper.sv Line: 3
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/quartus_word_ram.sv
+    Info (12023): Found entity 1: quartus_word_ram File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/quartus_word_ram.sv Line: 5
+Info (12021): Found 1 design units, including 1 entities, in source file /2151097_nguyen nhut khanh/verilog source code/logic_mul.sv
+    Info (12023): Found entity 1: logic_mul File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/logic_mul.sv Line: 4
+Info (144001): Generated suppressed messages file D:/2151097_Nguyen Nhut Khanh/quartus/output_files/llm_soc.map.smsg
+Error: Quartus Prime Analysis & Synthesis was unsuccessful. 4 errors, 0 warnings
+    Error: Peak virtual memory: 4796 megabytes
+    Error: Processing ended: Mon Oct  5 00:45:12 2026
+    Error: Elapsed time: 00:00:10
+    Error: Total CPU time (on all processors): 00:00:02

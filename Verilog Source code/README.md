@@ -17,14 +17,14 @@ Thư mục này là source đang phát triển. Top toàn graph là `llm_soc.sv`
 
 ## Nhóm source
 
-- **Toàn graph:** `llm_soc`, `llm_math`, `llm_pkg`, các bảng exp/Gumbel, và `reset_release`; compute/controller không dùng vendor IP.
+- **Toàn graph:** `llm_soc`, `llm_linear_engine`, `llm_head_engine`, `llm_attention_engine`, `llm_attention_normalize`, `ternary_dot32`, `llm_math`, `llm_pkg`, các bảng exp/Gumbel, và `reset_release`; xem [kiến trúc tối ưu exact](../docs/design/exact_throughput_optimization.md).
 - **SRAM toàn graph:** `llm_parameter_ram`, `llm_bank_ram`, `pipelined_word_ram`; chỉ leaf `quartus_word_ram` instantiate `altsyncram`. Xem ports/latency/collision/reset trong tài liệu full graph.
-- **Số học chung:** `logic_mul` dùng cây tích bit và compressor; divider/sqrt/rounding dùng logic portable.
+- **Số học chung:** `logic_mul` dùng cây tích bit và compressor; `div`, `isqrt_u64`, sigmoid và rounding dùng logic portable. `sram_word_tile` là file riêng cho SRAM behavioral leaf.
 
 Những nhóm bên dưới còn được top legacy instantiate và có regression riêng:
 
 - **Control:** `matmulfree`, `PC`, `ins_mem`, `descriptor_file`.
-- **NORM/scalar:** `norm_dispatch`, `norm` (gồm `isqrt_u64`), `div`, `scale_compose`.
+- **NORM/scalar:** `norm_dispatch`, `norm`, `div`, `scale_compose`; `isqrt_u64` đã tách thành module/file dùng chung độc lập.
 - **Ternary:** `ternary_mul`, `acc_mul`, `postscale`.
 - **Vector:** `rowwise_dispatch`, `rowwise_op`, `sigmoid` và LUT hằng `sigmoid_lut.svh`; `sigmoid_257.mem` giữ cùng mẫu để generate/đối chiếu.
 - **Memory:** `sram_256_wrapper`, `regfile`, `mem_mapping`; synchronous read/valid, data array không reset.

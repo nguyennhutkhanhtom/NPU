@@ -1,0 +1,48 @@
+{
+  "baseline_rtl_code_lines": 5072,
+  "added": 186,
+  "deleted": 93,
+  "percentage": 5.500788643533123,
+  "changed_files": {
+    "llm_soc.sv": {
+      "added": 186,
+      "deleted": 93
+    }
+  },
+  "baseline_by_file": {
+    "acc_mul.sv": 29,
+    "banked_word_ram.sv": 52,
+    "descriptor_file.sv": 62,
+    "div.sv": 66,
+    "ins_mem.sv": 55,
+    "llm_bank_ram.sv": 70,
+    "llm_exp_lut.svh": 267,
+    "llm_gumbel_lut.svh": 266,
+    "llm_math.sv": 67,
+    "llm_parameter_ram.sv": 88,
+    "llm_pkg.sv": 26,
+    "llm_soc.sv": 992,
+    "logic_mul.sv": 69,
+    "matmul_wrap.sv": 27,
+    "matmulfree.sv": 524,
+    "mem_mapping.sv": 35,
+    "mul.sv": 39,
+    "norm.sv": 581,
+    "norm_dispatch.sv": 69,
+    "npu_pkg.sv": 103,
+    "PC.sv": 16,
+    "pipelined_word_ram.sv": 165,
+    "postscale.sv": 42,
+    "quartus_word_ram.sv": 35,
+    "regfile.sv": 35,
+    "reset_release.sv": 12,
+    "rowwise_dispatch.sv": 166,
+    "rowwise_op.sv": 236,
+    "scale_compose.sv": 144,
+    "sigmoid.sv": 94,
+    "sigmoid_lut.svh": 267,
+    "sram_256_wrapper.sv": 82,
+    "ternary_mul.sv": 291
+  },
+  "method": "Task-start snapshot; nonblank non-comment SV/V/SVH lines; replacements count deletion plus addition; numeric MEM assets hashed but excluded from code-line counts"
+}

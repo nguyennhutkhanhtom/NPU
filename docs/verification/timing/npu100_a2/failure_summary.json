@@ -1,0 +1,6 @@
+{
+  "status": "SYNTHESIS_TOOL_INTERNAL_ERROR_NO_FREQUENCY",
+  "reason": "QSYN failed at opening child-process pipes ul_pipertl*; retry outside sandbox with unchanged RTL/configuration",
+  "runner": "./tools/timing/run.ps1 -Project quartus/llm_soc -Tag npu100_a2 -QuartusBin C:/altera_lite/25.1std/quartus/bin64 -Python C:/Users/khanh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "map_log_sha256": "ae3afc4e36ae14c302d3de9f7b1aba7c2e72daedfe5e2cd14b7fa8389b1e1fa3"
+}

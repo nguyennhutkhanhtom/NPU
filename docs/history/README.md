@@ -16,6 +16,12 @@ Thiết kế đang phát triển được mô tả trong [kiến trúc hiện h�
 | [Unused-cache cleanup 02/10/2026](cache_cleanup_20261002.json) | Six untracked retired-demo caches,1.29GB freed; current model/assets/evidence retained |
 | [Quartus database cleanup 04/10/2026](quartus_database_cleanup_20261004.json) | Twelve inactive db/incremental_db directories,1.864GB; six source ZIPs/report hashes verified, active fanout1 DB retained |
 | [Cleanup manifest](cleanup_manifest.json) | Phân loại file, SHA-256 và thông tin đối chiếu archive |
+| [Tối ưu throughput hiện tại](../reviews/rtl_change_review_v3.md) | RTL đã triển khai, graph nhanh 3,987 lần, unit/portable/host/timing PASS |
+| [Workspace cleanup 05/10/2026](workspace_cleanup_20261005.json) | Thu hồi 4,273 GiB cache; giữ nguyên 3.711 file được bảo vệ |
+| [Optimization implementation archive](optimization_implementation_20261005.md) | 17 file helper/staging lưu trong ZIP trước khi gỡ khỏi tools |
+| [Sắp xếp workspace 05/10/2026](workspace_arrangement_20261005.json) | 17 lần di chuyển, SHA-256 từng file tại thời điểm chuyển |
+| [Các project Quartus cũ](quartus_projects.md) | 11 project trong `quartus/archive`, config/report giữ nguyên byte |
+| [Task state lịch sử](task_state_20261004.md) | Snapshot 04/10 giữ nguyên byte; đường dẫn dùng ngữ cảnh root lúc tạo |
 
 Archive có SHA-256 `6d7e6b88f8d28863fc03b47593b3c4d9c0a60653f910ef7289315b6310d5f9fb`. Nội dung archive được giữ nguyên khi sắp xếp lại tài liệu ngày 01/10/2026.
 

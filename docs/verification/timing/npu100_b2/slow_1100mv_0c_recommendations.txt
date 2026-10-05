@@ -1,0 +1,732 @@
+Statistics: 200 0 20788 1 2 -0.164
+
+Heuristic: Chained Adders
+From To Score Heuristic
+div:u_div|remainder[10] scalar_round_q[62] 0.549391 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[62]~DUPLICATE 0.549501 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[60] 0.558599 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[52] 0.531389 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[0]~DUPLICATE div_numerator_q[56] 0.452144 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[0]~DUPLICATE div_numerator_q[54] 0.447961 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[56] 0.548956 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[61] 0.547747 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[61]~DUPLICATE 0.547862 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[48]~DUPLICATE 0.519192 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[58] 0.557603 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[48] 0.519302 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[54] 0.546880 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[50] 0.544813 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[63] 0.556060 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[59] 0.541667 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[57] 0.536668 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+random_q[30] noise_product_q[32] 0.338844 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[46] 0.520393 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[46]~DUPLICATE 0.520282 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+random_q[25]~DUPLICATE noise_product_q[30] 0.307890 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[44] 0.520150 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[34] 0.484630 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+op[99] op[76]~SynDup 0.728589 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41} Selector6484~0}}
+lane_q[0]~DUPLICATE div_numerator_q[56] 0.728589 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{lane_q[0]~DUPLICATE} Mux290~7 Add331~1}}
+lane_q[0]~DUPLICATE div_numerator_q[54] 0.683052 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{lane_q[0]~DUPLICATE} Mux290~7}}
+reset_release:u_reset|core_rst_n vector_q[328] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[334] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[317] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[319] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+op[99] op[45]~SynDup_1 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+reset_release:u_reset|core_rst_n vector_q[333] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[325] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+op[36]~SynDup math_a_q[7][9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~SynDup} WideOr13}}
+reset_release:u_reset|core_rst_n vector_q[327] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[347] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+op[99] time_q[3] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[0]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[4]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[2] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[6] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[5] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[4] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[1] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[0] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+reset_release:u_reset|core_rst_n vector_q[342] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[337] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[355] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[357] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+lane_q[1]~DUPLICATE write_vector_q[127] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{lane_q[1]~DUPLICATE} always90~0}}
+op[99] probability_sum_q[9] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[10] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[16] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[14] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[13] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[12] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[18]~DUPLICATE 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+reset_release:u_reset|core_rst_n vector_q[356] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[345] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+op[99] probability_sum_q[9]~DUPLICATE 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[16]~DUPLICATE 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[15] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[11] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[18] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[17] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+lane_q[1]~DUPLICATE write_vector_q[143] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{lane_q[1]~DUPLICATE} always90~0}}
+reset_release:u_reset|core_rst_n vector_q[343] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[350] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+op[99] op[76]~SynDup_1 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41} Selector6484~0}}
+op[99] op[76]~SynDup_2 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41} Selector6484~0}}
+op[36]~SynDup math_a_q[6][22] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~SynDup} WideOr13}}
+op[36]~SynDup math_a_q[24][7] 0.933504 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~SynDup} WideOr13}}
+reset_release:u_reset|core_rst_n vector_q[358]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[358] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[349] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+op[36]~SynDup math_a_q[24][17] 0.842431 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~SynDup} WideOr13}}
+op[99] probability_sum_q[19]~DUPLICATE 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[19] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[20] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[31] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[30] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[29] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[28]~DUPLICATE 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+host_rdata[27]~reg0 host_rdata[27] 0.339190 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[27]~reg0 host_rdata[27](n) 0.339190 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[29]~reg0 host_rdata[29] 0.337910 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[29]~reg0 host_rdata[29](n) 0.337910 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[25]~reg0 host_rdata[25] 0.335704 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[25]~reg0 host_rdata[25](n) 0.335704 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[31]~reg0 host_rdata[31] 0.334431 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[31]~reg0 host_rdata[31](n) 0.334431 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[18]~reg0 host_rdata[18] 0.336400 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[18]~reg0 host_rdata[18](n) 0.336400 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_ready~reg0 host_ready 0.335125 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_ready~reg0 host_ready(n) 0.335125 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[20]~reg0 host_rdata[20] 0.336748 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[20]~reg0 host_rdata[20](n) 0.336748 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[28]~reg0 host_rdata[28] 0.337445 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[28]~reg0 host_rdata[28](n) 0.337445 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[2]~reg0 pc_debug[2] 0.336284 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[2]~reg0 pc_debug[2](n) 0.336284 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[14]~reg0 host_rdata[14] 0.336748 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[14]~reg0 host_rdata[14](n) 0.336748 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[15]~reg0 host_rdata[15] 0.336516 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[15]~reg0 host_rdata[15](n) 0.336516 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[24]~reg0 host_rdata[24] 0.335125 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[24]~reg0 host_rdata[24](n) 0.335125 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[0]~reg0 pc_debug[0] 0.333622 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[0]~reg0 pc_debug[0](n) 0.333622 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[1]~reg0 pc_debug[1] 0.335588 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[1]~reg0 pc_debug[1](n) 0.335588 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[26]~reg0 host_rdata[26] 0.335125 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[26]~reg0 host_rdata[26](n) 0.335125 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[30]~reg0 host_rdata[30] 0.333737 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[30]~reg0 host_rdata[30](n) 0.333737 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[9]~reg0 instr_debug[9] 0.310360 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[9]~reg0 instr_debug[9](n) 0.310360 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[10]~reg0 host_rdata[10] 0.309692 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[10]~reg0 host_rdata[10](n) 0.309692 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[11]~reg0 instr_debug[11] 0.308358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[11]~reg0 instr_debug[11](n) 0.308358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[6]~reg0 pc_debug[6] 0.312705 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[6]~reg0 pc_debug[6](n) 0.312705 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[10]~reg0 instr_debug[10] 0.308802 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[10]~reg0 instr_debug[10](n) 0.308802 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[6]~reg0 instr_debug[6] 0.309581 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[6]~reg0 instr_debug[6](n) 0.309581 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[0]~reg0 instr_debug[0] 0.308358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[0]~reg0 instr_debug[0](n) 0.308358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[5]~reg0 host_rdata[5] 0.308469 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[5]~reg0 host_rdata[5](n) 0.308469 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[1]~reg0 instr_debug[1] 0.309136 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[1]~reg0 instr_debug[1](n) 0.309136 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[0]~reg0 host_rdata[0] 0.307803 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[0]~reg0 host_rdata[0](n) 0.307803 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[3]~reg0 pc_debug[3] 0.311029 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[3]~reg0 pc_debug[3](n) 0.311029 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[6]~reg0 host_rdata[6] 0.310583 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[6]~reg0 host_rdata[6](n) 0.310583 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[4]~reg0 instr_debug[4] 0.308025 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[4]~reg0 instr_debug[4](n) 0.308025 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[5]~reg0 instr_debug[5] 0.308025 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[5]~reg0 instr_debug[5](n) 0.308025 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[8]~reg0 host_rdata[8] 0.311811 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[8]~reg0 host_rdata[8](n) 0.311811 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+error~reg0 error 0.306805 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+error~reg0 error(n) 0.306805 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[4]~reg0 host_rdata[4] 0.311141 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[4]~reg0 host_rdata[4](n) 0.311141 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[7]~reg0 instr_debug[7] 0.307470 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[7]~reg0 instr_debug[7](n) 0.307470 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[3]~reg0 instr_debug[3] 0.308469 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[3]~reg0 instr_debug[3](n) 0.308469 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[13]~reg0 host_rdata[13] 0.307249 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[13]~reg0 host_rdata[13](n) 0.307249 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[12]~reg0 host_rdata[12] 0.309136 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[12]~reg0 host_rdata[12](n) 0.309136 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[2]~reg0 host_rdata[2] 0.310138 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[2]~reg0 host_rdata[2](n) 0.310138 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[3]~reg0 host_rdata[3] 0.311364 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[3]~reg0 host_rdata[3](n) 0.311364 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+running~reg0 running 0.309358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+running~reg0 running(n) 0.309358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[22]~reg0 host_rdata[22] 0.306694 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[22]~reg0 host_rdata[22](n) 0.306694 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[4]~reg0 pc_debug[4] 0.307470 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[4]~reg0 pc_debug[4](n) 0.307470 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[23]~reg0 host_rdata[23] 0.305698 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[23]~reg0 host_rdata[23](n) 0.305698 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+running~reg0_Duplicate_1 ready 0.308580 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+running~reg0_Duplicate_1 ready(n) 0.308580 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+overflow_out~reg0 overflow_out 0.307359 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+overflow_out~reg0 overflow_out(n) 0.307359 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[8]~reg0 instr_debug[8] 0.306141 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[8]~reg0 instr_debug[8](n) 0.306141 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[11]~reg0 host_rdata[11] 0.308914 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[11]~reg0 host_rdata[11](n) 0.308914 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[2]~reg0 instr_debug[2] 0.307692 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[2]~reg0 instr_debug[2](n) 0.307692 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[1]~reg0 host_rdata[1] 0.309581 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[1]~reg0 host_rdata[1](n) 0.309581 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[19]~reg0 host_rdata[19] 0.306362 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[19]~reg0 host_rdata[19](n) 0.306362 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[5]~reg0 pc_debug[5] 0.308136 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[5]~reg0 pc_debug[5](n) 0.308136 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[17]~reg0 host_rdata[17] 0.307359 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[17]~reg0 host_rdata[17](n) 0.307359 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[7]~reg0 host_rdata[7] 0.309915 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[7]~reg0 host_rdata[7](n) 0.309915 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[21]~reg0 host_rdata[21] 0.305035 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[21]~reg0 host_rdata[21](n) 0.305035 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[16]~reg0 host_rdata[16] 0.305367 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[16]~reg0 host_rdata[16](n) 0.305367 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+div:u_div|remainder[10] scalar_round_q[62] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[62]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[74]~SynDup 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[60] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[76]~SynDup 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[52] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[66]~SynDup_31 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[66]~SynDup_1 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[66]~SynDup_1DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+lane_q[0]~DUPLICATE div_numerator_q[56] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+lane_q[0]~DUPLICATE div_numerator_q[54] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[99] op[66]~SynDup_28 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[66]~SynDup_29 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[56] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[328] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[61] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[334] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n vector_q[317] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[61]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[319] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[48]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[45]~SynDup_1 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[58] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[48] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[54] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[333] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[50] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[325] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[99] op[66]~SynDup_2 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[63] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~SynDup math_a_q[7][9] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[99] op[66]~SynDup_25 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[59] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[327] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n vector_q[347] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[57] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] time_q[3] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[0]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[4]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[2] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[6] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[5] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[4] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[1] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[0] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+reset_release:u_reset|core_rst_n vector_q[342] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n vector_q[337] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n vector_q[355] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n vector_q[357] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+lane_q[1]~DUPLICATE write_vector_q[127] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+random_q[30] noise_product_q[32] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[9] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[10] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[16] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[14] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[13] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[12] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[18]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+reset_release:u_reset|core_rst_n vector_q[356] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n vector_q[345] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[99] probability_sum_q[9]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[16]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[15] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[11] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[18] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[17] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+lane_q[1]~DUPLICATE write_vector_q[143] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+div:u_div|remainder[10] scalar_round_q[46] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[343] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[46]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[66]~SynDup_30 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[350] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[99] op[76]~SynDup_1 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+random_q[25]~DUPLICATE noise_product_q[30] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[76]~SynDup_2 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~SynDup math_a_q[6][22] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[36]~SynDup math_a_q[24][7] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n vector_q[358]~DUPLICATE 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n vector_q[358] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[44] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[34] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[349] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[36]~SynDup math_a_q[24][17] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[99] probability_sum_q[19]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[19] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[20] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[31] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[30] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[29] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[28]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+div:u_div|remainder[10] scalar_round_q[62] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+div:u_div|remainder[10] scalar_round_q[62] 0.549391 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[62] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[62]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[62]~DUPLICATE 0.549501 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[62]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[74]~SynDup 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+op[99] op[74]~SynDup 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[60] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[60] 0.558599 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[60] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[76]~SynDup 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+op[99] op[76]~SynDup 0.728589 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41} Selector6484~0}}
+op[99] op[76]~SynDup 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_rdata[27]~reg0 host_rdata[27] 0.339190 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[27]~reg0 host_rdata[27](n) 0.339190 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[29]~reg0 host_rdata[29] 0.337910 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[29]~reg0 host_rdata[29](n) 0.337910 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+div:u_div|remainder[10] scalar_round_q[52] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[52] 0.531389 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[52] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_rdata[25]~reg0 host_rdata[25] 0.335704 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[25]~reg0 host_rdata[25](n) 0.335704 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[31]~reg0 host_rdata[31] 0.334431 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[31]~reg0 host_rdata[31](n) 0.334431 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[18]~reg0 host_rdata[18] 0.336400 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[18]~reg0 host_rdata[18](n) 0.336400 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_ready~reg0 host_ready 0.335125 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_ready~reg0 host_ready(n) 0.335125 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+op[99] op[66]~SynDup_31 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] op[66]~SynDup_31 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_rdata[20]~reg0 host_rdata[20] 0.336748 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[20]~reg0 host_rdata[20](n) 0.336748 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[28]~reg0 host_rdata[28] 0.337445 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[28]~reg0 host_rdata[28](n) 0.337445 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[2]~reg0 pc_debug[2] 0.336284 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[2]~reg0 pc_debug[2](n) 0.336284 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[14]~reg0 host_rdata[14] 0.336748 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[14]~reg0 host_rdata[14](n) 0.336748 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[15]~reg0 host_rdata[15] 0.336516 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[15]~reg0 host_rdata[15](n) 0.336516 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[24]~reg0 host_rdata[24] 0.335125 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[24]~reg0 host_rdata[24](n) 0.335125 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[0]~reg0 pc_debug[0] 0.333622 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[0]~reg0 pc_debug[0](n) 0.333622 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[1]~reg0 pc_debug[1] 0.335588 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[1]~reg0 pc_debug[1](n) 0.335588 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+op[99] op[66]~SynDup_1 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[66]~SynDup_1DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_rdata[26]~reg0 host_rdata[26] 0.335125 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[26]~reg0 host_rdata[26](n) 0.335125 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+lane_q[0]~DUPLICATE div_numerator_q[56] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+lane_q[0]~DUPLICATE div_numerator_q[56] 0.728589 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{lane_q[0]~DUPLICATE} Mux290~7 Add331~1}}
+lane_q[0]~DUPLICATE div_numerator_q[56] 0.452144 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[0]~DUPLICATE div_numerator_q[56] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+lane_q[0]~DUPLICATE div_numerator_q[54] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+lane_q[0]~DUPLICATE div_numerator_q[54] 0.683052 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{lane_q[0]~DUPLICATE} Mux290~7}}
+lane_q[0]~DUPLICATE div_numerator_q[54] 0.447961 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+lane_q[0]~DUPLICATE div_numerator_q[54] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_rdata[30]~reg0 host_rdata[30] 0.333737 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[30]~reg0 host_rdata[30](n) 0.333737 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+op[99] op[66]~SynDup_28 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] op[66]~SynDup_28 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[66]~SynDup_29 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] op[66]~SynDup_29 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[56] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[56] 0.548956 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[56] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[328] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[328] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[61] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[61] 0.547747 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[61] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[334] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[334] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n vector_q[317] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[317] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[61]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[61]~DUPLICATE 0.547862 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[61]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[319] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[319] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[48]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[48]~DUPLICATE 0.519192 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[48]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[45]~SynDup_1 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+op[99] op[45]~SynDup_1 0.819662 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] op[45]~SynDup_1 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[58] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[58] 0.557603 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[58] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[48] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[48] 0.519302 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[48] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[54] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[54] 0.546880 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[54] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[333] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[333] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[50] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[50] 0.544813 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[50] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+reset_release:u_reset|core_rst_n vector_q[325] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[325] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[99] op[66]~SynDup_2 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[63] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[63] 0.556060 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[63] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~SynDup math_a_q[7][9] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~SynDup} WideOr13}}
+op[36]~SynDup math_a_q[7][9] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[99] op[66]~SynDup_25 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] op[66]~SynDup_25 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+div:u_div|remainder[10] scalar_round_q[59] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[59] 0.541667 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[59] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+instr_debug[9]~reg0 instr_debug[9] 0.310360 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[9]~reg0 instr_debug[9](n) 0.310360 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+reset_release:u_reset|core_rst_n vector_q[327] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[327] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_rdata[10]~reg0 host_rdata[10] 0.309692 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[10]~reg0 host_rdata[10](n) 0.309692 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+reset_release:u_reset|core_rst_n vector_q[347] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[347] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[57] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[57] 0.536668 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[57] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] time_q[3] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[3] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[0]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[0]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[4]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[4]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[2] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[2] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[6] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[6] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[5] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[5] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[4] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[4] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[1] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[1] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] time_q[0] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] time_q[0] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+instr_debug[11]~reg0 instr_debug[11] 0.308358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[11]~reg0 instr_debug[11](n) 0.308358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[6]~reg0 pc_debug[6] 0.312705 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[6]~reg0 pc_debug[6](n) 0.312705 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[10]~reg0 instr_debug[10] 0.308802 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[10]~reg0 instr_debug[10](n) 0.308802 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+reset_release:u_reset|core_rst_n vector_q[342] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[342] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+instr_debug[6]~reg0 instr_debug[6] 0.309581 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[6]~reg0 instr_debug[6](n) 0.309581 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+reset_release:u_reset|core_rst_n vector_q[337] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[337] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+instr_debug[0]~reg0 instr_debug[0] 0.308358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[0]~reg0 instr_debug[0](n) 0.308358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+reset_release:u_reset|core_rst_n vector_q[355] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[355] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_rdata[5]~reg0 host_rdata[5] 0.308469 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[5]~reg0 host_rdata[5](n) 0.308469 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+reset_release:u_reset|core_rst_n vector_q[357] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[357] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+lane_q[1]~DUPLICATE write_vector_q[127] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+lane_q[1]~DUPLICATE write_vector_q[127] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{lane_q[1]~DUPLICATE} always90~0}}
+lane_q[1]~DUPLICATE write_vector_q[127] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+random_q[30] noise_product_q[32] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+random_q[30] noise_product_q[32] 0.338844 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+random_q[30] noise_product_q[32] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+instr_debug[1]~reg0 instr_debug[1] 0.309136 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[1]~reg0 instr_debug[1](n) 0.309136 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[0]~reg0 host_rdata[0] 0.307803 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[0]~reg0 host_rdata[0](n) 0.307803 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+op[99] probability_sum_q[9] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[9] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[9] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[10] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[10] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[10] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[16] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[16] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[16] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[14] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[14] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[14] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[13] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[13] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[13] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[12] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[12] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[12] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[18]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[18]~DUPLICATE 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[18]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+pc_debug[3]~reg0 pc_debug[3] 0.311029 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[3]~reg0 pc_debug[3](n) 0.311029 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+reset_release:u_reset|core_rst_n vector_q[356] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[356] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+reset_release:u_reset|core_rst_n vector_q[345] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[345] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[99] probability_sum_q[9]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[9]~DUPLICATE 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[9]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[16]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[16]~DUPLICATE 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[16]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[15] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[15] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[15] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[11] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[11] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[11] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[18] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[18] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[18] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[17] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[17] 0.887968 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[17] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+host_rdata[6]~reg0 host_rdata[6] 0.310583 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[6]~reg0 host_rdata[6](n) 0.310583 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+lane_q[1]~DUPLICATE write_vector_q[143] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{lane_q[1]~DUPLICATE} always90~0}}
+lane_q[1]~DUPLICATE write_vector_q[143] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+instr_debug[4]~reg0 instr_debug[4] 0.308025 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[4]~reg0 instr_debug[4](n) 0.308025 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[5]~reg0 instr_debug[5] 0.308025 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[5]~reg0 instr_debug[5](n) 0.308025 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+div:u_div|remainder[10] scalar_round_q[46] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[46] 0.520393 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[46] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_rdata[8]~reg0 host_rdata[8] 0.311811 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[8]~reg0 host_rdata[8](n) 0.311811 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+reset_release:u_reset|core_rst_n vector_q[343] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[343] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+div:u_div|remainder[10] scalar_round_q[46]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[46]~DUPLICATE 0.520282 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[46]~DUPLICATE 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+error~reg0 error 0.306805 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+error~reg0 error(n) 0.306805 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[4]~reg0 host_rdata[4] 0.311141 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[4]~reg0 host_rdata[4](n) 0.311141 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[7]~reg0 instr_debug[7] 0.307470 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[7]~reg0 instr_debug[7](n) 0.307470 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+op[99] op[66]~SynDup_30 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] op[66]~SynDup_30 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+instr_debug[3]~reg0 instr_debug[3] 0.308469 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[3]~reg0 instr_debug[3](n) 0.308469 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[13]~reg0 host_rdata[13] 0.307249 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[13]~reg0 host_rdata[13](n) 0.307249 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[12]~reg0 host_rdata[12] 0.309136 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[12]~reg0 host_rdata[12](n) 0.309136 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+reset_release:u_reset|core_rst_n vector_q[350] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[350] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_rdata[2]~reg0 host_rdata[2] 0.310138 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[2]~reg0 host_rdata[2](n) 0.310138 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[3]~reg0 host_rdata[3] 0.311364 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[3]~reg0 host_rdata[3](n) 0.311364 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+running~reg0 running 0.309358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+running~reg0 running(n) 0.309358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+op[99] op[76]~SynDup_1 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+op[99] op[76]~SynDup_1 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41} Selector6484~0}}
+op[99] op[76]~SynDup_1 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_rdata[22]~reg0 host_rdata[22] 0.306694 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[22]~reg0 host_rdata[22](n) 0.306694 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[4]~reg0 pc_debug[4] 0.307470 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[4]~reg0 pc_debug[4](n) 0.307470 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+random_q[25]~DUPLICATE noise_product_q[30] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 1 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 1}
+random_q[25]~DUPLICATE noise_product_q[30] 0.307890 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+random_q[25]~DUPLICATE noise_product_q[30] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[99] op[76]~SynDup_2 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+op[99] op[76]~SynDup_2 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41} Selector6484~0}}
+op[99] op[76]~SynDup_2 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+op[36]~SynDup math_a_q[6][22] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~SynDup} WideOr13}}
+op[36]~SynDup math_a_q[6][22] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_rdata[23]~reg0 host_rdata[23] 0.305698 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[23]~reg0 host_rdata[23](n) 0.305698 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+running~reg0_Duplicate_1 ready 0.308580 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+running~reg0_Duplicate_1 ready(n) 0.308580 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+op[36]~SynDup math_a_q[24][7] 0.933504 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~SynDup} WideOr13}}
+op[36]~SynDup math_a_q[24][7] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+overflow_out~reg0 overflow_out 0.307359 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+overflow_out~reg0 overflow_out(n) 0.307359 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[8]~reg0 instr_debug[8] 0.306141 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[8]~reg0 instr_debug[8](n) 0.306141 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[11]~reg0 host_rdata[11] 0.308914 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[11]~reg0 host_rdata[11](n) 0.308914 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[2]~reg0 instr_debug[2] 0.307692 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[2]~reg0 instr_debug[2](n) 0.307692 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+reset_release:u_reset|core_rst_n vector_q[358]~DUPLICATE 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[358]~DUPLICATE 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_rdata[1]~reg0 host_rdata[1] 0.309581 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[1]~reg0 host_rdata[1](n) 0.309581 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[19]~reg0 host_rdata[19] 0.306362 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[19]~reg0 host_rdata[19](n) 0.306362 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[5]~reg0 pc_debug[5] 0.308136 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[5]~reg0 pc_debug[5](n) 0.308136 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[17]~reg0 host_rdata[17] 0.307359 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[17]~reg0 host_rdata[17](n) 0.307359 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+reset_release:u_reset|core_rst_n vector_q[358] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[358] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_rdata[7]~reg0 host_rdata[7] 0.309915 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[7]~reg0 host_rdata[7](n) 0.309915 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+div:u_div|remainder[10] scalar_round_q[44] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[44] 0.520150 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[44] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_rdata[21]~reg0 host_rdata[21] 0.305035 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[21]~reg0 host_rdata[21](n) 0.305035 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+div:u_div|remainder[10] scalar_round_q[34] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[34] 0.484630 {Chained Adders} {recommendation {{Add a pipeline stage between an adder and other logic}}}
+div:u_div|remainder[10] scalar_round_q[34] 0.820637 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 3}
+host_rdata[16]~reg0 host_rdata[16] 0.305367 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[16]~reg0 host_rdata[16](n) 0.305367 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+reset_release:u_reset|core_rst_n vector_q[349] 1.000000 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {reset_release:u_reset|core_rst_n {vector_q[6]~0}}}
+reset_release:u_reset|core_rst_n vector_q[349] 0.448754 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[36]~SynDup math_a_q[24][17] 0.842431 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[36]~SynDup} WideOr13}}
+op[36]~SynDup math_a_q[24][17] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+op[99] probability_sum_q[19]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[19]~DUPLICATE 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[19]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[19] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[19] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[19] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[20] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[20] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[20] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[31] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[31] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[31] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[30] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[30] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[30] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[29] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[29] 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[29] 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+op[99] probability_sum_q[28]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[28]~DUPLICATE 0.910736 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{op[99]} {op_debug_prefix[6][103]~41}}}
+op[99] probability_sum_q[28]~DUPLICATE 0.746261 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+div:u_div|remainder[10] scalar_round_q[62] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+div:u_div|remainder[10] scalar_round_q[62]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+op[99] op[74]~SynDup 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+div:u_div|remainder[10] scalar_round_q[60] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+op[99] op[76]~SynDup 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+div:u_div|remainder[10] scalar_round_q[52] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+op[99] op[66]~SynDup_31 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+lane_q[0]~DUPLICATE div_numerator_q[56] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+lane_q[0]~DUPLICATE div_numerator_q[54] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] op[66]~SynDup_28 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] op[66]~SynDup_29 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+div:u_div|remainder[10] scalar_round_q[56] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[61] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[61]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[48]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+op[99] op[45]~SynDup_1 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+div:u_div|remainder[10] scalar_round_q[58] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[48] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[54] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[50] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[63] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+op[99] op[66]~SynDup_25 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+div:u_div|remainder[10] scalar_round_q[59] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[57] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+lane_q[1]~DUPLICATE write_vector_q[127] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+random_q[30] noise_product_q[32] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+op[99] probability_sum_q[9] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[10] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[16] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[14] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[13] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[12] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[18]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[9]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[16]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[15] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[11] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[18] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[17] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+div:u_div|remainder[10] scalar_round_q[46] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[46]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+op[99] op[66]~SynDup_30 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] op[76]~SynDup_1 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+random_q[25]~DUPLICATE noise_product_q[30] 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 1 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 1}
+op[99] op[76]~SynDup_2 0.585338 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 3 after the destination}} {Nodes to move after dest} 3 {Nodes to move before source} 0}
+div:u_div|remainder[10] scalar_round_q[44] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+div:u_div|remainder[10] scalar_round_q[34] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 2 combinational nodes before the source and 0 after the destination}} {Nodes to move after dest} 0 {Nodes to move before source} 2}
+op[99] probability_sum_q[19]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[19] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[20] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[31] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[30] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[29] 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+op[99] probability_sum_q[28]~DUPLICATE 0.390225 {Unbalanced Combinational Logic} {recommendation {{Move 0 combinational nodes before the source and 2 after the destination}} {Nodes to move after dest} 2 {Nodes to move before source} 0}
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

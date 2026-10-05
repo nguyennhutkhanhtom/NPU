@@ -1,0 +1,45 @@
+[
+  {
+    "arguments": [
+      "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\npu100_b1_host_cancel"
+    ],
+    "executable": "C:/altera_lite/25.1std/questa_fse/win64/vlib.exe",
+    "started_utc": "2026-10-05T04:04:55.7910006Z"
+  },
+  {
+    "arguments": [
+      "-sv",
+      "-svinputport=var",
+      "-work",
+      "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\npu100_b1_host_cancel",
+      "+incdir+D:\\2151097_Nguyen Nhut Khanh\\Verilog Source code",
+      "-f",
+      "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\evidence\\npu100_b1_host_cancel\\sources.f",
+      "-l",
+      "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\evidence\\npu100_b1_host_cancel\\compile.log"
+    ],
+    "executable": "C:/altera_lite/25.1std/questa_fse/win64/vlog.exe",
+    "started_utc": "2026-10-05T04:04:55.9742413Z"
+  },
+  {
+    "arguments": [
+      "-c",
+      "-onfinish",
+      "exit",
+      "-voptargs=-duselectreport=tests/full_rtl/evidence/npu100_b1_host_cancel/design_units.json",
+      "-L",
+      "tests/full_rtl/build/questa25_model/altera_mf_ver",
+      "-L",
+      "tests/full_rtl/build/npu100_b1_host_cancel",
+      "-lib",
+      "tests/full_rtl/build/npu100_b1_host_cancel",
+      "-l",
+      "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\evidence\\npu100_b1_host_cancel\\probe.log",
+      "tb_host_cancel_contract",
+      "-do",
+      "run -all; quit -f"
+    ],
+    "executable": "C:/altera_lite/25.1std/questa_fse/win64/vsim.exe",
+    "started_utc": "2026-10-05T04:04:56.3515620Z"
+  }
+]

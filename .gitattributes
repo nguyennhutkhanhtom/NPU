@@ -42,3 +42,5 @@ docs/verification/rtl_policy_attention1/** -text -whitespace
 docs/verification/portable_elaboration_attention1/** -text -whitespace
 docs/verification/rtl_policy_cache1/** -text -whitespace
 docs/verification/portable_elaboration_cache1/** -text -whitespace
+# Preserve the relocated historical task-state snapshot byte-for-byte.
+docs/history/task_state_20261004.md -text

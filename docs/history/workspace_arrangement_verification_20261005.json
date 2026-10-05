@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "date": "2026-10-05",
+  "timezone": "Asia/Saigon",
+  "authorization": "User requested arrange files",
+  "move_record": "workspace_arrangement_20261005.json",
+  "moves": 17,
+  "retired_quartus_projects": 11,
+  "retired_project_and_task_snapshot_files_verified_byte_exact": 134,
+  "document_files_checked": 16,
+  "local_links_checked": 391,
+  "missing_local_links": 0,
+  "current_rtl_lut_assets": 41,
+  "matching_evidence": [
+    "tests/full_rtl/evidence/opt_final4_all/results.json",
+    "tests/full_rtl/evidence/opt_host1/results.json",
+    "docs/verification/portable_elaboration_opt_final4/results.json",
+    "docs/verification/timing/opt_fulltop7/manifest.json"
+  ],
+  "backend_configuration_hashes_verified": 3,
+  "final_unit_archive_hashes_verified": 80,
+  "final_timing_archive_hashes_verified": true,
+  "relocated_checkpoint_helper": {
+    "path": "tools/optimization/checkpoint.py",
+    "status": "PASS",
+    "baseline_code_lines": 5165,
+    "added_code_lines": 828,
+    "deleted_code_lines": 265,
+    "percentage": 21.16166505324298,
+    "matches_archived_change_counts": true
+  },
+  "intentional_followup_edits": [
+    "Rebase local links in relocated reports and research",
+    "Update documentation navigation and distinguish current evidence from historical checkpoints",
+    "Adjust checkpoint helper repository-root calculation for its new directory depth",
+    "Preserve old TASK_STATE.md in history and provide a current root navigation entry",
+    "Allow quartus/README.md through the existing local-backend ignore rule",
+    "Preserve raw bytes of the historical task-state snapshot through Git checkout"
+  ],
+  "scope": "File arrangement and navigation only; no RTL/test/configuration or immutable verification evidence content changed; no pretrained execution"
+}

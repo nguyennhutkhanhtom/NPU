@@ -1,0 +1,24 @@
+# ** Note: (vsim-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# vsim -c -onfinish exit -voptargs="-duselectreport=tests/full_rtl/build/npu100_a_all_tb_llm_operators_design_units.json" -L tests/full_rtl/build/questa25_model/altera_mf_ver -L tests/full_rtl/build/npu100_a_work -lib tests/full_rtl/build/npu100_a_work -l D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\tb_llm_operators.log tb_llm_operators -do "run -all; quit -f" 
+# Start time: 00:45:43 on Oct 05,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Note: (vopt-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# //  Questa Altera Starter FPGA Edition-64
+# //  Version 2025.2 win64 May 31 2025
+# //
+# // Unpublished work. Copyright 2025 Siemens
+# //
+# // This material contains trade secrets or otherwise confidential information
+# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+# // "SISW"), or its licensors. Access to and use of this information is strictly
+# // limited as set forth in the Customer's applicable agreements with SISW.
+# //
+# // This material may not be copied, distributed, or otherwise disclosed outside
+# // of the Customer's facilities without the express written permission of SISW,
+# // and may not be used in any way not expressly authorized by SISW.
+# //
+# Loading sv_std.std
+# Loading work.llm_pkg(fast)
+# Loading work.npu_pkg(fast)
+# Loading work.tb_llm_operators(fast)
+# run -all

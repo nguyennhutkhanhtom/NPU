@@ -1,0 +1,44 @@
+{
+  "baseline_code_lines": 5165,
+  "added_code_lines": 758,
+  "deleted_code_lines": 171,
+  "percentage": 17.9864472410455,
+  "files": [
+    {
+      "file": "llm_attention_engine.sv",
+      "added": 67,
+      "deleted": 0
+    },
+    {
+      "file": "llm_attention_normalize.sv",
+      "added": 92,
+      "deleted": 0
+    },
+    {
+      "file": "llm_head_engine.sv",
+      "added": 46,
+      "deleted": 0
+    },
+    {
+      "file": "llm_linear_engine.sv",
+      "added": 89,
+      "deleted": 0
+    },
+    {
+      "file": "llm_math.sv",
+      "added": 7,
+      "deleted": 4
+    },
+    {
+      "file": "llm_soc.sv",
+      "added": 405,
+      "deleted": 167
+    },
+    {
+      "file": "ternary_dot32.sv",
+      "added": 52,
+      "deleted": 0
+    }
+  ],
+  "scope": "Task-start RTL tree, excluding comments, blank lines, tests and reports"
+}

@@ -1,0 +1,226 @@
+TBBmalloc: skip allocation functions replacement in ucrtbase.dll: unknown prologue for function _msize
+Info: *******************************************************************
+Info: Running Quartus Prime Timing Analyzer
+    Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
+    Info: Copyright (C) 2025  Altera Corporation. All rights reserved.
+    Info: Your use of Altera Corporation's design tools, logic functions 
+    Info: and other software and tools, and any partner logic 
+    Info: functions, and any output files from any of the foregoing 
+    Info: (including device programming or simulation files), and any 
+    Info: associated documentation or information are expressly subject 
+    Info: to the terms and conditions of the Altera Program License 
+    Info: Subscription Agreement, the Altera Quartus Prime License Agreement,
+    Info: the Altera IP License Agreement, or other applicable license
+    Info: agreement, including, without limitation, that your use is for
+    Info: the sole purpose of programming logic devices manufactured by
+    Info: Altera and sold by Altera or its authorized distributors.  Please
+    Info: refer to the Altera Software License Subscription Agreements 
+    Info: on the Quartus Prime software download page.
+    Info: Processing started: Mon Oct  5 10:09:54 2026
+Info: Command: quartus_sta -t docs/verification/npu100_b1_baseline/query_sta_api.tcl
+---------------------------------------------------------------------------
+
+Usage: get_registers [-h] [-help] [-long_help] [-no_duplicates] [-nocase] [-nowarn] [<filter>]
+
+        -h: Quick usage
+        -help: Short help
+        -long_help: Long help with examples and possible return values
+
+        -no_duplicates: Do not match duplicated register names
+        -nocase: Specifies the matching of node names to be case-insensitive
+        -nowarn: Do not issue warnings messages about unmatched patterns
+        <filter>: Valid destinations (string patterns are matched using Tcl string matching)
+
+------------------------
+Tcl Package and Version:
+------------------------
+
+Belongs to ::quartus::sdc_ext 1.0
+
+------------
+Description:
+------------
+
+Returns a collection of registers in the design.
+
+The default matching scheme returns not only registers
+whose names match the specified filter, but also
+returns registers duplicated from these registers
+(cells automatically generated from these registers by
+the Quartus Prime software). Use the -no_duplicates
+option to exclude duplicated registers.
+
+The filter for the collection is a Tcl list of
+wildcards, and must follow standard Tcl or
+Timing Analyzer-extension substitution rules. See help for
+the use_timing_analyzer_style_escaping command for details.
+
+Avoid using the get_registers command if your design
+targets a HardCopy series device or if you plan to
+migrate your design to a HardCopy series device.
+
+--------------
+Example Usage:
+--------------
+
+project_open chiptrip
+create_timing_netlist
+
+set regs [get_registers *reg*]
+foreach_in_collection reg $regs {
+    puts [get_object_info -name $reg]
+}
+
+delete_timing_netlist
+project_close
+
+-------------
+Return Value:
+-------------
+
+Code Name	Code	String Return
+---------	----	-------------
+TCL_OK   	0   	INFO: Operation successful
+TCL_ERROR	1   	ERROR: Timing netlist does not exist. Use "create_timing_netlist" to create a timing netlist.
+
+---------------------------------------------------------------------------
+
+---------------------------------------------------------------------------
+
+Usage: get_node_info [-h] [-help] [-long_help] [-asynch_edges] [-cell] [-clock_edges] [-fanout_edges] [-location] [-name] [-synch_edges] [-type] <node_object>
+
+        -h: Quick usage
+        -help: Short help
+        -long_help: Long help with examples and possible return values
+
+        -asynch_edges: Return a list of asynchronous edge IDs
+        -cell: Return the host cell
+        -clock_edges: Return a list of clock edge IDs
+        -fanout_edges: Return a list of fanout edge IDs
+        -location: Return the atom location in device
+        -name: Return the node name
+        -synch_edges: Return a list of synchronous edge IDs
+        -type: Return the node type
+        <node_object>: Node object
+
+------------------------
+Tcl Package and Version:
+------------------------
+
+Belongs to ::quartus::sta 1.0
+
+------------
+Description:
+------------
+
+Gets information about the specified node (referenced by node ID).
+Use Tcl commands such as get_nodes to obtain node IDs. The -type
+option returns "reg", "port", "pin", "net", or "comb". The -name, -type,
+-clock_edges, -synch_edges, -asynch_edges, -fanout_edges, -cell and
+-location options are mutually exclusive.
+
+--------------
+Example Usage:
+--------------
+
+project_open chiptrip
+create_timing_netlist
+set registers [get_registers]
+foreach_in_collection reg $registers {
+    puts "[get_node_info $reg -name]: [get_node_info $reg -type]"
+}
+delete_timing_netlist
+project_close
+
+-------------
+Return Value:
+-------------
+
+Code Name	Code	String Return
+---------	----	-------------
+TCL_OK   	0   	INFO: Operation successful
+TCL_ERROR	1   	ERROR: Object with ID "<string>" is not an object of type <string>. Specify the ID of an object with the correct type.
+TCL_ERROR	1   	ERROR: Cannot find object of ID "<string>". Specify an existing object ID.
+TCL_ERROR	1   	ERROR: Unsupported object type: <string>. Specify a supported object type.
+
+---------------------------------------------------------------------------
+
+---------------------------------------------------------------------------
+
+Usage: get_register_info [-h] [-help] [-long_help] [-asynch_edges] [-clock_edges] [-delay_type <max_rise|max_fall|min_rise|min_fall>] [-fanout_edges] [-is_latch] [-name] [-related_pin <related_pin_value>] [-synch_edges] [-tch] [-tcl] [-tco] [-th] [-tmin] [-tsu] [-type] <reg_object>
+
+        -h: Quick usage
+        -help: Short help
+        -long_help: Long help with examples and possible return values
+
+        -asynch_edges: Return a list of asynchronous edge IDs
+        -clock_edges: Return a list of clock edge IDs
+        -delay_type <max_rise|max_fall|min_rise|min_fall>: Specify which type of micro delay to query
+        -fanout_edges: Return a list of fanout edge IDs
+        -is_latch: Return "1" if this is a latch node, or "0" otherwise
+        -name: Return the object name
+        -related_pin <related_pin_value>: Specify which register port you want the tsu/th/tco for
+        -synch_edges: Return a list of synchronous edge IDs
+        -tch: Return the Tch value
+        -tcl: Return the Tcl value
+        -tco: Return the Tco value
+        -th: Return the Th value
+        -tmin: Return the Tmin value
+        -tsu: Return the Tsu value
+        -type: Return the object type
+        <reg_object>: Register object
+
+------------------------
+Tcl Package and Version:
+------------------------
+
+Belongs to ::quartus::sta 1.0
+
+------------
+Description:
+------------
+
+Gets information about the specified register (referenced by register
+ID). Register IDs can be obtained by Tcl commands such as
+get_registers.
+
+The -type option returns "reg". The -name, -type, -tco, -tsu, -th,
+-tch, -tcl, -tmin, -clock_edges, -synch_edges, -asynch_edges, -fanout_edges
+and -is_latch options are mutually exclusive. 
+
+--------------
+Example Usage:
+--------------
+
+project_open chiptrip
+create_timing_netlist
+set registers [get_registers]
+foreach_in_collection reg $registers {
+	set name [get_register_info $reg -name]
+	set tco [get_register_info $reg -tco]
+    puts "Tco of $name is $tco" 
+}
+delete_timing_netlist
+project_close
+
+-------------
+Return Value:
+-------------
+
+Code Name	Code	String Return
+---------	----	-------------
+TCL_OK   	0   	INFO: Operation successful
+TCL_ERROR	1   	ERROR: delay_type is used without specifying the related_pin. These two options must be used together.
+TCL_ERROR	1   	ERROR: related_pin is used without specifying the delay_type. These two options must be used together.
+TCL_ERROR	1   	ERROR: Object with ID "<string>" is not an object of type <string>. Specify the ID of an object with the correct type.
+TCL_ERROR	1   	ERROR: Cannot find object of ID "<string>". Specify an existing object ID.
+TCL_ERROR	1   	ERROR: Unsupported object type: <string>. Specify a supported object type.
+
+---------------------------------------------------------------------------
+
+Info (23030): Evaluation of Tcl script docs/verification/npu100_b1_baseline/query_sta_api.tcl was successful
+Info: Quartus Prime Timing Analyzer was successful. 0 errors, 0 warnings
+    Info: Peak virtual memory: 4611 megabytes
+    Info: Processing ended: Mon Oct  5 10:09:54 2026
+    Info: Elapsed time: 00:00:00
+    Info: Total CPU time (on all processors): 00:00:00

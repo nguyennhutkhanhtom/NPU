@@ -1,0 +1,1305 @@
+diff --git a/Verilog Source code/llm_soc.sv b/Verilog Source code/llm_soc.sv
+index dfeb2f5..43b3caf 100644
+--- a/Verilog Source code/llm_soc.sv	
++++ b/Verilog Source code/llm_soc.sv	
+@@ -19,7 +19,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+         G_UP, G_SILU, G_GMUL, G_DOWN, G_MADD, G_NEXT, G_FNORM, G_HEAD,
+         G_ADVANCE, G_DONE} graph_t;
+     graph_t graph;
+-    localparam int OP_COUNT = 102;
++    localparam int OP_COUNT = 103;
+     localparam int O_IDLE_IDX = 0;
+     localparam int O_P_REQ_IDX = 1;
+     localparam int O_P_WAIT_IDX = 2;
+@@ -122,6 +122,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+     localparam int A_EXP_DELTA_IDX = 99;
+     localparam int L_FLAGS_IDX = 100;
+     localparam int A_FLAGS_IDX = 101;
++    localparam int SC_ROUTE_IDX = 102;
+     typedef enum logic [OP_COUNT - 1:0] {
+         O_IDLE = OP_COUNT'(1) << O_IDLE_IDX,
+         O_P_REQ = OP_COUNT'(1) << O_P_REQ_IDX,
+@@ -224,7 +225,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+         L_DECODE = OP_COUNT'(1) << L_DECODE_IDX,
+         A_EXP_DELTA = OP_COUNT'(1) << A_EXP_DELTA_IDX,
+         L_FLAGS = OP_COUNT'(1) << L_FLAGS_IDX,
+-        A_FLAGS = OP_COUNT'(1) << A_FLAGS_IDX
++        A_FLAGS = OP_COUNT'(1) << A_FLAGS_IDX,
++        SC_ROUTE = OP_COUNT'(1) << SC_ROUTE_IDX
+     } op_t;
+     op_t op, return_p, return_v, return_k, return_m, return_w, return_scalar;
+     logic op_done, launch, core_running, op_fault_q;
+@@ -237,6 +239,11 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+     logic signed [63:0] sampled_score_q;
+     logic [11:0] token_q, best_token_q, vocabulary_row_q;
+     logic [11:0] prompt_memory [0:127], output_memory [0:127];
++    logic [6:0] token_prompt_address_q;
++    logic [2:0] token_prompt_bank_q;
++    logic [11:0] token_prompt_word_q [0:7], token_feedback_q;
++    logic token_feedback_source_q;
++    logic token_read_valid_q, token_commit_valid_q, token_valid_q;
+     logic [3:0] row_q, chunk_q;
+     logic [4:0] lane_q;
+     logic [2:0] source_q, destination_q;
+@@ -274,9 +281,16 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+ 
+     logic signed [55:0] scalar_pair_q;
+     logic signed [23:0] scalar_group_q [0:7];
+-    logic [7:0] scalar_clip_high_q, scalar_clip_low_q;
++    logic signed [23:0] scalar_packet_low_q;
++    logic scalar_packet_high_q, scalar_packet_lower_q, scalar_packet_linear_q;
++    logic [2:0] scalar_packet_group_q;
++    logic scalar_packet_valid_q;
++    logic signed [23:0] scalar_cluster_low_q [0:1];
++    logic [1:0] scalar_cluster_high_q, scalar_cluster_lower_q, scalar_cluster_valid_q;
++    logic [1:0] scalar_cluster_group_q [0:1];
+     logic [1:0] ternary_code_q [0:31];
+     logic signed [63:0] lane_raw_q [0:31], lane_round_q [0:31];
++    logic [7:0] round16_group_q;
+     logic [63:0] square_sum_q, root_input_q;
+     // epsilon >=42950 makes root>=207, so rounded 2^32/root fits U25.
+     // Avoid distributing seven redundant sign/zero bits across all SIMD lanes.
+@@ -485,11 +499,10 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+     always_ff @(posedge clk or negedge core_rst_n) begin
+         if (!core_rst_n) begin
+             graph <= G_IDLE; layer_q <= 0; position_q <= 0; generated_q <= 0;
+-            token_q <= 0; error <= 0;
++            error <= 0;
+         end else begin
+             if (graph == G_IDLE && launch) begin
+                 error <= 0; layer_q <= 0; position_q <= 0; generated_q <= 0;
+-                token_q <= prompt_memory[0];
+                 if (prompt_count_q == 0 || max_new_q == 0 ||
+                     {1'b0, prompt_count_q} + {1'b0, max_new_q} > 128) error <= 1;
+                 else graph <= G_EMBED;
+@@ -522,7 +535,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+                 G_NEXT : begin
+                     if (layer_q != 3) begin layer_q <= layer_q + 1'b1; graph <= G_ANORM; end
+                     else if ({1'b0, position_q} + 1 < prompt_count_q) begin
+-                        position_q <= position_q + 1'b1; token_q <= prompt_memory[position_q + 1'b1];
++                        position_q <= position_q + 1'b1;
+                         layer_q <= 0; graph <= G_EMBED;
+                     end else graph <= G_FNORM;
+                 end
+@@ -532,7 +545,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+                     if (generated_q + 1 >= max_new_q || best_token_q == 12'd1 || position_q == 127)
+                         graph <= G_DONE;
+                     else begin
+-                        token_q <= best_token_q; position_q <= position_q + 1'b1;
++                        position_q <= position_q + 1'b1;
+                         layer_q <= 0; graph <= G_EMBED;
+                     end
+                 end
+@@ -542,11 +555,75 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+         end
+     end
+ 
++    // Graph decisions only capture a token request. Local prompt selection and
++    // token commit occupy separate edges; G_EMBED waits for token validity.
++    wire token_launch_request = graph == G_IDLE && launch && prompt_count_q != 0 &&
++        max_new_q != 0 && {1'b0, prompt_count_q} + {1'b0, max_new_q} <= 128;
++    wire token_prefill_request = graph == G_NEXT && !op_fault_q && !op_done &&
++        layer_q == 3 && {1'b0, position_q} + 1 < prompt_count_q;
++    wire token_decode_request = graph == G_ADVANCE && !op_fault_q && !op_done &&
++        generated_q + 1 < max_new_q && best_token_q != 12'd1 && position_q != 127;
++    wire token_request = token_launch_request || token_prefill_request || token_decode_request;
++    wire token_abort = op_fault_q && core_running && graph != G_DONE;
++    wire token_consume = op[O_IDLE_IDX] && !op_done && graph == G_EMBED && token_valid_q;
++    always_ff @(posedge clk or negedge core_rst_n) begin
++        if (!core_rst_n) begin
++            token_read_valid_q <= 0; token_commit_valid_q <= 0; token_valid_q <= 0;
++        end else if (token_abort) begin
++            token_read_valid_q <= 0; token_commit_valid_q <= 0; token_valid_q <= 0;
++        end else begin
++            token_read_valid_q <= token_request;
++            token_commit_valid_q <= token_read_valid_q;
++            if (token_request || token_consume) token_valid_q <= 0;
++            else if (token_commit_valid_q) token_valid_q <= 1;
++        end
++    end
++    always_ff @(posedge clk)
++        if (core_rst_n && token_request) begin
++            token_prompt_address_q <= token_prefill_request ? position_q + 1'b1 : 7'd0;
++            token_feedback_source_q <= token_decode_request;
++            if (token_decode_request) token_feedback_q <= best_token_q;
++        end
++    always_ff @(posedge clk)
++        if (core_rst_n && !token_abort && token_read_valid_q)
++            token_prompt_bank_q <= token_prompt_address_q[6:4];
++    genvar prompt_bank;
++    generate
++    for (prompt_bank = 0; prompt_bank < 8; prompt_bank = prompt_bank + 1) begin : g_prompt_read
++        always_ff @(posedge clk)
++            if (core_rst_n && !token_abort && token_read_valid_q)
++                token_prompt_word_q[prompt_bank] <= prompt_memory[{3'(prompt_bank), token_prompt_address_q[3:0]}];
++    end
++    endgenerate
++    always_ff @(posedge clk or negedge core_rst_n)
++        if (!core_rst_n) token_q <= 0;
++        else if (!token_abort && token_commit_valid_q)
++            token_q <= token_feedback_source_q ? token_feedback_q : token_prompt_word_q[token_prompt_bank_q];
++
+     // Independent lane registers keep constant slice boundaries visible to
+     // synthesis. The FSM carries enables and addresses, while each lane owns
+     // its arithmetic payload and its portion of the workspace write bus.
+-    genvar lane, scalar_group;
++    // The wide scalar result is reduced only after full-width clamp decisions.
++    // Two registered clusters bound the distribution to four output groups.
++    always_ff @(posedge clk or negedge core_rst_n)
++        if (!core_rst_n) scalar_packet_valid_q <= 0;
++        else scalar_packet_valid_q <= op[L_FLAGS_IDX] || op[A_FLAGS_IDX];
++    always_ff @(posedge clk)
++        if (core_rst_n && (op[L_FLAGS_IDX] || op[A_FLAGS_IDX])) begin
++            scalar_packet_low_q <= scalar_round_q[23:0];
++            scalar_packet_high_q <= scalar_round_q > 64'sd8388607;
++            scalar_packet_lower_q <= scalar_round_q < -64'sd8388608;
++            scalar_packet_group_q <= op[L_FLAGS_IDX] ? matrix_row_q[4:2] : lane_q[4:2];
++            scalar_packet_linear_q <= op[L_FLAGS_IDX];
++        end
++    genvar lane, scalar_group, scalar_cluster, round_group;
+     generate
++    // Prepare each four-lane enable on the existing raw-product capture edge.
++    for (round_group = 0; round_group < 8; round_group = round_group + 1) begin : g_round_control
++        always_ff @(posedge clk or negedge core_rst_n)
++            if (!core_rst_n) round16_group_q[round_group] <= 0;
++            else round16_group_q[round_group] <= op[N_RECIP_IDX] || op[B_CALC_IDX];
++    end
+     for (lane = 0; lane < 32; lane = lane + 1) begin : g_simd
+         // Cache payload is held by the RAM response until the next read.
+         // A_KEY/A_WEIGHT follow O_K_WAIT with k_valid, so this plain FF
+@@ -557,16 +634,22 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+         always_ff @(posedge clk) begin
+             if (core_rst_n) begin
+                 unique case (1'b1)
+-                    op[E_DATA_IDX] : begin
+-                        math_a_q[lane] <= 24'($signed(parameter_word_q[lane * 8 +: 8]));
+-                        math_b_q[lane] <= {8'h0, coefficient_q};
+-                    end
+-                    op[E_CALC_IDX] : lane_raw_q[lane] <= llm_extend56(math_product[lane]);
+-                    op[E_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd8);
+-                    op[L_INPUT_IDX] : begin
+-                        math_a_q[lane] <= vector_q[lane * 24 +: 24];
+-                        ternary_code_q[lane] <= weights_q[(int'(chunk_q[1:0]) << 6) + lane * 2 +: 2];
+-                    end
++                    op[E_DATA_IDX] : math_a_q[lane] <= 24'($signed(parameter_word_q[lane * 8 +: 8]));
++                    op[L_INPUT_IDX], op[N_SQUARE_IDX], op[N_INPUT_IDX], op[R_INPUT_IDX],
++                    op[S_MUL_IDX], op[H_INPUT_IDX] : math_a_q[lane] <= vector_q[lane * 24 +: 24];
++                    op[NR_CLAMP_IDX] : math_a_q[lane] <= llm_sat24(lane_round_q[lane]);
++                    op[R_COS_IDX] : math_a_q[lane] <= vector_q[((lane + 16) % 32) * 24 +: 24];
++                    op[A_KEY_IDX] : math_a_q[lane] <= query_q[lane * 24 +: 24];
++                    op[A_WEIGHT_IDX] : math_a_q[lane] <= cache_operand_q[lane * 24 +: 24];
++                    op[B_INPUT1_IDX] : if (graph == G_GMUL) math_a_q[lane] <= second_q[lane * 24 +: 24];
++                    default : ;
++                endcase
++            end
++        end
++        always_ff @(posedge clk) begin
++            if (core_rst_n) begin
++                unique case (1'b1)
++                    op[E_DATA_IDX] : math_b_q[lane] <= {8'h0, coefficient_q};
+                     op[L_DECODE_IDX] : begin
+                         case (ternary_code_q[lane])
+                             2'b01 : math_b_q[lane] <= 1;
+@@ -574,66 +657,62 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+                             default : math_b_q[lane] <= 0;
+                         endcase
+                     end
+-                    op[N_SQUARE_IDX] : begin
+-                        math_a_q[lane] <= vector_q[lane * 24 +: 24];
+-                        math_b_q[lane] <= 32'($signed(vector_q[lane * 24 +: 24]));
+-                    end
+-                    op[N_INPUT_IDX] : begin
+-                        math_a_q[lane] <= vector_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, reciprocal_q};
+-                    end
+-                    op[N_RECIP_IDX], op[N_GAIN_IDX], op[B_CALC_IDX], op[S_PACK_IDX] : lane_raw_q[lane] <= llm_extend56(math_product[lane]);
+-                    op[NR_ROUND_IDX], op[B_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd16);
+-                    op[NR_CLAMP_IDX] : begin
+-                        math_a_q[lane] <= llm_sat24(lane_round_q[lane]);
+-                        math_b_q[lane] <= 32'($signed(table_q[lane * 16 +: 16]));
+-                    end
+-                    op[N_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd12);
+-                    op[R_INPUT_IDX] : begin
+-                        math_a_q[lane] <= vector_q[lane * 24 +: 24];
+-                        math_b_q[lane] <= 32'($signed(table_q[(lane % 16) * 32 +: 16]));
+-                    end
+-                    op[R_COS_IDX] : begin
+-                        rotation_cos_q[lane] <= math_product[lane];
+-                        math_a_q[lane] <= vector_q[((lane + 16) % 32) * 24 +: 24];
+-                        math_b_q[lane] <= lane < 16 ?
+-                            -$signed(32'($signed(table_q[(lane % 16) * 32 + 16 +: 16]))) :
+-                            32'($signed(table_q[(lane % 16) * 32 + 16 +: 16]));
+-                    end
++                    op[N_SQUARE_IDX] : math_b_q[lane] <= 32'($signed(vector_q[lane * 24 +: 24]));
++                    op[N_INPUT_IDX] : math_b_q[lane] <= {7'h0, reciprocal_q};
++                    op[NR_CLAMP_IDX] : math_b_q[lane] <= 32'($signed(table_q[lane * 16 +: 16]));
++                    op[R_INPUT_IDX] : math_b_q[lane] <= 32'($signed(table_q[(lane % 16) * 32 +: 16]));
++                    op[R_COS_IDX] : math_b_q[lane] <= lane < 16 ?
++                        -$signed(32'($signed(table_q[(lane % 16) * 32 + 16 +: 16]))) :
++                        32'($signed(table_q[(lane % 16) * 32 + 16 +: 16]));
++                    op[A_KEY_IDX] : math_b_q[lane] <= 32'($signed(cache_operand_q[lane * 24 +: 24]));
++                    op[A_WEIGHT_IDX] : math_b_q[lane] <= {7'h0, probability_q};
++                    op[B_INPUT1_IDX] : if (graph == G_GMUL) math_b_q[lane] <= 32'($signed(vector_q[lane * 24 +: 24]));
++                    op[S_MUL_IDX] : math_b_q[lane] <= {16'h0, sigmoid_values_q[lane]};
++                    op[H_INPUT_IDX] : math_b_q[lane] <= 32'($signed(weights_q[lane * 8 +: 8]));
++                    default : ;
++                endcase
++            end
++        end
++        always_ff @(posedge clk)
++            if (core_rst_n && op[L_INPUT_IDX])
++                ternary_code_q[lane] <= weights_q[(int'(chunk_q[1:0]) << 6) + lane * 2 +: 2];
++        always_ff @(posedge clk) begin
++            if (core_rst_n) begin
++                unique case (1'b1)
++                    op[E_CALC_IDX], op[N_RECIP_IDX], op[N_GAIN_IDX], op[B_CALC_IDX],
++                    op[S_PACK_IDX] : lane_raw_q[lane] <= llm_extend56(math_product[lane]);
+                     op[R_SIN_IDX] : lane_raw_q[lane] <=
+                         llm_extend56(rotation_cos_q[lane]) + llm_extend56(math_product[lane]);
++                    op[B_INPUT1_IDX] : if (graph != G_GMUL) lane_raw_q[lane] <=
++                        64'($signed(second_q[lane * 24 +: 24])) + 64'($signed(vector_q[lane * 24 +: 24]));
++                    default : ;
++                endcase
++            end
++        end
++        always_ff @(posedge clk) begin
++            if (core_rst_n) begin
++                if (round16_group_q[lane / 4]) lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd16);
++                else unique case (1'b1)
++                    op[E_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd8);
++                    op[N_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd12);
+                     op[R_ROUND_IDX], op[S_ROUND_IDX] : lane_round_q[lane] <= rne_shift64(lane_raw_q[lane], 6'd15);
+-                    op[A_KEY_IDX] : begin
+-                        math_a_q[lane] <= query_q[lane * 24 +: 24];
+-                        math_b_q[lane] <= 32'($signed(cache_operand_q[lane * 24 +: 24]));
+-                    end
+-                    op[A_QUERY_IDX] : attention_acc_q[lane] <= 0;
+-                    op[A_WEIGHT_IDX] : begin
+-                        math_a_q[lane] <= cache_operand_q[lane * 24 +: 24]; math_b_q[lane] <= {7'h0, probability_q};
+-                    end
+-                    op[A_ACC_IDX] : attention_acc_q[lane] <= attention_acc_q[lane] + math_product[lane];
+-                    op[B_INPUT1_IDX] : begin
+-                        if (graph == G_GMUL) begin
+-                            math_a_q[lane] <= second_q[lane * 24 +: 24];
+-                            math_b_q[lane] <= 32'($signed(vector_q[lane * 24 +: 24]));
+-                        end else lane_raw_q[lane] <=
+-                            64'($signed(second_q[lane * 24 +: 24])) + 64'($signed(vector_q[lane * 24 +: 24]));
+-                    end
+-                    op[S_INPUT_IDX] : lane_round_q[lane] <=
+-                        rne_shift64(64'($signed(vector_q[lane * 24 +: 24])), 6'd4);
+-                    op[SG_CLAMP_IDX] : sigmoid_inputs_q[lane] <= sat_s16(lane_round_q[lane]);
+-                    op[S_SIG_WAIT_IDX] : if (sig_done && lane_q == 5'(lane)) sigmoid_values_q[lane] <= sig_y;
+-                    op[S_MUL_IDX] : begin
+-                        math_a_q[lane] <= vector_q[lane * 24 +: 24];
+-                        math_b_q[lane] <= {16'h0, sigmoid_values_q[lane]};
+-                    end
+-                    op[H_INPUT_IDX] : begin
+-                        math_a_q[lane] <= vector_q[lane * 24 +: 24];
+-                        math_b_q[lane] <= 32'($signed(weights_q[lane * 8 +: 8]));
+-                    end
++                    op[S_INPUT_IDX] : lane_round_q[lane] <= rne_shift64(64'($signed(vector_q[lane * 24 +: 24])), 6'd4);
+                     default : ;
+                 endcase
+             end
+         end
++        always_ff @(posedge clk)
++            if (core_rst_n && op[R_COS_IDX]) rotation_cos_q[lane] <= math_product[lane];
++        always_ff @(posedge clk)
++            if (core_rst_n) begin
++                if (op[A_QUERY_IDX]) attention_acc_q[lane] <= 0;
++                else if (op[A_ACC_IDX]) attention_acc_q[lane] <= attention_acc_q[lane] + math_product[lane];
++            end
++        always_ff @(posedge clk)
++            if (core_rst_n && op[SG_CLAMP_IDX]) sigmoid_inputs_q[lane] <= sat_s16(lane_round_q[lane]);
++        always_ff @(posedge clk)
++            if (core_rst_n && op[S_SIG_WAIT_IDX] && sig_done && lane_q == 5'(lane))
++                sigmoid_values_q[lane] <= sig_y;
+         // Only states that write this payload control its mux/enable. Keeping
+         // unrelated arithmetic states outside this cone avoids a wide priority
+         // decoder feeding every workspace bit.
+@@ -650,22 +729,27 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+             end
+         end
+     end
+-    for (scalar_group = 0; scalar_group < 8; scalar_group = scalar_group + 1) begin : g_scalar_output
+-        // Each group has a distinct lane-qualified enable, so these payloads
+-        // remain local without vendor attributes in the compute datapath.
+-        logic signed [23:0] low_data_q;
++    for (scalar_cluster = 0; scalar_cluster < 2; scalar_cluster = scalar_cluster + 1) begin : g_scalar_cluster
++        always_ff @(posedge clk or negedge core_rst_n)
++            if (!core_rst_n) scalar_cluster_valid_q[scalar_cluster] <= 0;
++            else scalar_cluster_valid_q[scalar_cluster] <= op[SC_ROUTE_IDX] &&
++                scalar_packet_valid_q && scalar_packet_group_q[2] == 1'(scalar_cluster);
+         always_ff @(posedge clk)
+-            if (core_rst_n && ((op[L_FLAGS_IDX] && matrix_row_q[4:2] == 3'(scalar_group)) ||
+-                          (op[A_FLAGS_IDX] && lane_q[4:2] == 3'(scalar_group)))) begin
+-                low_data_q <= scalar_round_q[23:0];
+-                scalar_clip_high_q[scalar_group] <= scalar_round_q > 64'sd8388607;
+-                scalar_clip_low_q[scalar_group] <= scalar_round_q < -64'sd8388608;
++            if (core_rst_n && op[SC_ROUTE_IDX] && scalar_packet_valid_q &&
++                scalar_packet_group_q[2] == 1'(scalar_cluster)) begin
++                scalar_cluster_low_q[scalar_cluster] <= scalar_packet_low_q;
++                scalar_cluster_high_q[scalar_cluster] <= scalar_packet_high_q;
++                scalar_cluster_lower_q[scalar_cluster] <= scalar_packet_lower_q;
++                scalar_cluster_group_q[scalar_cluster] <= scalar_packet_group_q[1:0];
+             end
++    end
++    for (scalar_group = 0; scalar_group < 8; scalar_group = scalar_group + 1) begin : g_scalar_output
+         always_ff @(posedge clk)
+-            if (core_rst_n && ((op[L_SAT_IDX] && matrix_row_q[4:2] == 3'(scalar_group)) ||
+-                          (op[A_SAT_IDX] && lane_q[4:2] == 3'(scalar_group))))
+-                scalar_group_q[scalar_group] <= scalar_clip_high_q[scalar_group] ? 24'sh7fffff :
+-                    scalar_clip_low_q[scalar_group] ? 24'sh800000 : low_data_q;
++            if (core_rst_n && (op[L_SAT_IDX] || op[A_SAT_IDX]) &&
++                scalar_cluster_valid_q[scalar_group / 4] &&
++                scalar_cluster_group_q[scalar_group / 4] == 2'(scalar_group % 4))
++                scalar_group_q[scalar_group] <= scalar_cluster_high_q[scalar_group / 4] ? 24'sh7fffff :
++                    scalar_cluster_lower_q[scalar_group / 4] ? 24'sh800000 : scalar_cluster_low_q[scalar_group / 4];
+     end
+     endgenerate
+ 
+@@ -685,6 +769,17 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+     end
+     endgenerate
+ 
++    // Only scalar-product launch states own this held continuation register.
++    always_ff @(posedge clk)
++        if (core_rst_n) begin
++            unique case (1'b1)
++                op[L_COEFF_IDX] : return_scalar <= L_ROUND;
++                op[A_SCALE_IDX] : return_scalar <= A_SCORE;
++                op[H_COEFF_IDX] : return_scalar <= H_ROUND;
++                default : ;
++            endcase
++        end
++
+     // Payloads are assigned before their operation consumes them. Reset only
+     // cancels the operation pipeline and clears architectural status.
+     always_ff @(posedge clk) begin
+@@ -696,7 +791,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+                     row_q <= 0; chunk_q <= 0; head_q <= 0; time_q <= 0; lane_q <= 0;
+                     source_q <= 1; destination_q <= 1; linear_acc_q <= 0;
+                     case (graph)
+-                        G_EMBED : begin p_address_q <= 15'(EMB_SCALE_BASE + (token_q >> 3)); return_p <= E_SCALE; op <= O_P_REQ; end
++                        G_EMBED : if (token_valid_q) begin p_address_q <= 15'(EMB_SCALE_BASE + (token_q >> 3)); return_p <= E_SCALE; op <= O_P_REQ; end
+                         G_ANORM, G_MNORM, G_FNORM : begin
+                             square_sum_q <= 0; begin v_address_q <= 7'(((int'($unsigned(3'(0))) << 3) + (int'($unsigned(3'(0))) << 2)) + int'($unsigned(4'(0)))); return_v <= N_SQUARE; op <= O_V_REQ; end
+                         end
+@@ -784,7 +879,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+                 end
+                 op[L_COEFF_IDX] : begin
+                     scalar_a_q <= linear_acc_q; scalar_b_q <= $signed({1'b0, coefficient_q});
+-                    return_scalar <= L_ROUND; op <= SC_MULTIPLY;
++                    op <= SC_MULTIPLY;
+                 end
+                 op[SC_MULTIPLY_IDX] : begin
+                     scalar_partial_q[0] <= scalar_partial_comb[0];
+@@ -801,10 +896,14 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+                     op <= return_scalar;
+                 end
+                 op[L_ROUND_IDX] : begin scalar_round_q <= rne_shift64(scalar_product_q, 6'd24); op <= L_FLAGS; end
+-                op[L_FLAGS_IDX] : op <= L_SAT;
++                op[L_FLAGS_IDX] : op <= SC_ROUTE;
++                op[SC_ROUTE_IDX] : if (scalar_packet_valid_q)
++                    op <= scalar_packet_linear_q ? L_SAT : A_SAT;
+                 op[L_SAT_IDX] : begin
+                     op <= L_STORE;
+-                    if (scalar_clip_high_q[matrix_row_q[4:2]] || scalar_clip_low_q[matrix_row_q[4:2]]) overflow_out <= 1;
++                    if (scalar_cluster_valid_q[scalar_packet_group_q[2]] &&
++                        (scalar_cluster_high_q[scalar_packet_group_q[2]] ||
++                         scalar_cluster_lower_q[scalar_packet_group_q[2]])) overflow_out <= 1;
+                 end
+                 op[L_STORE_IDX] : begin
+                     begin write_vector_addr_q <= 7'(((int'($unsigned(3'(destination_q))) << 3) + (int'($unsigned(3'(destination_q))) << 2)) + int'($unsigned(4'(matrix_row_q[8:5])))); write_vector_mask_q <= 32'b1 << matrix_row_q[4:0]; return_w <= E_PACK; op <= O_WRITE; end
+@@ -884,7 +983,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+                 op[A_DOT_IDX] : begin scalar_round_q <= rne_shift64(64'(math_sum), 6'd16); op <= A_SCALE; end
+                 op[A_SCALE_IDX] : begin
+                     scalar_a_q <= $signed(scalar_round_q[38:0]); scalar_b_q <= 25'sd11585;
+-                    return_scalar <= A_SCORE; op <= SC_MULTIPLY;
++                    op <= SC_MULTIPLY;
+                 end
+                 op[A_SCORE_IDX] : begin
+                     scalar_round_q <= rne_shift64(scalar_product_q, 6'd16); op <= A_NEXT_SCORE;
+@@ -938,7 +1037,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+                         -$signed(div_quotient + {63'h0, divide_round_up}) :
+                         $signed(div_quotient + {63'h0, divide_round_up}); op <= A_FLAGS;
+                 end
+-                op[A_FLAGS_IDX] : op <= A_SAT;
++                op[A_FLAGS_IDX] : op <= SC_ROUTE;
+                 op[A_SAT_IDX] : op <= A_PACK;
+                 op[A_PACK_IDX] : begin
+                     if (lane_q == 31) begin write_vector_addr_q <= 7'(((int'($unsigned(3'(5))) << 3) + (int'($unsigned(3'(5))) << 2)) + int'($unsigned(4'({2'b0, head_q})))); write_vector_mask_q <= 32'hffffffff; return_w <= A_QUERY; op <= O_WRITE; end
+@@ -1005,7 +1104,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1) (
+                 end
+                 op[H_COEFF_IDX] : begin
+                     scalar_a_q <= linear_acc_q; scalar_b_q <= $signed({1'b0, coefficient_q});
+-                    return_scalar <= H_ROUND; op <= SC_MULTIPLY;
++                    op <= SC_MULTIPLY;
+                 end
+                 op[H_ROUND_IDX] : begin scalar_round_q <= rne_shift64(scalar_product_q, 6'd24); op <= H_NOISE; end
+                 op[H_NOISE_IDX] : begin
+diff --git a/Verilog Source code/pipelined_word_ram.sv b/Verilog Source code/pipelined_word_ram.sv
+index 5c2f6c9..06bba06 100644
+--- a/Verilog Source code/pipelined_word_ram.sv	
++++ b/Verilog Source code/pipelined_word_ram.sv	
+@@ -28,9 +28,68 @@ module pipelined_word_ram #(
+             wr_valid <= write_pending_q;
+         end
+     end
+-    genvar tile, group_id;
++    genvar tile, group_id, member, leaf, node;
+     generate
+-    if (USE_QUARTUS_MEMORY) begin : g_ip
++    if (USE_QUARTUS_MEMORY && ROWS > 4096) begin : g_ip_tiled
++        // Each deep-memory tile has a local address and enable owner. Write
++        // payload is captured once per four-tile group on the same edge.
++        logic [WIDTH - 1:0] write_group_q [0:GROUPS - 1];
++        for (group_id = 0; group_id < GROUPS; group_id = group_id + 1) begin : g_write_payload
++            always_ff @(posedge clk) write_group_q[group_id] <= wr_data;
++        end
++        for (tile = 0; tile < TILES; tile = tile + 1) begin : g_tile
++            localparam int TILE_ROWS = (ROWS - tile * 1024 < 1024) ? ROWS - tile * 1024 : 1024;
++            logic [9:0] read_address_q, write_address_q;
++            logic read_enable_q, write_enable_q;
++            always_ff @(posedge clk) begin
++                read_address_q <= 10'(rd_addr);
++                write_address_q <= 10'(wr_addr);
++            end
++            always_ff @(posedge clk or negedge rst_n) begin
++                if (!rst_n) begin
++                    read_enable_q <= 0; write_enable_q <= 0; read_tile_q[tile] <= 0;
++                end else begin
++                    read_enable_q <= rd_en && (rd_addr >> 10) == tile;
++                    write_enable_q <= wr_en && (wr_addr >> 10) == tile;
++                    read_tile_q[tile] <= read_enable_q;
++                end
++            end
++            quartus_word_ram #(.WIDTH(WIDTH), .ROWS(TILE_ROWS), .ADDR_W(10)) u_storage(
++                .clk(clk), .rd_en(rst_n && read_enable_q), .wr_en(rst_n && write_enable_q),
++                .rd_addr(read_address_q), .wr_addr(write_address_q),
++                .wr_data(write_group_q[tile / 4]), .rd_data(tile_data[tile]));
++        end
++        for (group_id = 0; group_id < GROUPS; group_id = group_id + 1) begin : g_response
++            wire [WIDTH - 1:0] member_data [0:3];
++            for (member = 0; member < 4; member = member + 1) begin : g_member
++                if (group_id * 4 + member < TILES) begin : g_used
++                    assign member_data[member] = tile_data[group_id * 4 + member] &
++                        {WIDTH{read_tile_q[group_id * 4 + member]}};
++                end else begin : g_padding
++                    assign member_data[member] = '0;
++                end
++            end
++            always_ff @(posedge clk)
++                if (rst_n && read_valid_q[1]) group_data_q[group_id] <=
++                    (member_data[0] | member_data[1]) | (member_data[2] | member_data[3]);
++        end
++        // A padded binary response tree retains four-edge deep read latency.
++        localparam int TREE_LEAVES = 1 << $clog2(GROUPS);
++        wire [WIDTH - 1:0] response_tree [1:2 * TREE_LEAVES - 1];
++        for (leaf = 0; leaf < TREE_LEAVES; leaf = leaf + 1) begin : g_tree_leaf
++            if (leaf < GROUPS) begin : g_used
++                assign response_tree[TREE_LEAVES + leaf] = group_data_q[leaf];
++            end else begin : g_padding
++                assign response_tree[TREE_LEAVES + leaf] = '0;
++            end
++        end
++        for (node = 1; node < TREE_LEAVES; node = node + 1) begin : g_tree_node
++            assign response_tree[node] = response_tree[2 * node] | response_tree[2 * node + 1];
++        end
++        always_ff @(posedge clk)
++            if (rst_n && read_valid_q[2]) rd_data <= response_tree[1];
++        assign rd_valid = read_valid_q[3];
++    end else if (USE_QUARTUS_MEMORY) begin : g_ip
+         logic [ADDR_W - 1:0] read_address_q, write_address_q;
+         (* dont_merge *) logic [WIDTH - 1:0] write_data_q;
+         logic [WIDTH - 1:0] raw_data, response_q;
+diff --git a/quartus/llm_soc.qsf b/quartus/llm_soc.qsf
+index 4d9f6ff..3717b81 100644
+--- a/quartus/llm_soc.qsf
++++ b/quartus/llm_soc.qsf
+@@ -103,3 +103,20 @@ set_instance_assignment -name D3_DELAY 7 -to "host_addr[*]"
+ # Cache1 forced-global reset routing failed setup/recovery; its timing
+ # recommendations explicitly request removal at core_rst_n~CLKENA0.
+ # Keep automatic routing, the verified standard-FF reset and original SDC.
++
++# Deep parameter tiles require separate ordinary address and payload drivers.
++# Keep this backend preservation policy outside the portable memory adapter.
++set_instance_assignment -name DONT_MERGE_REGISTER ON -to "*|g_ip_tiled.g_tile*.read_address_q*"
++set_instance_assignment -name DONT_MERGE_REGISTER ON -to "*|g_ip_tiled.g_tile*.write_address_q*"
++set_instance_assignment -name DONT_MERGE_REGISTER ON -to "*|g_ip_tiled.write_group_q*"
++
++# Eight ordinary round commands are prepared on the raw-product capture edge.
++# Retain the exact four-lane copies without device attributes in compute RTL.
++set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[0]"
++set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[1]"
++set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[2]"
++set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[3]"
++set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[4]"
++set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[5]"
++set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[6]"
++set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[7]"
+diff --git a/tests/full_rtl/host_cancel_contract.sv b/tests/full_rtl/host_cancel_contract.sv
+index b8c5f4e..261b8cf 100644
+--- a/tests/full_rtl/host_cancel_contract.sv
++++ b/tests/full_rtl/host_cancel_contract.sv
+@@ -14,12 +14,12 @@ module tb_host_cancel_contract;
+     // The replaceable leaf contract commits on the edge with wr_en asserted.
+     // Observe the real IP boundary, including its captured address/data.
+     always @(posedge clk) begin
+-        if(dut.u_parameters.g_ram_lane[0].u_storage.g_ip.u_storage.wr_en) begin
+-            if(dut.u_parameters.g_ram_lane[0].u_storage.g_ip.u_storage.wr_addr==0 &&
+-               dut.u_parameters.g_ram_lane[0].u_storage.g_ip.u_storage.wr_data===canceled_value)
++        if(dut.u_parameters.g_ram_lane[0].u_storage.g_ip_tiled.g_tile[0].u_storage.wr_en) begin
++            if(dut.u_parameters.g_ram_lane[0].u_storage.g_ip_tiled.g_tile[0].u_storage.wr_addr==0 &&
++               dut.u_parameters.g_ram_lane[0].u_storage.g_ip_tiled.g_tile[0].u_storage.wr_data===canceled_value)
+                 commits++;
+-            if(dut.u_parameters.g_ram_lane[0].u_storage.g_ip.u_storage.wr_addr==1 &&
+-               dut.u_parameters.g_ram_lane[0].u_storage.g_ip.u_storage.wr_data===new_value)
++            if(dut.u_parameters.g_ram_lane[0].u_storage.g_ip_tiled.g_tile[0].u_storage.wr_addr==1 &&
++               dut.u_parameters.g_ram_lane[0].u_storage.g_ip_tiled.g_tile[0].u_storage.wr_data===new_value)
+                 second_commits++;
+         end
+     end
+diff --git a/tests/full_rtl/tb_graph.sv b/tests/full_rtl/tb_graph.sv
+index 01fb727..dd82e12 100644
+--- a/tests/full_rtl/tb_graph.sv
++++ b/tests/full_rtl/tb_graph.sv
+@@ -18,6 +18,10 @@ module tb_llm_graph;
+     always @(negedge clk) begin
+         if(rst_n) begin
+             if(!$onehot(dut.op)) $fatal(1,"Operator control lost one-hot invariant");
++            if(dut.core_rst_n && dut.round16_group_q!=={8{dut.op[dut.NR_ROUND_IDX] || dut.op[dut.B_ROUND_IDX]}})
++                $fatal(1,"Round command lost its predecessor/consumer alignment");
++            if((dut.token_read_valid_q || dut.token_commit_valid_q) && dut.p_read)
++                $fatal(1,"Embedding request before token commit");
+             if(dut.graph!=previous_graph) visits[dut.graph]++;
+             previous_graph=dut.graph;
+             if(dut.k_read && dut.k_address_q[9:3]>dut.position_q)
+@@ -64,8 +68,8 @@ module tb_llm_graph;
+         transaction(1,32'h00400010,0);transaction(1,32'h00400018,0);
+         transaction(1,32'h0040000c,1);
+         if(!running) $fatal(1,"Synthetic graph did not start");
+-        // Byte-product stages add two clocks per SIMD/scalar operation. Keep
+-        // all numeric/token/causal assertions; only the pipeline budget changes.
++        // Scalar distribution adds 24576 clocks and four token fetches add 8.
++        // Keep the existing bound and all numeric/token/causal assertions.
+         while(running && clocks<5000000) begin
+             @(negedge clk);clocks++;
+             if(clocks%500000==0) $display("LLM_GRAPH_PROGRESS clocks=%0d position=%0d generated=%0d",clocks,dut.position_q,dut.generated_q);
+diff --git a/tests/full_rtl/tb_memory_ip.sv b/tests/full_rtl/tb_memory_ip.sv
+index 8098486..ee30961 100644
+--- a/tests/full_rtl/tb_memory_ip.sv
++++ b/tests/full_rtl/tb_memory_ip.sv
+@@ -4,6 +4,11 @@
+ module memory_ip_case #(parameter int WIDTH=32, ROWS=3072, ADDR_W=$clog2(ROWS))
+     (input logic clk, output logic finished=0, output integer checks=0);
+     localparam int LATENCY=ROWS<=4096 ? 3 : 4;
++    localparam int TILES=(ROWS+1023)/1024;
++    localparam int BOUNDARIES=2*TILES;
++    integer boundary_address [0:BOUNDARIES-1];
++    logic [WIDTH-1:0] boundary_value [0:BOUNDARIES-1];
++    logic [WIDTH-1:0] held_data;
+     logic rst_n=0,rd_en=0,wr_en=0;
+     logic [ADDR_W-1:0] rd_addr=0,wr_addr=0;
+     logic [WIDTH-1:0] wr_data=0,model_data,ip_data;
+@@ -70,21 +75,66 @@ module memory_ip_case #(parameter int WIDTH=32, ROWS=3072, ADDR_W=$clog2(ROWS))
+             repeat(LATENCY+1) begin @(negedge clk);if(ip_valid) $fatal(1,"Stale reset response");end
+             read_word(0,WIDTH'(32'h76543210));checks++;
+         end
++        // Exercise every tile start/end, including all response-group crossings.
++        // Values distinguish adjacent transactions and stale held leaf outputs.
++        for(integer tile=0;tile<TILES;tile++) begin
++            boundary_address[2*tile]=tile*1024;
++            boundary_address[2*tile+1]=(tile+1)*1024<ROWS ? (tile+1)*1024-1 : ROWS-1;
++            boundary_value[2*tile]=WIDTH'(32'ha5300000+2*tile);
++            boundary_value[2*tile+1]=WIDTH'(32'ha5300001+2*tile);
++            write_word(boundary_address[2*tile],boundary_value[2*tile]);
++            write_word(boundary_address[2*tile+1],boundary_value[2*tile+1]);
++        end
++        // Sustained simultaneous read/write traffic checks old-data on every
++        // address, one response per cycle, and exact leaf commit timing.
++        for(integer cycle=0;cycle<BOUNDARIES+LATENCY+1;cycle++) begin
++            @(negedge clk);
++            if(cycle>=LATENCY && cycle<BOUNDARIES+LATENCY) begin
++                if(!ip_valid || ip_data!==boundary_value[cycle-LATENCY])
++                    $fatal(1,"Boundary stream rows=%0d cycle=%0d actual=%h",ROWS,cycle,ip_data);
++                checks++;
++            end else if(ip_valid) $fatal(1,"Unexpected boundary stream response rows=%0d",ROWS);
++            if(ip_commit!==(cycle>=2 && cycle<BOUNDARIES+2))
++                $fatal(1,"Boundary stream commit rows=%0d cycle=%0d",ROWS,cycle);
++            rd_en=cycle<BOUNDARIES;wr_en=cycle<BOUNDARIES;
++            if(cycle<BOUNDARIES) begin
++                rd_addr=ADDR_W'(boundary_address[cycle]);wr_addr=ADDR_W'(boundary_address[cycle]);
++                wr_data=boundary_value[cycle]^WIDTH'(32'h0055aaff);
++            end
++        end
++        for(integer index=0;index<BOUNDARIES;index++)
++            read_word(boundary_address[index],boundary_value[index]^WIDTH'(32'h0055aaff));
++        // Different tiles may read and write on the same accepting edge.
++        @(negedge clk);rd_en=1;wr_en=1;rd_addr=0;wr_addr=ADDR_W'(ROWS-1);
++        wr_data=WIDTH'(32'h2468ace0);
++        @(negedge clk);rd_en=0;wr_en=0;
++        repeat(LATENCY-1) @(negedge clk);
++        if(!ip_valid || ip_data!==(boundary_value[0]^WIDTH'(32'h0055aaff)))
++            $fatal(1,"Independent read/write rows=%0d",ROWS);
++        checks++;
++        @(negedge clk);read_word(ROWS-1,WIDTH'(32'h2468ace0));
++        held_data=ip_data;
++        repeat(LATENCY+2) begin
++            @(negedge clk);rd_addr=~rd_addr;
++            if(ip_valid || ip_commit || ip_data!==held_data) $fatal(1,"Disabled output hold rows=%0d",ROWS);
++            checks++;
++        end
+         finished=1;
+     end
+ endmodule
+ module tb_quartus_memory;
+     logic clk=0;
+-    wire [3:0] finished;
+-    integer c0,c1,c2,c3;
++    wire [4:0] finished;
++    integer c0,c1,c2,c3,c4;
+     always #5 clk=~clk;
+     memory_ip_case #(.WIDTH(24),.ROWS(96)) vector_bank(clk,finished[0],c0);
+     memory_ip_case #(.WIDTH(24),.ROWS(4096)) cache_bank(clk,finished[1],c1);
+     memory_ip_case #(.WIDTH(32),.ROWS(3072)) small_parameter(clk,finished[2],c2);
+     memory_ip_case #(.WIDTH(32),.ROWS(24576)) full_parameter(clk,finished[3],c3);
++    memory_ip_case #(.WIDTH(32),.ROWS(5123)) partial_parameter(clk,finished[4],c4);
+     initial begin
+         wait(&finished);@(negedge clk);
+-        $display("QUARTUS_MEMORY_PASS banks=4 checks=%0d collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained",c0+c1+c2+c3);
++        $display("QUARTUS_MEMORY_PASS banks=5 checks=%0d collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked",c0+c1+c2+c3+c4);
+         $finish;
+     end
+     initial begin #100000; $fatal(1,"Memory IP test timeout");end
+diff --git a/tests/full_rtl/tb_operators.sv b/tests/full_rtl/tb_operators.sv
+index acba74d..c6e1a81 100644
+--- a/tests/full_rtl/tb_operators.sv
++++ b/tests/full_rtl/tb_operators.sv
+@@ -10,6 +10,8 @@ module tb_llm_operators;
+     llm_soc #(.USE_QUARTUS_MEMORY(0)) dut(.*);
+     always #5 clk=~clk;
+     logic seed_v=0,seed_p=0,seed_k=0;
++    logic round_seed=0;
++    logic signed [63:0] fixture_raw[0:31];
+     logic [11:0] seed_addr=0,observe_k=0;
+     logic [6:0] observe_v=0;
+     logic [767:0] seed_vector=0;
+@@ -20,6 +22,10 @@ module tb_llm_operators;
+     genvar bank,tile;
+     generate
+     for(bank=0;bank<32;bank++) begin : g_fixture
++        always @(round_seed) begin
++            if(round_seed) force dut.lane_raw_q[bank]=fixture_raw[bank];
++            else release dut.lane_raw_q[bank];
++        end
+         // Seed through the leaf write port so memory retains its RTL
+         // always_ff writer. Release all overrides before operator execution.
+         always @(seed_v) begin
+@@ -67,6 +73,7 @@ module tb_llm_operators;
+     end
+     endgenerate
+     integer checks=0,transactions=0,clocks,scalar_checks=0,clamp_checks=0;
++    integer round_cases=0,round_reset_cases=0,scalar_reset_cases=0;
+     logic signed [127:0] expected,acc,value;
+     logic [255:0] packed_parameter;
+     logic [767:0] packed_vector;
+@@ -123,29 +130,133 @@ module tb_llm_operators;
+     endfunction
+     task automatic reset_fixture;
+         release dut.graph;
+-        @(negedge clk);rst_n=0;host_en=0;seed_v=0;seed_p=0;seed_k=0;
++        @(negedge clk);rst_n=0;host_en=0;seed_v=0;seed_p=0;seed_k=0;round_seed=0;
+         repeat(3) @(negedge clk);
+         rst_n=1;
+         repeat(2) @(negedge clk);
+         if(dut.core_rst_n!==1) $fatal(1,"Operator fixture reset did not release");
+     endtask
+     task automatic check_scalar_clamp(input logic signed [63:0] x,
+-                                      input integer group_id,input bit attention);
++                                      input integer group_id,input bit attention,
++                                      input integer lane_offset=0,input bit prior_overflow=0);
++        logic signed [23:0] previous_groups[0:7];
+         reset_fixture();
+         @(negedge clk);rst_n=1;
+         repeat(2) @(negedge clk); // Wait for reset release before depositing the operation.
++        for(integer g=0;g<8;g++) previous_groups[g]=dut.scalar_group_q[g];
++        force dut.write_vector_q={32{24'sd1234}};
++        force dut.destination_q=3'd3;force dut.matrix_rows_q=10'd512;force dut.head_q=2'd0;
++        #1;release dut.write_vector_q;release dut.destination_q;release dut.matrix_rows_q;release dut.head_q;
++        if(prior_overflow) begin force dut.overflow_out=1'b1;#1;release dut.overflow_out;end
+         $deposit(dut.scalar_round_q,x);
+-        $deposit(dut.matrix_row_q,10'(group_id*4));$deposit(dut.lane_q,5'(group_id*4));
+-        $deposit(dut.op,attention ? dut.A_FLAGS : dut.L_FLAGS);
+-        repeat(2) @(negedge clk);
++        $deposit(dut.matrix_row_q,10'(group_id*4+lane_offset));$deposit(dut.lane_q,5'(group_id*4+lane_offset));
++        // Force/release propagates the injected phase to all optimized state
++        // consumers before the edge; a deposit can miss merged state copies.
++        if(attention) force dut.op=dut.A_FLAGS;
++        else force dut.op=dut.L_FLAGS;
++        #1;release dut.op;
++        @(negedge clk);
++        if(dut.op!==dut.SC_ROUTE || !dut.scalar_packet_valid_q ||
++           dut.scalar_packet_group_q!==3'(group_id))
++            $fatal(1,"Scalar packet phase/tag op=%h valid=%b group=%b expected=%0d attention=%b",dut.op,dut.scalar_packet_valid_q,dut.scalar_packet_group_q,group_id,attention);
++        @(negedge clk);
++        if(dut.op!==(attention ? dut.A_SAT : dut.L_SAT) ||
++           dut.scalar_cluster_valid_q!== (2'b1 << (group_id/4)) ||
++           dut.scalar_cluster_group_q[group_id/4]!==2'(group_id%4))
++            $fatal(1,"Scalar route phase/tag");
++        @(negedge clk);
+         if(dut.op!==(attention ? dut.A_PACK : dut.L_STORE))
+             $fatal(1,"Scalar clamp pipeline latency");
+         if(dut.scalar_group_q[group_id]!==clamp24(128'(x)))
+             $fatal(1,"Scalar clamp group=%0d x=%h expected=%h actual=%h",group_id,x,clamp24(128'(x)),dut.scalar_group_q[group_id]);
+-        if(overflow_out!==(attention ? 1'b0 : (x>8388607 || x< -8388608)))
++        for(integer g=0;g<8;g++)
++            if(g!=group_id && dut.scalar_group_q[g]!==previous_groups[g])
++                $fatal(1,"Scalar completion modified untagged group=%0d",g);
++        if(overflow_out!==(prior_overflow || (!attention && (x>8388607 || x< -8388608))))
+             $fatal(1,"Scalar clamp selected-group overflow flag");
++        @(negedge clk);
++        for(integer i=0;i<32;i++)
++            if(dut.write_vector_q[i*24+:24]!==
++               (i==group_id*4+lane_offset ? clamp24(128'(x)) : 24'sd1234))
++                $fatal(1,"Scalar write-vector lane=%0d group=%0d offset=%0d",i,group_id,lane_offset);
++        if(!attention && (dut.write_vector_mask_q!==(32'b1 << (group_id*4+lane_offset)) ||
++                         dut.write_vector_addr_q!==7'd36))
++            $fatal(1,"Linear scalar write mask/address");
+         clamp_checks++;checks+=3;
+     endtask
++    task automatic check_scalar_cancel(input integer phase,input bit attention);
++        reset_fixture();
++        @(negedge clk);
++        force dut.write_vector_q={32{24'sd1234}};#1;release dut.write_vector_q;
++        $deposit(dut.scalar_round_q,64'sh7fffffffffffffff);
++        $deposit(dut.matrix_row_q,10'd28);$deposit(dut.lane_q,5'd28);
++        if(attention) force dut.op=dut.A_FLAGS;else force dut.op=dut.L_FLAGS;
++        #1;release dut.op;
++        repeat(phase) @(negedge clk);
++        rst_n=0;#1;
++        if(dut.scalar_packet_valid_q || dut.scalar_cluster_valid_q!==0)
++            $fatal(1,"Scalar reset validity phase=%0d",phase);
++        repeat(3) @(negedge clk);rst_n=1;
++        repeat(4) @(negedge clk);
++        if(dut.write_vector_q!=={32{24'sd1234}} || overflow_out || dut.op!==dut.O_IDLE)
++            $fatal(1,"Scalar reset allowed stale store/overflow phase=%0d",phase);
++        scalar_reset_cases++;
++    endtask
++    task automatic check_round16(input bit binary,input integer cancel_phase=0);
++        logic signed [127:0] rounded;
++        reset_fixture();
++        for(integer i=0;i<32;i++) begin
++            case(i%8)
++                0:fixture_raw[i]=64'sd32768;
++                1:fixture_raw[i]=64'sd98304;
++                2:fixture_raw[i]=-64'sd32768;
++                3:fixture_raw[i]=-64'sd98304;
++                4:fixture_raw[i]=(64'sd8388607 << 16)+64'sd32768;
++                5:fixture_raw[i]=(-64'sd8388608 << 16)-64'sd32769;
++                6:fixture_raw[i]=64'sh7fffffffffffffff-i;
++                7:fixture_raw[i]=64'sh8000000000000000+i;
++            endcase
++        end
++        @(negedge clk);round_seed=1;
++        if(binary) force dut.op=dut.B_CALC;else force dut.op=dut.N_RECIP;
++        #1;release dut.op;
++        @(negedge clk);
++        if(dut.round16_group_q!==8'hff || dut.op!==(binary ? dut.B_ROUND : dut.NR_ROUND))
++            $fatal(1,"Local round command preparation");
++        if(cancel_phase!=1) begin
++            @(negedge clk);
++            if(dut.round16_group_q!==0 || dut.op!==(binary ? dut.B_CLAMP : dut.NR_CLAMP))
++                $fatal(1,"Local round command consumption");
++            for(integer i=0;i<32;i++) begin
++                rounded=rne(128'(fixture_raw[i]),128'd65536);
++                if(dut.lane_round_q[i]!==rounded[63:0])
++                    $fatal(1,"Local RNE lane=%0d expected=%h actual=%h",i,rounded[63:0],dut.lane_round_q[i]);
++                checks++;
++            end
++        end
++        if(cancel_phase==0 || cancel_phase==3) begin
++            @(negedge clk);
++            for(integer i=0;i<32;i++) begin
++                rounded=rne(128'(fixture_raw[i]),128'd65536);
++                if(binary ? dut.write_vector_q[i*24+:24]!==clamp24(rounded) :
++                            dut.math_a_q[i]!==clamp24(rounded))
++                    $fatal(1,"Local rounded clamp consumer lane=%0d",i);
++                checks++;
++            end
++        end
++        if(cancel_phase!=0) begin
++            rst_n=0;round_seed=0;#1;
++            if(dut.round16_group_q!==0) $fatal(1,"Round commands survived reset");
++            repeat(3) @(negedge clk);rst_n=1;
++            repeat(4) @(negedge clk);
++            if(dut.round16_group_q!==0 || dut.op!==dut.O_IDLE || dut.math_start || dut.p_read)
++                $fatal(1,"Stale rounding continuation after reset");
++            round_reset_cases++;
++        end else begin round_seed=0;round_cases++;end
++    endtask
++    always @(negedge clk)
++        if(dut.core_rst_n && dut.round16_group_q!=={8{dut.op[dut.NR_ROUND_IDX] || dut.op[dut.B_ROUND_IDX]}})
++            $fatal(1,"Round command/phase mismatch");
+     task automatic check_scalar(input logic signed [38:0] x,
+                                 input logic signed [24:0] y);
+         logic signed [127:0] reference_product;
+@@ -173,7 +284,11 @@ module tb_llm_operators;
+         rst_n=1;
+         repeat(2) @(negedge clk);
+         case(which)
+-            0: force dut.graph=dut.G_EMBED;
++            0: begin
++                force dut.graph=dut.G_EMBED;
++                force dut.token_valid_q=1'b1;
++                #1;release dut.token_valid_q;
++            end
+             1: force dut.graph=dut.G_Q;
+             2: force dut.graph=dut.G_ANORM;
+             3: force dut.graph=dut.G_RQ;
+@@ -239,16 +354,26 @@ module tb_llm_operators;
+         // Private group flags remain unreset. Alternate overflow and ordinary
+         // values across all groups to detect stale flags or incorrect owners.
+         for(integer g=0;g<8;g++)
+-            for(integer a=0;a<2;a++) begin
+-                check_scalar_clamp(64'sh7fffffffffffffff,g,1'(a));
+-                check_scalar_clamp(64'sd0,g,1'(a));
+-                check_scalar_clamp(64'sh8000000000000000,g,1'(a));
+-                check_scalar_clamp(-64'sd1,g,1'(a));
+-                check_scalar_clamp(64'sd8388607,g,1'(a));
+-                check_scalar_clamp(64'sd8388608,g,1'(a));
+-                check_scalar_clamp(-64'sd8388608,g,1'(a));
+-                check_scalar_clamp(-64'sd8388609,g,1'(a));
+-            end
++            for(integer a=0;a<2;a++)
++                for(integer offset=0;offset<4;offset++) begin
++                    check_scalar_clamp(64'sh7fffffffffffffff,g,1'(a),offset);
++                    check_scalar_clamp(64'sd0,g,1'(a),offset);
++                    check_scalar_clamp(64'sh8000000000000000,g,1'(a),offset);
++                    check_scalar_clamp(-64'sd1,g,1'(a),offset);
++                    check_scalar_clamp(64'sd8388607,g,1'(a),offset);
++                    check_scalar_clamp(64'sd8388608,g,1'(a),offset);
++                    check_scalar_clamp(-64'sd8388608,g,1'(a),offset);
++                    check_scalar_clamp(-64'sd8388609,g,1'(a),offset);
++                end
++        check_scalar_clamp(64'sh0000000100800000,6,0,3);
++        check_scalar_clamp(64'shffffffff007fffff,1,1,2);
++        check_scalar_clamp(64'sd0,7,0,1,1);
++        check_scalar_clamp(64'sd0,0,1,2,1);
++        for(integer phase=1;phase<=3;phase++)
++            for(integer a=0;a<2;a++) check_scalar_cancel(phase,1'(a));
++        check_round16(0);check_round16(1);
++        for(integer phase=1;phase<=3;phase++)
++            for(integer b=0;b<2;b++) check_round16(1'(b),phase);
+         reset_fixture();
+         seed_parameter_row(23045,{8{scale}});
+         for(integer row=0;row<4;row++) begin
+@@ -487,7 +612,7 @@ module tb_llm_operators;
+         begin_operator(1);
+         if(!dut.op_fault_q || !error) $fatal(1,"Reserved full-graph ternary code did not fault");
+         checks++;
+-        $display("LLM_OPERATORS_PASS operators=%0d checks=%0d scalar_cases=%0d clamp_cases=%0d reference=S128 fixtures=synthetic",transactions,checks,scalar_checks,clamp_checks);$finish;
++        $display("LLM_OPERATORS_PASS operators=%0d checks=%0d scalar_cases=%0d clamp_cases=%0d scalar_reset_cases=%0d round_cases=%0d round_reset_cases=%0d reference=S128 fixtures=synthetic",transactions,checks,scalar_checks,clamp_checks,scalar_reset_cases,round_cases,round_reset_cases);$finish;
+     end
+     initial begin #20000000;$fatal(1,"LLM_OPERATORS_TIMEOUT");end
+ endmodule
+diff --git a/tests/full_rtl/tb_protocol.sv b/tests/full_rtl/tb_protocol.sv
+index 6ad5d97..96eba8a 100644
+--- a/tests/full_rtl/tb_protocol.sv
++++ b/tests/full_rtl/tb_protocol.sv
+@@ -6,7 +6,11 @@ module tb_llm_protocol;
+     logic [8:0] pc_debug;
+     logic [12:0] instr_debug;
+     logic [31:0] result;
+-    integer checks=0;
++    integer checks=0,token_checks=0;
++    logic [6:0] fixture_position;
++    logic [1:0] fixture_layer;
++    logic [7:0] fixture_prompt,fixture_maximum,fixture_generated;
++    logic [11:0] fixture_best;
+     llm_soc dut(.*);
+     always #5 clk=~clk;
+     task automatic transaction(input bit write,input logic [31:0] address,data,
+@@ -24,6 +28,58 @@ module tb_llm_protocol;
+         transaction(0,address,0,result);
+         if(result!==expected) $fatal(1,"LLM host read addr=%h expected=%h actual=%h",address,expected,result);
+     endtask
++    // Phase injection exercises boundary indices without executing 128 layers.
++    // The normal host launch below independently verifies request integration.
++    task automatic reset_token_fixture;
++        release dut.graph;
++        @(negedge clk);rst_n=0;host_en=0;host_we=0;
++        #1;
++        if(dut.token_read_valid_q || dut.token_commit_valid_q || dut.token_valid_q || dut.token_q!==0)
++            $fatal(1,"Token reset did not cancel pending validity");
++        repeat(3) @(negedge clk);rst_n=1;
++        repeat(2) @(negedge clk);
++        if(dut.core_rst_n!==1) $fatal(1,"Token fixture reset release");
++    endtask
++    task automatic request_prefill(input integer index);
++        @(negedge clk);
++        seed_token_control(index-1,3,index+1,1,0,0);
++        force dut.graph=dut.G_NEXT;#1;release dut.graph;
++    endtask
++    task automatic seed_token_control(input integer position,layer,prompt,maximum,generated,best);
++        fixture_position=7'(position);fixture_layer=2'(layer);fixture_prompt=8'(prompt);
++        fixture_maximum=8'(maximum);fixture_generated=8'(generated);fixture_best=12'(best);
++        force dut.position_q=fixture_position;force dut.layer_q=fixture_layer;
++        force dut.prompt_count_q=fixture_prompt;force dut.max_new_q=fixture_maximum;
++        force dut.generated_q=fixture_generated;force dut.best_token_q=fixture_best;
++        #1;
++        release dut.position_q;release dut.layer_q;release dut.prompt_count_q;
++        release dut.max_new_q;release dut.generated_q;release dut.best_token_q;
++    endtask
++    task automatic check_token_pipeline(input logic [11:0] expected,
++                                        input integer position,generated);
++        @(negedge clk);
++        if(!dut.token_read_valid_q || dut.token_commit_valid_q || dut.token_valid_q ||
++           dut.token_q!==0 || dut.graph!==dut.G_EMBED || dut.op!==dut.O_IDLE ||
++           dut.position_q!==7'(position) || dut.generated_q!==8'(generated) || dut.layer_q!==0)
++            $fatal(1,"Token request phase pos=%0d",position);
++        @(negedge clk);
++        if(dut.token_read_valid_q || !dut.token_commit_valid_q || dut.token_valid_q ||
++           dut.token_q!==0 || dut.p_read || !running)
++            $fatal(1,"Token prompt-read phase");
++        @(negedge clk);
++        if(dut.token_commit_valid_q || !dut.token_valid_q || dut.token_q!==expected ||
++           dut.op!==dut.O_IDLE || dut.p_read)
++            $fatal(1,"Token commit expected=%h actual=%h",expected,dut.token_q);
++        @(negedge clk);
++        if(dut.token_valid_q || dut.op!==dut.O_P_REQ ||
++           dut.p_address_q!==15'(23040+(expected>>3)) ||
++           dut.position_q!==7'(position) || dut.generated_q!==8'(generated) || dut.random_q!==1)
++            $fatal(1,"Token consume/address or stalled architectural state");
++        token_checks++;
++    endtask
++    always @(negedge clk)
++        if(dut.core_rst_n && (dut.token_read_valid_q || dut.token_commit_valid_q) && dut.p_read)
++            $fatal(1,"Embedding request escaped before token commit");
+     initial begin
+         repeat(3) @(negedge clk);rst_n=1;
+         #1;if(dut.core_rst_n!==0) $fatal(1,"Reset released without clock edges");
+@@ -59,7 +115,65 @@ module tb_llm_protocol;
+         #1;if(host_ready || host_rdata!==0) $fatal(1,"Host reset cancellation");
+         @(negedge clk);host_en=0;rst_n=1;
+         repeat(2) @(negedge clk);check_read(0,32'h12345678);
+-        $display("LLM_PROTOCOL_PASS transactions=%0d cancellations=12 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2",checks);$finish;
++        for(integer i=0;i<128;i++) transaction(1,32'h00100000+4*i,32'h400+i,result);
++        // Real host launch: token commit must precede the embedding address.
++        transaction(1,32'h00400004,2,result);transaction(1,32'h00400008,3,result);
++        transaction(1,32'h0040000c,1,result);
++        if(!running || error || dut.token_q!==12'h400 || dut.p_address_q!==15'(23040+128))
++            $fatal(1,"Host-launched token pipeline");
++        token_checks++;
++        for(integer i=0;i<7;i++) begin
++            reset_token_fixture();
++            case(i)
++                0:request_prefill(1);
++                1:request_prefill(15);
++                2:request_prefill(16);
++                3:request_prefill(31);
++                4:request_prefill(32);
++                5:request_prefill(126);
++                // Index 127 is an isolated read-geometry boundary; normal
++                // host launch still enforces prompt_count+max_new <=128.
++                6:request_prefill(127);
++            endcase
++            check_token_pipeline(12'(32'h400+dut.position_q+1),int'(dut.position_q)+1,0);
++        end
++        reset_token_fixture();
++        @(negedge clk);
++        seed_token_control(10,0,1,3,0,12'h5a7);
++        force dut.graph=dut.G_ADVANCE;#1;release dut.graph;
++        check_token_pipeline(12'h5a7,11,1);
++        for(integer stop=0;stop<3;stop++) begin
++            reset_token_fixture();
++            @(negedge clk);
++            seed_token_control(stop==2 ? 127 : 8,0,1,stop==0 ? 1 : 3,0,stop==1 ? 1 : 12'h500);
++            force dut.graph=dut.G_ADVANCE;#1;release dut.graph;
++            @(negedge clk);
++            if(dut.graph!==dut.G_DONE || dut.generated_q!==1 || dut.token_read_valid_q ||
++               dut.token_commit_valid_q || dut.token_valid_q || dut.token_q!==0 ||
++               dut.position_q!==(stop==2 ? 7'd127 : 7'd8))
++                $fatal(1,"Terminal token request/count case=%0d",stop);
++            repeat(2) @(negedge clk);
++            check_read(32'h00200000,stop==1 ? 32'd1 : 32'h500);
++            token_checks++;
++        end
++        for(integer phase=1;phase<=3;phase++) begin
++            reset_token_fixture();request_prefill(16);
++            repeat(phase) @(negedge clk);
++            reset_token_fixture();
++            repeat(3) begin
++                @(negedge clk);
++                if(dut.token_read_valid_q || dut.token_commit_valid_q || dut.token_valid_q || dut.p_read)
++                    $fatal(1,"Stale token pipeline after reset phase=%0d",phase);
++            end
++            transaction(1,32'h00100000,32'h600+phase,result);
++            transaction(1,32'h00400004,1,result);transaction(1,32'h00400008,1,result);
++            transaction(1,32'h0040000c,1,result);
++            if(!running || error || dut.token_q!==12'(32'h600+phase))
++                $fatal(1,"Token restart phase=%0d",phase);
++            token_checks++;
++        end
++        reset_token_fixture();
++        $display("LLM_PROTOCOL_PASS transactions=%0d cancellations=12 token_pipeline_cases=%0d bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2",checks,token_checks);$finish;
+     end
+     initial begin #1000000;$fatal(1,"LLM_PROTOCOL_TIMEOUT");end
+ endmodule
+diff --git a/tests/full_rtl/unit_results.json b/tests/full_rtl/unit_results.json
+index 4a78daa..730e27e 100644
+--- a/tests/full_rtl/unit_results.json
++++ b/tests/full_rtl/unit_results.json
+@@ -2,71 +2,71 @@
+   "status": "PASS",
+   "scope": "Synthetic arithmetic/protocol/operators; graph required for application gate",
+   "rtl_dir": "D:\\2151097_Nguyen Nhut Khanh\\Verilog Source code",
+-  "verified_utc": "2026-10-04T15:02:59.0548222Z",
++  "verified_utc": "2026-10-05T04:03:48.6291761Z",
+   "tests": {
+-    "tb_quartus_memory": "# QUARTUS_MEMORY_PASS banks=4 checks=158 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained",
++    "tb_quartus_memory": "# QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked",
+     "tb_llm_math": "# LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128",
+     "tb_llm_ram": "# LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3",
+-    "tb_llm_protocol": "# LLM_PROTOCOL_PASS transactions=29 cancellations=12 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2",
++    "tb_llm_protocol": "# LLM_PROTOCOL_PASS transactions=175 cancellations=12 token_pipeline_cases=15 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2",
+     "tb_llm_selection": "# SELECT_EDGE_PASS checks=14 minimum_score_ties=2 excluded=5 stable_ties=2",
+-    "tb_llm_operators": "# LLM_OPERATORS_PASS operators=17 checks=3460 scalar_cases=128 clamp_cases=128 reference=S128 fixtures=synthetic",
+-    "tb_llm_graph": "# LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=4229462 host_commands=196619 fixtures=synthetic"
++    "tb_llm_operators": "# LLM_OPERATORS_PASS operators=17 checks=4944 scalar_cases=128 clamp_cases=516 scalar_reset_cases=6 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic",
++    "tb_llm_graph": "# LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=4254046 host_commands=196619 fixtures=synthetic"
+   },
+   "evidence": {
+     "tb_quartus_memory": {
+       "log": "tests/full_rtl/build/tb_quartus_memory.log",
+-      "sha256": "09d3ec6cab08bd88482443e65cc2c969f1ce6b4fc7dc2be234587aaa292270d2",
++      "sha256": "a7f62033b95c3f756db489d11718b326c542d6ffb205a8e9f01719ed86256214",
+       "design_units": {
+-        "file": "tests/full_rtl/build/cache1_tb_quartus_memory_design_units.json",
+-        "sha256": "ceeab38874b9f76c5e2647991a0f635df86122f7fb79e726294768fb2227d9d7"
++        "file": "tests/full_rtl/build/npu100_b1_all_tb_quartus_memory_design_units.json",
++        "sha256": "2ddaee42840afc1877059c0e8f2a663fec45e622495cfa1cd1ebb0c9aee6b5fe"
+       }
+     },
+     "tb_llm_math": {
+       "log": "tests/full_rtl/build/tb_llm_math.log",
+-      "sha256": "c084ec94084a912e7f39e884540cb38b5e10dc95bb35ac67075f9091590e1c14",
++      "sha256": "390fc9d351716183339d4727828aeb3227a7645e70b110753e84ea38e8352ba5",
+       "design_units": {
+-        "file": "tests/full_rtl/build/cache1_tb_llm_math_design_units.json",
+-        "sha256": "31bf07c0e73a1ded7359b1c57dafe1d4860662cbd008a447177f84f9cb7b53e4"
++        "file": "tests/full_rtl/build/npu100_b1_all_tb_llm_math_design_units.json",
++        "sha256": "c01731213104e1608b61d0a55c9c96df5ed1b75542fac188d67542c3152b76cb"
+       }
+     },
+     "tb_llm_ram": {
+       "log": "tests/full_rtl/build/tb_llm_ram.log",
+-      "sha256": "f1dc504779696afa9246c1647b26c9981044bb5963137c6d43f5711977be901d",
++      "sha256": "54e0ceef1d8346af57e38f9e8eba48683f29bec8b3ccca75ebccd86f213c9729",
+       "design_units": {
+-        "file": "tests/full_rtl/build/cache1_tb_llm_ram_design_units.json",
+-        "sha256": "88842eefe1ec3789ff4ea48aec0323989387c71f14dd109ea8b5da7009ef6a43"
++        "file": "tests/full_rtl/build/npu100_b1_all_tb_llm_ram_design_units.json",
++        "sha256": "e51afa8999554facc3b4e76b70a67d76213b0386a0783ce6d5461d19e4fbf38a"
+       }
+     },
+     "tb_llm_protocol": {
+       "log": "tests/full_rtl/build/tb_llm_protocol.log",
+-      "sha256": "e42f6ad64088389b61ae5709c298050c8d4a258be6a42b9cad5295ad682541b7",
++      "sha256": "f667d479b16b276282e22a11460f2f4329d7e9c4bc1abdb74e33ffccfc275035",
+       "design_units": {
+-        "file": "tests/full_rtl/build/cache1_tb_llm_protocol_design_units.json",
+-        "sha256": "7524a34384d2aa8aa5e8b5609b3608e01895b66d2ed893bb98c0d4403f57b41a"
++        "file": "tests/full_rtl/build/npu100_b1_all_tb_llm_protocol_design_units.json",
++        "sha256": "6d514bfd382b85b2e0555ce5c1dab9ef9297271bf1102d64244d3e7309e47531"
+       }
+     },
+     "tb_llm_selection": {
+       "log": "tests/full_rtl/build/tb_llm_selection.log",
+-      "sha256": "280e22342fcef40684fae7e9a4b7d7387869f987eb8c847254eabb55a33fbb40",
++      "sha256": "591a5d5ff782ae5df877d1131f364405baa5456c09f5130f1cfcb4b08dd39348",
+       "design_units": {
+-        "file": "tests/full_rtl/build/cache1_tb_llm_selection_design_units.json",
+-        "sha256": "37a564fc468be8eba32a5ed47fbb9ecf8060af6c3d3800803a3fd94d90f38677"
++        "file": "tests/full_rtl/build/npu100_b1_all_tb_llm_selection_design_units.json",
++        "sha256": "24b4f615d517871ee4fd565a441a687dee34bd7ce61ed878b587fe0fb1aa98a4"
+       }
+     },
+     "tb_llm_operators": {
+       "log": "tests/full_rtl/build/tb_llm_operators.log",
+-      "sha256": "f0c17ce1063c6622414041332236820063e06d692383f9a909b7e81bc74b13d6",
++      "sha256": "abcf0a83065cb1c41bc00544a533aad1afcc88a5e2feb344a0bf3cb1f97aac36",
+       "design_units": {
+-        "file": "tests/full_rtl/build/cache1_tb_llm_operators_design_units.json",
+-        "sha256": "e51efb727567dc312680c9ed17f9e20e3218c4bcfc2e4a4f4ddae5819fe422ba"
++        "file": "tests/full_rtl/build/npu100_b1_all_tb_llm_operators_design_units.json",
++        "sha256": "16203b6bcc85aab9acee2ce047101dbcee027413bb0c0de8fc098af5d2687037"
+       }
+     },
+     "tb_llm_graph": {
+       "log": "tests/full_rtl/build/tb_llm_graph.log",
+-      "sha256": "91b1e0921b819e0c25c2700bf8c2318dec20e309b9b77f734f58c5af95147456",
++      "sha256": "7ef433e6c0ea9095970be414ce695cef135b88bbe8df12ca5da616d4ad50453a",
+       "design_units": {
+-        "file": "tests/full_rtl/build/cache1_tb_llm_graph_design_units.json",
+-        "sha256": "8958300b77e553dd38017d8204f561f8d0949a1d6219c96cf82fbbf23b15d471"
++        "file": "tests/full_rtl/build/npu100_b1_all_tb_llm_graph_design_units.json",
++        "sha256": "881e20a942808c0485b454d4191b6d7398c3e7c7b533c0e370959718419898f5"
+       }
+     }
+   },
+@@ -86,7 +86,7 @@
+     "llm_math.sv": "9d4d44be0bfe5d44cb196ffdc5e812710640989fb43f23adbcb62a0e48bae8ed",
+     "llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
+     "llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
+-    "llm_soc.sv": "5abac9ed9dde98138c4e5928fe7638e302ca4bf9a49b38eeafd373826a10fb9e",
++    "llm_soc.sv": "12fc257f81ea059bbde9ff018f9a56b3c5b633f240862ad25e7668b17c767f77",
+     "logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
+     "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+     "matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
+@@ -96,7 +96,7 @@
+     "norm.sv": "045a18b3d7152a114705cf85f87396eb1d080193dbb867b6791f37e278f17f36",
+     "npu_pkg.sv": "18385ff77706c505eb7c947c5b1f056b5d6230e6971a1cc09a4d823c27a7bcfd",
+     "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+-    "pipelined_word_ram.sv": "0e82266f6da5f31bd2612e4696778f9560915020f6a5a3b498dfd4acd8b6e07a",
++    "pipelined_word_ram.sv": "691f21844bfe3deae271a26e503b6d667948a70fd742d8b2d9a067039b49162a",
+     "postscale.sv": "b9cb61b7014c037c408340a8042b4c0862ed46997754d9b4dee40056835e7160",
+     "quartus_word_ram.sv": "c38b8642bfb143f71bf89902b767844086f0894a16db11ebc0abe98131709a0b",
+     "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+@@ -112,11 +112,11 @@
+   },
+   "test_sources": {
+     "run_units.ps1": "28672093a173db4ea1e4e8166bc9cdbc8853151cba9063463fbf7990f54cd345",
+-    "tb_graph.sv": "f3935e1049990dabcb066b7260b3363c0cce57de9567f0501c7904b51a9d26e9",
++    "tb_graph.sv": "38ea2533062ecfa117fabf1b8d5d6d420a780e1a9cba509f819ba5266c346041",
+     "tb_math.sv": "9a7befb14c6a8392952a14ea5ed858206f5287ff95eedd96716d7af9a4252ea4",
+-    "tb_memory_ip.sv": "698fbbcb7199006cc49030d17a3b8d4b282d646e7ba736568bb63922dd9b149f",
+-    "tb_operators.sv": "26d67ebf2a4b4d75faf6bf3ee252d268bdf96760f47b6ad7f59fb655cd93fabe",
+-    "tb_protocol.sv": "417c4b8060d0f06bf845cf2d39d036c8af4d97ea8d60536715041cedd8a58cc2",
++    "tb_memory_ip.sv": "e34a990c572eee5c2cbdca2c793f580dfedb374efa1e90ff6f040aed9afa6904",
++    "tb_operators.sv": "7319dda03bf81cf5949cce4151e8f04ce658ea1f0904902ad2b38dec2d1b6c5b",
++    "tb_protocol.sv": "3c671cb8d7f730a8ee96d5274929eadf4b76d476e7d7398d813f105268549810",
+     "tb_ram.sv": "4d40fea39efbf26f67db28c6ad4fde34f194603f57f4ee2f2fda6e0fc93ed0b1",
+     "tb_selection.sv": "9604220232f4dfe71a75f620c96159cec495ef68209ca550f06f88affe27d8f9"
+   }
+diff --git a/tools/timing/extract.tcl b/tools/timing/extract.tcl
+index 7d197e6..2af9c07 100644
+--- a/tools/timing/extract.tcl
++++ b/tools/timing/extract.tcl
+@@ -1,5 +1,5 @@
+ # Post-fit timing reports for the existing routed Quartus netlist.
+-# Run: quartus_sta -t tools/timing/extract.tcl [output_dir] [1.0|sdc] [project]
++# Run: quartus_sta -t tools/timing/extract.tcl [output_dir] [1.0|sdc] [project] [path_count]
+ # Numeric clock periods deliberately reproduce a fixed internal-clock baseline.
+ # "sdc" reads the project's explicit timing constraints without changing them.
+ package require ::quartus::project
+@@ -9,6 +9,7 @@ set repo [file normalize [file join [file dirname [info script]] .. ..]]
+ set output [file join $repo docs verification timing user_baseline]
+ set constraint_mode 1.0
+ set project [file join $repo quartus matmul_free]
++set path_count 40
+ if {[llength $quartus(args)] > 0} {
+     set output [file normalize [lindex $quartus(args) 0]]
+ }
+@@ -25,6 +26,12 @@ if {$constraint_mode ne "sdc" &&
+     (![string is double -strict $constraint_mode] || $constraint_mode <= 0)} {
+     error "Clock argument must be a positive period in ns or sdc"
+ }
++if {[llength $quartus(args)] > 3} {
++    set path_count [lindex $quartus(args) 3]
++}
++if {![string is integer -strict $path_count] || $path_count < 1 || $path_count > 1000} {
++    error "Path count must be an integer from 1 through 1000"
++}
+ file mkdir $output
+ cd [file dirname $project]
+ project_open [file tail $project] -revision [file tail $project]
+@@ -41,6 +48,19 @@ report_sdc -file [file join $output extracted_sdc.rpt]
+ report_ucp -summary -file [file join $output extracted_unconstrained.rpt]
+ check_timing -file [file join $output extracted_checks.rpt]
+ 
++# Audit physical register copies and direct timing-netlist fanout edges.
++# This is report-only: it does not change assignments, constraints or placement.
++set register_audit [open [file join $output implemented_registers.rpt] w]
++puts $register_audit "Pattern\tRegister\tType\tFanout_edges\tLocation"
++foreach pattern {*scalar_round_q* *scalar_packet* *scalar_cluster* *scalar_group_q* *token_prompt* token_q* *round16_group_q* *return_scalar*} {
++    set matches [get_registers -nowarn $pattern]
++    puts $register_audit "Count\t$pattern\t[get_collection_size $matches]"
++    foreach_in_collection reg $matches {
++        puts $register_audit "$pattern\t[get_node_info -name $reg]\t[get_node_info -type $reg]\t[llength [get_node_info -fanout_edges $reg]]\t[get_node_info -location $reg]"
++    }
++}
++close $register_audit
++
+ # Cover all four voltage/temperature models used by this Cyclone V device.
+ # Explicit corner reports also retain each model's distinct critical endpoints.
+ foreach corner {{slow 85 1100} {slow 0 1100} {fast 85 1100} {fast 0 1100}} {
+@@ -49,15 +69,32 @@ foreach corner {{slow 85 1100} {slow 0 1100} {fast 85 1100} {fast 0 1100}} {
+     set_operating_conditions -model $model -temperature $temperature -voltage $voltage
+     update_timing_netlist
+     foreach analysis {setup hold recovery removal} {
+-        set command [list report_timing -$analysis -npaths 40 -nworst 1 \
++        set command [list report_timing -$analysis -npaths $path_count -nworst 1 \
+             -detail full_path -show_routing \
+             -file [file join $output ${corner_name}_${analysis}.rpt]]
+         eval $command
+     }
+-    report_min_pulse_width -nworst 40 -detail full_path \
++    report_min_pulse_width -nworst $path_count -detail full_path \
+         -file [file join $output ${corner_name}_pulse.rpt]
+     report_clock_fmax_summary -file [file join $output ${corner_name}_fmax.rpt]
+ 
++    # Retain a separate bounded sample for each changed family even when it
++    # falls outside the global setup sample. Include the new pipeline stages.
++    foreach {family from_patterns to_patterns} {
++        scalar_distribution {*scalar_round_q* *scalar_packet* *scalar_cluster*} {*scalar_packet* *scalar_cluster* *scalar_group_q*}
++        token_fetch {*graph* *token_prompt*} {*token_read_valid_q* *token_prompt* token_q*}
++        round_control {op* *round16_group_q*} {*round16_group_q* *lane_round_q*}
++        scalar_return {op*} {*return_scalar*}
++    } {
++        set family_from [get_registers -nowarn $from_patterns]
++        set family_to [get_registers -nowarn $to_patterns]
++        if {[get_collection_size $family_from] && [get_collection_size $family_to]} {
++            report_timing -setup -from $family_from -to $family_to \
++                -npaths 20 -nworst 1 -detail full_path -show_routing \
++                -file [file join $output ${corner_name}_${family}.rpt]
++        }
++    }
++
+     # Quartus 18.1 implements closure recommendations in its bundled Tcl.
+     # Export the heuristic tables directly because plain-text STA exports omit
+     # HTML panels. This does not change the original .sta.rpt report database.
+@@ -72,9 +109,9 @@ foreach corner {{slow 85 1100} {slow 0 1100} {fast 85 1100} {fast 0 1100}} {
+         array set timing_tables {}
+         array set timing_aggregate {}
+         set timing_path_table {}
+-        set critical_paths [get_timing_paths -setup -npaths 40 -nworst 1]
++        set critical_paths [get_timing_paths -setup -npaths $path_count -nworst 1]
+         set statistics [::report_design_analysis::do_analysis_work \
+-            timing_tables timing_aggregate timing_path_table 40 $critical_paths]
++            timing_tables timing_aggregate timing_path_table $path_count $critical_paths]
+         puts $recommendations "Statistics: $statistics"
+         foreach heuristic [lsort [array names timing_tables]] {
+             puts $recommendations "\nHeuristic: $heuristic"
+diff --git a/tools/timing/run.ps1 b/tools/timing/run.ps1
+index a712b28..ba5578f 100644
+--- a/tools/timing/run.ps1
++++ b/tools/timing/run.ps1
+@@ -3,7 +3,8 @@ param(
+     [string]$RtlDir='Verilog Source code',
+     [ValidatePattern('^[a-z][a-z0-9_-]{0,63}$')][string]$Tag='optimized',
+     [string]$QuartusBin='',
+-    [string]$Python=''
++    [string]$Python='',
++    [ValidateRange(1,1000)][int]$ReportPathCount=40
+ )
+ $ErrorActionPreference='Stop'
+ $repo=Split-Path (Split-Path $PSScriptRoot)
+@@ -83,7 +84,7 @@ try {
+ } finally {
+     Pop-Location
+ }
+-Invoke-TimingStage 'extract' (Join-Path $QuartusBin 'quartus_sta.exe') @('-t',$extract,$outputPath,'sdc',$projectPath)
++Invoke-TimingStage 'extract' (Join-Path $QuartusBin 'quartus_sta.exe') @('-t',$extract,$outputPath,'sdc',$projectPath,[string]$ReportPathCount)
+ $commands | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $outputPath 'commands.json') -Encoding utf8
+ & $Python $record --project $projectPath --rtl-dir $rtlPath --output $outputPath
+ if($LASTEXITCODE -ne 0) {throw 'Timing evidence record failed; compilation inputs may have changed.'}

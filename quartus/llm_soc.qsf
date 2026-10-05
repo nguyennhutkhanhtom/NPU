@@ -2,16 +2,15 @@
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CGXFC9E6F35C7
 set_global_assignment -name TOP_LEVEL_ENTITY llm_soc
+set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name OPTIMIZATION_TECHNIQUE SPEED
 set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
 set_global_assignment -name SEED 1
-set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name SDC_FILE llm_soc.sdc
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/npu_pkg.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/banked_word_ram.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_pkg.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/div.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_bank_ram.sv"
@@ -20,9 +19,7 @@ set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_param
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_math.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/reset_release.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_soc.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/norm.sv"
 set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/sigmoid.sv"
-set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/sram_256_wrapper.sv"
 set_global_assignment -name VERILOG_INCLUDE_FILE "../Verilog Source code/llm_exp_lut.svh"
 set_global_assignment -name VERILOG_INCLUDE_FILE "../Verilog Source code/llm_gumbel_lut.svh"
 set_global_assignment -name VERILOG_INCLUDE_FILE "../Verilog Source code/sigmoid_lut.svh"
@@ -103,3 +100,39 @@ set_instance_assignment -name D3_DELAY 7 -to "host_addr[*]"
 # Cache1 forced-global reset routing failed setup/recovery; its timing
 # recommendations explicitly request removal at core_rst_n~CLKENA0.
 # Keep automatic routing, the verified standard-FF reset and original SDC.
+
+# Deep parameter tiles require separate ordinary address and payload drivers.
+# Keep this backend preservation policy outside the portable memory adapter.
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "*|g_ip_tiled.g_tile*.read_address_q*"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "*|g_ip_tiled.g_tile*.write_address_q*"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "*|g_ip_tiled.write_group_q*"
+
+# Eight ordinary round commands are prepared on the raw-product capture edge.
+# Retain the exact four-lane copies without device attributes in compute RTL.
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[0]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[1]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[2]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[3]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[4]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[5]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[6]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[7]"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/ternary_dot32.sv"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_head_engine.sv"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_attention_engine.sv"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_attention_normalize.sv"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_linear_engine.sv"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/isqrt_u64.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/sram_word_tile.sv"
+
+set_global_assignment -name LAST_QUARTUS_VERSION "25.1std.0 Lite Edition"
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top

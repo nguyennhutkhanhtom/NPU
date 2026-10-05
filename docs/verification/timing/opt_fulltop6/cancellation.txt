@@ -1,0 +1,1 @@
+Analysis & Synthesis PASS with zero errors and 23 warnings. Fitting interrupted to restore original ALL tool concurrency after the unsandboxed run bypassed QSYN worker-pipe failure. No post-fit timing result.

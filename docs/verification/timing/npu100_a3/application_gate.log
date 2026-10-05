@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\check_gate.py", line 83, in <module>
+    checked = check_gate(args.manifest)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\check_gate.py", line 43, in check_gate
+    assert metrics["worst_restricted_fmax_mhz"] >= 100, "Fmax is below 100 MHz"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Fmax is below 100 MHz

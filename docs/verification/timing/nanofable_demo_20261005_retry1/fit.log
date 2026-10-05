@@ -1,0 +1,86 @@
+TBBmalloc: skip allocation functions replacement in ucrtbase.dll: unknown prologue for function _msize
+Info: *******************************************************************
+Info: Running Quartus Prime Fitter
+    Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
+    Info: Copyright (C) 2025  Altera Corporation. All rights reserved.
+    Info: Your use of Altera Corporation's design tools, logic functions 
+    Info: and other software and tools, and any partner logic 
+    Info: functions, and any output files from any of the foregoing 
+    Info: (including device programming or simulation files), and any 
+    Info: associated documentation or information are expressly subject 
+    Info: to the terms and conditions of the Altera Program License 
+    Info: Subscription Agreement, the Altera Quartus Prime License Agreement,
+    Info: the Altera IP License Agreement, or other applicable license
+    Info: agreement, including, without limitation, that your use is for
+    Info: the sole purpose of programming logic devices manufactured by
+    Info: Altera and sold by Altera or its authorized distributors.  Please
+    Info: refer to the Altera Software License Subscription Agreements 
+    Info: on the Quartus Prime software download page.
+    Info: Processing started: Mon Oct  5 21:50:48 2026
+Info: Command: quartus_fit --read_settings_files=on --write_settings_files=off llm_soc -c llm_soc
+Info: qfit2_default_script.tcl version: #1
+Info: Project  = llm_soc
+Info: Revision = llm_soc
+Info (20030): Parallel compilation is enabled and will use 16 of the 16 processors detected
+Info (119006): Selected device 5CGXFC9E6F35C7 for design "llm_soc"
+Info (21077): Low junction temperature is 0 degrees C
+Info (21077): High junction temperature is 85 degrees C
+Info (171004): Fitter is performing a Standard Fit compilation using maximum Fitter effort to optimize design performance
+Warning (292013): Feature LogicLock is only available with a valid subscription license. You can purchase a software subscription to gain full access to this feature.
+Warning (15714): Some pins have incomplete I/O assignments. Refer to the I/O Assignment Warnings report for details
+Info (176045): Design uses memory blocks. Violating setup or hold times of memory block address registers for either read or write operations could cause memory contents to be corrupted. Make sure that all memory block address registers meet the setup and hold time requirements.
+Critical Warning (169085): No exact pin location assignment(s) for 125 pins of 127 total pins. For the list of pins please refer to the I/O Assignment Warnings table in the fitter report.
+Info (184025): 59 differential I/O pins do not have complementary pins. As a result, the Fitter automatically creates the complementary pins.
+    Info (184026): differential I/O pin "host_rdata[0]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[0](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[1]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[1](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[2]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[2](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[3]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[3](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[4]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[4](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[5]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[5](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[6]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[6](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[7]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[7](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[8]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[8](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[9]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[9](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[10]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[10](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[11]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[11](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[12]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[12](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[13]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[13](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[14]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[14](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[15]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[15](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[16]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[16](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[17]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[17](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[18]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[18](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[19]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[19](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[20]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[20](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[21]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[21](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[22]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[22](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[23]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[23](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[24]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[24](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[25]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[25](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[26]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[26](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[27]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[27](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[28]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[28](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[29]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[29](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[30]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[30](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_rdata[31]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_rdata[31](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 478
+    Info (184026): differential I/O pin "host_ready" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "host_ready(n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 11
+    Info (184026): differential I/O pin "running" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "running(n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 11
+    Info (184026): differential I/O pin "ready" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "ready(n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 11
+    Info (184026): differential I/O pin "pc_debug[0]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "pc_debug[0](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "pc_debug[1]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "pc_debug[1](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "pc_debug[2]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "pc_debug[2](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "pc_debug[3]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "pc_debug[3](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "pc_debug[4]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "pc_debug[4](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "pc_debug[5]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "pc_debug[5](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "pc_debug[6]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "pc_debug[6](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "instr_debug[7]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "instr_debug[7](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "instr_debug[8]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "instr_debug[8](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "instr_debug[9]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "instr_debug[9](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "instr_debug[10]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "instr_debug[10](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "instr_debug[11]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "instr_debug[11](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "error" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "error(n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 11
+    Info (184026): differential I/O pin "overflow_out" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "overflow_out(n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 11
+    Info (184026): differential I/O pin "instr_debug[12]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "instr_debug[12](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "pc_debug[7]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "pc_debug[7](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "pc_debug[8]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "pc_debug[8](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616
+    Info (184026): differential I/O pin "instr_debug[0]" does not have a complementary pin. As a result, the Fitter automatically creates the complementary pin "instr_debug[0](n)". File: D:/2151097_Nguyen Nhut Khanh/Verilog Source code/llm_soc.sv Line: 616

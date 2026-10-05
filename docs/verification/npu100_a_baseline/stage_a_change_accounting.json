@@ -1,0 +1,13 @@
+{
+  "baseline_rtl_code_lines": 5016,
+  "added": 57,
+  "deleted": 1,
+  "percentage": 1.1562998405103668,
+  "changed_files": {
+    "Verilog Source code/pipelined_word_ram.sv": {
+      "added": 57,
+      "deleted": 1
+    }
+  },
+  "method": "Nonblank/noncomment code-line sequence against byte-exact approved baseline; replaced lines count as deletion plus addition; .sv/.v/.svh included; .mem excluded"
+}

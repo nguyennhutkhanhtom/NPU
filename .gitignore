@@ -23,6 +23,7 @@
 !/quartus/llm_soc.qpf
 !/quartus/llm_soc.qsf
 !/quartus/llm_soc.sdc
+!/quartus/README.md
 /tmp/
 /quartus/db/
 /quartus/incremental_db/

@@ -1,0 +1,19 @@
+ M "Verilog Source code/pipelined_word_ram.sv"
+ M quartus/llm_soc.qsf
+ M tests/full_rtl/host_cancel_contract.sv
+ M tests/full_rtl/tb_memory_ip.sv
+ M tests/full_rtl/unit_results.json
+?? ARCH_RESEARCH.md
+?? docs/verification/npu100_a_baseline/
+?? docs/verification/npu100_b1_baseline/
+?? docs/verification/synthesis/npu100_a3/
+?? docs/verification/timing/fullrtl100_cache2/
+?? docs/verification/timing/npu100_a/
+?? docs/verification/timing/npu100_a2/
+?? docs/verification/timing/npu100_a3/
+?? rtl_change_review.md
+?? tests/full_rtl/evidence/npu100_a2_six/
+?? tests/full_rtl/evidence/npu100_a2_stopped/
+?? tests/full_rtl/evidence/npu100_a_cancelled/
+?? tests/full_rtl/run_host_cancel_100mhz.ps1
+?? tests/full_rtl/run_portable_100mhz.ps1

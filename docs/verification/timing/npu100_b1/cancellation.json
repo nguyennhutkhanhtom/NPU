@@ -1,0 +1,23 @@
+{
+  "status": "CANCELLED_BEFORE_FREQUENCY",
+  "recorded_utc": "2026-10-05T04:20:09.1461065Z",
+  "reason": "QSF brace-delimited register names were read literally, yielding 16 critical warnings and merging round16_group_q[1..7] with [0]. Fit stopped before frequency measurement; intended preservation syntax will be corrected without changing RTL or SDC.",
+  "map_errors": 0,
+  "map_warnings": 29,
+  "mapped_registers": 53479,
+  "frequency_result": null,
+  "archives": {
+    "fit.log": "6031877bfd85121ee4bb8add38a324d14a304a16e6327fb563608321736a4f9c",
+    "llm_soc.map.rpt": "1127793c6ff29ba36df04daf9554fa0dce38c746139373280ba946ac92920199",
+    "llm_soc.map.summary": "70e2b1ef4a0357579beabd179addf8e223d3193f7e5b43b6495170677f41cb85",
+    "map.log": "43aa9ef14d4610b891006e626d778239973775ff2bc5adab33b3bfe89333d9b5",
+    "reporting_support.json": "dedfdcb3999a13a4e3d8d4c6ab4b552e1267eb3189132fbed6c39a2e1e48b0d7",
+    "source_archive.json": "33a64b462a3bf6b4511a8c6df3447c94f18665f177950efa5e0edd85ff49824b",
+    "source_archive.zip": "8e65fa8f0581abf10d56de73bd425fd4dd21052086428c20b5e49899dbfc8bc5",
+    "sources_before.json": "b20460ce6a328b93216c4a79dda8f21b93237fba49f27dbba7aa0b132764cce7",
+    "reporting_support/archive_sources.py": "4424e5745b9668c79fab28033acc244dce6e5bf57d2f93936f9f7458a890be7e",
+    "reporting_support/extract.tcl": "39642ca28e431af2f5d092e6dc4e1524c70dbf37f2bd2d3201ef14abfedbb0b9",
+    "reporting_support/record.py": "89e96917370906c3bbbf35739ca1a313f4bcdedb6f4611d10568dc8d42be0be5",
+    "reporting_support/run.ps1": "1dc0d127800a0ac69aa716b4d08bd74c3640e121d8c4082915573c2ec1e80d89"
+  }
+}

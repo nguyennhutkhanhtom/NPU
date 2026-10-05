@@ -1,0 +1,27 @@
+{
+  "status": "CANCELLED_NOT_ALL_SEVEN_PASS",
+  "started_utc": "2026-10-04T17:45:02.2885238Z",
+  "fresh_pass_markers": {
+    "tb_llm_math.log": [
+      "# LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128"
+    ],
+    "tb_llm_protocol.log": [
+      "# LLM_PROTOCOL_PASS transactions=29 cancellations=12 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2"
+    ],
+    "tb_llm_ram.log": [
+      "# LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3"
+    ],
+    "tb_llm_selection.log": [
+      "# SELECT_EDGE_PASS checks=14 minimum_score_ties=2 excluded=5 stable_ties=2"
+    ],
+    "tb_quartus_memory.log": [
+      "# QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked"
+    ]
+  },
+  "inherited_logs_excluded": [
+    "tb_llm_graph.log",
+    "tb_llm_graph_logic6.log"
+  ],
+  "reason": "Broad log capture included existing logs; inherited graph log is explicitly excluded from this attempt",
+  "results_sha256": "a13e539e804be3dbe3a65038f2a3424a27708d1ffd5ad6df3bf161d6cd9b5043"
+}

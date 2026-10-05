@@ -1,0 +1,1133 @@
+
+<html><head><link rel='stylesheet' href='bogus:style.css' type='text/css' /><script type='text/javascript' src='qrc:rpwq_sorttable.js'></script>
+<script language="javascript" type="text/javascript">
+function toggle(id, showtext, hidetext) {
+	document.getElementById(id+'-toggle').innerHTML = (document.getElementById(id).style.display == "none") ? hidetext : showtext;
+	document.getElementById(id).style.display = (document.getElementById(id).style.display == "none") ? "" : "none";
+}
+</script>
+
+<style type="text/css">
+
+body { 
+	font-family:      "Intel Clear", Arial, Helvetica, sans-serif;
+	font-size:        8pt;
+	background-color: white;
+	margin:           0;
+/*	border:           1px solid #7F9DB9;*/ /* border on page doesn't work right when scrolling...*/
+	padding:          2px;
+}
+
+h1, h2 { 
+	background-color: #316AC5; 
+	color:            white; 
+	padding:          2px;
+}
+
+
+h1, h2 a:link {color:#fff;}
+
+
+h1             { font-size: 10pt; }
+h2, h3, h4, h5 { font-size: 8pt; }
+p, blockquote  { font-size: 8pt; }
+table, td, th  { font-size: 8pt; }
+ul, ol, li     { font-size: 8pt; }
+dl, dt, dd     { font-size: 8pt; }
+
+/* i don't like the space after paragraphs and before lists */
+p { margin: 1em 0 0 0; }
+
+
+/* table formats */
+table {
+	border-collapse: collapse;
+}
+
+td, th {
+	border-collapse: collapse;
+	border:          1px solid #C8C8C8;
+	padding:         1px;
+	padding-left:    2px;
+	padding-right:   2px;
+	margin:          0;
+	vertical-align:  middle;
+	text-align:      left;
+}
+
+th                 { background-color: #EDEDED; } /* tq table grey - for table heading */
+tr:nth-child(2n+0) { background-color: #EDEDED; } /* tq table grey - for even rows */
+tr:nth-child(2n+1) { background-color: #FFFFFF; } /* tq table white - for odd rows */
+
+table#path_table td {
+	vertical-align:top;
+}
+
+.graph { 
+	width: 100px; 
+	border: 1px solid #aaa; 
+	padding: 0px 1px 0px 1px; 
+}
+.graph .bar { 
+	display: block;	
+	position: relative;
+	background: #aaa; 
+	text-align: left;
+	padding-left: 2px;
+	padding-right: 2px;
+	color: #000; 
+	height: 12px; 
+	vertical-align: middle;
+	left:-2px; /* needs to be adjusted in conjunction with .graph styles */
+}
+
+div.bar {
+	height:11px; 
+	background-color:#C00000; 
+	color: white; 
+	text-align: left; 
+	vertical-align: middle;
+}
+
+/* for description lists for summary */
+dl.rec {
+	margin: 1px;
+	padding: 0;
+}
+
+.rec dt {
+	clear: left;
+	float: left;
+	width: 7em;
+	margin: 0;
+	padding: 1px;
+}
+
+.rec dd {
+	margin: 0 0 0 5em;
+	padding: 1px;
+}
+
+dd.path_table_rec {
+	overflow: hidden;
+	whitespace: nowrap;
+	text-overflow: ellipsis;
+}
+
+ul, ol, li {
+	margin: 1px;
+}
+
+/* tooltip experiment for long node names */
+/* use with: <span id="links"><a href="#">short name<span>longer node name</span></a></span> */
+span#tip {position: relative; top: 0; left: 0;}
+span#tip a { text-decoration: none; color: black;}
+span#tip a:hover {}
+
+span#tip a span {display: none;}
+span#tip a:hover span {
+	display: block;
+	position: absolute; top: -2px; left: -2px; 
+	padding: 1px; margin: 0px; z-index: 100;
+	border: 1px solid black;
+	color: black; background: #FFFFDC;
+	text-align: left;
+	z-index: 100;
+}
+
+div#multicolumn {
+	-webkit-column-width: 50em;
+	-webkit-column-gap: 2em;
+}
+
+</style>
+</head>
+<body>
+<!--<h1>Long Combinational Path</h1>-->
+
+<h2 style='background-color:#316AC5;color:white;padding:2px;font-size:8pt;'>Overview
+
+</h2><div id='twist-Overview-Long Combinational Path' style='display:inline;'>
+
+<p>
+The <b>Description and Recommendations</b> section gives general 
+advice and recommendations for addressing Long Combinational Path.
+</p>
+<p>
+The <b>Aggregate Results</b> section shows the 
+Entity Name
+and the number of occurences of the Entity Name 
+in the identified paths.
+You can sort the table by clicking the column header.
+</p>
+<p>
+The <b>Top Recommendations</b> section lists 
+recommendations for the most serious issues identified by the analysis.
+The number of stars indicates the relative importance of each recommendation,
+with five stars identifying the most important recommendations.
+Click <b>show details</b> for more information about each recommendation;
+click <b>report timing</b> to generate a timing report for the listed path. 
+</p>
+
+<p>
+The <b>Detailed Results</b> section contains the detailed 
+report for this analysis.
+Click on <b>show details</b> for more information related to the recommendation for each path;
+click on <b>report timing</b> to generate a timing report for the listed path. 
+You can sort the table by clicking the column header.
+</p>
+</div>
+
+<h2 style='background-color:#316AC5;color:white;padding:2px;font-size:8pt;'>Description and Recommendations
+
+</h2><div id='twist-Description and Recommendations-Long Combinational Path' style='display:inline;'>
+
+	<p>
+Each path listed may contain too many levels of combinational logic between the source and destination registers. Even when placed and routed using near optimal resources its timing constraint would be difficult to meet. There may be a solution where this path meets timing, however it will be difficult to find. If many failing paths exist it is unlikely they could all be placed and routed and meet timing.
+</p>
+<p>
+The following suggestions may help resolve this issue:
+</p>
+<ul>
+<li>Restructure the appropriate HDL code to reduce the number of combinational logic levels</li><li>Turn on Physical Synthesis for combinational logic or for register retiming </li><li>If only a few paths are failing use a different seed or try running Design Space Explorer </li><li>Set the synthesis <b>Optimization Technique</b> option to <b>Speed</b> in the settings dialog box</li>
+</ul>
+<p>
+See the <b>Top Recommendations</b> section for potential solutions
+for each path.
+
+</div>
+<h2 style='background-color:#316AC5;color:white;padding:2px;font-size:8pt;'>Aggregate Results
+
+</h2><div id='twist-Aggregate Results' style='display:inline;'>
+<p>
+<table id='aggregate_table' class='sortable'>
+    <tr>
+      <th></th>
+      <th>Entity Name</th>
+      <th width=100>Paths Affected</th>
+    </tr>
+
+    <tr>
+      <td>1</td>
+      <td>|llm_soc</td>
+      <td><div class='graph'><div class='bar' style='width:100%;'>93</div></div></td>
+    </tr>
+
+    <tr>
+      <td>2</td>
+      <td>|llm_soc|llm_parameter_ram:u_parameters</td>
+      <td><div class='graph'><div class='bar' style='width:21%;'>20</div></div></td>
+    </tr>
+
+</table>
+
+</div>
+<h2 style='background-color:#316AC5;color:white;padding:2px;font-size:8pt;'>Top Recommendations
+
+</h2><div id='twist-Top Recommendations' style='display:inline;'>
+
+<dl class='rec'>
+    <dt>&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Reduce the levels of combinational logic for the path from <b>host_en</b>
+        to <b><span id='tip'><a href='#'>altsyncram:output..._B_ADDRESS_STALL<span>altsyncram:output_memory_rtl_0|altsyncram_hlo1:auto_generated|ram_block1a0~PORT_B_ADDRESS_STALL</span></a></span></b> 
+</li><ul><div id='twist-1-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Long Combinational Path'>Long Combinational Path</a></li>
+        <li><b>From:</b> host_en</li>
+        <li><b>To:</b> altsyncram:output_memory_rtl_0|altsyncram_hlo1:auto_generated|ram_block1a0~PORT_B_ADDRESS_STALL</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_en} -to {altsyncram:output_memory_rtl_0|altsyncram_hlo1:auto_generated|ram_block1a0~PORT_B_ADDRESS_STALL} -detail full_path -panel_name {Path 1 (Long Combinational Path)} -show_routing'>report timing</a></li>
+        <li><b>Extra levels of combinational logic:</b></li><ul><li>1</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Reduce the levels of combinational logic for the path from <b>host_en</b>
+        to <b>host_payload_q[14]</b> 
+</li><ul><div id='twist-2-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Long Combinational Path'>Long Combinational Path</a></li>
+        <li><b>From:</b> host_en</li>
+        <li><b>To:</b> host_payload_q[14]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[14]} -detail full_path -panel_name {Path 2 (Long Combinational Path)} -show_routing'>report timing</a></li>
+        <li><b>Extra levels of combinational logic:</b></li><ul><li>1</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Reduce the levels of combinational logic for the path from <b>host_en</b>
+        to <b>host_payload_q[26]</b> 
+</li><ul><div id='twist-3-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Long Combinational Path'>Long Combinational Path</a></li>
+        <li><b>From:</b> host_en</li>
+        <li><b>To:</b> host_payload_q[26]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[26]} -detail full_path -panel_name {Path 3 (Long Combinational Path)} -show_routing'>report timing</a></li>
+        <li><b>Extra levels of combinational logic:</b></li><ul><li>1</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Reduce the levels of combinational logic for the path from <b>host_en</b>
+        to <b>host_payload_q[17]</b> 
+</li><ul><div id='twist-4-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Long Combinational Path'>Long Combinational Path</a></li>
+        <li><b>From:</b> host_en</li>
+        <li><b>To:</b> host_payload_q[17]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[17]} -detail full_path -panel_name {Path 4 (Long Combinational Path)} -show_routing'>report timing</a></li>
+        <li><b>Extra levels of combinational logic:</b></li><ul><li>1</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Reduce the levels of combinational logic for the path from <b>host_en</b>
+        to <b>host_payload_q[27]</b> 
+</li><ul><div id='twist-5-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Long Combinational Path'>Long Combinational Path</a></li>
+        <li><b>From:</b> host_en</li>
+        <li><b>To:</b> host_payload_q[27]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[27]} -detail full_path -panel_name {Path 5 (Long Combinational Path)} -show_routing'>report timing</a></li>
+        <li><b>Extra levels of combinational logic:</b></li><ul><li>1</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Reduce the levels of combinational logic for the path from <b>host_en</b>
+        to <b>host_payload_q[12]</b> 
+</li><ul><div id='twist-6-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Long Combinational Path'>Long Combinational Path</a></li>
+        <li><b>From:</b> host_en</li>
+        <li><b>To:</b> host_payload_q[12]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[12]} -detail full_path -panel_name {Path 6 (Long Combinational Path)} -show_routing'>report timing</a></li>
+        <li><b>Extra levels of combinational logic:</b></li><ul><li>1</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Reduce the levels of combinational logic for the path from <b>host_en</b>
+        to <b>host_payload_q[18]</b> 
+</li><ul><div id='twist-7-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Long Combinational Path'>Long Combinational Path</a></li>
+        <li><b>From:</b> host_en</li>
+        <li><b>To:</b> host_payload_q[18]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[18]} -detail full_path -panel_name {Path 7 (Long Combinational Path)} -show_routing'>report timing</a></li>
+        <li><b>Extra levels of combinational logic:</b></li><ul><li>1</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Reduce the levels of combinational logic for the path from <b>host_en</b>
+        to <b>host_payload_q[16]</b> 
+</li><ul><div id='twist-8-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Long Combinational Path'>Long Combinational Path</a></li>
+        <li><b>From:</b> host_en</li>
+        <li><b>To:</b> host_payload_q[16]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[16]} -detail full_path -panel_name {Path 8 (Long Combinational Path)} -show_routing'>report timing</a></li>
+        <li><b>Extra levels of combinational logic:</b></li><ul><li>1</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Reduce the levels of combinational logic for the path from <b>host_en</b>
+        to <b>host_payload_q[15]</b> 
+</li><ul><div id='twist-9-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Long Combinational Path'>Long Combinational Path</a></li>
+        <li><b>From:</b> host_en</li>
+        <li><b>To:</b> host_payload_q[15]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[15]} -detail full_path -panel_name {Path 9 (Long Combinational Path)} -show_routing'>report timing</a></li>
+        <li><b>Extra levels of combinational logic:</b></li><ul><li>1</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;&#9733;</dt>
+    <dd>
+        Reduce the levels of combinational logic for the path from <b>host_en</b>
+        to <b>host_payload_q[28]</b> 
+</li><ul><div id='twist-10-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Long Combinational Path'>Long Combinational Path</a></li>
+        <li><b>From:</b> host_en</li>
+        <li><b>To:</b> host_payload_q[28]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[28]} -detail full_path -panel_name {Path 10 (Long Combinational Path)} -show_routing'>report timing</a></li>
+        <li><b>Extra levels of combinational logic:</b></li><ul><li>1</li></ul>
+</div>
+    </ul>
+    </dd>
+</dl>
+</div>
+
+<h2 style='background-color:#316AC5;color:white;padding:2px;font-size:8pt;'>Detailed Results
+
+</h2><div id='twist-Detailed Results' style='display:inline;'>
+
+<table id='output_table' class='sortable'>
+    <tr>
+        <th></th>
+        <th>Commands</th>
+        <th>From</th><th>To</th>
+        <th>Importance</th>
+        <th>Extra levels of combinational logic</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {altsyncram:output_memory_rtl_0|altsyncram_hlo1:auto_generated|ram_block1a0~PORT_B_ADDRESS_STALL} -detail full_path -panel_name {Path 1 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td><span id='tip'><a href='#'>altsyncram:output..._B_ADDRESS_STALL<span>altsyncram:output_memory_rtl_0|altsyncram_hlo1:auto_generated|ram_block1a0~PORT_B_ADDRESS_STALL</span></a></span></td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>2</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[14]} -detail full_path -panel_name {Path 2 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[14]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>3</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[26]} -detail full_path -panel_name {Path 3 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[26]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>4</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[17]} -detail full_path -panel_name {Path 4 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[17]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>5</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[27]} -detail full_path -panel_name {Path 5 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[27]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>6</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[12]} -detail full_path -panel_name {Path 6 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[12]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>7</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[18]} -detail full_path -panel_name {Path 7 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[18]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>8</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[16]} -detail full_path -panel_name {Path 8 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[16]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>9</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[15]} -detail full_path -panel_name {Path 9 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[15]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>10</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[28]} -detail full_path -panel_name {Path 10 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[28]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>11</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[29]} -detail full_path -panel_name {Path 11 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[29]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>12</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[20]} -detail full_path -panel_name {Path 12 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[20]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>13</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[22]} -detail full_path -panel_name {Path 13 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[22]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>14</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[25]} -detail full_path -panel_name {Path 14 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[25]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>15</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[24]} -detail full_path -panel_name {Path 15 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[24]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>16</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[19]} -detail full_path -panel_name {Path 16 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[19]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>17</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[30]} -detail full_path -panel_name {Path 17 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[30]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>18</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[31]} -detail full_path -panel_name {Path 18 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[31]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>19</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {output_memory_rtl_0_bypass[14]} -detail full_path -panel_name {Path 19 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>output_memory_rtl_0_bypass[14]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>20</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {output_memory_rtl_0_bypass[4]} -detail full_path -panel_name {Path 20 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>output_memory_rtl_0_bypass[4]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>21</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {output_memory_rtl_0_bypass[2]} -detail full_path -panel_name {Path 21 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>output_memory_rtl_0_bypass[2]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>22</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {output_memory_rtl_0_bypass[10]} -detail full_path -panel_name {Path 22 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>output_memory_rtl_0_bypass[10]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>23</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {output_memory_rtl_0_bypass[12]} -detail full_path -panel_name {Path 23 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>output_memory_rtl_0_bypass[12]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>24</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {output_memory_rtl_0_bypass[8]} -detail full_path -panel_name {Path 24 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>output_memory_rtl_0_bypass[8]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>25</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {output_memory_rtl_0_bypass[6]} -detail full_path -panel_name {Path 25 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>output_memory_rtl_0_bypass[6]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>26</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[21]} -detail full_path -panel_name {Path 26 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[21]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>27</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[13]} -detail full_path -panel_name {Path 27 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[13]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>28</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_payload_q[23]} -detail full_path -panel_name {Path 28 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_payload_q[23]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>29</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {output_memory~0} -detail full_path -panel_name {Path 29 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>output_memory~0</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>30</td>
+      <td><a href='tcl:taw_report_timing -from {op[36]~SynDup} -to {math_a_q[24][20]} -detail full_path -panel_name {Path 30 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>op[36]~SynDup</td><td>math_a_q[24][20]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>31</td>
+      <td><a href='tcl:taw_report_timing -from {vector_q[508]} -to {math_a_q[5][4]} -detail full_path -panel_name {Path 31 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>vector_q[508]</td><td>math_a_q[5][4]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>32</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_data_q[5]} -detail full_path -panel_name {Path 32 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_data_q[5]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>33</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_data_q[6]~DUPLICATE} -detail full_path -panel_name {Path 33 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_data_q[6]~DUPLICATE</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>34</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_data_q[6]} -detail full_path -panel_name {Path 34 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_data_q[6]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>35</td>
+      <td><a href='tcl:taw_report_timing -from {vector_q[53]} -to {math_a_q[18][5]} -detail full_path -panel_name {Path 35 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>vector_q[53]</td><td>math_a_q[18][5]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>36</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_data_q[1]~DUPLICATE} -detail full_path -panel_name {Path 36 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_data_q[1]~DUPLICATE</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>37</td>
+      <td><a href='tcl:taw_report_timing -from {host_en} -to {host_data_q[1]} -detail full_path -panel_name {Path 37 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>host_en</td><td>host_data_q[1]</td>
+      <td sorttable_customkey='52.313'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>38</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[358]} -detail full_path -panel_name {Path 38 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[358]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>39</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[358]~DUPLICATE} -detail full_path -panel_name {Path 39 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[358]~DUPLICATE</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>40</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[349]} -detail full_path -panel_name {Path 40 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[349]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>41</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[328]} -detail full_path -panel_name {Path 41 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[328]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>42</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[317]} -detail full_path -panel_name {Path 42 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[317]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>43</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[334]} -detail full_path -panel_name {Path 43 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[334]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>44</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[319]} -detail full_path -panel_name {Path 44 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[319]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>45</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[333]} -detail full_path -panel_name {Path 45 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[333]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>46</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[325]} -detail full_path -panel_name {Path 46 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[325]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>47</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[327]} -detail full_path -panel_name {Path 47 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[327]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>48</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[318]} -detail full_path -panel_name {Path 48 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[318]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>49</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[321]} -detail full_path -panel_name {Path 49 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[321]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>50</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[323]} -detail full_path -panel_name {Path 50 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[323]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>51</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[347]} -detail full_path -panel_name {Path 51 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[347]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>52</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[342]} -detail full_path -panel_name {Path 52 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[342]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>53</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[337]} -detail full_path -panel_name {Path 53 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[337]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>54</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[357]} -detail full_path -panel_name {Path 54 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[357]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>55</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[345]} -detail full_path -panel_name {Path 55 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[345]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>56</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[322]} -detail full_path -panel_name {Path 56 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[322]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>57</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[356]} -detail full_path -panel_name {Path 57 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[356]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>58</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[355]} -detail full_path -panel_name {Path 58 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[355]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>59</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[320]} -detail full_path -panel_name {Path 59 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[320]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>60</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[332]} -detail full_path -panel_name {Path 60 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[332]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>61</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[329]} -detail full_path -panel_name {Path 61 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[329]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>62</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[378]} -detail full_path -panel_name {Path 62 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[378]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>63</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[309]} -detail full_path -panel_name {Path 63 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[309]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>64</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[294]} -detail full_path -panel_name {Path 64 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[294]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>65</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[350]} -detail full_path -panel_name {Path 65 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[350]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>66</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[343]} -detail full_path -panel_name {Path 66 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[343]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>67</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[298]} -detail full_path -panel_name {Path 67 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[298]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>68</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[308]} -detail full_path -panel_name {Path 68 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[308]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>69</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[307]} -detail full_path -panel_name {Path 69 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[307]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>70</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[306]} -detail full_path -panel_name {Path 70 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[306]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>71</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[301]} -detail full_path -panel_name {Path 71 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[301]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>72</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[303]} -detail full_path -panel_name {Path 72 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[303]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>73</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[219]} -detail full_path -panel_name {Path 73 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[219]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>74</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[304]} -detail full_path -panel_name {Path 74 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[304]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>75</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[302]} -detail full_path -panel_name {Path 75 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[302]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>76</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[310]} -detail full_path -panel_name {Path 76 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[310]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>77</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[335]} -detail full_path -panel_name {Path 77 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[335]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>78</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[324]} -detail full_path -panel_name {Path 78 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[324]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>79</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[330]} -detail full_path -panel_name {Path 79 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[330]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>80</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[377]} -detail full_path -panel_name {Path 80 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[377]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>81</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[374]} -detail full_path -panel_name {Path 81 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[374]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>82</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[372]} -detail full_path -panel_name {Path 82 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[372]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>83</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[376]} -detail full_path -panel_name {Path 83 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[376]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>84</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[372]~DUPLICATE} -detail full_path -panel_name {Path 84 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[372]~DUPLICATE</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>85</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[193]} -detail full_path -panel_name {Path 85 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[193]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>86</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[193]~DUPLICATE} -detail full_path -panel_name {Path 86 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[193]~DUPLICATE</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>87</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[196]} -detail full_path -panel_name {Path 87 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[196]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>88</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[194]} -detail full_path -panel_name {Path 88 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[194]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>89</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[192]~DUPLICATE} -detail full_path -panel_name {Path 89 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[192]~DUPLICATE</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>90</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[196]~DUPLICATE} -detail full_path -panel_name {Path 90 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[196]~DUPLICATE</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>91</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[192]} -detail full_path -panel_name {Path 91 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[192]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>92</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[229]} -detail full_path -panel_name {Path 92 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[229]</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+    <tr>
+      <td>93</td>
+      <td><a href='tcl:taw_report_timing -from {reset_release:u_reset|core_rst_n} -to {vector_q[229]~DUPLICATE} -detail full_path -panel_name {Path 93 (Long Combinational Path)} -show_routing'>report timing</a></td>
+      <td>reset_release:u_reset|core_rst_n</td><td>vector_q[229]~DUPLICATE</td>
+      <td sorttable_customkey='44.8754'>&#9733;&#9733;&#9733;</td>
+      <td>1<br></td>
+    </tr>
+
+</table>
+</div>
+
+</body>
+</html>

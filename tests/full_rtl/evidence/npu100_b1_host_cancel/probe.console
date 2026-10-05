@@ -1,0 +1,36 @@
+Reading pref.tcl
+
+# 2025.2
+
+# ** Note: (vsim-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# vsim -c -onfinish exit -voptargs="-duselectreport=tests/full_rtl/evidence/npu100_b1_host_cancel/design_units.json" -L tests/full_rtl/build/questa25_model/altera_mf_ver -L tests/full_rtl/build/npu100_b1_host_cancel -lib tests/full_rtl/build/npu100_b1_host_cancel -l D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\evidence\npu100_b1_host_cancel\probe.log tb_host_cancel_contract -do "run -all; quit -f" 
+# Start time: 11:04:57 on Oct 05,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Note: (vopt-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# //  Questa Altera Starter FPGA Edition-64
+# //  Version 2025.2 win64 May 31 2025
+# //
+# // Unpublished work. Copyright 2025 Siemens
+# //
+# // This material contains trade secrets or otherwise confidential information
+# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+# // "SISW"), or its licensors. Access to and use of this information is strictly
+# // limited as set forth in the Customer's applicable agreements with SISW.
+# //
+# // This material may not be copied, distributed, or otherwise disclosed outside
+# // of the Customer's facilities without the express written permission of SISW,
+# // and may not be used in any way not expressly authorized by SISW.
+# //
+# Loading sv_std.std
+# Loading work.llm_pkg(fast)
+# Loading work.npu_pkg(fast)
+# Loading work.tb_host_cancel_contract(fast)
+# Loading work.quartus_word_ram(fast__1)
+# Loading work.pipelined_word_ram(fast__2)
+# Loading work.pipelined_word_ram(fast__3)
+# run -all
+# HOST_CANCEL_CONTRACT_PASS phases=7 checks=14 pre_execute_cancel=1 accepted_write_commits=6 own_commit_before_ack=7 idle_edges=1
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/host_cancel_contract.sv(64)
+#    Time: 3590 ns  Iteration: 1  Instance: /tb_host_cancel_contract
+# End time: 11:05:03 on Oct 05,2026, Elapsed time: 0:00:06
+# Errors: 0, Warnings: 0

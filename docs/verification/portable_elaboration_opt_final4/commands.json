@@ -1,0 +1,18 @@
+{
+  "executable": "C:/altera_lite/25.1std/questa_fse/win64/vsim.exe",
+  "arguments": [
+    "-c",
+    "-onfinish",
+    "exit",
+    "-lib",
+    "tests/full_rtl/build/opt_final4",
+    "-voptargs=-duselectreport=docs/verification/portable_elaboration_opt_final4/design_units.json",
+    "-gUSE_QUARTUS_MEMORY=0",
+    "-l",
+    "D:\\2151097_Nguyen Nhut Khanh\\docs\\verification\\portable_elaboration_opt_final4\\elaborate.log",
+    "llm_soc",
+    "-do",
+    "run 0; quit -f"
+  ],
+  "started_utc": "2026-10-05T10:13:40.7980534Z"
+}

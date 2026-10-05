@@ -1,0 +1,44 @@
+{
+  "status": "STOPPED_AFTER_FIRST_FREQUENCY_RESULT",
+  "recorded_utc": "2026-10-04T18:44:28.802052+00:00",
+  "timing_status": "FAIL",
+  "worst_fmax_mhz": 91.15,
+  "baseline_fmax_mhz": 90.61,
+  "fmax_delta_mhz": 0.54,
+  "checks_passed": 18,
+  "checks_total": 20,
+  "resources": {
+    "alms": 54651,
+    "registers": 56075,
+    "block_memory_bits": 9515648,
+    "ram_blocks": 1186,
+    "dsp_blocks": 0,
+    "pins": 186
+  },
+  "resource_deltas": {
+    "alms": 2329,
+    "registers": 6692,
+    "ram_blocks": 0,
+    "block_memory_bits": 0
+  },
+  "source_and_report_hash_audit": {
+    "status": "PASS",
+    "rtl_assets": 34,
+    "archived_reports": 63,
+    "zip_members": 37,
+    "unchanged_sdc_bytes": true
+  },
+  "unit_status": "SIX_GROUPS_PASS_GRAPH_CANCELLED_AT_REQUESTED_STOP",
+  "graph_evidence": "tests/full_rtl/evidence/npu100_a2_stopped/results.json",
+  "application_gate": {
+    "status": "FAIL",
+    "exit_code": 1,
+    "reason": "Fmax is below 100 MHz",
+    "log_sha256": "29e05abafab82d647b77b3bfdf045b78f9ddf9882867de3a6ed4eb0dc4bf7fc5"
+  },
+  "not_executed": [
+    "run_portable_100mhz.ps1",
+    "run_host_cancel_100mhz.ps1"
+  ],
+  "pretrained_application_executed": false
+}

@@ -1,0 +1,12 @@
+{
+  "archived_utc": "2026-10-05T04:05:59.6322760Z",
+  "report_path_count": 200,
+  "family_path_count": 20,
+  "physical_register_audit": true,
+  "files": {
+    "archive_sources.py": "4424e5745b9668c79fab28033acc244dce6e5bf57d2f93936f9f7458a890be7e",
+    "extract.tcl": "39642ca28e431af2f5d092e6dc4e1524c70dbf37f2bd2d3201ef14abfedbb0b9",
+    "record.py": "89e96917370906c3bbbf35739ca1a313f4bcdedb6f4611d10568dc8d42be0be5",
+    "run.ps1": "1dc0d127800a0ac69aa716b4d08bd74c3640e121d8c4082915573c2ec1e80d89"
+  }
+}

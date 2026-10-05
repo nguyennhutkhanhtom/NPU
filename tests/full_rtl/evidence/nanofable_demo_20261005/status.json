@@ -1,0 +1,9 @@
+{
+  "stage": "WAITING_FOR_TIMING",
+  "message": "Awaiting the fresh full-top synthesis, fit and all-corner STA run.",
+  "updated_utc": "2026-10-05T14:52:39.2761284Z",
+  "timing_manifest": "docs/verification/timing/nanofable_demo_20261005_retry1/manifest.json",
+  "prompt": "Once upon a time, Lily found a tiny kitten.",
+  "max_new_tokens": 96,
+  "seed": 7
+}

@@ -1,0 +1,48 @@
+[
+  {
+    "started_at_utc": "2026-10-04T17:50:30.8969503Z",
+    "stage": "map",
+    "arguments": [
+      "--read_settings_files=on",
+      "--write_settings_files=off",
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ],
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_map.exe"
+  },
+  {
+    "started_at_utc": "2026-10-04T17:55:19.4034280Z",
+    "stage": "fit",
+    "arguments": [
+      "--read_settings_files=on",
+      "--write_settings_files=off",
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ],
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_fit.exe"
+  },
+  {
+    "started_at_utc": "2026-10-04T18:33:51.4177988Z",
+    "stage": "sta",
+    "arguments": [
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ],
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_sta.exe"
+  },
+  {
+    "started_at_utc": "2026-10-04T18:35:45.0468305Z",
+    "stage": "extract",
+    "arguments": [
+      "-t",
+      "D:\\2151097_Nguyen Nhut Khanh\\tools\\timing\\extract.tcl",
+      "D:\\2151097_Nguyen Nhut Khanh\\docs\\verification\\timing\\npu100_a3",
+      "sdc",
+      "D:\\2151097_Nguyen Nhut Khanh\\quartus\\llm_soc"
+    ],
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_sta.exe"
+  }
+]

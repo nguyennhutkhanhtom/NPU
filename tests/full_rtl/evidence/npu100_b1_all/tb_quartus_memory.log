@@ -1,0 +1,28 @@
+# ** Note: (vsim-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# vsim -c -onfinish exit -voptargs="-duselectreport=tests/full_rtl/build/npu100_b1_all_tb_quartus_memory_design_units.json" -L tests/full_rtl/build/questa25_model/altera_mf_ver -L tests/full_rtl/build/npu100_b1_all -lib tests/full_rtl/build/npu100_b1_all -l D:\2151097_Nguyen Nhut Khanh\tests\full_rtl\build\tb_quartus_memory.log tb_quartus_memory -do "run -all; quit -f" 
+# Start time: 09:26:37 on Oct 05,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Note: (vopt-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# //  Questa Altera Starter FPGA Edition-64
+# //  Version 2025.2 win64 May 31 2025
+# //
+# // Unpublished work. Copyright 2025 Siemens
+# //
+# // This material contains trade secrets or otherwise confidential information
+# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+# // "SISW"), or its licensors. Access to and use of this information is strictly
+# // limited as set forth in the Customer's applicable agreements with SISW.
+# //
+# // This material may not be copied, distributed, or otherwise disclosed outside
+# // of the Customer's facilities without the express written permission of SISW,
+# // and may not be used in any way not expressly authorized by SISW.
+# //
+# Loading sv_std.std
+# Loading work.tb_quartus_memory(fast)
+# Loading work.quartus_word_ram(fast__3)
+# run -all
+# QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_memory_ip.sv(138)
+#    Time: 7740 ns  Iteration: 1  Instance: /tb_quartus_memory
+# End time: 09:26:40 on Oct 05,2026, Elapsed time: 0:00:03
+# Errors: 0, Warnings: 0

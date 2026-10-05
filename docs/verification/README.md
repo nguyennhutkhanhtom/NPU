@@ -2,11 +2,20 @@
 
 [Project](../../README.md) → [Tài liệu](../README.md) → **Kiểm chứng**
 
-Full top `llm_soc` có [7 nhóm unit PASS lịch sử](../../tests/full_rtl/evidence/logic6q5_all_units/results.json)
+Full top hiện tại `llm_soc` có [7 nhóm PASS](../../tests/full_rtl/evidence/opt_final4_all/results.json),
+graph 1.066.965 compute clocks và [post-fit timing PASS](timing/opt_fulltop7/manifest.json)
+với Fmax thấp nhất 100,78 MHz, mọi slack không âm, TNS = 0 và không có path
+unconstrained. [Host cancellation](../../tests/full_rtl/evidence/opt_host1/results.json)
+và [portable elaboration](portable_elaboration_opt_final4/results.json) cũng PASS.
+[Lệnh tái hiện và trạng thái hiện tại](optimization_status.md) ·
+[Báo cáo triển khai](../reviews/rtl_change_review_v3.md).
+Chưa chạy pretrained application; Quartus là backend demo EDA, không phải ASIC signoff.
+
+Checkpoint cũ có [7 nhóm unit PASS lịch sử](../../tests/full_rtl/evidence/logic6q5_all_units/results.json)
 trên snapshot35source, dùng RAM Quartus25.1 thật và Questa2025.2,0compile/runtime
 warnings. Graph có2prompt/3token doRTLchọn/16layer runs/causal checks. Snapshot33assets đã refactor theo [coding rules](../design/rtl_style.md), có [7 nhóm PASS](../../tests/full_rtl/evidence/explicit3_all_units/results.json)
 và fit hoàn tất: timing explicit2 FAIL93,28MHz/setup/removal. Logic5/6 FAIL99,07MHz;logic7 FAIL96,04MHz. Không có full-top
-100MHz PASS và chưa chạy pretrained application. [Timing hub](timing/README.md)
+100MHz PASS tại checkpoint đó và chưa chạy pretrained application. [Timing hub](timing/README.md)
 ghi device, constraints, source/config hashes, critical paths và mọi corner.
 Các số liệu legacy bên dưới thuộc `matmulfree`, không phải gate cho `llm_soc`.
 
