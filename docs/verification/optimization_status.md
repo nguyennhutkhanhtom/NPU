@@ -13,15 +13,15 @@ manifest, source hashes và log là bằng chứng gốc.
 | Graph tổng hợp | 1.066.965 compute clocks; 2 prompt token, 3 token mới, 16 lượt transformer layer | Fixture tổng hợp, giữ các numeric/token/causal/traffic checks |
 | Host cancellation | [opt_host1: PASS](../../tests/full_rtl/evidence/opt_host1/results.json) | Cùng RTL; accepted write và ACK sau commit |
 | Portable elaboration | [opt_final4: PASS](portable_elaboration_opt_final4/results.json) | Cùng RTL; USE_QUARTUS_MEMORY=0, 0 errors/warnings |
-| Timing đã hoàn tất | [opt_fulltop7: PASS](timing/opt_fulltop7/manifest.json), minimum Fmax 100,78 MHz | RTL khớp; **QSF hiện tại khác QSF đã đo** |
-| Timing cho lượt demo mới | [Trạng thái workflow](../../tests/full_rtl/evidence/nanofable_long_20261005/status.json): TIMING_RUNNING | Chưa có manifest hoàn tất cho nanofable_long_20261005 lúc rà soát |
-| Application pretrained | Chưa có application_results.json PASS | Workflow vẫn chờ gate timing của cấu hình hiện tại |
+| Timing đã hoàn tất | [nanofable_max_20261006: PASS](timing/nanofable_max_20261006/manifest.json), minimum Fmax 100,78 MHz | Khớp toàn bộ RTL/QSF/QPF/SDC hiện tại; cả bốn corner đạt gate |
+| Application pretrained | [Trạng thái workflow](../../tests/full_rtl/evidence/nanofable_max_20261006/status.json): APPLICATION_RUNNING | Gate PASS; đang chạy 4 prompt token + 124 token mới, context RTL 128 |
 
-QSF hiện tại bổ sung metadata version/partition so với archive `opt_fulltop7`.
-Dù RTL giống nhau, runner yêu cầu cấu hình khớp chính xác; manifest cũ vì vậy
-chưa mở được gate cho application hiện tại. Không sửa hash, constraints hay
-ngưỡng kiểm tra để bỏ qua điều kiện này. Trạng thái workflow là lần ghi cuối
-của script; muốn biết tiến trình thực tế cần đọc log và trạng thái process.
+Lượt `nanofable_max_20261006` đã đo lại cấu hình có metadata version/partition
+hiện tại và thu được cùng Fmax, slack và resources với `opt_fulltop7`.
+Gate đã xác minh source/config, report hashes và all-seven unit evidence;
+export/reference checkpoint chỉ bắt đầu sau bước đó. Không sửa hash, constraints
+hay ngưỡng kiểm tra để bỏ qua điều kiện này. Trạng thái workflow là lần ghi cuối
+của script; kiểm tra process để biết tiến trình còn chạy hay đã kết thúc.
 
 ## Số liệu của checkpoint tối ưu
 

@@ -1,3 +1,0 @@
-SIGMOID_ROM_PASS: 257 samples, endpoints, monotonicity, adjacent_delta<=512, symmetry and RNE
-ROM_VALIDATION_PASS: missing_assets=2 corrupt_assets=2
-REFERENCE_PASS {"host_cases": 168, "host_commands": 23827, "host_groups": {"Norm": 43, "Ternary": 65, "Rowwise": 57, "HostDecode": 3}, "sigmoid_cases": 1638400, "sigmoid_formats": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]}

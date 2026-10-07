@@ -1,0 +1,138 @@
+Statistics: 40 0 3632 0 0 0.148
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+pc_debug[4]~reg0 pc_debug[4] 0.339539 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[4]~reg0 pc_debug[4](n) 0.339539 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[2]~reg0 pc_debug[2] 0.335704 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[2]~reg0 pc_debug[2](n) 0.335704 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[30]~reg0 host_rdata[30] 0.336632 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[30]~reg0 host_rdata[30](n) 0.336632 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[6]~reg0 pc_debug[6] 0.337561 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[6]~reg0 pc_debug[6](n) 0.337561 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[8]~reg0 instr_debug[8] 0.333968 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[8]~reg0 instr_debug[8](n) 0.333968 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[9]~reg0 instr_debug[9] 0.334778 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[9]~reg0 instr_debug[9](n) 0.334778 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_ready~reg0 host_ready 0.336980 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_ready~reg0 host_ready(n) 0.336980 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[26]~reg0 host_rdata[26] 0.336980 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[26]~reg0 host_rdata[26](n) 0.336980 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[5]~reg0 pc_debug[5] 0.337096 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[5]~reg0 pc_debug[5](n) 0.337096 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+error~reg0 error 0.335936 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+error~reg0 error(n) 0.335936 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[27]~reg0 host_rdata[27] 0.336284 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[27]~reg0 host_rdata[27](n) 0.336284 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[1]~reg0 pc_debug[1] 0.334778 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[1]~reg0 pc_debug[1](n) 0.334778 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[10]~reg0 instr_debug[10] 0.333275 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[10]~reg0 instr_debug[10](n) 0.333275 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[11]~reg0 instr_debug[11] 0.335241 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[11]~reg0 instr_debug[11](n) 0.335241 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[3]~reg0 pc_debug[3] 0.334662 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[3]~reg0 pc_debug[3](n) 0.334662 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[7]~reg0 instr_debug[7] 0.333391 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[7]~reg0 instr_debug[7](n) 0.333391 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[10]~reg0 host_rdata[10] 0.310360 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[10]~reg0 host_rdata[10](n) 0.310360 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[22]~reg0 host_rdata[22] 0.309692 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[22]~reg0 host_rdata[22](n) 0.309692 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[12]~reg0 host_rdata[12] 0.308358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[12]~reg0 host_rdata[12](n) 0.308358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[11]~reg0 host_rdata[11] 0.308914 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[11]~reg0 host_rdata[11](n) 0.308914 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+pc_debug[4]~reg0 pc_debug[4] 0.339539 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[4]~reg0 pc_debug[4](n) 0.339539 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[2]~reg0 pc_debug[2] 0.335704 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[2]~reg0 pc_debug[2](n) 0.335704 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[30]~reg0 host_rdata[30] 0.336632 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[30]~reg0 host_rdata[30](n) 0.336632 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[6]~reg0 pc_debug[6] 0.337561 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[6]~reg0 pc_debug[6](n) 0.337561 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[8]~reg0 instr_debug[8] 0.333968 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[8]~reg0 instr_debug[8](n) 0.333968 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[9]~reg0 instr_debug[9] 0.334778 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[9]~reg0 instr_debug[9](n) 0.334778 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_ready~reg0 host_ready 0.336980 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_ready~reg0 host_ready(n) 0.336980 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[26]~reg0 host_rdata[26] 0.336980 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[26]~reg0 host_rdata[26](n) 0.336980 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[5]~reg0 pc_debug[5] 0.337096 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[5]~reg0 pc_debug[5](n) 0.337096 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+error~reg0 error 0.335936 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+error~reg0 error(n) 0.335936 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[27]~reg0 host_rdata[27] 0.336284 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[27]~reg0 host_rdata[27](n) 0.336284 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[1]~reg0 pc_debug[1] 0.334778 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[1]~reg0 pc_debug[1](n) 0.334778 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[10]~reg0 instr_debug[10] 0.333275 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[10]~reg0 instr_debug[10](n) 0.333275 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[11]~reg0 instr_debug[11] 0.335241 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[11]~reg0 instr_debug[11](n) 0.335241 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[3]~reg0 pc_debug[3] 0.334662 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[3]~reg0 pc_debug[3](n) 0.334662 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[7]~reg0 instr_debug[7] 0.333391 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+instr_debug[7]~reg0 instr_debug[7](n) 0.333391 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[10]~reg0 host_rdata[10] 0.310360 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[10]~reg0 host_rdata[10](n) 0.310360 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[22]~reg0 host_rdata[22] 0.309692 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[22]~reg0 host_rdata[22](n) 0.309692 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[12]~reg0 host_rdata[12] 0.308358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[12]~reg0 host_rdata[12](n) 0.308358 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[11]~reg0 host_rdata[11] 0.308914 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[11]~reg0 host_rdata[11](n) 0.308914 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

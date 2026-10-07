@@ -17,10 +17,11 @@ trong mô phỏng RTL. Reference số nguyên trên CPU dùng để kiểm tra t
 | Checkpoint/tokenizer | tests/language_demo/upstream, SHA-256 khớp upstream_manifest.json |
 | Evidence | Cả bảy nhóm PASS và full-top all-corner timing đạt ≥100 MHz, đúng RTL/config |
 
-**Trạng thái lúc rà soát 06/10/2026:** QSF hiện tại khác `opt_fulltop7` và chưa có
-manifest hoàn tất cho lượt timing demo mới. Các bước export/reference và
-application phải chờ gate PASS. [Trang trạng thái](../verification/optimization_status.md)
-ghi evidence hiện có. Dùng một phiên Questa tại một thời điểm; runner application
+**Timing ngày 06/10/2026:** [nanofable_max_20261006](../verification/timing/nanofable_max_20261006/manifest.json)
+đã hoàn tất và khớp RTL/QSF/QPF/SDC hiện tại: minimum Fmax **100,78 MHz**,
+cả bốn corner PASS. Gate cũng xác minh đủ bảy nhóm unit/graph trước khi chạy
+checkpoint. [Trang trạng thái](../verification/optimization_status.md)
+ghi kết quả application. Dùng một phiên Questa tại một thời điểm; runner application
 sử dụng các tên build cố định nên không chạy hai demo song song.
 
 ## Các bước chạy
@@ -56,12 +57,11 @@ và kiểm tra 12 file đã pin. Bước này chưa thực thi checkpoint infere
 
 ### 3. Chọn manifest đúng và kiểm tra gate
 
-Chỉ chọn file `manifest.json` của một lượt timing đã hoàn tất. Ví dụ dưới đây
-là đường dẫn workflow demo đang chờ; file phải tồn tại và gate phải PASS trước
-khi tiếp tục.
+Chỉ chọn file `manifest.json` của một lượt timing đã hoàn tất. Manifest dưới đây
+đã PASS trên bản RTL/config ngày 06/10/2026; luôn kiểm tra lại gate trước khi chạy.
 
 ```powershell
-$timingManifest = 'docs/verification/timing/nanofable_long_20261005/manifest.json'
+$timingManifest = 'docs/verification/timing/nanofable_max_20261006/manifest.json'
 if (-not (Test-Path -LiteralPath $timingManifest)) {
     throw 'Timing chưa hoàn tất. Xem status/log của workflow hoặc tạo lượt timing mới.'
 }
@@ -111,6 +111,27 @@ sau `MinNew`; không phải lần nào cũng sinh đủ `NewTokens`. Exporter ki
 `prompt token count + NewTokens ≤128`; số token của prompt không phải số từ.
 Chọn prompt tiếng Anh ngắn cho checkpoint kể chuyện này. Độ dài mô phỏng trên PC
 phụ thuộc prompt/context và số token, khác với thời gian tính theo clock phần cứng.
+
+### 6. Dùng hết context của RTL hiện tại
+
+Checkpoint gốc khai báo context **512 token** trong `upstream/config.json`.
+RTL hiện tại hỗ trợ **128 token**, tính cả prompt và continuation. Vì vậy,
+demo tối đa của bản RTL này dùng prompt `Once upon a time` (4 token) và sinh
+124 token mới; đây là giới hạn của RTL đang kiểm chứng.
+
+```powershell
+$appArgs.Prompt = 'Once upon a time'
+$appArgs.NewTokens = 124
+$appArgs.MinNew = 124
+$appArgs.Temperature = 166
+$appArgs.Seed = 7
+& tests/full_rtl/run_application.ps1 @appArgs
+```
+
+`MinNew=124` giữ EOS bị mask trong toàn bộ continuation để dùng đủ 128 vị trí.
+Đây là cấu hình sampling; token kết quả vẫn phải khớp reference số nguyên.
+Muốn dùng đủ context 512 của checkpoint cần mở rộng RTL, memory/address geometry,
+exporter và testbench, rồi chạy lại các gate trước application.
 
 ## Đọc tiến độ và kết quả
 

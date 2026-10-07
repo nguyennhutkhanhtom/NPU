@@ -12,7 +12,9 @@ legacy. Report timing của core legacy không xác minh toàn graph llm_soc.
 
 Source/config hashes phải khớp workspace. Ví dụ `opt_fulltop7` có RTL khớp
 regression hiện tại nhưng QSF đã khác; Fmax của archive vẫn là kết quả hợp lệ
-cho checkpoint đó, còn gate application hiện tại cần manifest configuration mới.
+cho checkpoint đó. Lượt [nanofable_max_20261006](nanofable_max_20261006/manifest.json)
+đã đo lại đúng cấu hình hiện tại và PASS ở cả bốn corner, với minimum Fmax
+100,78 MHz; kết quả slack/resources trùng với bảng `opt_fulltop7` bên dưới.
 
 ## Lệnh đo
 

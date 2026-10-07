@@ -1,9 +1,0 @@
-{
-  "status": "CANCELLED",
-  "reason": "Switch to installed official Questa2025 optimization; preserve all testcase/numeric/causal expectations. Signed-minimum literal spelling will be made explicit for new compiler warnings. No assertion failure or graph PASS claimed.",
-  "cancelled_utc": "2026-10-04T02:29:02.4189960Z",
-  "log_sha256": "36a111125debcb568b8d9ace087fcad71cfba3a6e1f17bf524f2451ec1cb72ce",
-  "snapshot_sha256": "8cb045086c8705d9802132eaff29c9525a81a768925cd220c94e05539c2cd74d",
-  "old_model": "ModelSimIntelStarter20.1 with official Quartus25.1 RAM model",
-  "replacement": "QuestaAlteraStarter2025.2 with official Quartus25.1 RAM, including elaboration design-unit report"
-}

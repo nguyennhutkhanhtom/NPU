@@ -1,7 +1,0 @@
-Traceback (most recent call last):
-  File "D:\2151097_Nguyen Nhut Khanh\tests\reference.py", line 378, in <module>
-    verify_rom(args.rtl)
-    ~~~~~~~~~~^^^^^^^^^^
-  File "D:\2151097_Nguyen Nhut Khanh\tests\reference.py", line 29, in verify_rom
-    raise ValueError(f'Incorrect ROM: {path}')
-ValueError: Incorrect ROM: D:\2151097_Nguyen Nhut Khanh\Verilog Source code\sigmoid_lut.svh

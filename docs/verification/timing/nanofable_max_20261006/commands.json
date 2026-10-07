@@ -1,0 +1,49 @@
+[
+  {
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_map.exe",
+    "started_at_utc": "2026-10-05T18:28:33.2301412Z",
+    "stage": "map",
+    "arguments": [
+      "--read_settings_files=on",
+      "--write_settings_files=off",
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ]
+  },
+  {
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_fit.exe",
+    "started_at_utc": "2026-10-05T18:34:09.7172777Z",
+    "stage": "fit",
+    "arguments": [
+      "--read_settings_files=on",
+      "--write_settings_files=off",
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ]
+  },
+  {
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_sta.exe",
+    "started_at_utc": "2026-10-05T19:22:37.4263819Z",
+    "stage": "sta",
+    "arguments": [
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ]
+  },
+  {
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_sta.exe",
+    "started_at_utc": "2026-10-05T19:24:35.5617486Z",
+    "stage": "extract",
+    "arguments": [
+      "-t",
+      "D:\\2151097_Nguyen Nhut Khanh\\tools\\timing\\extract.tcl",
+      "D:\\2151097_Nguyen Nhut Khanh\\docs\\verification\\timing\\nanofable_max_20261006",
+      "sdc",
+      "D:\\2151097_Nguyen Nhut Khanh\\quartus\\llm_soc",
+      "40"
+    ]
+  }
+]
