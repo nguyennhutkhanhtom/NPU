@@ -5,7 +5,7 @@ import sys
 import re
 from datetime import datetime, timezone
 from hashlib import sha256
-from check_gate import check_gate
+from check_gate import application_context
 from memory_model import verify_model, verify_design_units
 
 HERE = Path(__file__).resolve().parent
@@ -15,11 +15,14 @@ ROOT = HERE.parents[1]
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--timing", required=True, type=Path)
+    parser.add_argument("--skip-gate", action="store_true")
     args = parser.parse_args()
-    gate = check_gate(args.timing)
+    gate = application_context(args.timing, args.skip_gate)
     sys.path.insert(0, str(ROOT/"tests/language_demo/packages"))
     from tokenizers import Tokenizer
     reference = json.loads((HERE/"build/reference.json").read_text())
+    gate_status = "SKIPPED" if args.skip_gate else "PASS"
+    assert reference.get("hardware_gate", "PASS") == gate_status, "Application gate mode changed since export"
     assert reference["rtl_sources"] == gate["rtl_sources"], "Application was prepared for different RTL"
     assert reference["timing_manifest_sha256"] == sha256(args.timing.read_bytes()).hexdigest()
     memory_manifest = Path(reference["memory_model_manifest"])
@@ -52,7 +55,8 @@ def main():
     assert tokens == reference["expected_ids"]
     tokenizer = Tokenizer.from_file(str(ROOT/"tests/language_demo/upstream/tokenizer.json"))
     text = tokenizer.decode(tokens)
-    result = {"status":"PASS", "verification":"Exact RTL/reference continuation token matching",
+    result = {"status":"PASS", "hardware_gate":gate_status,
+              "verification":"Exact RTL/reference continuation token matching",
               "text_quality":{"status":"NOT_ASSESSED", "note":"Token matching alone does not establish a meaningful coherent paragraph; inspect the actual RTL-decoded text separately."},
               "verified_utc":datetime.now(timezone.utc).isoformat(),
               "execution":"Entire prefill/decode graph and token selection on RTL; CPU host only loads data/tokenizes",
@@ -65,9 +69,11 @@ def main():
               "application_marker":markers[0]}
     if binding_path:
         result["memory_binding_report_sha256"] = sha256(binding_path.read_bytes()).hexdigest()
-    (HERE/"application_results.json").write_text(json.dumps(result,indent=2)+"\n")
-    (HERE/"generated_text.md").write_text(f"# RTL-generated continuation\n\nPrompt: {reference['prompt']}\n\n{text}\n")
-    print("FULL_RTL_APPLICATION_EVIDENCE_PASS")
+    result_name = "application_functional_results.json" if args.skip_gate else "application_results.json"
+    text_name = "generated_functional_text.md" if args.skip_gate else "generated_text.md"
+    (HERE/result_name).write_text(json.dumps(result,indent=2)+"\n")
+    (HERE/text_name).write_text(f"# RTL-generated continuation\n\nPrompt: {reference['prompt']}\n\n{text}\n")
+    print("FULL_RTL_APPLICATION_FUNCTIONAL_PASS" if args.skip_gate else "FULL_RTL_APPLICATION_EVIDENCE_PASS")
 
 
 if __name__ == "__main__":

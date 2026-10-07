@@ -17,7 +17,7 @@ full-top timing hoặc application checkpoint.
 | Portable elaboration | tests/full_rtl/run_portable_100mhz.ps1 | Full top elaborate với USE_QUARTUS_MEMORY=0 và không binding vendor modules |
 | Full-top timing | tools/timing/run.ps1 -Project quartus/llm_soc | Fit và all-corner STA của đúng source/config |
 | Pretrained application | tests/full_rtl/run_application.ps1 | Token RTL của checkpoint thật khớp reference integer |
-| Chất lượng văn bản | Đọc generated_text.md và đánh giá riêng | Mức mạch lạc/phù hợp của paragraph thực tế |
+| Chất lượng văn bản | Đọc generated_text.md và đánh giá riêng | Mức độ mạch lạc/phù hợp của paragraph thực tế |
 
 Sáu nhóm non-graph chỉ có trạng thái `SIX_GROUPS_PASS_GRAPH_PENDING`.
 Application gate yêu cầu **cả bảy nhóm**, bao gồm autonomous graph. Portable
@@ -34,9 +34,9 @@ $simBin = 'C:/altera_lite/25.1std/questa_fse/win64'
 $quartusBin = 'C:/altera_lite/25.1std/quartus/bin64'
 ```
 
-Dùng tên library và evidence tag mới cho mỗi lượt kiểm chứng. Không compile
-lại library đang được một phiên vsim sử dụng. License hiện tại cho phép một
-simulation session; Quartus là tiến trình độc lập, nhưng không sửa source/config
+Dùng tên library và evidence tag mới cho mỗi lượt kiểm chứng. Không compile lại
+library đang được một phiên vsim sử dụng. License hiện tại cho phép một simulation
+session; Quartus là tiến trình độc lập, nhưng không sửa source/config
 khi một build đang đo chúng.
 
 ## Chạy bảy nhóm units và graph
@@ -62,7 +62,7 @@ $unitArgs = @{
 & tests/full_rtl/run_units.ps1 @unitArgs
 ```
 
-Result hiện hành nằm ở `tests/full_rtl/unit_results.json`; log, compile list và
+Kết quả hiện hành nằm ở `tests/full_rtl/unit_results.json`; log, compile list và
 binding reports nằm trong build. Archive các kết quả quan trọng bằng
 [checkpoint helper](../../tools/optimization/README.md) trước lượt chạy kế tiếp.
 Tham số `-UnitsOnly` chỉ chạy sáu nhóm; `-OnlyTop` dùng để debug nhóm chọn riêng.
@@ -118,4 +118,6 @@ và 10 nhóm regression riêng. Các demo MNIST/hybrid thuộc
 
 ## Pretrained application gate
 
-Before exporter/reference inference and application simulation, `check_gate.py` requires matching source/configuration/report hashes, all seven unit/graph groups, all-corner post-fit Fmax ≥100 MHz, nonnegative setup/hold/recovery/removal/pulse slack, zero TNS and unconstrained paths, and zero fitted DSP/PLL/DLL/HSSI resources. Keep the 100 MHz constraints even when reporting a failing result. See [language execution](../demos/language.md).
+Trước khi chạy exporter/reference inference và application simulation, `check_gate.py` yêu cầu các hash source/configuration/report phải khớp; cả bảy nhóm unit/graph phải PASS; Fmax post-fit ở mọi corner phải ≥100 MHz; setup/hold/recovery/removal/pulse slack không âm; TNS và số unconstrained path bằng 0; số tài nguyên DSP/PLL/DLL/HSSI đã fit cũng bằng 0. Giữ nguyên constraint 100 MHz ngay cả khi báo cáo kết quả FAIL. Xem [hướng dẫn chạy ngôn ngữ](../demos/language.md).
+
+Để kiểm tra chức năng language model trước khi gate này PASS, dùng `run_application.ps1 -SkipGate` (các Python entry point nhận `--skip-gate`). Timing manifest vẫn bắt buộc để xác định RAM model của Quartus. Quy trình vẫn kiểm tra hash RTL hiện tại, RAM binding, compilation và token RTL/reference khớp chính xác. Lượt chạy bỏ qua gate ghi `application_functional_results.json` với `hardware_gate: SKIPPED` và `generated_functional_text.md`, đồng thời giữ nguyên các file kết quả có gate.

@@ -16,7 +16,10 @@ sigmoid lane và bốn divider lane mặc định tăng throughput cho các batc
 
 ## Sơ đồ tài nguyên và đường dữ liệu
 
-Đây là functional overview. Các đường qua **Parent request and operand muxes** được thực hiện trong llm_soc, không phải dây nối trực tiếp giữa hai engine. Xem [hierarchy và port-map manifest](../diagrams/README.md) để tra instance, generate scope và kết nối chính xác.
+Đây là functional overview. Các đường qua **Parent request and operand muxes**
+được thực hiện trong llm_soc, không phải dây nối trực tiếp giữa hai engine. Xem
+[hierarchy và port-map manifest](../diagrams/README.md) để tra instance, generate
+scope và kết nối chính xác.
 
 ```mermaid
 %%{init: {
@@ -171,7 +174,8 @@ class N output;
 | llm_attention_engine | position bound, KV request tags, sum_valid, score pipeline và maximum |
 | llm_attention_normalize | Batch/lane progress, shared divider lane zero, rounding metadata và result-valid |
 
-Parent may overlap one next linear row with the current scalar/store tail; retained completion preserves ordered consumption.
+Parent có thể overlap một next linear row với scalar/store tail hiện tại; completion
+được giữ lại để bảo đảm thứ tự tiêu thụ.
 
 Graph chọn một phase tại một thời điểm. Engine có thể giữ nhiều request hoặc
 arithmetic transaction trong pipeline của phase đó. Parent chỉ đổi quyền dùng
@@ -215,6 +219,7 @@ bảo toàn khi thay technology leaf.
 ## Chú giải và sơ đồ đã lưu
 
 [Mục lục từng file](blocks/README.md) có hai đường đọc: source hiện tại và trang
-chú giải snapshot. Cột trạng thái hash cho biết snapshot code có khớp file đang
-compile không. Những trang có hash cũ cần đọc cùng RTL hiện tại; sơ đồ/code excerpts
-sẽ được refresh ở đợt riêng. [Hierarchy legacy](<legacy/README.md>) giữ sơ đồ matmulfree.
+chú giải snapshot. Cột trạng thái hash cho biết code trong snapshot có khớp với
+file đang compile hay không. Những trang có hash cũ cần được đọc cùng RTL hiện tại;
+sơ đồ/code excerpt sẽ được refresh trong đợt riêng. [Hierarchy legacy](<legacy/README.md>)
+lưu sơ đồ matmulfree.

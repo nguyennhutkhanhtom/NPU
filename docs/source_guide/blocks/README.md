@@ -1,10 +1,11 @@
-# Per-module source guides
+# Hướng dẫn source theo module
 
-> **Category: GUIDE.** Use [full graph](../full_graph.md) first; [legacy hierarchy](../legacy/README.md) covers `matmulfree`.
+> **Category: GUIDE.** Đọc [full graph](../full_graph.md) trước; [hierarchy legacy](../legacy/README.md) mô tả `matmulfree`.
 
-Source links lead to the current implementation. Guides explain responsibilities and contracts without copying RTL. Diagrams follow the [shared visual style](../../diagrams/diagram_style.md).
+Các liên kết source trỏ đến implementation hiện tại. Phần chú giải mô tả trách
+nhiệm và contract mà không sao chép RTL. Sơ đồ tuân theo [visual style dùng chung](../../diagrams/diagram_style.md).
 
-| Source | Scope | Role | Guide |
+| Source | Phạm vi | Vai trò | Chú giải |
 |---|---|---|---|
 | [llm_attention_engine.sv](<../../../Verilog Source code/llm_attention_engine.sv>) | Full graph | Score Q/K theo giới hạn causal và maximum | [Xem chú giải](llm_attention_engine.sv.md) |
 | [llm_attention_normalize.sv](<../../../Verilog Source code/llm_attention_normalize.sv>) | Full graph | Exact division, RNE, sign và clamp | [Xem chú giải](llm_attention_normalize.sv.md) |

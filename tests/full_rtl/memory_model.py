@@ -1,7 +1,7 @@
 """Compile and verify the RAM model shipped with the recorded Quartus install.
 
 This utility compiles simulation support only; it does not run an application
-or reference inference. Application entry points still check the hardware gate.
+or reference inference. Application entry points check the hardware gate by default.
 Vendor source and compiled libraries remain in ignored local build directories.
 """
 from pathlib import Path

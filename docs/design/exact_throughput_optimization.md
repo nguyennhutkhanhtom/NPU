@@ -20,7 +20,7 @@ và thứ tự cập nhật PRNG. Số liệu đo nằm trong [review version 3]
 | llm_attention_normalize | Exact RNE divide, sign restoration và S24 clamp theo batch | Lane 0 dùng chung divider RMSNorm; ba divider riêng bổ sung |
 | ternary_dot32 | S25 terms và balanced S30 reduction pipeline | Logic add/subtract riêng |
 
-Một pass phải drain các response trước khi parent chuyển resource ownership.
+Mỗi pass phải drain các response trước khi parent chuyển resource ownership.
 Parameter SRAM chỉ có một owner phát request tại một thời điểm. Các test kiểm
 tra ownership và giới hạn hai-word prefetch của linear engine.
 
@@ -29,8 +29,8 @@ tra ownership và giới hạn hai-word prefetch của linear engine.
 Một register cache **12 × 768 bit = 9.216 payload bits** dùng chung cho linear
 và head. Q, O, Gate và Down preload input; Q/K/V và Gate/Up chỉ reuse khi source,
 geometry và family khớp. Producer writes, reset, launch, faults hoặc head entry
-invalidate linear cache. Head nạp lại bốn row của final-normalized vector mỗi
-lần vào pass; không thêm cache riêng cho head.
+làm mất hiệu lực linear cache. Head nạp lại bốn row của final-normalized vector
+ở mỗi pass; không thêm cache riêng cho head.
 
 Head giữ một word scale 256 bit cho tám vocabulary row. Mỗi coefficient có
 24 bit trong slot 32 bit. Vocabulary order và PRNG updates giữ nguyên. RoPE K
@@ -53,11 +53,14 @@ Normalizer capture quotient và rounding metadata, rồi tách round, phục h�
 và clamp thành các stage register.
 
 ATTN_DIV_LANES và SIGMOID_LANES là elaboration parameters, hỗ trợ các lũy thừa
-hai chia hết 32: 1, 2, 4, 8, 16 hoặc 32. Default geometry and evidence applicability: [architecture](full_rtl_language.md) and [status](../verification/optimization_status.md).
+hai chia hết 32: 1, 2, 4, 8, 16 hoặc 32. Geometry mặc định và phạm vi áp dụng của
+evidence được ghi tại [kiến trúc](full_rtl_language.md) và [trạng thái](../verification/optimization_status.md).
 
 ## Transaction geometry
 
-Bounded operand/scale reuse and packed vector stores reduce SRAM transactions. The before/after measurement belongs to the [2026-10-06 throughput review](../reviews/rtl_change_review_v3.md); current counts and applicability belong to [verification status](../verification/optimization_status.md).
+Việc reuse operand/scale có giới hạn và ghi vector dạng packed giúp giảm số
+SRAM transaction. Số liệu đo trước/sau thuộc [throughput review ngày 2026-10-06](../reviews/rtl_change_review_v3.md);
+số liệu hiện tại và phạm vi áp dụng được ghi trong [trạng thái kiểm chứng](../verification/optimization_status.md).
 
 ## Source và kiểm chứng
 
@@ -72,9 +75,10 @@ reciprocal trong đường normalize này. [Verification status](../verification
 ghi bằng chứng áp dụng cho workspace; application cần all-seven PASS và full-top
 timing khớp source/config trước pretrained execution.
 
-## Cache reuse and ownership
+## Cache reuse và ownership
 
-This diagram summarizes parent control conditions; it does not introduce a cache module instance. The source predicates remain authoritative.
+Sơ đồ này tóm tắt các điều kiện điều khiển của parent; nó không bổ sung cache
+module instance. Các predicate trong source vẫn là nguồn chuẩn.
 
 ```mermaid
 %%{init: {

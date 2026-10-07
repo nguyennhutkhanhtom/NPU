@@ -136,11 +136,17 @@ memory/arithmetic của giai đoạn đó. Host không cấp hidden activations,
 hay continuation IDs cho DUT. Reference CPU dùng trong application chỉ cung
 cấp giá trị kỳ vọng cho testbench so sánh.
 
-## Control and resource ownership
+## Quyền sở hữu control và tài nguyên
 
-The graph FSM selects inference phases; the operator FSM owns shared-resource routing, scalar processing and vector writes. Engine/module responsibilities are indexed in [full graph](../source_guide/full_graph.md). [Cache and streaming contracts](exact_throughput_optimization.md) explain reuse and bounded requests.
+Graph FSM chọn các phase inference; operator FSM sở hữu việc định tuyến tài nguyên
+dùng chung, xử lý scalar và ghi vector. Trách nhiệm của từng engine/module được
+liệt kê trong [full graph](../source_guide/full_graph.md). [Contract cache và streaming](exact_throughput_optimization.md)
+giải thích cơ chế reuse và request có giới hạn.
 
-Linear execution permits at most one next row during the current row's coefficient/round/store tail. The parent retains its accumulator and fault until ordered consumption; start protection and draining prevent cross-row contamination. This does not create another linear engine or another output stream.
+Linear execution chỉ cho phép tối đa một next row trong phần coefficient/round/store
+tail của row hiện tại. Parent giữ accumulator và fault cho đến khi chúng được tiêu
+thụ đúng thứ tự; start protection và draining ngăn nhiễm chéo giữa các row. Cơ chế
+này không tạo thêm linear engine hoặc output stream.
 
 ## Hợp đồng số học
 
@@ -165,7 +171,9 @@ raw integer / 2^16. `U` là unsigned. RNE là làm tròn nearest, ties to even.
 Một số phép làm tròn có quy tắc riêng như exp interpolation ở trên; không thay
 chúng bằng cùng một rounding mode. ID 0 và 2 bị loại khỏi sampling; EOS ID 1 bị
 loại đến `min_new`. Khi score bằng nhau, ID hợp lệ nhỏ nhất thắng, kể cả S32_MIN.
-At zero temperature, selection bypasses the noise/sample states but advances the PRNG once per vocabulary row, including excluded IDs. Switching back to sampling therefore preserves the random stream.
+Khi temperature bằng 0, selection bỏ qua các state noise/sample nhưng vẫn advance
+PRNG một lần cho mỗi vocabulary row, kể cả các ID bị loại. Vì vậy, khi chuyển lại
+sang sampling, random stream vẫn được bảo toàn.
 
 Exporter giữ ternary weights đã train và lượng tử hóa embedding/head; token
 matching được đối chiếu với reference integer của layout này.

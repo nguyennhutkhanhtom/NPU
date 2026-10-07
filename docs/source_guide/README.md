@@ -1,13 +1,15 @@
-# Source guide
+# Hướng dẫn source
 
-> **Category: GUIDE.** Navigate current RTL without loading copied source listings.
+> **Category: GUIDE.** Điều hướng RTL hiện tại mà không cần nạp các bản sao source listing.
 
-| Start with | Purpose |
+| Bắt đầu từ | Mục đích |
 |---|---|
-| [Full graph](full_graph.md) | Current top `llm_soc`, module responsibilities and shared resources |
-| [Per-module index](blocks/README.md) | Source links and compact block explanations |
-| [Current architecture](../design/full_rtl_language.md) | Model geometry, inference flow and numeric contracts |
-| [Legacy hierarchy](legacy/README.md) | Instruction/descriptor core `matmulfree` |
-| [Diagram index](../diagrams/README.md) | Existing hierarchy and diagram assets |
+| [Full graph](full_graph.md) | Top `llm_soc` hiện tại, trách nhiệm của module và tài nguyên dùng chung |
+| [Danh mục theo module](blocks/README.md) | Liên kết source và chú giải ngắn gọn cho từng block |
+| [Kiến trúc hiện tại](../design/full_rtl_language.md) | Model geometry, luồng inference và numeric contract |
+| [Hierarchy legacy](legacy/README.md) | Core instruction/descriptor `matmulfree` |
+| [Danh mục sơ đồ](../diagrams/README.md) | Hierarchy và diagram asset hiện có |
 
-RTL is authoritative for implementation details. Search the named state/signal before reading a large module. Current verification and implementation status: [optimization status](../verification/optimization_status.md).
+RTL là nguồn chuẩn cho chi tiết implementation. Hãy tìm state/signal cần thiết
+trước khi đọc một module lớn. Trạng thái verification và implementation hiện tại:
+[optimization status](../verification/optimization_status.md).

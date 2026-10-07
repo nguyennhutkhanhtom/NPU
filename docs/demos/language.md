@@ -5,7 +5,7 @@
 [Tài liệu](../README.md) → [Demo](README.md) → **NanoFable**
 
 Runner dùng checkpoint **NanoFable-1M-ternary seed1** đã pin. Host nạp parameters,
-prompt và cấu hình; toàn prefill/decode, attention, head và token selection chạy
+prompt và cấu hình; toàn bộ prefill/decode, attention, head và token selection chạy
 trong mô phỏng RTL. Reference số nguyên trên CPU dùng để kiểm tra token kết quả.
 
 ## Trước khi chạy
@@ -19,7 +19,7 @@ trong mô phỏng RTL. Reference số nguyên trên CPU dùng để kiểm tra t
 | Checkpoint/tokenizer | tests/language_demo/upstream, SHA-256 khớp upstream_manifest.json |
 | Evidence | Cả bảy nhóm PASS và full-top all-corner timing đạt ≥100 MHz, đúng RTL/config |
 
-Current verification and application status: [optimization status](../verification/optimization_status.md). Use one Questa session at a time; application uses shared build names.
+Trạng thái verification và application hiện tại: [optimization status](../verification/optimization_status.md). Mỗi lần chỉ dùng một Questa session vì application dùng chung tên build.
 
 ## Các bước chạy
 
@@ -32,12 +32,12 @@ $simBin = 'C:/altera_lite/25.1std/questa_fse/win64'
 & $pythonExe --version
 ```
 
-Đường dẫn trên là runtime và tools đã dùng trong workspace. Nếu đổi máy, thay
-chúng bằng installation tương ứng. `setup.ps1` yêu cầu Python 3.11/3.12.
+Các đường dẫn trên trỏ đến runtime và tool đang dùng trong workspace. Khi đổi máy,
+hãy thay bằng installation tương ứng. `setup.ps1` yêu cầu Python 3.11/3.12.
 
 ### 2. Chuẩn bị checkpoint và dependencies
 
-Nếu assets đã có, chỉ kiểm tra file:
+Nếu assets đã có, chỉ cần kiểm tra file:
 
 ```powershell
 & $pythonExe tests/language_demo/fetch_assets.py --check
@@ -87,9 +87,22 @@ $appArgs = @{
 ```
 
 Runner kiểm tra gate, chuẩn bị RAM model, export parameter image và reference,
-compile testbench, mô phỏng rồi xác minh evidence. `MinNew=8` mask EOS trước
+compile testbench, mô phỏng rồi xác minh evidence. `MinNew=8` mask EOS trong
 8 token; `Temperature=0` dùng greedy. Bắt đầu với lượt ngắn để biết pipeline
 application hoạt động trước khi chọn continuation dài.
+
+Để chạy thử chức năng khi RTL đã đổi hoặc timing/unit gate chưa PASS, bỏ qua
+bước gọi `check_gate.py` ở trên và dùng:
+
+```powershell
+& tests/full_rtl/run_application.ps1 @appArgs -SkipGate
+```
+
+Chế độ này vẫn cần `TimingManifest` để chọn RAM model của Quartus và vẫn
+kiểm tra token RTL khớp reference. Kết quả được lưu riêng trong
+`tests/full_rtl/application_functional_results.json` (`hardware_gate: SKIPPED`)
+và `tests/full_rtl/generated_functional_text.md`; không chứng minh timing hay
+bảy nhóm unit đã PASS cho RTL hiện tại.
 
 ### 5. Chạy continuation dài hơn
 
@@ -103,7 +116,7 @@ $appArgs.Temperature = 166
 & tests/full_rtl/run_application.ps1 @appArgs
 ```
 
-Temperature là raw U8/F8: 166 tương đương khoảng 0,6484. EOS có thể kết thúc
+Temperature dùng định dạng raw U8/F8: 166 tương đương khoảng 0,6484. EOS có thể kết thúc
 sau `MinNew`; không phải lần nào cũng sinh đủ `NewTokens`. Exporter kiểm tra
 `prompt token count + NewTokens ≤128`; số token của prompt không phải số từ.
 Chọn prompt tiếng Anh ngắn cho checkpoint kể chuyện này. Độ dài mô phỏng trên PC
@@ -139,8 +152,10 @@ Get-Content -LiteralPath 'tests/full_rtl/build/application.log' -Tail 20 -Wait
 ```
 
 Ctrl+C trong terminal theo dõi chỉ dừng `Get-Content`; để dừng mô phỏng, dùng
-terminal đang chạy runner. Log báo `FULL_RTL_PROGRESS` mỗi triệu compute clocks
-và `FULL_RTL_TOKEN_VERIFIED` cho token được so sánh. Runner dừng ngay khi mismatch.
+terminal đang chạy runner. Log báo `FULL_RTL_LOAD_PROGRESS` mỗi 1.024 parameter
+rows trong lúc nạp checkpoint, rồi `FULL_RTL_GRAPH_START` khi bắt đầu inference.
+Log báo `FULL_RTL_PROGRESS` mỗi 100.000 compute clocks và
+`FULL_RTL_TOKEN_VERIFIED` cho từng token được so sánh. Runner dừng ngay khi mismatch.
 
 | File | Nội dung |
 |---|---|
@@ -154,7 +169,7 @@ và `FULL_RTL_TOKEN_VERIFIED` cho token được so sánh. Runner dừng ngay kh
 Một lượt hoàn tất cần `FULL_RTL_APPLICATION_PASS` và
 `FULL_RTL_APPLICATION_EVIDENCE_PASS`. `application_results.json` ghi `status=PASS`
 khi token RTL khớp reference. Mục `text_quality=NOT_ASSESSED` cần được bổ sung
-bằng việc đọc paragraph thực tế; PASS numeric chưa xác nhận chất lượng văn bản.
+bằng cách đọc paragraph thực tế; PASS numeric chưa xác nhận chất lượng văn bản.
 
 ## Lưu kết quả trước lượt kế tiếp
 
@@ -179,7 +194,7 @@ Get-ChildItem -LiteralPath $appArchive -File | ForEach-Object {
 $hashes | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $appArchive 'sha256.json') -Encoding utf8
 ```
 
-Archive này giữ kết quả/log/input, còn timing và source snapshot được dẫn bởi
+Archive này lưu kết quả/log/input, còn timing và source snapshot được tham chiếu qua
 manifest. Giữ cả RAM-model cache được application result tham chiếu. Không sửa
 archive cũ để biểu diễn một lần chạy khác.
 

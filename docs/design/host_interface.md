@@ -36,7 +36,7 @@ Host và DUT dùng cùng `clk`. Mọi địa chỉ bên dưới là byte address
 
 Status dùng bits 0=running, 1=ready, 2=error, 3=overflow và bits 11:4=output
 count. Chỉ đọc các register/window mà RTL hỗ trợ; không giả định config writes
-có register readback. KV và vector workspace do graph sở hữu.
+có register readback. Graph sở hữu KV và vector workspace.
 
 ## Một transaction
 
@@ -91,12 +91,12 @@ class X platform;
 4. Deassert `host_en` ít nhất một clock rồi bắt đầu request kế tiếp.
 
 Parameters được đọc đồng bộ qua adapter. Write ACK chờ leaf commit; thời gian
-ACK có thể khác giữa memory và register access. Writes trong lúc graph running
-không sửa parameters/config/prompt. Status vẫn dùng để polling tiến độ.
+ACK có thể khác nhau giữa memory access và register access. Write trong lúc graph
+đang chạy không sửa parameters/config/prompt. Status vẫn dùng để poll tiến độ.
 
-Deassert enable trước execution edge hủy write. Sau khi write đã được accepted,
-deassert enable hủy response nhưng write có thể commit. Reset hủy queue entries
-chưa commit và giữ các word đã commit; host không được giả định rollback.
+Deassert enable trước execution edge sẽ hủy write. Sau khi write được accept,
+deassert enable sẽ hủy response nhưng write vẫn có thể commit. Reset hủy queue
+entry chưa commit và giữ các word đã commit; host không được giả định rollback.
 
 ## Trình tự chạy graph
 

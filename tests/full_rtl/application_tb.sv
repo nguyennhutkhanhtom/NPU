@@ -43,9 +43,14 @@ module tb_full_rtl_application;
         $readmemh("tests/full_rtl/build/prompt.mem",prompt);
         $readmemh("tests/full_rtl/build/expected.mem",expected);
         repeat(3) @(negedge clk);rst_n=1;
-        for(integer row=0;row<24576;row++)
+        $display("FULL_RTL_LOAD_START rows=24576 time=%0t",$time);
+        for(integer row=0;row<24576;row++) begin
             for(integer lane=0;lane<8;lane++)
                 transaction(1,32'(row*32+lane*4),parameters[row][lane*32+:32],response);
+            if((row+1)%1024==0)
+                $display("FULL_RTL_LOAD_PROGRESS rows=%0d/24576 host_commands=%0d time=%0t",row+1,commands,$time);
+        end
+        $display("FULL_RTL_LOAD_COMPLETE host_commands=%0d time=%0t",commands,$time);
         for(integer token=0;token<PROMPT_COUNT;token++)
             transaction(1,32'h00100000+token*4,{20'h0,prompt[token]},response);
         transaction(1,32'h00400004,PROMPT_COUNT,response);
@@ -55,9 +60,10 @@ module tb_full_rtl_application;
         transaction(1,32'h00400018,MIN_NEW,response);
         transaction(1,32'h0040000c,1,response);
         if(!running) $fatal(1,"Autonomous graph did not start");
+        $display("FULL_RTL_GRAPH_START prompt=%0d new_tokens=%0d time=%0t",PROMPT_COUNT,MAX_NEW,$time);
         while(running && clocks<150000000) begin
             @(negedge clk);clocks++;
-            if(clocks%1000000==0)
+            if(clocks%100000==0)
                 $display("FULL_RTL_PROGRESS clocks=%0d position=%0d generated=%0d phase=%0d",clocks,pc_debug,dut.generated_q,dut.graph);
         end
         if(running || error) $fatal(1,"Autonomous graph timeout/error clocks=%0d",clocks);

@@ -8,6 +8,15 @@ ROOT = Path(__file__).resolve().parents[2]
 RTL = ROOT / "Verilog Source code"
 
 
+def application_context(manifest_path: Path, skip_gate: bool = False) -> dict:
+    """Use current RTL hashes for an explicitly ungated functional run."""
+    if not skip_gate:
+        return check_gate(manifest_path)
+    return {"rtl_sources": {p.name: sha256(p.read_bytes()).hexdigest()
+                            for p in RTL.iterdir()
+                            if p.suffix in {".sv", ".v", ".svh", ".mem"}}}
+
+
 def check_gate(manifest_path: Path) -> dict:
     evidence = json.loads(manifest_path.read_text(encoding="utf-8-sig"))
     assert evidence["source_hashes_verified"] and evidence["configuration_hashes_verified"]

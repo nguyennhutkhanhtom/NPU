@@ -1,6 +1,6 @@
 """Export the pinned trained graph and run an independent integer reference.
 
-This application entry point checks the exact hardware timing gate first.
+This entry point checks the hardware timing gate unless --skip-gate is supplied.
 CPU reference inference is verification only; the RTL host driver loads only
 parameters, config and prompt IDs, and never loads intermediate activations.
 """
@@ -11,7 +11,7 @@ import math
 import sys
 from hashlib import sha256
 from datetime import datetime, timezone
-from check_gate import check_gate
+from check_gate import application_context
 from memory_model import verify_model
 
 HERE = Path(__file__).resolve().parent
@@ -22,6 +22,7 @@ LANGUAGE = ROOT / "tests/language_demo"
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--timing", required=True, type=Path)
+    parser.add_argument("--skip-gate", action="store_true")
     parser.add_argument("--memory-model", required=True, type=Path)
     parser.add_argument("--design-units", type=Path)
     parser.add_argument("--prompt", default="Once upon a time, Lily found a tiny kitten.")
@@ -30,7 +31,7 @@ def main():
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--min-new", type=int, default=64)
     args = parser.parse_args()
-    timing = check_gate(args.timing)
+    timing = application_context(args.timing, args.skip_gate)
     memory_model = verify_model(args.memory_model, args.timing)
     memory_digest = sha256(args.memory_model.read_bytes()).hexdigest()
     runner_names = ("application_tb.sv", "run_application.ps1", "check_gate.py",
@@ -205,7 +206,9 @@ def main():
     reference = {"checkpoint_sha256":expected_sha,"prompt":args.prompt,"prompt_ids":prompt,
                  "new_tokens":args.new_tokens,"temperature":args.temperature,"seed":args.seed or 1,
                  "min_new":args.min_new,"expected_ids":output,"expected_text":tokenizer.decode(output),
-                 "timing_manifest":str(args.timing),"fmax_mhz":timing['metrics']['worst_restricted_fmax_mhz'],
+                 "timing_manifest":str(args.timing),
+                 "hardware_gate":"SKIPPED" if args.skip_gate else "PASS",
+                 "fmax_mhz":None if args.skip_gate else timing['metrics']['worst_restricted_fmax_mhz'],
                  "prepared_utc":datetime.now(timezone.utc).isoformat(),
                  "timing_manifest_sha256":timing_digest,"rtl_sources":timing["rtl_sources"],
                  "runner_sources":runner_hashes,
@@ -217,7 +220,8 @@ def main():
     reference["input_files"] = {name: sha256((build/name).read_bytes()).hexdigest()
                                 for name in ("parameter.mem", "prompt.mem", "expected.mem", "config.svh")}
     assert runner_hashes == {name: sha256((HERE/name).read_bytes()).hexdigest() for name in runner_names}, "Application sources changed during export/reference"
-    check_gate(args.timing)
+    assert application_context(args.timing, args.skip_gate)["rtl_sources"] == timing["rtl_sources"], \
+        "RTL changed during export/reference"
     verify_model(args.memory_model, args.timing)
     assert sha256(args.memory_model.read_bytes()).hexdigest() == memory_digest, "RAM model changed during export"
     assert sha256(args.timing.read_bytes()).hexdigest() == timing_digest, "Timing evidence changed during export"
