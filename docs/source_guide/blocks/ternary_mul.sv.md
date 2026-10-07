@@ -1,6 +1,6 @@
 # ternary_mul.sv — 32 PE ternary và vòng lặp dot product
 
-> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — TMATMUL.
@@ -16,58 +16,50 @@
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-CFG["q / output / matrix descriptors + start"]
-    WS["Workspace port<br/>256-bit read/write"]
-    PM["Parameter read port<br/>256-bit weight / bias"]
-    subgraph CORE["ternary_mul"]
-        CTRL["Descriptor checks + controller<br/>Row/chunk counters + weight row pointer"]
-        QB["Activation buffer<br/>32 × S8"]
-        WB["Weight buffer 256 bit"]
-        WSEL@{ shape: trap-t, label: "32-weight slice selector" }
-        PE@{ shape: trap-t, label: "32 ternary lanes<br/>Select +q / zero / minus q; mask outside K" }
-        RED["acc_mul<br/>Four 8-input S12 trees and one 4-input S14 tree"]
-        ACC["S18 accumulation adder and register"]
-        BIAS["Bias S32 buffer"]
-        BSEL@{ shape: trap-t, label: "Bias / zero selector" }
-        SMUL["Postscale multiplier<br/>S18 × U24 → S42"]
-        PREG["Product register S42"]
-        SRNE["rne_shift42<br/>Signed RNE"]
-        RREG["Rounded register S42"]
-        POST["postscale_finish<br/>Bias adder S43 · saturation"]
-        OUT["Output packer 256 bit<br/>S16 or S32"]
-    end
-    CFG -.-> CTRL
-    CFG -.->|"M"| SMUL
-    CFG -.->|"r"| SRNE
-    CFG -.->|"Output format"| POST
-    CTRL -.->|"Read/write request"| WS
-    CTRL -.->|"Read request"| PM
-    WS --> QB
-    PM --> WB
-    PM --> BIAS
-    CTRL -.->|"no_bias"| BSEL
-    QB --> PE
-    WB --> WSEL
-    CTRL -.->|"chunk offset"| WSEL
-    WSEL --> PE
-    CTRL -.->|"K / chunk"| PE
-    PE --> RED
-    RED --> ACC
-    ACC --> SMUL
-    SMUL --> PREG
-    PREG --> SRNE
-    SRNE --> RREG
-    RREG --> POST
-    BIAS --> BSEL
-    BSEL --> POST
-    POST --> OUT
-    OUT -->|"Write data"| WS
-    CTRL -.-> STATUS["busy / done / format_error"]
-    POST -.-> OV["overflow"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ C["Descriptor / row control"]
+ subgraph DOT["Legacy ternary reduction"]
+  Q["Activation buffer<br/>32 × S8"] --> T["Ternary sign /<br/>zero terms 32<br/>× S9"]
+  W["Weight buffer 256-bit<br/>words"] --> T
+  T --> R["Reduction trees S12<br/>then S14"]
+  R --> A["Row accumulator<br/>S18"]
+ end
+ A --> P["Postscale pipeline S42<br/>product and RNE"]
+ B["Scale / bias<br/>metadata U24 coefficient,<br/>S32 bias"] --> P
+ P --> O["Bias / saturation<br/>/ pack S16<br/>or S32 output"]
+ C -.-> Q & W & A & P & O
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class C control;
+class Q,W,B buffer;
+class T,R,A,P compute;
+class O output;
+style DOT fill:#ffffff,stroke:#aaaaaa,color:#111111;
 ```
 
 ## Main flow
@@ -108,22 +100,49 @@ CFG["q / output / matrix descriptors + start"]
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-Q["q_word<br/>32 activations S8"] --> SIGN["32 sign-extension / negation paths<br/>+q and −q in S9"]
+Q["q_word<br/>32 activations S8"] --> SIGN["Sign / negation<br/>32 × S9<br/>terms"]
     W["w_word 256 bit"] --> SEL@{ shape: trap-t, label: "Weight slice selector<br/>32 weights × 2 bit" }
     CFG["K / input chunk index"] -.-> SEL
-    SEL --> DEC@{ shape: trap-b, label: "32 weight decoders + reserved-code detector" }
-    SIGN --> PE@{ shape: trap-t, label: "32 ternary selectors<br/>+q / zero / −q + tail mask" }
+    SEL --> DEC@{ shape: trap-b, label: "Weight decode 32<br/>ternary codes" }
+    SIGN --> PE@{ shape: trap-t, label: "Ternary selection Sign<br/>/ zero and<br/>tail mask" }
     DEC -.-> PE
     CFG -.-> PE
     CFG -.->|"Useful-lane mask"| DEC
-    PE --> TREE["acc_mul<br/>Four S12 group trees; registered groups; S14 total tree"]
-    TREE --> ACC["S18 accumulation adder + storage"]
+    PE --> TREE["acc_mul S12 groups<br/>→ S14 total"]
+    TREE --> ACC["Row accumulator<br/>S18"]
     ACC --> POST["postscale input"]
-    DEC -.-> ERR["Reserved-weight error<br/>Only for useful lanes inside K"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+    DEC -.-> ERR["Reserved-weight error Useful<br/>lanes only"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class SEL,PE interface;
+class Q,SIGN,W,CFG,TREE,ERR,DEC buffer;
+class ACC,POST compute;
 ```
 
 ### [Dòng 138–162: Địa chỉ SRAM](<../../../Verilog%20Source%20code/ternary_mul.sv#L138>)

@@ -108,15 +108,41 @@ Each tile owns registered 10-bit read and write addresses and decoded read/write
 Use the existing two response edges for a masked four-input local response and a balanced six-group final response. Unselected groups must contribute zero for the current transaction even though individual leaf outputs hold previous values. Align the registered tile-select with the returning data; never use the newest request's selection to route an earlier response. Use structural generated mux/OR trees and explicit register ownership. Support a final partial tile and partial response group with elaboration constants and zero padding.
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
-flowchart LR
-    P[Parameter lane request register] --> T[24 local tile request registers]
-    T --> M[24 replaceable 1024 x 32 SRAM leaves]
-    M --> G[Six registered four-tile responses]
-    G --> R[Balanced response tree and output register]
-    R --> C[Compute row or host lane selection]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
+flowchart TB
+    P["Parameter lane request<br/>register"] --> T["24 local tile<br/>request registers"]
+    T --> M["24 replaceable 1024<br/>x 32 SRAM<br/>leaves"]
+    M --> G["Six registered four-tile<br/>responses"]
+    G --> R["Balanced response tree<br/>and output register"]
+    R --> C["Compute row or<br/>host lane selection"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class P,T,G,R,C interface;
+class M platform;
 ```
 
 For an adapter request accepted at edge E1:

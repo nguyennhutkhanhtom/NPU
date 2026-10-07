@@ -1,6 +1,6 @@
 # npu_pkg.sv — Kiểu dữ liệu, saturation và rounding
 
-> **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — package chung.
@@ -16,24 +16,46 @@
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-subgraph PKG["npu_pkg: elaboration definitions; no module instance"]
-        SIZE["Width and capacity constants<br/>SRAM 256 bit · K_MAX=512"]
-        TYPE["Tensor and descriptor types<br/>ws_desc_t 32 bit · mat_desc_t 96 bit"]
-        ARITH["Pure combinational arithmetic helpers<br/>RNE / scale_shift / saturation"]
-        CHECK["Pure descriptor checks<br/>ws_words / ws_valid / ranges_overlap"]
-    end
-    TOP["Top + descriptor file + SRAM wrappers"]
-    ENGINE["Row-wise / NORM / ternary engines"]
-    SIZE -.->|"RTL geometry"| TOP
-    SIZE -.-> ENGINE
-    TYPE -.->|"Port and metadata types"| TOP
-    TYPE -.-> ENGINE
-    ARITH -.->|"Combinational logic at call sites"| ENGINE
-    CHECK -.->|"Checks at call sites"| ENGINE
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ subgraph DEFINITIONS["Compile-time package; no module instance"]
+ S["Widths / descriptor<br/>types Compile-time definitions"]
+ A["Pure arithmetic helpers<br/>RNE, shift and<br/>saturation"]
+ C["Pure descriptor checks<br/>Words, bounds and<br/>overlap"]
+ end
+ S -.-> U["RTL callers Top,<br/>adapters and engines"]
+ A & C -.-> U
+ style DEFINITIONS fill:#ffffff,stroke:#aaaaaa,color:#111111;
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class S buffer;
+class A compute;
+class C control;
+class U interface;
 ```
 
 ## Main flow
@@ -81,7 +103,27 @@ subgraph PKG["npu_pkg: elaboration definitions; no module instance"]
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
     X["x signed S64"] --> SH["Arithmetic right shift<br/>q = floor(x / 2^shift)"]
     R["shift U6"] -.-> SH
@@ -92,8 +134,15 @@ flowchart TB
     SH --> ADD["Signed q + increment"]
     ROUND -.-> ADD
     ADD --> OUT["RNE signed S64<br/>shift=0: output=input"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class X,ROUND,ADD buffer;
+class SH,R,BITS compute;
+class OUT output;
 ```
 
 ### [Dòng 84–102: RNE đúng độ rộng S42](<../../../Verilog%20Source%20code/npu_pkg.sv#L84>)

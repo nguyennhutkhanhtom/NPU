@@ -1,6 +1,6 @@
 # mul.sv — Helper nhân S16 và gate
 
-> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Helper — không instantiate trong top hiện tại.
@@ -16,24 +16,48 @@
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-A["a S16"] --> MUL["Signed multiplier<br/>S16 × S17 → S33"]
-    B["b 16 bit"] --> EXT@{ shape: trap-t, label: "Sign/zero-extension selector" }
-    U["b_unsigned"] -.-> EXT
-    EXT --> MUL
-    MUL --> P["product output<br/>Low 32 bits"]
-    MUL --> RNE["Sign-extend S64 + RNE shifter"]
-    SHIFT["rshift"] -.-> RNE
-    RNE --> SAT["S16 saturator + range checker"]
-    B --> GATE["Gate range detector<br/>Raw value above 0x8000"]
-    U -.-> GATE
-    SAT --> R["result S16"]
-    SAT -.-> OV["Overflow OR logic"]
-    GATE -.-> OV
-    OV --> O["overflow"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ A["Operand A<br/>S16"] --> M["Signed multiply<br/>S16 × S17 → S33"]
+ B["Operand B<br/>16-bit signed / unsigned"] --> E["Sign / zero extension"]
+ E --> M
+ M --> P["Raw product<br/>Low 32 bits"]
+ M --> R["Scale / RNE<br/>Sign-extended S64"]
+ R --> S["S16 saturation<br/>Result and overflow"]
+ B -.-> G["Unsigned gate range<br/>Check above 0x8000"]
+ G -.-> S
+ C["Unsigned mode / rshift"] -.-> E & R & G
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class A,B interface;
+class E buffer;
+class M,R compute;
+class P,S output;
+class C,G control;
 ```
 
 ## Main flow

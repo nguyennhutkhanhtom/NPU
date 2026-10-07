@@ -1,6 +1,6 @@
 # postscale.sv — Đổi scale, cộng bias và saturation
 
-> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — postscale_finish sau các register trong ternary_mul; postscale giữ interface tổ hợp cho kiểm tra.
@@ -16,30 +16,42 @@
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-A["acc S18"] --> MUL["Multiplier<br/>S18 × U24 → S42"]
-    M["scale_m U24"] --> MUL
-    MUL --> RNE["rne_shift42<br/>Signed RNE S42"]
-    R["scale_r U6"] -.-> RNE
-    subgraph FIN["postscale_finish — reused combinational module"]
-        ADD["Bias adder S43"]
-        S16["Saturation S16"]
-        S32["Saturation S32"]
-        DET["S16 / S32 range detectors"]
-    end
-    RNE --> ADD
-    B["bias S32 sign-extended"] --> ADD
-    ADD --> S16
-    ADD --> S32
-    ADD --> DET
-    F["output_s32"] -.-> DET
-    S16 --> Y16["y_s16"]
-    S32 --> Y32["y_s32"]
-    DET --> OV["overflow"]
-    REG["ternary_mul rounded register S42<br/>Alternative caller"] --> ADD
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ A["Accumulator / scale<br/>S18 × U24"] --> M["Product<br/>S42"]
+ M --> R["Signed RNE<br/>Shift U6"]
+ R --> F["postscale_finish Bias S43,<br/>saturation and range<br/>flags"]
+ B["Bias / output<br/>format S32; S16<br/>or S32 selection"] --> F
+ X["Registered rounded result<br/>Alternative ternary_mul caller"] --> F
+ F --> O["Result / overflow<br/>S16 or S32"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class A,M,R compute;
+class F,B,X,O output;
 ```
 
 Nét liền là dữ liệu, nét đứt là format/control. Hai module trong file này đều tổ hợp; product/round registers của engine nằm trong [ternary_mul](ternary_mul.sv.md), không nằm trong interface `postscale`.
@@ -67,7 +79,27 @@ Nét liền là dữ liệu, nét đứt là format/control. Hai module trong fi
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
     R["Rounded S42<br/>From wrapper or engine register"] --> EXT["Sign extension S43"]
     B["Bias S32, in output units"] --> EXT_B["Sign extension S43"]
@@ -80,6 +112,13 @@ flowchart TB
     S16 --> Y16["y_s16"]
     S32 --> Y32["y_s32"]
     DET --> OV["overflow"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class R,EXT,EXT_B,DET,Y16,Y32,OV buffer;
+class ADD compute;
+class B,S16,S32,F output;
 ```

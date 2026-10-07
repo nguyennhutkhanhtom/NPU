@@ -30,27 +30,93 @@ kiểm chứng lại theo [verification guide](../verification/README.md).
 ## Luồng inference
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
- H["Host loads parameters / prompt IDs / configuration"] --> E["G_EMBED: token embedding"]
- E --> A["G_ANORM: affine RMSNorm"]
- A --> Q["G_Q / G_K / G_V: ternary projections"]
- Q --> R["G_RQ / G_RK: RoPE; G_CACHE: KV write"]
- R --> T["G_ATTENTION: causal QK / softmax / V / normalization"]
- T --> O["G_O / G_AADD: O projection and residual"]
- O --> N["G_MNORM: affine RMSNorm"]
- N --> F["G_GATE / G_UP / G_SILU / G_GMUL / G_DOWN / G_MADD"]
- F --> L{"G_NEXT: another layer?"}
- L -->|"Yes: increment layer"| A
- L -->|"Four layers completed"| P{"More prompt positions?"}
- P -->|"Yes: advance position and reset layer"| E
- P -->|"No"| Z["G_FNORM / G_HEAD: final norm, tied head, RTL token selection"]
- Z --> W["G_ADVANCE: append selected token to output buffer"]
- W --> D{"Count / EOS / context stop?"}
- D -->|"No: feed back selected token"| E
- D -->|"Yes"| S["G_DONE -> G_IDLE; host reads IDs and decodes text"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ H["Host load /<br/>START Parameters, prompt<br/>and configuration"] --> E["Embedding Current input<br/>token"]
+ E --> L["Transformer layers Four<br/>ordered layer passes"]
+ L --> P{"More prompt positions?"}
+ P -->|"yes"| E
+ P -->|"no"| N["Final norm /<br/>tied head RTL<br/>token selection"]
+ N --> O["Output token buffer<br/>Append selected ID"]
+ O --> D{"Count / EOS / context stop?"}
+ D -->|"yes"| F["Complete Host decodes<br/>IDs to text"]
+ D ==>|"no: selected token"| E
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class P,D control;
+class H interface;
+class E,L buffer;
+class N,O,F output;
+```
+
+```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
+flowchart TB
+ subgraph ATTENTION["Attention sublayer"]
+  A["Affine RMSNorm"] --> Q["Q / K<br/>/ V projections<br/>Ternary weights"]
+  Q --> R["RoPE / KV<br/>write Rotate Q<br/>and K"]
+  R --> T["Causal attention QK,<br/>softmax and value<br/>reduction"]
+  T --> O["O projection / residual"]
+ end
+ subgraph FFN["Feed-forward sublayer"]
+  N["Affine RMSNorm"] --> G["Gate / Up projections"]
+  G --> S["SiLU / element product"]
+  S --> D["Down projection / residual"]
+ end
+ O --> N
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class A,Q,R,T,O,N,G,S,D compute;
+style ATTENTION fill:#ffffff,stroke:#aaaaaa,color:#111111;
+style FFN fill:#ffffff,stroke:#aaaaaa,color:#111111;
 ```
 
 

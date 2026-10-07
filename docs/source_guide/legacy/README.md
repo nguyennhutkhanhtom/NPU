@@ -55,59 +55,48 @@ Tài liệu và RTL dùng hexadecimal cho giá trị gắn trực tiếp với b
 ## 2. Sơ đồ kiến trúc tổng quan đang chạy
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-HOST["Host 32 bit"]
-    subgraph NPU["NPU — matmulfree.sv"]
-        IF["Host interface<br/>Read request + tagged response registers<br/>Ctrl/desc: 2 edges · SRAM/imem: 4 edges<br/>Write: same-edge acceptance"]
-        subgraph CTRL["Control and configuration"]
-            PC["PC.sv<br/>Program counter 9 bit"]
-            IM@{ shape: rect, label: "ins_mem.sv<hr/>Instruction memory 512 × 13 bit" }
-            SCH["Scheduler single-issue<br/>Opcode decode and engine scheduling"]
-            DESC@{ shape: rect, label: "descriptor_file.sv<hr/>8 workspace × 32-bit FF<hr/>8 matrix × 3 word × 32-bit FF" }
-            SCALE["Runtime q metadata + effective_mat<br/>scale_compose.sv + div 48/25<br/>Static scale or dynamic composition<br/>Overlap guard for quantization metadata"]
-        end
-        subgraph ENG["Compute engines"]
-            ROW["Row-wise vector engine<br/>rowwise_dispatch + rowwise_op<br/>Registered operand / product / RNE<br/>ADD / SUB / MUL / REC / RELU<br/>sigmoid: ROM and interpolation"]
-            NORM["NORM + QUANT engine<br/>norm_dispatch + norm<br/>isqrt_u64 + div 55/32<br/>Registered operand / product / RNE<br/>S16 → scratch S24/F16 → S8"]
-            TM["Ternary matmul engine<br/>ternary_mul · 32 sign/zero selection lanes<br/>acc_mul + accumulator S18<br/>Registered product / RNE<br/>postscale_finish + bias → S16/S32"]
-        end
-        REQMUX@{ shape: trap-t, label: "Workspace request mux<br/>Select requests/writes using active_unit" }
-        RSPDEC@{ shape: trap-b, label: "Workspace response demux<br/>Route read data/valid to the active engine" }
-        WS@{ shape: rect, label: "Workspace SRAM 8 KiB<hr/>regfile.sv: register<hr/>sram_256_wrapper ADDR_W=8<hr/>256 × 256 bit<hr/>8 bank × 32 bit" }
-        PM@{ shape: rect, label: "Parameter SRAM 32 KiB<hr/>mem_mapping.sv<hr/>sram_256_wrapper ADDR_W=10<hr/>1024 × 256 bit · weight + bias<hr/>8 bank × 32 bit" }
-        IF <-->|"Load/read program, descriptors and control/status"| CTRL
-        IF <-->|"Host 32 bit · read valid/ready"| WS
-        IF <-->|"Host 32 bit · read valid/ready"| PM
-        PC -->|"Address"| IM
-        IM -->|"Instruction + valid"| SCH
-        SCH -.->|"clear / advance"| PC
-        SCH -.->|"Descriptor IDs"| DESC
-        DESC -.->|"Tensor metadata"| ENG
-        DESC -.->|"Matrix descriptor"| SCALE
-        SCH -.->|"start / opcode"| ENG
-        ENG -.->|"done / error / overflow"| SCH
-        SCH -.->|"active_unit"| REQMUX
-        SCH -.->|"active_unit"| RSPDEC
-        SCH -.->|"Compose control"| SCALE
-        SCALE -.->|"done / error"| SCH
-        IF -.->|"scratch base / epsilon / delta"| NORM
-        NORM -.->|"quant_d"| SCALE
-        SCALE -.->|"effective_mat + M/r"| TM
-        ROW -->|"Request / write data"| REQMUX
-        NORM -->|"Request / write data"| REQMUX
-        TM -->|"Request / write data"| REQMUX
-        REQMUX -->|"Address / enable / write data"| WS
-        WS -->|"256-bit read data / valid"| RSPDEC
-        RSPDEC -->|"Vector data"| ROW
-        RSPDEC -->|"X / scratch / q"| NORM
-        RSPDEC -->|"q / output"| TM
-        TM -.->|"Read request"| PM
-        PM -->|"256 bit + valid"| TM
-    end
-    HOST <-->|"Address / data / handshake"| IF
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ H["Host<br/>32-bit transactions"] <--> F["Host frontend Control<br/>and memory windows"]
+ F <--> D["Configuration storage Workspace<br/>/ matrix descriptors"]
+ F <--> M["Memory ports Parameters<br/>and workspace"]
+ P["Program storage PC<br/>and instruction memory"] --> C["Single-issue scheduler Opcode<br/>and engine ownership"]
+ D --> C
+ C -.-> E["Compute engines Rowwise,<br/>norm and ternary"]
+ E <--> M
+ E -.-> S["Status Done, error<br/>and overflow"]
+ S -.-> F
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class H,F,M interface;
+class D,P buffer;
+class C control;
+class E compute;
+class S output;
 ```
 
 Các hộp biểu diễn khối phần cứng hoặc giao diện; nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.

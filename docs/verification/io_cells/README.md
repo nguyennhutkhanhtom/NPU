@@ -1,6 +1,6 @@
 # Ordinary I/O cell characterization
 
-> **Category: GUIDE.**
+> **Category: HISTORICAL SNAPSHOT — archived Quartus 18.1 I/O characterization.** This experiment is not current full-top implementation evidence.
 
 [Documentation hub](../../README.md) · [Full-top timing](../timing/README.md) · [ASIC portability](../../design/asic_portability.md)
 

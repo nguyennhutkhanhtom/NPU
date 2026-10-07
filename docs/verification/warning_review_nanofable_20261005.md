@@ -1,6 +1,6 @@
 # NanoFable synthesis and fitter warning review
 
-> **Category: REVIEW — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
+> **Category: REVIEW — 2026-10-05 snapshot.** This snapshot must not determine current architecture, live status or active tasks.
 
 Scope: the recorded `nanofable_long_20261005` synthesis log and incomplete fitter log. The user requested fixes for material RTL/ASIC problems and acceptance of warnings confined to the FPGA demonstration backend.
 

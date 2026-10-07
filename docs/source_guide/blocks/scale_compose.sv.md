@@ -1,6 +1,6 @@
 # scale_compose.sv — Ghép scale bằng lựa chọn shift song song
 
-> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Source guide](<../legacy/README.md>) → [Mục lục](README.md)
 
 **Source:** [scale_compose.sv](<../../../Verilog%20Source%20code/scale_compose.sv>).
@@ -14,18 +14,45 @@
 ## Sơ đồ kiến trúc
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-    IN[U24 factors and U6 base shift] --> MUL[Registered U48 product]
-    MUL --> FIT[48 constant threshold comparisons]
-    FIT --> SELECT[Prefix boundary and signed target shift]
-    SELECT --> SHIFT[Registered numerator and denominator]
-    SHIFT --> DIV[Divider U48 by U25]
-    DIV --> RNE[Remainder RNE and range checks]
-    SELECT --> OUT[Result M and r]
+    IN["U24 factors and U6 base shift"] --> MUL["Registered U48 product"]
+    MUL --> FIT["48 constant threshold<br/>comparisons"]
+    FIT --> SELECT["Prefix boundary and<br/>signed target shift"]
+    SELECT --> SHIFT["Registered numerator and<br/>denominator"]
+    SHIFT --> DIV["Divider U48 by U25"]
+    DIV --> RNE["Remainder RNE and range checks"]
+    SELECT --> OUT["Result M and r"]
     RNE --> OUT
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class IN,SELECT,DIV,RNE compute;
+class MUL,FIT,SHIFT buffer;
+class OUT output;
 ```
 
 ## Important state / datapath groups

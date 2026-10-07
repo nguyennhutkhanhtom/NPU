@@ -1,6 +1,6 @@
 # descriptor_file.sv — Bảng mô tả tensor và ma trận
 
-> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng.
@@ -16,34 +16,41 @@
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-H["Host 32-bit read/write<br/>ID · matrix select · word select"]
-    subgraph DF["descriptor_file"]
-        WD@{ shape: trap-b, label: "Host write decoder<br/>Independent entry / 32-bit word enable" }
-        W@{ shape: rect, label: "Workspace descriptor bank<hr/>8 × 32-bit FF = 256 bit" }
-        M@{ shape: rect, label: "Matrix descriptor bank<hr/>8 entry × 3 word × 32-bit FF = 768 bit" }
-        RM@{ shape: trap-t, label: "Host read selector<br/>Workspace word / matrix 32-bit slice" }
-        WR["Three combinational workspace descriptor ports"]
-        MR["One combinational matrix descriptor port"]
-    end
-    CLK["clk / rst_n: Reset all 1024 FFs"] -.-> W
-    CLK -.-> M
-    H --> WD
-    WD --> W
-    WD --> M
-    W --> RM
-    M --> RM
-    H -.->|"Read selects"| RM
-    RM -->|"host_rdata"| H
-    IDS["ws_id0 / ws_id1 / ws_id2"] -.-> WR
-    MID["mat_id"] -.-> MR
-    W --> WR
-    M --> MR
-    WR --> WO["src0 / src1 / dst descriptors"]
-    MR --> MO["Matrix descriptor 96 bit"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ H["Host access 32-bit<br/>read / write"] <--> F["Entry / word selection"]
+ F <--> W["Workspace descriptors 8<br/>× 32-bit registers"]
+ F <--> M["Matrix descriptors 8<br/>× 96-bit registers"]
+ W --> O["Workspace descriptor ports<br/>src0 / src1<br/>/ dst"]
+ M --> P["Matrix descriptor port<br/>96-bit descriptor"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class H,F,O,P interface;
+class W,M buffer;
 ```
 
 ## Main flow

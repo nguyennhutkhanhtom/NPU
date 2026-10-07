@@ -77,18 +77,78 @@ timing khớp source/config trước pretrained execution.
 This diagram summarizes parent control conditions; it does not introduce a cache module instance. The source predicates remain authoritative.
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
- S["Parent selects input source / shape / operation family"] --> T{"Valid matching operand-cache tag?"}
- T -->|"Q/K/V or Gate/Up matching reuse"| C["Reuse 12 x 768-bit cached operands"]
- T -->|"Miss or head entry"| L["Read vector SRAM and refill rows"]
+ S["Parent input selection<br/>Source, shape and<br/>family"] --> T{"Matching valid tag?"}
+ T -->|"Q/K/V or Gate/Up reuse"| C["Operand cache<br/>12 × 768 bit"]
+ T -->|"miss or head entry"| L["Vector SRAM refill"]
  L --> C
- C --> A["Linear ternary engine or parent head SIMD operands"]
- P["Producer write / reset / launch / fault / head transition"] -.->|"Invalidate according to parent conditions"| T
- R["RoPE position tag"] --> K{"Q and K share the same valid table?"}
- K -->|"Yes"| U["Reuse cached cos/sin table; read K vector separately"]
- K -->|"No"| F["Fetch table and update position tag"]
- G["Norm gain load"] -.->|"Invalidate shared table payload"| K
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ C --> A["Linear / head<br/>operands Parent-owned routing"]
+ P["Producer / reset /<br/>launch / fault Invalidate<br/>per parent predicates"] -.-> T
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class T control;
+class S,C,A,P buffer;
+class L platform;
+```
+
+```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
+flowchart LR
+ R["RoPE position tag"] --> K{"Matching valid table?"}
+ K -->|"yes"| U["Reuse cos /<br/>sin Read K<br/>vector separately"]
+ K -->|"no"| F["Fetch table<br/>Update tag"]
+ G["Norm gain load<br/>Shared payload invalidation"] -.-> K
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class K control;
+class R,U,F,G buffer;
 ```

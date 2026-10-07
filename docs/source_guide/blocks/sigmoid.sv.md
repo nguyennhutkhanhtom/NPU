@@ -1,6 +1,6 @@
 # sigmoid.sv — Sigmoid bằng ROM và nội suy
 
-> **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — gọi từ rowwise_op.
@@ -16,14 +16,34 @@
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
 X["x_raw S16 + frac_bits"]
     subgraph SIG["sigmoid"]
         COORD["Coordinate S45 + boundary clamp<br/>Index U9 · fraction U24"]
         CTRL["Controller + index/fraction storage"]
         ADDR@{ shape: trap-t, label: "ROM address selector<br/>index or bounded index+1" }
-        ROM@{ shape: rect, label: "One shared ROM lookup<hr/>257 × 16 bit · sigmoid_lut.svh" }
+        ROM@{ shape: rect, label: "One shared ROM lookup<br/>257 × 16 bit · sigmoid_lut.svh" }
         SAMPLES["Sample storage y0 / y1"]
         INTERP["Interpolation pipeline<br/>Slope U10 → product U34 → integer sum U17<br/>RNE uses full integer-sum parity"]
         OUT["Output storage U16/F15"]
@@ -41,8 +61,18 @@ X["x_raw S16 + frac_bits"]
     CTRL -.->|"Output enable"| OUT
     OUT --> Y["y_raw U16/F15"]
     CTRL -.-> STATUS["busy / done"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class CTRL control;
+class X,SAMPLES,START,Y,STATUS buffer;
+class INTERP compute;
+class COORD,OUT output;
+class ADDR,ROM platform;
+style SIG fill:#ffffff,stroke:#aaaaaa,color:#111111;
 ```
 
 ## Main flow
@@ -76,26 +106,88 @@ Các đoạn dưới đây bao phủ nguyên văn toàn bộ source hiện tại
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-X["x_raw S16 / frac_bits 0…24"] --> COORD["Coordinate conversion S45 + clamp"]
-    COORD --> IDX["Index U9 / fraction U24 storage"]
-    IDX -.-> ADDR@{ shape: trap-t, label: "Bounded index / index+1 address selector" }
-    CTRL["Sample controller"] -.-> ADDR
-    ADDR --> ROM@{ shape: rect, label: "One shared ROM lookup<hr/>257 samples × 16 bit" }
-    ROM --> SAMPLE["y0 / y1 sample storage"]
-    CTRL -.-> SAMPLE
-    SAMPLE --> SUB["Monotone adjacent-sample difference U10<br/>0 ≤ y1 − y0 ≤ 512"]
-    SUB --> MUL["U10 × U24 interpolation multiplier<br/>Exact product U34"]
-    IDX -->|"fraction"| MUL
-    MUL --> ADD["Upper product U10 + sample y0<br/>Registered integer sum U17"]
-    SAMPLE -->|"y0 zero-extended to U17"| ADD
-    MUL --> REM["Registered low product U24<br/>Fractional remainder"]
-    REM --> RNE["RNE from remainder<br/>Use entire integer sum parity on ties"]
-    ADD --> RNE
-    RNE --> Y["U16/F15 output storage"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ X["Input / fractional bits<br/>S16; F0…F24"] --> C["Coordinate conversion<br/>S45 and clamp"]
+ C --> I["Index / fraction<br/>U9 / U24"]
+ I --> A["Bounded sample addresses<br/>Index and index + 1"]
+ A --> R["Shared sigmoid ROM<br/>257 × U16 samples"]
+ R --> S["Adjacent sample storage<br/>y0 / y1"]
+ T["Sample controller"] -.-> A & S
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class X,A interface;
+class C compute;
+class I,S buffer;
+class R platform;
+class T control;
+```
+
+```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
+flowchart TB
+ S["Adjacent samples<br/>y0 / y1"] --> D["Monotone difference<br/>U10; at most 512"]
+ D --> M["Interpolation multiply<br/>U10 × U24 → U34"]
+ F["Fraction<br/>U24"] --> M
+ M --> A["Integer sum<br/>y0 + upper product; U17"]
+ S --> A
+ M --> L["Fractional remainder<br/>Low product U24"]
+ A --> R["RNE<br/>Full sum parity on ties"]
+ L --> R
+ R --> Y["Output<br/>U16/F15"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class S,F,L buffer;
+class D,M,A,R compute;
+class Y output;
 ```
 
 ### [Dòng 72–106: FSM lấy hai mẫu và chốt output](<../../../Verilog%20Source%20code/sigmoid.sv#L72>)

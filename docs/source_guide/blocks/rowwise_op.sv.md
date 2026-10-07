@@ -1,6 +1,6 @@
 # rowwise_op.sv — ALU vector nhỏ và cập nhật state
 
-> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — datapath rowwise.
@@ -16,57 +16,47 @@
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-IN["A / B / old state words 256 bit<br/>Format + fractional bits + valid_elems"]
-    subgraph CORE["rowwise_op — registered datapath"]
-        CTRL["Opcode controller + element index<br/>LOAD / MULTIPLY / RAW / ROUND / PACK"]
-        BUF["Input word buffers"]
-        LANE@{ shape: trap-t, label: "Lane and multiplier operand selectors<hr/>Magnitude / sign / gate complement" }
-        LREG["Lane registers<br/>2 × S17 for A and B"]
-        MREG["Magnitude + sign registers<br/>2 × U16 pairs"]
-        MUL["Two shared unsigned<br/>16 × 16 multipliers"]
-        PREG["Product registers<br/>2 × U32"]
-        SIGN["Product sign correction<br/>REC sum S33"]
-        AS["ADD / SUB / ReLU<br/>Extended arithmetic"]
-        RAW@{ shape: trap-t, label: "Raw-value selectors<hr/>MUL / REC / ADD / SUB / ReLU" }
-        RREG["Raw result registers<br/>2 × S33"]
-        RNE["Two shared scale / RNE paths<br/>REC shift=15"]
-        SREG["Rounded result registers<br/>2 × S64"]
-        SAT["S16 / U16 saturation<br/>Tail and result position selection"]
-        SQ["Sigmoid input register S16"]
-        SIG["sigmoid<br/>ROM + interpolation"]
-        RES@{ shape: trap-t, label: "Result selector<hr/>Arithmetic PACK / SIG done" }
-        RBUF["Result buffer 256 bit"]
-    end
-    IN --> BUF
-    IN -.-> CTRL
-    BUF --> LANE
-    CTRL -.->|"Index / opcode"| LANE
-    LANE --> LREG
-    LANE --> MREG
-    LANE --> SQ
-    MREG --> MUL
-    MUL --> PREG
-    PREG --> SIGN
-    LREG --> AS
-    AS --> RAW
-    SIGN --> RAW
-    RAW --> RREG
-    RREG --> RNE
-    CTRL -.->|"Latched shift"| RNE
-    RNE --> SREG
-    SREG --> SAT
-    CTRL -.->|"Index / valid lanes"| SAT
-    SAT --> RES
-    SQ --> SIG
-    SIG --> RES
-    CTRL -.->|"Enable / state"| RES
-    RES --> RBUF
-    RBUF --> OUT["result_word 256 bit"]
-    CTRL -.-> STATUS["busy / done / overflow / format_error"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ I["Input words / format"] --> B["Buffered lane operands"]
+ B --> A["Shared arithmetic Multiply,<br/>add, subtract and<br/>ReLU"]
+ B --> S["Sigmoid ROM /<br/>interpolation"]
+ A --> R["Scale / RNE / clamp"]
+ S --> O["Result packer 256-bit<br/>output"]
+ R --> O
+ C["Opcode / lane control"] -.-> B & A & R
+ O --> F["Result / status"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class I interface;
+class B buffer;
+class A,S compute;
+class R,O,F output;
+class C control;
 ```
 
 Nét liền là dữ liệu, nét đứt là control. MUX dùng hình thang thu hẹp về ngõ ra. Các hộp mang tên register là ranh giới clock thực trong datapath; các batch vẫn chạy tuần tự, không nhận một batch mới mỗi clock. Sơ đồ mô tả phần cứng, không phải pipeline instruction CPU.
@@ -121,7 +111,27 @@ Mỗi nhóm giữ nguyên source và phạm vi dòng để đối chiếu. Giả
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
     SELECT["Lane selection + magnitude / sign"] --> INREG["LOAD registers<br/>Magnitude U16 pairs + sign + lane S17"]
     INREG --> MUL["2 shared unsigned 16 × 16 multipliers"]
@@ -139,8 +149,17 @@ flowchart TB
     CTRL -.-> RREG
     CTRL -.-> SREG
     CTRL -.-> PACK
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class OP,CTRL control;
+class SELECT interface;
+class INREG,PREG,RAW,RREG,SREG buffer;
+class MUL,RNE compute;
+class PACK output;
 ```
 
 ### [Dòng 141–172: Saturation, tail và pack](<../../../Verilog%20Source%20code/rowwise_op.sv#L141>)

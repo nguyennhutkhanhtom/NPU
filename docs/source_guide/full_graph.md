@@ -19,29 +19,134 @@ sigmoid lane và bốn divider lane mặc định tăng throughput cho các batc
 Đây là functional overview. Các đường qua **Parent request and operand muxes** được thực hiện trong llm_soc, không phải dây nối trực tiếp giữa hai engine. Xem [hierarchy và port-map manifest](../diagrams/README.md) để tra instance, generate scope và kết nối chính xác.
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
- H["Host request / held acknowledgement<br/>32-bit address and data"] --> F["Registered host frontend<br/>Prompt / configuration / token output"]
- F <--> P["u_parameters<br/>24576 rows x 256 bits"]
- G["Parent graph and operator FSMs<br/>112 one-hot operator bits"] --> R["Parent request and operand muxes"]
- R <--> P
- R <--> V["u_vectors<br/>96 rows x 768 bits"]
- R <--> K["u_cache<br/>4096 rows x 768 bits"]
- G --> L["u_linear_engine<br/>Two-word prefetch / ternary_dot32"]
- G --> E["u_head_engine<br/>Four ordered int8 chunks"]
- G --> A["u_attention_engine<br/>Causal QK scores and maximum"]
- L <-->|"Parameter request / data / valid"| R
- E <-->|"Parameter request / capture / issue"| R
- A <-->|"KV request / capture / issue"| R
- R <--> C["Parent input cache<br/>12 rows x 768 bits"]
- R <--> M["u_math STREAMING=1<br/>32 S24 x S32 lanes"]
- G <--> N["u_attention_normalize<br/>Four lanes: shared + three private dividers"]
- N <-->|"Lane 0 request / quotient / remainder"| D["u_div<br/>RMS reciprocal or attention lane 0"]
- G <--> Q["u_root and four sigmoid instances"]
- G --> O["Parent scaling / sampling<br/>Output token buffer"]
- F -.->|"Launch / status"| G
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ H["Host interface<br/>32-bit request / response"] <--> F["Host frontend<br/>Prompt, config and output IDs"]
+ subgraph MEMORY["Shared storage"]
+  P["u_parameters<br/>24576 × 256 bit"]
+  V["u_vectors<br/>96 × 768 bit"]
+  K["u_cache<br/>4096 × 768 bit"]
+ end
+ F <--> P
+ R["Parent resource muxes<br/>Compute requests / payloads"] <--> P
+ R <--> V
+ R <--> K
+ C["Graph / operator control<br/>Phase and routing"] -.-> R
+ C -.-> F
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class C control;
+class H interface;
+class R buffer;
+class F output;
+class P,V,K platform;
+style MEMORY fill:#ffffff,stroke:#aaaaaa,color:#111111;
+```
+
+```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
+flowchart TB
+ C["Parent phase control<br/>llm_soc"] -.-> L & H & A
+ subgraph ENGINES["Compute engines"]
+ L["u_linear_engine<br/>Ternary rows"]
+ H["u_head_engine<br/>Ordered int8 chunks"]
+ A["u_attention_engine<br/>Causal QK scores"]
+ end
+ R["Parent muxes<br/>Requests / operands / returns"] <--> L & H & A
+ R --> M["u_math<br/>32 streaming SIMD lanes"]
+ M -->|"sum / valid"| R
+ style ENGINES fill:#ffffff,stroke:#aaaaaa,color:#111111;
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class C control;
+class L,H,A,M compute;
+class R interface;
+```
+
+```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
+flowchart TB
+ C["Parent arithmetic routing<br/>RMSNorm / attention / SiLU"] -.-> D & Q & N
+ D["u_div<br/>Shared divider"] -->|"quotient + remainder"| N["u_attention_normalize<br/>Shared lane 0 + private lanes"]
+ Q["Root / sigmoid resources"] --> C
+ N --> C
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class C interface;
+class D,Q platform;
+class N output;
 ```
 
 ## Đọc source theo luồng

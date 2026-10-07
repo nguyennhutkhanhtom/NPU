@@ -2,7 +2,7 @@
 
 > **Category: GUIDE.** Use [full graph](../full_graph.md) first; [legacy hierarchy](../legacy/README.md) covers `matmulfree`.
 
-Source links lead to the current implementation. Guides explain responsibilities and contracts without copying RTL. Existing diagrams are retained and may require a separate refresh.
+Source links lead to the current implementation. Guides explain responsibilities and contracts without copying RTL. Diagrams follow the [shared visual style](../../diagrams/diagram_style.md).
 
 | Source | Scope | Role | Guide |
 |---|---|---|---|

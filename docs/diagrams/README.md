@@ -44,7 +44,7 @@ giữ từng instance riêng; dùng zoom/search trong diagrams.net để đọc 
 
 ## Quy ước và cấu hình
 
-Mọi sơ đồ dùng nền trắng, nét/chữ đen và cỡ chữ **18 pt = 24 px**. Trong draw.io,
+Markdown Mermaid diagrams follow the [shared diagram style](diagram_style.md): semantic colors, dark text, white background and approximately 17 px text. The existing draw.io hierarchy retains its black/white 18 pt presentation. Trong draw.io,
 arrow mảnh biểu diễn instantiation; arrow đậm có nhãn biểu diễn kết nối chức năng
 đã trace. Outline đứt đoạn đánh dấu primitive ngoài source repository.
 

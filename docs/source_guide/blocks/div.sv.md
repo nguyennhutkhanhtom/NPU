@@ -1,6 +1,6 @@
 # div.sv — Divider unsigned tuần tự
 
-> **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — scalar nội bộ.
@@ -16,32 +16,46 @@
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-N["Numerator NUM_W bit"]
-    D["Denominator DEN_W bit"]
-    subgraph DIV["div — unsigned iterative divider"]
-        CTRL["Start / completion controller<br/>Bit counter + zero-divisor detector"]
-        WORK["Working storage<br/>q_work · rem_work · den_reg"]
-        ALU["Shift + compare/subtract<br/>One reused arithmetic datapath"]
-        MUX@{ shape: trap-t, label: "Arithmetic feedback / zero-divisor selector" }
-        OUT["Quotient / remainder output storage"]
-    end
-    N --> WORK
-    D --> WORK
-    D -.-> CTRL
-    START["start"] -.-> CTRL
-    WORK --> ALU
-    ALU --> MUX
-    WORK -->|"Zero-divisor bypass data"| MUX
-    MUX -->|"Feedback q_next / remainder"| WORK
-    MUX --> OUT
-    CTRL -.->|"Load / update enables"| WORK
-    CTRL -.->|"Output select / enable"| OUT
-    OUT --> Q["quotient / remainder"]
-    CTRL -.-> STATUS["busy / done / div_zero"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ I["Input transaction Numerator<br/>/ denominator"] --> W["Quotient / remainder<br/>state Captured operands"]
+ W --> A["Restoring divide step<br/>Shift, compare and<br/>subtract"]
+ A ==>|"next bit"| W
+ A --> O["Result registers Quotient<br/>/ remainder"]
+ C["Start / completion<br/>control NUM_W iterations"] -.-> W & O
+ I -.-> Z["Zero-divisor path Sentinel<br/>result; div_zero"]
+ Z --> O
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class I interface;
+class W buffer;
+class A compute;
+class O,Z output;
+class C control;
 ```
 
 ## Main flow
@@ -79,23 +93,43 @@ Start khi rảnh chốt numerator/denominator. Mỗi cycle busy tiến một bit
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-Q["q_work storage"] --> SHIFT["Shift / bit-append network"]
-    R["rem_work storage"] --> SHIFT
-    D["den_reg storage"] --> ALU["Compare/subtract network"]
-    SHIFT -->|"Shifted remainder"| ALU
-    ALU --> MUX@{ shape: trap-t, label: "Remainder result mux" }
-    SHIFT -->|"Unsubtracted remainder"| MUX
-    ALU -.->|"Comparison result"| MUX
-    ALU -.->|"New quotient bit"| QNEXT["Quotient shift + LSB connection"]
-    Q --> QNEXT
-    MUX -->|"Arithmetic feedback"| R
-    QNEXT -->|"Arithmetic feedback"| Q
-    CTRL["Divider controller / bit counter"] -.-> Q
-    CTRL -.-> R
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ Q["Quotient state<br/>q_work"] --> S["Shift / bit append"]
+ R["Remainder state<br/>rem_work"] --> S
+ S --> A["Extended compare /<br/>subtract DEN_W+2"]
+ D["Captured denominator den_reg"] --> A
+ A --> N["Next quotient /<br/>remainder Subtract or<br/>retain remainder"]
+ N ==>|"iterate"| Q
+ N ==>|"iterate"| R
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class Q,R,D buffer;
+class S,A,N compute;
 ```
 
 ### [Dòng 38–58: Reset/start](<../../../Verilog%20Source%20code/div.sv#L38>)

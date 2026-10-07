@@ -1,6 +1,6 @@
 # sigmoid_257.mem — Bản hex của ROM sigmoid mới
 
-> **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục từng file](README.md)
 
 **Source:** [sigmoid_257.mem](<../../../Verilog%20Source%20code/sigmoid_257.mem>).

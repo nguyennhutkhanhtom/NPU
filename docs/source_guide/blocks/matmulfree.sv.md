@@ -1,6 +1,6 @@
 # matmulfree.sv — Top-level: điều phối toàn NPU
 
-> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — core chính.
@@ -18,59 +18,48 @@ Port host là bus đơn giản 32 bit, không phải AXI/APB. Địa chỉ host 
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-HOST["Host 32 bit"]
-    subgraph NPU["NPU — matmulfree.sv"]
-        IF["Host interface<br/>Read request + tagged response registers<br/>Ctrl/desc: 2 edges · SRAM/imem: 4 edges<br/>Write: same-edge acceptance"]
-        subgraph CTRL["Control and configuration"]
-            PC["PC.sv<br/>Program counter 9 bit"]
-            IM@{ shape: rect, label: "ins_mem.sv<hr/>Instruction memory 512 × 13 bit" }
-            SCH["Scheduler single-issue<br/>Opcode decode and engine scheduling"]
-            DESC@{ shape: rect, label: "descriptor_file.sv<hr/>8 workspace × 32-bit FF<hr/>8 matrix × 3 word × 32-bit FF" }
-            SCALE["Runtime q metadata + effective_mat<br/>scale_compose.sv + div 48/25<br/>Static scale or dynamic composition<br/>Overlap guard for quantization metadata"]
-        end
-        subgraph ENG["Compute engines"]
-            ROW["Row-wise vector engine<br/>rowwise_dispatch + rowwise_op<br/>Registered operand / product / RNE<br/>ADD / SUB / MUL / REC / RELU<br/>sigmoid: ROM and interpolation"]
-            NORM["NORM + QUANT engine<br/>norm_dispatch + norm<br/>isqrt_u64 + div 55/32<br/>Registered operand / product / RNE<br/>S16 → scratch S24/F16 → S8"]
-            TM["Ternary matmul engine<br/>ternary_mul · 32 sign/zero selection lanes<br/>acc_mul + accumulator S18<br/>Registered product / RNE<br/>postscale_finish + bias → S16/S32"]
-        end
-        REQMUX@{ shape: trap-t, label: "Workspace request mux<br/>Select requests/writes using active_unit" }
-        RSPDEC@{ shape: trap-b, label: "Workspace response demux<br/>Route read data/valid to the active engine" }
-        WS@{ shape: rect, label: "Workspace SRAM 8 KiB<hr/>regfile.sv: register<hr/>sram_256_wrapper ADDR_W=8<hr/>256 × 256 bit<hr/>8 bank × 32 bit" }
-        PM@{ shape: rect, label: "Parameter SRAM 32 KiB<hr/>mem_mapping.sv<hr/>sram_256_wrapper ADDR_W=10<hr/>1024 × 256 bit · weight + bias<hr/>8 bank × 32 bit" }
-        IF <-->|"Load/read program, descriptors and control/status"| CTRL
-        IF <-->|"Host 32 bit · read valid/ready"| WS
-        IF <-->|"Host 32 bit · read valid/ready"| PM
-        PC -->|"Address"| IM
-        IM -->|"Instruction + valid"| SCH
-        SCH -.->|"clear / advance"| PC
-        SCH -.->|"Descriptor IDs"| DESC
-        DESC -.->|"Tensor metadata"| ENG
-        DESC -.->|"Matrix descriptor"| SCALE
-        SCH -.->|"start / opcode"| ENG
-        ENG -.->|"done / error / overflow"| SCH
-        SCH -.->|"active_unit"| REQMUX
-        SCH -.->|"active_unit"| RSPDEC
-        SCH -.->|"Compose control"| SCALE
-        SCALE -.->|"done / error"| SCH
-        IF -.->|"scratch base / epsilon / delta"| NORM
-        NORM -.->|"quant_d"| SCALE
-        SCALE -.->|"effective_mat + M/r"| TM
-        ROW -->|"Request / write data"| REQMUX
-        NORM -->|"Request / write data"| REQMUX
-        TM -->|"Request / write data"| REQMUX
-        REQMUX -->|"Address / enable / write data"| WS
-        WS -->|"256-bit read data / valid"| RSPDEC
-        RSPDEC -->|"Vector data"| ROW
-        RSPDEC -->|"X / scratch / q"| NORM
-        RSPDEC -->|"q / output"| TM
-        TM -.->|"Read request"| PM
-        PM -->|"256 bit + valid"| TM
-    end
-    HOST <-->|"Address / data / handshake"| IF
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ H["Host<br/>32-bit transactions"] <--> F["Host frontend Control<br/>and memory windows"]
+ F <--> D["Configuration storage Workspace<br/>/ matrix descriptors"]
+ F <--> M["Memory ports Parameters<br/>and workspace"]
+ P["Program storage PC<br/>and instruction memory"] --> C["Single-issue scheduler Opcode<br/>and engine ownership"]
+ D --> C
+ C -.-> E["Compute engines Rowwise,<br/>norm and ternary"]
+ E <--> M
+ E -.-> S["Status Done, error<br/>and overflow"]
+ S -.-> F
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class H,F,M interface;
+class D,P buffer;
+class C control;
+class E compute;
+class S output;
 ```
 
 ## Main flow
@@ -109,30 +98,44 @@ Cache q giữ D, base và length để scale gắn đúng tensor. Bất kỳ ghi
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
-flowchart LR
-H["Host enable / read / address"]
-    D["Range + alignment decoder<br/>Control always · other regions idle"]
-    R["Request registers<br/>Address + one-hot region + pending"]
-    C["Control / descriptor data<br/>Address from request register"]
-    M["SRAM / instruction adapter<br/>Synchronous read + tag + valid"]
-    X@{ shape: trap-t, label: "Parallel region response mux" }
-    P["Response registers<br/>Data + address tag + valid"]
-    O["host_rdata<br/>Valid mask to zero"]
-    A["host_ready<br/>Response tag matches current request"]
-    H --> D
-    D --> R
-    R --> C
-    R --> M
-    C --> X
-    M --> X
-    X --> P
-    R -.->|"Request tag"| P
-    P --> O
-    P -.-> A
-    H -.->|"Enable / read / address"| A
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
+flowchart TB
+ P["PC / instruction storage"] --> D["Opcode decode"]
+ D --> C["Single-issue scheduler"]
+ C -.-> E["Selected compute engine"]
+ E --> R["Completion / faults"]
+ R ==>|"advance instruction"| P
+ R -.-> S["Host status Running,<br/>ready and sticky<br/>flags"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class P buffer;
+class D,C control;
+class E compute;
+class R,S output;
 ```
 
 Control/descriptor cần hai cạnh lên; SRAM/imem cần bốn cạnh lên từ sample đầu. Mux data dùng region đã chốt, output data đi từ register response. Comparator address/tag giữ ready gắn đúng giao dịch; host phải lấy data cùng ready.
@@ -214,41 +217,44 @@ Control/descriptor cần hai cạnh lên; SRAM/imem cần bốn cạnh lên từ
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-PROG["Program block<br/>PC + instruction memory"]
-    DESC@{ shape: rect, label: "Descriptor file<hr/>Addressable storage" }
-    subgraph CTRL["Top-level matmulfree control"]
-        DECODE["Instruction storage + opcode decode"]
-        SCH["Single-issue scheduler"]
-        STATUS["Completion/error aggregation<br/>running / ready / sticky error / overflow"]
-        QMETA@{ shape: rect, label: "Runtime q metadata bank<hr/>336-bit payload without async reset<hr/>8 resettable valid bits" }
-        ESEL@{ shape: trap-t, label: "Static/dynamic coefficient selector" }
-        EFF["Effective matrix descriptor storage"]
-    end
-    ENGINE["Row-wise / NORM / ternary engines"]
-    COMP["scale_compose"]
-    PROG --> DECODE
-    DECODE -.-> SCH
-    DECODE -.->|"IDs"| DESC
-    DESC -.-> ESEL
-    DESC -.->|"q base/length validation"| SCH
-    SCH -.->|"clear / advance"| PROG
-    SCH -.->|"start / active_unit"| ENGINE
-    ENGINE -.->|"done / error / overflow"| STATUS
-    STATUS -.-> SCH
-    ENGINE -->|"NORM quant_d"| QMETA
-    WR["Workspace write address / host descriptor write"] -.->|"Invalidate"| QMETA
-    QMETA -->|"D masked to zero while invalid"| COMP
-    QMETA -.->|"Valid / extent · alias-overlap guard"| SCH
-    ESEL --> EFF
-    EFF -->|"Descriptor M/r"| COMP
-    SCH -.->|"Compose start"| COMP
-    COMP -.->|"done / error"| SCH
-    COMP -->|"Composed M/r"| ESEL
-    EFF -.->|"Matrix config"| ENGINE
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ D["Matrix descriptor Static<br/>scale M/r"] --> S["Effective scale selection"]
+ E["Norm completion quant_d<br/>metadata"] --> Q["Runtime scale metadata<br/>Payload + valid<br/>bits"]
+ Q --> C["scale_compose<br/>Dynamic M/r"]
+ D --> C
+ C --> S
+ W["Workspace / descriptor<br/>writes Invalidate matching<br/>metadata"] -.-> Q
+ S --> M["Ternary engine Effective<br/>matrix descriptor"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class D,Q buffer;
+class E,C,M compute;
+class S,W control;
 ```
 
 ### [Dòng 543–568: Mux response và status](<../../../Verilog%20Source%20code/matmulfree.sv#L543>)

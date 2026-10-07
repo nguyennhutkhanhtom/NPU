@@ -215,16 +215,36 @@ Bản đầu không cần lệnh hàm mũ hoặc chia vector tổng quát. NORM 
 ## SRAM và luồng dữ liệu
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
-flowchart LR
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
+flowchart TB
     H["Host loads model and input<br/>Read logits; argmax and tokenization"]
     I["Host interface 32 bit<br/>SRAM read valid/ready"]
     H <--> I
     I <-->|"Load/read; ready"| W["Parameter SRAM 32 KiB<br/>8 bank × 1024 × 32 bit<br/>Synchronous read/valid"]
-    I <-->|"Load/read; ready"| S["Workspace SRAM 8 KiB<br/>8 bank × 256 × 32 bit<br/>Synchronous read/valid<br/>X / scratch / q / state / logits"]
+    I <-->|"Load/read; ready"| S["Workspace SRAM 8 KiB 8 bank × 256<br/>× 32 bit Synchronous read/valid X / scratch<br/>/ q / state / logits"]
     S --> N["NORM + QUANT<br/>2 lane + scalar units"]
     N -->|"q S8 and scratch"| S
-    S -->|"q S8"| T["Ternary core 32 × 1<br/>32 selectors; S12/S14 reductions; S18 accumulator"]
+    S -->|"q S8"| T["Ternary core 32 ×<br/>1 32 selectors; S12/S14<br/>reductions; S18 accumulator"]
     W --> B["Weight buffer 256 bit<br/>Reuse for up to four chunks"]
     B --> T
     T --> R["Postscale + bias<br/>RNE + saturation → S16/S32"]
@@ -236,8 +256,17 @@ flowchart LR
     C -.-> T
     C -.-> V
     I -.-> C
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class H,T interface;
+class B,C buffer;
+class N,V compute;
+class R output;
+class I,W,S platform;
 ```
 
 Đây là sơ đồ luồng dữ liệu; scheduler chạy từng instruction, dùng workspace request mux/response demux để nối engine đang hoạt động. `q`, scratch, state và logits là các vùng trong cùng workspace 8 KiB. TMATMUL ghi S16/S32 vào workspace; rowwise đọc/ghi workspace qua lệnh riêng. Host đọc logits và thực hiện argmax/tokenization. [Sơ đồ hierarchy đầy đủ](<../../source_guide/legacy/README.md#2-sơ-đồ-kiến-trúc-tổng-quan-đang-chạy>) thể hiện các đường control/data thực tế. Khi tính dot product ternary, workspace SRAM cấp dữ liệu `q`, còn parameter SRAM cấp weight. Các lần đọc bias, ghi đầu ra và truy cập khác phải được sắp lịch qua buffer hoặc những chu kỳ riêng; không giả định SRAM một cổng vừa đọc nhiều nguồn vừa ghi trong cùng chu kỳ.

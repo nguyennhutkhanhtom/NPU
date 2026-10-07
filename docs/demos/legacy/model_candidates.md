@@ -104,8 +104,28 @@ Với **Char32**, dùng vocabulary gồm 128 ký tự ASCII, embedding INT16, m�
 [NanoFable đã được demo](nanofable_hybrid.md): CPU generation và linear replay thực trên RTL. 28 tensor ternary với 6 activation context mỗi tensor pass 168 lượt; K lớn nhất 384. Weight linear đã padding dùng 212.992 B, tầng lớn nhất 12.288 B và workspace demo 2.560 B. Toàn model vẫn có tệp nén khoảng 1,16 MiB cùng affine RMSNorm/RoPE/attention/gating và embedding/output head ngoài core. Điểm chưa đáp ứng nằm ở memory, operator và quá trình export, không phải kết luận rằng 32 PE không thể lần lượt thực hiện các linear layer được hỗ trợ. Nếu chọn triển khai model này, phải lập cấu hình mở rộng riêng. Với vocabulary 4096, token ID có thể lưu U16. Vocabulary lớn hơn không tự buộc tăng width của logits; vẫn đề xuất S32 cùng scale, nhưng phải kiểm tra range và sai số khi export checkpoint. Lưu cả vector logits S32 sẽ cần 16 KiB, còn streaming argmax cho greedy decoding có thể tránh buffer đó; cách này không giải quyết các operator attention còn thiếu.
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
-flowchart LR
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
+flowchart TB
     PC["Host: pretrained checkpoint and exporter"] --> P["Packed weights and integer scales"]
     P --> W["Parameter SRAM: 32 KiB"]
     IN["Image 16x16, image row or character"] --> S["Workspace SRAM: 8 KiB"]
@@ -114,9 +134,17 @@ flowchart LR
     W --> T
     T --> V["Rescale / ReLU / SIG / SiLU"]
     V --> S
-    V --> OUT["Host selects highest-scoring label or character"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+    V --> OUT["Host selects highest-scoring<br/>label or character"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class PC,OUT interface;
+class IN buffer;
+class P,N,T,V compute;
+class W,S platform;
 ```
 
 ## Cách kiểm tra demo

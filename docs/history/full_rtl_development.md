@@ -52,29 +52,89 @@ cells. See [ASIC portability](../design/asic_portability.md) for the technology 
 Historical illustration of the recorded implementation; see the [current graph](../design/full_rtl_language.md) for current engine ownership.
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
-flowchart TD
-    HOST[CPU checkpoint loader and tokenizer] --> PARAM[Parameter SRAM and prompt IDs]
-    PARAM --> EMB[RTL embedding]
-    EMB --> AN[Affine RMSNorm]
-    AN --> QKV[Q K V projections]
-    QKV --> ROPE[RoPE on Q and K]
-    ROPE --> CACHE[KV cache write]
-    CACHE --> ATT[Causal attention and softmax]
-    ATT --> O[O projection and residual]
-    O --> MN[Affine RMSNorm]
-    MN --> MLP[Gate and up projections / SiLU / multiply / down]
-    MLP --> RES[Residual]
-    RES --> LAYER{Four layers complete?}
-    LAYER -->|Next layer| AN
-    LAYER -->|More prompt positions| EMB
-    LAYER -->|Decode| FINAL[Final affine norm and tied head]
-    FINAL --> PICK[RTL greedy or Gumbel token selection]
-    PICK --> NEXT{Stop condition?}
-    NEXT -->|Next token| EMB
-    NEXT -->|Finished| OUT[Output token SRAM to CPU decode]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
+flowchart TB
+ H["CPU checkpoint / tokenizer"] --> P["Parameters / prompt IDs"]
+ P --> E["RTL embedding"]
+ E --> L["Transformer layer passes<br/>Historical flow below"]
+ L --> C{"Layer / position progress?"}
+ C ==>|"next layer"| L
+ C -->|"prompt position"| E
+ C -->|"decode"| F["Final norm / tied head"]
+ F --> T["Greedy / Gumbel selection"]
+ T --> S{"Stop?"}
+ S ==>|"next token"| E
+ S -->|"finished"| O["Output token SRAM<br/>CPU text decode"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class H,P interface;
+class E,L,F compute;
+class C,S control;
+class T,O output;
+```
+
+```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
+flowchart TB
+ A["Affine RMSNorm"] --> Q["Q / K / V projections"]
+ Q --> R["RoPE / KV write"]
+ R --> T["Causal attention / softmax"]
+ T --> O["O projection / residual"]
+ O --> N["Affine RMSNorm"]
+ N --> F["Gate / Up / SiLU / multiply / Down"]
+ F --> S["Residual"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class A,Q,R,T,O,N,F compute;
+class S output;
 ```
 
 `llm_soc` contains two state machines: `graph` chooses the transformer stage;
@@ -330,18 +390,46 @@ token/phase/causal assertions change. Memory-only dont_merge now also preserves
 group and IP read/write enables. Memory latency and reset contract are unchanged.
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
-flowchart LR
-    WEIGHT[Weights and chunk] --> CODE[Registered U2 code per lane]
-    CODE --> DECODE[Registered ternary S32]
-    DECODE --> MATH[Portable SIMD byte pipeline]
-    LUT[Exp endpoints U25] --> DELTA[Registered U25 delta]
-    DELTA --> INTERP[Registered U37 interpolation]
-    ROUND[Scalar RNE S64] --> FLAGS[Private group flags and low24]
-    FLAGS --> CLAMP[Registered group S24 clamp]
-    CLAMP --> VECTOR[Selected vector lane]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
+flowchart TB
+    WEIGHT["Weights and chunk"] --> CODE["Registered U2 code per lane"]
+    CODE --> DECODE["Registered ternary S32"]
+    DECODE --> MATH["Portable SIMD byte pipeline"]
+    LUT["Exp endpoints U25"] --> DELTA["Registered U25 delta"]
+    DELTA --> INTERP["Registered U37 interpolation"]
+    ROUND["Scalar RNE S64"] --> FLAGS["Private group flags and low24"]
+    FLAGS --> CLAMP["Registered group S24 clamp"]
+    CLAMP --> VECTOR["Selected vector lane"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class WEIGHT,CODE,DECODE,DELTA,INTERP,FLAGS,VECTOR buffer;
+class MATH interface;
+class LUT,ROUND compute;
+class CLAMP output;
 ```
 
 QSF selects an ordinary LVDS input buffer for clk, feeding direct GCLK without

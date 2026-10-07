@@ -1,6 +1,6 @@
 # rowwise_dispatch.sv — Đọc tensor, gọi ALU và ghi output
 
-> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng — điều phối rowwise.
@@ -16,34 +16,47 @@
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-CFG["start / opcode / A, B, dst descriptors"]
-    WS["Workspace read/write port 256 bit"]
-    subgraph DISPATCH["rowwise_dispatch"]
-        CHECK["Descriptor checker<br/>Format / scale / length / overlap"]
-        CTRL["Controller + word counter<br/>valid_elems"]
-        ADDR@{ shape: trap-t, label: "Workspace address selector<br/>A / B / old dst / output dst" }
-        BUF["A / B / old-destination buffers<br/>3 × 256 bit"]
-        ALU["rowwise_op<br/>Vector arithmetic + sigmoid"]
-        WRITE["Output write connection<br/>alu_result + dst address"]
-        STATUS["Completion / error / overflow aggregation"]
-    end
-    CFG -.-> CHECK
-    CFG -.-> CTRL
-    CHECK -.-> CTRL
-    CTRL -.->|"Select + enable"| ADDR
-    ADDR -.->|"Read/write address"| WS
-    WS -->|"Read data / valid"| BUF
-    CTRL -.->|"Buffer load selects"| BUF
-    BUF --> ALU
-    CTRL -.->|"start / op / format / tail"| ALU
-    ALU -.->|"done / error / overflow"| CTRL
-    ALU --> WRITE
-    WRITE -->|"Write data"| WS
-    CTRL -.-> STATUS
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ D["Descriptors / opcode"] --> C["Validation / word control"]
+ C -.-> R["Workspace request routing"]
+ W["Workspace SRAM 256-bit<br/>words"] <--> R
+ R --> B["Word buffers A<br/>/ B /<br/>old destination"]
+ B --> A["rowwise_op Arithmetic and<br/>sigmoid"]
+ A --> R
+ A -.-> S["Status Done, error<br/>and overflow"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class D,R interface;
+class C control;
+class W platform;
+class B buffer;
+class A compute;
+class S output;
 ```
 
 ## Main flow
@@ -109,22 +122,47 @@ CFG["start / opcode / A, B, dst descriptors"]
 #### Sơ đồ khối phần cứng của nhóm
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-D["Latched descriptors + opcode"] -.-> CTRL["Dispatcher controller<br/>word_index / word_count / valid_elems"]
-    D -.-> ADDR@{ shape: trap-t, label: "Workspace address selector<br/>A / B / old dst / output dst" }
-    CTRL -.-> ADDR
-    ADDR -.-> WS["Workspace SRAM interface"]
-    WS -->|"Read data / valid"| BUF["A / B / old-state word buffers"]
-    CTRL -.->|"Load selects"| BUF
-    BUF --> ALU["rowwise_op"]
-    CTRL -.->|"start / format / opcode"| ALU
-    ALU -->|"Result word"| WS
-    ALU -.->|"done / error / overflow"| CTRL
-    CTRL -.->|"Write enable"| WS
-    CTRL -.-> STATUS["busy / done / overflow / format_error"]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ D["Latched descriptors / opcode"] -.-> C["Dispatcher control Word<br/>index and valid<br/>elements"]
+ C -.-> R["Workspace routing Source<br/>/ destination addresses"]
+ R <--> W["Workspace SRAM"]
+ R --> B["Buffered input words"]
+ B --> A["rowwise_op"]
+ A --> R
+ C -.-> S["Completion / error status"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class D,B buffer;
+class C control;
+class R interface;
+class W platform;
+class A compute;
+class S output;
 ```
 
 ### [Dòng 136–151: Đọc B/state và chờ ALU](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L136>)

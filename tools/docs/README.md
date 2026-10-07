@@ -2,7 +2,7 @@
 
 > **Category: GUIDE.**
 
-[Documentation hub](../../docs/README.md) · [Source guide](<../../docs/source_guide/legacy/README.md>)
+[Documentation hub](../../docs/README.md) · [Source guide](../../docs/source_guide/README.md)
 
 The Markdown Mermaid blocks are the source of truth for inline diagrams. This renderer scans all
 Markdown under `docs/` and the root `README.md`, checks syntax, saves PNG/SVG
@@ -13,7 +13,7 @@ Editable module hierarchy is stored in [rtl_hierarchy.drawio](../../rtl_hierarch
 and [the portable variant](../../docs/diagrams/rtl_hierarchy_portable.drawio).
 Their source expansion and port maps are recorded in
 [hierarchy_manifest.json](../../docs/diagrams/hierarchy_manifest.json).
-All diagrams use black/white and 18 pt text (24 CSS pixels).
+Markdown diagrams use the [semantic palette and 17 px light-theme style](../../docs/diagrams/diagram_style.md). The draw.io hierarchy assets have a separate rendering workflow.
 
 ## Setup and run
 

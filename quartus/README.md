@@ -20,6 +20,6 @@ do not build them in place after relocation. Use their preserved source/config
 archives and recorded commands under `docs/verification/timing` for a fresh replay.
 
 Trạng thái source/config hiện tại: [verification status](../docs/verification/optimization_status.md).
-Checkpoint đã hoàn tất: [opt_fulltop7 timing PASS](../docs/verification/timing/opt_fulltop7/manifest.json); QSF hiện tại đã khác archive này.
+Current verification and implementation status: [optimization status](../docs/verification/optimization_status.md).
 Experiment locations: [historical project index](../docs/history/quartus_projects.md).
 Quartus results are an EDA demonstration, not ASIC signoff.

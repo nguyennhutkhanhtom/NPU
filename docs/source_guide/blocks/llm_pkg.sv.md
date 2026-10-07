@@ -1,6 +1,6 @@
 # llm_pkg.sv — Layout, saturation và sampler
 
-> **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
 **Source:** [llm_pkg.sv](<../../../Verilog%20Source%20code/llm_pkg.sv>).
@@ -14,14 +14,42 @@
 ## Sơ đồ kiến trúc
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-    LAYOUT[Fixed graph and SRAM offsets] --> CTRL[llm_soc]
-    SAT[S24 saturation and S56 extension] --> MATH[Numeric datapath]
-    EXP[Exponential LUT] --> ATT[Softmax]
-    RANDOM[Xorshift32 and Gumbel LUT] --> HEAD[Token selection]
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+    LAYOUT["Fixed graph and SRAM offsets"] --> CTRL["llm_soc"]
+    SAT["S24 saturation and<br/>S56 extension"] --> MATH["Numeric datapath"]
+    EXP["Exponential LUT"] --> ATT["Softmax"]
+    RANDOM["Xorshift32 and Gumbel LUT"] --> HEAD["Token selection"]
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class LAYOUT platform;
+class CTRL,MATH buffer;
+class SAT,HEAD output;
+class EXP,ATT,RANDOM compute;
 ```
 
 ## Important state / datapath groups

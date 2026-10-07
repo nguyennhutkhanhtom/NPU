@@ -1,6 +1,6 @@
 # ins_mem.sv — Instruction RAM và fetch/host valid
 
-> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams are preserved from the existing guide.
+> **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
 
 **Trạng thái:** Đang dùng.
@@ -16,35 +16,44 @@
 ## Sơ đồ kiến trúc tổng quan
 
 ```mermaid
-%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryTextColor": "#111111",
+    "secondaryTextColor": "#111111",
+    "tertiaryTextColor": "#111111",
+    "lineColor": "#444444",
+    "clusterBkg": "#ffffff",
+    "clusterBorder": "#aaaaaa",
+    "edgeLabelBackground": "#ffffff",
+    "fontSize": "17px"
+  },
+  "flowchart": {
+    "curve": "linear",
+    "nodeSpacing": 30,
+    "rankSpacing": 40,
+    "htmlLabels": true,
+    "useMaxWidth": true
+  }
+}}%%
 flowchart TB
-H["Host: en / we / addr / write instruction"]
-    F["Scheduler: fetch_en / PC"]
-    subgraph IM["ins_mem"]
-        MUX@{ shape: trap-t, label: "Shared read address selector<br/>Host read or fetch" }
-        REQ["Request registers<br/>address / client / pending"]
-        RAM@{ shape: rect, label: "Instruction memory<hr/>512 × 13 bit<hr/>Synchronous read / host write" }
-        DATA["Read data register 13 bit<br/>No asynchronous reset"]
-        RESP["Response registers<br/>address / client / valid"]
-        MATCH["Current request + two tags match<br/>Client / address / read enabled"]
-    end
-    H -.-> MUX
-    F -.-> MUX
-    MUX -.-> REQ
-    REQ -.-> RAM
-    H -->|"Write"| RAM
-    RAM --> DATA
-    REQ -.-> RESP
-    H -.-> MATCH
-    F -.-> MATCH
-    REQ -.-> MATCH
-    RESP -.-> MATCH
-    DATA -->|"instr 13 bit"| F
-    DATA -->|"host_rinstr 13 bit"| H
-    MATCH -.->|"instr_valid"| F
-    MATCH -.->|"host_rvalid → frontend response register"| H
-    classDef default fill:white,stroke:black,color:black,font-size:24px;
-    linkStyle default stroke:black,color:black;
+ C["Clients Host /<br/>instruction fetch"] --> R["Request selection /<br/>tags Address and<br/>client"]
+ R --> M["Instruction memory 512<br/>× 13 bit"]
+ M --> D["Read payload / response tag"]
+ D --> V["Request match Address,<br/>client and validity"]
+ V --> O["Client response 13-bit<br/>instruction"]
+ C -->|"host write"| M
+classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
+classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
+classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
+classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
+classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
+classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
+class C,R,O interface;
+class M platform;
+class D buffer;
+class V control;
 ```
 
 Nét liền là dữ liệu, nét đứt là điều khiển và địa chỉ. Memory và read data register không có reset bất đồng bộ. Sơ đồ mô tả storage logic, không quy định macro vật lý.

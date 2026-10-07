@@ -19,7 +19,7 @@ Lượt demo ngày **01/10/2026 lúc 14:30:25** pass **22.492 commands / 12.402 
 | Chương trình toàn graph | 12 instruction gồm HALT; chạy hai lần, lần thứ hai không reset/nạp lại |
 | Chu kỳ xử lý toàn graph | 20.783 clock cho mỗi lần chạy toàn graph của ảnh số 0; chưa tính host load/readback |
 
-![Ảnh mẫu, nhãn và dự đoán CPU/RTL](mnist.png)
+![Ảnh mẫu, nhãn và dự đoán CPU/RTL](<../mnist.png>)
 
 Đây là **10 ảnh 16×16 đã preprocess** từ header mẫu của upstream, không phải phép đo accuracy trên toàn MNIST. Bit-exact áp dụng giữa RTL và reference số nguyên; các activation không bắt buộc trùng bit với mô hình float32 gốc. Clock 10 ns trong testbench không xác nhận timing ASIC.
 
