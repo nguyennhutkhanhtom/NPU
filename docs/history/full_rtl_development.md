@@ -1,10 +1,12 @@
 # Lịch sử phát triển full graph
 
+> **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
+
 Bản tài liệu được lưu trước đợt cập nhật ngày 06/10/2026. Các câu ghi
 “current” hoặc “đang chạy” bên dưới thuộc thời điểm viết; trạng thái workspace
 đọc tại [trang kiểm chứng hiện tại](../verification/optimization_status.md).
 
-[Design hub](../design/architecture.md) · [Demo status](../demos/legacy/nanofable_hybrid.md) · [Timing evidence](../verification/timing/README.md)
+[Design hub](<../design/legacy/architecture.md>) · [Demo status](../demos/legacy/nanofable_hybrid.md) · [Timing evidence](../verification/timing/README.md)
 
 This extension is **not yet a verified full graph demo**. The existing language
 demo covers isolated ternary linears and uses CPU graph execution. It does not
@@ -101,7 +103,7 @@ before score/exponent generation. Previously their late clear in
 `A_EXP_STORE` depended on `time_q == position_q`, creating a wide equality
 control cone to32S56registers. No accumulator is consumed before value
 reduction, so the clear can move earlier without adding a state or clock.
-[Preceding attention1 all-seven regression](../../tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three selected tokens/16layer executions. Full-top attention1 timing FAIL92.19MHz/setup+recovery; no trained application has run under this gate.
+Preceding attention1 all-seven regression (`../../tests/full_rtl/evidence/attention1_all_units/results.json`; historical target unavailable in this checkout) PASS0compile/runtimewarnings, graph4229462compute clocks/three selected tokens/16layer executions. Full-top attention1 timing FAIL92.19MHz/setup+recovery; no trained application has run under this gate.
 
 The host memory map and request/response protocol are defined in the
 [full RTL test guide](../../tests/full_rtl/README.md). The ISA-driven legacy
@@ -175,7 +177,7 @@ the adapter. Compute/control equations and public latency remain unchanged.
 Host cancellation before the execution edge prevents a pending write. Once
 execution accepts a write, dropping enable retires the response but does not
 promise rollback of the SRAM queue. Reset still cancels enables before leaf
-commit and retains committed words. [The additional cancellation probe](../../tests/full_rtl/evidence/host_cancel_gap1/results.json)
+commit and retains committed words. The additional cancellation probe (`../../tests/full_rtl/evidence/host_cancel_gap1/results.json`; historical target unavailable in this checkout)
 checks a following write after exactly one idle edge and observes that its
 actual leaf commit occurs before its ACK. This synthetic host-only check does
 not load a checkpoint or run the language graph.
@@ -327,8 +329,6 @@ remain within the existing5M compute/100ms graph bound; no expected values or
 token/phase/causal assertions change. Memory-only dont_merge now also preserves
 group and IP read/write enables. Memory latency and reset contract are unchanged.
 
-Historical illustration of the recorded implementation; see the [current graph](../design/full_rtl_language.md) for current engine ownership.
-
 ```mermaid
 %%{init: {"theme":"base","fontFamily":"Arial, sans-serif","themeVariables":{"fontSize":"24px","primaryColor":"#ffffff","primaryTextColor":"#000000","primaryBorderColor":"#000000","secondaryColor":"#ffffff","tertiaryColor":"#ffffff","lineColor":"#000000","textColor":"#000000","mainBkg":"#ffffff","nodeBorder":"#000000","clusterBkg":"#ffffff","clusterBorder":"#000000","edgeLabelBackground":"#ffffff"},"flowchart":{"htmlLabels":true,"useMaxWidth":false,"nodeSpacing":32,"rankSpacing":48,"curve":"linear","subGraphTitleMargin":{"top":16,"bottom":30}}}}%%
 flowchart LR
@@ -392,6 +392,6 @@ remain blocked by the hardware/all-seven gate.
 
 See [coding rules and structural ownership](../design/rtl_style.md). Request/address/return-state updates are visible in the FSM, SIMD/tag pipelines use generate blocks, and LUTs are explicit combinational instances. Latencies/numeric values are unchanged. Earlier35-source unit/timing evidence is historical; current33-source gates must be rerun.
 
-Current cache1 separates generated continuous KV payload FFs from the held binary operand. Consumers still follow cache valid; no FSM state/clock/latency/expected-value change. [Seven groups](../../tests/full_rtl/evidence/cache1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions/causal checked; full timing FAIL73.97MHz/setup+recovery; hold/removal/pulse PASS every corner/UCP0. Host reset still clears response immediately; QSF global-routing request is backend-only, not compute/control IP or ASIC signoff. [Current vendor-free elaboration](../verification/portable_elaboration_cache1/results.json) PASS24module units/14names/0errors0warnings, run0/no weights/inference. Preceding timing evidence applies to its archived attention1 source; no current100MHz or trained application PASS.
+Current cache1 separates generated continuous KV payload FFs from the held binary operand. Consumers still follow cache valid; no FSM state/clock/latency/expected-value change. Seven groups (`../../tests/full_rtl/evidence/cache1_all_units/results.json`; historical target unavailable in this checkout) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions/causal checked; full timing FAIL73.97MHz/setup+recovery; hold/removal/pulse PASS every corner/UCP0. Host reset still clears response immediately; QSF global-routing request is backend-only, not compute/control IP or ASIC signoff. [Current vendor-free elaboration](../verification/portable_elaboration_cache1/results.json) PASS24module units/14names/0errors0warnings, run0/no weights/inference. Preceding timing evidence applies to its archived attention1 source; no current100MHz or trained application PASS.
 
 Backend cache2 removes the forced-global QSF routing request after cache1 recommendations identified its failing path. No RTL, test input, SRAM contract or SDC change; exact cache1 seven-group/vendor-free PASS remains applicable to the same source. Fresh full synthesis/fit/all-corner timing is running; no application gate is open.

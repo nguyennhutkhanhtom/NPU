@@ -1,5 +1,7 @@
 # Các mốc timing đã ghi
 
+> **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
+
 Bản tài liệu được lưu trước đợt cập nhật ngày 06/10/2026. Các câu ghi
 “current” hoặc “đang chạy” bên dưới thuộc thời điểm viết; trạng thái workspace
 đọc tại [trang kiểm chứng hiện tại](../verification/optimization_status.md).
@@ -26,7 +28,7 @@ original 10 ns SDC, removing only the failed forced GLOBAL_SIGNAL request.
 
 ## Cache1 result: 73.97 MHz, setup/recovery FAIL
 
-[Manifest](../verification/timing/fullrtl100_cache1/manifest.json), [source ZIP](../verification/timing/fullrtl100_cache1/source_archive.json) and [all seven units](../../tests/full_rtl/evidence/cache1_all_units/results.json) match34RTL/3configuration hashes, verified against the current source before any next change. Extraction completed22:14:10 on04Oct2026. QuartusLite25.1std Build1129/CycloneV5CGXFC9E6F35C7/seed1/SPEED/STANDARD; SDC10ns and original I/O budgets unchanged, no exceptions. Map0errors12warnings/fit0errors4warnings/STA0errors2warnings332148. Fit52417ALM/49186FF/1186RAMblocks/9515648bits/186pins, DSP/PLL/DLL/HSSI0. UCP0;16/20checks PASS. Synthesis/fitting PASS, timing FAIL; strict application gate rejects73.97MHz.
+[Manifest](../verification/timing/fullrtl100_cache1/manifest.json), [source ZIP](../verification/timing/fullrtl100_cache1/source_archive.json) and all seven units (`../../tests/full_rtl/evidence/cache1_all_units/results.json`; historical target unavailable in this checkout) match34RTL/3configuration hashes, verified against the current source before any next change. Extraction completed22:14:10 on04Oct2026. QuartusLite25.1std Build1129/CycloneV5CGXFC9E6F35C7/seed1/SPEED/STANDARD; SDC10ns and original I/O budgets unchanged, no exceptions. Map0errors12warnings/fit0errors4warnings/STA0errors2warnings332148. Fit52417ALM/49186FF/1186RAMblocks/9515648bits/186pins, DSP/PLL/DLL/HSSI0. UCP0;16/20checks PASS. Synthesis/fitting PASS, timing FAIL; strict application gate rejects73.97MHz.
 
 | Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
 |---|---:|---:|---:|---:|---:|
@@ -43,7 +45,7 @@ Twelve synthesis warnings retain bounded sigmoid index10027, unused SRAM ports28
 
 ## Attention1 result: 92.19 MHz, setup/recovery FAIL
 
-[Manifest](../verification/timing/fullrtl100_attention1/manifest.json), [source ZIP](../verification/timing/fullrtl100_attention1/source_archive.json) and [seven-group regression](../../tests/full_rtl/evidence/attention1_all_units/results.json) match34RTL/3configuration hashes. Extraction completed20:52:43 on04Oct2026. QuartusLite25.1std Build1129/CycloneV5CGXFC9E6F35C7/seed1/SPEED/STANDARD; SDC10ns,input0.5..2ns/outputsetup2ns/hold0.5ns,no exceptions. Map0errors12warnings, fit0errors4warnings, STA0errors2warnings332148. Resources52799ALM/48311FF/1186of1220RAMblocks/9515648bits/186pins, DSP/PLL/DLL/HSSI0. UCP0;17/20checks PASS. Synthesis/fitting PASS, timing FAIL; strict application gate rejects92.19MHz.
+[Manifest](../verification/timing/fullrtl100_attention1/manifest.json), [source ZIP](../verification/timing/fullrtl100_attention1/source_archive.json) and seven-group regression (`../../tests/full_rtl/evidence/attention1_all_units/results.json`; historical target unavailable in this checkout) match34RTL/3configuration hashes. Extraction completed20:52:43 on04Oct2026. QuartusLite25.1std Build1129/CycloneV5CGXFC9E6F35C7/seed1/SPEED/STANDARD; SDC10ns,input0.5..2ns/outputsetup2ns/hold0.5ns,no exceptions. Map0errors12warnings, fit0errors4warnings, STA0errors2warnings332148. Resources52799ALM/48311FF/1186of1220RAMblocks/9515648bits/186pins, DSP/PLL/DLL/HSSI0. UCP0;17/20checks PASS. Synthesis/fitting PASS, timing FAIL; strict application gate rejects92.19MHz.
 
 | Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
 |---|---:|---:|---:|---:|---:|
@@ -60,7 +62,7 @@ Hold now PASS at every corner; host_addr/host_wdata D3 setting7 requests remain 
 
 ## Fanout2 result: 96.67 MHz, setup/hold FAIL
 
-[Manifest](../verification/timing/fullrtl100_fanout2/manifest.json), [source ZIP](../verification/timing/fullrtl100_fanout2/source_archive.json) and [unchanged seven-group regression](../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match34RTL/3configuration hashes. Extraction complete19:29:55 on04Oct2026. Same CycloneV5CGXFC9E6F35C7/QuartusLite25.1std Build1129/seed1/SPEED/STANDARD,10ns SDC and I/O budgets. Map0errors12warnings, fit0errors4warnings, STA0errors2warnings332148. Resources51888ALM/48214FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. UCP0.17/20checks PASS. Synthesis/fitting PASS, timing FAIL; no pretrained application.
+[Manifest](../verification/timing/fullrtl100_fanout2/manifest.json), [source ZIP](../verification/timing/fullrtl100_fanout2/source_archive.json) and unchanged seven-group regression (`../../tests/full_rtl/evidence/pipeline3_all_units/results.json`; historical target unavailable in this checkout) match34RTL/3configuration hashes. Extraction complete19:29:55 on04Oct2026. Same CycloneV5CGXFC9E6F35C7/QuartusLite25.1std Build1129/seed1/SPEED/STANDARD,10ns SDC and I/O budgets. Map0errors12warnings, fit0errors4warnings, STA0errors2warnings332148. Resources51888ALM/48214FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. UCP0.17/20checks PASS. Synthesis/fitting PASS, timing FAIL; no pretrained application.
 
 | Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
 |---|---:|---:|---:|---:|---:|
@@ -75,7 +77,7 @@ The physical cache write-address fanout and host_wdata D3 setting7 requests were
 
 ## Fanout1 result: 98.63 MHz, setup/hold FAIL
 
-[Manifest](../verification/timing/fullrtl100_fanout1/manifest.json), [source archive](../verification/timing/fullrtl100_fanout1/source_archive.json) and [preceding seven units](../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match34RTL assets. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD; SDC remains10ns with input0.5..2ns/output setup2ns/hold0.5ns and no exceptions. Extraction completed17:28:31 on04Oct2026. Map0errors12warnings, fit0errors4warnings, STA0errors1warning332148. Resources51919ALM/48086FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. All UCP counts0.18of20checks PASS; application gate rejects98.63MHz.
+[Manifest](../verification/timing/fullrtl100_fanout1/manifest.json), [source archive](../verification/timing/fullrtl100_fanout1/source_archive.json) and preceding seven units (`../../tests/full_rtl/evidence/pipeline3_all_units/results.json`; historical target unavailable in this checkout) match34RTL assets. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD; SDC remains10ns with input0.5..2ns/output setup2ns/hold0.5ns and no exceptions. Extraction completed17:28:31 on04Oct2026. Map0errors12warnings, fit0errors4warnings, STA0errors1warning332148. Resources51919ALM/48086FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. All UCP counts0.18of20checks PASS; application gate rejects98.63MHz.
 
 | Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
 |---|---:|---:|---:|---:|---:|
@@ -92,7 +94,7 @@ Quartus is the EDA demonstration backend. Pin standards, physical fanout/delay s
 
 ## Release1 result: 91.61 MHz, setup/hold FAIL
 
-[Manifest](../verification/timing/fullrtl100_release1/manifest.json), [source archive](../verification/timing/fullrtl100_release1/source_archive.json) and [seven-group regression](../../tests/full_rtl/evidence/pipeline3_all_units/results.json) match the exact34RTL assets. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD, unchanged10ns SDC and I/O budgets. A&S0errors/12warnings, fit0errors/4warnings, STA0errors/2timing warnings. Fitted51900ALM/48234FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. All unconstrained counts0. Extraction completed15:55:47 on04Oct2026. Synthesis and fitting PASS do not imply timing PASS; application remains blocked.
+[Manifest](../verification/timing/fullrtl100_release1/manifest.json), [source archive](../verification/timing/fullrtl100_release1/source_archive.json) and seven-group regression (`../../tests/full_rtl/evidence/pipeline3_all_units/results.json`; historical target unavailable in this checkout) match the exact34RTL assets. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD, unchanged10ns SDC and I/O budgets. A&S0errors/12warnings, fit0errors/4warnings, STA0errors/2timing warnings. Fitted51900ALM/48234FF/1186RAMblocks/9515648bits/186pins; DSP/PLL/DLL/HSSI0. All unconstrained counts0. Extraction completed15:55:47 on04Oct2026. Synthesis and fitting PASS do not imply timing PASS; application remains blocked.
 
 | Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
 |---|---:|---:|---:|---:|---:|
@@ -107,7 +109,7 @@ The standard-FF reset conditioner fixes recovery/removal at every corner. Contin
 
 ## Explicit2 result: 93.28 MHz, setup/removal FAIL
 
-[Manifest](../verification/timing/fullrtl100_explicit2/manifest.json) and [source archive](../verification/timing/fullrtl100_explicit2/source_archive.json) identify the exact 33 RTL assets and three configuration files. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD and unchanged10ns SDC. Map PASS0errors/12warnings, fit PASS0errors/4warnings, STA completes0errors/2timing warnings. Fitted52189ALM/48316FF/1186RAMblocks/9515648memorybits/186pins; DSP/PLL/DLL/HSSI0. All UCP counts0. [Seven unit groups](../../tests/full_rtl/evidence/explicit3_all_units/results.json) PASS for this exact source. The application gate correctly rejects Fmax below100MHz; no pretrained application/reference ran.
+[Manifest](../verification/timing/fullrtl100_explicit2/manifest.json) and [source archive](../verification/timing/fullrtl100_explicit2/source_archive.json) identify the exact 33 RTL assets and three configuration files. Quartus Lite25.1std.0 Build1129, CycloneV5CGXFC9E6F35C7, seed1/SPEED/STANDARD and unchanged10ns SDC. Map PASS0errors/12warnings, fit PASS0errors/4warnings, STA completes0errors/2timing warnings. Fitted52189ALM/48316FF/1186RAMblocks/9515648memorybits/186pins; DSP/PLL/DLL/HSSI0. All UCP counts0. Seven unit groups (`../../tests/full_rtl/evidence/explicit3_all_units/results.json`; historical target unavailable in this checkout) PASS for this exact source. The application gate correctly rejects Fmax below100MHz; no pretrained application/reference ran.
 
 | Corner1.1V | Setup slack/TNS ns | Hold | Recovery | Removal | Pulse |
 |---|---:|---:|---:|---:|---:|
@@ -179,7 +181,7 @@ no synthesizable tasks/unbounded loops, explicit pipeline/LUT ownership. QSF
 removes the four ignored delay settings and adds MAX_FANOUT16 on onehot op bits,
 targeting the measured control path. SRAM remains the only explicit vendor IP.
 SDC/device/seed/I/O budgets are unchanged. [A&S](../verification/synthesis/explicit2/manifest.json)
-PASS0errors/12warnings; [all seven units](../../tests/full_rtl/evidence/explicit3_all_units/results.json)
+PASS0errors/12warnings; all seven units (`../../tests/full_rtl/evidence/explicit3_all_units/results.json`; historical target unavailable in this checkout)
 PASS0compile/runtimewarnings, including the full synthetic graph. Fitting completed, timing FAIL93.28MHz/setup/removal; no current100MHz
 PASS is claimed. The preceding explicit1 map was
 cancelled after its operator test found a signed buffer-address cast regression.
@@ -216,7 +218,7 @@ Source hashes/reports must prove any timing improvement. A&S completed08:25:47,
 1187M10K/9519744memorybits/128pins, DSP/PLL/DLL/HSSI0. STA0errors/2warnings,
 but **timingFAIL92.75MHz**. All six units
 PASS, including17operators/3460checks/scalar128/clamp128; archived in
-[control1 six-group evidence](../../tests/full_rtl/evidence/control1_six_units/results.json).
+control1 six-group evidence (`../../tests/full_rtl/evidence/control1_six_units/results.json`; historical target unavailable in this checkout).
 Actual-IP full graph started08:41:21, then was cancelled for the measured host
 address-owner mux fix; log/cancellation record and six PASS groups retained.
 No assertion failure or seven-group acceptance is claimed. No pretrained application has run.
@@ -404,7 +406,7 @@ lane selection plus RNE/clamp→sigmoid input10.571ns, broad priority-control co
 Its [recommendations](../verification/timing/fullrtl100_tree2/slow_1100mv_85c_recommendations.txt) call for
 shorter combinational logic and reduced fanout/competition.
 
-Six-group exact-source tree2 evidence is [archived here](../../tests/full_rtl/evidence/tree2_units_final/unit_results.json):
+Six-group exact-source tree2 evidence is archived here (`../../tests/full_rtl/evidence/tree2_units_final/unit_results.json`; historical target unavailable in this checkout):
 five ModelSim units plus the unchanged compiled Verilator graph, not a pretrained
 application. Longer queued writes exposed a final-KV commit error; the retained
 failed fixture led to `O_FINISH` waiting for both memory `wr_busy` signals.
@@ -443,7 +445,7 @@ Fit uses25476ALM/35233registers/1220M10K/252MLAB/102DSP/127pins. The new worst
 `scalar_lane_q[9]→write_vector_q[657]`, data10.517ns with32destinations and long
 routing. Public host output clear/load and DDIO clock/pad delay also fail setup.
 The former sigmoid/control cones are absent from the worst40paths.
-[Six-group units](../../tests/full_rtl/evidence/select3_units/unit_results.json)
+Six-group units (`../../tests/full_rtl/evidence/select3_units/unit_results.json`; historical target unavailable in this checkout)
 PASS for that snapshot, not for later RTL edits.
 
 Candidate `fullrtl100_group1` replaces the scalar broadcast with eight separately
@@ -543,7 +545,7 @@ NORM tách capture operand, multiply, RNE và xử lý kết quả bằng cùng 
 
 Postscale của ternary engine chốt tích S42, RNE S42 rồi cộng bias S43/saturation/pack: thêm hai clock mỗi output row. `rne_shift42` giữ RNE bit-exact với reference rộng ở shift 0…63; shift≥42 trả zero. Module finish được dùng chung với wrapper tổ hợp, không tạo implementation chỉ dành cho timing demo. Compose dùng signed S7 cho hiệu hai shift U6, không đổi latency.
 
-Lượt tiếp theo chốt host read address/region và response data/tag, tách đường address → mux → output; control/descriptor read hai cạnh lên, SRAM/imem bốn cạnh lên, write vẫn trực tiếp. NORM dùng lại `norm_r`, `quant_r`, `quant_d` đã chốt ở PREP khi launch divider và làm tròn hệ số, không thêm chu kỳ. [Host contract](../design/interfaces.md#host-32-bit) quy định response giữ snapshot đầu và cách poll status mới.
+Lượt tiếp theo chốt host read address/region và response data/tag, tách đường address → mux → output; control/descriptor read hai cạnh lên, SRAM/imem bốn cạnh lên, write vẫn trực tiếp. NORM dùng lại `norm_r`, `quant_r`, `quant_d` đã chốt ở PREP khi launch divider và làm tròn hệ số, không thêm chu kỳ. [Host contract](<../design/legacy/interfaces.md#host-32-bit>) quy định response giữ snapshot đầu và cách poll status mới.
 
 | Rowwise word có `n` phần tử hữu ích | Từ cạnh nhận start đến cạnh done |
 |---|---:|
@@ -571,11 +573,11 @@ quartus_sta -t tools/timing/extract.tcl docs/verification/timing/constrained sdc
 
 ---
 
-[Về verification](../verification/README.md) · [Rowwise RTL](../source_guide/blocks/rowwise_op.sv.md) · [Design review](../reviews/design_review.md)
+[Về verification](../verification/README.md) · [Rowwise RTL](../source_guide/blocks/rowwise_op.sv.md) · [Design review](<reviews/design_review.md>)
 ## Current verification scope
 
 Portable bit-product arithmetic, ordinary registers/control and replaceable
 SRAM binding remain the implementation policy. The preceding35-source graph
-unit PASS is archived in [logic6q5](../../tests/full_rtl/evidence/logic6q5_all_units/results.json).
+unit PASS is archived in logic6q5 (`../../tests/full_rtl/evidence/logic6q5_all_units/results.json`; historical target unavailable in this checkout).
 The current34-source snapshot has all-seven PASS and release1 timing FAIL91.61MHz; fresh physical closure is required.
 See [checkpoint](../../TASK_STATE.md) for active jobs and reproduction commands.

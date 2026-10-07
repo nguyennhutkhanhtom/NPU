@@ -1,12 +1,15 @@
 # llm_pkg.sv — Layout, saturation và sampler
 
+> **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams are preserved from the existing guide.
 [Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
 
-**Source:** [llm_pkg.sv](<../../../Verilog%20Source%20code/llm_pkg.sv>). **Số dòng:** 31. **SHA-256:** `8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21`.
+**Source:** [llm_pkg.sv](<../../../Verilog%20Source%20code/llm_pkg.sv>).
 
-## Khối này làm gì?
+## At a glance
 
-Hằng số graph cố định NanoFable, địa chỉ parameter rows, S24 saturation, sign extension và xorshift32. LUT exp/Gumbel được include thành logic portable.
+| Item | Description |
+|---|---|
+| Responsibility | Hằng số graph cố định NanoFable, địa chỉ parameter rows, S24 saturation, sign extension và xorshift32. LUT exp/Gumbel được include thành logic portable. |
 
 ## Sơ đồ kiến trúc
 
@@ -21,63 +24,16 @@ flowchart TB
     linkStyle default stroke:black,color:black;
 ```
 
-## Cách hoạt động chi tiết
-
-Hằng số graph cố định NanoFable, địa chỉ parameter rows, S24 saturation, sign extension và xorshift32. LUT exp/Gumbel được include thành logic portable.
-
-## Các nhóm logic trong source
+## Important state / datapath groups
 
 ### [Dòng 1–10: Layout constants](<../../../Verilog%20Source%20code/llm_pkg.sv#L1>)
-
-<!-- source-range:1:10 -->
-```systemverilog
-package llm_pkg;
-    // Fixed NanoFable graph: four blocks, 128 channels, four 32-channel heads.
-    localparam int CONTEXT = 128;
-    localparam int PARAM_ROWS = 24576;
-    localparam int EMB_SCALE_BASE = 23040;
-    localparam int MATRIX_META_BASE = 23552;
-    localparam int GAIN_BASE = 23580;
-    localparam int ROPE_BASE = 23652;
-
-    function automatic logic signed [23:0] llm_sat24(input logic signed [63:0] x);
-```
 
 PARAM_ROWS=24576; địa chỉ tính theo row 256 bit. EMB_SCALE, matrix metadata, gains và RoPE nằm sau trọng số.
 
 ### [Dòng 11–20: Numeric helpers](<../../../Verilog%20Source%20code/llm_pkg.sv#L11>)
 
-<!-- source-range:11:20 -->
-```systemverilog
-        if (x > 64'sd8388607) llm_sat24 = 24'sh7fffff;
-        else if (x < -64'sd8388608) llm_sat24 = 24'sh800000;
-        else llm_sat24 = x[23:0];
-    endfunction
-
-    function automatic logic signed [63:0] llm_extend56(input logic signed [55:0] x);
-        llm_extend56 = {{8{x[55]}}, x};
-    endfunction
-
-    function automatic logic [31:0] llm_random_next(input logic [31:0] previous);
-```
-
 Saturation ở biên ±2^23; llm_extend56 giữ sign của SIMD product trước RNE64.
 
 ### [Dòng 21–31: Sampler](<../../../Verilog%20Source%20code/llm_pkg.sv#L21>)
-
-<!-- source-range:21:31 -->
-```systemverilog
-        logic [31:0] x;
-        begin
-            x = previous ^ (previous << 13);
-            x = x ^ (x >> 17);
-            llm_random_next = x ^ (x << 5);
-        end
-    endfunction
-endpackage
-
-`include "llm_exp_lut.svh"
-`include "llm_gumbel_lut.svh"
-```
 
 Xorshift32 deterministic, seed zero được controller thay bằng one. Temperature zero cho greedy argmax.

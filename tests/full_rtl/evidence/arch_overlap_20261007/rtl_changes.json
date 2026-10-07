@@ -1,0 +1,64 @@
+{
+  "baseline_code_lines": 5165,
+  "added_code_lines": 861,
+  "deleted_code_lines": 266,
+  "percentage": 21.81994191674734,
+  "files": [
+    {
+      "file": "banked_word_ram.sv",
+      "added": 0,
+      "deleted": 15
+    },
+    {
+      "file": "isqrt_u64.sv",
+      "added": 56,
+      "deleted": 0
+    },
+    {
+      "file": "llm_attention_engine.sv",
+      "added": 67,
+      "deleted": 0
+    },
+    {
+      "file": "llm_attention_normalize.sv",
+      "added": 93,
+      "deleted": 0
+    },
+    {
+      "file": "llm_head_engine.sv",
+      "added": 46,
+      "deleted": 0
+    },
+    {
+      "file": "llm_linear_engine.sv",
+      "added": 90,
+      "deleted": 0
+    },
+    {
+      "file": "llm_math.sv",
+      "added": 7,
+      "deleted": 4
+    },
+    {
+      "file": "llm_soc.sv",
+      "added": 434,
+      "deleted": 191
+    },
+    {
+      "file": "norm.sv",
+      "added": 0,
+      "deleted": 56
+    },
+    {
+      "file": "sram_word_tile.sv",
+      "added": 15,
+      "deleted": 0
+    },
+    {
+      "file": "ternary_dot32.sv",
+      "added": 53,
+      "deleted": 0
+    }
+  ],
+  "scope": "Task-start RTL tree, excluding comments, blank lines, tests and reports"
+}

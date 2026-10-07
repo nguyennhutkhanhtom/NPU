@@ -1,5 +1,7 @@
 # Assets NanoFable đã pin
 
+> **Category: GUIDE.**
+
 [Tài liệu](../../docs/README.md) → [Demo NanoFable](../../docs/demos/language.md) → **Assets**
 
 Thư mục này cung cấp checkpoint/tokenizer và dependencies cho application

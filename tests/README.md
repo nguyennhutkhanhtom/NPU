@@ -1,5 +1,7 @@
 # Hệ thống tests
 
+> **Category: GUIDE.**
+
 [Trang bắt đầu](../README.md) · [Mục lục tài liệu](../docs/README.md) · [Kết quả kiểm chứng](../docs/verification/README.md) · [Các demo model](../docs/demos/README.md)
 
 ## Chọn bộ kiểm chứng

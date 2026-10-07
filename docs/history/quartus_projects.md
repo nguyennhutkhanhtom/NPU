@@ -1,5 +1,7 @@
 # Retired Quartus experiments
 
+> **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
+
 Eleven retired project folders now live under `quartus/archive/`. Their QPF,
 QSF, SDC and raw reports were verified byte-for-byte after relocation.
 Current builds use `quartus/llm_soc`; these snapshots do not participate in it.

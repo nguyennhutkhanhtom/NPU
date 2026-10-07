@@ -1,5 +1,7 @@
 # Optimization implementation history
 
+> **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
+
 The workspace cleanup on 2026-10-05 preserves the one-shot optimization scripts
 and superseded staging sources in `optimization_implementation_20261005.zip`,
 with their original `tools/...` paths. Each ZIP entry was checked against the

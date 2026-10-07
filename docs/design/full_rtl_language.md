@@ -1,5 +1,7 @@
 # Kiến trúc llm_soc: toàn graph ngôn ngữ
 
+> **Category: CURRENT.**
+
 [Tài liệu](../README.md) → [Thiết kế](README.md) → **llm_soc**
 
 `llm_soc.sv` là top hiện tại. Host nạp parameters, prompt token IDs và cấu hình;
@@ -68,25 +70,11 @@ memory/arithmetic của giai đoạn đó. Host không cấp hidden activations,
 hay continuation IDs cho DUT. Reference CPU dùng trong application chỉ cung
 cấp giá trị kỳ vọng cho testbench so sánh.
 
-## Khối và quyền sở hữu dữ liệu
+## Control and resource ownership
 
-[Sơ đồ hierarchy chỉnh sửa được](../../rtl_hierarchy.drawio) và [mục lục sơ đồ](../diagrams/README.md) tách các instance thật khỏi những FSM/register nằm trong top.
+The graph FSM selects inference phases; the operator FSM owns shared-resource routing, scalar processing and vector writes. Engine/module responsibilities are indexed in [full graph](../source_guide/full_graph.md). [Cache and streaming contracts](exact_throughput_optimization.md) explain reuse and bounded requests.
 
-
-| Khối | Trách nhiệm |
-|---|---|
-| llm_soc | Graph, host, metadata, cache operands, scaling, vector writes, probability/V pass và sampling |
-| llm_linear_engine | Một hàng ternary, prefetch hai word, reserved-code fault và drain |
-| llm_head_engine | Bốn chunk int8 mỗi vocabulary row, request/response counters và S39 accumulation |
-| llm_attention_engine | Q/K causal, score scaling, score storage và maximum |
-| llm_attention_normalize | Chia RNE, phục hồi dấu và clamp theo batch; bốn divider lane mặc định |
-| ternary_dot32 | 32 term sign/zero và cây cộng có pipeline |
-| llm_math | 32 signed multiply lanes, product và reduction response |
-| llm_parameter_ram / llm_bank_ram | Adapter parameters và KV/vector workspace |
-
-[Source overview](../source_guide/full_graph.md) dẫn tới từng file.
-[Tối ưu throughput](exact_throughput_optimization.md) giải thích cache validity,
-streaming, bounded requests và quyền dùng tài nguyên chung.
+Linear execution permits at most one next row during the current row's coefficient/round/store tail. The parent retains its accumulator and fault until ordered consumption; start protection and draining prevent cross-row contamination. This does not create another linear engine or another output stream.
 
 ## Hợp đồng số học
 
@@ -111,6 +99,8 @@ raw integer / 2^16. `U` là unsigned. RNE là làm tròn nearest, ties to even.
 Một số phép làm tròn có quy tắc riêng như exp interpolation ở trên; không thay
 chúng bằng cùng một rounding mode. ID 0 và 2 bị loại khỏi sampling; EOS ID 1 bị
 loại đến `min_new`. Khi score bằng nhau, ID hợp lệ nhỏ nhất thắng, kể cả S32_MIN.
+At zero temperature, selection bypasses the noise/sample states but advances the PRNG once per vocabulary row, including excluded IDs. Switching back to sampling therefore preserves the random stream.
+
 Exporter giữ ternary weights đã train và lượng tử hóa embedding/head; token
 matching được đối chiếu với reference integer của layout này.
 

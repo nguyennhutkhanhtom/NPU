@@ -1,5 +1,7 @@
 # Thiết kế
 
+> **Category: GUIDE.**
+
 [Tài liệu](../README.md) → **Thiết kế**
 
 ## Thiết kế llm_soc hiện tại
@@ -20,16 +22,16 @@ hoặc [hướng dẫn chạy NanoFable](../demos/language.md).
 
 | Trang | Phạm vi |
 |---|---|
-| [Kiến trúc matmulfree](architecture.md) | Core instruction-driven 32 PE; parameter 32 KiB và workspace 8 KiB |
-| [ISA và interface matmulfree](interfaces.md) | Opcode, descriptor, dynamic scale và host map của core cũ |
-| [Hierarchy đã lưu](../source_guide/README.md) | Luồng NORM, TMATMUL, vector operations và sơ đồ legacy |
+| [Kiến trúc matmulfree](<legacy/architecture.md>) | Core instruction-driven 32 PE; parameter 32 KiB và workspace 8 KiB |
+| [ISA và interface matmulfree](<legacy/interfaces.md>) | Opcode, descriptor, dynamic scale và host map của core cũ |
+| [Hierarchy đã lưu](<../source_guide/legacy/README.md>) | Luồng NORM, TMATMUL, vector operations và sơ đồ legacy |
 
 Các interface và dung lượng của core legacy thuộc top `matmulfree`, còn
 `llm_soc` dùng graph cố định và host map ở trang riêng phía trên.
 
 ## Nghiên cứu và quyết định
 
-[Architecture research](architecture_research.md) ghi baseline và các mốc được
+[Architecture research](<../history/architecture_research_20261005.md>) ghi baseline và các mốc được
 nêu trong tài liệu. [Review version 3](../reviews/rtl_change_review_v3.md) ghi
-implementation tối ưu và số liệu đã đo; [trạng thái kiểm chứng](../verification/optimization_status.md)
+implementation tại snapshot được nêu; [trạng thái kiểm chứng](../verification/optimization_status.md)
 cho biết evidence nào còn áp dụng cho workspace.

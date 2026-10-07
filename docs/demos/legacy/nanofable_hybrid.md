@@ -1,5 +1,7 @@
 # NanoFable hybrid: kết quả lịch sử
 
+> **Category: LEGACY.**
+
 Bản tài liệu được lưu trước đợt cập nhật ngày 06/10/2026. Các câu ghi
 “current” hoặc “đang chạy” bên dưới thuộc thời điểm viết; trạng thái workspace
 đọc tại [trang kiểm chứng hiện tại](../../verification/optimization_status.md).
@@ -98,4 +100,4 @@ giữ checkpoint/tokenizer đã pin; mọi lượt sinh token mới dùng [full 
 Kết quả CPU/hybrid ở trên chỉ mô tả snapshot lịch sử, không chứng minh demo RTL toàn graph.
 Các script cũ có thể lấy lại từ commit `d9ed7921d42731a198f565785a8ae79b20c7c79e`.
 
-[Regression core](../../verification/README.md) · [Demo MNIST toàn graph](../mnist.md) · [ISA và host](../../design/interfaces.md) · [Về mục lục demo](../README.md)
+[Regression core](../../verification/README.md) · [Demo MNIST toàn graph](<mnist.md>) · [ISA và host](<../../design/legacy/interfaces.md>) · [Về mục lục demo](../README.md)

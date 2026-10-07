@@ -1,5 +1,7 @@
 # Kiểm chứng llm_soc
 
+> **Category: GUIDE.**
+
 [Tài liệu](../README.md) → **Kiểm chứng**
 
 Đọc [trạng thái mới nhất](optimization_status.md) trước khi chạy lại. Trang này
@@ -113,3 +115,7 @@ và 10 nhóm regression riêng. Các demo MNIST/hybrid thuộc
 [demo legacy](../demos/legacy/README.md).
 [Lịch sử timing](../history/timing_development.md) và
 [lịch sử full graph](../history/full_rtl_development.md) giữ các mốc trước tối ưu.
+
+## Pretrained application gate
+
+Before exporter/reference inference and application simulation, `check_gate.py` requires matching source/configuration/report hashes, all seven unit/graph groups, all-corner post-fit Fmax ≥100 MHz, nonnegative setup/hold/recovery/removal/pulse slack, zero TNS and unconstrained paths, and zero fitted DSP/PLL/DLL/HSSI resources. Keep the 100 MHz constraints even when reporting a failing result. See [language execution](../demos/language.md).

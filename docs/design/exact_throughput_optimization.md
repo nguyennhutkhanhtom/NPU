@@ -1,5 +1,7 @@
 # Tối ưu throughput và quyền dùng tài nguyên
 
+> **Category: GUIDE.**
+
 [Tài liệu](../README.md) → [Thiết kế](README.md) → **Throughput**
 
 Tối ưu giữ geometry cố định của graph: bốn layer, 128 channel, bốn head,
@@ -51,24 +53,11 @@ Normalizer capture quotient và rounding metadata, rồi tách round, phục h�
 và clamp thành các stage register.
 
 ATTN_DIV_LANES và SIGMOID_LANES là elaboration parameters, hỗ trợ các lũy thừa
-hai chia hết 32: 1, 2, 4, 8, 16 hoặc 32. Evidence hiện được đo với mặc định bốn
-lane ở cả hai khối, PERF_COUNTERS=0 và ENABLE_DEBUG_INDEX=0. Geometry khác cần
-matched evidence riêng.
+hai chia hết 32: 1, 2, 4, 8, 16 hoặc 32. Default geometry and evidence applicability: [architecture](full_rtl_language.md) and [status](../verification/optimization_status.md).
 
 ## Transaction geometry
 
-| Mỗi layer hoặc head invocation | Baseline | Tối ưu |
-|---|---:|---:|
-| Linear vector reads / layer | 6.656 | 24 |
-| Linear vector write transactions / layer | 1.408 | 44 |
-| RoPE parameter reads / layer | 4 | 2 |
-| Head vector reads / invocation | 16.384 | 4 |
-| Head scale reads / invocation | 4.096 | 512 |
-
-Graph tổng hợp gồm hai prompt token, ba token mới và 16 lượt layer đã kiểm tra
-77.756 parameter reads, 1.828 vector reads, 1.564 vector writes, 320 KV reads và
-128 KV writes. Đây là transaction counts; cycle, area và timing dùng số liệu
-trong manifest của checkpoint tương ứng.
+Bounded operand/scale reuse and packed vector stores reduce SRAM transactions. The before/after measurement belongs to the [2026-10-06 throughput review](../reviews/rtl_change_review_v3.md); current counts and applicability belong to [verification status](../verification/optimization_status.md).
 
 ## Source và kiểm chứng
 

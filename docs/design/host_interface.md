@@ -1,9 +1,11 @@
 # Host interface của llm_soc
 
+> **Category: GUIDE.**
+
 [Tài liệu](../README.md) → [Thiết kế](README.md) → **Host interface**
 
 Host và DUT dùng cùng `clk`. Mọi địa chỉ bên dưới là byte address, căn chỉnh
-4 byte. Core matmulfree có host contract riêng trong [interface legacy](interfaces.md).
+4 byte. Core matmulfree có host contract riêng trong [interface legacy](<legacy/interfaces.md>).
 
 ## Ports
 

@@ -1,5 +1,7 @@
 # Optimization evidence helper
 
+> **Category: GUIDE.**
+
 Run commands from the repository root:
 
 ```powershell

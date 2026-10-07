@@ -1,5 +1,7 @@
 # Reproducible Quartus timing demo
 
+> **Category: GUIDE.**
+
 [Documentation hub](../../docs/README.md) · [Verification](../../docs/verification/README.md)
 
 ## Compile, extract and archive

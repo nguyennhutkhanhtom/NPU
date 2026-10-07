@@ -1,5 +1,7 @@
 # Full-top timing và demo NanoFable ở context tối đa của RTL
 
+> **Category: HISTORICAL SNAPSHOT — 2026-10-06.** Results below refer only to this saved run; use [current status](optimization_status.md) for workspace applicability.
+
 [Tài liệu](../README.md) → [Kiểm chứng](README.md) → **NanoFable 06/10/2026**
 
 ## Phạm vi và kết quả timing
@@ -85,8 +87,8 @@ Reference số nguyên dùng để so sánh token, không điều khiển DUT.
 124 continuation tokens; mô phỏng phải kiểm tra toàn bộ token và provenance
 trước khi kết luận. Chất lượng văn bản sẽ được đánh giá sau khi decode token RTL.
 
-[Workflow và cấu hình thực thi](../../tests/full_rtl/evidence/nanofable_max_20261006/workflow.ps1)
-và [trạng thái](../../tests/full_rtl/evidence/nanofable_max_20261006/status.json)
+Workflow và cấu hình thực thi (`../../tests/full_rtl/evidence/nanofable_max_20261006/workflow.ps1`; historical target unavailable in this checkout)
+và trạng thái (`../../tests/full_rtl/evidence/nanofable_max_20261006/status.json`; historical target unavailable in this checkout)
 giữ tiến trình của lượt mới. Một worker cũ chỉ đợi manifest đã được dừng để
 tránh chạy application song song; trạng thái trước khi dừng được giữ trong
 evidence mới. Evidence của các lượt trước không bị reset hoặc ghi đè bởi lượt này.

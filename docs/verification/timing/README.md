@@ -1,5 +1,7 @@
 # Đọc và tái tạo timing full-top
 
+> **Category: GUIDE.**
+
 [Tài liệu](../../README.md) → [Kiểm chứng](../README.md) → **Timing**
 
 Timing hiện tại cần đọc cùng [trang trạng thái](../optimization_status.md).
@@ -9,12 +11,6 @@ Trang này mô tả quy trình và cách hiểu một checkpoint đã hoàn tấ
 
 Full graph dùng `quartus/llm_soc.qpf`, QSF và SDC đi kèm. `matmul_free` là project
 legacy. Report timing của core legacy không xác minh toàn graph llm_soc.
-
-Source/config hashes phải khớp workspace. Ví dụ `opt_fulltop7` có RTL khớp
-regression hiện tại nhưng QSF đã khác; Fmax của archive vẫn là kết quả hợp lệ
-cho checkpoint đó. Lượt [nanofable_max_20261006](nanofable_max_20261006/manifest.json)
-đã đo lại đúng cấu hình hiện tại và PASS ở cả bốn corner, với minimum Fmax
-100,78 MHz; kết quả slack/resources trùng với bảng `opt_fulltop7` bên dưới.
 
 ## Lệnh đo
 
@@ -45,24 +41,9 @@ Gate yêu cầu cả bốn corner slow/fast, 1.100 mV, 0 °C/85 °C đạt setup
 recovery, removal và pulse. Resource report cũng cần DSP/PLL/DLL/HSSI bằng 0.
 Không dùng timing exception để che failure.
 
-## Checkpoint tối ưu đã hoàn tất
+## Current results
 
-[opt_fulltop7 manifest](opt_fulltop7/manifest.json) ghi:
-
-| Corner | Fmax MHz | Setup ns | Hold ns | Recovery ns | Removal ns | Pulse ns |
-|---|---:|---:|---:|---:|---:|---:|
-| Slow 85 °C | 100,78 | 0,077 | 0,245 | 0,123 | 1,599 | 3,600 |
-| Slow 0 °C | 101,50 | 0,148 | 0,232 | 0,332 | 3,666 | 3,548 |
-| Fast 85 °C | 148,41 | 3,262 | 0,131 | 4,535 | 2,330 | 3,801 |
-| Fast 0 °C | 161,60 | 3,812 | 0,115 | 5,473 | 0,976 | 3,790 |
-
-Mọi TNS bằng 0; unconstrained counts bằng 0. Fit dùng 59.605 ALMs, 66.924
-registers, 1.186 RAM blocks và 0 DSP. Worst setup margin +0,077 ns nhỏ, nên các
-thay đổi tiếp theo cần fresh timing evidence.
-
-Warnings được giữ trong report. Pin assignments và LogicLock license thuộc
-backend EDA; việc chấp nhận các warning đã review không thay thế các điều kiện
-slack, TNS hay unconstrained checks. Xem [warning review NanoFable](../warning_review_nanofable_20261005.md).
+[Optimization status](../optimization_status.md) owns current Fmax, slack, resources and evidence. [Historical throughput review](../../reviews/rtl_change_review_v3.md) preserves the earlier checkpoint.
 
 ## Những file cần giữ
 

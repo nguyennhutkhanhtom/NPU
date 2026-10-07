@@ -1,6 +1,8 @@
 # Render documentation diagrams
 
-[Documentation hub](../../docs/README.md) · [Source guide](../../docs/source_guide/README.md)
+> **Category: GUIDE.**
+
+[Documentation hub](../../docs/README.md) · [Source guide](<../../docs/source_guide/legacy/README.md>)
 
 The Markdown Mermaid blocks are the source of truth for inline diagrams. This renderer scans all
 Markdown under `docs/` and the root `README.md`, checks syntax, saves PNG/SVG

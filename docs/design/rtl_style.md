@@ -1,27 +1,52 @@
-# Explicit synthesizable RTL
+# Synthesizable RTL policy
 
-[Documentation hub](../README.md) · [Repository rules](../../AGENTS.md) · [ASIC portability](asic_portability.md) · [Source guide](../source_guide/blocks/README.md)
+> **Category: POLICY.** Keep hardware structure, timing boundaries and register ownership explicit.
 
-Avoid software-like abstraction in synthesizable RTL. The binding repository rules are in `AGENTS.md`. Structural replication uses named `generate for` blocks. Procedural loops are reserved for small, static groups whose unrolling would obscure the local operation. Variable or unbounded loops and synthesizable tasks are prohibited. Functions may implement small pure combinational helpers; FSM transitions, handshakes, register updates, memory accesses, pipeline stages and substantial datapaths remain visible in their owning module.
+## At a glance
 
-The current refactor makes all 61 former request/math/write task calls explicit in the `llm_soc` FSM. Each state directly assigns its address, return state, write mask and next operation. Vector address expressions retain the former three-bit buffer and four-bit row argument truncation. Request enables still come from the following request state; the change adds no clock or transaction.
+| Area | Rule |
+|---|---|
+| Sequential logic | One clear owner per register/array element; no multiple drivers or unintended latches |
+| FSMs | Explicit state transitions, clock enables, pipeline registers and handshakes |
+| Replication | `generate` for module/interface replication and independently owned lane registers |
+| Procedural loops | Statically determinable bounds; review the resulting combinational depth and replicated hardware |
+| Helpers | Small pure combinational or elaboration functions only |
+| Memory | Technology macros confined to leaves behind explicit portable contracts |
 
-`llm_math` now has named lane, partial-product register and reduction-stage generate blocks. Each array element has one sequential owner. `llm_parameter_ram` exposes each valid/owner/address stage as a named generate block; cancellation checks and the four/five-edge contract are unchanged. Ternary decode, reserved-weight detection, debug encoding, NORM/QUANT shift selection, compose thresholds and RAM response muxes are explicit structural logic. Exp, Gumbel and sigmoid tables are combinational module instances with visible `case` tables, rather than large function datapaths. They add no register or ROM latency.
+## State and control
 
-The remaining procedural loops are the two arithmetic lanes in `norm`/`rowwise_op`, eight metadata slots in the legacy scheduler, and the four local tile-mux members in `pipelined_word_ram`. All have literal static bounds. The two small `logic_mul` geometry functions execute only during elaboration, use the static `ROWS` bound and create no counter or divider hardware. Remaining runtime functions are pure saturation, extension, rounding/shift, descriptor-range checks and xorshift helpers in the packages. They access no memory and update no registers.
+- Keep FSM transitions, register updates, memory requests and response capture in visible RTL.
+- Do not use synthesizable tasks or helper abstractions that hide significant datapaths, state, timing or transactions.
+- Prefer explicit register/lane ownership. A bounded procedural loop is acceptable when its hardware remains clear.
+- Use clock enables. Ordinary combinational clock gating is prohibited; technology clock gating belongs at the integration boundary.
+- Do not use simulation delays, force/release, file I/O or system-task behavior in compute/control RTL.
 
-[Preceding attention1 source review](../verification/rtl_policy_attention1/results.json) records exact hashes for34assets and a line-level inventory:41structural generate loops,13small static procedural loops,2elaboration loops,13runtime combinational helpers and2geometry functions. All61statements containing multiplication/division symbols use constant geometry or index factors. The sole explicit vendor primitive remains the SRAM leaf. This combines manual review with a lexical inventory; it is not a SystemVerilog parser, functional proof, timing result or application gate.
+## Arithmetic
 
-[Git transfer check](../verification/rtl_policy_attention1_git/results.json) verifies the committed payload and referenced helper/rules/source hashes. The initial strict metadata-byte comparison failed because JSON was staged with CRLF-to-LF normalization before its evidence attribute was added. Only line endings differ; the committed and working metadata payloads are identical. Both hashes and the failed-check reason are retained, with no change to archived source or test expectations.
+Make width, signedness, fixed-point scale, extension, truncation, rounding and saturation explicit. Use ordinary synthesizable operators where they express the intended hardware clearly.
 
-The preceding 33-source refactor has [all seven unit groups PASS](../../tests/full_rtl/evidence/explicit3_all_units/results.json), including the autonomous graph in 4,229,462 compute clocks with zero compile/runtime warnings. [Synthesis](../verification/synthesis/explicit2/manifest.json) passed, but [timing](../verification/timing/fullrtl100_explicit2/manifest.json) fails at93.28MHz with setup/removal violations.
+Preserve intentional multiplier/divider avoidance: do not replace the structural NPU datapaths with runtime `*`, `/` or vendor arithmetic IP without an explicitly authorized architecture change and numerical/PPA verification. Constant geometry/index arithmetic at elaboration is permitted.
 
-The preceding 34-source candidate removes redundant SIMD payload enables and adds [two explicit reset FFs](../source_guide/blocks/reset_release.sv.md). Captured operands and nine-clock response latency are preserved. Raw reset asserts immediately; internal release takes two rising edges. Neither change introduces vendor IP, a hidden sequential helper or a timing exception. [All seven groups](../../tests/full_rtl/evidence/pipeline3_all_units/results.json) PASS0warnings and [synthesis](../verification/synthesis/release1/manifest.json) PASS0errors12warnings. Graph `pipeline3` PASS: 4,229,462 compute clocks, three RTL-selected tokens and causal checks. Timing `fullrtl100_fanout2` FAIL96.67MHz/setup+hold; recovery/removal PASS at all corners. Application remains blocked. See [checkpoint](../../TASK_STATE.md) and [timing evidence](../verification/timing/README.md). ASIC SRAM replacement stays confined to the memory boundary; this coding review is not ASIC signoff.
+Keep pure saturation, rounding, extension and constant-geometry helpers small. Significant arithmetic pipelines belong in explicit modules.
 
-Preceding attention1 source clears accumulators at each head entry; [all seven groups](../../tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions. Full-top attention1 timing FAIL92.19MHz/setup+recovery; hold PASS every corner. No trained application gate is open.
+## Memory and reset
 
-Current cache1 splits continuously sampled KV payload from the held binary vector operand. [Seven groups](../../tests/full_rtl/evidence/cache1_all_units/results.json) PASS0compile/runtimewarnings; graph4229462compute clocks/three RTL-selected tokens/causal checked. Full timing FAIL73.97MHz/setup+recovery; hold/removal/pulse PASS every corner/UCP0. The two-FF reset/immediate host response-zero contract is unchanged; global-reset routing is requested only in QSF, with no SDC exception or RTL IP. No current timing100MHz or trained application PASS.
+- Define read latency, write commitment, collision behavior, reset cancellation and response validity at each adapter boundary.
+- Reset control/validity as required; unreset payload must never be consumed without a valid transaction.
+- Preserve committed SRAM contents when the specified reset contract requires retention.
+- Do not infer that resetting a request cancels an already committed write.
+- Quartus memory primitives belong only in `quartus_word_ram`; placement/routing/pin/physical assignments belong in the backend.
+- ASIC SRAM, clock-gating and other technology cells require dedicated wrappers or integration layers with explicit portable contracts.
 
-[Current cache1 policy inventory](../verification/rtl_policy_cache1/results.json) matches34source hashes/56loops/15functions/62arithmetic-symbol statements, all geometry/index factors. The new cache FFs have explicit per-lane ownership and no payload reset/enable. Manual/lexical review, not a functional/timing gate.
+## Good / avoid
 
-Backend cache2 removes the forced-global QSF routing request after cache1 recommendations identified its failing path. No RTL, test input, SRAM contract or SDC change; exact cache1 seven-group/vendor-free PASS remains applicable to the same source. Fresh full synthesis/fit/all-corner timing is running; no application gate is open.
+| Good | Avoid |
+|---|---|
+| Named pipeline valid and operand registers | A helper that implicitly advances transactions |
+| Explicit extension before addition and a named rounding step | Unsized arithmetic with accidental truncation |
+| Static lane replication with clear owners | Runtime-bounded hardware loops |
+| Adapter response-valid and commit/busy signals | Assuming that request acceptance means completion |
+
+## Related docs
+
+[Current numeric contracts](full_rtl_language.md#hợp-đồng-số-học) · [Memory binding](asic_memory_binding.md) · [Verification](../verification/README.md) · [Repository working policy](../../AGENTS.md)

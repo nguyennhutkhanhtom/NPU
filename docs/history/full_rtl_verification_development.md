@@ -1,5 +1,7 @@
 # Lịch sử runner và kiểm chứng full graph
 
+> **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
+
 Trang này giữ nội dung trước đợt cập nhật 06/10/2026. Các trạng thái “current”
 bên dưới thuộc thời điểm viết; xem [trạng thái hiện tại](../verification/optimization_status.md).
 
@@ -35,7 +37,7 @@ and packed-store contracts.
 The installed Questa Starter nodelocked license permits one running simulation
 session. Finish the active regression before starting another simulation or an
 optimizer profile. Quartus fitting can run independently. The first isolated
-`-O5` profile was [refused before design loading](../../tests/full_rtl/evidence/opt5_profile_license_denied/results.json);
+`-O5` profile was refused before design loading (`../../tests/full_rtl/evidence/opt5_profile_license_denied/results.json`; historical target unavailable in this checkout);
 no optimizer speed or numeric result is claimed from that attempt.
 `-RtlDir` permits isolated candidates; candidate hashes cannot pass the trained
 application gate unless they match the current main RTL and timing evidence.
@@ -47,7 +49,7 @@ The application testbench observes each completed RTL token through a read-only
 monitor and stops immediately on an unexpected count or token mismatch. Final
 host reads still check every returned token and write `rtl_tokens.txt`. Expected
 IDs never drive a DUT port or internal state. The monitor has a
-[compile-only check](../../tests/full_rtl/evidence/application_monitor_compile/results.json); its
+compile-only check (`../../tests/full_rtl/evidence/application_monitor_compile/results.json`; historical target unavailable in this checkout); its
 trained application run remains blocked until the full hardware/unit gate passes.
 Application preparation records source/runner hashes and all four generated
 input files. Finalization rejects stale compile/runtime logs, changed inputs,
@@ -58,7 +60,7 @@ reference inference is run before the hardware/unit gate.
 
 The installed hardware tools are Quartus Lite25.1std and official Questa
 Altera Starter2025.2; ModelSim Intel Starter20.1 remains available. The archived
-[logic6q5 seven groups](../../tests/full_rtl/evidence/logic6q5_all_units/results.json) PASS with the
+logic6q5 seven groups (`../../tests/full_rtl/evidence/logic6q5_all_units/results.json`; historical target unavailable in this checkout) PASS with the
 official25.1 RAM model and zero compile/runtime warnings. Graph:196619host
 commands, two-token prefill, three RTL-selected tokens,16layer executions and
 4229462compute clocks. This is synthetic verification, not pretrained text.
@@ -104,7 +106,7 @@ vector/cache writes before reporting completion.
 The current Questa runner archives all seven groups and actual Intel RAM-IP
 elaboration bindings directly. Retired native/merge helpers are preserved in
 [cleanup history](helper_cleanup1/manifest.json); they have
-no current runner callers. Older [select3 units](../../tests/full_rtl/evidence/select3_units/unit_results.json)
+no current runner callers. Older select3 units (`../../tests/full_rtl/evidence/select3_units/unit_results.json`; historical target unavailable in this checkout)
 verify their archived pre-IP source and cannot gate this revision. Windows
 Application Control blocks some native executables; no policy bypass is used.
 
@@ -118,9 +120,9 @@ accepts it, dropping enable cancels its response but the accepted SRAM write
 may still commit; the host must not assume rollback. Reset cancels uncommitted
 queue entries and retains committed storage. An additional [host-only probe](../../tests/full_rtl/host_cancel_contract.sv)
 checks all seven cancellation phases, the next request after one idle edge,
-and each new write's own leaf commit before ACK: [14checks PASS](../../tests/full_rtl/evidence/host_cancel_gap1/results.json),
+and each new write's own leaf commit before ACK: 14checks PASS (`../../tests/full_rtl/evidence/host_cancel_gap1/results.json`; historical target unavailable in this checkout),
 Questa2025.2/actual Quartus25.1 RAM,0compile/runtimewarnings. The preceding
-[two-idle-edge probe](../../tests/full_rtl/evidence/host_cancel_gap2/results.json) is retained separately.
+two-idle-edge probe (`../../tests/full_rtl/evidence/host_cancel_gap2/results.json`; historical target unavailable in this checkout) is retained separately.
 This does not execute the graph or checkpoint and does not alter the eight
 inputs of the current seven-group regression.
 
@@ -187,8 +189,8 @@ against independent testbench arithmetic, then retains the existing 503 SIMD
 transactions, reset cancellation and LUT checks. Arithmetic operators are
 permitted in independent testbench/reference code only, not hardware datapaths.
 
-Preceding attention1 [seven-group archive](../../tests/full_rtl/evidence/attention1_all_units/results.json) PASS0compile/runtimewarnings after moving accumulator clear to head entry; full graph4229462compute clocks, three RTL-selected tokens,16layer executions and causal checks. [Vendor-free full-top elaboration](../verification/portable_elaboration_attention1/results.json) also PASS, run0/no weights/inference. Full-top attention1 timing FAIL92.19MHz/setup+recovery; application gate is closed.
+Preceding attention1 seven-group archive (`../../tests/full_rtl/evidence/attention1_all_units/results.json`; historical target unavailable in this checkout) PASS0compile/runtimewarnings after moving accumulator clear to head entry; full graph4229462compute clocks, three RTL-selected tokens,16layer executions and causal checks. [Vendor-free full-top elaboration](../verification/portable_elaboration_attention1/results.json) also PASS, run0/no weights/inference. Full-top attention1 timing FAIL92.19MHz/setup+recovery; application gate is closed.
 
-Current cache1 separates generated continuous KV payload FFs from the held binary operand. Consumers still follow cache valid; no FSM state/clock/latency/expected-value change. [Seven groups](../../tests/full_rtl/evidence/cache1_all_units/results.json) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions/causal checked; full timing FAIL73.97MHz/setup+recovery; hold/removal/pulse PASS every corner/UCP0. Host reset still clears response immediately; QSF global-routing request is backend-only, not compute/control IP or ASIC signoff. [Current vendor-free elaboration](../verification/portable_elaboration_cache1/results.json) PASS24module units/14names/0errors0warnings, run0/no weights/inference. Preceding timing evidence applies to its archived attention1 source; no current100MHz or trained application PASS.
+Current cache1 separates generated continuous KV payload FFs from the held binary operand. Consumers still follow cache valid; no FSM state/clock/latency/expected-value change. Seven groups (`../../tests/full_rtl/evidence/cache1_all_units/results.json`; historical target unavailable in this checkout) PASS0compile/runtimewarnings, graph4229462compute clocks/three RTL-selected tokens/16layer executions/causal checked; full timing FAIL73.97MHz/setup+recovery; hold/removal/pulse PASS every corner/UCP0. Host reset still clears response immediately; QSF global-routing request is backend-only, not compute/control IP or ASIC signoff. [Current vendor-free elaboration](../verification/portable_elaboration_cache1/results.json) PASS24module units/14names/0errors0warnings, run0/no weights/inference. Preceding timing evidence applies to its archived attention1 source; no current100MHz or trained application PASS.
 
 Backend cache2 removes the forced-global QSF routing request after cache1 recommendations identified its failing path. No RTL, test input, SRAM contract or SDC change; exact cache1 seven-group/vendor-free PASS remains applicable to the same source. Fresh full synthesis/fit/all-corner timing is running; no application gate is open.

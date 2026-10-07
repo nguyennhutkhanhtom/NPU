@@ -1,0 +1,330 @@
+----------------
+; Command Info ;
+----------------
+Report Timing: Found 2 setup paths (0 violated).  Worst case slack is 9.350 
+
+Tcl Command:
+    report_timing -setup -show_routing -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/arch_fulltop1_20261007/fast_1100mv_85c_scalar_return.rpt} -from [get_registers {op*}] -to [get_registers {*return_scalar*}] -nworst 1 -npaths 20 -detail full_path
+
+Options:
+    -from [get_registers {op*}] 
+    -to [get_registers {*return_scalar*}] 
+    -setup 
+    -nworst 1 
+    -npaths 20 
+    -show_routing 
+    -detail full_path 
+    -file {D:/2151097_Nguyen Nhut Khanh/docs/verification/timing/arch_fulltop1_20261007/fast_1100mv_85c_scalar_return.rpt} 
+
+Delay Model:
+    Fast 1100mV 85C Model
+
++----------------------------------------------------------------------------------------------------------------------------+
+; Summary of Paths                                                                                                           ;
++-------+-----------+----------------------------------+--------------+-------------+--------------+------------+------------+
+; Slack ; From Node ; To Node                          ; Launch Clock ; Latch Clock ; Relationship ; Clock Skew ; Data Delay ;
++-------+-----------+----------------------------------+--------------+-------------+--------------+------------+------------+
+; 9.350 ; op[19]    ; return_scalar.RET_SCALAR_H_ROUND ; clk          ; clk         ; 10.000       ; -0.033     ; 0.517      ;
+; 9.355 ; op[19]    ; return_scalar.RET_SCALAR_L_ROUND ; clk          ; clk         ; 10.000       ; -0.033     ; 0.512      ;
++-------+-----------+----------------------------------+--------------+-------------+--------------+------------+------------+
+
+Path #1: Setup slack is 9.350 
+===============================================================================
++-------------------------------------------------------+
+; Path Summary                                          ;
++--------------------+----------------------------------+
+; Property           ; Value                            ;
++--------------------+----------------------------------+
+; From Node          ; op[19]                           ;
+; To Node            ; return_scalar.RET_SCALAR_H_ROUND ;
+; Launch Clock       ; clk                              ;
+; Latch Clock        ; clk                              ;
+; Data Arrival Time  ; 2.701                            ;
+; Data Required Time ; 12.051                           ;
+; Slack              ; 9.350                            ;
++--------------------+----------------------------------+
+
++-------------------------------------------------------------------------------------+
+; Statistics                                                                          ;
++------------------------+--------+-------+-------------+------------+--------+-------+
+; Property               ; Value  ; Count ; Total Delay ; % of Total ; Min    ; Max   ;
++------------------------+--------+-------+-------------+------------+--------+-------+
+; Setup Relationship     ; 10.000 ;       ;             ;            ;        ;       ;
+; Clock Skew             ; -0.033 ;       ;             ;            ;        ;       ;
+; Data Delay             ; 0.517  ;       ;             ;            ;        ;       ;
+; Number of Logic Levels ;        ; 1     ;             ;            ;        ;       ;
+; Physical Delays        ;        ;       ;             ;            ;        ;       ;
+;  Arrival Path          ;        ;       ;             ;            ;        ;       ;
+;   Clock                ;        ;       ;             ;            ;        ;       ;
+;    IC                  ;        ; 3     ; 0.000       ; 0          ; 0.000  ; 0.000 ;
+;    Cell                ;        ; 3     ; 0.793       ; 36         ; 0.146  ; 0.417 ;
+;    Routing Element     ;        ; 25    ; 1.391       ; 64         ; 0.000  ; 0.492 ;
+;   Data                 ;        ;       ;             ;            ;        ;       ;
+;    IC                  ;        ; 2     ; -0.001      ; 0          ; -0.001 ; 0.000 ;
+;    Cell                ;        ; 3     ; 0.168       ; 32         ; 0.000  ; 0.129 ;
+;    uTco                ;        ; 1     ; 0.000       ; 0          ; 0.000  ; 0.000 ;
+;    Routing Element     ;        ; 6     ; 0.350       ; 68         ; 0.000  ; 0.129 ;
+;  Required Path         ;        ;       ;             ;            ;        ;       ;
+;   Clock                ;        ;       ;             ;            ;        ;       ;
+;    IC                  ;        ; 3     ; 0.000       ; 0          ; 0.000  ; 0.000 ;
+;    Cell                ;        ; 3     ; 0.765       ; 38         ; 0.139  ; 0.417 ;
+;    Routing Element     ;        ; 25    ; 1.228       ; 62         ; 0.000  ; 0.478 ;
++------------------------+--------+-------+-------------+------------+--------+-------+
+Note: Negative delays are omitted from totals when calculating percentages
+
++--------------------------------------------------------------------------------------------------------------------+
+; Data Arrival Path                                                                                                  ;
++---------+----------+----+------+--------+-------------------------------------+------------------------------------+
+; Total   ; Incr     ; RF ; Type ; Fanout ; Location                            ; Element                            ;
++---------+----------+----+------+--------+-------------------------------------+------------------------------------+
+; 0.000   ; 0.000    ;    ;      ;        ;                                     ; launch edge time                   ;
+; 2.184   ; 2.184    ;    ;      ;        ;                                     ; clock path                         ;
+;   0.000 ;   0.000  ;    ;      ;        ;                                     ; source latency                     ;
+;   0.000 ;   0.000  ;    ;      ; 1      ; PIN_AC18                            ; clk                                ;
+;   0.000 ;   0.000  ;    ; RE   ; 1      ; IOPAD_X54_Y0_N0                     ; ARRIAV_IO_PAD                      ;
+;   0.000 ;   0.000  ;    ; RE   ; 1      ; IO_PAD_OUTPUT_X54_Y0_N0_I1          ; IO_PAD_OUTPUT                      ;
+;   0.000 ;   0.000  ;    ; RE   ; 1      ; IO_INPUT_BUFFER_INPUT_X54_Y0_N1_I0  ; IO_INPUT_BUFFER_INPUT              ;
+;   0.000 ;   0.000  ; RR ; IC   ; 1      ; IOIBUF_X54_Y0_N1                    ; clk~input|i                        ;
+;   0.417 ;   0.417  ; RR ; CELL ; 1      ; IOIBUF_X54_Y0_N1                    ; clk~input|o                        ;
+;   0.417 ;   0.000  ;    ; RE   ; 1      ; IOIBUF_X54_Y0_N1                    ; ARRIAV_IO_IBUF                     ;
+;   0.417 ;   0.000  ;    ; RE   ; 1      ; IO_INPUT_BUFFER_OUTPUT_X54_Y0_N1_I2 ; IO_INPUT_BUFFER_OUTPUT             ;
+;   0.417 ;   0.000  ;    ; RE   ; 1      ; IO_RE_X54_Y0_N0_I96                 ; IO_RE                              ;
+;   0.552 ;   0.135  ;    ; RE   ; 1      ; IO_RE_X54_Y0_N0_I66                 ; IO_RE                              ;
+;   0.633 ;   0.081  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X58_Y0_N0_I1614   ; CLKBUF_CLUSTER_RE                  ;
+;   0.633 ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X58_Y0_N0_I616    ; CLKBUF_CLUSTER_RE                  ;
+;   0.633 ;   0.000  ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X58_Y0_N6_I10       ; GCLK_CLUSTER_RE                    ;
+;   0.633 ;   0.000  ;    ; RE   ; 1      ; CLKBUFBLOCK_INPUT_X58_Y0_N7_I0      ; CLKBUFBLOCK_INPUT                  ;
+;   0.633 ;   0.000  ; RR ; IC   ; 1      ; CLKCTRL_G6                          ; clk~inputCLKENA0|inclk             ;
+;   0.779 ;   0.146  ; RR ; CELL ; 68041  ; CLKCTRL_G6                          ; clk~inputCLKENA0|outclk            ;
+;   0.779 ;   0.000  ;    ; RE   ; 1      ; CLKCTRL_G6                          ; ARRIAV_CLKBUF                      ;
+;   0.779 ;   0.000  ;    ; RE   ; 1      ; CLKBUFBLOCK_OUTPUT_X58_Y0_N7_I2     ; CLKBUFBLOCK_OUTPUT                 ;
+;   0.779 ;   0.000  ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X58_Y0_N6_I12       ; GCLK_CLUSTER_RE                    ;
+;   0.779 ;   0.000  ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X58_Y0_N0_I417    ; CLKBUF_CLUSTER_RE                  ;
+;   1.271 ;   0.492  ;    ; RE   ; 16     ; GLOBAL_CLOCK_X0_Y58_N0_I6           ; GLOBAL_CLOCK                       ;
+;   1.396 ;   0.125  ;    ; RE   ; 29     ; SPINE_CLOCK_X45_Y30_N0_I22          ; SPINE_CLOCK                        ;
+;   1.585 ;   0.189  ;    ; RE   ; 1      ; SCLK_TO_ROWCLK_BUF_X45_Y43_N0_I132  ; SCLK_TO_ROWCLK_BUF                 ;
+;   1.625 ;   0.040  ;    ; RE   ; 2      ; SCLK_TO_ROWCLK_BUF_X45_Y43_N0_I135  ; SCLK_TO_ROWCLK_BUF                 ;
+;   1.851 ;   0.226  ;    ; RE   ; 13     ; LAB_CLK_X46_Y43_N0_I2               ; LAB_CLK                            ;
+;   1.919 ;   0.068  ;    ; RE   ; 1      ; BLK_CLK_BUF_X59_Y43_N0_I2           ; BLK_CLK_BUF                        ;
+;   1.933 ;   0.014  ;    ; RE   ; 1      ; ROWCLKSEL_PREBUF_X59_Y43_N0_I2      ; ROWCLKSEL_PREBUF                   ;
+;   1.954 ;   0.021  ;    ; RE   ; 1      ; ROWCLKSEL_X59_Y43_N0_I1             ; ROWCLKSEL                          ;
+;   1.954 ;   0.000  ;    ; RE   ; 2      ; GLOBAL_LOCAL_SEL_X59_Y43_N0_I1      ; GLOBAL_LOCAL_SEL                   ;
+;   1.954 ;   0.000  ;    ; RE   ; 14     ; LAB_INPUT_X59_Y43_N0_I0             ; LAB_INPUT                          ;
+;   1.954 ;   0.000  ; RR ; IC   ; 1      ; FF_X59_Y43_N4                       ; op[19]|clk                         ;
+;   2.184 ;   0.230  ; RR ; CELL ; 1      ; FF_X59_Y43_N4                       ; op[19]                             ;
+; 2.701   ; 0.517    ;    ;      ;        ;                                     ; data path                          ;
+;   2.184 ;   0.000  ;    ; uTco ; 1      ; FF_X59_Y43_N4                       ; op[19]                             ;
+;   2.184 ;   0.000  ; FF ; CELL ; 7      ; FF_X59_Y43_N4                       ; op[19]|q                           ;
+;   2.198 ;   0.014  ;    ; RE   ; 2      ; FF_X59_Y43_N4                       ; ARRIAV_FF                          ;
+;   2.232 ;   0.034  ;    ; RE   ; 2      ; LE_BUFFER_X59_Y43_N0_I2             ; LE_BUFFER                          ;
+;   2.335 ;   0.103  ;    ; RE   ; 2      ; R6_X54_Y43_N0_I33                   ; H_SEG6                             ;
+;   2.464 ;   0.129  ;    ; RE   ; 4      ; LOCAL_INTERCONNECT_X59_Y43_N0_I20   ; LAB_LINE                           ;
+;   2.534 ;   0.070  ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X59_Y43_N0_I33      ; LEIM_INPUT                         ;
+;   2.533 ;   -0.001 ; FF ; IC   ; 1      ; LABCELL_X59_Y43_N24                 ; return_scalar~10|dataf             ;
+;   2.572 ;   0.039  ; FR ; CELL ; 1      ; LABCELL_X59_Y43_N24                 ; return_scalar~10|combout           ;
+;   2.572 ;   0.000  ;    ; RE   ; 1      ; LABCELL_X59_Y43_N24                 ; ARRIAV_LCELL_COMB                  ;
+;   2.572 ;   0.000  ; RR ; IC   ; 1      ; FF_X59_Y43_N26                      ; return_scalar.RET_SCALAR_H_ROUND|d ;
+;   2.701 ;   0.129  ; RR ; CELL ; 1      ; FF_X59_Y43_N26                      ; return_scalar.RET_SCALAR_H_ROUND   ;
++---------+----------+----+------+--------+-------------------------------------+------------------------------------+
+
++----------------------------------------------------------------------------------------------------------------------+
+; Data Required Path                                                                                                   ;
++----------+---------+----+------+--------+-------------------------------------+--------------------------------------+
+; Total    ; Incr    ; RF ; Type ; Fanout ; Location                            ; Element                              ;
++----------+---------+----+------+--------+-------------------------------------+--------------------------------------+
+; 10.000   ; 10.000  ;    ;      ;        ;                                     ; latch edge time                      ;
+; 12.151   ; 2.151   ;    ;      ;        ;                                     ; clock path                           ;
+;   10.000 ;   0.000 ;    ;      ;        ;                                     ; source latency                       ;
+;   10.000 ;   0.000 ;    ;      ; 1      ; PIN_AC18                            ; clk                                  ;
+;   10.000 ;   0.000 ;    ; RE   ; 1      ; IOPAD_X54_Y0_N0                     ; ARRIAV_IO_PAD                        ;
+;   10.000 ;   0.000 ;    ; RE   ; 1      ; IO_PAD_OUTPUT_X54_Y0_N0_I1          ; IO_PAD_OUTPUT                        ;
+;   10.000 ;   0.000 ;    ; RE   ; 1      ; IO_INPUT_BUFFER_INPUT_X54_Y0_N1_I0  ; IO_INPUT_BUFFER_INPUT                ;
+;   10.000 ;   0.000 ; RR ; IC   ; 1      ; IOIBUF_X54_Y0_N1                    ; clk~input|i                          ;
+;   10.417 ;   0.417 ; RR ; CELL ; 1      ; IOIBUF_X54_Y0_N1                    ; clk~input|o                          ;
+;   10.417 ;   0.000 ;    ; RE   ; 1      ; IOIBUF_X54_Y0_N1                    ; ARRIAV_IO_IBUF                       ;
+;   10.417 ;   0.000 ;    ; RE   ; 1      ; IO_INPUT_BUFFER_OUTPUT_X54_Y0_N1_I2 ; IO_INPUT_BUFFER_OUTPUT               ;
+;   10.417 ;   0.000 ;    ; RE   ; 1      ; IO_RE_X54_Y0_N0_I96                 ; IO_RE                                ;
+;   10.505 ;   0.088 ;    ; RE   ; 1      ; IO_RE_X54_Y0_N0_I66                 ; IO_RE                                ;
+;   10.505 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X58_Y0_N0_I1614   ; CLKBUF_CLUSTER_RE                    ;
+;   10.505 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X58_Y0_N0_I616    ; CLKBUF_CLUSTER_RE                    ;
+;   10.505 ;   0.000 ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X58_Y0_N6_I10       ; GCLK_CLUSTER_RE                      ;
+;   10.505 ;   0.000 ;    ; RE   ; 1      ; CLKBUFBLOCK_INPUT_X58_Y0_N7_I0      ; CLKBUFBLOCK_INPUT                    ;
+;   10.505 ;   0.000 ; RR ; IC   ; 1      ; CLKCTRL_G6                          ; clk~inputCLKENA0|inclk               ;
+;   10.644 ;   0.139 ; RR ; CELL ; 68041  ; CLKCTRL_G6                          ; clk~inputCLKENA0|outclk              ;
+;   10.644 ;   0.000 ;    ; RE   ; 1      ; CLKCTRL_G6                          ; ARRIAV_CLKBUF                        ;
+;   10.644 ;   0.000 ;    ; RE   ; 1      ; CLKBUFBLOCK_OUTPUT_X58_Y0_N7_I2     ; CLKBUFBLOCK_OUTPUT                   ;
+;   10.644 ;   0.000 ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X58_Y0_N6_I12       ; GCLK_CLUSTER_RE                      ;
+;   10.644 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X58_Y0_N0_I417    ; CLKBUF_CLUSTER_RE                    ;
+;   11.122 ;   0.478 ;    ; RE   ; 16     ; GLOBAL_CLOCK_X0_Y58_N0_I6           ; GLOBAL_CLOCK                         ;
+;   11.244 ;   0.122 ;    ; RE   ; 29     ; SPINE_CLOCK_X45_Y30_N0_I22          ; SPINE_CLOCK                          ;
+;   11.428 ;   0.184 ;    ; RE   ; 1      ; SCLK_TO_ROWCLK_BUF_X45_Y43_N0_I132  ; SCLK_TO_ROWCLK_BUF                   ;
+;   11.467 ;   0.039 ;    ; RE   ; 2      ; SCLK_TO_ROWCLK_BUF_X45_Y43_N0_I135  ; SCLK_TO_ROWCLK_BUF                   ;
+;   11.687 ;   0.220 ;    ; RE   ; 13     ; LAB_CLK_X46_Y43_N0_I2               ; LAB_CLK                              ;
+;   11.750 ;   0.063 ;    ; RE   ; 1      ; BLK_CLK_BUF_X59_Y43_N0_I2           ; BLK_CLK_BUF                          ;
+;   11.764 ;   0.014 ;    ; RE   ; 1      ; ROWCLKSEL_PREBUF_X59_Y43_N0_I2      ; ROWCLKSEL_PREBUF                     ;
+;   11.784 ;   0.020 ;    ; RE   ; 1      ; ROWCLKSEL_X59_Y43_N0_I1             ; ROWCLKSEL                            ;
+;   11.784 ;   0.000 ;    ; RE   ; 2      ; GLOBAL_LOCAL_SEL_X59_Y43_N0_I1      ; GLOBAL_LOCAL_SEL                     ;
+;   11.784 ;   0.000 ;    ; RE   ; 14     ; LAB_INPUT_X59_Y43_N0_I0             ; LAB_INPUT                            ;
+;   11.784 ;   0.000 ; RR ; IC   ; 1      ; FF_X59_Y43_N26                      ; return_scalar.RET_SCALAR_H_ROUND|clk ;
+;   11.993 ;   0.209 ; RR ; CELL ; 1      ; FF_X59_Y43_N26                      ; return_scalar.RET_SCALAR_H_ROUND     ;
+;   12.151 ;   0.158 ;    ;      ;        ;                                     ; clock pessimism removed              ;
+; 12.051   ; -0.100  ;    ;      ;        ;                                     ; clock uncertainty                    ;
+; 12.051   ; 0.000   ;    ; uTsu ; 1      ; FF_X59_Y43_N26                      ; return_scalar.RET_SCALAR_H_ROUND     ;
++----------+---------+----+------+--------+-------------------------------------+--------------------------------------+
+
+----------------------------
+; Extra Fitter Information ;
+----------------------------
+HTML report is unavailable in plain text report export.
+
+
+Path #2: Setup slack is 9.355 
+===============================================================================
++-------------------------------------------------------+
+; Path Summary                                          ;
++--------------------+----------------------------------+
+; Property           ; Value                            ;
++--------------------+----------------------------------+
+; From Node          ; op[19]                           ;
+; To Node            ; return_scalar.RET_SCALAR_L_ROUND ;
+; Launch Clock       ; clk                              ;
+; Latch Clock        ; clk                              ;
+; Data Arrival Time  ; 2.696                            ;
+; Data Required Time ; 12.051                           ;
+; Slack              ; 9.355                            ;
++--------------------+----------------------------------+
+
++------------------------------------------------------------------------------------+
+; Statistics                                                                         ;
++------------------------+--------+-------+-------------+------------+-------+-------+
+; Property               ; Value  ; Count ; Total Delay ; % of Total ; Min   ; Max   ;
++------------------------+--------+-------+-------------+------------+-------+-------+
+; Setup Relationship     ; 10.000 ;       ;             ;            ;       ;       ;
+; Clock Skew             ; -0.033 ;       ;             ;            ;       ;       ;
+; Data Delay             ; 0.512  ;       ;             ;            ;       ;       ;
+; Number of Logic Levels ;        ; 1     ;             ;            ;       ;       ;
+; Physical Delays        ;        ;       ;             ;            ;       ;       ;
+;  Arrival Path          ;        ;       ;             ;            ;       ;       ;
+;   Clock                ;        ;       ;             ;            ;       ;       ;
+;    IC                  ;        ; 3     ; 0.000       ; 0          ; 0.000 ; 0.000 ;
+;    Cell                ;        ; 3     ; 0.793       ; 36         ; 0.146 ; 0.417 ;
+;    Routing Element     ;        ; 25    ; 1.391       ; 64         ; 0.000 ; 0.492 ;
+;   Data                 ;        ;       ;             ;            ;       ;       ;
+;    IC                  ;        ; 2     ; 0.000       ; 0          ; 0.000 ; 0.000 ;
+;    Cell                ;        ; 3     ; 0.167       ; 33         ; 0.000 ; 0.129 ;
+;    uTco                ;        ; 1     ; 0.000       ; 0          ; 0.000 ; 0.000 ;
+;    Routing Element     ;        ; 6     ; 0.345       ; 67         ; 0.000 ; 0.125 ;
+;  Required Path         ;        ;       ;             ;            ;       ;       ;
+;   Clock                ;        ;       ;             ;            ;       ;       ;
+;    IC                  ;        ; 3     ; 0.000       ; 0          ; 0.000 ; 0.000 ;
+;    Cell                ;        ; 3     ; 0.765       ; 38         ; 0.139 ; 0.417 ;
+;    Routing Element     ;        ; 25    ; 1.228       ; 62         ; 0.000 ; 0.478 ;
++------------------------+--------+-------+-------------+------------+-------+-------+
+Note: Negative delays are omitted from totals when calculating percentages
+
++-------------------------------------------------------------------------------------------------------------------+
+; Data Arrival Path                                                                                                 ;
++---------+---------+----+------+--------+-------------------------------------+------------------------------------+
+; Total   ; Incr    ; RF ; Type ; Fanout ; Location                            ; Element                            ;
++---------+---------+----+------+--------+-------------------------------------+------------------------------------+
+; 0.000   ; 0.000   ;    ;      ;        ;                                     ; launch edge time                   ;
+; 2.184   ; 2.184   ;    ;      ;        ;                                     ; clock path                         ;
+;   0.000 ;   0.000 ;    ;      ;        ;                                     ; source latency                     ;
+;   0.000 ;   0.000 ;    ;      ; 1      ; PIN_AC18                            ; clk                                ;
+;   0.000 ;   0.000 ;    ; RE   ; 1      ; IOPAD_X54_Y0_N0                     ; ARRIAV_IO_PAD                      ;
+;   0.000 ;   0.000 ;    ; RE   ; 1      ; IO_PAD_OUTPUT_X54_Y0_N0_I1          ; IO_PAD_OUTPUT                      ;
+;   0.000 ;   0.000 ;    ; RE   ; 1      ; IO_INPUT_BUFFER_INPUT_X54_Y0_N1_I0  ; IO_INPUT_BUFFER_INPUT              ;
+;   0.000 ;   0.000 ; RR ; IC   ; 1      ; IOIBUF_X54_Y0_N1                    ; clk~input|i                        ;
+;   0.417 ;   0.417 ; RR ; CELL ; 1      ; IOIBUF_X54_Y0_N1                    ; clk~input|o                        ;
+;   0.417 ;   0.000 ;    ; RE   ; 1      ; IOIBUF_X54_Y0_N1                    ; ARRIAV_IO_IBUF                     ;
+;   0.417 ;   0.000 ;    ; RE   ; 1      ; IO_INPUT_BUFFER_OUTPUT_X54_Y0_N1_I2 ; IO_INPUT_BUFFER_OUTPUT             ;
+;   0.417 ;   0.000 ;    ; RE   ; 1      ; IO_RE_X54_Y0_N0_I96                 ; IO_RE                              ;
+;   0.552 ;   0.135 ;    ; RE   ; 1      ; IO_RE_X54_Y0_N0_I66                 ; IO_RE                              ;
+;   0.633 ;   0.081 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X58_Y0_N0_I1614   ; CLKBUF_CLUSTER_RE                  ;
+;   0.633 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X58_Y0_N0_I616    ; CLKBUF_CLUSTER_RE                  ;
+;   0.633 ;   0.000 ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X58_Y0_N6_I10       ; GCLK_CLUSTER_RE                    ;
+;   0.633 ;   0.000 ;    ; RE   ; 1      ; CLKBUFBLOCK_INPUT_X58_Y0_N7_I0      ; CLKBUFBLOCK_INPUT                  ;
+;   0.633 ;   0.000 ; RR ; IC   ; 1      ; CLKCTRL_G6                          ; clk~inputCLKENA0|inclk             ;
+;   0.779 ;   0.146 ; RR ; CELL ; 68041  ; CLKCTRL_G6                          ; clk~inputCLKENA0|outclk            ;
+;   0.779 ;   0.000 ;    ; RE   ; 1      ; CLKCTRL_G6                          ; ARRIAV_CLKBUF                      ;
+;   0.779 ;   0.000 ;    ; RE   ; 1      ; CLKBUFBLOCK_OUTPUT_X58_Y0_N7_I2     ; CLKBUFBLOCK_OUTPUT                 ;
+;   0.779 ;   0.000 ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X58_Y0_N6_I12       ; GCLK_CLUSTER_RE                    ;
+;   0.779 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X58_Y0_N0_I417    ; CLKBUF_CLUSTER_RE                  ;
+;   1.271 ;   0.492 ;    ; RE   ; 16     ; GLOBAL_CLOCK_X0_Y58_N0_I6           ; GLOBAL_CLOCK                       ;
+;   1.396 ;   0.125 ;    ; RE   ; 29     ; SPINE_CLOCK_X45_Y30_N0_I22          ; SPINE_CLOCK                        ;
+;   1.585 ;   0.189 ;    ; RE   ; 1      ; SCLK_TO_ROWCLK_BUF_X45_Y43_N0_I132  ; SCLK_TO_ROWCLK_BUF                 ;
+;   1.625 ;   0.040 ;    ; RE   ; 2      ; SCLK_TO_ROWCLK_BUF_X45_Y43_N0_I135  ; SCLK_TO_ROWCLK_BUF                 ;
+;   1.851 ;   0.226 ;    ; RE   ; 13     ; LAB_CLK_X46_Y43_N0_I2               ; LAB_CLK                            ;
+;   1.919 ;   0.068 ;    ; RE   ; 1      ; BLK_CLK_BUF_X59_Y43_N0_I2           ; BLK_CLK_BUF                        ;
+;   1.933 ;   0.014 ;    ; RE   ; 1      ; ROWCLKSEL_PREBUF_X59_Y43_N0_I2      ; ROWCLKSEL_PREBUF                   ;
+;   1.954 ;   0.021 ;    ; RE   ; 1      ; ROWCLKSEL_X59_Y43_N0_I1             ; ROWCLKSEL                          ;
+;   1.954 ;   0.000 ;    ; RE   ; 2      ; GLOBAL_LOCAL_SEL_X59_Y43_N0_I1      ; GLOBAL_LOCAL_SEL                   ;
+;   1.954 ;   0.000 ;    ; RE   ; 14     ; LAB_INPUT_X59_Y43_N0_I0             ; LAB_INPUT                          ;
+;   1.954 ;   0.000 ; RR ; IC   ; 1      ; FF_X59_Y43_N4                       ; op[19]|clk                         ;
+;   2.184 ;   0.230 ; RR ; CELL ; 1      ; FF_X59_Y43_N4                       ; op[19]                             ;
+; 2.696   ; 0.512   ;    ;      ;        ;                                     ; data path                          ;
+;   2.184 ;   0.000 ;    ; uTco ; 1      ; FF_X59_Y43_N4                       ; op[19]                             ;
+;   2.184 ;   0.000 ; FF ; CELL ; 7      ; FF_X59_Y43_N4                       ; op[19]|q                           ;
+;   2.198 ;   0.014 ;    ; RE   ; 2      ; FF_X59_Y43_N4                       ; ARRIAV_FF                          ;
+;   2.232 ;   0.034 ;    ; RE   ; 2      ; LE_BUFFER_X59_Y43_N0_I2             ; LE_BUFFER                          ;
+;   2.335 ;   0.103 ;    ; RE   ; 2      ; R6_X54_Y43_N0_I33                   ; H_SEG6                             ;
+;   2.460 ;   0.125 ;    ; RE   ; 4      ; LOCAL_INTERCONNECT_X59_Y43_N0_I20   ; LAB_LINE                           ;
+;   2.529 ;   0.069 ;    ; RE   ; 1      ; BLOCK_INPUT_MUX_X59_Y43_N0_I25      ; LEIM_INPUT                         ;
+;   2.529 ;   0.000 ; FF ; IC   ; 1      ; LABCELL_X59_Y43_N18                 ; return_scalar~9|dataf              ;
+;   2.567 ;   0.038 ; FF ; CELL ; 1      ; LABCELL_X59_Y43_N18                 ; return_scalar~9|combout            ;
+;   2.567 ;   0.000 ;    ; RE   ; 1      ; LABCELL_X59_Y43_N18                 ; ARRIAV_LCELL_COMB                  ;
+;   2.567 ;   0.000 ; FF ; IC   ; 1      ; FF_X59_Y43_N19                      ; return_scalar.RET_SCALAR_L_ROUND|d ;
+;   2.696 ;   0.129 ; FF ; CELL ; 1      ; FF_X59_Y43_N19                      ; return_scalar.RET_SCALAR_L_ROUND   ;
++---------+---------+----+------+--------+-------------------------------------+------------------------------------+
+
++----------------------------------------------------------------------------------------------------------------------+
+; Data Required Path                                                                                                   ;
++----------+---------+----+------+--------+-------------------------------------+--------------------------------------+
+; Total    ; Incr    ; RF ; Type ; Fanout ; Location                            ; Element                              ;
++----------+---------+----+------+--------+-------------------------------------+--------------------------------------+
+; 10.000   ; 10.000  ;    ;      ;        ;                                     ; latch edge time                      ;
+; 12.151   ; 2.151   ;    ;      ;        ;                                     ; clock path                           ;
+;   10.000 ;   0.000 ;    ;      ;        ;                                     ; source latency                       ;
+;   10.000 ;   0.000 ;    ;      ; 1      ; PIN_AC18                            ; clk                                  ;
+;   10.000 ;   0.000 ;    ; RE   ; 1      ; IOPAD_X54_Y0_N0                     ; ARRIAV_IO_PAD                        ;
+;   10.000 ;   0.000 ;    ; RE   ; 1      ; IO_PAD_OUTPUT_X54_Y0_N0_I1          ; IO_PAD_OUTPUT                        ;
+;   10.000 ;   0.000 ;    ; RE   ; 1      ; IO_INPUT_BUFFER_INPUT_X54_Y0_N1_I0  ; IO_INPUT_BUFFER_INPUT                ;
+;   10.000 ;   0.000 ; RR ; IC   ; 1      ; IOIBUF_X54_Y0_N1                    ; clk~input|i                          ;
+;   10.417 ;   0.417 ; RR ; CELL ; 1      ; IOIBUF_X54_Y0_N1                    ; clk~input|o                          ;
+;   10.417 ;   0.000 ;    ; RE   ; 1      ; IOIBUF_X54_Y0_N1                    ; ARRIAV_IO_IBUF                       ;
+;   10.417 ;   0.000 ;    ; RE   ; 1      ; IO_INPUT_BUFFER_OUTPUT_X54_Y0_N1_I2 ; IO_INPUT_BUFFER_OUTPUT               ;
+;   10.417 ;   0.000 ;    ; RE   ; 1      ; IO_RE_X54_Y0_N0_I96                 ; IO_RE                                ;
+;   10.505 ;   0.088 ;    ; RE   ; 1      ; IO_RE_X54_Y0_N0_I66                 ; IO_RE                                ;
+;   10.505 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X58_Y0_N0_I1614   ; CLKBUF_CLUSTER_RE                    ;
+;   10.505 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X58_Y0_N0_I616    ; CLKBUF_CLUSTER_RE                    ;
+;   10.505 ;   0.000 ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X58_Y0_N6_I10       ; GCLK_CLUSTER_RE                      ;
+;   10.505 ;   0.000 ;    ; RE   ; 1      ; CLKBUFBLOCK_INPUT_X58_Y0_N7_I0      ; CLKBUFBLOCK_INPUT                    ;
+;   10.505 ;   0.000 ; RR ; IC   ; 1      ; CLKCTRL_G6                          ; clk~inputCLKENA0|inclk               ;
+;   10.644 ;   0.139 ; RR ; CELL ; 68041  ; CLKCTRL_G6                          ; clk~inputCLKENA0|outclk              ;
+;   10.644 ;   0.000 ;    ; RE   ; 1      ; CLKCTRL_G6                          ; ARRIAV_CLKBUF                        ;
+;   10.644 ;   0.000 ;    ; RE   ; 1      ; CLKBUFBLOCK_OUTPUT_X58_Y0_N7_I2     ; CLKBUFBLOCK_OUTPUT                   ;
+;   10.644 ;   0.000 ;    ; RE   ; 1      ; GCLK_CLUSTER_RE_X58_Y0_N6_I12       ; GCLK_CLUSTER_RE                      ;
+;   10.644 ;   0.000 ;    ; RE   ; 1      ; CLKBUF_CLUSTER_RE_X58_Y0_N0_I417    ; CLKBUF_CLUSTER_RE                    ;
+;   11.122 ;   0.478 ;    ; RE   ; 16     ; GLOBAL_CLOCK_X0_Y58_N0_I6           ; GLOBAL_CLOCK                         ;
+;   11.244 ;   0.122 ;    ; RE   ; 29     ; SPINE_CLOCK_X45_Y30_N0_I22          ; SPINE_CLOCK                          ;
+;   11.428 ;   0.184 ;    ; RE   ; 1      ; SCLK_TO_ROWCLK_BUF_X45_Y43_N0_I132  ; SCLK_TO_ROWCLK_BUF                   ;
+;   11.467 ;   0.039 ;    ; RE   ; 2      ; SCLK_TO_ROWCLK_BUF_X45_Y43_N0_I135  ; SCLK_TO_ROWCLK_BUF                   ;
+;   11.687 ;   0.220 ;    ; RE   ; 13     ; LAB_CLK_X46_Y43_N0_I2               ; LAB_CLK                              ;
+;   11.750 ;   0.063 ;    ; RE   ; 1      ; BLK_CLK_BUF_X59_Y43_N0_I2           ; BLK_CLK_BUF                          ;
+;   11.764 ;   0.014 ;    ; RE   ; 1      ; ROWCLKSEL_PREBUF_X59_Y43_N0_I2      ; ROWCLKSEL_PREBUF                     ;
+;   11.784 ;   0.020 ;    ; RE   ; 1      ; ROWCLKSEL_X59_Y43_N0_I1             ; ROWCLKSEL                            ;
+;   11.784 ;   0.000 ;    ; RE   ; 2      ; GLOBAL_LOCAL_SEL_X59_Y43_N0_I1      ; GLOBAL_LOCAL_SEL                     ;
+;   11.784 ;   0.000 ;    ; RE   ; 14     ; LAB_INPUT_X59_Y43_N0_I0             ; LAB_INPUT                            ;
+;   11.784 ;   0.000 ; RR ; IC   ; 1      ; FF_X59_Y43_N19                      ; return_scalar.RET_SCALAR_L_ROUND|clk ;
+;   11.993 ;   0.209 ; RR ; CELL ; 1      ; FF_X59_Y43_N19                      ; return_scalar.RET_SCALAR_L_ROUND     ;
+;   12.151 ;   0.158 ;    ;      ;        ;                                     ; clock pessimism removed              ;
+; 12.051   ; -0.100  ;    ;      ;        ;                                     ; clock uncertainty                    ;
+; 12.051   ; 0.000   ;    ; uTsu ; 1      ; FF_X59_Y43_N19                      ; return_scalar.RET_SCALAR_L_ROUND     ;
++----------+---------+----+------+--------+-------------------------------------+--------------------------------------+
+
+----------------------------
+; Extra Fitter Information ;
+----------------------------
+HTML report is unavailable in plain text report export.
+
+

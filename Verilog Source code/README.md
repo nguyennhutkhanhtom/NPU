@@ -1,5 +1,7 @@
 # Source RTL
 
+> **Category: GUIDE.**
+
 [Project](../README.md) → [Tài liệu](../docs/README.md) → **Source**
 
 ## Chọn top
@@ -7,7 +9,7 @@
 | Top | Phạm vi | Tài liệu |
 |---|---|---|
 | llm_soc.sv | Graph LLM cố định: host, prefill, transformer, head và decode | [Kiến trúc hiện tại](../docs/design/full_rtl_language.md) |
-| matmulfree.sv | Core instruction-driven legacy: NORM, TMATMUL và vector ops | [Kiến trúc legacy](../docs/design/architecture.md) |
+| matmulfree.sv | Core instruction-driven legacy: NORM, TMATMUL và vector ops | [Kiến trúc legacy](<../docs/design/legacy/architecture.md>) |
 | matmul_wrap.sv | Wrapper legacy khi chọn board top | [Chú giải snapshot](../docs/source_guide/blocks/matmul_wrap.sv.md) |
 
 ## Nhóm file

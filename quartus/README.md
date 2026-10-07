@@ -1,5 +1,7 @@
 # Quartus EDA backend
 
+> **Category: GUIDE.**
+
 The active full-graph project is `llm_soc.qpf`, with `llm_soc.qsf` and
 `llm_soc.sdc`. The legacy `matmul_free` project retains its separate configuration.
 Portable compute/control RTL stays in `Verilog Source code`; backend device,

@@ -523,8 +523,35 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         assign linear_operand[input_lane] = input_cache_q[linear_input_chunk][input_lane * 24 +: 24];
     end
     endgenerate
-    llm_linear_engine u_linear_engine(.clk(clk), .rst_n(core_rst_n), .start_i(op[L_ROW_START_IDX]),
-        .cancel_i(op_fault_q), .weight_base_i(weight_row_q), .chunks_i(matrix_chunks_q),
+    // Only the next row may overlap the current row's scalar/store tail.
+    // Retain completion until L_ROW_WAIT consumes it, including an early fault.
+    logic linear_prefetched_q, linear_result_valid_q, linear_result_fault_q;
+    logic signed [38:0] linear_result_q;
+    wire linear_overlap_start = op[L_COEFF_IDX] && linear_ready && !op_fault_q &&
+        matrix_row_q + 1'b1 < matrix_rows_q;
+    wire [14:0] linear_weight_base = linear_overlap_start ?
+        weight_row_q + 15'((matrix_chunks_q + 3) >> 2) : weight_row_q;
+    wire linear_start = linear_overlap_start || (op[L_ROW_START_IDX] && !linear_prefetched_q);
+    always_ff @(posedge clk or negedge core_rst_n) begin
+        if (!core_rst_n) begin
+            linear_prefetched_q <= 0; linear_result_valid_q <= 0;
+        end else if (op_fault_q || launch) begin
+            linear_prefetched_q <= 0; linear_result_valid_q <= 0;
+        end else begin
+            if (linear_overlap_start) linear_prefetched_q <= 1;
+            if (linear_done) linear_result_valid_q <= 1;
+            if (op[L_ROW_WAIT_IDX] && (linear_done || linear_result_valid_q)) begin
+                linear_prefetched_q <= 0; linear_result_valid_q <= 0;
+            end
+        end
+    end
+    always_ff @(posedge clk)
+        if (core_rst_n && linear_done) begin
+            linear_result_q <= linear_dot_acc;
+            linear_result_fault_q <= linear_fault;
+        end
+    llm_linear_engine u_linear_engine(.clk(clk), .rst_n(core_rst_n), .start_i(linear_start),
+        .cancel_i(op_fault_q), .weight_base_i(linear_weight_base), .chunks_i(matrix_chunks_q),
         .ready_o(linear_ready), .busy_o(linear_busy), .done_o(linear_done), .fault_o(linear_fault),
         .parameter_req_o(linear_parameter_req), .parameter_address_o(linear_parameter_address),
         .parameter_valid_i(p_valid), .parameter_data_i(p_data), .input_chunk_o(linear_input_chunk),
@@ -1090,10 +1117,10 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                         return_v <= RET_V_L_PRELOAD; op <= O_V_REQ;
                     end
                 end
-                op[L_ROW_START_IDX] : if (linear_ready) op <= L_ROW_WAIT;
-                op[L_ROW_WAIT_IDX] : if (linear_done) begin
-                    if (linear_fault) begin op_fault_q <= 1; op <= O_FINISH; end
-                    else begin linear_acc_q <= linear_dot_acc; op <= L_COEFF; end
+                op[L_ROW_START_IDX] : if (linear_prefetched_q || linear_ready) op <= L_ROW_WAIT;
+                op[L_ROW_WAIT_IDX] : if (linear_done || linear_result_valid_q) begin
+                    if (linear_result_valid_q ? linear_result_fault_q : linear_fault) begin op_fault_q <= 1; op <= O_FINISH; end
+                    else begin linear_acc_q <= linear_result_valid_q ? linear_result_q : linear_dot_acc; op <= L_COEFF; end
                 end
                 op[L_COEFF_IDX] : begin
                     scalar_a_q <= linear_acc_q; scalar_b_q <= $signed({1'b0, coefficient_q});
@@ -1318,7 +1345,16 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                     scalar_a_q <= linear_acc_q; scalar_b_q <= $signed({1'b0, coefficient_q});
                     op <= SC_MULTIPLY;
                 end
-                op[H_ROUND_IDX] : begin scalar_round_q <= rne_shift64(scalar_product_q, 6'd24); op <= H_NOISE; end
+                op[H_ROUND_IDX] : begin
+                    scalar_round_q <= rne_shift64(scalar_product_q, 6'd24);
+                    if (temperature_q == 0) begin
+                        sampled_score_q <= rne_shift64(scalar_product_q, 6'd24);
+                        // Greedy still advances once per row, including excluded
+                        // tokens, so later sampled passes retain the same stream.
+                        random_q <= llm_random_next(random_q);
+                        op <= H_SELECT;
+                    end else op <= H_NOISE;
+                end
                 op[H_NOISE_IDX] : begin
                     // Gumbel-max selection is entirely on RTL. Temperature=0
                     // selects the largest logit, preserving stable lowest-ID ties.

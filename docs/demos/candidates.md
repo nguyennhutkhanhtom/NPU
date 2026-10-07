@@ -1,5 +1,7 @@
 # Model tương thích với llm_soc
 
+> **Category: GUIDE.**
+
 [Tài liệu](../README.md) → [Demo](README.md) → **Tương thích model**
 
 ## Model đang được exporter hỗ trợ

@@ -1,5 +1,7 @@
 # Chạy NanoFable thật trên llm_soc
 
+> **Category: GUIDE.**
+
 [Tài liệu](../README.md) → [Demo](README.md) → **NanoFable**
 
 Runner dùng checkpoint **NanoFable-1M-ternary seed1** đã pin. Host nạp parameters,
@@ -17,12 +19,7 @@ trong mô phỏng RTL. Reference số nguyên trên CPU dùng để kiểm tra t
 | Checkpoint/tokenizer | tests/language_demo/upstream, SHA-256 khớp upstream_manifest.json |
 | Evidence | Cả bảy nhóm PASS và full-top all-corner timing đạt ≥100 MHz, đúng RTL/config |
 
-**Timing ngày 06/10/2026:** [nanofable_max_20261006](../verification/timing/nanofable_max_20261006/manifest.json)
-đã hoàn tất và khớp RTL/QSF/QPF/SDC hiện tại: minimum Fmax **100,78 MHz**,
-cả bốn corner PASS. Gate cũng xác minh đủ bảy nhóm unit/graph trước khi chạy
-checkpoint. [Trang trạng thái](../verification/optimization_status.md)
-ghi kết quả application. Dùng một phiên Questa tại một thời điểm; runner application
-sử dụng các tên build cố định nên không chạy hai demo song song.
+Current verification and application status: [optimization status](../verification/optimization_status.md). Use one Questa session at a time; application uses shared build names.
 
 ## Các bước chạy
 
@@ -58,7 +55,7 @@ và kiểm tra 12 file đã pin. Bước này chưa thực thi checkpoint infere
 ### 3. Chọn manifest đúng và kiểm tra gate
 
 Chỉ chọn file `manifest.json` của một lượt timing đã hoàn tất. Manifest dưới đây
-đã PASS trên bản RTL/config ngày 06/10/2026; luôn kiểm tra lại gate trước khi chạy.
+là ví dụ lịch sử; chọn manifest áp dụng từ trang trạng thái và kiểm tra gate trước khi chạy.
 
 ```powershell
 $timingManifest = 'docs/verification/timing/nanofable_max_20261006/manifest.json'

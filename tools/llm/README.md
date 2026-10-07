@@ -1,5 +1,7 @@
 # LUT generation
 
+> **Category: GUIDE.**
+
 [Documentation hub](../../docs/README.md) · [Numeric tables](../../docs/design/full_rtl_language.md)
 
 `generate_tables.py` regenerates the explicit exp/Gumbel combinational tables.

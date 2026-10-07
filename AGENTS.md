@@ -1,169 +1,562 @@
 # NPU repository instructions
 
-## General working policy
+## 1. Working policy
 
 Work only on the requested or currently active milestone.
 
-Continue working until that milestone is implemented and verified, unless blocked by missing information, required user approval, or an external tool/process.
+Continue until that milestone is implemented and verified unless blocked by:
 
-Do not automatically continue into another major milestone after the requested one is complete.
+- missing information;
+- required user approval;
+- an external tool or long-running process.
 
-Prefer the smallest correct change. Avoid unrelated refactors, cleanup, documentation updates, or architectural changes.
+Do not automatically continue into another major milestone after the active milestone is complete.
 
-Treat the current repository, configuration, tests, manifests, and generated reports as the source of truth.
+Prefer the smallest correct change.
 
-## Search and tool use
+Avoid unrelated:
 
-When searching for text or symbols, prefer `rg`. When searching for files, prefer `rg --files`.
+- RTL refactors;
+- architecture changes;
+- configuration changes;
+- cleanup;
+- documentation changes.
 
-Use a dedicated file, search, patch, or Git tool when one is available instead of reproducing the same operation through a more general shell command.
+**Exception:** documentation required to keep modified RTL synchronized is part of the RTL change and is mandatory.
 
-Search before reading large files.
+Treat the current repository, configuration, tests, manifests, source code, and generated reports as the source of truth.
 
-Inspect the smallest useful file region plus the dependencies required to understand or modify it.
+For large JSON manifests, reports, logs, or result files, inspect only the fields or sections needed for the current decision.
 
-Batch independent read-only searches and checks when practical.
+---
 
-Keep command output bounded. Prefer summaries, selected matches, relevant report sections, and log tails over full dumps.
+# 2. Efficient search and context use
 
-Do not recursively dump large directories, generated outputs, build logs, evidence archives, or repository-wide diffs into context.
+Optimize repository work for low context/token usage.
 
-Do not repeatedly poll long-running simulations or Quartus processes. Check them when the result is needed for the next decision.
+When searching:
 
-AGENTS.md is already supplied through the Codex instruction context. Do not read it from disk unless the active task is to review or edit AGENTS.md itself.
+- use `rg` for text and symbols;
+- use `rg --files` for files;
+- search before reading large files;
+- read the smallest useful source region plus required dependencies;
+- batch independent read-only searches when practical.
 
-If global git status is large, summarize its counts and inspect only dirty paths relevant to the active task instead of dumping the full status into context.
+Keep command output bounded.
 
-## Repository navigation
+Prefer:
 
-The current full-graph top is `llm_soc`.
+- selected matches;
+- short report sections;
+- summaries;
+- log tails;
+- scoped diffs;
 
-`matmulfree` and its instruction/descriptor datapath are legacy. Do not inspect or modify legacy RTL unless:
-- the active task explicitly concerns it;
-- a changed shared module affects it; or
-- a required regression identifies a failure there.
+instead of full file or directory dumps.
 
-For continuation work, read `TASK_STATE.md` once near the beginning to recover the verified state and active issue.
+Do not recursively dump:
 
-For architecture questions, start with `docs/source_guide/full_graph.md`.
-
-For verification or timing work, start with `docs/verification/optimization_status.md` and then inspect only the relevant current manifest, report, or log.
-
-Use `docs/design/full_rtl_language.md` when graph architecture or numeric contracts are relevant.
-
-Do not recursively read:
-- `docs/verification/timing/`
-- `tests/full_rtl/evidence/`
-- history/archive directories
-- generated build directories
-
-Open historical evidence only for a specific comparison, regression, or provenance question.
-
-Do not read a generated/source-guide block explanation when the corresponding RTL source already provides everything needed for the active coding task. Use those pages when documentation, architecture explanation, or a saved snapshot is specifically relevant.
-
-`llm_soc.sv` is large. Search for the relevant state, signal, instance, or symbol before reading it. Do not read the whole file merely to locate a local issue.
+- generated build directories;
+- large logs;
+- evidence archives;
+- repository-wide diffs;
+- history/archive trees.
 
 Do not reread unchanged files without a concrete reason.
 
-## Verification workflow
+Use dedicated search, patch, Git, or file tools when available instead of recreating the same operation with general shell commands.
+
+`AGENTS.md` is already supplied through Codex instruction context.
+
+Do not read it from disk unless the active task is specifically reviewing or modifying `AGENTS.md`.
+
+For a large Git working tree, inspect counts first and then restrict status/diff inspection to paths relevant to the active task.
+
+---
+
+# 3. Repository navigation
+
+The current full-graph top is:
+
+`llm_soc`
+
+`matmulfree` and its instruction/descriptor datapath are legacy.
+
+Do not inspect or modify legacy RTL unless:
+
+- the active task explicitly concerns it;
+- a modified shared module affects it;
+- a required regression reports a failure there.
+
+For continuation work, read `TASK_STATE.md` once near the beginning to recover:
+
+- the verified baseline;
+- the active issue;
+- the expected next action.
+
+Use these documentation entry points:
+
+| Need | Start here |
+|---|---|
+| Current RTL graph / module ownership | `docs/source_guide/full_graph.md` |
+| Current architecture / numeric contracts | `docs/design/full_rtl_language.md` |
+| Current verification / timing status | `docs/verification/optimization_status.md` |
+| Verification workflow | `docs/verification/README.md` |
+| Language / NanoFable demo | `docs/demos/language.md` |
+| RTL coding policy | `docs/design/rtl_style.md` |
+
+Do not recursively read:
+
+- `docs/verification/timing/`;
+- `tests/full_rtl/evidence/`;
+- history/archive directories;
+- generated build directories.
+
+Open historical evidence only for a specific:
+
+- comparison;
+- regression;
+- provenance question.
+
+For RTL coding work, prefer the actual RTL source over generated/source-guide explanations.
+
+Read the module documentation when:
+
+- architecture context is needed;
+- documentation itself is being changed;
+- or the RTL has been modified and its documentation must be synchronized.
+
+`llm_soc.sv` is large.
+
+Search for the relevant:
+
+- state;
+- signal;
+- instance;
+- parameter;
+- module;
+- symbol;
+
+before reading source regions.
+
+Do not read the entire file merely to locate a local issue.
+
+---
+
+# 4. RTL ↔ documentation synchronization
+
+Documentation synchronization is part of the definition of done for RTL changes.
+
+## Per-module requirement
+
+Whenever a synthesizable RTL file is modified, the corresponding module documentation must also be updated in the same task.
+
+For example:
+
+```text
+llm_soc.sv
+→ docs/source_guide/blocks/llm_soc.sv.md
+
+llm_attention_engine.sv
+→ docs/source_guide/blocks/llm_attention_engine.sv.md
+```
+
+If a corresponding module documentation page exists, it MUST be edited when the RTL file changes.
+
+Do not mark an RTL task complete while its module documentation still describes the previous implementation.
+
+If the RTL change does not alter externally visible semantics, update only the smallest relevant documentation content, such as:
+
+- implementation description;
+- state/datapath explanation;
+- ownership information;
+- source-sync/hash metadata when present;
+- implementation notes relevant to the changed logic.
+
+Do not add meaningless prose merely to create a documentation diff.
+
+## Propagation rule
+
+Update higher-level documentation only when the RTL change affects the information owned by that document.
+
+### Update `docs/source_guide/full_graph.md` when:
+
+- module hierarchy changes;
+- block ownership changes;
+- a module is added or removed;
+- data/control flow between major blocks changes.
+
+### Update `docs/design/full_rtl_language.md` when:
+
+- graph architecture changes;
+- model dimensions or numeric contracts change;
+- memory organization changes;
+- major inference flow changes;
+- architectural behavior changes.
+
+### Update `docs/design/host_interface.md` when:
+
+- host-visible interface behavior changes;
+- protocol behavior changes;
+- command/result semantics change.
+
+### Update `docs/design/rtl_style.md` only when:
+
+- the project-wide RTL policy itself changes.
+
+Do not update it merely because RTL was modified.
+
+### Update `docs/verification/optimization_status.md` only when:
+
+- new verification evidence has actually been produced;
+- current PASS/FAIL status changes;
+- timing/resource/application evidence changes.
+
+Never invent or copy current verification claims without matching evidence.
+
+## Documentation style for RTL changes
+
+Do not paste large RTL excerpts into documentation.
+
+The RTL source is the canonical source code.
+
+Documentation should explain:
+
+- role;
+- ownership;
+- flow;
+- important state/datapath groups;
+- interfaces/contracts;
+- non-obvious behavior.
+
+Prefer concise tables, bullets, and links over duplicated source.
+
+If an RTL change makes an existing diagram inaccurate and diagram work is outside the current task, record:
+
+`Diagram follow-up required`
+
+rather than silently leaving the inconsistency unnoticed.
+
+---
+
+# 5. Verification workflow
 
 Run the smallest directly affected verification first.
 
-While debugging a full-graph problem, use the targeted `run_units.ps1` group when possible.
+For full-graph debugging, use the targeted `run_units.ps1` group when possible.
 
 Run the complete seven-group regression when:
+
 - shared behavior changed;
-- a milestone requires full regression evidence; or
+- the milestone requires full regression evidence;
 - the pretrained-application gate requires it.
 
-Do not rerun expensive regression or timing merely to reconfirm unchanged source/configuration when valid matching evidence already exists.
+Do not rerun expensive regression or timing solely to reconfirm unchanged source/configuration when valid matching evidence already exists.
 
-For full-top timing, use `tools/timing/run.ps1` with `quartus/llm_soc` and a fresh evidence tag.
+For full-top timing, use:
+
+`tools/timing/run.ps1`
+
+with:
+
+`quartus/llm_soc`
+
+and a fresh evidence tag.
 
 Preserve previous evidence tags and reports.
 
-Treat unit/graph PASS, synthesis PASS, fit PASS, timing PASS, portable elaboration PASS, and pretrained application PASS as separate claims.
+Treat these as separate claims:
 
-Before pretrained application execution, require exact-current unit/graph PASS and exact-current full-top post-fit timing >=100 MHz at every required corner, with:
-- nonnegative setup slack;
-- nonnegative hold slack;
-- nonnegative recovery/removal slack;
-- nonnegative pulse-width slack;
-- TNS = 0;
-- no unconstrained paths.
+- unit/graph PASS;
+- synthesis PASS;
+- fit PASS;
+- timing PASS;
+- portable elaboration PASS;
+- pretrained application PASS.
 
-Never weaken tests, expected values, timing constraints, or introduce false/multicycle exceptions merely to hide a real failure.
+For the 100 MHz timing target, a timing failure does not by itself require stopping optimization work.
+
+Reporting the resulting Fmax is sufficient unless the active milestone explicitly requires timing closure.
+
+Never weaken:
+
+- tests;
+- expected values;
+- timing constraints;
+
+and never introduce false/multicycle exceptions merely to hide a real failure.
 
 After a material verified milestone, update `TASK_STATE.md` concisely with:
-- the verified baseline;
-- the remaining blocker, if any;
-- the relevant evidence;
-- the next action.
+
+- verified baseline;
+- remaining blocker, if any;
+- relevant evidence;
+- next action.
 
 Do not use `TASK_STATE.md` as a chronological work log.
 
-## Synthesizable RTL
+---
 
-Write deterministic, synthesis-friendly SystemVerilog with hardware structure and ownership kept clear.
+# 6. Synthesizable RTL policy
 
-Prefer explicit RTL when it makes the intended hardware, pipeline boundaries, or register ownership easier to understand.
+Write deterministic, synthesis-friendly SystemVerilog.
 
-Use generate for for structural hardware replication and module/interface generation.
+Keep hardware structure, timing boundaries, and ownership explicit.
 
-Procedural loops are allowed when their bounds are statically determinable at elaboration/synthesis time and the resulting hardware remains clear. Avoid large procedural loops that unintentionally create long combinational paths or excessive replicated hardware.
+Prefer explicit RTL when it makes:
 
-Do not use unbounded loops or loops whose hardware iteration count depends on runtime data.
+- hardware replication;
+- pipeline boundaries;
+- register ownership;
+- memory behavior;
+- control flow;
 
-Avoid synthesizable task. If code reuse is needed, prefer a small pure combinational function or an explicit module. Do not use tasks/functions to hide state, timing, handshakes, memory transactions, or significant datapaths.
+easier to understand.
 
-Functions may be used for small pure combinational transformations and constant/elaboration helpers.
+Use `generate for` for structural hardware replication and module/interface generation.
 
-Do not hide FSM transitions, register updates, memory accesses, pipeline stages, clock-domain behavior, or significant datapaths inside helper abstractions.
+Procedural loops are allowed when:
 
-Each sequential state element should have clear ownership. Avoid multiple procedural drivers and unintended latches.
+- bounds are statically determinable;
+- the resulting hardware remains clear;
+- they do not unintentionally create excessive replication or long combinational paths.
 
-Preserve externally visible interfaces, protocols, ordering, and verified numerical behavior unless the active task explicitly changes them.
+Do not use:
 
-Internal latency, pipeline structure, and register placement may change when required for timing, area, or power optimization, provided the architectural/protocol contract is preserved or the intended contract change is explicitly verified.
+- unbounded loops;
+- loops whose hardware iteration count depends on runtime data.
 
-Prefer clock enables in portable RTL. Do not create gated clocks with ordinary combinational logic. Technology-specific clock-gating implementation belongs behind the ASIC technology/integration boundary.
+Avoid synthesizable tasks.
 
-Do not rely on simulation-only constructs, delays, force/release, or unsynthesizable file/system-task behavior in synthesizable RTL.
+For code reuse, prefer:
 
-## Arithmetic and technology policy
+- small pure combinational functions;
+- explicit modules.
+
+Functions may be used for:
+
+- small pure combinational transformations;
+- constant/elaboration helpers.
+
+Do not hide inside helpers:
+
+- FSM transitions;
+- register updates;
+- memory transactions;
+- pipeline stages;
+- clock-domain behavior;
+- significant datapaths.
+
+Each sequential state element must have clear ownership.
+
+Avoid:
+
+- multiple procedural drivers;
+- unintended latches.
+
+Preserve externally visible:
+
+- interfaces;
+- protocols;
+- ordering;
+- verified numerical behavior;
+
+unless the active task explicitly changes them.
+
+Internal:
+
+- latency;
+- pipeline structure;
+- register placement;
+
+may change for timing, area, or power optimization when the architectural/protocol contract remains preserved or the intended contract change is explicitly verified.
+
+Prefer clock enables in portable RTL.
+
+Do not create gated clocks using ordinary combinational logic.
+
+Technology-specific clock gating belongs behind an ASIC technology/integration boundary.
+
+Do not use simulation-only constructs, delays, force/release, or unsynthesizable system/file behavior in synthesizable RTL.
+
+---
+
+# 7. Arithmetic and technology policy
 
 Keep functional compute/control RTL technology-independent.
 
-Technology-specific macros or cells must be isolated behind clearly defined wrapper or leaf modules with documented functional, latency, reset, clocking, and collision behavior.
+Technology-specific cells or macros must be isolated behind clearly defined wrapper or leaf modules.
 
-For the current Quartus backend, quartus_word_ram is the only allowed Quartus/Altera memory-IP leaf. Do not introduce Quartus-specific arithmetic or control IP into portable compute/control RTL.
+Their contracts must document relevant:
 
-For a future ASIC backend, SRAM macros, clock-gating cells, or other required technology cells may be introduced only through dedicated technology wrappers or implementation/integration layers. Their portable-facing contracts must remain explicit.
+- functionality;
+- latency;
+- reset behavior;
+- clocking;
+- collision behavior.
 
-Use ordinary synthesizable SystemVerilog operators when they express the intended hardware clearly. Do not prohibit an operator solely because it can infer arithmetic hardware.
+For the current Quartus backend:
 
-However, preserve architecture-specific arithmetic restrictions where they are intentional. In NPU datapaths designed to avoid hardware multipliers/dividers, do not replace the verified structural implementation with runtime *, /, or vendor arithmetic IP unless the active task explicitly changes that architectural policy and verifies PPA, timing, and numerical behavior.
+`quartus_word_ram`
 
-Constant multiplication, division, indexing, and geometry used only for elaboration are permitted.
+is the only allowed Quartus/Altera memory-IP leaf.
 
-Do not infer expensive arithmetic accidentally. Width, signedness, truncation, rounding, saturation, and fixed-point scaling must be explicit enough to make the intended hardware and numerical behavior reviewable.
+Do not introduce Quartus-specific arithmetic or control IP into portable compute/control RTL.
 
-Keep FPGA-specific placement, routing, I/O, pin, delay-chain, and physical optimization assignments in the Quartus backend rather than portable RTL.
+Future ASIC-specific components such as:
 
-Keep ASIC-specific physical constraints, library bindings, UPF/power intent, CTS/DFT implementation details, and technology macro bindings outside the portable compute/control RTL except at explicit integration boundaries.
+- SRAM macros;
+- clock-gating cells;
+- technology cells;
 
-Quartus synthesis, fit, and STA are FPGA implementation evidence only. They do not constitute ASIC synthesis, STA, power, DFT, CDC/RDC, physical-design, or signoff evidence.
+must be isolated behind dedicated technology wrappers or implementation/integration layers.
 
-## Workspace and Git safety
+Portable-facing behavior must remain explicit.
 
-Preserve user changes, correct uncommitted work, and immutable verification evidence.
+Use ordinary synthesizable SystemVerilog operators when they clearly express the intended hardware.
 
-Do not reset, revert, delete, overwrite, clean, or discard existing work unless the active task explicitly requires that action.
+Do not prohibit an operator merely because it can infer arithmetic hardware.
 
-Do not use destructive Git commands to simplify the workspace.
+However, preserve architecture-specific arithmetic restrictions.
 
-Inspect the relevant diff before changing code that already has uncommitted modifications.
+For NPU datapaths intentionally designed to avoid hardware multipliers/dividers, do not replace verified structural implementations with runtime:
 
-Do not modify source or configuration while an active Quartus run is measuring that source/configuration.
+- `*`;
+- `/`;
+- vendor arithmetic IP;
 
-Do not commit or push unless the active task explicitly asks for it.
+unless the active task explicitly changes that policy and verifies:
+
+- numerical behavior;
+- timing;
+- area/power implications.
+
+Constant multiplication, division, indexing, and geometry used only for elaboration are allowed.
+
+Make these explicit enough for hardware review:
+
+- width;
+- signedness;
+- truncation;
+- rounding;
+- saturation;
+- fixed-point scaling.
+
+Keep FPGA-specific:
+
+- placement;
+- routing;
+- I/O;
+- pin assignments;
+- delay chains;
+- physical optimization assignments;
+
+inside the Quartus backend rather than portable RTL.
+
+Keep ASIC-specific:
+
+- physical constraints;
+- library bindings;
+- UPF/power intent;
+- CTS;
+- DFT;
+- technology macro binding;
+
+outside portable compute/control RTL except at explicit integration boundaries.
+
+Quartus synthesis, fit, and STA are FPGA implementation evidence only.
+
+They do not constitute ASIC:
+
+- synthesis;
+- STA;
+- power;
+- DFT;
+- CDC/RDC;
+- physical design;
+- signoff evidence.
+
+---
+
+# 8. Workspace and Git safety
+
+Preserve:
+
+- user changes;
+- valid uncommitted work;
+- immutable verification evidence.
+
+Do not:
+
+- reset;
+- revert;
+- delete;
+- overwrite;
+- clean;
+- discard existing work;
+
+unless the active task explicitly requires it.
+
+Do not use destructive Git commands merely to simplify the workspace.
+
+Before modifying a file that already has uncommitted changes, inspect its relevant diff first.
+
+Do not modify source/configuration while an active Quartus run is measuring that source/configuration.
+
+Do not commit or push unless explicitly requested.
+
+At the end of an RTL task, verify that:
+
+- intended RTL files changed;
+- corresponding module documentation changed;
+- required higher-level documentation changed;
+- unrelated files did not change.
+
+---
+
+# 9. Long-running jobs
+
+For simulations, regressions, synthesis, fit, timing analysis, or other long-running processes:
+
+1. start the job normally;
+2. capture enough information to identify it;
+3. perform at most one initial status check;
+4. if it is still running, do not repeatedly poll it.
+
+Do not repeatedly inspect:
+
+- process status;
+- logs;
+- intermediate output files.
+
+Do not relaunch an existing job merely because a previous Codex turn stopped.
+
+When a job must continue outside the current turn:
+
+- record required continuation state in `TASK_STATE.md`;
+- provide a concise **monitor handoff**.
+
+The handoff must include:
+
+- running job/stage;
+- PID/process name when available;
+- relevant log/report path;
+- one bounded command to check whether it is running;
+- one bounded command to inspect recent progress;
+- completion/success/failure marker;
+- expected output/report;
+- instruction to continue the existing Codex task after completion.
+
+Prefer small monitoring outputs such as:
+
+- process queries;
+- short log tails.
+
+When continuing after the job completes:
+
+1. inspect final status/results once;
+2. confirm they correspond to the expected source/configuration/evidence tag;
+3. continue from `TASK_STATE.md`;
+4. do not relaunch the job unless the result is invalid or source/configuration changed.
+
+Short jobs that complete within the current tool call do not require this handoff.

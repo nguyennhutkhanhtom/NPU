@@ -1,5 +1,7 @@
 # Công cụ hỗ trợ
 
+> **Category: GUIDE.**
+
 [Project](../README.md) → **Tools**
 
 | Thư mục | Công việc |

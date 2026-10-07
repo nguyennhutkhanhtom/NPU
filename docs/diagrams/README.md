@@ -1,5 +1,7 @@
 # Sơ đồ RTL và cách đọc
 
+> **Category: GUIDE.**
+
 [Tài liệu](../README.md) → **Sơ đồ RTL**
 
 Top chính là **llm_soc**. Sơ đồ hierarchy liệt kê instance thực, còn functional
@@ -17,7 +19,7 @@ overview giải thích các FSM, mux, register và luồng xử lý nằm trong 
 | Request/ACK, cancellation và parameter commit | [Host transaction](../design/host_interface.md#một-transaction) |
 | Cache reuse và invalidate | [Cache reuse and ownership](../design/exact_throughput_optimization.md#cache-reuse-and-ownership) |
 | Sơ đồ từng module, numeric stages và code hiện tại | [Danh mục 41 RTL/LUT assets](../source_guide/blocks/README.md) |
-| Core dùng instruction/descriptor | [Hierarchy matmulfree](../source_guide/README.md) |
+| Core dùng instruction/descriptor | [Hierarchy matmulfree](<../source_guide/legacy/README.md>) |
 
 ## Các tab hierarchy
 

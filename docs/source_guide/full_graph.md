@@ -1,6 +1,8 @@
 # Các khối RTL của full graph
 
-[Tài liệu](../README.md) → [Source guide](blocks/README.md) → **Full graph**
+> **Category: GUIDE.**
+
+[Tài liệu](../README.md) → [Source guide](README.md) → **Full graph**
 
 ## Top và cấu hình
 
@@ -64,6 +66,8 @@ flowchart TB
 | llm_attention_engine | position bound, KV request tags, sum_valid, score pipeline và maximum |
 | llm_attention_normalize | Batch/lane progress, shared divider lane zero, rounding metadata và result-valid |
 
+Parent may overlap one next linear row with the current scalar/store tail; retained completion preserves ordered consumption.
+
 Graph chọn một phase tại một thời điểm. Engine có thể giữ nhiều request hoặc
 arithmetic transaction trong pipeline của phase đó. Parent chỉ đổi quyền dùng
 tài nguyên sau khi các response của pass đã được drain.
@@ -108,4 +112,4 @@ bảo toàn khi thay technology leaf.
 [Mục lục từng file](blocks/README.md) có hai đường đọc: source hiện tại và trang
 chú giải snapshot. Cột trạng thái hash cho biết snapshot code có khớp file đang
 compile không. Những trang có hash cũ cần đọc cùng RTL hiện tại; sơ đồ/code excerpts
-sẽ được refresh ở đợt riêng. [Hierarchy legacy](README.md) giữ sơ đồ matmulfree.
+sẽ được refresh ở đợt riêng. [Hierarchy legacy](<legacy/README.md>) giữ sơ đồ matmulfree.

@@ -1,5 +1,7 @@
 # Ordinary I/O cell characterization
 
+> **Category: GUIDE.**
+
 [Documentation hub](../../README.md) · [Full-top timing](../timing/README.md) · [ASIC portability](../../design/asic_portability.md)
 
 These probes measure physical I/O buffers on the selected FPGA. They are not

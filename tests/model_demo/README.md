@@ -1,6 +1,8 @@
 # Historical Binary-MNIST160 evidence
 
-[Documentation hub](../../docs/README.md) · [Historical report](../../docs/demos/mnist.md) · [Current full RTL application](../full_rtl/README.md)
+> **Category: GUIDE.**
+
+[Documentation hub](../../docs/README.md) · [Historical report](<../../docs/demos/legacy/mnist.md>) · [Current full RTL application](../full_rtl/README.md)
 
 The legacy MNIST runners/exporter/testbench have been retired. This directory
 retains the original [results](results.json), [checkpoint provenance](checkpoint_history.json),

@@ -1,5 +1,7 @@
 # Lịch sử và tài liệu tham chiếu
 
+> **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
+
 [Tài liệu](../README.md) → **Lịch sử**
 
 Trạng thái workspace nằm ở [verification status](../verification/optimization_status.md).
@@ -8,13 +10,15 @@ Một câu “current” trong bản lưu cần được hiểu theo thời đi�
 
 ## Lịch sử thiết kế và kiểm chứng
 
+[Architecture research 2026-10-05](architecture_research_20261005.md) · [Review v1](reviews/rtl_change_review.md) · [Review v2](reviews/rtl_change_review_v2.md) · [Design review](reviews/design_review.md)
+
 | Trang | Phạm vi |
 |---|---|
 | [Phát triển full graph](full_rtl_development.md) | Các bước mở rộng, memory/pipeline và operator trước bản docs mới |
 | [Timing development](timing_development.md) | Critical paths, fail/pass và đề xuất Quartus tại từng checkpoint |
 | [Runner development](full_rtl_verification_development.md) | Các mốc memory models, license, compile và synthetic tests |
 | [Review version 3](../reviews/rtl_change_review_v3.md) | Tối ưu throughput đã triển khai và các kết quả đo |
-| [Implementation review](../reviews/implementation_review.md) | Tích hợp và sửa lỗi core legacy |
+| [Implementation review](<reviews/implementation_review.md>) | Tích hợp và sửa lỗi core legacy |
 | [Demo legacy](../demos/legacy/README.md) | MNIST, NanoFable hybrid và khảo sát model cũ |
 | [Task state 04/10/2026](task_state_20261004.md) | Snapshot giữ nguyên byte; links/commands dùng ngữ cảnh root khi tạo |
 | [Project Quartus cũ](quartus_projects.md) | Vị trí 11 retired experiment folders |

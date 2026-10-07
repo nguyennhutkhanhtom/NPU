@@ -1,5 +1,7 @@
 # Testbench và runner cho llm_soc
 
+> **Category: GUIDE.**
+
 [Tài liệu](../../docs/README.md) → [Kiểm chứng](../../docs/verification/README.md) → **Full RTL tests**
 
 Các file trong thư mục này compile source tại Verilog Source code.

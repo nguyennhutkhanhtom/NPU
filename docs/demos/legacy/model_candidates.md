@@ -1,14 +1,16 @@
 # Khảo sát model cho core matmulfree
 
+> **Category: LEGACY.**
+
 Bản tài liệu được lưu trước đợt cập nhật ngày 06/10/2026. Các câu ghi
 “current” hoặc “đang chạy” bên dưới thuộc thời điểm viết; trạng thái workspace
 đọc tại [trang kiểm chứng hiện tại](../../verification/optimization_status.md).
 
 [Project](../../../README.md) → [Tài liệu](../../README.md) → [Demo](../README.md) → **Model candidates**
 
-**Cập nhật ngày 01/10/2026:** RTL pass 9 mục regression và demo synthesis. Đã export checkpoint **Binary-MNIST width160_160_160**, chạy CPU gốc/reference số nguyên/RTL đúng nhãn 10/10 ảnh mẫu; 40 lượt tầng khớp bit-exact với reference số nguyên. Xem [demo checkpoint](../mnist.md) và [báo cáo tích hợp](../../reviews/implementation_review.md). Đã bổ sung [demo NanoFable](nanofable_hybrid.md): generation CPU 3 prompt × 32 token với deterministic repeat, RTL replay 168 lượt linear thực và 33.792 output S32 bit-exact. Chưa đánh giá toàn bộ MNIST hoặc chạy toàn graph ngôn ngữ trên NPU.
+**Cập nhật ngày 01/10/2026:** RTL pass 9 mục regression và demo synthesis. Đã export checkpoint **Binary-MNIST width160_160_160**, chạy CPU gốc/reference số nguyên/RTL đúng nhãn 10/10 ảnh mẫu; 40 lượt tầng khớp bit-exact với reference số nguyên. Xem [demo checkpoint](<mnist.md>) và [báo cáo tích hợp](<../../history/reviews/implementation_review.md>). Đã bổ sung [demo NanoFable](nanofable_hybrid.md): generation CPU 3 prompt × 32 token với deterministic repeat, RTL replay 168 lượt linear thực và 33.792 output S32 bit-exact. Chưa đánh giá toàn bộ MNIST hoặc chạy toàn graph ngôn ngữ trên NPU.
 
-Ngày kiểm tra nguồn: 28/09/2026. Tài liệu này bổ sung cho [đề xuất độ rộng bit và SRAM](<../../design/architecture.md>). Mục tiêu là chạy trọn mô hình trên một core nhỏ: 32 phần tử xử lý (PE), activation INT8, weight ternary mã hóa bằng 2 bit, accumulator 18 bit (ACC18), K≤512, parameter SRAM 32 KiB và workspace SRAM 8 KiB. Ở đây, K là số phần tử trong một phép dot product; S16/S32 là số nguyên có dấu rộng 16/32 bit. NORM + QUANT gồm chuẩn hóa RMS rồi lượng tử hóa activation sang INT8. Một mô hình chạy được trên máy tính chưa chắc chạy được trọn vẹn trên ASIC này.
+Ngày kiểm tra nguồn: 28/09/2026. Tài liệu này bổ sung cho [đề xuất độ rộng bit và SRAM](<../../design/legacy/architecture.md>). Mục tiêu là chạy trọn mô hình trên một core nhỏ: 32 phần tử xử lý (PE), activation INT8, weight ternary mã hóa bằng 2 bit, accumulator 18 bit (ACC18), K≤512, parameter SRAM 32 KiB và workspace SRAM 8 KiB. Ở đây, K là số phần tử trong một phép dot product; S16/S32 là số nguyên có dấu rộng 16/32 bit. NORM + QUANT gồm chuẩn hóa RMS rồi lượng tử hóa activation sang INT8. Một mô hình chạy được trên máy tính chưa chắc chạy được trọn vẹn trên ASIC này.
 
 **Phạm vi sau yêu cầu mới nhất:** giả định model đã train; NPU chỉ chạy inference. Mục tiêu ứng dụng là model ngôn ngữ nhỏ có thể sinh câu ngắn. MLP ternary 256→64→32→10 và Seq64 là các bài kiểm tra phần cứng bổ trợ. Các mục về QAT bên dưới mô tả nguồn gốc/cách tạo model, không phải yêu cầu thêm khối training vào NPU hoặc bắt buộc train lại một checkpoint đã tương thích.
 
@@ -25,14 +27,14 @@ Ngày kiểm tra nguồn: 28/09/2026. Tài liệu này bổ sung cho [đề xu�
 | Token ID | **U8 cho Char32 với 128 ký tự** | Với V=4096: tối thiểu U12, đề xuất lưu U16; output index U12 và output-count U13 |
 | SRAM | **Word 256 bit; parameter 32 KiB + workspace 8 KiB** | Model không vừa: tính lại depth/bank, địa chỉ và lịch nạp; không nhất thiết tăng word width |
 
-Các width chi tiết cho từng module, tích trung gian và trường hợp mở rộng nằm trong [bảng bit của thiết kế](<../../design/architecture.md#bảng-bit-cho-từng-khối>). `F16`/`F15` trong ký hiệu trên là số bit phần lẻ, không phải floating-point.
+Các width chi tiết cho từng module, tích trung gian và trường hợp mở rộng nằm trong [bảng bit của thiết kế](<../../design/legacy/architecture.md#bảng-bit-cho-từng-khối>). `F16`/`F15` trong ký hiệu trên là số bit phần lẻ, không phải floating-point.
 
 ## Chọn mô hình theo mục đích demo
 
 | Ứng viên | Tình trạng weight | Dung lượng ước tính trên ASIC | Cách dùng |
 |---|---|---|---|
 | **FCMNIST ternary 256→64→32→10**, dựa trên [mã BitNetMCU](https://github.com/cpldcpu/BitNetMCU/blob/main/models.py) | Có mã huấn luyện; chưa xác minh được checkpoint đã huấn luyện đúng cấu hình này | 18.752 weight; **5.440 B** sau padding từng hàng. Dự phòng cả bias và scale: **5.876 B**, chưa kể metadata khác | Kiểm tra NORM + QUANT, phép nhân ternary và phân loại ảnh |
-| **BitNetMCU Binary-MNIST width160_160_160** trong [modeldata đã pin](https://github.com/cpldcpu/BitNetMCU/tree/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/modeldata) | Đã tải/kiểm tra bốn tensor và chạy CPU/reference/RTL trên 10 mẫu | Xác nhận **256→160→160→160→10**, 93.760 weight, **31.360 B**, còn **1.408 B**; descriptor runtime nằm trong FF | [Demo hoàn tất](../mnist.md): 10/10 mẫu đúng, 40 tầng bit-exact; vẫn là checkpoint train với quantizer Binary |
+| **BitNetMCU Binary-MNIST width160_160_160** trong [modeldata đã pin](https://github.com/cpldcpu/BitNetMCU/tree/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/modeldata) | Đã tải/kiểm tra bốn tensor và chạy CPU/reference/RTL trên 10 mẫu | Xác nhận **256→160→160→160→10**, 93.760 weight, **31.360 B**, còn **1.408 B**; descriptor runtime nằm trong FF | [Demo hoàn tất](<mnist.md>): 10/10 mẫu đúng, 40 tầng bit-exact; vẫn là checkpoint train với quantizer Binary |
 | **Tiny-MLGRU-Seq64** | Kiến trúc đề xuất; chưa xác minh checkpoint | Dự phòng **11.904 B** cho tham số; state 128 B | Kiểm tra NORM + QUANT, sigmoid, SiLU và phép cập nhật state |
 | **Tiny-Char-MLGRU32** | Kiến trúc đề xuất; chưa xác minh checkpoint | Dự phòng **25.504 B** gồm embedding S16; state 64 B | Demo inference sinh ký tự trong bộ 128 ký tự ASCII; chưa có số liệu chất lượng hội thoại |
 | **[NanoFable-1M-ternary](https://huggingface.co/adrahmana/NanoFable-1M-ternary)** | Đã chạy CPU và 28 tensor ternary × 6 activation context trên RTL | Linear 2 bit đã padding: **212.992 B**, tầng lớn nhất **12.288 B**; tệp toàn model khoảng **1,16 MiB** | [Demo](nanofable_hybrid.md): CPU generation; linear RTL stream từng tầng. Affine RMSNorm/RoPE/attention/gating/head vẫn CPU |
@@ -85,7 +87,7 @@ Danh sách công khai của BitNetMCU có tệp:
 a11_Opt12k_cos_Aug_BitMnist_PerTensor_Binary_RMS_width160_160_160_lr0.001_decay0.1_stepsize10_bs128_epochs60.pth
 ```
 
-[Checkpoint đã pin commit](https://github.com/cpldcpu/BitNetMCU/tree/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/modeldata) đã được tải và kiểm tra: fc1 (160,256), fc2/fc3 (160,160), fcl (10,160), không bias/affine. Graph lịch sử được khôi phục tại commit thêm checkpoint ngày 15/04/2024, load strict bằng PyTorch CPU rồi export đúng quantizer và gain. Layout 2 bit theo hàng xác nhận 980 word/31.360 B. [Báo cáo demo](../mnist.md) ghi checksum và source provenance.
+[Checkpoint đã pin commit](https://github.com/cpldcpu/BitNetMCU/tree/0715bfc4ed9f2578496e17b4b0e13f2297e3cc0f/modeldata) đã được tải và kiểm tra: fc1 (160,256), fc2/fc3 (160,160), fcl (10,160), không bias/affine. Graph lịch sử được khôi phục tại commit thêm checkpoint ngày 15/04/2024, load strict bằng PyTorch CPU rồi export đúng quantizer và gain. Layout 2 bit theo hàng xác nhận 980 word/31.360 B. [Báo cáo demo](<mnist.md>) ghi checksum và source provenance.
 
 Quantizer Binary dùng `sign(w−mean(w))` và gain `mean(abs(w))`. Bản float32 CPU này có một weight đúng tại mean, xuất thành mã 0; các weight còn lại là −1/+1. Đây vẫn là checkpoint huấn luyện với quantizer Binary. Đổi nhãn `QuantType` sang `Ternary` không tạo ra mô hình được train cho ba mức hoặc bảo đảm giữ độ chính xác. Các checkpoint khác có bias, affine norm hoặc kích thước khác cần kiểm tra lại graph và dung lượng.
 
@@ -119,15 +121,15 @@ flowchart LR
 
 ## Cách kiểm tra demo
 
-Độ rộng và format cần đổi trong từng module RTL được liệt kê tại [bảng chuyển đổi module](<../../design/architecture.md#bảng-chuyển-đổi-từng-module-rtl-hiện-có>). Dùng cùng cấu hình K_MAX=512, ACC18 và bus SRAM256 cho các demo trong tài liệu này; scale của từng tensor được chốt khi calibration/QAT.
+Độ rộng và format cần đổi trong từng module RTL được liệt kê tại [bảng chuyển đổi module](<../../design/legacy/architecture.md#bảng-chuyển-đổi-từng-module-rtl-hiện-có>). Dùng cùng cấu hình K_MAX=512, ACC18 và bus SRAM256 cho các demo trong tài liệu này; scale của từng tensor được chốt khi calibration/QAT.
 
 - Cố định checkpoint, tokenizer hoặc cách xử lý ảnh đầu vào, và tập đánh giá. Kiểm tra graph, operator, K, vocabulary và memory trước khi nạp. Đo chất lượng trước và sau khi xuất sang số nguyên.
 - Xuất SRAM image chứa weight, các hệ số scale, bias, dữ liệu đầu vào và giá trị trung gian để đối chiếu. Gắn chung phiên bản và checksum cho các file.
 - So kết quả ở từng tầng hoặc từng bước thời gian với reference model số nguyên. Đặt lại state giữa hai chuỗi đầu vào độc lập.
 - Đo số chu kỳ cho cả nạp dữ liệu, NORM + QUANT và xử lý vector; ghi nhận mức sử dụng SRAM cao nhất và số lần bão hòa. Số PE không đủ để suy ra latency hoặc điện năng.
 
-**Trạng thái hiện tại:** [demo Binary-MNIST160](../mnist.md) đã hoàn tất, dùng checkpoint có sẵn và 10 ảnh S8 của upstream; không train lại. PyTorch 2.5.1+cpu được cài riêng trong `tests/model_demo/packages`, không sửa Python chung. Runner legacy đã được loại bỏ; giữ report/provenance để tra cứu. [NanoFable](nanofable_hybrid.md) đã chạy CPU 3 prompt × 32 token, deterministic repeat và RTL 168 lượt linear thực, compile/sim 0 error/0 warning. Mọi lượt mới dùng full RTL runner có hardware gate. Chưa chạy toàn bộ MNIST, Seq64, Char32 hoặc toàn graph NanoFable trên NPU.
+**Trạng thái hiện tại:** [demo Binary-MNIST160](<mnist.md>) đã hoàn tất, dùng checkpoint có sẵn và 10 ảnh S8 của upstream; không train lại. PyTorch 2.5.1+cpu được cài riêng trong `tests/model_demo/packages`, không sửa Python chung. Runner legacy đã được loại bỏ; giữ report/provenance để tra cứu. [NanoFable](nanofable_hybrid.md) đã chạy CPU 3 prompt × 32 token, deterministic repeat và RTL 168 lượt linear thực, compile/sim 0 error/0 warning. Mọi lượt mới dùng full RTL runner có hardware gate. Chưa chạy toàn bộ MNIST, Seq64, Char32 hoặc toàn graph NanoFable trên NPU.
 
 ---
 
-[Các demo đã thực hiện](../README.md) · [Interface export](../../design/interfaces.md) · [Về mục lục tài liệu](../../README.md)
+[Các demo đã thực hiện](../README.md) · [Interface export](<../../design/legacy/interfaces.md>) · [Về mục lục tài liệu](../../README.md)
