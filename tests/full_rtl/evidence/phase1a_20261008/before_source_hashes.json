@@ -1,15 +1,8 @@
 {
-  "status": "FAIL",
-  "failure": "Unit simulation failed: tb_llm_operators",
-  "verified_utc": "2026-10-07T19:00:36.8833447Z",
-  "rtl_dir": "D:\\2151097_Nguyen Nhut Khanh\\Verilog Source code",
-  "tests": {
-    "tb_quartus_memory": "# QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked",
-    "tb_llm_math": "# LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128",
-    "tb_llm_ram": "# LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3",
-    "tb_llm_protocol": "# LLM_PROTOCOL_PASS transactions=175 cancellations=12 token_pipeline_cases=15 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2",
-    "tb_llm_selection": "# SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2"
-  },
+  "status": "RUNNING",
+  "scope": "Synthetic units and graph only",
+  "started_utc": "2026-10-07T18:34:59.0825791Z",
+  "rtl_dir": "D:\\2151097_Nguyen Nhut Khanh\\tests\\full_rtl\\build\\phase1a_baseline_20261008\\rtl",
   "rtl_sources": {
     "acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
     "banked_word_ram.sv": "3f62befc5ff4942b92708e1fca7c54e61ae64781839e2efd2e6108ed0cc9a08e",
@@ -23,11 +16,11 @@
     "llm_exp_lut.svh": "7aafb64bcea808bcb74387c174c808784433bb941f2e9e2f815bcbeb9b1a5c6e",
     "llm_gumbel_lut.svh": "870d129c9722a00efb733f0a6fbcad493e069447877de57a123db9d9b4adbec8",
     "llm_head_engine.sv": "54fc2ea9fd0dd045caf6bdaf9e963fd8951180026d9770576f66c25b594fd080",
-    "llm_linear_engine.sv": "fddea184893825d79758564a4f1ec03c7cb42ddd9d5a60fa633363727b2cd533",
+    "llm_linear_engine.sv": "db4e5b2122af2dda953ed8e31d263cb44b0ed222a851fa05773b3d8d82262266",
     "llm_math.sv": "1280302be8a07422c547c62b470b51f43324e92519cc0d69b55dd58f94c5d0bd",
     "llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
     "llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
-    "llm_soc.sv": "ea6d6cea2a3bdb0cacc6fd0f5114198736adfdc2d6ec7dfac9908cf6f5fb062d",
+    "llm_soc.sv": "72995234f31c1f543565cc62c55d6ccb37dd3cea4d8a0b5923257ed73221abbd",
     "logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
     "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
     "matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
@@ -54,12 +47,11 @@
     "ternary_mul.sv": "71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f"
   },
   "test_sources": {
-    "run_units.ps1": "f571539ed1bf49a9266e9f95b047a38376e07bab2737e1130ed86b45915ad3f5",
+    "run_units.ps1": "dcdf534ba6a826292ddea55e7c2e0806f7ad66a75cdbdbd8babb3734b5ad9dae",
     "tb_graph.sv": "900615b6405c615c678921a70df0c35f72e8c279ef160e440349dabd69544a88",
-    "tb_linear_stream.sv": "55613ca9745d9b23898ac99bada7037444da9ff9f42bbcada6802edbdae82498",
     "tb_math.sv": "8d4ca37d579bf2486be2234116bf97ad77026da6788339c70587d4ec24bed43d",
     "tb_memory_ip.sv": "e34a990c572eee5c2cbdca2c793f580dfedb374efa1e90ff6f040aed9afa6904",
-    "tb_operators.sv": "f90db9fa42bf4ac96e687da5d204238670edc673c5abdc80eb7c9a44a26220ec",
+    "tb_operators.sv": "14c7b1a47515c7104203ae534948569fa3993f9676e459f099656eb1e8104a19",
     "tb_protocol.sv": "3c671cb8d7f730a8ee96d5274929eadf4b76d476e7d7398d813f105268549810",
     "tb_ram.sv": "4d40fea39efbf26f67db28c6ad4fde34f194603f57f4ee2f2fda6e0fc93ed0b1",
     "tb_selection.sv": "e356447b6e92ffebc8b46d74a5e58c4817f2a674aa2188d736bf79f7fe3c06aa"

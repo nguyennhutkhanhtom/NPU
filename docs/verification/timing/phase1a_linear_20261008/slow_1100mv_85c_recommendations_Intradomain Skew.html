@@ -1,0 +1,639 @@
+
+<html><head><link rel='stylesheet' href='bogus:style.css' type='text/css' /><script type='text/javascript' src='qrc:rpwq_sorttable.js'></script>
+<script language="javascript" type="text/javascript">
+function toggle(id, showtext, hidetext) {
+	document.getElementById(id+'-toggle').innerHTML = (document.getElementById(id).style.display == "none") ? hidetext : showtext;
+	document.getElementById(id).style.display = (document.getElementById(id).style.display == "none") ? "" : "none";
+}
+</script>
+
+<style type="text/css">
+
+body { 
+	font-family:      "Intel Clear", Arial, Helvetica, sans-serif;
+	font-size:        8pt;
+	background-color: white;
+	margin:           0;
+/*	border:           1px solid #7F9DB9;*/ /* border on page doesn't work right when scrolling...*/
+	padding:          2px;
+}
+
+h1, h2 { 
+	background-color: #316AC5; 
+	color:            white; 
+	padding:          2px;
+}
+
+
+h1, h2 a:link {color:#fff;}
+
+
+h1             { font-size: 10pt; }
+h2, h3, h4, h5 { font-size: 8pt; }
+p, blockquote  { font-size: 8pt; }
+table, td, th  { font-size: 8pt; }
+ul, ol, li     { font-size: 8pt; }
+dl, dt, dd     { font-size: 8pt; }
+
+/* i don't like the space after paragraphs and before lists */
+p { margin: 1em 0 0 0; }
+
+
+/* table formats */
+table {
+	border-collapse: collapse;
+}
+
+td, th {
+	border-collapse: collapse;
+	border:          1px solid #C8C8C8;
+	padding:         1px;
+	padding-left:    2px;
+	padding-right:   2px;
+	margin:          0;
+	vertical-align:  middle;
+	text-align:      left;
+}
+
+th                 { background-color: #EDEDED; } /* tq table grey - for table heading */
+tr:nth-child(2n+0) { background-color: #EDEDED; } /* tq table grey - for even rows */
+tr:nth-child(2n+1) { background-color: #FFFFFF; } /* tq table white - for odd rows */
+
+table#path_table td {
+	vertical-align:top;
+}
+
+.graph { 
+	width: 100px; 
+	border: 1px solid #aaa; 
+	padding: 0px 1px 0px 1px; 
+}
+.graph .bar { 
+	display: block;	
+	position: relative;
+	background: #aaa; 
+	text-align: left;
+	padding-left: 2px;
+	padding-right: 2px;
+	color: #000; 
+	height: 12px; 
+	vertical-align: middle;
+	left:-2px; /* needs to be adjusted in conjunction with .graph styles */
+}
+
+div.bar {
+	height:11px; 
+	background-color:#C00000; 
+	color: white; 
+	text-align: left; 
+	vertical-align: middle;
+}
+
+/* for description lists for summary */
+dl.rec {
+	margin: 1px;
+	padding: 0;
+}
+
+.rec dt {
+	clear: left;
+	float: left;
+	width: 7em;
+	margin: 0;
+	padding: 1px;
+}
+
+.rec dd {
+	margin: 0 0 0 5em;
+	padding: 1px;
+}
+
+dd.path_table_rec {
+	overflow: hidden;
+	whitespace: nowrap;
+	text-overflow: ellipsis;
+}
+
+ul, ol, li {
+	margin: 1px;
+}
+
+/* tooltip experiment for long node names */
+/* use with: <span id="links"><a href="#">short name<span>longer node name</span></a></span> */
+span#tip {position: relative; top: 0; left: 0;}
+span#tip a { text-decoration: none; color: black;}
+span#tip a:hover {}
+
+span#tip a span {display: none;}
+span#tip a:hover span {
+	display: block;
+	position: absolute; top: -2px; left: -2px; 
+	padding: 1px; margin: 0px; z-index: 100;
+	border: 1px solid black;
+	color: black; background: #FFFFDC;
+	text-align: left;
+	z-index: 100;
+}
+
+div#multicolumn {
+	-webkit-column-width: 50em;
+	-webkit-column-gap: 2em;
+}
+
+</style>
+</head>
+<body>
+<!--<h1>Intradomain Skew</h1>-->
+
+<h2 style='background-color:#316AC5;color:white;padding:2px;font-size:8pt;'>Overview
+
+</h2><div id='twist-Overview-Intradomain Skew' style='display:inline;'>
+
+<p>
+The <b>Description and Recommendations</b> section gives general 
+advice and recommendations for addressing Intradomain Skew.
+</p>
+<p>
+The <b>Aggregate Results</b> section shows the 
+Clock Transfer
+and the number of occurences of the Clock Transfer 
+in the identified paths.
+You can sort the table by clicking the column header.
+</p>
+<p>
+The <b>Top Recommendations</b> section lists 
+recommendations for the most serious issues identified by the analysis.
+The number of stars indicates the relative importance of each recommendation,
+with five stars identifying the most important recommendations.
+Click <b>show details</b> for more information about each recommendation;
+click <b>report timing</b> to generate a timing report for the listed path. 
+</p>
+
+<p>
+The <b>Detailed Results</b> section contains the detailed 
+report for this analysis.
+Click on <b>show details</b> for more information related to the recommendation for each path;
+click on <b>report timing</b> to generate a timing report for the listed path. 
+You can sort the table by clicking the column header.
+</p>
+</div>
+
+<h2 style='background-color:#316AC5;color:white;padding:2px;font-size:8pt;'>Description and Recommendations
+
+</h2><div id='twist-Description and Recommendations-Intradomain Skew' style='display:inline;'>
+
+	<p>
+Skew between the source register and the destination register makes it difficult for the Quartus Prime Compiler to meet timing constraints for the listed paths.
+</p>
+<p>
+The following suggestions may help resolve this issue:
+</p>
+<ul>
+<li>Promoting these clocks to global networks will reduce the internal skew</li>
+</ul>
+<p>
+See the <b>Top Recommendations</b> section for potential solutions
+for each path.
+
+</div>
+<h2 style='background-color:#316AC5;color:white;padding:2px;font-size:8pt;'>Aggregate Results
+
+</h2><div id='twist-Aggregate Results' style='display:inline;'>
+<p>
+<table id='aggregate_table' class='sortable'>
+    <tr>
+      <th></th>
+      <th>Clock Transfer</th>
+      <th width=100>Paths Affected</th>
+    </tr>
+
+    <tr>
+      <td>1</td>
+      <td>clock_0</td>
+      <td><div class='graph'><div class='bar' style='width:100%;'>32</div></div></td>
+    </tr>
+
+</table>
+
+</div>
+<h2 style='background-color:#316AC5;color:white;padding:2px;font-size:8pt;'>Top Recommendations
+
+</h2><div id='twist-Top Recommendations' style='display:inline;'>
+
+<dl class='rec'>
+    <dt>&#9733;&#9733;</dt>
+    <dd>
+        Place source and destination clock on the same global clock resource for the path from <b>host_rdata[1]~reg0</b>
+        to <b>host_rdata[1]</b> 
+</li><ul><div id='twist-1-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Intradomain Skew'>Intradomain Skew</a></li>
+        <li><b>From:</b> host_rdata[1]~reg0</li>
+        <li><b>To:</b> host_rdata[1]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_rdata[1]~reg0} -to {host_rdata[1]} -detail full_path -panel_name {Path 1 (Intradomain Skew)} -show_routing'>report timing</a></li>
+        <li><b>Clocks affected:</b></li><ul><li>clock_0</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;</dt>
+    <dd>
+        Place source and destination clock on the same global clock resource for the path from <b>host_rdata[1]~reg0</b>
+        to <b>host_rdata[1](n)</b> 
+</li><ul><div id='twist-2-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Intradomain Skew'>Intradomain Skew</a></li>
+        <li><b>From:</b> host_rdata[1]~reg0</li>
+        <li><b>To:</b> host_rdata[1](n)</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_rdata[1]~reg0} -to {host_rdata[1](n)} -detail full_path -panel_name {Path 2 (Intradomain Skew)} -show_routing'>report timing</a></li>
+        <li><b>Clocks affected:</b></li><ul><li>clock_0</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;</dt>
+    <dd>
+        Place source and destination clock on the same global clock resource for the path from <b>host_rdata[3]~reg0</b>
+        to <b>host_rdata[3]</b> 
+</li><ul><div id='twist-3-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Intradomain Skew'>Intradomain Skew</a></li>
+        <li><b>From:</b> host_rdata[3]~reg0</li>
+        <li><b>To:</b> host_rdata[3]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_rdata[3]~reg0} -to {host_rdata[3]} -detail full_path -panel_name {Path 3 (Intradomain Skew)} -show_routing'>report timing</a></li>
+        <li><b>Clocks affected:</b></li><ul><li>clock_0</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;</dt>
+    <dd>
+        Place source and destination clock on the same global clock resource for the path from <b>host_rdata[3]~reg0</b>
+        to <b>host_rdata[3](n)</b> 
+</li><ul><div id='twist-4-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Intradomain Skew'>Intradomain Skew</a></li>
+        <li><b>From:</b> host_rdata[3]~reg0</li>
+        <li><b>To:</b> host_rdata[3](n)</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_rdata[3]~reg0} -to {host_rdata[3](n)} -detail full_path -panel_name {Path 4 (Intradomain Skew)} -show_routing'>report timing</a></li>
+        <li><b>Clocks affected:</b></li><ul><li>clock_0</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;</dt>
+    <dd>
+        Place source and destination clock on the same global clock resource for the path from <b>pc_debug[1]~reg0</b>
+        to <b>pc_debug[1]</b> 
+</li><ul><div id='twist-5-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Intradomain Skew'>Intradomain Skew</a></li>
+        <li><b>From:</b> pc_debug[1]~reg0</li>
+        <li><b>To:</b> pc_debug[1]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {pc_debug[1]~reg0} -to {pc_debug[1]} -detail full_path -panel_name {Path 5 (Intradomain Skew)} -show_routing'>report timing</a></li>
+        <li><b>Clocks affected:</b></li><ul><li>clock_0</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;</dt>
+    <dd>
+        Place source and destination clock on the same global clock resource for the path from <b>pc_debug[1]~reg0</b>
+        to <b>pc_debug[1](n)</b> 
+</li><ul><div id='twist-6-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Intradomain Skew'>Intradomain Skew</a></li>
+        <li><b>From:</b> pc_debug[1]~reg0</li>
+        <li><b>To:</b> pc_debug[1](n)</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {pc_debug[1]~reg0} -to {pc_debug[1](n)} -detail full_path -panel_name {Path 6 (Intradomain Skew)} -show_routing'>report timing</a></li>
+        <li><b>Clocks affected:</b></li><ul><li>clock_0</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;</dt>
+    <dd>
+        Place source and destination clock on the same global clock resource for the path from <b>host_rdata[30]~reg0</b>
+        to <b>host_rdata[30]</b> 
+</li><ul><div id='twist-7-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Intradomain Skew'>Intradomain Skew</a></li>
+        <li><b>From:</b> host_rdata[30]~reg0</li>
+        <li><b>To:</b> host_rdata[30]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_rdata[30]~reg0} -to {host_rdata[30]} -detail full_path -panel_name {Path 7 (Intradomain Skew)} -show_routing'>report timing</a></li>
+        <li><b>Clocks affected:</b></li><ul><li>clock_0</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;</dt>
+    <dd>
+        Place source and destination clock on the same global clock resource for the path from <b>host_rdata[30]~reg0</b>
+        to <b>host_rdata[30](n)</b> 
+</li><ul><div id='twist-8-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Intradomain Skew'>Intradomain Skew</a></li>
+        <li><b>From:</b> host_rdata[30]~reg0</li>
+        <li><b>To:</b> host_rdata[30](n)</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_rdata[30]~reg0} -to {host_rdata[30](n)} -detail full_path -panel_name {Path 8 (Intradomain Skew)} -show_routing'>report timing</a></li>
+        <li><b>Clocks affected:</b></li><ul><li>clock_0</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;</dt>
+    <dd>
+        Place source and destination clock on the same global clock resource for the path from <b>host_rdata[2]~reg0</b>
+        to <b>host_rdata[2]</b> 
+</li><ul><div id='twist-9-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Intradomain Skew'>Intradomain Skew</a></li>
+        <li><b>From:</b> host_rdata[2]~reg0</li>
+        <li><b>To:</b> host_rdata[2]</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_rdata[2]~reg0} -to {host_rdata[2]} -detail full_path -panel_name {Path 9 (Intradomain Skew)} -show_routing'>report timing</a></li>
+        <li><b>Clocks affected:</b></li><ul><li>clock_0</li></ul>
+</div>
+    </ul>
+    </dd>
+    <dt>&#9733;&#9733;</dt>
+    <dd>
+        Place source and destination clock on the same global clock resource for the path from <b>host_rdata[2]~reg0</b>
+        to <b>host_rdata[2](n)</b> 
+</li><ul><div id='twist-10-tree' style='display:inline;'>
+
+        <li><b>Issue:</b> <a href='rdb:Intradomain Skew'>Intradomain Skew</a></li>
+        <li><b>From:</b> host_rdata[2]~reg0</li>
+        <li><b>To:</b> host_rdata[2](n)</li>
+        <li><b>Timing Analysis:</b> <a href='tcl:taw_report_timing -from {host_rdata[2]~reg0} -to {host_rdata[2](n)} -detail full_path -panel_name {Path 10 (Intradomain Skew)} -show_routing'>report timing</a></li>
+        <li><b>Clocks affected:</b></li><ul><li>clock_0</li></ul>
+</div>
+    </ul>
+    </dd>
+</dl>
+</div>
+
+<h2 style='background-color:#316AC5;color:white;padding:2px;font-size:8pt;'>Detailed Results
+
+</h2><div id='twist-Detailed Results' style='display:inline;'>
+
+<table id='output_table' class='sortable'>
+    <tr>
+        <th></th>
+        <th>Commands</th>
+        <th>From</th><th>To</th>
+        <th>Importance</th>
+        <th>Clocks affected</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[1]~reg0} -to {host_rdata[1]} -detail full_path -panel_name {Path 1 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[1]~reg0</td><td>host_rdata[1]</td>
+      <td sorttable_customkey='32.3079'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>2</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[1]~reg0} -to {host_rdata[1](n)} -detail full_path -panel_name {Path 2 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[1]~reg0</td><td>host_rdata[1](n)</td>
+      <td sorttable_customkey='32.3079'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>3</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[3]~reg0} -to {host_rdata[3]} -detail full_path -panel_name {Path 3 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[3]~reg0</td><td>host_rdata[3]</td>
+      <td sorttable_customkey='32.1602'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>4</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[3]~reg0} -to {host_rdata[3](n)} -detail full_path -panel_name {Path 4 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[3]~reg0</td><td>host_rdata[3](n)</td>
+      <td sorttable_customkey='32.1602'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>5</td>
+      <td><a href='tcl:taw_report_timing -from {pc_debug[1]~reg0} -to {pc_debug[1]} -detail full_path -panel_name {Path 5 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>pc_debug[1]~reg0</td><td>pc_debug[1]</td>
+      <td sorttable_customkey='32.1149'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>6</td>
+      <td><a href='tcl:taw_report_timing -from {pc_debug[1]~reg0} -to {pc_debug[1](n)} -detail full_path -panel_name {Path 6 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>pc_debug[1]~reg0</td><td>pc_debug[1](n)</td>
+      <td sorttable_customkey='32.1149'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>7</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[30]~reg0} -to {host_rdata[30]} -detail full_path -panel_name {Path 7 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[30]~reg0</td><td>host_rdata[30]</td>
+      <td sorttable_customkey='32.1036'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>8</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[30]~reg0} -to {host_rdata[30](n)} -detail full_path -panel_name {Path 8 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[30]~reg0</td><td>host_rdata[30](n)</td>
+      <td sorttable_customkey='32.1036'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>9</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[2]~reg0} -to {host_rdata[2]} -detail full_path -panel_name {Path 9 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[2]~reg0</td><td>host_rdata[2]</td>
+      <td sorttable_customkey='32.0922'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>10</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[2]~reg0} -to {host_rdata[2](n)} -detail full_path -panel_name {Path 10 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[2]~reg0</td><td>host_rdata[2](n)</td>
+      <td sorttable_customkey='32.0922'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>11</td>
+      <td><a href='tcl:taw_report_timing -from {running~reg0_Duplicate_1} -to {ready} -detail full_path -panel_name {Path 11 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>running~reg0_Duplicate_1</td><td>ready</td>
+      <td sorttable_customkey='32.0809'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>12</td>
+      <td><a href='tcl:taw_report_timing -from {running~reg0_Duplicate_1} -to {ready(n)} -detail full_path -panel_name {Path 12 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>running~reg0_Duplicate_1</td><td>ready(n)</td>
+      <td sorttable_customkey='32.0809'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>13</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[31]~reg0} -to {host_rdata[31]} -detail full_path -panel_name {Path 13 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[31]~reg0</td><td>host_rdata[31]</td>
+      <td sorttable_customkey='32.0696'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>14</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[31]~reg0} -to {host_rdata[31](n)} -detail full_path -panel_name {Path 14 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[31]~reg0</td><td>host_rdata[31](n)</td>
+      <td sorttable_customkey='32.0696'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>15</td>
+      <td><a href='tcl:taw_report_timing -from {error~reg0} -to {error} -detail full_path -panel_name {Path 15 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>error~reg0</td><td>error</td>
+      <td sorttable_customkey='32.0017'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>16</td>
+      <td><a href='tcl:taw_report_timing -from {error~reg0} -to {error(n)} -detail full_path -panel_name {Path 16 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>error~reg0</td><td>error(n)</td>
+      <td sorttable_customkey='32.0017'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>17</td>
+      <td><a href='tcl:taw_report_timing -from {pc_debug[6]~reg0} -to {pc_debug[6]} -detail full_path -panel_name {Path 17 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>pc_debug[6]~reg0</td><td>pc_debug[6]</td>
+      <td sorttable_customkey='31.979'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>18</td>
+      <td><a href='tcl:taw_report_timing -from {pc_debug[6]~reg0} -to {pc_debug[6](n)} -detail full_path -panel_name {Path 18 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>pc_debug[6]~reg0</td><td>pc_debug[6](n)</td>
+      <td sorttable_customkey='31.979'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>19</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[8]~reg0} -to {host_rdata[8]} -detail full_path -panel_name {Path 19 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[8]~reg0</td><td>host_rdata[8]</td>
+      <td sorttable_customkey='31.9564'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>20</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[8]~reg0} -to {host_rdata[8](n)} -detail full_path -panel_name {Path 20 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[8]~reg0</td><td>host_rdata[8](n)</td>
+      <td sorttable_customkey='31.9564'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>21</td>
+      <td><a href='tcl:taw_report_timing -from {pc_debug[5]~reg0} -to {pc_debug[5]} -detail full_path -panel_name {Path 21 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>pc_debug[5]~reg0</td><td>pc_debug[5]</td>
+      <td sorttable_customkey='31.9112'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>22</td>
+      <td><a href='tcl:taw_report_timing -from {pc_debug[5]~reg0} -to {pc_debug[5](n)} -detail full_path -panel_name {Path 22 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>pc_debug[5]~reg0</td><td>pc_debug[5](n)</td>
+      <td sorttable_customkey='31.9112'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>23</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[0]~reg0} -to {host_rdata[0]} -detail full_path -panel_name {Path 23 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[0]~reg0</td><td>host_rdata[0]</td>
+      <td sorttable_customkey='31.8999'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>24</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[0]~reg0} -to {host_rdata[0](n)} -detail full_path -panel_name {Path 24 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[0]~reg0</td><td>host_rdata[0](n)</td>
+      <td sorttable_customkey='31.8999'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>25</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[6]~reg0} -to {host_rdata[6]} -detail full_path -panel_name {Path 25 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[6]~reg0</td><td>host_rdata[6]</td>
+      <td sorttable_customkey='31.8773'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>26</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[6]~reg0} -to {host_rdata[6](n)} -detail full_path -panel_name {Path 26 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[6]~reg0</td><td>host_rdata[6](n)</td>
+      <td sorttable_customkey='31.8773'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>27</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[5]~reg0} -to {host_rdata[5]} -detail full_path -panel_name {Path 27 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[5]~reg0</td><td>host_rdata[5]</td>
+      <td sorttable_customkey='31.8209'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>28</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[5]~reg0} -to {host_rdata[5](n)} -detail full_path -panel_name {Path 28 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[5]~reg0</td><td>host_rdata[5](n)</td>
+      <td sorttable_customkey='31.8209'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>29</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[4]~reg0} -to {host_rdata[4]} -detail full_path -panel_name {Path 29 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[4]~reg0</td><td>host_rdata[4]</td>
+      <td sorttable_customkey='31.7645'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>30</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[4]~reg0} -to {host_rdata[4](n)} -detail full_path -panel_name {Path 30 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[4]~reg0</td><td>host_rdata[4](n)</td>
+      <td sorttable_customkey='31.7645'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>31</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[7]~reg0} -to {host_rdata[7]} -detail full_path -panel_name {Path 31 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[7]~reg0</td><td>host_rdata[7]</td>
+      <td sorttable_customkey='31.742'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+    <tr>
+      <td>32</td>
+      <td><a href='tcl:taw_report_timing -from {host_rdata[7]~reg0} -to {host_rdata[7](n)} -detail full_path -panel_name {Path 32 (Intradomain Skew)} -show_routing'>report timing</a></td>
+      <td>host_rdata[7]~reg0</td><td>host_rdata[7](n)</td>
+      <td sorttable_customkey='31.742'>&#9733;&#9733;</td>
+      <td>clock_0<br></td>
+    </tr>
+
+</table>
+</div>
+
+</body>
+</html>

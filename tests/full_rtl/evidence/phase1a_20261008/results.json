@@ -1,0 +1,14 @@
+{
+  "status": "SCOPED_PHASE1A_PASS",
+  "rtl_and_tests": {
+    "Verilog Source code/llm_linear_engine.sv": "fddea184893825d79758564a4f1ec03c7cb42ddd9d5a60fa633363727b2cd533",
+    "Verilog Source code/llm_soc.sv": "ea6d6cea2a3bdb0cacc6fd0f5114198736adfdc2d6ec7dfac9908cf6f5fb062d",
+    "tests/full_rtl/tb_operators.sv": "f90db9fa42bf4ac96e687da5d204238670edc673c5abdc80eb7c9a44a26220ec",
+    "tests/full_rtl/tb_linear_stream.sv": "55613ca9745d9b23898ac99bada7037444da9ff9f42bbcada6802edbdae82498",
+    "tests/full_rtl/run_units.ps1": "f571539ed1bf49a9266e9f95b047a38376e07bab2737e1130ed86b45915ad3f5"
+  },
+  "scope": "Exact row stream and SRAM/scalar/packing/write-drain integration only",
+  "simulation_warning": "32 pre-existing ModelSim force-select fixture warnings in tb_llm_operators; same warnings in preserved baseline",
+  "full_regression": "Five existing groups pass; operators blocked by identical baseline $deposit fixture failure; graph pending",
+  "timing": "Pending"
+}

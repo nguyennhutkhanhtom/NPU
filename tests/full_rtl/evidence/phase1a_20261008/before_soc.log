@@ -1,0 +1,161 @@
+# vsim -c -onfinish exit -L altera_mf_ver -lib tests/full_rtl/build/phase1a_base20 -l tests/full_rtl/build/phase1a_baseline_20261008/soc.log tb_llm_operators -do "run -all; quit -f" 
+# Start time: 01:59:25 on Oct 08,2026
+# Loading sv_std.std
+# Loading tests/full_rtl/build/phase1a_base20.tb_llm_operators
+# Loading tests/full_rtl/build/phase1a_base20.llm_pkg
+# Loading tests/full_rtl/build/phase1a_base20.npu_pkg
+# Loading tests/full_rtl/build/phase1a_base20.llm_soc
+# Loading tests/full_rtl/build/phase1a_base20.reset_release
+# Loading tests/full_rtl/build/phase1a_base20.logic_mul
+# Loading tests/full_rtl/build/phase1a_base20.llm_gumbel_sample
+# Loading tests/full_rtl/build/phase1a_base20.llm_exp_sample
+# Loading tests/full_rtl/build/phase1a_base20.llm_parameter_ram
+# Loading tests/full_rtl/build/phase1a_base20.llm_bank_ram
+# Loading tests/full_rtl/build/phase1a_base20.llm_math
+# Loading tests/full_rtl/build/phase1a_base20.llm_head_engine
+# Loading tests/full_rtl/build/phase1a_base20.llm_attention_engine
+# Loading tests/full_rtl/build/phase1a_base20.llm_linear_engine
+# Loading tests/full_rtl/build/phase1a_base20.ternary_dot32
+# Loading tests/full_rtl/build/phase1a_base20.isqrt_u64
+# Loading tests/full_rtl/build/phase1a_base20.llm_attention_normalize
+# Loading tests/full_rtl/build/phase1a_base20.div
+# Loading tests/full_rtl/build/phase1a_base20.pipelined_word_ram
+# Loading tests/full_rtl/build/phase1a_base20.sigmoid
+# Loading tests/full_rtl/build/phase1a_base20.sigmoid_sample
+# Loading tests/full_rtl/build/phase1a_base20.sram_word_tile
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[0] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[1] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[2] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[3] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[4] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[5] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[6] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[7] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[8] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[9] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[10] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[11] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[12] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[13] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[14] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[15] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[16] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[17] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[18] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[19] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[20] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[21] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[22] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[23] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[24] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[25] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[26] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[27] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[28] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[29] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[30] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[31] File: tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv Line: 26
+# run -all
+# SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=2227 linear_startup=768 linear_issue=512 linear_drain=640 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=1 state=0 cycles=1
+# SCHEDULE_STATE operator=1 state=1 cycles=1
+# SCHEDULE_STATE operator=1 state=2 cycles=5
+# SCHEDULE_STATE operator=1 state=3 cycles=4
+# SCHEDULE_STATE operator=1 state=4 cycles=20
+# SCHEDULE_STATE operator=1 state=9 cycles=4
+# SCHEDULE_STATE operator=1 state=10 cycles=5
+# SCHEDULE_STATE operator=1 state=15 cycles=1
+# SCHEDULE_STATE operator=1 state=19 cycles=128
+# SCHEDULE_STATE operator=1 state=20 cycles=128
+# SCHEDULE_STATE operator=1 state=21 cycles=128
+# SCHEDULE_STATE operator=1 state=79 cycles=128
+# SCHEDULE_STATE operator=1 state=92 cycles=128
+# SCHEDULE_STATE operator=1 state=96 cycles=128
+# SCHEDULE_STATE operator=1 state=97 cycles=128
+# SCHEDULE_STATE operator=1 state=100 cycles=128
+# SCHEDULE_STATE operator=1 state=102 cycles=128
+# SCHEDULE_STATE operator=1 state=103 cycles=4
+# SCHEDULE_STATE operator=1 state=110 cycles=128
+# SCHEDULE_STATE operator=1 state=111 cycles=902
+# LLM_TRAFFIC operator=1 clocks=2227 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+# SCHEDULE_PROFILE operator=10 context=1 temperature=166 cycles=3563 linear_startup=768 linear_issue=1536 linear_drain=896 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=10 state=0 cycles=1
+# SCHEDULE_STATE operator=10 state=1 cycles=1
+# SCHEDULE_STATE operator=10 state=2 cycles=5
+# SCHEDULE_STATE operator=10 state=3 cycles=12
+# SCHEDULE_STATE operator=10 state=4 cycles=60
+# SCHEDULE_STATE operator=10 state=9 cycles=4
+# SCHEDULE_STATE operator=10 state=10 cycles=5
+# SCHEDULE_STATE operator=10 state=15 cycles=1
+# SCHEDULE_STATE operator=10 state=19 cycles=128
+# SCHEDULE_STATE operator=10 state=20 cycles=128
+# SCHEDULE_STATE operator=10 state=21 cycles=128
+# SCHEDULE_STATE operator=10 state=79 cycles=128
+# SCHEDULE_STATE operator=10 state=92 cycles=128
+# SCHEDULE_STATE operator=10 state=96 cycles=128
+# SCHEDULE_STATE operator=10 state=97 cycles=128
+# SCHEDULE_STATE operator=10 state=100 cycles=128
+# SCHEDULE_STATE operator=10 state=102 cycles=128
+# SCHEDULE_STATE operator=10 state=103 cycles=12
+# SCHEDULE_STATE operator=10 state=110 cycles=128
+# SCHEDULE_STATE operator=10 state=111 cycles=2182
+# LLM_TRAFFIC operator=10 clocks=3563 parameter_reads=385 vector_reads=12 vector_writes=4 kv_reads=0
+# SCHEDULE_PROFILE operator=11 context=1 temperature=166 cycles=6579 linear_startup=2304 linear_issue=1536 linear_drain=1920 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=11 state=0 cycles=1
+# SCHEDULE_STATE operator=11 state=1 cycles=1
+# SCHEDULE_STATE operator=11 state=2 cycles=5
+# SCHEDULE_STATE operator=11 state=3 cycles=4
+# SCHEDULE_STATE operator=11 state=4 cycles=20
+# SCHEDULE_STATE operator=11 state=9 cycles=12
+# SCHEDULE_STATE operator=11 state=10 cycles=5
+# SCHEDULE_STATE operator=11 state=15 cycles=1
+# SCHEDULE_STATE operator=11 state=19 cycles=384
+# SCHEDULE_STATE operator=11 state=20 cycles=384
+# SCHEDULE_STATE operator=11 state=21 cycles=384
+# SCHEDULE_STATE operator=11 state=79 cycles=384
+# SCHEDULE_STATE operator=11 state=92 cycles=384
+# SCHEDULE_STATE operator=11 state=96 cycles=384
+# SCHEDULE_STATE operator=11 state=97 cycles=384
+# SCHEDULE_STATE operator=11 state=100 cycles=384
+# SCHEDULE_STATE operator=11 state=102 cycles=384
+# SCHEDULE_STATE operator=11 state=103 cycles=4
+# SCHEDULE_STATE operator=11 state=110 cycles=384
+# SCHEDULE_STATE operator=11 state=111 cycles=2686
+# LLM_TRAFFIC operator=11 clocks=6579 parameter_reads=385 vector_reads=4 vector_writes=12 kv_reads=0
+# LLM_LINEAR_BASELINE_SOC_PASS checks=640
+# ** Note: $finish    : tests/full_rtl/build/phase1a_baseline_20261008/tb_operators_scoped.sv(465)
+#    Time: 133744 ns  Iteration: 0  Instance: /tb_llm_operators
+# End time: 01:59:47 on Oct 08,2026, Elapsed time: 0:00:22
+# Errors: 0, Warnings: 32

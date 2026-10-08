@@ -80,6 +80,7 @@ module tb_llm_operators;
     integer linear_startup,linear_issue,linear_drain,head_startup,head_issue,head_drain;
     bit profile_active=0;
     bit delay_linear_result=0;
+    bit linear_extremes=0;
     always @(posedge clk) if(dut.core_rst_n && profile_active) begin
         for(integer s=0;s<112;s++) if(dut.op[s]) op_cycles[s]++;
         if(dut.linear_busy) begin
@@ -106,7 +107,10 @@ module tb_llm_operators;
             $fatal(1,"Linear prefetch exceeded its two-word credit window");
         if(dut.p_read) parameter_reads++;
         if(dut.v_read) vector_reads++;
-        if(dut.op[dut.O_WRITE_IDX] && |dut.write_vector_mask_q) vector_writes++;
+        if(dut.linear_write || (dut.op[dut.O_WRITE_IDX] && |dut.write_vector_mask_q)) vector_writes++;
+        if(dut.u_linear_engine.result_count_q>4 ||
+           (dut.u_linear_engine.started_rows_q-dut.u_linear_engine.consumed_rows_q)>4)
+            $fatal(1,"Linear row-result reservation exceeded");
         if(dut.k_read) kv_reads++;
     end
     logic signed [127:0] expected,acc,value;
@@ -147,6 +151,7 @@ module tb_llm_operators;
     logic signed [127:0] ref_root,ref_recip,ref_scores[0:127];
     logic signed [127:0] ref_max,ref_delta,ref_hi,ref_lo,ref_weights[0:127],ref_weight_sum;
     function automatic integer input_value(input integer index);
+        if(linear_extremes) return index%3==0 ? 8388607 : index%3==1 ? -8388608 : 0;
         return ((index*19)%127-63)*8191;
     endfunction
     function automatic integer head_input(input integer index);
@@ -353,12 +358,12 @@ module tb_llm_operators;
         clocks=0;
         while(!dut.op_done && clocks<500000) begin
             @(negedge clk);clocks++;
-            if(delay_linear_result && dut.matrix_row_q==32 && dut.op==dut.L_ROW_START) begin
-                force dut.op=dut.L_ROW_START;
+            if(delay_linear_result && dut.linear_row_issue_q==32 && dut.op==dut.L_ROW_WAIT) begin
+                force dut.linear_result_ready=1'b0;
                 repeat(24) begin @(negedge clk);clocks++;end
-                if(!dut.linear_result_valid_q || dut.linear_busy)
+                if(!dut.linear_result_valid_q || dut.u_linear_engine.result_count_q>4)
                     $fatal(1,"Overlapped linear result did not survive delayed consumption");
-                release dut.op;delay_linear_result=0;
+                release dut.linear_result_ready; delay_linear_result=0;
             end
         end
         if(!dut.op_done) $fatal(1,"Operator timeout which=%0d op=%0d",which,dut.op);
@@ -405,7 +410,32 @@ module tb_llm_operators;
         begin_operator(phase);
         for(integer row=0;row<rows;row++) begin
             acc=0;for(integer i=0;i<columns;i++) acc+=input_value(i)*weight_value(row,i);
-            observe_v=7'(dst*12+row/32);expect_lane(row%32,rne(acc,16));
+            observe_v=7'(dst*12+row/32);expect_lane(row%32,rne(acc*128'(scale[23:0]),128'd16777216));
+        end
+    endtask
+    task automatic check_linear_fault_row(input integer bad_row);
+        reset_fixture();
+        packed_parameter=0;packed_parameter[14:0]=16384;packed_parameter[24:15]=128;
+        packed_parameter[34:25]=128;packed_parameter[58:35]=scale[23:0];
+        seed_parameter_row(23552,packed_parameter);
+        for(integer row=0;row<4;row++) begin
+            seed_vector_row(12+row,{32{24'd65536}},0);
+            seed_vector_row(24+row,{32{24'd1234}},0);
+        end
+        for(integer row=0;row<128;row++) begin
+            packed_parameter={128{2'b01}};
+            if(row==bad_row) packed_parameter[127*2+:2]=2'b10;
+            seed_parameter_row(16384+row,packed_parameter);
+        end
+        begin_operator(1);
+        if(!dut.op_fault_q || !error || dut.matrix_row_q!=bad_row || vector_writes!=bad_row/32 ||
+           dut.linear_busy || dut.linear_result_valid_q || dut.linear_active_q || dut.linear_pipe_valid_q!=0)
+            $fatal(1,"Linear fault ownership/drain row=%0d",bad_row);
+        for(integer row=0;row<4;row++) begin
+            observe_v=7'(24+row); #1;
+            for(integer lane=0;lane<32;lane++)
+                if(observed_v[lane]!== (row<bad_row/32 ? 24'd524288 : 24'd1234))
+                    $fatal(1,"Linear fault committed an incomplete/younger bank row=%0d lane=%0d",row,lane);
         end
     endtask
     task automatic expect_lane(input integer lane,input logic signed [127:0] n);
@@ -428,21 +458,21 @@ module tb_llm_operators;
         force dut.graph=dut.G_Q;waits=0;
         while(waits<20000 && !((phase==0 && dut.u_linear_engine.request_q==1 && dut.u_linear_engine.response_q==0 && dut.linear_busy) ||
               (phase==1 && dut.u_linear_engine.issue_q==2 && dut.linear_busy) ||
-              (phase==2 && dut.op==dut.L_COEFF) ||
-              (phase==3 && dut.matrix_row_q==31 && dut.op==dut.L_STORE) ||
-              (phase==4 && dut.op==dut.SC_SUM && dut.linear_busy && dut.linear_prefetched_q) ||
-              (phase==5 && dut.matrix_row_q==1 && dut.op==dut.L_ROW_START && dut.linear_prefetched_q))) begin @(negedge clk);waits++;end
+              (phase==2 && dut.linear_pipe_valid_q[0]) ||
+              (phase==3 && dut.linear_pipe_row_q[7]==31 && dut.linear_pipe_valid_q[7]) ||
+              (phase==4 && dut.linear_pipe_valid_q[2] && dut.linear_busy) ||
+              (phase==5 && dut.linear_row_issue_q==1 && dut.op==dut.L_ROW_WAIT))) begin @(negedge clk);waits++;end
         if(waits>=20000) $fatal(1,"Linear cancellation phase not reached phase=%0d",phase);
         if(phase==5) begin
-            force dut.op=dut.L_ROW_START;
+            force dut.linear_result_ready=1'b0;
             repeat(24) @(negedge clk);
             if(!dut.linear_result_valid_q) $fatal(1,"No retained result at reset boundary");
-            rst_n=0;release dut.op;
+            rst_n=0; release dut.linear_result_ready;
         end
         reset_fixture();
         repeat(12) begin
             @(negedge clk);
-            if(dut.linear_busy || dut.linear_prefetched_q || dut.linear_result_valid_q ||
+            if(dut.linear_busy || dut.linear_active_q || dut.linear_result_valid_q || dut.linear_pipe_valid_q!=0 ||
                dut.linear_parameter_req || dut.u_linear_engine.launch_q || dut.p_valid || dut.op!==dut.O_IDLE)
                 $fatal(1,"Linear reset leaked queued work phase=%0d",phase);
         end
@@ -458,6 +488,23 @@ module tb_llm_operators;
     endtask
     initial begin
         $readmemh("Verilog Source code/sigmoid_257.mem",sigmoid_lut);
+        // A scoped entry point retains the full operator suite below. It runs
+        // the actual SRAM/epilogue/write-drain fixtures for Phase 1A alone.
+        if($test$plusargs("linear_only")) begin
+            check_linear_shape(128,128,1,23552,1,2);
+            check_linear_shape(384,128,6,23558,10,1);
+            check_linear_shape(128,384,1,23556,11,6);
+            delay_linear_result=1;
+            check_linear_shape(128,384,1,23556,11,6);
+            for(integer phase=0;phase<6;phase++) check_linear_cancel(phase);
+            linear_extremes=1; scale=32'h00ffffff;
+            check_linear_shape(128,128,1,23552,1,2);
+            if(!overflow_out) $fatal(1,"Streaming saturation did not set overflow");
+            linear_extremes=0; scale=32'h00100000;
+            check_linear_fault_row(0); check_linear_fault_row(1); check_linear_fault_row(33);
+            $display("LLM_LINEAR_SOC_PASS checks=%0d exact_rne_saturation=checked reset=6 ordered_fault=0_1_33 packed_write_drain=checked",checks);
+            $finish;
+        end
         // Independent S128 multiplication covers byte carries and sign edges
         // of the new S39 x S25 three-stage scalar engine.
         check_scalar({1'b1,38'b0},{1'b1,24'b0});
@@ -787,7 +834,7 @@ module tb_llm_operators;
         seed_parameter_row(16385,packed_parameter);
         begin_operator(1);
         if(!dut.op_fault_q || !error || dut.matrix_row_q!=1 || vector_writes!=0 ||
-           dut.linear_busy || dut.linear_result_valid_q || dut.linear_prefetched_q)
+           dut.linear_busy || dut.linear_result_valid_q || dut.linear_active_q || dut.linear_pipe_valid_q!=0)
             $fatal(1,"Malformed lookahead row ownership/drain failure");
         checks++;
         $display("LLM_OPERATORS_PASS operators=%0d checks=%0d scalar_cases=%0d clamp_cases=%0d scalar_reset_cases=%0d round_cases=%0d round_reset_cases=%0d reference=S128 fixtures=synthetic",transactions,checks,scalar_checks,clamp_checks,scalar_reset_cases,round_cases,round_reset_cases);$finish;

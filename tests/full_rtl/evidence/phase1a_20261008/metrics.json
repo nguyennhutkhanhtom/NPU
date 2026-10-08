@@ -1,0 +1,40 @@
+{
+  "scope": "Actual existing synthetic linear operator fixtures; exact outputs checked",
+  "operators": [
+    {
+      "reduction_percent": 68.52,
+      "operator": 1,
+      "before_cycles": 2227,
+      "after_cycles": 701
+    },
+    {
+      "reduction_percent": 42.83,
+      "operator": 10,
+      "before_cycles": 3563,
+      "after_cycles": 2037
+    },
+    {
+      "reduction_percent": 69.89,
+      "operator": 11,
+      "before_cycles": 6579,
+      "after_cycles": 1981
+    }
+  ],
+  "baseline_fmax_mhz": 95.61,
+  "baseline_timing": "docs/verification/timing/arch_fulltop2_20261007/manifest.json",
+  "baseline_rtl_hashes_match": true,
+  "new_timing_tag": "phase1a_linear_20261008",
+  "new_fmax_mhz": null,
+  "isolated_parameter_stalls": null,
+  "evidence_sha256": {
+    "after_engine.log": "347ea91fae2e983db2d907667979a30b1aa896c4343276118a3d505a31af19e8",
+    "after_soc.log": "094ebd74434a1fefc209a4b31a5a92cd6e134ca84ce04a5758087a8845306af0",
+    "before_engine.log": "95d40016f7ab6fc30103a61e6fc35a837a230ed0fba8c014ed28848e904342e4",
+    "before_soc.log": "8d313b3ca16b532f37bb0b4da40065a655799d86f32d5cc25d3ab5dfbf4cb056",
+    "before_source_hashes.json": "c659a8430b9281c7942518cc1849fb2095fb0cc063ec4c7d0f80e4e521c23d89",
+    "compile.log": "bfd6b1041a7ab71a35f69813f2e718c7bae9c8c53a99abeb546fcceaeff91918",
+    "portable_soc.log": "3349f64a480251a26ba36f60bbd1351ea9cab38c7bde70c467eeec84de4966b4",
+    "results.json": "a500a269e0c851edf8bb646801b318b2fb7be518cb50d0646cb4fb031926afeb",
+    "seven_groups_attempt.json": "c79aadaf03e45c9ce55718552b21d1f83bc7dcd9264af19f68cfbb24174e18b3"
+  }
+}

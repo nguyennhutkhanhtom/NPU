@@ -314,6 +314,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         (.a(scalar_a_q), .b(scalar_b_q[24:16]), .product(scalar_partial_comb[2]));
 
     logic signed [55:0] scalar_pair_q;
+    // The upper partial crosses the pair stage too when rows arrive together.
+    logic signed [47:0] linear_scalar_hi_q;
     logic signed [23:0] scalar_group_q [0:7];
     logic signed [23:0] scalar_packet_low_q;
     logic scalar_packet_high_q, scalar_packet_lower_q, scalar_packet_linear_q;
@@ -480,10 +482,14 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     logic v_read, v_valid, v_write_busy;
     logic [6:0] v_address_q;
     logic [767:0] v_data;
+    wire linear_write;
+    wire [6:0] linear_write_address;
     llm_bank_ram #(.ROWS(96), .ADDR_W(7), .USE_QUARTUS_MEMORY(USE_QUARTUS_MEMORY)) u_vectors(
         .clk(clk), .rst_n(core_rst_n), .rd_en(v_read), .rd_addr(v_address_q),
-        .rd_data(v_data), .rd_valid(v_valid), .wr_busy(v_write_busy), .wr_addr(write_vector_addr_q),
-        .wr_mask(op[O_WRITE_IDX] ? write_vector_mask_q : 32'h0), .wr_data(write_vector_q));
+        .rd_data(v_data), .rd_valid(v_valid), .wr_busy(v_write_busy),
+        .wr_addr(linear_write ? linear_write_address : write_vector_addr_q),
+        .wr_mask(linear_write ? 32'hffffffff : op[O_WRITE_IDX] ? write_vector_mask_q : 32'h0),
+        .wr_data(write_vector_q));
     assign v_read = op[O_V_REQ_IDX];
     logic k_read, k_valid, k_write_busy;
     logic [11:0] k_address_q, k_write_address_q;
@@ -523,35 +529,48 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         assign linear_operand[input_lane] = input_cache_q[linear_input_chunk][input_lane * 24 +: 24];
     end
     endgenerate
-    // Only the next row may overlap the current row's scalar/store tail.
-    // Retain completion until L_ROW_WAIT consumes it, including an early fault.
-    logic linear_prefetched_q, linear_result_valid_q, linear_result_fault_q;
-    logic signed [38:0] linear_result_q;
-    wire linear_overlap_start = op[L_COEFF_IDX] && linear_ready && !op_fault_q &&
-        matrix_row_q + 1'b1 < matrix_rows_q;
-    wire [14:0] linear_weight_base = linear_overlap_start ?
-        weight_row_q + 15'((matrix_chunks_q + 3) >> 2) : weight_row_q;
-    wire linear_start = linear_overlap_start || (op[L_ROW_START_IDX] && !linear_prefetched_q);
+    // One matrix launch owns the parameter stream until memory/dot drain.
+    // Row sums are queued in the engine; row tags follow the existing scalar
+    // registers through scaling, RNE, clamp, lane packing and bank acceptance.
+    logic linear_active_q, linear_result_valid_q, linear_result_fault_q;
+    logic [8:0] linear_pipe_valid_q;
+    logic [9:0] linear_row_issue_q, linear_pipe_row_q [0:8];
+    wire linear_start = op[L_ROW_START_IDX] && !linear_active_q && !op_fault_q;
+    wire linear_result_ready = linear_active_q && op[L_ROW_WAIT_IDX] && !op_fault_q &&
+        (!linear_result_fault_q || linear_pipe_valid_q == 0);
+    wire linear_feed = linear_result_ready && linear_result_valid_q && !linear_result_fault_q;
+    assign linear_write = linear_active_q && !op_fault_q && linear_pipe_valid_q[8] &&
+        (linear_pipe_row_q[8][4:0] == 31 || linear_pipe_row_q[8] + 1'b1 == matrix_rows_q);
+    assign linear_write_address = 7'((int'(destination_q) << 3) +
+        (int'(destination_q) << 2) + int'(linear_pipe_row_q[8][8:5]));
     always_ff @(posedge clk or negedge core_rst_n) begin
         if (!core_rst_n) begin
-            linear_prefetched_q <= 0; linear_result_valid_q <= 0;
+            linear_active_q <= 0; linear_pipe_valid_q <= 0; linear_row_issue_q <= 0;
         end else if (op_fault_q || launch) begin
-            linear_prefetched_q <= 0; linear_result_valid_q <= 0;
+            linear_active_q <= 0; linear_pipe_valid_q <= 0; linear_row_issue_q <= 0;
         end else begin
-            if (linear_overlap_start) linear_prefetched_q <= 1;
-            if (linear_done) linear_result_valid_q <= 1;
-            if (op[L_ROW_WAIT_IDX] && (linear_done || linear_result_valid_q)) begin
-                linear_prefetched_q <= 0; linear_result_valid_q <= 0;
+            linear_pipe_valid_q <= {linear_pipe_valid_q[7:0], linear_feed};
+            if (linear_start && linear_ready) begin
+                linear_active_q <= 1; linear_row_issue_q <= 0;
             end
+            if (linear_feed) linear_row_issue_q <= linear_row_issue_q + 1'b1;
+            if (op[O_FINISH_IDX]) linear_active_q <= 0;
         end
     end
     always_ff @(posedge clk)
-        if (core_rst_n && linear_done) begin
-            linear_result_q <= linear_dot_acc;
-            linear_result_fault_q <= linear_fault;
-        end
+        if (core_rst_n && linear_feed) linear_pipe_row_q[0] <= linear_row_issue_q;
+    genvar linear_stage;
+    generate
+    for (linear_stage = 1; linear_stage < 9; linear_stage = linear_stage + 1) begin : g_linear_tag
+        always_ff @(posedge clk)
+            if (core_rst_n && linear_pipe_valid_q[linear_stage - 1])
+                linear_pipe_row_q[linear_stage] <= linear_pipe_row_q[linear_stage - 1];
+    end
+    endgenerate
     llm_linear_engine u_linear_engine(.clk(clk), .rst_n(core_rst_n), .start_i(linear_start),
-        .cancel_i(op_fault_q), .weight_base_i(linear_weight_base), .chunks_i(matrix_chunks_q),
+        .cancel_i(op_fault_q), .weight_base_i(weight_row_q), .chunks_i(matrix_chunks_q),
+        .rows_i(matrix_rows_q), .result_ready_i(linear_result_ready),
+        .result_valid_o(linear_result_valid_q), .result_fault_o(linear_result_fault_q),
         .ready_o(linear_ready), .busy_o(linear_busy), .done_o(linear_done), .fault_o(linear_fault),
         .parameter_req_o(linear_parameter_req), .parameter_address_o(linear_parameter_address),
         .parameter_valid_i(p_valid), .parameter_data_i(p_data), .input_chunk_o(linear_input_chunk),
@@ -619,7 +638,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                 total_cycles <= total_cycles + 1'b1;
                 if (p_read) parameter_reads <= parameter_reads + 1'b1;
                 if (v_read) vector_reads <= vector_reads + 1'b1;
-                if (op[O_WRITE_IDX] && |write_vector_mask_q) vector_writes <= vector_writes + 1'b1;
+                if (linear_write || (op[O_WRITE_IDX] && |write_vector_mask_q)) vector_writes <= vector_writes + 1'b1;
                 if (k_read) kv_reads <= kv_reads + 1'b1;
                 if (op[C_STORE_IDX]) kv_writes <= kv_writes + 1'b1;
                 if (math_start) math_starts <= math_starts + 1'b1;
@@ -765,14 +784,15 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     // Two registered clusters bound the distribution to four output groups.
     always_ff @(posedge clk or negedge core_rst_n)
         if (!core_rst_n) scalar_packet_valid_q <= 0;
-        else scalar_packet_valid_q <= op[L_FLAGS_IDX] || op[A_FLAGS_IDX];
+        else scalar_packet_valid_q <= op[L_FLAGS_IDX] || op[A_FLAGS_IDX] || linear_pipe_valid_q[4];
     always_ff @(posedge clk)
-        if (core_rst_n && (op[L_FLAGS_IDX] || op[A_FLAGS_IDX])) begin
+        if (core_rst_n && (op[L_FLAGS_IDX] || op[A_FLAGS_IDX] || linear_pipe_valid_q[4])) begin
             scalar_packet_low_q <= scalar_round_q[23:0];
             scalar_packet_high_q <= scalar_round_q > 64'sd8388607;
             scalar_packet_lower_q <= scalar_round_q < -64'sd8388608;
-            scalar_packet_group_q <= op[L_FLAGS_IDX] ? matrix_row_q[4:2] : lane_q[4:2];
-            scalar_packet_linear_q <= op[L_FLAGS_IDX];
+            scalar_packet_group_q <= linear_pipe_valid_q[4] ? linear_pipe_row_q[4][4:2] :
+                op[L_FLAGS_IDX] ? matrix_row_q[4:2] : lane_q[4:2];
+            scalar_packet_linear_q <= op[L_FLAGS_IDX] || linear_pipe_valid_q[4];
         end
     genvar lane, scalar_group, scalar_cluster, round_group;
     generate
@@ -875,7 +895,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                 else if (op[E_CLAMP_IDX] || op[N_CLAMP_IDX] || op[R_CLAMP_IDX] ||
                     op[B_CLAMP_IDX] || op[S_CLAMP_IDX])
                     write_vector_q[lane * 24 +: 24] <= llm_sat24(lane_round_q[lane]);
-                else if ((op[L_STORE_IDX] && matrix_row_q[4:0] == 5'(lane)) ||
+                else if ((linear_pipe_valid_q[7] && !op_fault_q && linear_pipe_row_q[7][4:0] == 5'(lane)) ||
+                         (op[L_STORE_IDX] && matrix_row_q[4:0] == 5'(lane)) ||
                          (op[A_PACK_IDX] && lane_q == 5'(lane)))
                     write_vector_q[lane * 24 +: 24] <= scalar_group_q[lane / 4];
                 else if (op[B_ADD_CLAMP_IDX])
@@ -886,10 +907,10 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     for (scalar_cluster = 0; scalar_cluster < 2; scalar_cluster = scalar_cluster + 1) begin : g_scalar_cluster
         always_ff @(posedge clk or negedge core_rst_n)
             if (!core_rst_n) scalar_cluster_valid_q[scalar_cluster] <= 0;
-            else scalar_cluster_valid_q[scalar_cluster] <= op[SC_ROUTE_IDX] &&
+            else scalar_cluster_valid_q[scalar_cluster] <= (op[SC_ROUTE_IDX] || linear_pipe_valid_q[5]) &&
                 scalar_packet_valid_q && scalar_packet_group_q[2] == 1'(scalar_cluster);
         always_ff @(posedge clk)
-            if (core_rst_n && op[SC_ROUTE_IDX] && scalar_packet_valid_q &&
+            if (core_rst_n && (op[SC_ROUTE_IDX] || linear_pipe_valid_q[5]) && scalar_packet_valid_q &&
                 scalar_packet_group_q[2] == 1'(scalar_cluster)) begin
                 scalar_cluster_low_q[scalar_cluster] <= scalar_packet_low_q;
                 scalar_cluster_high_q[scalar_cluster] <= scalar_packet_high_q;
@@ -899,7 +920,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     end
     for (scalar_group = 0; scalar_group < 8; scalar_group = scalar_group + 1) begin : g_scalar_output
         always_ff @(posedge clk)
-            if (core_rst_n && (op[L_SAT_IDX] || op[A_SAT_IDX]) &&
+            if (core_rst_n && (op[L_SAT_IDX] || op[A_SAT_IDX] || linear_pipe_valid_q[6]) &&
                 scalar_cluster_valid_q[scalar_group / 4] &&
                 scalar_cluster_group_q[scalar_group / 4] == 2'(scalar_group % 4))
                 scalar_group_q[scalar_group] <= scalar_cluster_high_q[scalar_group / 4] ? 24'sh7fffff :
@@ -937,7 +958,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         if (!core_rst_n) begin input_cache_valid_q <= 0; rope_table_valid_q <= 0; end
         else begin
             if (launch || op_fault_q || (op[O_IDLE_IDX] && graph == G_HEAD) ||
-                (op[O_WRITE_IDX] && write_vector_addr_q >= cache_source_base && write_vector_addr_q < cache_source_base + 7'd12))
+                (op[O_WRITE_IDX] && write_vector_addr_q >= cache_source_base && write_vector_addr_q < cache_source_base + 7'd12) ||
+                (linear_write && linear_write_address >= cache_source_base && linear_write_address < cache_source_base + 7'd12))
                 input_cache_valid_q <= 0;
             else if (op[L_PRELOAD_IDX] && preload_chunk_q + 1'b1 >= matrix_chunks_q)
                 input_cache_valid_q <= 1;
@@ -958,6 +980,27 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     always_ff @(posedge clk) begin
         if (core_rst_n) begin
             op_done <= 0;
+            if (linear_feed) begin
+                scalar_a_q <= linear_dot_acc; scalar_b_q <= $signed({1'b0, coefficient_q});
+            end
+            if (linear_pipe_valid_q[0]) begin
+                scalar_partial_q[0] <= scalar_partial_comb[0];
+                scalar_partial_q[1] <= scalar_partial_comb[1];
+                scalar_partial_q[2] <= scalar_partial_comb[2];
+            end
+            if (linear_pipe_valid_q[1]) begin
+                scalar_pair_q <= 56'(scalar_partial_q[0]) + (56'(scalar_partial_q[1]) <<< 8);
+                linear_scalar_hi_q <= scalar_partial_q[2];
+            end
+            if (linear_pipe_valid_q[2])
+                scalar_product_q <= 64'(scalar_pair_q) + (64'(linear_scalar_hi_q) <<< 16);
+            if (linear_pipe_valid_q[3]) scalar_round_q <= rne_shift64(scalar_product_q, 6'd24);
+            if (linear_pipe_valid_q[6] && !op_fault_q &&
+                scalar_cluster_valid_q[linear_pipe_row_q[6][4]] &&
+                (scalar_cluster_high_q[linear_pipe_row_q[6][4]] ||
+                 scalar_cluster_lower_q[linear_pipe_row_q[6][4]])) overflow_out <= 1;
+            if (linear_pipe_valid_q[7] && !op_fault_q)
+                matrix_row_q <= linear_pipe_row_q[7] + (linear_pipe_row_q[7] + 1'b1 < matrix_rows_q ? 10'd1 : 10'd0);
             if (launch && graph == G_IDLE) begin overflow_out <= 0; random_q <= seed_q; op_fault_q <= 0; end
             unique case (1'b1)
                 op[O_IDLE_IDX] : if (core_running && !op_done) begin
@@ -1069,7 +1112,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                             default: begin op_fault_q <= 1; op <= O_FINISH; end
                         endcase
                     end
-                op[O_FINISH_IDX] : if (!v_write_busy && !k_write_busy && !linear_busy) begin op_done <= 1; op <= O_IDLE; end
+                op[O_FINISH_IDX] : if (!v_write_busy && !k_write_busy && !linear_busy &&
+                    linear_pipe_valid_q == 0) begin op_done <= 1; op <= O_IDLE; end
                 op[E_SCALE_IDX] : begin
                     coefficient_q <= parameter_word_q[(int'(token_q[2:0]) << 5) +: 24];
                     begin p_address_q <= {1'b0, token_q, 2'b00}; return_p <= RET_P_E_DATA; op <= O_P_REQ; end
@@ -1117,10 +1161,12 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                         return_v <= RET_V_L_PRELOAD; op <= O_V_REQ;
                     end
                 end
-                op[L_ROW_START_IDX] : if (linear_prefetched_q || linear_ready) op <= L_ROW_WAIT;
-                op[L_ROW_WAIT_IDX] : if (linear_done || linear_result_valid_q) begin
-                    if (linear_result_valid_q ? linear_result_fault_q : linear_fault) begin op_fault_q <= 1; op <= O_FINISH; end
-                    else begin linear_acc_q <= linear_result_valid_q ? linear_result_q : linear_dot_acc; op <= L_COEFF; end
+                op[L_ROW_START_IDX] : if (linear_ready) op <= L_ROW_WAIT;
+                op[L_ROW_WAIT_IDX] : begin
+                    if (linear_result_valid_q && linear_result_fault_q && linear_pipe_valid_q == 0) begin
+                        matrix_row_q <= linear_row_issue_q; op_fault_q <= 1; op <= O_FINISH;
+                    end else if (linear_active_q && linear_row_issue_q == matrix_rows_q &&
+                        !linear_busy && linear_pipe_valid_q == 0) op <= O_FINISH;
                 end
                 op[L_COEFF_IDX] : begin
                     scalar_a_q <= linear_acc_q; scalar_b_q <= $signed({1'b0, coefficient_q});

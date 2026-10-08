@@ -1,0 +1,142 @@
+Statistics: 40 0 4156 0 0 0.126
+
+Heuristic: Chained Adders
+From To Score Heuristic
+llm_math:u_math|product[4][55] attention_acc_q[4][55]~DUPLICATE 0.900000 {Chained Adders} {recommendation {{Add a pipeline stage in the adder}}}
+llm_math:u_math|product[4][55] attention_acc_q[4][55] 0.900000 {Chained Adders} {recommendation {{Add a pipeline stage in the adder}}}
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+host_rdata[1]~reg0 host_rdata[1] 0.323079 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[1]~reg0 host_rdata[1](n) 0.323079 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[6]~reg0 pc_debug[6] 0.319790 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[6]~reg0 pc_debug[6](n) 0.319790 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+running~reg0_Duplicate_1 ready 0.320809 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+running~reg0_Duplicate_1 ready(n) 0.320809 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[3]~reg0 host_rdata[3] 0.321602 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[3]~reg0 host_rdata[3](n) 0.321602 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[5]~reg0 host_rdata[5] 0.318209 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[5]~reg0 host_rdata[5](n) 0.318209 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[6]~reg0 host_rdata[6] 0.318773 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[6]~reg0 host_rdata[6](n) 0.318773 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[1]~reg0 pc_debug[1] 0.321149 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[1]~reg0 pc_debug[1](n) 0.321149 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[30]~reg0 host_rdata[30] 0.321036 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[30]~reg0 host_rdata[30](n) 0.321036 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+error~reg0 error 0.320017 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+error~reg0 error(n) 0.320017 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[31]~reg0 host_rdata[31] 0.320696 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[31]~reg0 host_rdata[31](n) 0.320696 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[2]~reg0 host_rdata[2] 0.320922 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[2]~reg0 host_rdata[2](n) 0.320922 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[5]~reg0 pc_debug[5] 0.319112 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[5]~reg0 pc_debug[5](n) 0.319112 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[7]~reg0 host_rdata[7] 0.317420 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[7]~reg0 host_rdata[7](n) 0.317420 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[8]~reg0 host_rdata[8] 0.319564 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[8]~reg0 host_rdata[8](n) 0.319564 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[0]~reg0 host_rdata[0] 0.318999 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[0]~reg0 host_rdata[0](n) 0.318999 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[4]~reg0 host_rdata[4] 0.317645 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[4]~reg0 host_rdata[4](n) 0.317645 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[5].u_storage|rd_data[31] math_b_q[23][14] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[1] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[10].read_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[1] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[10].read_address_q[1]~DUPLICATE 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[6].read_address_local_q[2] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip_tiled.g_tile[17].read_address_q[2] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+math_b_q[6][11] llm_math:u_math|b_q[6][11] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|product[4][55] attention_acc_q[4][55]~DUPLICATE 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_math:u_math|product[4][55] attention_acc_q[4][55] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+math_b_q[6][11] llm_math:u_math|b_q[6][11]~DUPLICATE 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[5].u_storage|rd_data[31] math_b_q[23][14] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[1] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[10].read_address_q[1] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[3].read_address_local_q[1] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[3].u_storage|g_ip_tiled.g_tile[10].read_address_q[1]~DUPLICATE 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_parameter_ram:u_parameters|g_ram_lane[6].read_address_local_q[2] llm_parameter_ram:u_parameters|pipelined_word_ram:g_ram_lane[6].u_storage|g_ip_tiled.g_tile[17].read_address_q[2] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+host_rdata[1]~reg0 host_rdata[1] 0.323079 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[1]~reg0 host_rdata[1](n) 0.323079 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[6]~reg0 pc_debug[6] 0.319790 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[6]~reg0 pc_debug[6](n) 0.319790 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+running~reg0_Duplicate_1 ready 0.320809 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+running~reg0_Duplicate_1 ready(n) 0.320809 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[3]~reg0 host_rdata[3] 0.321602 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[3]~reg0 host_rdata[3](n) 0.321602 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[5]~reg0 host_rdata[5] 0.318209 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[5]~reg0 host_rdata[5](n) 0.318209 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[6]~reg0 host_rdata[6] 0.318773 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[6]~reg0 host_rdata[6](n) 0.318773 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[1]~reg0 pc_debug[1] 0.321149 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[1]~reg0 pc_debug[1](n) 0.321149 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[30]~reg0 host_rdata[30] 0.321036 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[30]~reg0 host_rdata[30](n) 0.321036 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+error~reg0 error 0.320017 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+error~reg0 error(n) 0.320017 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[31]~reg0 host_rdata[31] 0.320696 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[31]~reg0 host_rdata[31](n) 0.320696 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[2]~reg0 host_rdata[2] 0.320922 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[2]~reg0 host_rdata[2](n) 0.320922 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[5]~reg0 pc_debug[5] 0.319112 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+pc_debug[5]~reg0 pc_debug[5](n) 0.319112 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[7]~reg0 host_rdata[7] 0.317420 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[7]~reg0 host_rdata[7](n) 0.317420 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[8]~reg0 host_rdata[8] 0.319564 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[8]~reg0 host_rdata[8](n) 0.319564 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[0]~reg0 host_rdata[0] 0.318999 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[0]~reg0 host_rdata[0](n) 0.318999 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[4]~reg0 host_rdata[4] 0.317645 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+host_rdata[4]~reg0 host_rdata[4](n) 0.317645 {Intradomain Skew} {recommendation {{Place source and destination clock on the same global clock resource}} {Clocks affected} clock_0}
+math_b_q[6][11] llm_math:u_math|b_q[6][11] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+llm_math:u_math|product[4][55] attention_acc_q[4][55]~DUPLICATE 0.900000 {Chained Adders} {recommendation {{Add a pipeline stage in the adder}}}
+llm_math:u_math|product[4][55] attention_acc_q[4][55]~DUPLICATE 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+llm_math:u_math|product[4][55] attention_acc_q[4][55] 0.900000 {Chained Adders} {recommendation {{Add a pipeline stage in the adder}}}
+llm_math:u_math|product[4][55] attention_acc_q[4][55] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+math_b_q[6][11] llm_math:u_math|b_q[6][11]~DUPLICATE 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 2}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic

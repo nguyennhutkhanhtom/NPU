@@ -1,0 +1,15 @@
+# vsim -c -onfinish exit -L altera_mf_ver -lib tests/full_rtl/build/phase1a_base20 -l tests/full_rtl/build/phase1a_baseline_20261008/stream_final.log tb_llm_linear_stream -do "run -all; quit -f" 
+# Start time: 01:56:04 on Oct 08,2026
+# Loading sv_std.std
+# Loading tests/full_rtl/build/phase1a_base20.tb_llm_linear_stream
+# Loading tests/full_rtl/build/phase1a_base20.llm_linear_engine
+# Loading tests/full_rtl/build/phase1a_base20.ternary_dot32
+# run -all
+# LINEAR_STREAM_METRIC k=128 rows=128 latency=5 cycles=2177 dot_issues=512 parameter_reads=128 row_ii_sum=2159 row_ii_count=127 row_ii_min=17 row_ii_max=17
+# LINEAR_STREAM_METRIC k=384 rows=128 latency=5 cycles=3457 dot_issues=1536 parameter_reads=384 row_ii_sum=3429 row_ii_count=127 row_ii_min=27 row_ii_max=27
+# LINEAR_STREAM_METRIC k=128 rows=384 latency=5 cycles=6529 dot_issues=1536 parameter_reads=384 row_ii_sum=6511 row_ii_count=383 row_ii_min=17 row_ii_max=17
+# LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked
+# ** Note: $finish    : tests/full_rtl/tb_linear_stream.sv(186)
+#    Time: 193160 ns  Iteration: 1  Instance: /tb_llm_linear_stream
+# End time: 01:56:05 on Oct 08,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

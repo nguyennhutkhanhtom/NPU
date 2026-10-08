@@ -1,0 +1,263 @@
+# vsim -c -onfinish exit -L altera_mf_ver -lib tests/full_rtl/build/phase1a_stream -l tests/full_rtl/build/phase1a_final_tb_llm_operators.log tb_llm_operators "+linear_only" -do "run -all; quit -f" 
+# Start time: 02:02:15 on Oct 08,2026
+# Loading sv_std.std
+# Loading tests/full_rtl/build/phase1a_stream.tb_llm_operators
+# Loading tests/full_rtl/build/phase1a_stream.llm_pkg
+# Loading tests/full_rtl/build/phase1a_stream.npu_pkg
+# Loading tests/full_rtl/build/phase1a_stream.llm_soc
+# Loading tests/full_rtl/build/phase1a_stream.reset_release
+# Loading tests/full_rtl/build/phase1a_stream.logic_mul
+# Loading tests/full_rtl/build/phase1a_stream.llm_gumbel_sample
+# Loading tests/full_rtl/build/phase1a_stream.llm_exp_sample
+# Loading tests/full_rtl/build/phase1a_stream.llm_parameter_ram
+# Loading tests/full_rtl/build/phase1a_stream.llm_bank_ram
+# Loading tests/full_rtl/build/phase1a_stream.llm_math
+# Loading tests/full_rtl/build/phase1a_stream.llm_head_engine
+# Loading tests/full_rtl/build/phase1a_stream.llm_attention_engine
+# Loading tests/full_rtl/build/phase1a_stream.llm_linear_engine
+# Loading tests/full_rtl/build/phase1a_stream.ternary_dot32
+# Loading tests/full_rtl/build/phase1a_stream.isqrt_u64
+# Loading tests/full_rtl/build/phase1a_stream.llm_attention_normalize
+# Loading tests/full_rtl/build/phase1a_stream.div
+# Loading tests/full_rtl/build/phase1a_stream.pipelined_word_ram
+# Loading tests/full_rtl/build/phase1a_stream.sigmoid
+# Loading tests/full_rtl/build/phase1a_stream.sigmoid_sample
+# Loading tests/full_rtl/build/phase1a_stream.sram_word_tile
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[0] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[1] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[2] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[3] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[4] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[5] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[6] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[7] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[8] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[9] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[10] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[11] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[12] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[13] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[14] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[15] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[16] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[17] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[18] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[19] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[20] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[21] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[22] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[23] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[24] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[25] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[26] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[27] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[28] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[29] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[30] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# ** Warning: (vsim-12070) Force of a variable select from a non-constant rhs may produce unexpected results.
+#    Time: 0 ps  Iteration: 0  Region: /tb_llm_operators/g_fixture[31] File: D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv Line: 26
+# run -all
+# SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=1 state=0 cycles=1
+# SCHEDULE_STATE operator=1 state=1 cycles=1
+# SCHEDULE_STATE operator=1 state=2 cycles=5
+# SCHEDULE_STATE operator=1 state=3 cycles=4
+# SCHEDULE_STATE operator=1 state=4 cycles=20
+# SCHEDULE_STATE operator=1 state=10 cycles=4
+# SCHEDULE_STATE operator=1 state=15 cycles=1
+# SCHEDULE_STATE operator=1 state=103 cycles=4
+# SCHEDULE_STATE operator=1 state=110 cycles=1
+# SCHEDULE_STATE operator=1 state=111 cycles=660
+# LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+# SCHEDULE_PROFILE operator=10 context=1 temperature=166 cycles=2037 linear_startup=6 linear_issue=1536 linear_drain=388 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=10 state=0 cycles=1
+# SCHEDULE_STATE operator=10 state=1 cycles=1
+# SCHEDULE_STATE operator=10 state=2 cycles=5
+# SCHEDULE_STATE operator=10 state=3 cycles=12
+# SCHEDULE_STATE operator=10 state=4 cycles=60
+# SCHEDULE_STATE operator=10 state=10 cycles=4
+# SCHEDULE_STATE operator=10 state=15 cycles=1
+# SCHEDULE_STATE operator=10 state=103 cycles=12
+# SCHEDULE_STATE operator=10 state=110 cycles=1
+# SCHEDULE_STATE operator=10 state=111 cycles=1940
+# LLM_TRAFFIC operator=10 clocks=2037 parameter_reads=385 vector_reads=12 vector_writes=4 kv_reads=0
+# SCHEDULE_PROFILE operator=11 context=1 temperature=166 cycles=1981 linear_startup=6 linear_issue=1536 linear_drain=388 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=11 state=0 cycles=1
+# SCHEDULE_STATE operator=11 state=1 cycles=1
+# SCHEDULE_STATE operator=11 state=2 cycles=5
+# SCHEDULE_STATE operator=11 state=3 cycles=4
+# SCHEDULE_STATE operator=11 state=4 cycles=20
+# SCHEDULE_STATE operator=11 state=10 cycles=4
+# SCHEDULE_STATE operator=11 state=15 cycles=1
+# SCHEDULE_STATE operator=11 state=103 cycles=4
+# SCHEDULE_STATE operator=11 state=110 cycles=1
+# SCHEDULE_STATE operator=11 state=111 cycles=1940
+# LLM_TRAFFIC operator=11 clocks=1981 parameter_reads=385 vector_reads=4 vector_writes=12 kv_reads=0
+# SCHEDULE_PROFILE operator=11 context=1 temperature=166 cycles=1990 linear_startup=6 linear_issue=1536 linear_drain=397 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=11 state=0 cycles=1
+# SCHEDULE_STATE operator=11 state=1 cycles=1
+# SCHEDULE_STATE operator=11 state=2 cycles=5
+# SCHEDULE_STATE operator=11 state=3 cycles=4
+# SCHEDULE_STATE operator=11 state=4 cycles=20
+# SCHEDULE_STATE operator=11 state=10 cycles=4
+# SCHEDULE_STATE operator=11 state=15 cycles=1
+# SCHEDULE_STATE operator=11 state=103 cycles=4
+# SCHEDULE_STATE operator=11 state=110 cycles=1
+# SCHEDULE_STATE operator=11 state=111 cycles=1949
+# LLM_TRAFFIC operator=11 clocks=1990 parameter_reads=385 vector_reads=4 vector_writes=12 kv_reads=0
+# SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=1 state=0 cycles=1
+# SCHEDULE_STATE operator=1 state=1 cycles=1
+# SCHEDULE_STATE operator=1 state=2 cycles=5
+# SCHEDULE_STATE operator=1 state=3 cycles=4
+# SCHEDULE_STATE operator=1 state=4 cycles=20
+# SCHEDULE_STATE operator=1 state=10 cycles=4
+# SCHEDULE_STATE operator=1 state=15 cycles=1
+# SCHEDULE_STATE operator=1 state=103 cycles=4
+# SCHEDULE_STATE operator=1 state=110 cycles=1
+# SCHEDULE_STATE operator=1 state=111 cycles=660
+# LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+# SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=1 state=0 cycles=1
+# SCHEDULE_STATE operator=1 state=1 cycles=1
+# SCHEDULE_STATE operator=1 state=2 cycles=5
+# SCHEDULE_STATE operator=1 state=3 cycles=4
+# SCHEDULE_STATE operator=1 state=4 cycles=20
+# SCHEDULE_STATE operator=1 state=10 cycles=4
+# SCHEDULE_STATE operator=1 state=15 cycles=1
+# SCHEDULE_STATE operator=1 state=103 cycles=4
+# SCHEDULE_STATE operator=1 state=110 cycles=1
+# SCHEDULE_STATE operator=1 state=111 cycles=660
+# LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+# SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=1 state=0 cycles=1
+# SCHEDULE_STATE operator=1 state=1 cycles=1
+# SCHEDULE_STATE operator=1 state=2 cycles=5
+# SCHEDULE_STATE operator=1 state=3 cycles=4
+# SCHEDULE_STATE operator=1 state=4 cycles=20
+# SCHEDULE_STATE operator=1 state=10 cycles=4
+# SCHEDULE_STATE operator=1 state=15 cycles=1
+# SCHEDULE_STATE operator=1 state=103 cycles=4
+# SCHEDULE_STATE operator=1 state=110 cycles=1
+# SCHEDULE_STATE operator=1 state=111 cycles=660
+# LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+# SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=1 state=0 cycles=1
+# SCHEDULE_STATE operator=1 state=1 cycles=1
+# SCHEDULE_STATE operator=1 state=2 cycles=5
+# SCHEDULE_STATE operator=1 state=3 cycles=4
+# SCHEDULE_STATE operator=1 state=4 cycles=20
+# SCHEDULE_STATE operator=1 state=10 cycles=4
+# SCHEDULE_STATE operator=1 state=15 cycles=1
+# SCHEDULE_STATE operator=1 state=103 cycles=4
+# SCHEDULE_STATE operator=1 state=110 cycles=1
+# SCHEDULE_STATE operator=1 state=111 cycles=660
+# LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+# SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=1 state=0 cycles=1
+# SCHEDULE_STATE operator=1 state=1 cycles=1
+# SCHEDULE_STATE operator=1 state=2 cycles=5
+# SCHEDULE_STATE operator=1 state=3 cycles=4
+# SCHEDULE_STATE operator=1 state=4 cycles=20
+# SCHEDULE_STATE operator=1 state=10 cycles=4
+# SCHEDULE_STATE operator=1 state=15 cycles=1
+# SCHEDULE_STATE operator=1 state=103 cycles=4
+# SCHEDULE_STATE operator=1 state=110 cycles=1
+# SCHEDULE_STATE operator=1 state=111 cycles=660
+# LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+# SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=1 state=0 cycles=1
+# SCHEDULE_STATE operator=1 state=1 cycles=1
+# SCHEDULE_STATE operator=1 state=2 cycles=5
+# SCHEDULE_STATE operator=1 state=3 cycles=4
+# SCHEDULE_STATE operator=1 state=4 cycles=20
+# SCHEDULE_STATE operator=1 state=10 cycles=4
+# SCHEDULE_STATE operator=1 state=15 cycles=1
+# SCHEDULE_STATE operator=1 state=103 cycles=4
+# SCHEDULE_STATE operator=1 state=110 cycles=1
+# SCHEDULE_STATE operator=1 state=111 cycles=660
+# LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+# SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=1 state=0 cycles=1
+# SCHEDULE_STATE operator=1 state=1 cycles=1
+# SCHEDULE_STATE operator=1 state=2 cycles=5
+# SCHEDULE_STATE operator=1 state=3 cycles=4
+# SCHEDULE_STATE operator=1 state=4 cycles=20
+# SCHEDULE_STATE operator=1 state=10 cycles=4
+# SCHEDULE_STATE operator=1 state=15 cycles=1
+# SCHEDULE_STATE operator=1 state=103 cycles=4
+# SCHEDULE_STATE operator=1 state=110 cycles=1
+# SCHEDULE_STATE operator=1 state=111 cycles=660
+# LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+# SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=58 linear_startup=6 linear_issue=8 linear_drain=6 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=1 state=0 cycles=1
+# SCHEDULE_STATE operator=1 state=1 cycles=1
+# SCHEDULE_STATE operator=1 state=2 cycles=5
+# SCHEDULE_STATE operator=1 state=3 cycles=4
+# SCHEDULE_STATE operator=1 state=4 cycles=20
+# SCHEDULE_STATE operator=1 state=10 cycles=5
+# SCHEDULE_STATE operator=1 state=15 cycles=1
+# SCHEDULE_STATE operator=1 state=103 cycles=4
+# SCHEDULE_STATE operator=1 state=110 cycles=1
+# SCHEDULE_STATE operator=1 state=111 cycles=16
+# LLM_TRAFFIC operator=1 clocks=58 parameter_reads=4 vector_reads=4 vector_writes=0 kv_reads=0
+# SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=64 linear_startup=6 linear_issue=10 linear_drain=10 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=1 state=0 cycles=1
+# SCHEDULE_STATE operator=1 state=1 cycles=1
+# SCHEDULE_STATE operator=1 state=2 cycles=5
+# SCHEDULE_STATE operator=1 state=3 cycles=4
+# SCHEDULE_STATE operator=1 state=4 cycles=20
+# SCHEDULE_STATE operator=1 state=10 cycles=1
+# SCHEDULE_STATE operator=1 state=15 cycles=1
+# SCHEDULE_STATE operator=1 state=103 cycles=4
+# SCHEDULE_STATE operator=1 state=110 cycles=1
+# SCHEDULE_STATE operator=1 state=111 cycles=26
+# LLM_TRAFFIC operator=1 clocks=64 parameter_reads=5 vector_reads=4 vector_writes=0 kv_reads=0
+# SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=224 linear_startup=6 linear_issue=138 linear_drain=42 head_startup=0 head_issue=0 head_drain=0
+# SCHEDULE_STATE operator=1 state=0 cycles=1
+# SCHEDULE_STATE operator=1 state=1 cycles=1
+# SCHEDULE_STATE operator=1 state=2 cycles=5
+# SCHEDULE_STATE operator=1 state=3 cycles=4
+# SCHEDULE_STATE operator=1 state=4 cycles=20
+# SCHEDULE_STATE operator=1 state=10 cycles=1
+# SCHEDULE_STATE operator=1 state=15 cycles=1
+# SCHEDULE_STATE operator=1 state=103 cycles=4
+# SCHEDULE_STATE operator=1 state=110 cycles=1
+# SCHEDULE_STATE operator=1 state=111 cycles=186
+# LLM_TRAFFIC operator=1 clocks=224 parameter_reads=37 vector_reads=4 vector_writes=1 kv_reads=0
+# LLM_LINEAR_SOC_PASS checks=1920 exact_rne_saturation=checked reset=6 ordered_fault=0_1_33 packed_write_drain=checked
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/tests/full_rtl/tb_operators.sv(506)
+#    Time: 155224 ns  Iteration: 0  Instance: /tb_llm_operators
+# End time: 02:02:41 on Oct 08,2026, Elapsed time: 0:00:26
+# Errors: 0, Warnings: 32

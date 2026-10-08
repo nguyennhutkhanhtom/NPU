@@ -1,0 +1,79 @@
+%Warning-WIDTHTRUNC: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\sram_word_tile.sv:12:26: Bit extraction of array[95:0] requires 7 bit index, not 10 bits.
+                                                                                             : ... note: In instance 'llm_soc.u_vectors.g_bank[31].u_storage..g_model.g_tile[0].u_tile'
+   12 |         if (wr_en) memory[wr_addr] <= wr_data;
+      |                          ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\sram_word_tile.sv:13:37: Bit extraction of array[95:0] requires 7 bit index, not 10 bits.
+                                                                                             : ... note: In instance 'llm_soc.u_vectors.g_bank[31].u_storage..g_model.g_tile[0].u_tile'
+   13 |         if (rd_en) rd_data <= memory[rd_addr];
+      |                                     ^
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\npu_pkg.sv:119:45: Operator LTE expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                                                        : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+  119 |         ws_valid = d.length > 0 && d.length <= K_MAX && d.frac_bits <= 24 &&
+      |                                             ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_attention_normalize.sv:46:41: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'batch_q' generates 5 bits.
+                                                                                                       : ... note: In instance 'llm_soc.u_attention_normalize'
+   46 |                 NEXT_BATCH: if (batch_q == BATCHES - 1) begin done_o <= 1; state <= IDLE; end
+      |                                         ^~
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_attention_normalize.sv:57:72: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'batch_q' generates 5 bits.
+                                                                                                       : ... note: In instance 'llm_soc.u_attention_normalize'
+   57 |         wire signed [55:0] next_selected = accumulator_i[(int'(batch_q + 1'b1) << SHIFT) + lane];
+      |                                                                        ^
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_attention_normalize.sv:74:61: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'batch_q' generates 5 bits.
+                                                                                                       : ... note: In instance 'llm_soc.u_attention_normalize'
+   74 |                 end else if (state == NEXT_BATCH && batch_q != BATCHES - 1) begin
+      |                                                             ^~
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_attention_normalize.sv:91:65: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'batch_q' generates 5 bits.
+                                                                                                       : ... note: In instance 'llm_soc.u_attention_normalize'
+   91 |             if (rst_n && !cancel_i && state == CLAMP && batch_q == lane / DIV_LANES)
+      |                                                                 ^~
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_soc.sv:1010:105: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'token_q' generates 12 bits.
+                                                                                          : ... note: In instance 'llm_soc'
+ 1010 |                         G_EMBED : if (token_valid_q) begin p_address_q <= 15'(EMB_SCALE_BASE + (token_q >> 3)); return_p <= RET_P_E_SCALE; op <= O_P_REQ; end
+      |                                                                                                         ^~
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_soc.sv:1130:101: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'row_q' generates 4 bits.
+                                                                                          : ... note: In instance 'llm_soc'
+ 1130 |                     else begin row_q <= row_q + 1'b1; begin p_address_q <= 15'((int'(token_q) << 2) + row_q + 1); return_p <= RET_P_E_DATA; op <= O_P_REQ; end end
+      |                                                                                                     ^
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_soc.sv:1160:89: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'preload_chunk_q' generates 4 bits.
+                                                                                         : ... note: In instance 'llm_soc'
+ 1160 |                         v_address_q <= 7'((int'(source_q) << 3) + (int'(source_q) << 2) + preload_chunk_q + 1);
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_soc.sv:1217:77: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'matrix_chunks_q' generates 4 bits.
+                                                                                         : ... note: In instance 'llm_soc'
+ 1217 |                         weight_row_q <= weight_row_q + 15'((matrix_chunks_q + 3) >> 2);
+      |                                                                             ^
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_soc.sv:1280:187: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'row_q' generates 4 bits.
+                                                                                          : ... note: In instance 'llm_soc'
+ 1280 |                         begin v_address_q <= 7'(((int'($unsigned(3'(row_q < 3 ? 3'd3 : 3'd4))) << 3) + (int'($unsigned(3'(row_q < 3 ? 3'd3 : 3'd4))) << 2)) + int'($unsigned(4'(4'((row_q + 1) & 3))))); return_v <= RET_V_C_INPUT; op <= O_V_REQ; end
+      |                                                                                                                                                                                           ^
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_soc.sv:1303:60: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'exp_hi_q' generates 25 bits.
+                                                                                         : ... note: In instance 'llm_soc'
+ 1303 |                     probability_sum_q <= probability_sum_q + exp_hi_q - 32'((exp_interpolation_q + 37'd2048) >> 12);
+      |                                                            ^
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_soc.sv:1320:46: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'head_q' generates 2 bits.
+                                                                                         : ... note: In instance 'llm_soc'
+ 1320 |                         v_address_q <= 7'(24 + head_q + 1'b1); return_v <= RET_V_A_QUERY; return_w <= RET_W_O_V_REQ;
+      |                                              ^
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_soc.sv:1333:54: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'head_q' generates 2 bits.
+                                                                                         : ... note: In instance 'llm_soc'
+ 1333 |                             v_address_q <= 7'(2 * 12 + head_q + 1); return_v <= RET_V_A_QUERY; return_w <= RET_W_O_V_REQ;
+      |                                                      ^
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_soc.sv:1373:80: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'row_q' generates 4 bits.
+                                                                                         : ... note: In instance 'llm_soc'
+ 1373 |                     else begin row_q <= row_q + 1'b1; v_address_q <= 7'(6 * 12 + row_q + 1); return_v <= RET_V_S_INPUT; return_w <= RET_W_O_V_REQ; end
+      |                                                                                ^
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_soc.sv:1380:46: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'preload_chunk_q' generates 4 bits.
+                                                                                         : ... note: In instance 'llm_soc'
+ 1380 |                         v_address_q <= 7'(12 + preload_chunk_q + 1); return_v <= RET_V_H_PRELOAD; op <= O_V_REQ;
+      |                                              ^
+%Warning-WIDTHEXPAND: D:/2151097_Nguyen Nhut Khanh/Verilog Source code\llm_soc.sv:1423:84: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'vocabulary_row_q' generates 12 bits.
+                                                                                         : ... note: In instance 'llm_soc'
+ 1423 |                             p_address_q <= 15'(EMB_SCALE_BASE + ((vocabulary_row_q + 1) >> 3)); return_p <= RET_P_H_SCALE; op <= O_P_REQ;
+      |                                                                                    ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260702
+- Verilator: Built from 5.675 MB sources in 44 modules, into 7.418 MB in 12 C++ files needing 0.000 MB
+- Verilator: Walltime 2.305 s (elab=0.157, cvt=1.921, bld=0.000); cpu 2.031 s on 1 threads; allocated 128.801 MB
