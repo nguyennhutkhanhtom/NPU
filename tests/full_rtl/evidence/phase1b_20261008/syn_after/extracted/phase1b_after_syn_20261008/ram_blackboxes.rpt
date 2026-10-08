@@ -1,0 +1,5 @@
+{
+  "sram_word_tile_WIDTH32_ROWS1024": 192,
+  "sram_word_tile_WIDTH24_ROWS1024": 128,
+  "sram_word_tile_WIDTH24_ROWS96": 32
+}

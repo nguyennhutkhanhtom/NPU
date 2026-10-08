@@ -1,0 +1,6 @@
+START library/read_hdl
+START elaborate llm_soc
+START syn_generic
+START syn_map
+START syn_opt
+GENUS_FLOW_COMPLETED

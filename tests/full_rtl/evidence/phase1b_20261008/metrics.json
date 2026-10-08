@@ -35,5 +35,65 @@
   "after_result_stalls": 0,
   "full_regression_job": "64351",
   "report_hashes_verified": 37,
-  "synthesis": "In progress; blackbox SRAM logic comparison; no current Fmax/resource claim"
+  "synthesis": {
+    "status": "Done",
+    "scope": "Genus mapped logic with 352 SRAM black boxes; SRAM area/timing excluded; no physical closure or FPGA Fmax claim",
+    "baseline": {
+      "cells": 236846,
+      "cell_area": 812007.59,
+      "slack_ps": 5,
+      "data_path_ps": 9933,
+      "reported_setup_status": "MET",
+      "warning_counts": {
+        "LBR-9": 20,
+        "VLOGPT-506": 9,
+        "VLOGPT-502": 1,
+        "CDFG-818": 1,
+        "CDFG-472": 5,
+        "CDFG-331": 3,
+        "CDFG-508": 1,
+        "MESG-11": 2,
+        "PBS-2": 8,
+        "RPT-80": 1,
+        "VRO-14": 6
+      },
+      "verified_report_count": 12,
+      "blackboxes": {
+        "sram_word_tile_WIDTH32_ROWS1024": 192,
+        "sram_word_tile_WIDTH24_ROWS96": 32,
+        "sram_word_tile_WIDTH24_ROWS1024": 128
+      },
+      "finished_utc": "2026-10-08T16:37:49.374741+00:00"
+    },
+    "after": {
+      "cells": 238919,
+      "cell_area": 818368.756,
+      "slack_ps": 0,
+      "data_path_ps": 9938,
+      "reported_setup_status": "MET",
+      "warning_counts": {
+        "LBR-9": 20,
+        "VLOGPT-506": 9,
+        "VLOGPT-502": 1,
+        "CDFG-818": 1,
+        "CDFG-472": 5,
+        "CDFG-331": 3,
+        "CDFG-508": 2,
+        "MESG-11": 2,
+        "PBS-2": 8,
+        "RPT-80": 1,
+        "VRO-14": 6
+      },
+      "verified_report_count": 12,
+      "blackboxes": {
+        "sram_word_tile_WIDTH32_ROWS1024": 192,
+        "sram_word_tile_WIDTH24_ROWS1024": 128,
+        "sram_word_tile_WIDTH24_ROWS96": 32
+      },
+      "finished_utc": "2026-10-08T16:37:05.557932+00:00"
+    },
+    "cell_area_percent": 0.7833875050355238,
+    "cell_count_delta": 2073,
+    "warning_review": "Same categories as baseline; additional unused chunk_q register removal; RPT-80 concerns pre-map generic_area only"
+  }
 }

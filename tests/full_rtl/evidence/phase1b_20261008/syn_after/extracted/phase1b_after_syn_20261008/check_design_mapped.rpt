@@ -1,0 +1,15 @@
+
+ 	 Check Design Report (c)
+	 ------------------- 
+
+  Unresolved References & Empty Modules
+  ------------------------------------- 
+No unresolved references in design 'llm_soc'
+
+design 'llm_soc' has the following empty module(s)
+sram_word_tile_WIDTH32_ROWS1024
+sram_word_tile_WIDTH24_ROWS1024
+sram_word_tile_WIDTH24_ROWS96
+Total number of empty modules in design 'llm_soc' : 3
+
+  Done Checking the design.

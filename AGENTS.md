@@ -130,7 +130,7 @@ For Quartus synthesis/fit/STA, long simulations, or similar jobs:
 - On continuation, inspect final status/report once, verify source/configuration/evidence provenance, and resume from `TASK_STATE.md`.
 - Do not relaunch a running/completed job merely because the previous Codex turn ended; relaunch only if evidence is invalid or source/configuration changed.
 - Short jobs completing within the current tool call need no handoff.
-- Before ending each long-job turn, provide a PowerShell command that I can run locally to execute an existing job-monitoring script. If the monitoring task is temporary and unlikely to be reused, create or modify the script in the `scratchpad` directory instead, and provide the corresponding PowerShell command. The script must run continuously monitoring until the job is done.
+- Only when handing off a long-running job that is still running, provide a PowerShell command that I can run locally to execute an existing job-monitoring script. Do not provide a monitoring script or command at the end of every turn, or when no job remains running. If the monitoring task is temporary and unlikely to be reused, create or modify the script in the `scratchpad` directory instead, and provide the corresponding PowerShell command. The script must run continuously monitoring until the job is done.
 - Only update the status within the relevant sections (e.g., `Timing`, `Simulating`), using exactly `Done` or `In progress`.
 - Mark a section as `Done` only when its tasks are fully completed and verified. Do not modify any other content in `TASK_STATE.md`.
 

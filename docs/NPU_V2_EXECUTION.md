@@ -68,14 +68,15 @@ This is the compact source of truth for staged NPU v2 implementation. Work only 
 DONE:
 
 - Phase 1A — continuous linear-row execution
+- Phase 1B — LM-head row streaming
 
 CURRENT:
 
-- Phase 1B — LM-head streaming — IN PROGRESS (functional validation passed; remote synthesis comparison pending)
+- Phase 1C — attention value-pass streaming
 
 NEXT:
 
-- Phase 1C — attention value-pass streaming
+- Phase 2 — descriptor-driven serial execution
 
 ### Phase 1A closure
 
@@ -95,7 +96,7 @@ Evidence: [scoped results and metrics](../tests/full_rtl/evidence/phase1a_202610
 
 ## Measurement gates
 
-### Phase 1B functional results; synthesis pending
+### Phase 1B closure
 
 Remote Xcelium scoped tests and all nine groups PASS (jobs 64347/64351, black, mandatory X11). Current/frozen inputs and all 37 full-regression report hashes were verified. The existing operator fixture checks every row's dot, packed scale, exact score and PRNG order, delayed result consumption, six reset/cancellation boundaries including final-row retirement, and complete drain. Selection adds tagged-path excluded-token, minimum-score, stable-tie and saturated-tie checks. Graph tokens and traffic remain exact; compute clocks fall from 570,837 to 280,602.
 
@@ -110,7 +111,18 @@ Remote Xcelium scoped tests and all nine groups PASS (jobs 64347/64351, black, m
 
 Each pass still reads 16,384 weight words and 512 packed-scale words and issues 16,384 SIMD dots. Scale words occupy 512 shared-port clocks; zero steady-state credit or result-consumption stalls were measured. A forced 24-clock result pause gives 8 credit-stall and 21 result-stall clocks, adding 8 pass clocks without changing output. Scaling/selection runs concurrently with weights instead of blocking each next row. The remaining head throughput limit is the single parameter-read port, including its scale traffic.
 
-Evidence: [measured comparison](../tests/full_rtl/evidence/phase1b_20261008/metrics.json), [full remote results](../tests/full_rtl/evidence/phase1b_20261008/full/extracted/phase1b_full_20261008/results.json). Baseline/after Genus jobs use the existing RAM-blackbox mode, confirmed slow library SHA256 `dec616b7b53aa5166eac9660ba83561a4057ee3b7e62f59f3d4bebad495ffe10` and unchanged 10 ns SDC. Fmax/resource impact remains unverified; SRAM area/timing is excluded from this comparison. [Synthesis handoff](../tests/full_rtl/build/scratchpad/phase1b_handoff_20261008.md). Keep Phase 1B IN PROGRESS and Phase 1C NEXT until synthesis reports are reviewed.
+Phase 1B is DONE. Baseline/after Genus jobs 64352/64350 completed synthesis, mapping and optimization with RAM-blackbox integrity PASS (352 instances, three intended empty module types), zero error diagnostics and no unexpected unresolved references. Frozen inputs, current Phase 1B runtime inputs, all 12 report hashes per run, matching library hashes and unchanged 10 ns SDC were verified. Warning categories match the baseline; the additional unused-register warning removes the retired `chunk_q`. The generic-area warning precedes mapping; comparisons below use mapped `area.rpt`.
+
+| Genus mapped logic, slow library at 0.9 V / 125 C | Before | Phase 1B |
+|---|---:|---:|
+| Cell count | 236,846 | 238,919 (+2,073; +0.88%) |
+| Cell area, library units | 812,007.590 | 818,368.756 (+0.78%) |
+| Reported worst setup slack at 100 MHz | +5 ps | 0 ps, MET at report precision |
+| Reported critical data path | 9,933 ps | 9,938 ps |
+
+Critical paths remain in the shared `llm_math` product-to-first-reduction stage. The head remains parameter-bandwidth limited; synthesis timing has effectively no reported margin. RAM black boxes exclude SRAM area/timing, and these Genus results do not establish physical timing closure or a new FPGA Fmax.
+
+Evidence: [measured comparison](../tests/full_rtl/evidence/phase1b_20261008/metrics.json), [full remote results](../tests/full_rtl/evidence/phase1b_20261008/full/extracted/phase1b_full_20261008/results.json), [synthesis review](../tests/full_rtl/evidence/phase1b_20261008/synthesis_review.json), [baseline synthesis](../tests/full_rtl/evidence/phase1b_20261008/syn_baseline/extracted/phase1b_baseline_syn_final/results.json), [Phase 1B synthesis](../tests/full_rtl/evidence/phase1b_20261008/syn_after/extracted/phase1b_after_syn_20261008/results.json). Library SHA256: `dec616b7b53aa5166eac9660ba83561a4057ee3b7e62f59f3d4bebad495ffe10`. Phase 1C is CURRENT; no Phase 1C implementation was started.
 
 - Phase 1A must measure linear-phase cycles, ternary-dot issue utilization, parameter stalls/utilization, row initiation interval, and Fmax.
 - Phase 1B must measure head cycles/token, rows in flight, weight/scale bandwidth, SIMD utilization, and selection/epilogue stalls.

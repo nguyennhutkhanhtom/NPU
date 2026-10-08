@@ -42,4 +42,4 @@
 
 ## Server synthesis flow
 
-- Status: In progress
+- Status: Done
