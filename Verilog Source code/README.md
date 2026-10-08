@@ -1,5 +1,8 @@
 # Source RTL
 
+Flow hiện tại: [Xcelium/Genus trong Slurm](../tools/server/README.md), packages trước modules, bỏ `quartus_word_ram.sv`, top mặc định `USE_QUARTUS_MEMORY=0`.
+
+
 > **Category: GUIDE.**
 
 [Project](../README.md) → [Tài liệu](../docs/README.md) → **Source**

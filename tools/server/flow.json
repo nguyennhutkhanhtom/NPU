@@ -1,0 +1,17 @@
+{
+  "packages": ["npu_pkg.sv", "llm_pkg.sv"],
+  "legacy": ["host", "scalar", "divprofiles", "postscale", "sigmoid", "arithmetic", "rowwise", "imem", "sram"],
+  "exclude": ["quartus_word_ram.sv"],
+  "modules": {"simulation": "cadence/xcelium/2409", "synthesis": null},
+  "tests": [
+    {"file": "tb_memory_ip.sv", "top": "tb_llm_memory", "marker": "LLM_MEMORY_PASS"},
+    {"file": "tb_math.sv", "top": "tb_llm_math", "marker": "LLM_MATH_PASS"},
+    {"file": "tb_ram.sv", "top": "tb_llm_ram", "marker": "LLM_RAM_PASS"},
+    {"file": "tb_protocol.sv", "top": "tb_llm_protocol", "marker": "LLM_PROTOCOL_PASS"},
+    {"file": "tb_selection.sv", "top": "tb_llm_selection", "marker": "SELECT_EDGE_PASS"},
+    {"file": "tb_operators.sv", "top": "tb_llm_operators", "marker": "LLM_OPERATORS_PASS"},
+    {"file": "tb_graph.sv", "top": "tb_llm_graph", "marker": "LLM_GRAPH_PASS"},
+    {"file": "tb_linear_stream.sv", "top": "tb_llm_linear_stream", "marker": "LLM_LINEAR_STREAM_PASS"},
+    {"file": "host_cancel_contract.sv", "top": "tb_host_cancel_contract", "marker": "HOST_CANCEL_CONTRACT_PASS"}
+  ]
+}

@@ -1,5 +1,8 @@
 # Công cụ hỗ trợ
 
+Chạy test/synthesis theo [flow server](server/README.md); `timing` bên dưới là backend/evidence FPGA lịch sử.
+
+
 > **Category: GUIDE.**
 
 [Project](../README.md) → **Tools**

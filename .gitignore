@@ -1,4 +1,9 @@
 # Local-only folders. Keep their contents on this computer, not in GitHub.
+/SERVER_ACCESS.md
+/ee5303_09.conf
+/build/
+/reports/
+/bundle_manifest.json
 /data/
 /functional/
 /nonlinear/

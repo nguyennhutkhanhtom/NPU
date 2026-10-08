@@ -23,7 +23,7 @@ và autoregressive decode. Tokenizer và bước decode token thành chữ chạ
 | Prompt/output buffer | Mỗi buffer 128 × 12-bit ID; host truyền word 32 bit |
 
 Cấu hình mặc định có `ATTN_DIV_LANES=4`, `SIGMOID_LANES=4`,
-`PERF_COUNTERS=0`, `ENABLE_DEBUG_INDEX=0` và `USE_QUARTUS_MEMORY=1`.
+`PERF_COUNTERS=0`, `ENABLE_DEBUG_INDEX=0` và `USE_QUARTUS_MEMORY=0` (portable RAM cho server).
 Evidence đã đo áp dụng cho cấu hình được ghi trong manifest; đổi tham số cần
 kiểm chứng lại theo [verification guide](../verification/README.md).
 

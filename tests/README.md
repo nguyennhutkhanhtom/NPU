@@ -6,35 +6,21 @@
 
 ## Chọn bộ kiểm chứng
 
-| Thiết kế | Entry point | Hướng dẫn |
+| Thiết kế | Entry point trên Linux Slurm | Hướng dẫn |
 |---|---|---|
-| llm_soc synthetic units/graph | tests/full_rtl/run_units.ps1 | [Verification guide](../docs/verification/README.md) |
-| llm_soc model thật | tests/full_rtl/run_application.ps1 | [NanoFable từng bước](../docs/demos/language.md) |
-| matmulfree legacy | tests/run.ps1 | Các lệnh và coverage bên dưới |
+| llm_soc units/graph/probes | `tools/server/run_flow.py --stage test` | [Flow server](../tools/server/README.md) |
+| llm_soc checkpoint | `--stage application --fixture PATH` | [Flow server](../tools/server/README.md#application-checkpoint) |
+| matmulfree legacy | `--stage legacy` | [Flow server](../tools/server/README.md) |
 
 ## Regression legacy
 
 Runner legacy compile cùng thư mục Verilog Source code và dùng tb_all.sv.
 Kết quả của bộ này thuộc core matmulfree; full graph llm_soc có bảy nhóm riêng.
 
-Runner, testbench, reference số nguyên và `results.json` được giữ trên GitHub. Cần Python 3.10 trở lên và ModelSim có `vlib.exe`, `vlog.exe`, `vsim.exe`. Python được tìm trong PATH rồi đến bundled runtime theo user profile; có thể chỉ rõ đường dẫn khi máy có nhiều bản Python:
-
-```powershell
-./tests/run.ps1 -Block All -Python 'C:/Python312/python.exe' -SimBin 'C:/intelFPGA/20.1/modelsim_ase/win32aloem'
-```
-
-Chạy từ thư mục gốc workspace:
-
-```powershell
-./tests/run.ps1 -Block All
-./tests/run.ps1 -Block Norm
-./tests/run.ps1 -Block Ternary
-./tests/run.ps1 -Block Rowwise
-./tests/run.ps1 -Block AccMul
-./tests/run.ps1 -Block Sram
-./tests/run.ps1 -Block DivProfiles
-./tests/run.ps1 -Block Postscale
-```
+Xcelium chạy các top trong `tb_all.sv`; Python integer/Decimal sinh vectors
+trong database riêng của từng top. Không cần tool test local. Chọn danh sách
+legacy tops trong `tools/server/flow.json`; runner hiện tại chạy 9 top đầy đủ.
+Các block/coverage bên dưới là contract của fixtures được giữ nguyên.
 
 | Block | Nội dung |
 |---|---|
@@ -52,7 +38,7 @@ Chạy từ thư mục gốc workspace:
 | Arithmetic | Reduction tree, helper addsub/mul, biên và random |
 | AccMul / AddSub / Mul | Chọn task số học riêng trong `tb_arithmetic` |
 
-Runner compile một lần, không truyền macro chọn implementation. `-Mode` đã được bỏ; `-Suite V2` vẫn là alias cho source chính. Có thể thay đường dẫn simulator/Python bằng `-SimBin` và `-Python`. Host test chờ `host_ready` cho các memory read đồng bộ; các monitor arbitration nằm trong testbench.
+Mỗi top có database/log riêng trong `build/TAG` và `reports/TAG`.
 
 `reference.py` tạo lại vector bằng Python integer/Decimal và kiểm tra chính xác 257 sample của cả `.mem` và `.svh`, bao gồm monotonic và chênh lệch hai sample liên tiếp không quá 512. Nó còn kiểm tra validator từ chối từng asset bị thiếu hoặc sai sample 128: hai ca thiếu và hai ca hỏng, bằng input mô phỏng trong Python. RTL luôn dùng ROM constant, không có tham số thay file LUT.
 
@@ -60,14 +46,9 @@ Scale composition được so sánh cả `(M,r)` với phép chia/làm tròn U12
 
 Host cases thêm NORM overflow rồi descriptor sai không reset (overflow mới phải bằng 0 và output giữ nguyên), reset trong lúc divider NORM busy rồi restart, cùng/partial alias của NORM q bị từ chối nếu dùng scale static và địa chỉ ngay sau q extent vẫn hợp lệ.
 
-`check_synthesis.tcl` là smoke check Quartus tùy chọn cho cùng source, không truyền macro. Nó kiểm tra descriptor không latch, workspace SRAM đủ 65.536 bit block RAM và instruction memory đủ 6.656 bit block RAM / không quá 128 FF trên device demo. Các con số mapping là kiểm chứng riêng cho device này.
-
-```powershell
-python tests/reference.py --check
-quartus_sh -t tests/check_synthesis.tcl
-```
-
-Kết quả/source hash ở `results.json`; log ở `sim/`. Sau khi pass, runner tự xóa library ModelSim, vector sinh ra và console trùng. Dùng `-KeepBuild` nếu cần giữ chúng để debug. Khi fail, build được giữ để kiểm tra. Các test dùng dữ liệu tổng hợp, chưa thay thế kiểm chứng checkpoint model hoặc STA/PPA.
+Synthesis hiện tại dùng Genus cho `llm_soc` và Liberty do lab cung cấp.
+`check_synthesis.tcl` và runner PowerShell cũ trả lỗi hướng sang flow server.
+Kết quả legacy không xác minh checkpoint toàn graph hoặc ASIC signoff.
 
 Test v1 không tương thích đã được bỏ. Các ca arithmetic còn hữu ích từ bộ cũ đã được chuyển sang interface mới: reduction N=1/3/32/37/512, số âm và extrema, saturation, signed/unsigned multiplication và RNE.
 

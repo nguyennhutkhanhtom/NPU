@@ -86,6 +86,7 @@ def check_gate(manifest_path: Path) -> dict:
 
 
 if __name__ == "__main__":
+    raise SystemExit("Local FPGA evidence/tool entry point retired; use tools/server/README.md")
     parser = argparse.ArgumentParser()
     parser.add_argument("manifest", type=Path)
     args = parser.parse_args()

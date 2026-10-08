@@ -1,6 +1,6 @@
 """Export the pinned trained graph and run an independent integer reference.
 
-This entry point checks the hardware timing gate unless --skip-gate is supplied.
+Server-only preparation of functional fixtures; no FPGA timing gate claim.
 CPU reference inference is verification only; the RTL host driver loads only
 parameters, config and prompt IDs, and never loads intermediate activations.
 """
@@ -11,8 +11,7 @@ import math
 import sys
 from hashlib import sha256
 from datetime import datetime, timezone
-from check_gate import application_context
-from memory_model import verify_model
+import os
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
@@ -21,23 +20,26 @@ LANGUAGE = ROOT / "tests/language_demo"
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--timing", required=True, type=Path)
-    parser.add_argument("--skip-gate", action="store_true")
-    parser.add_argument("--memory-model", required=True, type=Path)
-    parser.add_argument("--design-units", type=Path)
+    parser.add_argument("--output", required=True, type=Path, help="Fresh fixture directory")
     parser.add_argument("--prompt", default="Once upon a time, Lily found a tiny kitten.")
     parser.add_argument("--new-tokens", type=int, default=96)
     parser.add_argument("--temperature", type=int, default=166)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--min-new", type=int, default=64)
     args = parser.parse_args()
-    timing = application_context(args.timing, args.skip_gate)
-    memory_model = verify_model(args.memory_model, args.timing)
-    memory_digest = sha256(args.memory_model.read_bytes()).hexdigest()
-    runner_names = ("application_tb.sv", "run_application.ps1", "check_gate.py",
-                    "export_checkpoint.py", "finalize_application.py", "memory_model.py")
+    if sys.platform != 'linux' or not os.environ.get('SLURM_JOB_ID'):
+        parser.error('Reference inference requires Linux in an approved Slurm compute allocation')
+    import socket, subprocess
+    nodes = subprocess.check_output(['scontrol', 'show', 'hostnames', os.environ['SLURM_JOB_NODELIST']], text=True).split()
+    if socket.gethostname().split('.')[0] not in nodes:
+        parser.error('Current host is outside the Slurm allocation')
+    if args.output.exists():
+        parser.error('Output exists; use a fresh directory to preserve fixtures/evidence')
+    rtl = ROOT / 'Verilog Source code'
+    source_hashes = {f.name: sha256(f.read_bytes()).hexdigest() for f in rtl.iterdir()
+                     if f.suffix in ('.sv', '.svh', '.mem')}
+    runner_names = ("application_tb.sv", "export_checkpoint.py")
     runner_hashes = {name: sha256((HERE/name).read_bytes()).hexdigest() for name in runner_names}
-    timing_digest = sha256(args.timing.read_bytes()).hexdigest()
     if not (1 <= args.new_tokens <= 127 and 0 <= args.temperature <= 255
             and 0 <= args.min_new <= 128 and 0 <= args.seed <= 0xffffffff):
         parser.error('new-tokens must be 1..127, temperature 0..255, min-new 0..128 and seed U32')
@@ -198,33 +200,23 @@ def main():
         else:
             token=head(norm(x,8));output.append(token)
             if token==1: break
-    build = HERE/"build"
-    build.mkdir(exist_ok=True)
+    build = args.output.resolve()
+    build.mkdir(parents=True)
     (build/"parameter.mem").write_text("\n".join(f"{word:064x}" for word in image)+"\n")
     (build/"prompt.mem").write_text("\n".join(f"{token:03x}" for token in prompt)+"\n")
     (build/"expected.mem").write_text("\n".join(f"{token:03x}" for token in output)+"\n")
     reference = {"checkpoint_sha256":expected_sha,"prompt":args.prompt,"prompt_ids":prompt,
                  "new_tokens":args.new_tokens,"temperature":args.temperature,"seed":args.seed or 1,
                  "min_new":args.min_new,"expected_ids":output,"expected_text":tokenizer.decode(output),
-                 "timing_manifest":str(args.timing),
-                 "hardware_gate":"SKIPPED" if args.skip_gate else "PASS",
-                 "fmax_mhz":None if args.skip_gate else timing['metrics']['worst_restricted_fmax_mhz'],
+                 "hardware_gate":"NOT_EVALUATED", "memory_backend":"portable RAM",
                  "prepared_utc":datetime.now(timezone.utc).isoformat(),
-                 "timing_manifest_sha256":timing_digest,"rtl_sources":timing["rtl_sources"],
-                 "runner_sources":runner_hashes,
-                 "memory_model":memory_model,"memory_model_manifest":str(args.memory_model.resolve()),
-                 "memory_model_manifest_sha256":memory_digest}
-    if args.design_units:
-        reference["memory_binding_report"] = str(args.design_units.resolve())
+                 "rtl_sources":source_hashes, "runner_sources":runner_hashes}
     (build/"config.svh").write_text(f"localparam integer PROMPT_COUNT={len(prompt)}, MAX_NEW={args.new_tokens}, EXPECTED_COUNT={len(output)}, TEMPERATURE={args.temperature}, SEED={args.seed or 1}, MIN_NEW={args.min_new};\n")
     reference["input_files"] = {name: sha256((build/name).read_bytes()).hexdigest()
                                 for name in ("parameter.mem", "prompt.mem", "expected.mem", "config.svh")}
     assert runner_hashes == {name: sha256((HERE/name).read_bytes()).hexdigest() for name in runner_names}, "Application sources changed during export/reference"
-    assert application_context(args.timing, args.skip_gate)["rtl_sources"] == timing["rtl_sources"], \
-        "RTL changed during export/reference"
-    verify_model(args.memory_model, args.timing)
-    assert sha256(args.memory_model.read_bytes()).hexdigest() == memory_digest, "RAM model changed during export"
-    assert sha256(args.timing.read_bytes()).hexdigest() == timing_digest, "Timing evidence changed during export"
+    assert source_hashes == {f.name: sha256(f.read_bytes()).hexdigest() for f in rtl.iterdir()
+                             if f.suffix in ('.sv', '.svh', '.mem')}, "RTL changed during export/reference"
     (build/"reference.json").write_text(json.dumps(reference,indent=2)+"\n")
     print(f"FULL_RTL_REFERENCE_READY: prompt={len(prompt)} continuation={len(output)}")
 

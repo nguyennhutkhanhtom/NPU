@@ -375,11 +375,12 @@ if __name__=='__main__':
     parser.add_argument('--rtl',type=Path,default=Path(__file__).resolve().parent.parent/'Verilog Source code')
     parser.add_argument('--block',default='All',choices=['All','Host','Norm','Ternary','Rowwise','Scalar','DivProfiles','Postscale','Sigmoid','Sram','Imem','Arithmetic','AccMul','AddSub','Mul'])
     parser.add_argument('--check',action='store_true',help='Verify the main sigmoid ROM without generating test vectors')
+    parser.add_argument('--output',type=Path,help='Isolated server vector output directory')
     args=parser.parse_args()
     verify_rom(args.rtl)
     validate_rom_rejections(args.rtl)
     if not args.check:
-        output=Path(__file__).resolve().parent/'sim'
+        output=args.output or Path(__file__).resolve().parent/'sim'
         output.mkdir(parents=True,exist_ok=True)
         metadata={}
         if args.block in ('All','Host','Norm','Ternary','Rowwise'):

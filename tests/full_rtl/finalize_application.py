@@ -77,4 +77,5 @@ def main():
 
 
 if __name__ == "__main__":
+    raise SystemExit("Local FPGA evidence/tool entry point retired; use tools/server/README.md")
     main()

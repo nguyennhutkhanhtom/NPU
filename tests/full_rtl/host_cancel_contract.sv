@@ -12,14 +12,14 @@ module tb_host_cancel_contract;
     integer phase,checks=0,commits=0,second_commits=0;
     logic [31:0] canceled_value,new_value,response;
     // The replaceable leaf contract commits on the edge with wr_en asserted.
-    // Observe the real IP boundary, including its captured address/data.
+    // Observe the portable SRAM leaf boundary, including its captured address/data.
     always @(posedge clk) begin
-        if(dut.u_parameters.g_ram_lane[0].u_storage.g_ip_tiled.g_tile[0].u_storage.wr_en) begin
-            if(dut.u_parameters.g_ram_lane[0].u_storage.g_ip_tiled.g_tile[0].u_storage.wr_addr==0 &&
-               dut.u_parameters.g_ram_lane[0].u_storage.g_ip_tiled.g_tile[0].u_storage.wr_data===canceled_value)
+        if(dut.u_parameters.g_ram_lane[0].u_storage.g_model.g_tile[0].u_tile.wr_en) begin
+            if(dut.u_parameters.g_ram_lane[0].u_storage.g_model.g_tile[0].u_tile.wr_addr==0 &&
+               dut.u_parameters.g_ram_lane[0].u_storage.g_model.g_tile[0].u_tile.wr_data===canceled_value)
                 commits++;
-            if(dut.u_parameters.g_ram_lane[0].u_storage.g_ip_tiled.g_tile[0].u_storage.wr_addr==1 &&
-               dut.u_parameters.g_ram_lane[0].u_storage.g_ip_tiled.g_tile[0].u_storage.wr_data===new_value)
+            if(dut.u_parameters.g_ram_lane[0].u_storage.g_model.g_tile[0].u_tile.wr_addr==1 &&
+               dut.u_parameters.g_ram_lane[0].u_storage.g_model.g_tile[0].u_tile.wr_data===new_value)
                 second_commits++;
         end
     end

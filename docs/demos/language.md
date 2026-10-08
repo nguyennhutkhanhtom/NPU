@@ -1,5 +1,8 @@
 # Chạy NanoFable thật trên llm_soc
 
+> Branch `remote`: các lệnh local trong tài liệu này là lịch sử. Chạy checkpoint bằng [flow server](../../tools/server/README.md#application-checkpoint); không dùng hardware gate FPGA cũ cho cấu hình mới.
+
+
 > **Category: GUIDE.**
 
 [Tài liệu](../README.md) → [Demo](README.md) → **NanoFable**

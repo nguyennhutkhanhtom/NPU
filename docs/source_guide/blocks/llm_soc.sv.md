@@ -4,6 +4,10 @@
 > **Scope:** CURRENT. **Category:** GUIDE.
 > **Source:** [llm_soc.sv](<../../../Verilog Source code/llm_soc.sv>).
 
+Mặc định `USE_QUARTUS_MEMORY=0`: test Xcelium và synthesis Genus dùng RAM portable.
+Backend Quartus chỉ còn phục vụ snapshot FPGA cũ khi chọn tham số 1 rõ ràng.
+Xem [flow server](../../../tools/server/README.md); evidence FPGA cũ không xác minh cấu hình mới.
+
 ## At a glance
 
 | Item | Description |

@@ -1,5 +1,8 @@
 # NPU ternary: toàn graph LLM trên RTL
 
+**Flow chạy hiện tại:** [Xcelium/Genus trên Linux Slurm](tools/server/README.md). Các backend local đã ngừng hoạt động trên branch `remote`.
+
+
 > **Category: GUIDE.**
 
 Top chính là [`llm_soc.sv`](<Verilog Source code/llm_soc.sv>). Host nạp checkpoint,

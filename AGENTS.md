@@ -7,6 +7,7 @@
 - Prefer the smallest correct change. Avoid unrelated RTL, architecture, configuration, cleanup, or documentation changes.
 - Exception: documentation required to keep modified RTL synchronized is part of the RTL change.
 - Treat current repository source, configuration, tests, manifests, and matching generated evidence as the source of truth.
+- For server-related tasks, read `SERVER_ACCESS.md` first and follow its connection and security instructions.
 
 ## 2. Context efficiency
 
@@ -21,6 +22,9 @@ Optimize for low context/token use.
 - Prefer dedicated search/patch/Git/file tools over equivalent shell operations.
 - `AGENTS.md` is already provided through Codex instruction context; read it from disk only when reviewing/modifying it.
 - For large working trees, restrict status/diff inspection to relevant paths.
+- Before ending each turn, update `TASK_STATE.md` based on actual task progress. Prefer running an existing monitoring script. If a new script is needed, place it in the scratchpad for one-time jobs; only save reusable scripts permanently.
+- Only modify status fields within the relevant sections (e.g., `Timing`, `Simulating`), using exactly `Done` or `In progress`.
+- Mark a section as `Done` only when its tasks are fully completed and verified. Otherwise, keep it as `In progress`. Preserve all other content in `TASK_STATE.md` unchanged.
 
 ## 3. Repository navigation
 
@@ -66,12 +70,13 @@ If an RTL change makes a diagram inaccurate and diagram work is out of scope, re
 
 ## 5. Verification
 
-- Run the smallest directly affected verification first; for full-graph debugging prefer a targeted `run_units.ps1` group.
-- Run the complete seven-group regression when shared behavior changed, the milestone requires it, or the pretrained-application gate requires it.
+- Current flow on branch `remote`: read `tools/server/README.md`; run Xcelium/Genus only on an approved Linux Slurm compute node. Do not run local Quartus/ModelSim/Questa/Verilator entry points.
+- Run the smallest directly affected verification first with `tools/server/run_flow.py --stage test --only TOP --tag NEW_TAG`.
+- Run all nine full-graph groups (the seven original groups plus linear stream and host cancel) when shared behavior changed or the milestone requires it. Legacy regression uses `--stage legacy` only when implicated.
 - Do not rerun expensive regression/timing for unchanged source/configuration when valid matching evidence already exists.
-- Full-top timing: use `tools/timing/run.ps1` with `quartus/llm_soc` and a fresh evidence tag; preserve previous evidence.
+- Synthesis: use `tools/server/run_flow.py --stage syn --lib APPROVED_LIB --tag NEW_TAG`; confirm the lab Genus module and Liberty library first. Preserve prior FPGA evidence; local Quartus timing runner is retired.
 - Treat unit/graph, synthesis, fit, timing, portable elaboration, and pretrained-application PASS as separate claims.
-- For the 100 MHz target, timing failure alone does not stop optimization unless timing closure is explicitly required; report resulting Fmax.
+- Keep the 100 MHz target explicit in `tools/server/asic.sdc`. Report Genus timing separately from historic FPGA Fmax; flow completion does not establish ASIC physical timing closure.
 - Never weaken tests, expected values, timing constraints, or add false/multicycle exceptions to hide failures.
 - After a material verified milestone, update `TASK_STATE.md` with only the verified baseline, blocker if any, evidence, and next action. Do not use it as a chronological log.
 
@@ -125,6 +130,9 @@ For Quartus synthesis/fit/STA, long simulations, or similar jobs:
 - On continuation, inspect final status/report once, verify source/configuration/evidence provenance, and resume from `TASK_STATE.md`.
 - Do not relaunch a running/completed job merely because the previous Codex turn ended; relaunch only if evidence is invalid or source/configuration changed.
 - Short jobs completing within the current tool call need no handoff.
+- Before ending each turn, run an existing monitoring script or edit it in scratchpad section if those jobs will not be reused in the future to automatically update `TASK_STATE.md` based on actual task progress.
+- Only update the status within the relevant sections (e.g., `Timing`, `Simulating`), using exactly `Done` or `In progress`.
+- Mark a section as `Done` only when its tasks are fully completed and verified. Do not modify any other content in `TASK_STATE.md`.
 
 ## 10. Documentation diagrams
 

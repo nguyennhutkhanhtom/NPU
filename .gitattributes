@@ -8,6 +8,7 @@
 *.md text eol=lf
 *.py text eol=lf
 *.ps1 text eol=lf
+*.sh text eol=lf
 *.json text eol=lf
 *.tcl text eol=lf
 *.qpf text eol=lf

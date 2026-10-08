@@ -1,6 +1,6 @@
 // Autonomous fixed-point NanoFable inference. The host loads parameters and
 // prompt IDs; this controller owns prefill, attention, head and decode.
-module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
+module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
     parameter bit PERF_COUNTERS = 0,
     parameter bit ENABLE_DEBUG_INDEX = 0,
     parameter int ATTN_DIV_LANES = 4,

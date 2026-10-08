@@ -1,4 +1,4 @@
-// Testbenches for the current main RTL. Select a block with tests/run.ps1.
+// Legacy testbenches: tools/server/run_flow.py --stage legacy inside Slurm.
 
 // tb_host.sv
 `timescale 1ns/1ps

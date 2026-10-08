@@ -1,5 +1,8 @@
 # Quartus EDA backend
 
+> Backend FPGA lịch sử, không còn là flow chạy hiện tại trên branch `remote`. Xem [flow server](../tools/server/README.md).
+
+
 > **Category: GUIDE.**
 
 The active full-graph project is `llm_soc.qpf`, with `llm_soc.qsf` and
