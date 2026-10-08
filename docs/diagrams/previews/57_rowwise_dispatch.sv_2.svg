@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="807" height="851" viewBox="0 0 807 851">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="807" height="851" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">rowwise_dispatch.sv — detail 1</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: rowwise_dispatch.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="516.25,184 516.25,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="436.25,329 436.25,381 331.75,381 331.75,399" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="251.75,463 251.75,515 140,515 140,533" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="359.57,463 359.57,515 390,515 390,533" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="390,597 390,649 420.43,649 420.43,667" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="485.38,667 485.38,649 507,649 507,481 411.75,481 411.75,463" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="551.42,329 551.42,381 584.25,381 584.25,399" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="403.25" y="120" width="226" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="516.25" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Latched descriptors / opcode</text>
+<rect x="416.25" y="254" width="200" height="75" fill="#f8cecc" stroke="#b85450"/>
+<text x="516.25" y="278.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Dispatcher control Word</text>
+<text x="516.25" y="295.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">index and valid</text>
+<text x="516.25" y="312.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">elements</text>
+<rect x="231.75" y="399" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="331.75" y="426.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Workspace routing Source</text>
+<text x="331.75" y="443.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">/ destination addresses</text>
+<rect x="40" y="533" width="200" height="64" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="140.00" y="569.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Workspace SRAM</text>
+<rect x="290" y="533" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="390.00" y="569.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Buffered input words</text>
+<rect x="348.25" y="667" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="448.25" y="703.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">rowwise_op</text>
+<rect x="481.75" y="399" width="205" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="584.25" y="435.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Completion / error status</text>
+<text x="30.00" y="837.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

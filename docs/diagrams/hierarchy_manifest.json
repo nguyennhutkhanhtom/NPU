@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-06",
+  "date": "2026-10-08",
   "top": "llm_soc",
   "rtl_root": "D:\\2151097_Nguyen Nhut Khanh\\Verilog Source code",
-  "scope": "Reviewed structural expansion of current source; not synthesis or functional verification.",
+  "scope": "Current reviewed structural expansion. Native pages aggregate identical generated instances; containment means instantiation. Exact paths and port maps remain explicit below.",
   "source_hashes": {
     "acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
     "banked_word_ram.sv": "3f62befc5ff4942b92708e1fca7c54e61ae64781839e2efd2e6108ed0cc9a08e",
@@ -15,12 +15,12 @@
     "llm_bank_ram.sv": "c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb",
     "llm_exp_lut.svh": "7aafb64bcea808bcb74387c174c808784433bb941f2e9e2f815bcbeb9b1a5c6e",
     "llm_gumbel_lut.svh": "870d129c9722a00efb733f0a6fbcad493e069447877de57a123db9d9b4adbec8",
-    "llm_head_engine.sv": "54fc2ea9fd0dd045caf6bdaf9e963fd8951180026d9770576f66c25b594fd080",
-    "llm_linear_engine.sv": "db4e5b2122af2dda953ed8e31d263cb44b0ed222a851fa05773b3d8d82262266",
+    "llm_head_engine.sv": "618401179106e710e8eec3adc7539e31b5d90046c4b79bf830d0898f0effc6a1",
+    "llm_linear_engine.sv": "fddea184893825d79758564a4f1ec03c7cb42ddd9d5a60fa633363727b2cd533",
     "llm_math.sv": "1280302be8a07422c547c62b470b51f43324e92519cc0d69b55dd58f94c5d0bd",
     "llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
     "llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
-    "llm_soc.sv": "ac72d0ab7f58a4647168fbeb7d7454c73ed1df195229b8587071a98d16a57543",
+    "llm_soc.sv": "bd04e8e99a9d20c3bc9a1deba998b1778335ed2ca68c287f550fd09fc9b143d3",
     "logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
     "matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
     "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
@@ -31,7 +31,7 @@
     "npu_pkg.sv": "18385ff77706c505eb7c947c5b1f056b5d6230e6971a1cc09a4d823c27a7bcfd",
     "PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
     "pipelined_word_ram.sv": "691f21844bfe3deae271a26e503b6d667948a70fd742d8b2d9a067039b49162a",
-    "postscale.sv": "b9cb61b7014c037c408340a8042b4c0862ed46997754d9b4dee40056835e7160",
+    "postscale.sv": "1658907ed895486b2166a1f8b31699ffaad7dac37b50f403bdab2bd2d72d9179",
     "quartus_word_ram.sv": "c38b8642bfb143f71bf89902b767844086f0894a16db11ebc0abe98131709a0b",
     "regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
     "reset_release.sv": "2720ef4c4b21a68bf193c24cdb60f574ee8b272f36862a953c1cf060f14361a2",
@@ -42,1496 +42,144 @@
     "sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
     "sigmoid_lut.svh": "c72383f3cd3c3dadf7e8579d7d12edca2cc2d6555735dd1e9d4def6f561b73ef",
     "sram_256_wrapper.sv": "7c17702a2fa1c9a2baed950aff5e687f2981a07206ea3582e05659c6690e968a",
-    "sram_word_tile.sv": "fca521ff4a1c9458f1731025684d0db81a6842caf06f1762d84b51a7b1bd176c",
+    "sram_word_tile.sv": "f2a52b8f0a95ca5dc269f3846d90ce4d1190055e0c31c478d7fff3a76da76560",
     "ternary_dot32.sv": "6b0f803c23034b94874ca8a2f450408078deb77a3eaa029917d63b43efdab8d9",
     "ternary_mul.sv": "71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f"
   },
-  "source_modules": {
-    "acc_mul": {
-      "file": "acc_mul.sv",
-      "line": 1,
-      "templates": []
-    },
-    "banked_word_ram": {
-      "file": "banked_word_ram.sv",
-      "line": 3,
-      "templates": [
-        {
-          "name": "u_tile",
-          "module": "sram_word_tile",
-          "parameters": {
-            "WIDTH": "WIDTH",
-            "ROWS": "TILE_ROWS"
-          },
-          "ports": {
-            "clk": "clk",
-            "rd_en": "rd_en && (rd_addr >> 10) == tile",
-            "wr_en": "wr_en && (wr_addr >> 10) == tile",
-            "rd_addr": "10'(rd_addr)",
-            "wr_addr": "10'(wr_addr)",
-            "wr_data": "wr_data",
-            "rd_data": "tile_data[tile]"
-          },
-          "line": 20
-        }
-      ]
-    },
-    "descriptor_file": {
-      "file": "descriptor_file.sv",
-      "line": 1,
-      "templates": []
-    },
-    "div": {
-      "file": "div.sv",
-      "line": 3,
-      "templates": []
-    },
-    "ins_mem": {
-      "file": "ins_mem.sv",
-      "line": 1,
-      "templates": []
-    },
-    "isqrt_u64": {
-      "file": "isqrt_u64.sv",
-      "line": 1,
-      "templates": []
-    },
-    "llm_attention_engine": {
-      "file": "llm_attention_engine.sv",
-      "line": 4,
-      "templates": [
-        {
-          "name": "u_scale",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "39",
-            "B_W": "14",
-            "OUT_W": "55",
-            "SIGNED_A": "1",
-            "SIGNED_B": "0"
-          },
-          "ports": {
-            "a": "rounded_dot_q",
-            "b": "14'd11585",
-            "product": "scaled_dot"
-          },
-          "line": 29
-        }
-      ]
-    },
-    "llm_attention_normalize": {
-      "file": "llm_attention_normalize.sv",
-      "line": 3,
-      "templates": [
-        {
-          "name": "u_div",
-          "module": "div",
-          "parameters": {
-            "NUM_W": "64",
-            "DEN_W": "32"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "start": "batch_start_o",
-            "numerator": "numerator_q[lane]",
-            "denominator": "denominator_q",
-            "busy": "divider_busy[lane]",
-            "done": "divider_done[lane]",
-            "div_zero": "",
-            "quotient": "quotient[lane]",
-            "remainder": "remainder[lane]"
-          },
-          "line": 64
-        }
-      ]
-    },
-    "llm_bank_ram": {
-      "file": "llm_bank_ram.sv",
-      "line": 5,
-      "templates": [
-        {
-          "name": "u_storage",
-          "module": "pipelined_word_ram",
-          "parameters": {
-            "WIDTH": "WIDTH",
-            "ROWS": "ROWS",
-            "ADDR_W": "ADDR_W",
-            "USE_QUARTUS_MEMORY": "USE_QUARTUS_MEMORY"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "rd_en": "read_enable_q",
-            "wr_en": "write_enable_q",
-            "rd_addr": "read_address_q",
-            "wr_addr": "write_address_q",
-            "wr_data": "write_data_q",
-            "rd_data": "rd_data[lane * WIDTH +: WIDTH]",
-            "rd_valid": "lane_read_valid[lane]",
-            "wr_valid": ""
-          },
-          "line": 68
-        }
-      ]
-    },
-    "llm_exp_sample": {
-      "file": "llm_exp_lut.svh",
-      "line": 4,
-      "templates": []
-    },
-    "llm_gumbel_sample": {
-      "file": "llm_gumbel_lut.svh",
-      "line": 4,
-      "templates": []
-    },
-    "llm_head_engine": {
-      "file": "llm_head_engine.sv",
-      "line": 3,
-      "templates": []
-    },
-    "llm_linear_engine": {
-      "file": "llm_linear_engine.sv",
-      "line": 3,
-      "templates": [
-        {
-          "name": "u_dot",
-          "module": "ternary_dot32",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "valid_i": "launch_q",
-            "x_i": "x_q",
-            "w_i": "w_q",
-            "valid_o": "dot_valid",
-            "reserved_o": "dot_reserved",
-            "sum_o": "dot_sum"
-          },
-          "line": 40
-        }
-      ]
-    },
-    "llm_math": {
-      "file": "llm_math.sv",
-      "line": 5,
-      "templates": [
-        {
-          "name": "u_mul",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "24",
-            "B_W": "8",
-            "OUT_W": "33",
-            "SIGNED_A": "1",
-            "SIGNED_B": "mul_part == 3"
-          },
-          "ports": {
-            "a": "a_q[mul_lane]",
-            "b": "b_q[mul_lane][(mul_part << 3) +: 8]",
-            "product": "partial_comb[mul_lane][mul_part]"
-          },
-          "line": 23
-        }
-      ]
-    },
-    "llm_parameter_ram": {
-      "file": "llm_parameter_ram.sv",
-      "line": 5,
-      "templates": [
-        {
-          "name": "u_storage",
-          "module": "pipelined_word_ram",
-          "parameters": {
-            "WIDTH": "32",
-            "ROWS": "DEPTH",
-            "ADDR_W": "ADDR_W",
-            "USE_QUARTUS_MEMORY": "USE_QUARTUS_MEMORY"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "rd_en": "read_enable_q",
-            "wr_en": "write_enable_q",
-            "rd_addr": "read_address_local_q",
-            "wr_addr": "write_address_q",
-            "wr_data": "write_data_q",
-            "rd_data": "read_row[lane * 32 +: 32]",
-            "rd_valid": "lane_read_valid[lane]",
-            "wr_valid": "lane_write_valid[lane]"
-          },
-          "line": 87
-        }
-      ]
-    },
-    "llm_soc": {
-      "file": "llm_soc.sv",
-      "line": 3,
-      "templates": [
-        {
-          "name": "u_reset",
-          "module": "reset_release",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "core_rst_n": "core_rst_n"
-          },
-          "line": 19
-        },
-        {
-          "name": "u_scalar_lo",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "39",
-            "B_W": "8",
-            "OUT_W": "48",
-            "SIGNED_A": "1",
-            "SIGNED_B": "0"
-          },
-          "ports": {
-            "a": "scalar_a_q",
-            "b": "scalar_b_q[7:0]",
-            "product": "scalar_partial_comb[0]"
-          },
-          "line": 309
-        },
-        {
-          "name": "u_scalar_mid",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "39",
-            "B_W": "8",
-            "OUT_W": "48",
-            "SIGNED_A": "1",
-            "SIGNED_B": "0"
-          },
-          "ports": {
-            "a": "scalar_a_q",
-            "b": "scalar_b_q[15:8]",
-            "product": "scalar_partial_comb[1]"
-          },
-          "line": 311
-        },
-        {
-          "name": "u_scalar_hi",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "39",
-            "B_W": "9",
-            "OUT_W": "48",
-            "SIGNED_A": "1",
-            "SIGNED_B": "1"
-          },
-          "ports": {
-            "a": "scalar_a_q",
-            "b": "scalar_b_q[24:16]",
-            "product": "scalar_partial_comb[2]"
-          },
-          "line": 313
-        },
-        {
-          "name": "u_exp_mul",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "25",
-            "B_W": "12",
-            "OUT_W": "37",
-            "SIGNED_A": "0",
-            "SIGNED_B": "0"
-          },
-          "ports": {
-            "a": "exp_delta_q",
-            "b": "exp_difference_q[11:0]",
-            "product": "exp_interpolation_comb"
-          },
-          "line": 340
-        },
-        {
-          "name": "u_noise_mul",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "24",
-            "B_W": "8",
-            "OUT_W": "33",
-            "SIGNED_A": "1",
-            "SIGNED_B": "0"
-          },
-          "ports": {
-            "a": "gumbel_value",
-            "b": "temperature_q",
-            "product": "noise_product_comb"
-          },
-          "line": 344
-        },
-        {
-          "name": "u_gumbel_lookup",
-          "module": "llm_gumbel_sample",
-          "parameters": {},
-          "ports": {
-            "index": "random_q[31:24]",
-            "value": "gumbel_value"
-          },
-          "line": 348
-        },
-        {
-          "name": "u_exp_hi",
-          "module": "llm_exp_sample",
-          "parameters": {},
-          "ports": {
-            "index": "{1'b0, exp_difference_q[19:12]}",
-            "value": "exp_value_hi"
-          },
-          "line": 349
-        },
-        {
-          "name": "u_exp_lo",
-          "module": "llm_exp_sample",
-          "parameters": {},
-          "ports": {
-            "index": "{1'b0, exp_difference_q[19:12]} + 9'd1",
-            "value": "exp_value_lo"
-          },
-          "line": 350
-        },
-        {
-          "name": "u_parameters",
-          "module": "llm_parameter_ram",
-          "parameters": {
-            "ADDR_W": "15",
-            "DEPTH": "PARAM_ROWS",
-            "USE_QUARTUS_MEMORY": "USE_QUARTUS_MEMORY"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "core_rst_n",
-            "rd_en": "p_read",
-            "rd_addr": "linear_parameter_req ? linear_parameter_address :\n            head_parameter_req ? head_parameter_address : p_address_q",
-            "rd_data": "p_data",
-            "rd_valid": "p_valid",
-            "host_active": "host_en && !core_running && host_parameter_q",
-            "host_write_req": "host_en && !core_running && host_parameter_q &&\n            host_state == H_EXEC && host_write_q",
-            "host_read_req": "host_en && !core_running && host_parameter_q &&\n            host_state == H_READ && !host_write_q",
-            "host_we": "host_write_q",
-            "host_addr": "host_address_q[19:2]",
-            "host_wdata": "host_data_q",
-            "host_rdata": "p_host_data",
-            "host_rvalid": "p_host_valid"
-          },
-          "line": 395
-        },
-        {
-          "name": "u_vectors",
-          "module": "llm_bank_ram",
-          "parameters": {
-            "ROWS": "96",
-            "ADDR_W": "7",
-            "USE_QUARTUS_MEMORY": "USE_QUARTUS_MEMORY"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "core_rst_n",
-            "rd_en": "v_read",
-            "rd_addr": "v_address_q",
-            "rd_data": "v_data",
-            "rd_valid": "v_valid",
-            "wr_busy": "v_write_busy",
-            "wr_addr": "write_vector_addr_q",
-            "wr_mask": "op[O_WRITE_IDX] ? write_vector_mask_q : 32'h0",
-            "wr_data": "write_vector_q"
-          },
-          "line": 483
-        },
-        {
-          "name": "u_cache",
-          "module": "llm_bank_ram",
-          "parameters": {
-            "USE_QUARTUS_MEMORY": "USE_QUARTUS_MEMORY"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "core_rst_n",
-            "rd_en": "k_read",
-            "rd_addr": "k_read_address",
-            "rd_data": "k_data",
-            "rd_valid": "k_valid",
-            "wr_busy": "k_write_busy",
-            "wr_addr": "k_write_address_q",
-            "wr_mask": "op[C_STORE_IDX] ? 32'hffffffff : 32'h0",
-            "wr_data": "vector_q"
-          },
-          "line": 493
-        },
-        {
-          "name": "u_math",
-          "module": "llm_math",
-          "parameters": {
-            "STREAMING": "1"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "core_rst_n",
-            "start": "math_start",
-            "a": "math_a_q",
-            "b": "math_b_q",
-            "busy": "math_busy",
-            "done": "math_done",
-            "product": "math_product",
-            "sum": "math_sum",
-            "in_ready": "math_in_ready",
-            "product_valid": "math_product_valid",
-            "sum_valid": "math_sum_valid"
-          },
-          "line": 504
-        },
-        {
-          "name": "u_head_engine",
-          "module": "llm_head_engine",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "core_rst_n",
-            "start_i": "op[H_SCALE_IDX]",
-            "cancel_i": "op_fault_q",
-            "vocabulary_i": "vocabulary_row_q",
-            "parameter_req_o": "head_parameter_req",
-            "parameter_address_o": "head_parameter_address",
-            "parameter_valid_i": "p_valid",
-            "operand_capture_o": "head_capture",
-            "math_issue_o": "head_math_issue",
-            "input_chunk_o": "head_input_chunk",
-            "sum_valid_i": "math_sum_valid",
-            "sum_i": "math_sum",
-            "done_o": "head_dot_done",
-            "accumulator_o": "head_dot_acc"
-          },
-          "line": 509
-        },
-        {
-          "name": "u_attention_engine",
-          "module": "llm_attention_engine",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "core_rst_n",
-            "start_i": "op[A_QUERY_IDX]",
-            "cancel_i": "op_fault_q",
-            "layer_i": "layer_q",
-            "head_i": "head_q",
-            "position_i": "position_q",
-            "kv_req_o": "attention_k_req",
-            "kv_address_o": "attention_k_address",
-            "kv_valid_i": "k_valid",
-            "operand_capture_o": "attention_capture",
-            "math_issue_o": "attention_math_issue",
-            "sum_valid_i": "math_sum_valid",
-            "sum_i": "math_sum",
-            "score_address_i": "time_q",
-            "score_o": "attention_score",
-            "max_score_o": "attention_max",
-            "done_o": "attention_scores_done"
-          },
-          "line": 515
-        },
-        {
-          "name": "u_linear_engine",
-          "module": "llm_linear_engine",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "core_rst_n",
-            "start_i": "op[L_ROW_START_IDX]",
-            "cancel_i": "op_fault_q",
-            "weight_base_i": "weight_row_q",
-            "chunks_i": "matrix_chunks_q",
-            "ready_o": "linear_ready",
-            "busy_o": "linear_busy",
-            "done_o": "linear_done",
-            "fault_o": "linear_fault",
-            "parameter_req_o": "linear_parameter_req",
-            "parameter_address_o": "linear_parameter_address",
-            "parameter_valid_i": "p_valid",
-            "parameter_data_i": "p_data",
-            "input_chunk_o": "linear_input_chunk",
-            "x_i": "linear_operand",
-            "dot_issue_o": "linear_dot_issue",
-            "accumulator_o": "linear_dot_acc"
-          },
-          "line": 526
-        },
-        {
-          "name": "u_root",
-          "module": "isqrt_u64",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "core_rst_n",
-            "start": "op[N_ROOT_IDX]",
-            "radicand": "root_input_q",
-            "busy": "root_busy",
-            "done": "root_done",
-            "root": "root"
-          },
-          "line": 534
-        },
-        {
-          "name": "u_attention_normalize",
-          "module": "llm_attention_normalize",
-          "parameters": {
-            "DIV_LANES": "ATTN_DIV_LANES",
-            "USE_SHARED": "1"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "core_rst_n",
-            "start_i": "op[A_LANE_IDX]",
-            "cancel_i": "op_fault_q",
-            "accumulator_i": "attention_acc_q",
-            "denominator_i": "probability_sum_q",
-            "shared_busy_i": "div_busy",
-            "shared_done_i": "div_done",
-            "shared_quotient_i": "div_quotient",
-            "shared_remainder_i": "div_remainder",
-            "shared_numerator_o": "attention_div_numerator",
-            "shared_denominator_o": "attention_div_denominator",
-            "ready_o": "attention_norm_ready",
-            "batch_start_o": "attention_div_start",
-            "done_o": "attention_norm_done",
-            "vector_o": "attention_normalized"
-          },
-          "line": 547
-        },
-        {
-          "name": "u_div",
-          "module": "div",
-          "parameters": {
-            "NUM_W": "64",
-            "DEN_W": "32"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "core_rst_n",
-            "start": "op[N_DIV_IDX] || attention_div_start",
-            "numerator": "attention_div_start ? attention_div_numerator : div_numerator_q",
-            "denominator": "attention_div_start ? attention_div_denominator : div_denominator_q",
-            "busy": "div_busy",
-            "done": "div_done",
-            "div_zero": "div_zero",
-            "quotient": "div_quotient",
-            "remainder": "div_remainder"
-          },
-          "line": 555
-        },
-        {
-          "name": "u_sig",
-          "module": "sigmoid",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "core_rst_n",
-            "start": "op[S_SIG_IDX]",
-            "x_raw": "sig_x_q[sig_lane]",
-            "frac_bits": "5'd12",
-            "busy": "sig_busy[sig_lane]",
-            "done": "sig_done[sig_lane]",
-            "y_raw": "sig_y[sig_lane]"
-          },
-          "line": 571
-        }
-      ]
-    },
-    "logic_mul": {
-      "file": "logic_mul.sv",
-      "line": 4,
-      "templates": []
-    },
-    "matmul_wrap": {
-      "file": "matmul_wrap.sv",
-      "line": 3,
-      "templates": [
-        {
-          "name": "u_npu",
-          "module": "matmulfree",
-          "parameters": {},
-          "ports": {
-            "clk": "CLOCK_50",
-            "rst_n": "SW[0]",
-            "host_en": "host_en",
-            "host_we": "host_we",
-            "host_addr": "host_addr",
-            "host_wdata": "host_wdata",
-            "host_rdata": "host_rdata",
-            "host_ready": "host_ready",
-            "running": "running",
-            "ready": "LEDG[0]",
-            "overflow_out": "LEDG[1]",
-            "error": "LEDG[2]",
-            "pc_debug": "pc_debug",
-            "instr_debug": "instr_debug"
-          },
-          "line": 15
-        }
-      ]
-    },
-    "matmulfree": {
-      "file": "matmulfree.sv",
-      "line": 1,
-      "templates": [
-        {
-          "name": "u_pc",
-          "module": "PC",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "clear": "pc_clear",
-            "advance": "pc_advance",
-            "pc_out": "pc"
-          },
-          "line": 106
-        },
-        {
-          "name": "u_imem",
-          "module": "ins_mem",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "fetch_en": "instr_fetch_en",
-            "addr": "pc",
-            "instr": "instr_fetch",
-            "instr_valid": "instr_fetch_valid",
-            "host_en": "(host_imem && host_we && !running) || host_read_imem",
-            "host_we": "host_imem && host_we && !running",
-            "host_addr": "host_we ? host_addr[10:2] : host_read_address_q[10:2]",
-            "host_instr": "host_wdata[12:0]",
-            "host_rinstr": "instr_host",
-            "host_rvalid": "instr_host_valid"
-          },
-          "line": 111
-        },
-        {
-          "name": "u_desc",
-          "module": "descriptor_file",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "host_we": "host_desc && host_we && !running",
-            "host_id": "desc_host_id",
-            "host_is_matrix": "desc_host_matrix",
-            "host_word_sel": "desc_host_word",
-            "host_wdata": "host_wdata",
-            "host_rdata": "desc_host_rdata",
-            "ws_id0": "instr_q[2:0]",
-            "ws_id1": "instr_q[5:3]",
-            "ws_id2": "instr_q[8:6]",
-            "ws_desc0": "d_src0",
-            "ws_desc1": "d_src1",
-            "ws_desc2": "d_dst",
-            "mat_id": "instr_q[5:3]",
-            "mat_desc": "d_mat"
-          },
-          "line": 134
-        },
-        {
-          "name": "u_ws",
-          "module": "register",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "rd_en": "ws_rd_en",
-            "rd_addr": "ws_rd_addr",
-            "rd_data": "ws_rd_data",
-            "rd_valid": "ws_rd_valid",
-            "wr_en": "ws_wr_en",
-            "wr_addr": "ws_wr_addr",
-            "wr_data": "ws_wr_data",
-            "host_en": "(host_ws && host_we && !running) || host_read_ws",
-            "host_we": "host_we",
-            "host_addr": "host_we ? host_addr[12:2] : host_read_address_q[12:2]",
-            "host_wdata": "host_wdata",
-            "host_rdata": "ws_host_rdata",
-            "host_rvalid": "ws_host_rvalid"
-          },
-          "line": 158
-        },
-        {
-          "name": "u_param",
-          "module": "mem_mapping",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "rd_en": "p_rd_en",
-            "rd_addr": "p_rd_addr",
-            "rd_data": "p_rd_data",
-            "rd_valid": "p_rd_valid",
-            "wr_en": "1'b0",
-            "wr_addr": "'0",
-            "wr_data": "'0",
-            "host_en": "(host_param && host_we && !running) || host_read_param",
-            "host_we": "host_we",
-            "host_addr": "host_we ? host_addr[14:2] : host_read_address_q[14:2]",
-            "host_wdata": "host_wdata",
-            "host_rdata": "p_host_rdata",
-            "host_rvalid": "p_host_rvalid"
-          },
-          "line": 181
-        },
-        {
-          "name": "u_row",
-          "module": "rowwise_dispatch",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "start": "row_start",
-            "op": "instr_q[12:9]",
-            "a_desc": "d_src0",
-            "b_desc": "d_src1",
-            "dst_desc": "d_dst",
-            "ws_rd_en": "row_rd_en",
-            "ws_rd_addr": "row_rd_addr",
-            "ws_rd_data": "ws_rd_data",
-            "ws_rd_valid": "ws_rd_valid",
-            "ws_wr_en": "row_wr_en",
-            "ws_wr_addr": "row_wr_addr",
-            "ws_wr_data": "row_wr_data",
-            "busy": "row_busy",
-            "done": "row_done",
-            "overflow": "row_ov",
-            "format_error": "row_fmt_err"
-          },
-          "line": 204
-        },
-        {
-          "name": "u_norm",
-          "module": "norm_dispatch",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "start": "norm_start",
-            "src_desc": "d_src0",
-            "dst_desc": "d_dst",
-            "scratch_z_base": "scratch_z_base",
-            "epsilon_raw32": "epsilon_raw32",
-            "delta_raw": "delta_raw",
-            "ws_rd_en": "norm_rd_en",
-            "ws_rd_addr": "norm_rd_addr",
-            "ws_rd_data": "ws_rd_data",
-            "ws_rd_valid": "ws_rd_valid",
-            "ws_wr_en": "norm_wr_en",
-            "ws_wr_addr": "norm_wr_addr",
-            "ws_wr_data": "norm_wr_data",
-            "busy": "norm_busy",
-            "done": "norm_done",
-            "overflow": "norm_ov",
-            "format_error": "norm_error",
-            "quant_d": "quant_d",
-            "norm_m": "norm_m",
-            "norm_r": "norm_r",
-            "quant_m": "quant_m",
-            "quant_r": "quant_r"
-          },
-          "line": 233
-        },
-        {
-          "name": "u_tm",
-          "module": "ternary_mul",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "start": "tm_start",
-            "q_desc": "d_src0",
-            "out_desc": "d_dst",
-            "mat_desc": "effective_mat",
-            "ws_rd_en": "tm_rd_en",
-            "ws_rd_addr": "tm_rd_addr",
-            "ws_rd_data": "ws_rd_data",
-            "ws_rd_valid": "ws_rd_valid",
-            "ws_wr_en": "tm_wr_en",
-            "ws_wr_addr": "tm_wr_addr",
-            "ws_wr_data": "tm_wr_data",
-            "param_rd_en": "tm_p_rd_en",
-            "param_rd_addr": "tm_p_rd_addr",
-            "param_rd_data": "p_rd_data",
-            "param_rd_valid": "p_rd_valid",
-            "busy": "tm_busy",
-            "done": "tm_done",
-            "overflow": "tm_ov",
-            "format_error": "tm_error"
-          },
-          "line": 267
-        },
-        {
-          "name": "u_compose",
-          "module": "scale_compose",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "start": "sched == S_COMPOSE_START",
-            "factor_m": "effective_mat.scale_m",
-            "factor_r": "effective_mat.scale_r",
-            "quant_d": "selected_quant_d",
-            "busy": "compose_busy",
-            "done": "compose_done",
-            "format_error": "compose_error",
-            "result_m": "composed_m",
-            "result_r": "composed_r"
-          },
-          "line": 323
-        }
-      ]
-    },
-    "mem_mapping": {
-      "file": "mem_mapping.sv",
-      "line": 1,
-      "templates": [
-        {
-          "name": "u_sram",
-          "module": "sram_256_wrapper",
-          "parameters": {
-            "ADDR_W": "10"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "rd_en": "rd_en",
-            "rd_addr": "rd_addr",
-            "rd_data": "rd_data",
-            "rd_valid": "rd_valid",
-            "wr_en": "wr_en",
-            "wr_addr": "wr_addr",
-            "wr_data": "wr_data",
-            "host_en": "host_en",
-            "host_we": "host_we",
-            "host_addr": "host_addr",
-            "host_wdata": "host_wdata",
-            "host_rdata": "host_rdata",
-            "host_rvalid": "host_rvalid"
-          },
-          "line": 23
-        }
-      ]
-    },
-    "mul": {
-      "file": "mul.sv",
-      "line": 1,
-      "templates": [
-        {
-          "name": "u_bit_mul",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "16",
-            "B_W": "17",
-            "OUT_W": "33",
-            "SIGNED_A": "1",
-            "SIGNED_B": "1"
-          },
-          "ports": {
-            "a": "a",
-            "b": "b_s17",
-            "product": "p33"
-          },
-          "line": 14
-        }
-      ]
-    },
-    "addsub": {
-      "file": "mul.sv",
-      "line": 28,
-      "templates": []
-    },
-    "norm": {
-      "file": "norm.sv",
-      "line": 4,
-      "templates": [
-        {
-          "name": "u_div",
-          "module": "div",
-          "parameters": {
-            "NUM_W": "DIV_NUM_W",
-            "DEN_W": "32"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "start": "div_start",
-            "numerator": "div_num",
-            "denominator": "div_den",
-            "busy": "div_busy",
-            "done": "div_done",
-            "div_zero": "div_zero",
-            "quotient": "div_q",
-            "remainder": "div_rem"
-          },
-          "line": 73
-        },
-        {
-          "name": "u_sqrt",
-          "module": "isqrt_u64",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "start": "sqrt_start",
-            "radicand": "v_raw",
-            "busy": "sqrt_busy",
-            "done": "sqrt_done",
-            "root": "sqrt_root"
-          },
-          "line": 89
-        },
-        {
-          "name": "u_mul",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "25",
-            "B_W": "25",
-            "OUT_W": "48",
-            "SIGNED_A": "1",
-            "SIGNED_B": "1"
-          },
-          "ports": {
-            "a": "multiply_a_q[arithmetic_lane]",
-            "b": "multiply_b_q[arithmetic_lane]",
-            "product": "arithmetic_product[arithmetic_lane]"
-          },
-          "line": 108
-        }
-      ]
-    },
-    "norm_dispatch": {
-      "file": "norm_dispatch.sv",
-      "line": 1,
-      "templates": [
-        {
-          "name": "u_norm",
-          "module": "norm",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "start": "start && !invalid",
-            "x_base": "src_desc.base_word",
-            "z_base": "scratch_z_base",
-            "q_base": "dst_desc.base_word",
-            "k_len": "src_desc.length",
-            "epsilon_raw32": "epsilon_raw32",
-            "delta_raw": "delta_raw",
-            "ws_rd_en": "ws_rd_en",
-            "ws_rd_addr": "ws_rd_addr",
-            "ws_rd_data": "ws_rd_data",
-            "ws_rd_valid": "ws_rd_valid",
-            "ws_wr_en": "ws_wr_en",
-            "ws_wr_addr": "ws_wr_addr",
-            "ws_wr_data": "ws_wr_data",
-            "busy": "core_busy",
-            "done": "core_done",
-            "overflow": "core_overflow",
-            "format_error": "core_error",
-            "quant_d": "quant_d",
-            "norm_m": "norm_m",
-            "norm_r": "norm_r",
-            "quant_m": "quant_m",
-            "quant_r": "quant_r"
-          },
-          "line": 45
-        }
-      ]
-    },
-    "PC": {
-      "file": "PC.sv",
-      "line": 1,
-      "templates": []
-    },
-    "pipelined_word_ram": {
-      "file": "pipelined_word_ram.sv",
-      "line": 4,
-      "templates": [
-        {
-          "name": "u_storage",
-          "module": "quartus_word_ram",
-          "parameters": {
-            "WIDTH": "WIDTH",
-            "ROWS": "TILE_ROWS",
-            "ADDR_W": "10"
-          },
-          "ports": {
-            "clk": "clk",
-            "rd_en": "rst_n && read_enable_q",
-            "wr_en": "rst_n && write_enable_q",
-            "rd_addr": "read_address_q",
-            "wr_addr": "write_address_q",
-            "wr_data": "write_group_q[tile / 4]",
-            "rd_data": "tile_data[tile]"
-          },
-          "line": 57
-        },
-        {
-          "name": "u_storage",
-          "module": "quartus_word_ram",
-          "parameters": {
-            "WIDTH": "WIDTH",
-            "ROWS": "ROWS",
-            "ADDR_W": "ADDR_W"
-          },
-          "ports": {
-            "clk": "clk",
-            "rd_en": "rst_n && read_enable_q",
-            "wr_en": "rst_n && write_enable_q",
-            "rd_addr": "read_address_q",
-            "wr_addr": "write_address_q",
-            "wr_data": "write_data_q",
-            "rd_data": "raw_data"
-          },
-          "line": 105
-        },
-        {
-          "name": "u_tile",
-          "module": "sram_word_tile",
-          "parameters": {
-            "WIDTH": "WIDTH",
-            "ROWS": "TILE_ROWS"
-          },
-          "ports": {
-            "clk": "clk",
-            "rd_en": "rst_n && read_enable_q",
-            "wr_en": "rst_n && write_enable_q",
-            "rd_addr": "read_address_q",
-            "wr_addr": "write_address_q",
-            "wr_data": "write_data_q",
-            "rd_data": "tile_data[tile]"
-          },
-          "line": 137
-        }
-      ]
-    },
-    "postscale": {
-      "file": "postscale.sv",
-      "line": 2,
-      "templates": [
-        {
-          "name": "u_bit_mul",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "18",
-            "B_W": "24",
-            "OUT_W": "42",
-            "SIGNED_A": "1",
-            "SIGNED_B": "0"
-          },
-          "ports": {
-            "a": "acc",
-            "b": "scale_m",
-            "product": "product"
-          },
-          "line": 15
-        },
-        {
-          "name": "u_finish",
-          "module": "postscale_finish",
-          "parameters": {},
-          "ports": {
-            "rounded": "rounded",
-            "bias": "bias",
-            "output_s32": "output_s32",
-            "y_s32": "y_s32",
-            "y_s16": "y_s16",
-            "overflow": "overflow"
-          },
-          "line": 21
-        }
-      ]
-    },
-    "postscale_finish": {
-      "file": "postscale.sv",
-      "line": 28,
-      "templates": []
-    },
-    "quartus_word_ram": {
-      "file": "quartus_word_ram.sv",
-      "line": 5,
-      "templates": [
-        {
-          "name": "u_memory",
-          "module": "altsyncram",
-          "parameters": {
-            "intended_device_family": "\"Cyclone V\"",
-            "operation_mode": "\"DUAL_PORT\"",
-            "ram_block_type": "\"M10K\"",
-            "width_a": "WIDTH",
-            "width_b": "WIDTH",
-            "widthad_a": "ADDR_W",
-            "widthad_b": "ADDR_W",
-            "numwords_a": "ROWS",
-            "numwords_b": "ROWS",
-            "width_byteena_a": "1",
-            "width_byteena_b": "1",
-            "address_reg_b": "\"CLOCK0\"",
-            "rdcontrol_reg_b": "\"CLOCK0\"",
-            "outdata_reg_b": "\"UNREGISTERED\"",
-            "outdata_aclr_b": "\"NONE\"",
-            "clock_enable_input_a": "\"BYPASS\"",
-            "clock_enable_input_b": "\"BYPASS\"",
-            "clock_enable_output_a": "\"BYPASS\"",
-            "clock_enable_output_b": "\"BYPASS\"",
-            "read_during_write_mode_mixed_ports": "\"OLD_DATA\"",
-            "power_up_uninitialized": "\"TRUE\"",
-            "lpm_type": "\"altsyncram\""
-          },
-          "ports": {
-            "clock0": "clk",
-            "clock1": "1'b1",
-            "clocken0": "1'b1",
-            "clocken1": "1'b1",
-            "clocken2": "1'b1",
-            "clocken3": "1'b1",
-            "aclr0": "1'b0",
-            "aclr1": "1'b0",
-            "address_a": "wr_addr",
-            "address_b": "rd_addr",
-            "addressstall_a": "1'b0",
-            "addressstall_b": "1'b0",
-            "data_a": "wr_data",
-            "data_b": "{WIDTH{1'b0}}",
-            "wren_a": "wr_en",
-            "wren_b": "1'b0",
-            "rden_a": "1'b0",
-            "rden_b": "rd_en",
-            "byteena_a": "1'b1",
-            "byteena_b": "1'b1",
-            "q_a": "",
-            "q_b": "rd_data",
-            "eccstatus": ""
-          },
-          "line": 15
-        }
-      ]
-    },
-    "register": {
-      "file": "regfile.sv",
-      "line": 1,
-      "templates": [
-        {
-          "name": "u_sram",
-          "module": "sram_256_wrapper",
-          "parameters": {
-            "ADDR_W": "8"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "rd_en": "rd_en",
-            "rd_addr": "rd_addr",
-            "rd_data": "rd_data",
-            "rd_valid": "rd_valid",
-            "wr_en": "wr_en",
-            "wr_addr": "wr_addr",
-            "wr_data": "wr_data",
-            "host_en": "host_en",
-            "host_we": "host_we",
-            "host_addr": "host_addr",
-            "host_wdata": "host_wdata",
-            "host_rdata": "host_rdata",
-            "host_rvalid": "host_rvalid"
-          },
-          "line": 23
-        }
-      ]
-    },
-    "reset_release": {
-      "file": "reset_release.sv",
-      "line": 3,
-      "templates": []
-    },
-    "rowwise_dispatch": {
-      "file": "rowwise_dispatch.sv",
-      "line": 1,
-      "templates": [
-        {
-          "name": "u_alu",
-          "module": "rowwise_op",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "start": "state == START_ALU",
-            "select": "operation_q",
-            "a_word": "a_word",
-            "b_word": "b_word",
-            "c_word": "c_word",
-            "a_frac_bits": "source_a_desc_q.frac_bits",
-            "b_frac_bits": "source_b_desc_q.frac_bits",
-            "dst_frac_bits": "destination_desc_q.frac_bits",
-            "valid_elems": "valid_elems",
-            "a_unsigned": "source_a_desc_q.fmt == FMT_U16",
-            "b_unsigned": "source_b_desc_q.fmt == FMT_U16",
-            "dst_unsigned": "destination_desc_q.fmt == FMT_U16",
-            "result_word": "alu_result",
-            "busy": "alu_busy",
-            "done": "alu_done",
-            "overflow": "alu_ov",
-            "format_error": "alu_error"
-          },
-          "line": 52
-        }
-      ]
-    },
-    "rowwise_op": {
-      "file": "rowwise_op.sv",
-      "line": 1,
-      "templates": [
-        {
-          "name": "u_sig",
-          "module": "sigmoid",
-          "parameters": {},
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "start": "sig_start",
-            "x_raw": "sig_x_q",
-            "frac_bits": "source_a_frac_q",
-            "busy": "sig_busy",
-            "done": "sig_done",
-            "y_raw": "sig_y"
-          },
-          "line": 31
-        },
-        {
-          "name": "u_mul",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "16",
-            "B_W": "16",
-            "OUT_W": "32",
-            "SIGNED_A": "0",
-            "SIGNED_B": "0"
-          },
-          "ports": {
-            "a": "magnitude_a_q[mul_lane]",
-            "b": "magnitude_b_q[mul_lane]",
-            "product": "magnitude_product_comb[mul_lane]"
-          },
-          "line": 54
-        }
-      ]
-    },
-    "scale_compose": {
-      "file": "scale_compose.sv",
-      "line": 4,
-      "templates": [
-        {
-          "name": "u_bit_mul",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "24",
-            "B_W": "24",
-            "OUT_W": "48",
-            "SIGNED_A": "0",
-            "SIGNED_B": "0"
-          },
-          "ports": {
-            "a": "factor_q",
-            "b": "quant_q",
-            "product": "product_comb"
-          },
-          "line": 17
-        },
-        {
-          "name": "u_div",
-          "module": "div",
-          "parameters": {
-            "NUM_W": "48",
-            "DEN_W": "25"
-          },
-          "ports": {
-            "clk": "clk",
-            "rst_n": "rst_n",
-            "start": "state == DIV_START",
-            "numerator": "numerator",
-            "denominator": "denominator",
-            "busy": "div_busy",
-            "done": "div_done",
-            "div_zero": "div_zero",
-            "quotient": "quotient",
-            "remainder": "remainder"
-          },
-          "line": 75
-        }
-      ]
-    },
-    "sigmoid": {
-      "file": "sigmoid.sv",
-      "line": 2,
-      "templates": [
-        {
-          "name": "u_bit_mul",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "24",
-            "B_W": "10",
-            "OUT_W": "34",
-            "SIGNED_A": "0",
-            "SIGNED_B": "0"
-          },
-          "ports": {
-            "a": "fraction_q",
-            "b": "difference_q",
-            "product": "product_comb"
-          },
-          "line": 20
-        },
-        {
-          "name": "u_lookup",
-          "module": "sigmoid_sample",
-          "parameters": {},
-          "ports": {
-            "index": "rom_address",
-            "value": "rom_data"
-          },
-          "line": 34
-        }
-      ]
-    },
-    "sigmoid_sample": {
-      "file": "sigmoid_lut.svh",
-      "line": 3,
-      "templates": []
-    },
-    "sram_256_wrapper": {
-      "file": "sram_256_wrapper.sv",
-      "line": 3,
-      "templates": [
-        {
-          "name": "u_storage",
-          "module": "banked_word_ram",
-          "parameters": {
-            "WIDTH": "32",
-            "ROWS": "DEPTH",
-            "ADDR_W": "ADDR_W"
-          },
-          "ports": {
-            "clk": "clk",
-            "rd_en": "read_pending_q",
-            "wr_en": "rst_n && write_mask[lane]",
-            "rd_addr": "shared_read_address_q",
-            "wr_addr": "write_address",
-            "wr_data": "write_data[lane * 32 +: 32]",
-            "rd_data": "read_row_q[lane * 32 +: 32]"
-          },
-          "line": 65
-        }
-      ]
-    },
-    "sram_word_tile": {
-      "file": "sram_word_tile.sv",
-      "line": 1,
-      "templates": []
-    },
-    "ternary_dot32": {
-      "file": "ternary_dot32.sv",
-      "line": 3,
-      "templates": []
-    },
-    "ternary_mul": {
-      "file": "ternary_mul.sv",
-      "line": 1,
-      "templates": [
-        {
-          "name": "u_bit_mul",
-          "module": "logic_mul",
-          "parameters": {
-            "A_W": "18",
-            "B_W": "24",
-            "OUT_W": "42",
-            "SIGNED_A": "1",
-            "SIGNED_B": "0"
-          },
-          "ports": {
-            "a": "accumulator_q",
-            "b": "matrix_desc_q.scale_m",
-            "product": "scale_product_comb"
-          },
-          "line": 57
-        },
-        {
-          "name": "u_scale",
-          "module": "postscale_finish",
-          "parameters": {},
-          "ports": {
-            "rounded": "scale_rounded_q",
-            "bias": "bias",
-            "output_s32": "matrix_desc_q.output_s32",
-            "y_s32": "y32",
-            "y_s16": "y16",
-            "overflow": "scale_ov"
-          },
-          "line": 68
-        },
-        {
-          "name": "u_group",
-          "module": "acc_mul",
-          "parameters": {
-            "TERM_W": "9",
-            "NUM_INPUTS": "8",
-            "ACC_W": "12"
-          },
-          "ports": {
-            "term": "group_terms[g]",
-            "sum": "group_sum[g]"
-          },
-          "line": 124
-        },
-        {
-          "name": "u_total",
-          "module": "acc_mul",
-          "parameters": {
-            "TERM_W": "12",
-            "NUM_INPUTS": "4",
-            "ACC_W": "14"
-          },
-          "ports": {
-            "term": "group_sum_q",
-            "sum": "total_sum"
-          },
-          "line": 128
-        }
-      ]
-    }
-  },
+  "source_modules": [
+    "acc_mul",
+    "banked_word_ram",
+    "descriptor_file",
+    "div",
+    "ins_mem",
+    "isqrt_u64",
+    "llm_attention_engine",
+    "llm_attention_normalize",
+    "llm_bank_ram",
+    "llm_exp_sample",
+    "llm_gumbel_sample",
+    "llm_head_engine",
+    "llm_linear_engine",
+    "llm_math",
+    "llm_parameter_ram",
+    "llm_soc",
+    "logic_mul",
+    "matmul_wrap",
+    "matmulfree",
+    "mem_mapping",
+    "mul",
+    "addsub",
+    "norm",
+    "norm_dispatch",
+    "PC",
+    "pipelined_word_ram",
+    "postscale",
+    "postscale_finish",
+    "quartus_word_ram",
+    "register",
+    "reset_release",
+    "rowwise_dispatch",
+    "rowwise_op",
+    "scale_compose",
+    "sigmoid",
+    "sigmoid_sample",
+    "sram_256_wrapper",
+    "sram_word_tile",
+    "ternary_dot32",
+    "ternary_mul"
+  ],
   "configurations": {
     "quartus": {
       "pages": [
         {
-          "name": "00_TOP",
-          "width": 1760,
-          "height": 924
+          "name": "quartus \u2014 llm_soc",
+          "id": "h_quartus_llm_soc_0",
+          "width": 1352,
+          "height": 910
         },
         {
-          "name": "01_LEVEL_1",
-          "width": 1760,
-          "height": 5786
+          "name": "quartus \u2014 llm_parameter_ram",
+          "id": "h_quartus_llm_parameter_ram_0",
+          "width": 800,
+          "height": 390
         },
         {
-          "name": "02_LEVEL_2",
-          "width": 1760,
-          "height": 15704
+          "name": "quartus \u2014 llm_bank_ram configuration 1",
+          "id": "h_quartus_llm_bank_ram_0",
+          "width": 800,
+          "height": 390
         },
         {
-          "name": "03_LEVEL_3",
-          "width": 1760,
-          "height": 21540
+          "name": "quartus \u2014 llm_bank_ram configuration 2",
+          "id": "h_quartus_llm_bank_ram_1",
+          "width": 800,
+          "height": 390
         },
         {
-          "name": "04_LEVEL_4",
-          "width": 1760,
-          "height": 34994
+          "name": "quartus \u2014 llm_math",
+          "id": "h_quartus_llm_math_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "quartus \u2014 llm_linear_engine",
+          "id": "h_quartus_llm_linear_engine_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "quartus \u2014 llm_attention_engine",
+          "id": "h_quartus_llm_attention_engine_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "quartus \u2014 llm_attention_normalize",
+          "id": "h_quartus_llm_attention_normalize_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "quartus \u2014 sigmoid",
+          "id": "h_quartus_sigmoid_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "quartus \u2014 pipelined_word_ram configuration 1",
+          "id": "h_quartus_pipelined_word_ram_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "quartus \u2014 pipelined_word_ram configuration 2",
+          "id": "h_quartus_pipelined_word_ram_1",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "quartus \u2014 pipelined_word_ram configuration 3",
+          "id": "h_quartus_pipelined_word_ram_2",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "quartus \u2014 quartus_word_ram configuration 1",
+          "id": "h_quartus_quartus_word_ram_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "quartus \u2014 quartus_word_ram configuration 2",
+          "id": "h_quartus_quartus_word_ram_1",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "quartus \u2014 quartus_word_ram configuration 3",
+          "id": "h_quartus_quartus_word_ram_2",
+          "width": 800,
+          "height": 390
         }
       ],
       "instances": [
@@ -1604,7 +252,7 @@
             "product": "scalar_partial_comb[0]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 309,
+          "instantiation_line": 308,
           "module_source": "logic_mul.sv",
           "module_line": 4,
           "external": false
@@ -1636,7 +284,7 @@
             "product": "scalar_partial_comb[1]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 311,
+          "instantiation_line": 310,
           "module_source": "logic_mul.sv",
           "module_line": 4,
           "external": false
@@ -1668,7 +316,7 @@
             "product": "scalar_partial_comb[2]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 313,
+          "instantiation_line": 312,
           "module_source": "logic_mul.sv",
           "module_line": 4,
           "external": false
@@ -1700,7 +348,7 @@
             "product": "exp_interpolation_comb"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 340,
+          "instantiation_line": 341,
           "module_source": "logic_mul.sv",
           "module_line": 4,
           "external": false
@@ -1732,7 +380,7 @@
             "product": "noise_product_comb"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 344,
+          "instantiation_line": 345,
           "module_source": "logic_mul.sv",
           "module_line": 4,
           "external": false
@@ -1751,7 +399,7 @@
             "value": "gumbel_value"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 348,
+          "instantiation_line": 349,
           "module_source": "llm_gumbel_lut.svh",
           "module_line": 4,
           "external": false
@@ -1770,7 +418,7 @@
             "value": "exp_value_hi"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 349,
+          "instantiation_line": 350,
           "module_source": "llm_exp_lut.svh",
           "module_line": 4,
           "external": false
@@ -1789,7 +437,7 @@
             "value": "exp_value_lo"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 350,
+          "instantiation_line": 351,
           "module_source": "llm_exp_lut.svh",
           "module_line": 4,
           "external": false
@@ -1828,7 +476,7 @@
             "host_rvalid": "p_host_valid"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 395,
+          "instantiation_line": 403,
           "module_source": "llm_parameter_ram.sv",
           "module_line": 5,
           "external": false
@@ -1860,12 +508,12 @@
             "rd_data": "v_data",
             "rd_valid": "v_valid",
             "wr_busy": "v_write_busy",
-            "wr_addr": "write_vector_addr_q",
-            "wr_mask": "op[O_WRITE_IDX] ? write_vector_mask_q : 32'h0",
+            "wr_addr": "linear_write ? linear_write_address : write_vector_addr_q",
+            "wr_mask": "linear_write ? 32'hffffffff : op[O_WRITE_IDX] ? write_vector_mask_q : 32'h0",
             "wr_data": "write_vector_q"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 483,
+          "instantiation_line": 493,
           "module_source": "llm_bank_ram.sv",
           "module_line": 5,
           "external": false
@@ -1900,7 +548,7 @@
             "wr_data": "vector_q"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 493,
+          "instantiation_line": 505,
           "module_source": "llm_bank_ram.sv",
           "module_line": 5,
           "external": false
@@ -1933,7 +581,7 @@
             "sum_valid": "math_sum_valid"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 504,
+          "instantiation_line": 516,
           "module_source": "llm_math.sv",
           "module_line": 5,
           "external": false
@@ -1952,22 +600,27 @@
             "rst_n": "core_rst_n",
             "start_i": "op[H_SCALE_IDX]",
             "cancel_i": "op_fault_q",
-            "vocabulary_i": "vocabulary_row_q",
             "parameter_req_o": "head_parameter_req",
             "parameter_address_o": "head_parameter_address",
             "parameter_valid_i": "p_valid",
+            "parameter_data_i": "p_data",
             "operand_capture_o": "head_capture",
             "math_issue_o": "head_math_issue",
             "input_chunk_o": "head_input_chunk",
             "sum_valid_i": "math_sum_valid",
             "sum_i": "math_sum",
+            "result_ready_i": "head_result_ready",
+            "result_valid_o": "head_result_valid",
+            "busy_o": "head_busy",
+            "row_o": "head_result_row",
+            "coefficient_o": "head_result_coefficient",
             "done_o": "head_dot_done",
             "accumulator_o": "head_dot_acc"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 509,
+          "instantiation_line": 521,
           "module_source": "llm_head_engine.sv",
-          "module_line": 3,
+          "module_line": 4,
           "external": false
         },
         {
@@ -2000,7 +653,7 @@
             "done_o": "attention_scores_done"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 515,
+          "instantiation_line": 546,
           "module_source": "llm_attention_engine.sv",
           "module_line": 4,
           "external": false
@@ -2017,10 +670,14 @@
           "port_map": {
             "clk": "clk",
             "rst_n": "core_rst_n",
-            "start_i": "op[L_ROW_START_IDX]",
+            "start_i": "linear_start",
             "cancel_i": "op_fault_q",
             "weight_base_i": "weight_row_q",
             "chunks_i": "matrix_chunks_q",
+            "rows_i": "matrix_rows_q",
+            "result_ready_i": "linear_result_ready",
+            "result_valid_o": "linear_result_valid_q",
+            "result_fault_o": "linear_result_fault_q",
             "ready_o": "linear_ready",
             "busy_o": "linear_busy",
             "done_o": "linear_done",
@@ -2035,7 +692,7 @@
             "accumulator_o": "linear_dot_acc"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 526,
+          "instantiation_line": 595,
           "module_source": "llm_linear_engine.sv",
           "module_line": 3,
           "external": false
@@ -2059,7 +716,7 @@
             "root": "root"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 534,
+          "instantiation_line": 605,
           "module_source": "isqrt_u64.sv",
           "module_line": 1,
           "external": false
@@ -2098,7 +755,7 @@
             "vector_o": "attention_normalized"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 547,
+          "instantiation_line": 618,
           "module_source": "llm_attention_normalize.sv",
           "module_line": 3,
           "external": false
@@ -2131,7 +788,7 @@
             "remainder": "div_remainder"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 555,
+          "instantiation_line": 626,
           "module_source": "div.sv",
           "module_line": 3,
           "external": false
@@ -2156,7 +813,7 @@
             "y_raw": "sig_y[sig_lane]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 571,
+          "instantiation_line": 642,
           "module_source": "sigmoid.sv",
           "module_line": 2,
           "external": false
@@ -2181,7 +838,7 @@
             "y_raw": "sig_y[sig_lane]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 571,
+          "instantiation_line": 642,
           "module_source": "sigmoid.sv",
           "module_line": 2,
           "external": false
@@ -2206,7 +863,7 @@
             "y_raw": "sig_y[sig_lane]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 571,
+          "instantiation_line": 642,
           "module_source": "sigmoid.sv",
           "module_line": 2,
           "external": false
@@ -2231,7 +888,7 @@
             "y_raw": "sig_y[sig_lane]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 571,
+          "instantiation_line": 642,
           "module_source": "sigmoid.sv",
           "module_line": 2,
           "external": false
@@ -9048,7 +7705,7 @@
             "sum_o": "dot_sum"
           },
           "instantiation_source": "llm_linear_engine.sv",
-          "instantiation_line": 40,
+          "instantiation_line": 56,
           "module_source": "ternary_dot32.sv",
           "module_line": 3,
           "external": false
@@ -34712,24 +33369,76 @@
     "portable": {
       "pages": [
         {
-          "name": "00_TOP",
-          "width": 1760,
-          "height": 924
+          "name": "portable \u2014 llm_soc",
+          "id": "h_portable_llm_soc_0",
+          "width": 1352,
+          "height": 910
         },
         {
-          "name": "01_LEVEL_1",
-          "width": 1760,
-          "height": 5786
+          "name": "portable \u2014 llm_parameter_ram",
+          "id": "h_portable_llm_parameter_ram_0",
+          "width": 800,
+          "height": 390
         },
         {
-          "name": "02_LEVEL_2",
-          "width": 1760,
-          "height": 15704
+          "name": "portable \u2014 llm_bank_ram configuration 1",
+          "id": "h_portable_llm_bank_ram_0",
+          "width": 800,
+          "height": 390
         },
         {
-          "name": "03_LEVEL_3",
-          "width": 1760,
-          "height": 33929
+          "name": "portable \u2014 llm_bank_ram configuration 2",
+          "id": "h_portable_llm_bank_ram_1",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "portable \u2014 llm_math",
+          "id": "h_portable_llm_math_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "portable \u2014 llm_linear_engine",
+          "id": "h_portable_llm_linear_engine_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "portable \u2014 llm_attention_engine",
+          "id": "h_portable_llm_attention_engine_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "portable \u2014 llm_attention_normalize",
+          "id": "h_portable_llm_attention_normalize_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "portable \u2014 sigmoid",
+          "id": "h_portable_sigmoid_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "portable \u2014 pipelined_word_ram configuration 1",
+          "id": "h_portable_pipelined_word_ram_0",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "portable \u2014 pipelined_word_ram configuration 2",
+          "id": "h_portable_pipelined_word_ram_1",
+          "width": 800,
+          "height": 390
+        },
+        {
+          "name": "portable \u2014 pipelined_word_ram configuration 3",
+          "id": "h_portable_pipelined_word_ram_2",
+          "width": 800,
+          "height": 390
         }
       ],
       "instances": [
@@ -34802,7 +33511,7 @@
             "product": "scalar_partial_comb[0]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 309,
+          "instantiation_line": 308,
           "module_source": "logic_mul.sv",
           "module_line": 4,
           "external": false
@@ -34834,7 +33543,7 @@
             "product": "scalar_partial_comb[1]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 311,
+          "instantiation_line": 310,
           "module_source": "logic_mul.sv",
           "module_line": 4,
           "external": false
@@ -34866,7 +33575,7 @@
             "product": "scalar_partial_comb[2]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 313,
+          "instantiation_line": 312,
           "module_source": "logic_mul.sv",
           "module_line": 4,
           "external": false
@@ -34898,7 +33607,7 @@
             "product": "exp_interpolation_comb"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 340,
+          "instantiation_line": 341,
           "module_source": "logic_mul.sv",
           "module_line": 4,
           "external": false
@@ -34930,7 +33639,7 @@
             "product": "noise_product_comb"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 344,
+          "instantiation_line": 345,
           "module_source": "logic_mul.sv",
           "module_line": 4,
           "external": false
@@ -34949,7 +33658,7 @@
             "value": "gumbel_value"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 348,
+          "instantiation_line": 349,
           "module_source": "llm_gumbel_lut.svh",
           "module_line": 4,
           "external": false
@@ -34968,7 +33677,7 @@
             "value": "exp_value_hi"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 349,
+          "instantiation_line": 350,
           "module_source": "llm_exp_lut.svh",
           "module_line": 4,
           "external": false
@@ -34987,7 +33696,7 @@
             "value": "exp_value_lo"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 350,
+          "instantiation_line": 351,
           "module_source": "llm_exp_lut.svh",
           "module_line": 4,
           "external": false
@@ -35026,7 +33735,7 @@
             "host_rvalid": "p_host_valid"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 395,
+          "instantiation_line": 403,
           "module_source": "llm_parameter_ram.sv",
           "module_line": 5,
           "external": false
@@ -35058,12 +33767,12 @@
             "rd_data": "v_data",
             "rd_valid": "v_valid",
             "wr_busy": "v_write_busy",
-            "wr_addr": "write_vector_addr_q",
-            "wr_mask": "op[O_WRITE_IDX] ? write_vector_mask_q : 32'h0",
+            "wr_addr": "linear_write ? linear_write_address : write_vector_addr_q",
+            "wr_mask": "linear_write ? 32'hffffffff : op[O_WRITE_IDX] ? write_vector_mask_q : 32'h0",
             "wr_data": "write_vector_q"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 483,
+          "instantiation_line": 493,
           "module_source": "llm_bank_ram.sv",
           "module_line": 5,
           "external": false
@@ -35098,7 +33807,7 @@
             "wr_data": "vector_q"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 493,
+          "instantiation_line": 505,
           "module_source": "llm_bank_ram.sv",
           "module_line": 5,
           "external": false
@@ -35131,7 +33840,7 @@
             "sum_valid": "math_sum_valid"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 504,
+          "instantiation_line": 516,
           "module_source": "llm_math.sv",
           "module_line": 5,
           "external": false
@@ -35150,22 +33859,27 @@
             "rst_n": "core_rst_n",
             "start_i": "op[H_SCALE_IDX]",
             "cancel_i": "op_fault_q",
-            "vocabulary_i": "vocabulary_row_q",
             "parameter_req_o": "head_parameter_req",
             "parameter_address_o": "head_parameter_address",
             "parameter_valid_i": "p_valid",
+            "parameter_data_i": "p_data",
             "operand_capture_o": "head_capture",
             "math_issue_o": "head_math_issue",
             "input_chunk_o": "head_input_chunk",
             "sum_valid_i": "math_sum_valid",
             "sum_i": "math_sum",
+            "result_ready_i": "head_result_ready",
+            "result_valid_o": "head_result_valid",
+            "busy_o": "head_busy",
+            "row_o": "head_result_row",
+            "coefficient_o": "head_result_coefficient",
             "done_o": "head_dot_done",
             "accumulator_o": "head_dot_acc"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 509,
+          "instantiation_line": 521,
           "module_source": "llm_head_engine.sv",
-          "module_line": 3,
+          "module_line": 4,
           "external": false
         },
         {
@@ -35198,7 +33912,7 @@
             "done_o": "attention_scores_done"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 515,
+          "instantiation_line": 546,
           "module_source": "llm_attention_engine.sv",
           "module_line": 4,
           "external": false
@@ -35215,10 +33929,14 @@
           "port_map": {
             "clk": "clk",
             "rst_n": "core_rst_n",
-            "start_i": "op[L_ROW_START_IDX]",
+            "start_i": "linear_start",
             "cancel_i": "op_fault_q",
             "weight_base_i": "weight_row_q",
             "chunks_i": "matrix_chunks_q",
+            "rows_i": "matrix_rows_q",
+            "result_ready_i": "linear_result_ready",
+            "result_valid_o": "linear_result_valid_q",
+            "result_fault_o": "linear_result_fault_q",
             "ready_o": "linear_ready",
             "busy_o": "linear_busy",
             "done_o": "linear_done",
@@ -35233,7 +33951,7 @@
             "accumulator_o": "linear_dot_acc"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 526,
+          "instantiation_line": 595,
           "module_source": "llm_linear_engine.sv",
           "module_line": 3,
           "external": false
@@ -35257,7 +33975,7 @@
             "root": "root"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 534,
+          "instantiation_line": 605,
           "module_source": "isqrt_u64.sv",
           "module_line": 1,
           "external": false
@@ -35296,7 +34014,7 @@
             "vector_o": "attention_normalized"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 547,
+          "instantiation_line": 618,
           "module_source": "llm_attention_normalize.sv",
           "module_line": 3,
           "external": false
@@ -35329,7 +34047,7 @@
             "remainder": "div_remainder"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 555,
+          "instantiation_line": 626,
           "module_source": "div.sv",
           "module_line": 3,
           "external": false
@@ -35354,7 +34072,7 @@
             "y_raw": "sig_y[sig_lane]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 571,
+          "instantiation_line": 642,
           "module_source": "sigmoid.sv",
           "module_line": 2,
           "external": false
@@ -35379,7 +34097,7 @@
             "y_raw": "sig_y[sig_lane]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 571,
+          "instantiation_line": 642,
           "module_source": "sigmoid.sv",
           "module_line": 2,
           "external": false
@@ -35404,7 +34122,7 @@
             "y_raw": "sig_y[sig_lane]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 571,
+          "instantiation_line": 642,
           "module_source": "sigmoid.sv",
           "module_line": 2,
           "external": false
@@ -35429,7 +34147,7 @@
             "y_raw": "sig_y[sig_lane]"
           },
           "instantiation_source": "llm_soc.sv",
-          "instantiation_line": 571,
+          "instantiation_line": 642,
           "module_source": "sigmoid.sv",
           "module_line": 2,
           "external": false
@@ -42246,7 +40964,7 @@
             "sum_o": "dot_sum"
           },
           "instantiation_source": "llm_linear_engine.sv",
-          "instantiation_line": 40,
+          "instantiation_line": 56,
           "module_source": "ternary_dot32.sv",
           "module_line": 3,
           "external": false
@@ -42582,7 +41300,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42613,7 +41331,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42644,7 +41362,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42675,7 +41393,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42706,7 +41424,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42737,7 +41455,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42768,7 +41486,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42799,7 +41517,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42830,7 +41548,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42861,7 +41579,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42892,7 +41610,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42923,7 +41641,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42954,7 +41672,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -42985,7 +41703,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43016,7 +41734,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43047,7 +41765,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43078,7 +41796,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43109,7 +41827,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43140,7 +41858,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43171,7 +41889,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43202,7 +41920,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43233,7 +41951,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43264,7 +41982,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43295,7 +42013,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43326,7 +42044,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43357,7 +42075,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43388,7 +42106,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43419,7 +42137,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43450,7 +42168,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43481,7 +42199,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43512,7 +42230,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43543,7 +42261,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43574,7 +42292,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43605,7 +42323,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43636,7 +42354,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43667,7 +42385,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43698,7 +42416,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43729,7 +42447,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43760,7 +42478,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43791,7 +42509,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43822,7 +42540,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43853,7 +42571,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43884,7 +42602,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43915,7 +42633,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43946,7 +42664,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -43977,7 +42695,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44008,7 +42726,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44039,7 +42757,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44070,7 +42788,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44101,7 +42819,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44132,7 +42850,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44163,7 +42881,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44194,7 +42912,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44225,7 +42943,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44256,7 +42974,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44287,7 +43005,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44318,7 +43036,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44349,7 +43067,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44380,7 +43098,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44411,7 +43129,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44442,7 +43160,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44473,7 +43191,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44504,7 +43222,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44535,7 +43253,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44566,7 +43284,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44597,7 +43315,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44628,7 +43346,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44659,7 +43377,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44690,7 +43408,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44721,7 +43439,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44752,7 +43470,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44783,7 +43501,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44814,7 +43532,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44845,7 +43563,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44876,7 +43594,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44907,7 +43625,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44938,7 +43656,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -44969,7 +43687,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45000,7 +43718,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45031,7 +43749,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45062,7 +43780,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45093,7 +43811,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45124,7 +43842,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45155,7 +43873,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45186,7 +43904,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45217,7 +43935,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45248,7 +43966,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45279,7 +43997,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45310,7 +44028,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45341,7 +44059,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45372,7 +44090,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45403,7 +44121,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45434,7 +44152,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45465,7 +44183,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45496,7 +44214,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45527,7 +44245,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45558,7 +44276,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45589,7 +44307,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45620,7 +44338,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45651,7 +44369,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45682,7 +44400,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45713,7 +44431,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45744,7 +44462,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45775,7 +44493,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45806,7 +44524,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45837,7 +44555,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45868,7 +44586,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45899,7 +44617,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45930,7 +44648,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45961,7 +44679,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -45992,7 +44710,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46023,7 +44741,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46054,7 +44772,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46085,7 +44803,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46116,7 +44834,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46147,7 +44865,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46178,7 +44896,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46209,7 +44927,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46240,7 +44958,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46271,7 +44989,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46302,7 +45020,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46333,7 +45051,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46364,7 +45082,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46395,7 +45113,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46426,7 +45144,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46457,7 +45175,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46488,7 +45206,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46519,7 +45237,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46550,7 +45268,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46581,7 +45299,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46612,7 +45330,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46643,7 +45361,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46674,7 +45392,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46705,7 +45423,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46736,7 +45454,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46767,7 +45485,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46798,7 +45516,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46829,7 +45547,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46860,7 +45578,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46891,7 +45609,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46922,7 +45640,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46953,7 +45671,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -46984,7 +45702,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47015,7 +45733,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47046,7 +45764,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47077,7 +45795,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47108,7 +45826,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47139,7 +45857,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47170,7 +45888,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47201,7 +45919,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47232,7 +45950,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47263,7 +45981,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47294,7 +46012,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47325,7 +46043,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47356,7 +46074,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47387,7 +46105,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47418,7 +46136,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47449,7 +46167,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47480,7 +46198,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47511,7 +46229,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47542,7 +46260,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47573,7 +46291,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47604,7 +46322,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47635,7 +46353,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47666,7 +46384,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47697,7 +46415,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47728,7 +46446,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47759,7 +46477,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47790,7 +46508,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47821,7 +46539,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47852,7 +46570,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47883,7 +46601,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47914,7 +46632,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47945,7 +46663,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -47976,7 +46694,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48007,7 +46725,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48038,7 +46756,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48069,7 +46787,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48100,7 +46818,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48131,7 +46849,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48162,7 +46880,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48193,7 +46911,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48224,7 +46942,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48255,7 +46973,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48286,7 +47004,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48317,7 +47035,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48348,7 +47066,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48379,7 +47097,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48410,7 +47128,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48441,7 +47159,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48472,7 +47190,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48503,7 +47221,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48534,7 +47252,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48565,7 +47283,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48596,7 +47314,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48627,7 +47345,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48658,7 +47376,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48689,7 +47407,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48720,7 +47438,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48751,7 +47469,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48782,7 +47500,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48813,7 +47531,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48844,7 +47562,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48875,7 +47593,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48906,7 +47624,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48937,7 +47655,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48968,7 +47686,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -48999,7 +47717,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49030,7 +47748,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49061,7 +47779,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49092,7 +47810,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49123,7 +47841,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49154,7 +47872,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49185,7 +47903,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49216,7 +47934,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49247,7 +47965,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49278,7 +47996,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49309,7 +48027,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49340,7 +48058,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49371,7 +48089,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49402,7 +48120,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49433,7 +48151,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49464,7 +48182,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49495,7 +48213,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49526,7 +48244,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49557,7 +48275,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49588,7 +48306,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49619,7 +48337,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49650,7 +48368,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49681,7 +48399,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49712,7 +48430,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49743,7 +48461,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49774,7 +48492,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49805,7 +48523,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49836,7 +48554,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49867,7 +48585,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49898,7 +48616,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49929,7 +48647,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49960,7 +48678,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -49991,7 +48709,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50022,7 +48740,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50053,7 +48771,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50084,7 +48802,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50115,7 +48833,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50146,7 +48864,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50177,7 +48895,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50208,7 +48926,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50239,7 +48957,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50270,7 +48988,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50301,7 +49019,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50332,7 +49050,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50363,7 +49081,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50394,7 +49112,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50425,7 +49143,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50456,7 +49174,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50487,7 +49205,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50518,7 +49236,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50549,7 +49267,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50580,7 +49298,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50611,7 +49329,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50642,7 +49360,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50673,7 +49391,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50704,7 +49422,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50735,7 +49453,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50766,7 +49484,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50797,7 +49515,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50828,7 +49546,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50859,7 +49577,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50890,7 +49608,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50921,7 +49639,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50952,7 +49670,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -50983,7 +49701,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51014,7 +49732,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51045,7 +49763,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51076,7 +49794,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51107,7 +49825,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51138,7 +49856,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51169,7 +49887,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51200,7 +49918,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51231,7 +49949,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51262,7 +49980,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51293,7 +50011,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51324,7 +50042,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51355,7 +50073,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51386,7 +50104,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51417,7 +50135,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51448,7 +50166,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51479,7 +50197,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51510,7 +50228,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51541,7 +50259,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51572,7 +50290,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51603,7 +50321,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51634,7 +50352,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51665,7 +50383,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51696,7 +50414,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51727,7 +50445,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51758,7 +50476,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51789,7 +50507,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51820,7 +50538,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51851,7 +50569,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51882,7 +50600,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51913,7 +50631,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51944,7 +50662,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -51975,7 +50693,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52006,7 +50724,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52037,7 +50755,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52068,7 +50786,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52099,7 +50817,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52130,7 +50848,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52161,7 +50879,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52192,7 +50910,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52223,7 +50941,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52254,7 +50972,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52285,7 +51003,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52316,7 +51034,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52347,7 +51065,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52378,7 +51096,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52409,7 +51127,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52440,7 +51158,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52471,7 +51189,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52502,7 +51220,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52533,7 +51251,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52564,7 +51282,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52595,7 +51313,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52626,7 +51344,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52657,7 +51375,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52688,7 +51406,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52719,7 +51437,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52750,7 +51468,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52781,7 +51499,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52812,7 +51530,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52843,7 +51561,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52874,7 +51592,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52905,7 +51623,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52936,7 +51654,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52967,7 +51685,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -52998,7 +51716,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53029,7 +51747,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53060,7 +51778,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53091,7 +51809,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53122,7 +51840,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53153,7 +51871,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53184,7 +51902,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53215,7 +51933,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53246,7 +51964,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53277,7 +51995,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53308,7 +52026,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53339,7 +52057,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53370,7 +52088,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53401,7 +52119,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53432,7 +52150,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         },
         {
@@ -53463,7 +52181,7 @@
           "instantiation_source": "pipelined_word_ram.sv",
           "instantiation_line": 137,
           "module_source": "sram_word_tile.sv",
-          "module_line": 1,
+          "module_line": 2,
           "external": false
         }
       ],

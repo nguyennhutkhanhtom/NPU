@@ -17,50 +17,9 @@ Port host là bus đơn giản 32 bit, không phải AXI/APB. Địa chỉ host 
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- H["Host<br/>32-bit transactions"] <--> F["Host frontend Control<br/>and memory windows"]
- F <--> D["Configuration storage Workspace<br/>/ matrix descriptors"]
- F <--> M["Memory ports Parameters<br/>and workspace"]
- P["Program storage PC<br/>and instruction memory"] --> C["Single-issue scheduler Opcode<br/>and engine ownership"]
- D --> C
- C -.-> E["Compute engines Rowwise,<br/>norm and ternary"]
- E <--> M
- E -.-> S["Status Done, error<br/>and overflow"]
- S -.-> F
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class H,F,M interface;
-class D,P buffer;
-class C control;
-class E compute;
-class S output;
-```
+![matmulfree.sv — overview](../../diagrams/previews/36_matmulfree.sv_1.svg)
+
+[Editable draw.io — matmulfree.sv — overview](../../diagrams/architecture.drawio) · Page `36_matmulfree.sv_1`.
 
 ## Main flow
 
@@ -97,46 +56,9 @@ Cache q giữ D, base và length để scale gắn đúng tensor. Bất kỳ ghi
 
 #### Sơ đồ khối phần cứng của nhóm
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- P["PC / instruction storage"] --> D["Opcode decode"]
- D --> C["Single-issue scheduler"]
- C -.-> E["Selected compute engine"]
- E --> R["Completion / faults"]
- R ==>|"advance instruction"| P
- R -.-> S["Host status Running,<br/>ready and sticky<br/>flags"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class P buffer;
-class D,C control;
-class E compute;
-class R,S output;
-```
+![matmulfree.sv — detail 1](../../diagrams/previews/37_matmulfree.sv_2.svg)
+
+[Editable draw.io — matmulfree.sv — detail 1](../../diagrams/architecture.drawio) · Page `37_matmulfree.sv_2`.
 
 Control/descriptor cần hai cạnh lên; SRAM/imem cần bốn cạnh lên từ sample đầu. Mux data dùng region đã chốt, output data đi từ register response. Comparator address/tag giữ ready gắn đúng giao dịch; host phải lấy data cùng ready.
 
@@ -216,46 +138,9 @@ Control/descriptor cần hai cạnh lên; SRAM/imem cần bốn cạnh lên từ
 
 #### Sơ đồ khối phần cứng của nhóm
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- D["Matrix descriptor Static<br/>scale M/r"] --> S["Effective scale selection"]
- E["Norm completion quant_d<br/>metadata"] --> Q["Runtime scale metadata<br/>Payload + valid<br/>bits"]
- Q --> C["scale_compose<br/>Dynamic M/r"]
- D --> C
- C --> S
- W["Workspace / descriptor<br/>writes Invalidate matching<br/>metadata"] -.-> Q
- S --> M["Ternary engine Effective<br/>matrix descriptor"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class D,Q buffer;
-class E,C,M compute;
-class S,W control;
-```
+![matmulfree.sv — detail 2](../../diagrams/previews/38_matmulfree.sv_3.svg)
+
+[Editable draw.io — matmulfree.sv — detail 2](../../diagrams/architecture.drawio) · Page `38_matmulfree.sv_3`.
 
 ### [Dòng 543–568: Mux response và status](<../../../Verilog%20Source%20code/matmulfree.sv#L543>)
 

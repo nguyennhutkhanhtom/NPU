@@ -15,52 +15,9 @@
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- C["Descriptor / row control"]
- subgraph DOT["Legacy ternary reduction"]
-  Q["Activation buffer<br/>32 × S8"] --> T["Ternary sign /<br/>zero terms 32<br/>× S9"]
-  W["Weight buffer 256-bit<br/>words"] --> T
-  T --> R["Reduction trees S12<br/>then S14"]
-  R --> A["Row accumulator<br/>S18"]
- end
- A --> P["Postscale pipeline S42<br/>product and RNE"]
- B["Scale / bias<br/>metadata U24 coefficient,<br/>S32 bias"] --> P
- P --> O["Bias / saturation<br/>/ pack S16<br/>or S32 output"]
- C -.-> Q & W & A & P & O
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class C control;
-class Q,W,B buffer;
-class T,R,A,P compute;
-class O output;
-style DOT fill:#ffffff,stroke:#aaaaaa,color:#111111;
-```
+![ternary_mul.sv — overview](../../diagrams/previews/68_ternary_mul.sv_1.svg)
+
+[Editable draw.io — ternary_mul.sv — overview](../../diagrams/architecture.drawio) · Page `68_ternary_mul.sv_1`.
 
 ## Main flow
 
@@ -99,51 +56,9 @@ style DOT fill:#ffffff,stroke:#aaaaaa,color:#111111;
 
 #### Sơ đồ khối phần cứng của nhóm
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
-Q["q_word<br/>32 activations S8"] --> SIGN["Sign / negation<br/>32 × S9<br/>terms"]
-    W["w_word 256 bit"] --> SEL@{ shape: trap-t, label: "Weight slice selector<br/>32 weights × 2 bit" }
-    CFG["K / input chunk index"] -.-> SEL
-    SEL --> DEC@{ shape: trap-b, label: "Weight decode 32<br/>ternary codes" }
-    SIGN --> PE@{ shape: trap-t, label: "Ternary selection Sign<br/>/ zero and<br/>tail mask" }
-    DEC -.-> PE
-    CFG -.-> PE
-    CFG -.->|"Useful-lane mask"| DEC
-    PE --> TREE["acc_mul S12 groups<br/>→ S14 total"]
-    TREE --> ACC["Row accumulator<br/>S18"]
-    ACC --> POST["postscale input"]
-    DEC -.-> ERR["Reserved-weight error Useful<br/>lanes only"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class SEL,PE interface;
-class Q,SIGN,W,CFG,TREE,ERR,DEC buffer;
-class ACC,POST compute;
-```
+![ternary_mul.sv — detail 1](../../diagrams/previews/69_ternary_mul.sv_2.svg)
+
+[Editable draw.io — ternary_mul.sv — detail 1](../../diagrams/architecture.drawio) · Page `69_ternary_mul.sv_2`.
 
 ### [Dòng 138–162: Địa chỉ SRAM](<../../../Verilog%20Source%20code/ternary_mul.sv#L138>)
 

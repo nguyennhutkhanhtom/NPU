@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1018" viewBox="0 0 800 1018">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="1018" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">sram_256_wrapper.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: sram_256_wrapper.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="300.3,184 300.3,236 235,236 235,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="235,329 235,399" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="235,474 235,549.5" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="235,613.5 235,689" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="235,764 235,816 300.3,816 300.3,834" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="485,619 485,694.5" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="419.7,184 419.7,526 485,526 485,544" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="485,758.5 485,816 419.7,816 419.7,834" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="260" y="120" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="360.00" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Clients Host 32-bit</text>
+<text x="360.00" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">/ compute 256-bit</text>
+<rect x="135" y="254" width="200" height="75" fill="#fff2cc" stroke="#d6b656"/>
+<text x="235.00" y="278.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Read / write</text>
+<text x="235.00" y="295.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">routing Host write</text>
+<text x="235.00" y="312.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">priority</text>
+<rect x="135" y="399" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="235.00" y="423.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Eight RAM banks</text>
+<text x="235.00" y="440.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">32 bits per</text>
+<text x="235.00" y="457.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">bank</text>
+<rect x="135" y="549.5" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="235.00" y="577.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Read payload</text>
+<text x="235.00" y="594.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">256-bit row</text>
+<rect x="135" y="689" width="200" height="75" fill="#fff2cc" stroke="#d6b656"/>
+<text x="235.00" y="713.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Client data selection</text>
+<text x="235.00" y="730.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host lane /</text>
+<text x="235.00" y="747.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">compute row</text>
+<rect x="260" y="834" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="870.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Response data / valid</text>
+<rect x="385" y="544" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="485.00" y="568.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Request / response</text>
+<text x="485.00" y="585.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">tags Address, lane</text>
+<text x="485.00" y="602.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">and owner</text>
+<rect x="385" y="694.5" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="485.00" y="730.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Current-request match</text>
+<text x="30.00" y="1004.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

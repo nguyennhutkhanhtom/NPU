@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="843" viewBox="0 0 800 843">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="843" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">mem_mapping.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: mem_mapping.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<rect x="135.625" y="355" width="436.5" height="290" fill="none" stroke="#999999" stroke-dasharray="5 4"/>
+<text x="143.62" y="372.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666" font-weight="bold">sram_256_wrapper · ADDR_W=10</text>
+<rect x="113.625" y="320" width="480.5" height="360" fill="none" stroke="#999999" stroke-dasharray="5 4"/>
+<text x="121.62" y="337.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666" font-weight="bold">mem_mapping</text>
+<polyline points="341.62,465 341.62,535" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="440.19,212 440.19,372 374.73,372 374.73,390" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="445.2,390 445.2,230 502.86,230 502.86,212" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="179.62,198 179.62,372 257.83,372 257.83,390" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<rect x="353.125" y="120" width="233" height="92" fill="#fff2cc" stroke="#d6b656"/>
+<text x="469.62" y="144.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Ternary compute read port</text>
+<text x="469.62" y="161.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Data 256 bit · address 10 bit</text>
+<text x="469.62" y="178.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Compute write tied off in</text>
+<text x="469.62" y="195.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">matmulfree</text>
+<rect x="56.125" y="134" width="247" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="179.62" y="161.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host port</text>
+<text x="179.62" y="178.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Data 32 bit · word-index 13 bit</text>
+<rect x="211.125" y="390" width="261" height="75" fill="#fff2cc" stroke="#d6b656"/>
+<text x="341.62" y="414.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Masked write / shared synchronous</text>
+<text x="341.62" y="431.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">read</text>
+<text x="341.62" y="448.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host lane select + host_rvalid</text>
+<rect x="225.125" y="535" width="233" height="75" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="341.62" y="559.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parameter memory array 1024 ×</text>
+<text x="341.62" y="576.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">256 bit 8 bank ×</text>
+<text x="341.62" y="593.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">32 bit 32 KiB</text>
+<rect x="346.19" y="280.0" width="86" height="24" fill="white"/>
+<text x="389.19" y="296.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">Read request</text>
+<rect x="453.2" y="300.0" width="20" height="20" fill="white"/>
+<text x="463.20" y="314.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">1</text>
+<rect x="112.62" y="266.0" width="134" height="38" fill="white"/>
+<text x="179.62" y="282.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">32-bit lane access +</text>
+<text x="179.62" y="298.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">host_rvalid</text>
+<text x="30.00" y="786.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">1. Read data / valid</text>
+<text x="30.00" y="829.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

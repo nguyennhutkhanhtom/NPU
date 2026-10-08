@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="840" viewBox="0 0 800 840">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="840" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">llm_math.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_math.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="195.5,184 195.5,236 201.25,236 201.25,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="206.5,318 206.5,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="206.5,452 206.5,504 319.5,504 319.5,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="399.5,586 399.5,638 435.02,638 435.02,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="444.5,184 444.5,236 260.95,236 260.95,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="556.98,184 556.98,202 573.5,202 573.5,504 479.5,504 479.5,522" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="594.71,184 594.71,638 547.5,638 547.5,656" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="492.02,184 492.02,236 456.5,236 456.5,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="95.5" y="120" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="195.50" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Input handshake</text>
+<text x="195.50" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">32 S24 / S32 pairs</text>
+<rect x="106.5" y="254" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="206.50" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Captured operands</text>
+<text x="206.50" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Acceptance E0</text>
+<rect x="100.5" y="388" width="212" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="206.50" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Byte-product pipeline</text>
+<text x="206.50" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">128 structural multipliers</text>
+<rect x="299.5" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="399.50" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Lane products</text>
+<text x="399.50" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">32 S56 values at E3</text>
+<rect x="367.5" y="656" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="467.50" y="683.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Registered reduction</text>
+<text x="467.50" y="700.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S61 sum at E8</text>
+<rect x="424.5" y="120" width="200" height="64" fill="#f8cecc" stroke="#b85450"/>
+<text x="524.50" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Valid / ready control</text>
+<text x="524.50" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">STREAMING mode</text>
+<rect x="356.5" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="456.50" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Legacy completion</text>
+<text x="456.50" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Done at E9</text>
+<text x="30.00" y="826.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

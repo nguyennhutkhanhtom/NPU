@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1108" viewBox="0 0 800 1108">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="1108" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">norm.sv — detail 1</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: norm.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="245.88,318 245.88,370 283.88,370 283.88,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="397.38,184 397.38,236 245.88,236 245.88,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="504.38,184 504.38,370 404.62,370 404.62,388" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="257.73,452 257.73,504 191.12,504 191.12,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="379.52,452 379.52,504 446.12,504 446.12,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="191.12,586 191.12,671 346.12,671" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="446.12,586 446.12,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="543.54,184 543.54,202 563.12,202 563.12,638 513.11,638 513.11,656" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="446.12,720 446.12,790" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="446.12,854 446.12,924" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="136.375" y="254" width="219" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="245.88" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Workspace read port 256 bit</text>
+<rect x="212.625" y="388" width="212" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="318.62" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Read buffer + two S16 lane</text>
+<text x="318.62" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">selectors</text>
+<rect x="377.375" y="120" width="254" height="64" fill="#f8cecc" stroke="#b85450"/>
+<text x="504.38" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Word/lane counters + length mask</text>
+<text x="504.38" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Read request controller</text>
+<rect x="88.625" y="522" width="205" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="191.12" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Shared multiplier 0 in P1</text>
+<text x="191.12" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S16 × S16</text>
+<rect x="343.625" y="522" width="205" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="446.12" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Shared multiplier 1 in P1</text>
+<text x="446.12" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S16 × S16</text>
+<rect x="346.125" y="656" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="446.12" y="692.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Tail mask + pair sum U40</text>
+<rect x="346.125" y="790" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="446.12" y="817.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">U40 sum accumulator</text>
+<text x="446.12" y="834.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Adder + sum_sq storage</text>
+<rect x="322.625" y="924" width="247" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="446.12" y="960.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Mean-square / coefficient block</text>
+<text x="30.00" y="1094.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

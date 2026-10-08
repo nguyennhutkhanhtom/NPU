@@ -19,10 +19,11 @@ bằng thông báo chuyển hướng.
 | Remote Desktop | Cùng host/tài khoản, màu 16-bit theo hướng dẫn lab; giữ phiên X11 hoạt động |
 
 Người dùng bật VPN trên chính máy thực thi SSH; Codex không đọc VPN config hoặc
-đổi VPN/DNS. Kết nối từ sandbox/cloud không được mặc định là có VPN. Từ terminal:
+đổi VPN/DNS. Kết nối từ sandbox/cloud không được mặc định là có VPN. SSH dùng
+mật khẩu; đăng nhập thủ công phải tắt public-key authentication:
 
 ```powershell
-ssh ee5303_09@red.doelab.site
+ssh -o PubkeyAuthentication=no -o PreferredAuthentications=password ee5303_09@red.doelab.site
 ```
 
 Xác minh host key với nguồn tin cậy khi gặp host mới/mismatch; không tự chấp nhận
@@ -34,22 +35,29 @@ Mật khẩu không nằm trong Markdown. Dữ liệu xác thực local đã đ�
 Windows hiện tại và SYSTEM. Không đọc/in mật khẩu, commit, upload hay đưa nó vào
 command arguments, environment, transcript hoặc logs. File lưu thông tin
 `host`, `user`, `password`; nếu cần cập nhật thì chỉ sửa riêng tại local, không
-chép giá trị vào tài liệu. Có thể bỏ `-UseSavedPassword` và dùng prompt SSH thủ công.
+chép giá trị vào tài liệu. Có thể dùng prompt SSH thủ công; các script flow luôn
+dùng password trong credentials local.
 
-Sau đợt gộp tài liệu, credential đã được chuyển và kiểm tra readback tại local;
-kiểm tra cú pháp helper đạt. Lần thử SSH bằng credential này bị server từ chối
-(`Permission denied`); chưa xác nhận lại login. Kiểm tra/cập nhật mật khẩu hiện
-tại trực tiếp trong file local hoặc ở SSH prompt, không gửi giá trị vào chat.
-Không retry tự động khi chưa có thông tin xác thực mới. Kết quả regression đã
-ghi trước đó vẫn thuộc phiên/source được lưu trong evidence, không phải lần login này.
+Kiểm tra lại ngày 2026-10-08 bằng credential local và `ssh-auth.ps1`: SSH đăng
+nhập thành công, lệnh `hostname` trả về `red.doelab.site`, host-key checking vẫn
+bật. Đây là kiểm tra truy cập login node; chưa cấp Slurm hoặc chạy EDA trong
+lần kiểm tra này. Khi cần cập nhật mật khẩu, sửa trực tiếp file local hoặc dùng
+SSH prompt, không gửi giá trị vào chat. Không retry tự động mật khẩu bị từ chối.
 
-`ssh-auth.ps1` dùng Git for Windows SSH và temporary askpass helper: đọc JSON
+`copy-via-ssh.ps1` và `get-reports.ps1` luôn dùng `ssh-auth.ps1`. Helper dùng
+Git for Windows SSH và temporary askpass: đọc JSON
 trong bộ nhớ, chỉ trả mật khẩu vào đúng prompt của tài khoản/host trên. Không
 chạy helper standalone; stdout chỉ được SSH tiêu thụ. Helper được xóa sau phiên,
 environment chỉ được đặt cho process SSH. `DISPLAY=codex:0` của askpass là giá trị
 local để bật helper, không phải display X11 trên server; X11 thật được xác thực
 riêng bằng launcher bên dưới. Dùng `StrictHostKeyChecking=yes`, known_hosts của
 người dùng, timeout 10 giây và tối đa một password prompt.
+
+Flow password được kiểm tra ngày 2026-10-08: SSH xác nhận authentication
+`password`; copy file mới và copy lại file cùng hash đạt `COPY_VERIFIED`;
+download archive rồi giải nén có SHA256 khớp file gốc UTF-8. Helper tạm được
+dọn sạch. Evidence local:
+`tests/full_rtl/build/scratchpad/password_probe_4b453ac6430046b0a321a79bf883037c/result.json`.
 
 ### Phạm vi thao tác
 
@@ -128,7 +136,7 @@ Linux đang hoạt động của cùng tài khoản cung cấp display dùng đ�
 Sau transfer được phép và authorization chạy job, từ terminal Windows:
 
 ```powershell
-ssh -t ee5303_09@red.doelab.site 'bash -l "$HOME/project/test_khanh/bundle_TAG/tools/server/slurm_x11.sh" test --tag test_next'
+ssh -t -o PubkeyAuthentication=no -o PreferredAuthentications=password ee5303_09@red.doelab.site 'bash -l "$HOME/project/test_khanh/bundle_TAG/tools/server/slurm_x11.sh" test --tag test_next'
 ```
 
 `slurm_x11.sh` dùng `resolve_x11.py` kiểm tra DISPLAY hiện tại hoặc display của
@@ -137,6 +145,15 @@ process thuộc **chính UID**, xác thực bằng `xdpyinfo`, rồi chạy
 display, không in cookie, không sửa Xauthority, không dùng `xhost +`, không mở
 port hay đổi sshd. Nó fail trước allocation nếu không có display hợp lệ.
 `run.sh` và Python runner kiểm tra kết nối X11 một lần nữa trên compute node.
+
+Launcher hỗ trợ danh sách node có thứ tự: `NPU_SLURM_NODES='gray white'`
+và `NPU_SLURM_BUSY_TIMEOUT=30` (1..300 giây mỗi node). Mặc định vẫn chọn
+`NPU_SLURM_NODE` hoặc `black`. Mỗi node chỉ thử một lần; `--immediate`
+giới hạn chờ allocation, không giới hạn thời gian synthesis đã chạy.
+Chỉ đổi node khi Slurm trả mã busy riêng `SLURM_EXIT_IMMEDIATE=75`;
+lỗi X11/module/EDA làm dừng, không tự chạy lại design lỗi.
+Nếu mọi node đều busy, launcher thoát 75. Giữ `--x11` và giới hạn job 5 giờ.
+Quy ước mã busy theo [Slurm srun](https://slurm.schedmd.com/srun.html).
 
 Nếu phiên RDP/X11 đã đóng, mở lại desktop của tài khoản rồi thử launcher. Cũng
 có thể dùng SSH `-X` khi có X server local và forwarding hoạt động; không tự gán
@@ -185,6 +202,27 @@ python3 tools/server/run_flow.py --stage all --tag all_20261008 --lib /approved/
 bash -l tools/server/run.sh test --tag test_next
 ```
 
+Library khảo sát ngày 2026-10-08 nằm trong
+`tests/full_rtl/build/scratchpad/server_cell_library_20261008.md`.
+Lượt full-top dùng `slow_vdd1v0_basicCells.lib` tại
+`/tools/eda/pdks/cadence/gpdk045/gsclib045_svt_v4.7/gsclib045/timing/`;
+header thực tế là 0.9 V / 125 C, không suy PVT từ tên file.
+Giữ clock 10 ns trong `asic.sdc`, top `llm_soc`, `USE_QUARTUS_MEMORY=0`
+và nguyên RTL. Sau transfer bundle được phép, chạy trong allocation hiện có:
+
+```bash
+srun --jobid=JOB_ID --pty --x11 -c 2 bash -l "$HOME/project/test_khanh/bundle_syn_gpdk045_20261008/tools/server/run.sh" syn --tag syn_gpdk045_20261008 --lib /tools/eda/pdks/cadence/gpdk045/gsclib045_svt_v4.7/gsclib045/timing/slow_vdd1v0_basicCells.lib
+```
+
+SSH cần DISPLAY/XAUTHORITY được `resolve_x11.py` xác thực như launcher;
+không tự đặt display giả. Nếu không còn allocation, dùng `slurm_x11.sh syn`
+với cùng `--tag`/`--lib` để cấp job mới. Không relaunch tag đã tồn tại.
+`genus.version.log` lưu tool version; `synthesis_progress.log` đánh dấu
+read/elaborate/generic/map/opt. `generic_area.rpt` có trước mapping và
+`check_design_mapped.rpt` kiểm tra unresolved sau tối ưu. `results.json`
+ghi hash source/library/SDC/report. Completion vẫn cần review warnings,
+unresolved, mapping và timing; chưa phải physical timing closure.
+
 ## Application checkpoint
 
 Giữ pinned checkpoint/tokenizer và dependencies trong môi trường Python Linux
@@ -215,6 +253,16 @@ RAM hiện là inferred portable RTL, chưa bind SRAM macro. Không suy ra ASIC
 physical STA/PPA/DFT/CDC/signoff hoặc Fmax FPGA từ kết quả này. Evidence cũ giữ
 nguyên, không dùng để chứng nhận source/configuration mới.
 
+Optional ASIC runtime mode: add `--syn-ram-blackbox` to `--stage syn` (or `all`).
+Only Genus receives `SYNTH_RAM_BLACKBOX`; Xcelium retains functional RAM. The
+storage leaf `sram_word_tile` becomes a parameterized black box; wrapper ports,
+dimensions and pipeline RTL remain unchanged. For lightweight checks use
+`--syn-top llm_parameter_ram` or `--syn-top llm_bank_ram` with the approved `--lib`;
+netlist/SDC names follow that top. Keep the 10 ns SDC. Black boxes have no SRAM
+area or timing arcs, so reports cover surrounding logic only and cannot establish
+complete ASIC PPA or memory-path timing closure. Genus uses two CPUs to match
+the launcher allocation.
+
 Khi job dài chưa xong, kiểm tra ban đầu tối đa một lần rồi bàn giao:
 
 ```bash
@@ -236,7 +284,7 @@ không truyền file. Chạy source trực tiếp từ checkout cũng được.
 Sau khi admin cho phép phương thức SSH của script, copy từ PowerShell:
 
 ```powershell
-./tools/server/copy-via-ssh.ps1 -AdminApprovedTransfer -SourcePath tests/full_rtl/build/bundle_TAG -TargetPath '~/project/test_khanh/bundle_TAG' -UseSavedPassword
+./tools/server/copy-via-ssh.ps1 -AdminApprovedTransfer -SourcePath tests/full_rtl/build/bundle_TAG -TargetPath '~/project/test_khanh/bundle_TAG'
 ```
 
 Script chỉ nhận thư mục task dưới `~/project/test_khanh`, giữ file giống hash,
@@ -286,5 +334,5 @@ xác nhận. Legacy/application là gates riêng, chưa được kiểm chứng 
 Download riêng reports của tag được phép:
 
 ```powershell
-./tools/server/get-reports.ps1 -AdminApprovedTransfer -RemoteRoot '~/project/test_khanh/server_x11_lut_20261008' -Tag x11_full2_20261008 -UseSavedPassword
+./tools/server/get-reports.ps1 -AdminApprovedTransfer -RemoteRoot '~/project/test_khanh/server_x11_lut_20261008' -Tag x11_full2_20261008
 ```

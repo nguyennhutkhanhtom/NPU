@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1549" viewBox="0 0 800 1549">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="1549" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">full_rtl_language — detail 1</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_soc.sv · clk; raw rst_n → u_reset → core_rst_n</text>
+<rect x="224" y="120" width="272" height="703" fill="none" stroke="#999999" stroke-dasharray="5 4"/>
+<text x="232.00" y="137.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666" font-weight="bold">Attention sublayer</text>
+<rect x="218" y="893" width="284" height="536" fill="none" stroke="#999999" stroke-dasharray="5 4"/>
+<text x="226.00" y="910.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666" font-weight="bold">Feed-forward sublayer</text>
+<polyline points="360,219 360,289" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,364 360,434" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,509 360,579" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,654 360,724" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,992 360,1062" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,1126 360,1196" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,1260 360,1330" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,788 360,928" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="260" y="155" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="191.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Affine RMSNorm</text>
+<rect x="260" y="289" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="313.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Q / K</text>
+<text x="360.00" y="330.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">/ V projections</text>
+<text x="360.00" y="347.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Ternary weights</text>
+<rect x="260" y="434" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="458.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">RoPE / KV</text>
+<text x="360.00" y="475.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">write Rotate Q</text>
+<text x="360.00" y="492.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">and K</text>
+<rect x="260" y="579" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="603.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Causal attention QK,</text>
+<text x="360.00" y="620.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">softmax and value</text>
+<text x="360.00" y="637.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">reduction</text>
+<rect x="260" y="724" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="760.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">O projection / residual</text>
+<rect x="260" y="928" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="964.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Affine RMSNorm</text>
+<rect x="260" y="1062" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="1098.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Gate / Up projections</text>
+<rect x="260" y="1196" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="1232.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">SiLU / element product</text>
+<rect x="254" y="1330" width="212" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="1366.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Down projection / residual</text>
+<text x="30.00" y="1535.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

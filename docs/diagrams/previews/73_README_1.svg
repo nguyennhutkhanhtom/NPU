@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="916" height="974" viewBox="0 0 916 974">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="916" height="974" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">README — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: matmulfree.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="546.75,184 546.75,254" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="546.75,318 546.75,388" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="446.75,302.04 134.75,302.04 134.75,790" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="273.25,452 273.25,504 344.69,504 344.69,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="546.75,452 546.75,504 475.31,504 475.31,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="410,586 410,656" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="330,720 330,772 176.42,772 176.42,790" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="490,720 490,772 657.16,772 657.16,790" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="700.5,790 700.5,336 622.93,336 622.93,318" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="446.75" y="120" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="546.75" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host</text>
+<text x="546.75" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">32-bit transactions</text>
+<rect x="446.75" y="254" width="200" height="64" fill="#f8cecc" stroke="#b85450"/>
+<text x="546.75" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host frontend Control</text>
+<text x="546.75" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">and memory windows</text>
+<rect x="423.25" y="388" width="247" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="546.75" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Configuration storage Workspace</text>
+<text x="546.75" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">/ matrix descriptors</text>
+<rect x="40" y="790" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="140.00" y="817.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Memory ports Parameters</text>
+<text x="140.00" y="834.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">and workspace</text>
+<rect x="173.25" y="388" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="273.25" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Program storage PC</text>
+<text x="273.25" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">and instruction memory</text>
+<rect x="293.5" y="522" width="233" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="410.00" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Single-issue scheduler Opcode</text>
+<text x="410.00" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">and engine ownership</text>
+<rect x="310" y="656" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="410.00" y="683.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Compute engines Rowwise,</text>
+<text x="410.00" y="700.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">norm and ternary</text>
+<rect x="595.25" y="790" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="695.25" y="817.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Status Done, error</text>
+<text x="695.25" y="834.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">and overflow</text>
+<text x="30.00" y="960.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

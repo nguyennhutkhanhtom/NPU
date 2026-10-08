@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="939" height="840" viewBox="0 0 939 840">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="939" height="840" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">mul.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: mul.sv · Combinational logic / compile-time definitions; no private clock domain</text>
+<polyline points="140,318 140,370 169.78,370 169.78,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="362.78,184 362.78,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="390,318 390,370 277,370 277,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="169.78,452 169.78,504 140,504 140,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="297,437 315,437 315,504 539.52,504 539.52,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="572,586 572,638 613.27,638 613.27,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="490,169 508,169 508,236 691.78,236 691.78,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="719,318 719,638 683.48,638 683.48,656" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="575.04,184 575.04,236 444.45,236 444.45,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="612.78,184 612.78,202 577.25,202 577.25,522" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="682.99,184 682.99,236 724.25,236 724.25,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="40" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="140.00" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Operand A</text>
+<text x="140.00" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S16</text>
+<rect x="97" y="388" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="197.00" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Signed multiply</text>
+<text x="197.00" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S16 × S17 → S33</text>
+<rect x="290" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="390.00" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Operand B</text>
+<text x="390.00" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">16-bit signed / unsigned</text>
+<rect x="290" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="390.00" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Sign / zero extension</text>
+<rect x="40" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="140.00" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Raw product</text>
+<text x="140.00" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Low 32 bits</text>
+<rect x="472" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="572.00" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Scale / RNE</text>
+<text x="572.00" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Sign-extended S64</text>
+<rect x="551" y="656" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="651.00" y="683.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S16 saturation</text>
+<text x="651.00" y="700.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Result and overflow</text>
+<rect x="619" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="719.00" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Unsigned gate range</text>
+<text x="719.00" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Check above 0x8000</text>
+<rect x="540" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="640.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Unsigned mode / rshift</text>
+<text x="30.00" y="826.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

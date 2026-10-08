@@ -13,85 +13,12 @@
 
 ## Sơ đồ kiến trúc
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- I["Input handshake<br/>32 S24 / S32 pairs"] --> C["Captured operands<br/>Acceptance E0"]
- C --> M["Byte-product pipeline<br/>128 structural multipliers"]
- M --> P["Lane products<br/>32 S56 values at E3"]
- P --> R["Registered reduction<br/>S61 sum at E8"]
- V["Valid / ready control<br/>STREAMING mode"] -.-> C & P & R
- V -.-> D["Legacy completion<br/>Done at E9"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class I interface;
-class C buffer;
-class M,R compute;
-class P,D output;
-class V control;
-```
+![llm_math.sv — overview](../../diagrams/previews/27_llm_math.sv_1.svg)
+
+[Editable draw.io — llm_math.sv — overview](../../diagrams/architecture.drawio) · Page `27_llm_math.sv_1`.
 
 ## Internal arithmetic pipeline
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- B["Byte multipliers<br/>Three unsigned; one signed"] --> P["Partial products<br/>S33 at E1"]
- P --> R["Pair sums<br/>S41 at E2"]
- R --> X["Lane product<br/>S56 at E3"]
- X --> T["Five reduction stages<br/>S57 → S61"]
- T --> O["Sum<br/>S61 at E8"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class B,T compute;
-class P,R buffer;
-class X,O output;
-```
+![llm_math.sv — detail 1](../../diagrams/previews/28_llm_math.sv_2.svg)
+
+[Editable draw.io — llm_math.sv — detail 1](../../diagrams/architecture.drawio) · Page `28_llm_math.sv_2`.

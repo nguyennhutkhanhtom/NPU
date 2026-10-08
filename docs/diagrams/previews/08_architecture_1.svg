@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1153" height="1386" viewBox="0 0 1153 1386">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="1153" height="1386" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">architecture — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: matmulfree.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="378,195 378,265" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="353.9,329 353.9,405 318.5,405 318.5,423" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="298,329 298,347 192,347 192,1032.33 398.75,1032.33" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="398.75,1092.32 380.75,1092.32 380.75,1184 135.54,1184 135.54,1202" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="182.63,1202 182.63,1093 398.75,1093" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="659.75,1031 677.75,1031 677.75,797 586.25,797" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="318.5,498 318.5,573.5" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="318.5,637.5 318.5,719 406.52,719 406.52,737" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="476.75,812 476.75,864 515.67,864 515.67,882" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="418.5,477.7 461,477.7 461,720 637.25,720 637.25,882" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="551.25,946 551.25,998 541.74,998 541.74,1016" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="639.75,1108 639.75,1184 856.37,1184 856.37,1202" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="903.46,1202 903.46,1093 659.75,1093" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="478,627.2 460,627.2 460,720 144.46,720 144.46,1202" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="591,643 591,719 527.45,719 527.45,737" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="704,628 722,628 722,1184 894.54,1184 894.54,1202" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="458,329 458,347 591,347 591,568" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="272" y="120" width="212" height="75" fill="#fff2cc" stroke="#d6b656"/>
+<text x="378.00" y="144.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host loads model and input</text>
+<text x="378.00" y="161.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Read logits; argmax and</text>
+<text x="378.00" y="178.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">tokenization</text>
+<rect x="278" y="265" width="200" height="64" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="378.00" y="292.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host interface 32 bit</text>
+<text x="378.00" y="309.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">SRAM read valid/ready</text>
+<rect x="218.5" y="423" width="200" height="75" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="318.50" y="447.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parameter SRAM 32 KiB</text>
+<text x="318.50" y="464.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">8 bank × 1024 × 32 bit</text>
+<text x="318.50" y="481.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Synchronous read/valid</text>
+<rect x="398.75" y="1016" width="261" height="92" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="529.25" y="1040.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Workspace SRAM 8 KiB 8 bank × 256</text>
+<text x="529.25" y="1057.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">× 32 bit Synchronous read/valid X</text>
+<text x="529.25" y="1074.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">/ scratch</text>
+<text x="529.25" y="1091.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">/ q / state / logits</text>
+<rect x="40" y="1202" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="140.00" y="1229.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">NORM + QUANT</text>
+<text x="140.00" y="1246.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">2 lane + scalar units</text>
+<rect x="367.25" y="737" width="219" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="476.75" y="761.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Ternary core 32 ×</text>
+<text x="476.75" y="778.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">1 32 selectors; S12/S14</text>
+<text x="476.75" y="795.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">reductions; S18 accumulator</text>
+<rect x="209" y="573.5" width="219" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="318.50" y="601.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Weight buffer 256 bit</text>
+<text x="318.50" y="618.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Reuse for up to four chunks</text>
+<rect x="445.25" y="882" width="212" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="551.25" y="909.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Postscale + bias</text>
+<text x="551.25" y="926.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">RNE + saturation → S16/S32</text>
+<rect x="765" y="1202" width="268" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="899.00" y="1229.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Rowwise 2 lane + SIG LUT</text>
+<text x="899.00" y="1246.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">ADD / SUB / MUL / REC / RELU / SIG</text>
+<rect x="478" y="568" width="226" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="591.00" y="592.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Scheduler single-issue</text>
+<text x="591.00" y="609.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">PC + instruction RAM/valid +</text>
+<text x="591.00" y="626.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">descriptor FF</text>
+<rect x="298.9" y="355.0" width="110" height="24" fill="white"/>
+<text x="353.90" y="371.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">Load/read; ready</text>
+<rect x="137.0" y="677.665" width="110" height="24" fill="white"/>
+<text x="192.00" y="693.66" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">Load/read; ready</text>
+<rect x="235.69" y="1081.0" width="110" height="24" fill="white"/>
+<text x="290.69" y="1097.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">q S8 and scratch</text>
+<rect x="658.75" y="960.5" width="38" height="24" fill="white"/>
+<text x="677.75" y="976.50" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">q S8</text>
+<rect x="530.125" y="690.0" width="38" height="24" fill="white"/>
+<text x="549.12" y="706.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">Bias</text>
+<text x="30.00" y="1372.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

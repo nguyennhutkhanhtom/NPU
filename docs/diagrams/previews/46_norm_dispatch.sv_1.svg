@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="851" viewBox="0 0 800 851">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="851" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">norm_dispatch.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: norm_dispatch.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="481.5,184 481.5,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="481.5,318 481.5,388" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="426.46,452 426.46,504 300.3,504 300.3,522" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="229,452 229,504 234.75,504 234.75,522" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="234.75,586 234.75,638 229,638 229,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="486.75,452 486.75,643.5 486.36,643.5 486.36,661.5" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="300.3,586 300.3,643.5 430.63,643.5 430.63,661.5" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="372" y="120" width="219" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="481.50" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Descriptors / configuration</text>
+<rect x="379" y="254" width="205" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="481.50" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Descriptor checks Bounds,</text>
+<text x="481.50" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">format and length</text>
+<rect x="379" y="388" width="205" height="64" fill="#f8cecc" stroke="#b85450"/>
+<text x="481.50" y="424.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Start / rejection control</text>
+<rect x="140" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="240.00" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">norm RMSNorm +</text>
+<text x="240.00" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">quantization</text>
+<rect x="129" y="388" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="229.00" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Workspace port 256-bit</text>
+<text x="229.00" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">words</text>
+<rect x="129" y="656" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="229.00" y="680.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Scale metadata D,</text>
+<text x="229.00" y="697.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">norm M/r, quant</text>
+<text x="229.00" y="714.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">M/r</text>
+<rect x="379" y="661.5" width="205" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="481.50" y="689.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Status combine Completion</text>
+<text x="481.50" y="706.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">and errors</text>
+<text x="30.00" y="837.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

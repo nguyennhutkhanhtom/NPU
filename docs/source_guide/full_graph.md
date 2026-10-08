@@ -21,136 +21,17 @@ sigmoid lane và bốn divider lane mặc định tăng throughput cho các batc
 [hierarchy và port-map manifest](../diagrams/README.md) để tra instance, generate
 scope và kết nối chính xác.
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- H["Host interface<br/>32-bit request / response"] <--> F["Host frontend<br/>Prompt, config and output IDs"]
- subgraph MEMORY["Shared storage"]
-  P["u_parameters<br/>24576 × 256 bit"]
-  V["u_vectors<br/>96 × 768 bit"]
-  K["u_cache<br/>4096 × 768 bit"]
- end
- F <--> P
- R["Parent resource muxes<br/>Compute requests / payloads"] <--> P
- R <--> V
- R <--> K
- C["Graph / operator control<br/>Phase and routing"] -.-> R
- C -.-> F
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class C control;
-class H interface;
-class R buffer;
-class F output;
-class P,V,K platform;
-style MEMORY fill:#ffffff,stroke:#aaaaaa,color:#111111;
-```
+![full_graph — overview](../diagrams/previews/70_full_graph_1.svg)
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- C["Parent phase control<br/>llm_soc"] -.-> L & H & A
- subgraph ENGINES["Compute engines"]
- L["u_linear_engine<br/>Ternary rows"]
- H["u_head_engine<br/>Ordered int8 chunks"]
- A["u_attention_engine<br/>Causal QK scores"]
- end
- R["Parent muxes<br/>Requests / operands / returns"] <--> L & H & A
- R --> M["u_math<br/>32 streaming SIMD lanes"]
- M -->|"sum / valid"| R
- style ENGINES fill:#ffffff,stroke:#aaaaaa,color:#111111;
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class C control;
-class L,H,A,M compute;
-class R interface;
-```
+[Editable draw.io — full_graph — overview](../diagrams/architecture.drawio) · Page `70_full_graph_1`.
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- C["Parent arithmetic routing<br/>RMSNorm / attention / SiLU"] -.-> D & Q & N
- D["u_div<br/>Shared divider"] -->|"quotient + remainder"| N["u_attention_normalize<br/>Shared lane 0 + private lanes"]
- Q["Root / sigmoid resources"] --> C
- N --> C
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class C interface;
-class D,Q platform;
-class N output;
-```
+![full_graph — detail 1](../diagrams/previews/71_full_graph_2.svg)
+
+[Editable draw.io — full_graph — detail 1](../diagrams/architecture.drawio) · Page `71_full_graph_2`.
+
+![full_graph — detail 2](../diagrams/previews/72_full_graph_3.svg)
+
+[Editable draw.io — full_graph — detail 2](../diagrams/architecture.drawio) · Page `72_full_graph_3`.
 
 ## Đọc source theo luồng
 

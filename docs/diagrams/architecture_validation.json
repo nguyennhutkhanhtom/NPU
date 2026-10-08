@@ -1,0 +1,705 @@
+{
+  "status": "PASS",
+  "scope": "XML references/editability, complete configured instance coverage, source-port validation, RTL/LUT preservation, orthogonal routing, node and signal-label collisions, named-module existence, and reviewed source witnesses. Not simulation/synthesis or a general SV elaborator.",
+  "pages": [
+    {
+      "id": "h_quartus_llm_soc_0",
+      "cells": 26,
+      "nodes": 24,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_llm_parameter_ram_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_llm_bank_ram_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_llm_bank_ram_1",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_llm_math_0",
+      "cells": 8,
+      "nodes": 6,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_llm_linear_engine_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_llm_attention_engine_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_llm_attention_normalize_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_sigmoid_0",
+      "cells": 8,
+      "nodes": 6,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_pipelined_word_ram_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_pipelined_word_ram_1",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_pipelined_word_ram_2",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_quartus_word_ram_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_quartus_word_ram_1",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_quartus_quartus_word_ram_2",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "01_model_candidates_1",
+      "cells": 23,
+      "nodes": 12,
+      "connections": 9
+    },
+    {
+      "id": "02_nanofable_hybrid_1",
+      "cells": 18,
+      "nodes": 10,
+      "connections": 6
+    },
+    {
+      "id": "03_exact_throughput_optimization_1",
+      "cells": 19,
+      "nodes": 11,
+      "connections": 6
+    },
+    {
+      "id": "04_exact_throughput_optimization_2",
+      "cells": 16,
+      "nodes": 10,
+      "connections": 4
+    },
+    {
+      "id": "05_full_rtl_language_1",
+      "cells": 26,
+      "nodes": 15,
+      "connections": 9
+    },
+    {
+      "id": "06_full_rtl_language_2",
+      "cells": 24,
+      "nodes": 14,
+      "connections": 8
+    },
+    {
+      "id": "07_host_interface_1",
+      "cells": 26,
+      "nodes": 15,
+      "connections": 9
+    },
+    {
+      "id": "08_architecture_1",
+      "cells": 37,
+      "nodes": 18,
+      "connections": 17
+    },
+    {
+      "id": "09_full_rtl_development_1",
+      "cells": 26,
+      "nodes": 15,
+      "connections": 9
+    },
+    {
+      "id": "10_full_rtl_development_2",
+      "cells": 24,
+      "nodes": 14,
+      "connections": 8
+    },
+    {
+      "id": "11_full_rtl_development_3",
+      "cells": 32,
+      "nodes": 19,
+      "connections": 11
+    },
+    {
+      "id": "12_rtl_change_review_1",
+      "cells": 16,
+      "nodes": 9,
+      "connections": 5
+    },
+    {
+      "id": "13_rtl_change_review_v2_1",
+      "cells": 32,
+      "nodes": 19,
+      "connections": 11
+    },
+    {
+      "id": "14_acc_mul.sv_1",
+      "cells": 12,
+      "nodes": 7,
+      "connections": 3
+    },
+    {
+      "id": "15_acc_mul.sv_2",
+      "cells": 14,
+      "nodes": 8,
+      "connections": 4
+    },
+    {
+      "id": "16_banked_word_ram.sv_1",
+      "cells": 15,
+      "nodes": 8,
+      "connections": 5
+    },
+    {
+      "id": "17_descriptor_file.sv_1",
+      "cells": 16,
+      "nodes": 9,
+      "connections": 5
+    },
+    {
+      "id": "18_div.sv_1",
+      "cells": 20,
+      "nodes": 10,
+      "connections": 8
+    },
+    {
+      "id": "19_div.sv_2",
+      "cells": 20,
+      "nodes": 11,
+      "connections": 7
+    },
+    {
+      "id": "20_ins_mem.sv_1",
+      "cells": 18,
+      "nodes": 10,
+      "connections": 6
+    },
+    {
+      "id": "21_isqrt_u64.sv_1",
+      "cells": 26,
+      "nodes": 12,
+      "connections": 12
+    },
+    {
+      "id": "22_llm_attention_engine.sv_1",
+      "cells": 26,
+      "nodes": 15,
+      "connections": 9
+    },
+    {
+      "id": "23_llm_attention_normalize.sv_1",
+      "cells": 27,
+      "nodes": 14,
+      "connections": 11
+    },
+    {
+      "id": "24_llm_bank_ram.sv_1",
+      "cells": 18,
+      "nodes": 10,
+      "connections": 6
+    },
+    {
+      "id": "25_llm_head_engine.sv_1",
+      "cells": 43,
+      "nodes": 24,
+      "connections": 17
+    },
+    {
+      "id": "26_llm_linear_engine.sv_1",
+      "cells": 43,
+      "nodes": 25,
+      "connections": 16
+    },
+    {
+      "id": "27_llm_math.sv_1",
+      "cells": 20,
+      "nodes": 10,
+      "connections": 8
+    },
+    {
+      "id": "28_llm_math.sv_2",
+      "cells": 16,
+      "nodes": 9,
+      "connections": 5
+    },
+    {
+      "id": "29_llm_parameter_ram.sv_1",
+      "cells": 21,
+      "nodes": 12,
+      "connections": 7
+    },
+    {
+      "id": "30_llm_pkg.sv_1",
+      "cells": 17,
+      "nodes": 11,
+      "connections": 4
+    },
+    {
+      "id": "31_llm_soc.sv_1",
+      "cells": 32,
+      "nodes": 16,
+      "connections": 14
+    },
+    {
+      "id": "32_llm_soc.sv_2",
+      "cells": 32,
+      "nodes": 19,
+      "connections": 11
+    },
+    {
+      "id": "33_llm_soc.sv_3",
+      "cells": 22,
+      "nodes": 12,
+      "connections": 8
+    },
+    {
+      "id": "34_logic_mul.sv_1",
+      "cells": 18,
+      "nodes": 10,
+      "connections": 6
+    },
+    {
+      "id": "35_matmul_wrap.sv_1",
+      "cells": 16,
+      "nodes": 9,
+      "connections": 5
+    },
+    {
+      "id": "36_matmulfree.sv_1",
+      "cells": 22,
+      "nodes": 11,
+      "connections": 9
+    },
+    {
+      "id": "37_matmulfree.sv_2",
+      "cells": 18,
+      "nodes": 10,
+      "connections": 6
+    },
+    {
+      "id": "38_matmulfree.sv_3",
+      "cells": 19,
+      "nodes": 10,
+      "connections": 7
+    },
+    {
+      "id": "39_mem_mapping.sv_1",
+      "cells": 19,
+      "nodes": 13,
+      "connections": 4
+    },
+    {
+      "id": "40_mul.sv_1",
+      "cells": 25,
+      "nodes": 12,
+      "connections": 11
+    },
+    {
+      "id": "41_norm.sv_1",
+      "cells": 26,
+      "nodes": 13,
+      "connections": 11
+    },
+    {
+      "id": "42_norm.sv_2",
+      "cells": 23,
+      "nodes": 11,
+      "connections": 10
+    },
+    {
+      "id": "43_norm.sv_3",
+      "cells": 21,
+      "nodes": 11,
+      "connections": 8
+    },
+    {
+      "id": "44_norm.sv_4",
+      "cells": 14,
+      "nodes": 8,
+      "connections": 4
+    },
+    {
+      "id": "45_norm.sv_5",
+      "cells": 33,
+      "nodes": 16,
+      "connections": 15
+    },
+    {
+      "id": "46_norm_dispatch.sv_1",
+      "cells": 19,
+      "nodes": 10,
+      "connections": 7
+    },
+    {
+      "id": "47_npu_pkg.sv_1",
+      "cells": 13,
+      "nodes": 8,
+      "connections": 3
+    },
+    {
+      "id": "48_npu_pkg.sv_2",
+      "cells": 22,
+      "nodes": 11,
+      "connections": 9
+    },
+    {
+      "id": "49_PC.sv_1",
+      "cells": 22,
+      "nodes": 12,
+      "connections": 8
+    },
+    {
+      "id": "50_pipelined_word_ram.sv_1",
+      "cells": 33,
+      "nodes": 19,
+      "connections": 12
+    },
+    {
+      "id": "51_postscale.sv_1",
+      "cells": 18,
+      "nodes": 10,
+      "connections": 6
+    },
+    {
+      "id": "52_postscale.sv_2",
+      "cells": 28,
+      "nodes": 15,
+      "connections": 11
+    },
+    {
+      "id": "53_quartus_word_ram.sv_1",
+      "cells": 16,
+      "nodes": 9,
+      "connections": 5
+    },
+    {
+      "id": "54_regfile.sv_1",
+      "cells": 16,
+      "nodes": 11,
+      "connections": 3
+    },
+    {
+      "id": "55_reset_release.sv_1",
+      "cells": 18,
+      "nodes": 9,
+      "connections": 7
+    },
+    {
+      "id": "56_rowwise_dispatch.sv_1",
+      "cells": 19,
+      "nodes": 10,
+      "connections": 7
+    },
+    {
+      "id": "57_rowwise_dispatch.sv_2",
+      "cells": 19,
+      "nodes": 10,
+      "connections": 7
+    },
+    {
+      "id": "58_rowwise_op.sv_1",
+      "cells": 23,
+      "nodes": 11,
+      "connections": 10
+    },
+    {
+      "id": "59_rowwise_op.sv_2",
+      "cells": 32,
+      "nodes": 14,
+      "connections": 16
+    },
+    {
+      "id": "60_scale_compose.sv_1",
+      "cells": 21,
+      "nodes": 11,
+      "connections": 8
+    },
+    {
+      "id": "61_sigmoid.sv_1",
+      "cells": 33,
+      "nodes": 18,
+      "connections": 13
+    },
+    {
+      "id": "62_sigmoid.sv_2",
+      "cells": 19,
+      "nodes": 10,
+      "connections": 7
+    },
+    {
+      "id": "63_sigmoid.sv_3",
+      "cells": 22,
+      "nodes": 11,
+      "connections": 9
+    },
+    {
+      "id": "64_sram_256_wrapper.sv_1",
+      "cells": 21,
+      "nodes": 11,
+      "connections": 8
+    },
+    {
+      "id": "65_sram_256_wrapper.sv_2",
+      "cells": 32,
+      "nodes": 15,
+      "connections": 15
+    },
+    {
+      "id": "66_sram_word_tile.sv_1",
+      "cells": 12,
+      "nodes": 7,
+      "connections": 3
+    },
+    {
+      "id": "67_ternary_dot32.sv_1",
+      "cells": 24,
+      "nodes": 13,
+      "connections": 9
+    },
+    {
+      "id": "68_ternary_mul.sv_1",
+      "cells": 27,
+      "nodes": 13,
+      "connections": 12
+    },
+    {
+      "id": "69_ternary_mul.sv_2",
+      "cells": 29,
+      "nodes": 15,
+      "connections": 12
+    },
+    {
+      "id": "70_full_graph_1",
+      "cells": 32,
+      "nodes": 16,
+      "connections": 14
+    },
+    {
+      "id": "71_full_graph_2",
+      "cells": 29,
+      "nodes": 13,
+      "connections": 14
+    },
+    {
+      "id": "72_full_graph_3",
+      "cells": 25,
+      "nodes": 12,
+      "connections": 11
+    },
+    {
+      "id": "73_README_1",
+      "cells": 22,
+      "nodes": 11,
+      "connections": 9
+    },
+    {
+      "id": "h_portable_llm_soc_0",
+      "cells": 26,
+      "nodes": 24,
+      "connections": 0
+    },
+    {
+      "id": "h_portable_llm_parameter_ram_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_portable_llm_bank_ram_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_portable_llm_bank_ram_1",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_portable_llm_math_0",
+      "cells": 8,
+      "nodes": 6,
+      "connections": 0
+    },
+    {
+      "id": "h_portable_llm_linear_engine_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_portable_llm_attention_engine_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_portable_llm_attention_normalize_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_portable_sigmoid_0",
+      "cells": 8,
+      "nodes": 6,
+      "connections": 0
+    },
+    {
+      "id": "h_portable_pipelined_word_ram_0",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_portable_pipelined_word_ram_1",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    },
+    {
+      "id": "h_portable_pipelined_word_ram_2",
+      "cells": 7,
+      "nodes": 5,
+      "connections": 0
+    }
+  ],
+  "hierarchy_instances": {
+    "quartus": 749,
+    "portable": 589
+  },
+  "source_files_unchanged": 41,
+  "source_witnesses": [
+    {
+      "fact": "linear result queue",
+      "source": "llm_linear_engine.sv",
+      "line": 36,
+      "sha256": "fddea184893825d79758564a4f1ec03c7cb42ddd9d5a60fa633363727b2cd533"
+    },
+    {
+      "fact": "linear row credits",
+      "source": "llm_linear_engine.sv",
+      "line": 43,
+      "sha256": "fddea184893825d79758564a4f1ec03c7cb42ddd9d5a60fa633363727b2cd533"
+    },
+    {
+      "fact": "linear parameter credits",
+      "source": "llm_linear_engine.sv",
+      "line": 52,
+      "sha256": "fddea184893825d79758564a4f1ec03c7cb42ddd9d5a60fa633363727b2cd533"
+    },
+    {
+      "fact": "head eight results",
+      "source": "llm_head_engine.sv",
+      "line": 29,
+      "sha256": "618401179106e710e8eec3adc7539e31b5d90046c4b79bf830d0898f0effc6a1"
+    },
+    {
+      "fact": "head scale grouping",
+      "source": "llm_head_engine.sv",
+      "line": 38,
+      "sha256": "618401179106e710e8eec3adc7539e31b5d90046c4b79bf830d0898f0effc6a1"
+    },
+    {
+      "fact": "head reservations",
+      "source": "llm_head_engine.sv",
+      "line": 36,
+      "sha256": "618401179106e710e8eec3adc7539e31b5d90046c4b79bf830d0898f0effc6a1"
+    },
+    {
+      "fact": "linear nine tagged stages",
+      "source": "llm_soc.sv",
+      "line": 562,
+      "sha256": "bd04e8e99a9d20c3bc9a1deba998b1778335ed2ca68c287f550fd09fc9b143d3"
+    },
+    {
+      "fact": "head six tagged stages",
+      "source": "llm_soc.sv",
+      "line": 395,
+      "sha256": "bd04e8e99a9d20c3bc9a1deba998b1778335ed2ca68c287f550fd09fc9b143d3"
+    },
+    {
+      "fact": "aligned high scalar part",
+      "source": "llm_soc.sv",
+      "line": 1021,
+      "sha256": "bd04e8e99a9d20c3bc9a1deba998b1778335ed2ca68c287f550fd09fc9b143d3"
+    },
+    {
+      "fact": "head ordered PRNG",
+      "source": "llm_soc.sv",
+      "line": 1026,
+      "sha256": "bd04e8e99a9d20c3bc9a1deba998b1778335ed2ca68c287f550fd09fc9b143d3"
+    },
+    {
+      "fact": "full bank linear writes",
+      "source": "llm_soc.sv",
+      "line": 497,
+      "sha256": "bd04e8e99a9d20c3bc9a1deba998b1778335ed2ca68c287f550fd09fc9b143d3"
+    },
+    {
+      "fact": "SRAM retained contents",
+      "source": "sram_word_tile.sv",
+      "line": 14,
+      "sha256": "f2a52b8f0a95ca5dc269f3846d90ce4d1190055e0c31c478d7fff3a76da76560"
+    },
+    {
+      "fact": "single-clock reset boundary",
+      "source": "llm_soc.sv",
+      "line": 19,
+      "sha256": "bd04e8e99a9d20c3bc9a1deba998b1778335ed2ca68c287f550fd09fc9b143d3"
+    }
+  ],
+  "errors": [],
+  "limits": [
+    "Fixed llm_soc expansion: ATTN_DIV_LANES=4, SIGMOID_LANES=4, PERF_COUNTERS=0, ENABLE_DEBUG_INDEX=0; both memory backends.",
+    "Legacy instance templates and port maps are indexed; legacy parameterized hierarchy is not fully elaborated.",
+    "Widths with parameter expressions remain symbolic unless explicitly resolved in a configured diagram.",
+    "altsyncram is an external vendor primitive; internal implementation is not available in repository RTL.",
+    "Historical software/demo flows are contextual, not RTL module connectivity."
+  ],
+  "artifact_sha256": {
+    "../../rtl_hierarchy.drawio": "7c7414ff2e379d6fecd57be5d96b87e9ee9c74993828d15eaaa2a288c65a682b",
+    "architecture.drawio": "61dda9e190c8d1a80535a52b20f1dbca2b738aa01deec58688196abf0bcd8391",
+    "rtl_hierarchy_portable.drawio": "6038034b623689c7a8a6743d2b37ec96173322aa9e8977202d6e4e32fbc60b73"
+  },
+  "backup_sha256": "573f61e8872728b35b645edbe47764d15cb90c226dc57c79b034355dcbafcbd8"
+}

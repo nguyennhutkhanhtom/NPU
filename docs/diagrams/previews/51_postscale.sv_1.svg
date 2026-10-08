@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="862" viewBox="0 0 900 862">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="900" height="862" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">postscale.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: postscale.sv · Combinational logic / compile-time definitions; no private clock domain</text>
+<polyline points="140,184 140,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="140,318 140,393.5" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="140,457.5 140,548 284,548" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="390,463 390,533" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="660,457.5 660,548 496,548" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="390,608 390,678" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="40" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="140.00" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Accumulator / scale</text>
+<text x="140.00" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S18 × U24</text>
+<rect x="40" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="140.00" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Product</text>
+<text x="140.00" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S42</text>
+<rect x="40" y="393.5" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="140.00" y="421.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Signed RNE</text>
+<text x="140.00" y="438.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Shift U6</text>
+<rect x="284" y="533" width="212" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="390.00" y="557.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">postscale_finish Bias S43,</text>
+<text x="390.00" y="574.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">saturation and range</text>
+<text x="390.00" y="591.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">flags</text>
+<rect x="290" y="388" width="200" height="75" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="390.00" y="412.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Bias / output</text>
+<text x="390.00" y="429.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">format S32; S16</text>
+<text x="390.00" y="446.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">or S32 selection</text>
+<rect x="540" y="393.5" width="240" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="660.00" y="421.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Registered rounded result</text>
+<text x="660.00" y="438.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Alternative ternary_mul caller</text>
+<rect x="290" y="678" width="200" height="64" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="390.00" y="705.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Result / overflow</text>
+<text x="390.00" y="722.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S16 or S32</text>
+<text x="30.00" y="848.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

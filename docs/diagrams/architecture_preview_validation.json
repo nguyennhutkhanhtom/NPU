@@ -1,0 +1,906 @@
+{
+  "status": "complete",
+  "pages": [
+    {
+      "page": "01_model_candidates_1",
+      "width": 800,
+      "height": 1108,
+      "texts": 16,
+      "errors": [],
+      "preview": "previews/01_model_candidates_1.svg",
+      "sha256": "e8b16e626525a0b750c9d4db547bca410d817f16342631319dbce4f2882a5491"
+    },
+    {
+      "page": "02_nanofable_hybrid_1",
+      "width": 800,
+      "height": 996,
+      "texts": 18,
+      "errors": [],
+      "preview": "previews/02_nanofable_hybrid_1.svg",
+      "sha256": "2591b3d97df083da0e4bdb92d41494066ad2804fd781d316387c70b6185c106b"
+    },
+    {
+      "page": "03_exact_throughput_optimization_1",
+      "width": 800,
+      "height": 911,
+      "texts": 18,
+      "errors": [],
+      "preview": "previews/03_exact_throughput_optimization_1.svg",
+      "sha256": "9a323da60b2dcd1ab8b06c9ce8b7ad468f3c2a9f336e67d1100a4eba0833ec41"
+    },
+    {
+      "page": "04_exact_throughput_optimization_2",
+      "width": 800,
+      "height": 643,
+      "texts": 15,
+      "errors": [],
+      "preview": "previews/04_exact_throughput_optimization_2.svg",
+      "sha256": "d474adb1eab857313493a4a0eaa74b3c060bc3e3bd429bed734fd61415d212f4"
+    },
+    {
+      "page": "05_full_rtl_language_1",
+      "width": 800,
+      "height": 1437,
+      "texts": 28,
+      "errors": [],
+      "preview": "previews/05_full_rtl_language_1.svg",
+      "sha256": "d714d518d7075e3e9607bb4a1a21838b70b13b92c0234859d25dac1152cb879c"
+    },
+    {
+      "page": "06_full_rtl_language_2",
+      "width": 800,
+      "height": 1549,
+      "texts": 21,
+      "errors": [],
+      "preview": "previews/06_full_rtl_language_2.svg",
+      "sha256": "458f5b7a18208234679c21e312d6a3443b4daf43ffb3f2a419f34c8a863a2a57"
+    },
+    {
+      "page": "07_host_interface_1",
+      "width": 821,
+      "height": 1110,
+      "texts": 28,
+      "errors": [],
+      "preview": "previews/07_host_interface_1.svg",
+      "sha256": "f88703b01f8d8150de1f14dd174f54cdf6976f46d96397a19a9d52f224d97cd8"
+    },
+    {
+      "page": "08_architecture_1",
+      "width": 1153,
+      "height": 1386,
+      "texts": 35,
+      "errors": [],
+      "preview": "previews/08_architecture_1.svg",
+      "sha256": "765a9ea339c2639b9d7cc47b13e44a72b2e4d3e444924cc47c728422cdbf62dc"
+    },
+    {
+      "page": "09_full_rtl_development_1",
+      "width": 800,
+      "height": 1437,
+      "texts": 28,
+      "errors": [],
+      "preview": "previews/09_full_rtl_development_1.svg",
+      "sha256": "5b73847b89f849e94c24dce5eabe605242acaa361352168d5401643f9aecea56"
+    },
+    {
+      "page": "10_full_rtl_development_2",
+      "width": 800,
+      "height": 1549,
+      "texts": 21,
+      "errors": [],
+      "preview": "previews/10_full_rtl_development_2.svg",
+      "sha256": "fe328ee30d9d6755f70a01c48571a40536583c7fcaf8c43d7cdb9877892fd42c"
+    },
+    {
+      "page": "11_full_rtl_development_3",
+      "width": 1010,
+      "height": 1122,
+      "texts": 42,
+      "errors": [],
+      "preview": "previews/11_full_rtl_development_3.svg",
+      "sha256": "afda08ce5e3f919a82d16f3e966987a215cf370480b45bb5789e4142b85a863c"
+    },
+    {
+      "page": "12_rtl_change_review_1",
+      "width": 800,
+      "height": 985,
+      "texts": 17,
+      "errors": [],
+      "preview": "previews/12_rtl_change_review_1.svg",
+      "sha256": "13873b049500e2db300aa8e50735fd4b61e8b1bbad658de8ce1e69cd0560bacc"
+    },
+    {
+      "page": "13_rtl_change_review_v2_1",
+      "width": 1010,
+      "height": 1122,
+      "texts": 42,
+      "errors": [],
+      "preview": "previews/13_rtl_change_review_v2_1.svg",
+      "sha256": "34faad0c13142e4678e0ae6c67cfb23072cf3f17c6545c838812846405c6b6ff"
+    },
+    {
+      "page": "14_acc_mul.sv_1",
+      "width": 800,
+      "height": 717,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/14_acc_mul.sv_1.svg",
+      "sha256": "0cb8160d3ed3c225f5aa126748b29d1d44b7e431c31a31a9c8e6bd1257c3172b"
+    },
+    {
+      "page": "15_acc_mul.sv_2",
+      "width": 800,
+      "height": 851,
+      "texts": 13,
+      "errors": [],
+      "preview": "previews/15_acc_mul.sv_2.svg",
+      "sha256": "76af6caab06c35d17886dc7afee7c3a189a07ba997ae2ce509f9faf455a06bd1"
+    },
+    {
+      "page": "16_banked_word_ram.sv_1",
+      "width": 800,
+      "height": 706,
+      "texts": 9,
+      "errors": [],
+      "preview": "previews/16_banked_word_ram.sv_1.svg",
+      "sha256": "066b0eb0b3a676bcd08de818bbc6b7e499be7824c2834617e087df2e654fba7f"
+    },
+    {
+      "page": "17_descriptor_file.sv_1",
+      "width": 800,
+      "height": 717,
+      "texts": 16,
+      "errors": [],
+      "preview": "previews/17_descriptor_file.sv_1.svg",
+      "sha256": "d305935747c7fbea0051f95dec20046f3f12e3162e8cb997946e8abb1a738a24"
+    },
+    {
+      "page": "18_div.sv_1",
+      "width": 806,
+      "height": 741,
+      "texts": 18,
+      "errors": [],
+      "preview": "previews/18_div.sv_1.svg",
+      "sha256": "ac7c1b1e99d1adafc3639bd973eb69fa0de1ccd2a5f941a90c5f96476a81e33d"
+    },
+    {
+      "page": "19_div.sv_2",
+      "width": 800,
+      "height": 899,
+      "texts": 17,
+      "errors": [],
+      "preview": "previews/19_div.sv_2.svg",
+      "sha256": "359fe5de8cca777440ef3afb630267522cb6500827e75cfe9d991f800462e84a"
+    },
+    {
+      "page": "20_ins_mem.sv_1",
+      "width": 800,
+      "height": 985,
+      "texts": 17,
+      "errors": [],
+      "preview": "previews/20_ins_mem.sv_1.svg",
+      "sha256": "639f3b154c97b57ff1bd50dc380e60a5c36bdeb85721a9d6509edfeb7436513f"
+    },
+    {
+      "page": "21_isqrt_u64.sv_1",
+      "width": 867,
+      "height": 974,
+      "texts": 16,
+      "errors": [],
+      "preview": "previews/21_isqrt_u64.sv_1.svg",
+      "sha256": "1462786020b84257196d9730c9fcfa31054df5a5263c136407ec25b25949455a"
+    },
+    {
+      "page": "22_llm_attention_engine.sv_1",
+      "width": 800,
+      "height": 1558,
+      "texts": 24,
+      "errors": [],
+      "preview": "previews/22_llm_attention_engine.sv_1.svg",
+      "sha256": "6cfcf692fcfb450085229baf7af386313b347bbbce6e4b1f296515a067558b83"
+    },
+    {
+      "page": "23_llm_attention_normalize.sv_1",
+      "width": 800,
+      "height": 1376,
+      "texts": 23,
+      "errors": [],
+      "preview": "previews/23_llm_attention_normalize.sv_1.svg",
+      "sha256": "d0f804f8fc8004477a5ae7852491a8331859380c8b8d660bf5a02ccbf942cb7d"
+    },
+    {
+      "page": "24_llm_bank_ram.sv_1",
+      "width": 800,
+      "height": 851,
+      "texts": 14,
+      "errors": [],
+      "preview": "previews/24_llm_bank_ram.sv_1.svg",
+      "sha256": "506545e83397c114e0819011926882bb47c2df97b48b1df0bbf4b97bf335aff7"
+    },
+    {
+      "page": "25_llm_head_engine.sv_1",
+      "width": 1330,
+      "height": 1163,
+      "texts": 46,
+      "errors": [],
+      "preview": "previews/25_llm_head_engine.sv_1.svg",
+      "sha256": "a9415644850a2de0228456b2d9bde92d8da43ceef38809f8d310b9fa6e6adc4e"
+    },
+    {
+      "page": "26_llm_linear_engine.sv_1",
+      "width": 1330,
+      "height": 1163,
+      "texts": 46,
+      "errors": [],
+      "preview": "previews/26_llm_linear_engine.sv_1.svg",
+      "sha256": "236c094880d70ed72aaf71f49d4f90965ca5e7c99a816ac11e2174201c847920"
+    },
+    {
+      "page": "27_llm_math.sv_1",
+      "width": 800,
+      "height": 840,
+      "texts": 18,
+      "errors": [],
+      "preview": "previews/27_llm_math.sv_1.svg",
+      "sha256": "4a81db5e66ad9671e87e2812bad22c2b757a21329aa2fad552bd48c0a032a403"
+    },
+    {
+      "page": "28_llm_math.sv_2",
+      "width": 800,
+      "height": 974,
+      "texts": 16,
+      "errors": [],
+      "preview": "previews/28_llm_math.sv_2.svg",
+      "sha256": "a002fdf4ab54dd2ffa859fee2d3c4e40d0df8292b7ced7e491ea9008b7a30c21"
+    },
+    {
+      "page": "29_llm_parameter_ram.sv_1",
+      "width": 923,
+      "height": 851,
+      "texts": 17,
+      "errors": [],
+      "preview": "previews/29_llm_parameter_ram.sv_1.svg",
+      "sha256": "8a27558869fce9016c5cc4fa41747c9bb845d3fa0d0b35ba64c213a94c53b728"
+    },
+    {
+      "page": "30_llm_pkg.sv_1",
+      "width": 1237,
+      "height": 449,
+      "texts": 17,
+      "errors": [],
+      "preview": "previews/30_llm_pkg.sv_1.svg",
+      "sha256": "a6f8f0c306b42401bc27a52dc3a04a56a408ab91b4545b07700c33b38d7303b0"
+    },
+    {
+      "page": "31_llm_soc.sv_1",
+      "width": 1330,
+      "height": 890,
+      "texts": 40,
+      "errors": [],
+      "preview": "previews/31_llm_soc.sv_1.svg",
+      "sha256": "786d6aa530e15a6906a25f82989f08283149532b5c098891f42764b449d61faf"
+    },
+    {
+      "page": "32_llm_soc.sv_2",
+      "width": 1010,
+      "height": 1122,
+      "texts": 42,
+      "errors": [],
+      "preview": "previews/32_llm_soc.sv_2.svg",
+      "sha256": "1a01bdf2b27b620752a8ff84a37a2a0f82b3b5c0bf1af003125cfc527d7d234d"
+    },
+    {
+      "page": "33_llm_soc.sv_3",
+      "width": 800,
+      "height": 1219,
+      "texts": 31,
+      "errors": [],
+      "preview": "previews/33_llm_soc.sv_3.svg",
+      "sha256": "8446fd92245d0fbf12cc1a61825b8ff7def8bebbbc087ffda122333cda9f1d88"
+    },
+    {
+      "page": "34_logic_mul.sv_1",
+      "width": 800,
+      "height": 1007,
+      "texts": 18,
+      "errors": [],
+      "preview": "previews/34_logic_mul.sv_1.svg",
+      "sha256": "fb16b51a53c31b31ff0d7843eb0bdb48500e349066bbe01aaf8cca05d24078e0"
+    },
+    {
+      "page": "35_matmul_wrap.sv_1",
+      "width": 860,
+      "height": 583,
+      "texts": 14,
+      "errors": [],
+      "preview": "previews/35_matmul_wrap.sv_1.svg",
+      "sha256": "dd37dcd6ad03a14b63fc4d2376b852c64b779cf622e08b1171870db3b07f88ef"
+    },
+    {
+      "page": "36_matmulfree.sv_1",
+      "width": 916,
+      "height": 974,
+      "texts": 20,
+      "errors": [],
+      "preview": "previews/36_matmulfree.sv_1.svg",
+      "sha256": "2f993ea86ec947e777a9f5798ac91c62381fd7b8237e5e0637edba848e3ad352"
+    },
+    {
+      "page": "37_matmulfree.sv_2",
+      "width": 800,
+      "height": 985,
+      "texts": 13,
+      "errors": [],
+      "preview": "previews/37_matmulfree.sv_2.svg",
+      "sha256": "00ee5f7780e6e8362becfa4a49fb1ba7c3e632812f427c755b1cc253d4c71101"
+    },
+    {
+      "page": "38_matmulfree.sv_3",
+      "width": 800,
+      "height": 862,
+      "texts": 19,
+      "errors": [],
+      "preview": "previews/38_matmulfree.sv_3.svg",
+      "sha256": "fbc6183eeac3aeef0bf5081bc9fdc17f48ba9d694f724a094ec0fdf80cc88d33"
+    },
+    {
+      "page": "39_mem_mapping.sv_1",
+      "width": 800,
+      "height": 843,
+      "texts": 23,
+      "errors": [],
+      "preview": "previews/39_mem_mapping.sv_1.svg",
+      "sha256": "032eaf296f93c290fe09a7f1db8eda6bdc3cd11478c55d4b6bd36a8615fe6140"
+    },
+    {
+      "page": "40_mul.sv_1",
+      "width": 939,
+      "height": 840,
+      "texts": 20,
+      "errors": [],
+      "preview": "previews/40_mul.sv_1.svg",
+      "sha256": "4b57b3d88f0b047bfe49be4a72d44f498739f29968bb2470f1e6291d0b070b47"
+    },
+    {
+      "page": "41_norm.sv_1",
+      "width": 927,
+      "height": 1334,
+      "texts": 24,
+      "errors": [],
+      "preview": "previews/41_norm.sv_1.svg",
+      "sha256": "c4a4243f8b8db8d698af7a0bbc02c31b17da451d3b325131b407c865661f514c"
+    },
+    {
+      "page": "42_norm.sv_2",
+      "width": 800,
+      "height": 1108,
+      "texts": 17,
+      "errors": [],
+      "preview": "previews/42_norm.sv_2.svg",
+      "sha256": "aae96881ec37c2a7d96b585d8a22976aafb370dab2c96a7fcfbc581ad9738603"
+    },
+    {
+      "page": "43_norm.sv_3",
+      "width": 800,
+      "height": 1108,
+      "texts": 19,
+      "errors": [],
+      "preview": "previews/43_norm.sv_3.svg",
+      "sha256": "77a6728d953605459cbc564c431e761472be457d649eb316126cb944aea579b8"
+    },
+    {
+      "page": "44_norm.sv_4",
+      "width": 800,
+      "height": 706,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/44_norm.sv_4.svg",
+      "sha256": "18397ca18d584a44eac7b210e5e6caed508d6bff43466cdd909beac865bc325b"
+    },
+    {
+      "page": "45_norm.sv_5",
+      "width": 857,
+      "height": 1668,
+      "texts": 25,
+      "errors": [],
+      "preview": "previews/45_norm.sv_5.svg",
+      "sha256": "d0ca032e6372ca0608c2a46c5f8f132c77e4376868e76f005eda98543079da88"
+    },
+    {
+      "page": "46_norm_dispatch.sv_1",
+      "width": 800,
+      "height": 851,
+      "texts": 17,
+      "errors": [],
+      "preview": "previews/46_norm_dispatch.sv_1.svg",
+      "sha256": "e676bd4d64d47238105f116b9834b8004d6d4053beffe729b6a08691b15c034d"
+    },
+    {
+      "page": "47_npu_pkg.sv_1",
+      "width": 972,
+      "height": 519,
+      "texts": 15,
+      "errors": [],
+      "preview": "previews/47_npu_pkg.sv_1.svg",
+      "sha256": "7c3e9323dc6be8bd2ebe179ab0ee9a0031f87c589e3a57f2cb57f3d57f9a4284"
+    },
+    {
+      "page": "48_npu_pkg.sv_2",
+      "width": 800,
+      "height": 875,
+      "texts": 17,
+      "errors": [],
+      "preview": "previews/48_npu_pkg.sv_2.svg",
+      "sha256": "f398928cff01b1827578dc4a30a4a625dd2cd74b71a8cd042fcc1d5170033baa"
+    },
+    {
+      "page": "49_PC.sv_1",
+      "width": 800,
+      "height": 773,
+      "texts": 16,
+      "errors": [],
+      "preview": "previews/49_PC.sv_1.svg",
+      "sha256": "8b4b7861483d56772867bad0094504361aaa9d2a4c96a4ad2b729388feb7ace9"
+    },
+    {
+      "page": "50_pipelined_word_ram.sv_1",
+      "width": 1012,
+      "height": 1105,
+      "texts": 34,
+      "errors": [],
+      "preview": "previews/50_pipelined_word_ram.sv_1.svg",
+      "sha256": "3f9714cb47fcd9256acb5e024cab8b3cc0aa9cf19b31a05271789e7aadab9c8b"
+    },
+    {
+      "page": "51_postscale.sv_1",
+      "width": 900,
+      "height": 862,
+      "texts": 20,
+      "errors": [],
+      "preview": "previews/51_postscale.sv_1.svg",
+      "sha256": "394c00e9fa4fe703beed100b4f61f298fad4fdc624755755938de7ad079b2d49"
+    },
+    {
+      "page": "52_postscale.sv_2",
+      "width": 927,
+      "height": 840,
+      "texts": 17,
+      "errors": [],
+      "preview": "previews/52_postscale.sv_2.svg",
+      "sha256": "3ce60ca106822f4afd1cfdbb5d650d44ef453d3d749559406941f926c68782f2"
+    },
+    {
+      "page": "53_quartus_word_ram.sv_1",
+      "width": 1148,
+      "height": 572,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/53_quartus_word_ram.sv_1.svg",
+      "sha256": "9659d6cc9fcd93ac5bbdac0c154c915bfca2eec8e0f4768deac589070b7cb878"
+    },
+    {
+      "page": "54_regfile.sv_1",
+      "width": 800,
+      "height": 772,
+      "texts": 19,
+      "errors": [],
+      "preview": "previews/54_regfile.sv_1.svg",
+      "sha256": "86f26e3b6a17c3427ae34a7ea517ebbfbb5939e6c02dd8032232dab55bb5dc64"
+    },
+    {
+      "page": "55_reset_release.sv_1",
+      "width": 800,
+      "height": 840,
+      "texts": 11,
+      "errors": [],
+      "preview": "previews/55_reset_release.sv_1.svg",
+      "sha256": "4a8fa303fe9ba99719d144efd4bf0d7d1c69d5c64e647d63e4a1ae175157084a"
+    },
+    {
+      "page": "56_rowwise_dispatch.sv_1",
+      "width": 800,
+      "height": 985,
+      "texts": 16,
+      "errors": [],
+      "preview": "previews/56_rowwise_dispatch.sv_1.svg",
+      "sha256": "feb4efb3d07c932af55cc81c7590b987377debfa78ea7f9afa06848bdc6a6063"
+    },
+    {
+      "page": "57_rowwise_dispatch.sv_2",
+      "width": 807,
+      "height": 851,
+      "texts": 14,
+      "errors": [],
+      "preview": "previews/57_rowwise_dispatch.sv_2.svg",
+      "sha256": "a8ba770fa5e9a3093405ec27e3fdd01e16922605555f54e9cc72116f7e513321"
+    },
+    {
+      "page": "58_rowwise_op.sv_1",
+      "width": 800,
+      "height": 985,
+      "texts": 16,
+      "errors": [],
+      "preview": "previews/58_rowwise_op.sv_1.svg",
+      "sha256": "0d68092acf97720a3232ea9aa9fdcb5600b4cbefd25e6f517db6b6d551276ab4"
+    },
+    {
+      "page": "59_rowwise_op.sv_2",
+      "width": 1075,
+      "height": 1387,
+      "texts": 23,
+      "errors": [],
+      "preview": "previews/59_rowwise_op.sv_2.svg",
+      "sha256": "01b82ca7cd9371ec95708024cc85863cd4c371d6adce88ce4e0108ced05c17df"
+    },
+    {
+      "page": "60_scale_compose.sv_1",
+      "width": 800,
+      "height": 1242,
+      "texts": 15,
+      "errors": [],
+      "preview": "previews/60_scale_compose.sv_1.svg",
+      "sha256": "1c5a1bc2b4ef169f37b427e28370a6ea9c6697f0dfb6de4cfb030727c30fe16a"
+    },
+    {
+      "page": "61_sigmoid.sv_1",
+      "width": 1126,
+      "height": 1522,
+      "texts": 26,
+      "errors": [],
+      "preview": "previews/61_sigmoid.sv_1.svg",
+      "sha256": "7c532f0915085c76030cc5ac502da38acbe08af9072c5bcaa5c184fc9687f94f"
+    },
+    {
+      "page": "62_sigmoid.sv_2",
+      "width": 800,
+      "height": 974,
+      "texts": 17,
+      "errors": [],
+      "preview": "previews/62_sigmoid.sv_2.svg",
+      "sha256": "05d53b76e044a5d8212cd5b5e0416187485249867ee2ee0823147ccfe1443258"
+    },
+    {
+      "page": "63_sigmoid.sv_3",
+      "width": 882,
+      "height": 974,
+      "texts": 20,
+      "errors": [],
+      "preview": "previews/63_sigmoid.sv_3.svg",
+      "sha256": "1e12f7cc4fb6276256ec324bfeca7ba3b005838e27f66071a0c087cf7dfd37d9"
+    },
+    {
+      "page": "64_sram_256_wrapper.sv_1",
+      "width": 800,
+      "height": 1018,
+      "texts": 22,
+      "errors": [],
+      "preview": "previews/64_sram_256_wrapper.sv_1.svg",
+      "sha256": "1f3b8f8a2b134ee259c0b611ec9f2999a08d080caf3632da1cb8f982bfdaad45"
+    },
+    {
+      "page": "65_sram_256_wrapper.sv_2",
+      "width": 1148,
+      "height": 985,
+      "texts": 21,
+      "errors": [],
+      "preview": "previews/65_sram_256_wrapper.sv_2.svg",
+      "sha256": "728f1ab20081b7dfbadd1a888a9aea00c89170e2140b8ec7ed06d358ac76aad7"
+    },
+    {
+      "page": "66_sram_word_tile.sv_1",
+      "width": 800,
+      "height": 572,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/66_sram_word_tile.sv_1.svg",
+      "sha256": "3f922e7af881791c5e959fe55dffb9a04869883a86d176527ffe168842bb2e6b"
+    },
+    {
+      "page": "67_ternary_dot32.sv_1",
+      "width": 800,
+      "height": 1119,
+      "texts": 18,
+      "errors": [],
+      "preview": "previews/67_ternary_dot32.sv_1.svg",
+      "sha256": "01162041c4457be81267932dd182f01b8b314c43e52607669ab1a1a9d0602522"
+    },
+    {
+      "page": "68_ternary_mul.sv_1",
+      "width": 1080,
+      "height": 1211,
+      "texts": 25,
+      "errors": [],
+      "preview": "previews/68_ternary_mul.sv_1.svg",
+      "sha256": "a01b2d0375a390e476949e7afa2f0ed88f618e6eb1b9d29d876b10b687d04ff3"
+    },
+    {
+      "page": "69_ternary_mul.sv_2",
+      "width": 1028,
+      "height": 1130,
+      "texts": 26,
+      "errors": [],
+      "preview": "previews/69_ternary_mul.sv_2.svg",
+      "sha256": "732add75f77bfeb41129a6130e8c5a9233b04af7ff5e86640dc282d283dcf07e"
+    },
+    {
+      "page": "70_full_graph_1",
+      "width": 1330,
+      "height": 890,
+      "texts": 40,
+      "errors": [],
+      "preview": "previews/70_full_graph_1.svg",
+      "sha256": "fd6c38882c1566c34dba1f74e1e9ffe5eff64643c9f0379667e6e356f810e6e4"
+    },
+    {
+      "page": "71_full_graph_2",
+      "width": 1190,
+      "height": 1146,
+      "texts": 22,
+      "errors": [],
+      "preview": "previews/71_full_graph_2.svg",
+      "sha256": "22494d0f8f80126ef581b0dd3f8f9d016a553dd36cf626da54e1e09759199325"
+    },
+    {
+      "page": "72_full_graph_3",
+      "width": 1220,
+      "height": 769,
+      "texts": 23,
+      "errors": [],
+      "preview": "previews/72_full_graph_3.svg",
+      "sha256": "6aed0c65fcc9c96383674943f217afc0ddbb8723f74a8371a149aabc849eb77e"
+    },
+    {
+      "page": "73_README_1",
+      "width": 916,
+      "height": 974,
+      "texts": 20,
+      "errors": [],
+      "preview": "previews/73_README_1.svg",
+      "sha256": "aeebfe36da58ad25b3bf8121acbd809e3a10cce00b200efe759e1d68bce59ded"
+    },
+    {
+      "page": "h_quartus_llm_soc_0",
+      "width": 1352,
+      "height": 910,
+      "texts": 65,
+      "errors": [],
+      "preview": "previews/h_quartus_llm_soc_0.svg",
+      "sha256": "c5d97c14aac096d7d3301a9266802b7780ccdd9b42da8b41d876c33115fd6a19"
+    },
+    {
+      "page": "h_quartus_llm_parameter_ram_0",
+      "width": 800,
+      "height": 390,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/h_quartus_llm_parameter_ram_0.svg",
+      "sha256": "bb6d855d1fe927f04035587100c43559da6e1a809b41e18084dfe13370f56511"
+    },
+    {
+      "page": "h_quartus_llm_bank_ram_0",
+      "width": 800,
+      "height": 390,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/h_quartus_llm_bank_ram_0.svg",
+      "sha256": "6c8a4370c15eb2b45c0647032f6696128d3a5b7793d742c39e9e38defe5fd180"
+    },
+    {
+      "page": "h_quartus_llm_bank_ram_1",
+      "width": 800,
+      "height": 390,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/h_quartus_llm_bank_ram_1.svg",
+      "sha256": "c486bc178327391d61f1deb5d45672ab70ef1cb6c8e7cf95eab41e283dc7ebde"
+    },
+    {
+      "page": "h_quartus_llm_math_0",
+      "width": 800,
+      "height": 390,
+      "texts": 14,
+      "errors": [],
+      "preview": "previews/h_quartus_llm_math_0.svg",
+      "sha256": "eb9b92f5dc7359a7270101f205a97c493bcd1a2b33d91291f8a1cb6f3c484afb"
+    },
+    {
+      "page": "h_quartus_llm_linear_engine_0",
+      "width": 800,
+      "height": 390,
+      "texts": 8,
+      "errors": [],
+      "preview": "previews/h_quartus_llm_linear_engine_0.svg",
+      "sha256": "4141526257f64fd0b37b1793839de801cacddc4cdbd929170a0546a81785ce2a"
+    },
+    {
+      "page": "h_quartus_llm_attention_engine_0",
+      "width": 800,
+      "height": 390,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/h_quartus_llm_attention_engine_0.svg",
+      "sha256": "99619f0c770e6fbbf572204ada7505199c91fab0d8565c213dd914659617a721"
+    },
+    {
+      "page": "h_quartus_llm_attention_normalize_0",
+      "width": 800,
+      "height": 390,
+      "texts": 9,
+      "errors": [],
+      "preview": "previews/h_quartus_llm_attention_normalize_0.svg",
+      "sha256": "22f7b52c7f59ebc4cd8c3c67ae52df8fbb49fdd35591d529a34b30c711adc14c"
+    },
+    {
+      "page": "h_quartus_sigmoid_0",
+      "width": 800,
+      "height": 390,
+      "texts": 12,
+      "errors": [],
+      "preview": "previews/h_quartus_sigmoid_0.svg",
+      "sha256": "895dc89381b191b49a81d49b48588bc781103c3cd22a42e40647a6ea7285751e"
+    },
+    {
+      "page": "h_quartus_pipelined_word_ram_0",
+      "width": 800,
+      "height": 390,
+      "texts": 9,
+      "errors": [],
+      "preview": "previews/h_quartus_pipelined_word_ram_0.svg",
+      "sha256": "175200764a03fe9c011ac05426e49a3d4daa066f14839d19ea735e701b7ea345"
+    },
+    {
+      "page": "h_quartus_pipelined_word_ram_1",
+      "width": 800,
+      "height": 390,
+      "texts": 9,
+      "errors": [],
+      "preview": "previews/h_quartus_pipelined_word_ram_1.svg",
+      "sha256": "23ce578545ca6b420303321d6994242e821decf7eef0e960c00a6f37f2e06369"
+    },
+    {
+      "page": "h_quartus_pipelined_word_ram_2",
+      "width": 800,
+      "height": 390,
+      "texts": 9,
+      "errors": [],
+      "preview": "previews/h_quartus_pipelined_word_ram_2.svg",
+      "sha256": "4296570ae362dfb1cbd55258530581a36aabe1589baa24dcdd92bcc97ea6729e"
+    },
+    {
+      "page": "h_quartus_quartus_word_ram_0",
+      "width": 800,
+      "height": 390,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/h_quartus_quartus_word_ram_0.svg",
+      "sha256": "f9486474f7f31bde46c89d636c5c11772b5728c49e66d308de432b72e6237565"
+    },
+    {
+      "page": "h_quartus_quartus_word_ram_1",
+      "width": 800,
+      "height": 390,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/h_quartus_quartus_word_ram_1.svg",
+      "sha256": "3dcbf479ff84960e1d3c37fbcdeb4cb246631970b9db14aea5b372c6fe2ef700"
+    },
+    {
+      "page": "h_quartus_quartus_word_ram_2",
+      "width": 800,
+      "height": 390,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/h_quartus_quartus_word_ram_2.svg",
+      "sha256": "6b4b9ca9803e76f9d6a75fbf6d82c73ab4034f88e1ef58f5ff4b0e258142f09a"
+    },
+    {
+      "page": "h_portable_llm_soc_0",
+      "width": 1352,
+      "height": 910,
+      "texts": 65,
+      "errors": [],
+      "preview": "previews/h_portable_llm_soc_0.svg",
+      "sha256": "8df02f6035347e82ad68d3e72fcb27e6bd580a5a52c640d95e1f4d79698d74dd"
+    },
+    {
+      "page": "h_portable_llm_parameter_ram_0",
+      "width": 800,
+      "height": 390,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/h_portable_llm_parameter_ram_0.svg",
+      "sha256": "7504937b6287b201e533704b97e9c1f6e8c3e9bb1c2c636cbcd778e12cbe1a94"
+    },
+    {
+      "page": "h_portable_llm_bank_ram_0",
+      "width": 800,
+      "height": 390,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/h_portable_llm_bank_ram_0.svg",
+      "sha256": "646b9367ad182629bcbb6bf110ab29e79870c0d56e6c0b5fac77f1ef1ce052fd"
+    },
+    {
+      "page": "h_portable_llm_bank_ram_1",
+      "width": 800,
+      "height": 390,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/h_portable_llm_bank_ram_1.svg",
+      "sha256": "90af3d81d1b23e7375fb0e0435a2f598cb1f6a7aa981acea3d4a92f7c74ebcce"
+    },
+    {
+      "page": "h_portable_llm_math_0",
+      "width": 800,
+      "height": 390,
+      "texts": 14,
+      "errors": [],
+      "preview": "previews/h_portable_llm_math_0.svg",
+      "sha256": "020b3d39bda6efda403a509f89e96af5ff114a67916c835df867e4f34c7e2159"
+    },
+    {
+      "page": "h_portable_llm_linear_engine_0",
+      "width": 800,
+      "height": 390,
+      "texts": 8,
+      "errors": [],
+      "preview": "previews/h_portable_llm_linear_engine_0.svg",
+      "sha256": "5f475988578fff517b1cc765775fdac9c81c4770d47dc027a14956abea110f2b"
+    },
+    {
+      "page": "h_portable_llm_attention_engine_0",
+      "width": 800,
+      "height": 390,
+      "texts": 10,
+      "errors": [],
+      "preview": "previews/h_portable_llm_attention_engine_0.svg",
+      "sha256": "4e126dc3dd29e6dd41930cce208f2ac6fee04c631a9ea8188d73314b2dc648df"
+    },
+    {
+      "page": "h_portable_llm_attention_normalize_0",
+      "width": 800,
+      "height": 390,
+      "texts": 9,
+      "errors": [],
+      "preview": "previews/h_portable_llm_attention_normalize_0.svg",
+      "sha256": "184c2d218a4a3a842d20de0d56d55bbb74121e8f36f1ba68e614ac49b40e2193"
+    },
+    {
+      "page": "h_portable_sigmoid_0",
+      "width": 800,
+      "height": 390,
+      "texts": 12,
+      "errors": [],
+      "preview": "previews/h_portable_sigmoid_0.svg",
+      "sha256": "ceb9ac6135467afad1746549863707e3c731ca54de71a0961f7c1f223dbe8896"
+    },
+    {
+      "page": "h_portable_pipelined_word_ram_0",
+      "width": 800,
+      "height": 390,
+      "texts": 9,
+      "errors": [],
+      "preview": "previews/h_portable_pipelined_word_ram_0.svg",
+      "sha256": "ba6117b8ba4a1366a9e1fcba5ed4451bb914242e7e82043daf98723da4e5000e"
+    },
+    {
+      "page": "h_portable_pipelined_word_ram_1",
+      "width": 800,
+      "height": 390,
+      "texts": 9,
+      "errors": [],
+      "preview": "previews/h_portable_pipelined_word_ram_1.svg",
+      "sha256": "32a4a420087a708f9871912590a4cabadc88bb281135e80c6d6b12ef67b88047"
+    },
+    {
+      "page": "h_portable_pipelined_word_ram_2",
+      "width": 800,
+      "height": 390,
+      "texts": 9,
+      "errors": [],
+      "preview": "previews/h_portable_pipelined_word_ram_2.svg",
+      "sha256": "009882c921eadfe039f4c5554854ac29b62266ba2f416e846969ada2e11df214"
+    }
+  ],
+  "renderer": "Local SVG generated from native draw.io geometry + Edge headless; no diagrams.net CLI installed"
+}

@@ -15,43 +15,9 @@
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- H["Host access 32-bit<br/>read / write"] <--> F["Entry / word selection"]
- F <--> W["Workspace descriptors 8<br/>× 32-bit registers"]
- F <--> M["Matrix descriptors 8<br/>× 96-bit registers"]
- W --> O["Workspace descriptor ports<br/>src0 / src1<br/>/ dst"]
- M --> P["Matrix descriptor port<br/>96-bit descriptor"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class H,F,O,P interface;
-class W,M buffer;
-```
+![descriptor_file.sv — overview](../../diagrams/previews/17_descriptor_file.sv_1.svg)
+
+[Editable draw.io — descriptor_file.sv — overview](../../diagrams/architecture.drawio) · Page `17_descriptor_file.sv_1`.
 
 ## Main flow
 

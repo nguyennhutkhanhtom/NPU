@@ -15,49 +15,9 @@
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- D["Descriptors / opcode"] --> C["Validation / word control"]
- C -.-> R["Workspace request routing"]
- W["Workspace SRAM 256-bit<br/>words"] <--> R
- R --> B["Word buffers A<br/>/ B /<br/>old destination"]
- B --> A["rowwise_op Arithmetic and<br/>sigmoid"]
- A --> R
- A -.-> S["Status Done, error<br/>and overflow"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class D,R interface;
-class C control;
-class W platform;
-class B buffer;
-class A compute;
-class S output;
-```
+![rowwise_dispatch.sv — overview](../../diagrams/previews/56_rowwise_dispatch.sv_1.svg)
+
+[Editable draw.io — rowwise_dispatch.sv — overview](../../diagrams/architecture.drawio) · Page `56_rowwise_dispatch.sv_1`.
 
 ## Main flow
 
@@ -121,49 +81,9 @@ class S output;
 
 #### Sơ đồ khối phần cứng của nhóm
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- D["Latched descriptors / opcode"] -.-> C["Dispatcher control Word<br/>index and valid<br/>elements"]
- C -.-> R["Workspace routing Source<br/>/ destination addresses"]
- R <--> W["Workspace SRAM"]
- R --> B["Buffered input words"]
- B --> A["rowwise_op"]
- A --> R
- C -.-> S["Completion / error status"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class D,B buffer;
-class C control;
-class R interface;
-class W platform;
-class A compute;
-class S output;
-```
+![rowwise_dispatch.sv — detail 1](../../diagrams/previews/57_rowwise_dispatch.sv_2.svg)
+
+[Editable draw.io — rowwise_dispatch.sv — detail 1](../../diagrams/architecture.drawio) · Page `57_rowwise_dispatch.sv_2`.
 
 ### [Dòng 136–151: Đọc B/state và chờ ALU](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L136>)
 

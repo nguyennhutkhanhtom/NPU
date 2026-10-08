@@ -15,44 +15,9 @@
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart LR
-CLK["CLOCK_50"] -.-> CORE["matmulfree<br/>NPU core"]
-    SW["SW&#91;0&#93; / rst_n"] -.-> CORE
-    HOST["Host 32-bit interface"] <--> CORE
-    CORE -.-> LED["LEDG&#91;0&#93;=ready<br/>LEDG&#91;1&#93;=overflow<br/>LEDG&#91;2&#93;=error"]
-    CORE -.-> DBG["Local signals<br/>running · pc_debug · instr_debug"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class HOST interface;
-class CLK,SW,LED,DBG buffer;
-class CORE compute;
-```
+![matmul_wrap.sv — overview](../../diagrams/previews/35_matmul_wrap.sv_1.svg)
+
+[Editable draw.io — matmul_wrap.sv — overview](../../diagrams/architecture.drawio) · Page `35_matmul_wrap.sv_1`.
 
 ## Main flow
 

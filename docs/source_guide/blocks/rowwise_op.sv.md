@@ -15,49 +15,9 @@
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- I["Input words / format"] --> B["Buffered lane operands"]
- B --> A["Shared arithmetic Multiply,<br/>add, subtract and<br/>ReLU"]
- B --> S["Sigmoid ROM /<br/>interpolation"]
- A --> R["Scale / RNE / clamp"]
- S --> O["Result packer 256-bit<br/>output"]
- R --> O
- C["Opcode / lane control"] -.-> B & A & R
- O --> F["Result / status"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class I interface;
-class B buffer;
-class A,S compute;
-class R,O,F output;
-class C control;
-```
+![rowwise_op.sv — overview](../../diagrams/previews/58_rowwise_op.sv_1.svg)
+
+[Editable draw.io — rowwise_op.sv — overview](../../diagrams/architecture.drawio) · Page `58_rowwise_op.sv_1`.
 
 Nét liền là dữ liệu, nét đứt là control. MUX dùng hình thang thu hẹp về ngõ ra. Các hộp mang tên register là ranh giới clock thực trong datapath; các batch vẫn chạy tuần tự, không nhận một batch mới mỗi clock. Sơ đồ mô tả phần cứng, không phải pipeline instruction CPU.
 
@@ -110,57 +70,9 @@ Mỗi nhóm giữ nguyên source và phạm vi dòng để đối chiếu. Giả
 
 #### Sơ đồ khối phần cứng của nhóm
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
-    SELECT["Lane selection + magnitude / sign"] --> INREG["LOAD registers<br/>Magnitude U16 pairs + sign + lane S17"]
-    INREG --> MUL["2 shared unsigned 16 × 16 multipliers"]
-    MUL --> PREG["MULTIPLY registers<br/>2 × U32"]
-    PREG --> RAW["Sign correction / REC S33 sum<br/>Raw operation selection"]
-    INREG --> RAW
-    RAW --> RREG["RAW registers<br/>2 × S33"]
-    RREG --> RNE["Shared scale_shift64 / RNE"]
-    RNE --> SREG["ROUND registers<br/>2 × S64"]
-    SREG --> PACK["Saturation / tail / pack<br/>Result register write at PACK"]
-    OP["Latched opcode / shift"] -.-> RAW
-    OP -.-> RNE
-    CTRL["FSM phase enables"] -.-> INREG
-    CTRL -.-> PREG
-    CTRL -.-> RREG
-    CTRL -.-> SREG
-    CTRL -.-> PACK
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class OP,CTRL control;
-class SELECT interface;
-class INREG,PREG,RAW,RREG,SREG buffer;
-class MUL,RNE compute;
-class PACK output;
-```
+![rowwise_op.sv — detail 1](../../diagrams/previews/59_rowwise_op.sv_2.svg)
+
+[Editable draw.io — rowwise_op.sv — detail 1](../../diagrams/architecture.drawio) · Page `59_rowwise_op.sv_2`.
 
 ### [Dòng 141–172: Saturation, tail và pack](<../../../Verilog%20Source%20code/rowwise_op.sv#L141>)
 

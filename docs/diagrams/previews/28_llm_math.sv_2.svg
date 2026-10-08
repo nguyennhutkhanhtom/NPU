@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="974" viewBox="0 0 800 974">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="974" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">llm_math.sv — detail 1</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_math.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="360,184 360,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,318 360,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,452 360,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,586 360,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,720 360,790" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="254" y="120" width="212" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Byte multipliers</text>
+<text x="360.00" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Three unsigned; one signed</text>
+<rect x="260" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Partial products</text>
+<text x="360.00" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S33 at E1</text>
+<rect x="260" y="388" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Pair sums</text>
+<text x="360.00" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S41 at E2</text>
+<rect x="260" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Lane product</text>
+<text x="360.00" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S56 at E3</text>
+<rect x="260" y="656" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="683.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Five reduction stages</text>
+<text x="360.00" y="700.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S57 → S61</text>
+<rect x="260" y="790" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="817.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Sum</text>
+<text x="360.00" y="834.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S61 at E8</text>
+<text x="30.00" y="960.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

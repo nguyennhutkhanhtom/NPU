@@ -1,82 +1,65 @@
-# Sơ đồ RTL và cách đọc
+# RTL architecture diagrams
 
-> **Category: GUIDE.**
+[Documentation](../README.md) · [All 100 editable pages](architecture_catalog.md)
 
-[Tài liệu](../README.md) → **Sơ đồ RTL**
+Current RTL is the source of architectural truth. The redesign replaces all
+73 existing Markdown flowcharts with native draw.io pages and linked SVG
+previews, and rebuilds both hierarchy files. Historical documents explicitly
+label current RTL replacement diagrams; their surrounding prose remains historical.
+The legacy software-only NanoFable hybrid flow remains labelled as application context.
 
-Top chính là **llm_soc**. Sơ đồ hierarchy liệt kê instance thực, còn functional
-overview giải thích các FSM, mux, register và luồng xử lý nằm trong top.
-`matmulfree` dùng host contract và ISA riêng; các sơ đồ của nó thuộc phần legacy.
+| Diagram set | Editable source | Pages |
+|---|---|---|
+| Module internals, datapaths, host, inference and legacy architecture | [architecture.drawio](architecture.drawio) | 73 |
+| llm_soc with USE_QUARTUS_MEMORY=1 | [rtl_hierarchy.drawio](../../rtl_hierarchy.drawio) | 15 |
+| llm_soc with USE_QUARTUS_MEMORY=0 | [rtl_hierarchy_portable.drawio](rtl_hierarchy_portable.drawio) | 12 |
 
-## Chọn sơ đồ theo mục đích
+Hierarchy containment represents instantiation. Repeated children are aggregated
+by module and effective parameters; every covered full instance path is retained
+in editable XML metadata and the [manifest](architecture_manifest.json). Coverage
+is 749 Quartus / 589 portable instances, including the top. This is elaborated
+hierarchy coverage, not synthesized resource usage. Functional arrows represent
+data/control dependencies, with explicit parent muxes for shared resources.
+Packages are compile-time definitions, not instantiated hardware.
 
-| Muốn xem | Tài liệu hoặc file |
-|---|---|
-| Instance, module con và generate scope | [rtl_hierarchy.drawio](../../rtl_hierarchy.drawio) |
-| Hierarchy khi USE_QUARTUS_MEMORY=0 | [rtl_hierarchy_portable.drawio](rtl_hierarchy_portable.drawio) |
-| Engine, tài nguyên dùng chung và mux ở top | [Full graph overview](../source_guide/full_graph.md#sơ-đồ-tài-nguyên-và-đường-dữ-liệu) |
-| Prefill, bốn layer, token selection và decode | [Luồng inference](../design/full_rtl_language.md#luồng-inference) |
-| Request/ACK, cancellation và parameter commit | [Host transaction](../design/host_interface.md#một-transaction) |
-| Cache reuse và invalidate | [Cache reuse and ownership](../design/exact_throughput_optimization.md#cache-reuse-and-ownership) |
-| Sơ đồ từng module, numeric stages và code hiện tại | [Danh mục 41 RTL/LUT assets](../source_guide/blocks/README.md) |
-| Core dùng instruction/descriptor | [Hierarchy matmulfree](<../source_guide/legacy/README.md>) |
+The configured hierarchy uses ATTN_DIV_LANES=4, SIGMOID_LANES=4,
+PERF_COUNTERS=0 and ENABLE_DEBUG_INDEX=0. The normalizer uses the parent's
+shared divider for lane zero and three private divider instances. Host traffic
+uses the RTL request/held-ACK protocol. All sequential full-graph blocks share
+clk; u_reset converts raw rst_n into core_rst_n. Stored SRAM contents are unreset.
 
-## Các tab hierarchy
+The visual templates come from all 28 pages of
+[Ethos_U85_mini.drawio](../../reference/Ethos_U85_mini.drawio), using legend
+cells 00-5/7/9/11/13/15, title 00-2, subtitle 00-3, group 01-7 and open connector
+00-32. Blocks are square and colored by function; connectors are orthogonal.
+Text uses 12 px blocks, 11 px signal labels and 20 px titles. The requested
+CODEX_DRAWIO_STYLE_GUIDE.md filename is absent; [diagram_style.md](diagram_style.md)
+contains that guide and was used unchanged.
 
-| Tab | Nội dung |
-|---|---|
-| 00_TOP | Top, host request/acknowledge, clock/reset và status/debug |
-| 01_LEVEL_1 | Các instance trực tiếp; xem thêm các kết nối chức năng ở cuối phần block |
-| 02_LEVEL_2 | Lane banks, 128 byte multipliers, ternary dot, private dividers và sigmoid helpers |
-| 03_LEVEL_3 | SRAM technology leaves; parameter banks sâu chia 24 tile mỗi lane |
-| 04_LEVEL_4 | altsyncram: external Quartus library primitive; chỉ có trong bản Quartus |
+Architectural corrections include four-result continuous linear streaming,
+eight-result vocabulary streaming and packed scale reads, nine linear and six
+head tag stages through the parent scalar registers, aligned upper scalar
+partials, exact memory backend/latency branches, and separation of private
+ternary arithmetic from shared SIMD. Parent token storage is a register array,
+not an invented output SRAM module. Legacy reduction diagrams include the
+registered S14 total, and acc_mul uses growing, capped level widths.
 
-Các instance lặp có block riêng. Generate scope đặt ngoài block; tên trong block
-luôn gồm hai dòng: instance và `(module)`. Panel **Block Functions & Interfaces**
-giải thích các block, source references và những range generate bao phủ chúng.
-[Manifest](hierarchy_manifest.json) liệt kê từng full path, parent, tham số và
-port mapping trong source, để tra những instance có cùng tên cục bộ.
+[Structural validation](architecture_validation.json) checks XML/editability,
+instance coverage, source hashes and port names/directions, orthogonal routes,
+block/label collisions and source witnesses. [Preview validation](architecture_preview_validation.json)
+records local rendering of every page. SVGs use the same native geometry and
+labels; diagrams.net desktop CLI is unavailable, so these are local SVG/browser
+renders, not diagrams.net exports. No simulation or synthesis was required.
 
-Hierarchy Quartus có 749 instance kể cả top và 256 external `altsyncram`;
-hierarchy portable có 589 instance kể cả top. Đây là số instance trong expansion
-đã phân tích, không phải số tài nguyên sau synthesis. Các trang sâu dài vì vẫn
-giữ từng instance riêng; dùng zoom/search trong diagrams.net để đọc từng nhóm.
+Parameterized widths remain symbolic outside the displayed configurations.
+The external altsyncram primitive cannot be inspected internally from repository
+RTL. The legacy hierarchy is indexed by instance templates but is not fully
+elaborated. No unsupported architectural connection is intentionally represented.
 
-## Quy ước và cấu hình
+Original draw.io files, SVGs and diagram-bearing Markdown are preserved in
+[original_diagrams.zip](../../scratchpad/architecture_redesign/original_diagrams.zip).
+RTL/LUT hashes remained unchanged; existing user edits outside diagrams were
+preserved. TASK_STATE.md has no diagram status section, so its existing status
+fields and other content remain unchanged.
 
-Markdown Mermaid diagrams follow the [shared diagram style](diagram_style.md): semantic colors, dark text, white background and approximately 17 px text. The existing draw.io hierarchy retains its black/white 18 pt presentation. Trong draw.io,
-arrow mảnh biểu diễn instantiation; arrow đậm có nhãn biểu diễn kết nối chức năng
-đã trace. Outline đứt đoạn đánh dấu primitive ngoài source repository.
-
-Cấu hình: USE_QUARTUS_MEMORY=1 hoặc 0, ATTN_DIV_LANES=4, SIGMOID_LANES=4,
-PERF_COUNTERS=0, ENABLE_DEBUG_INDEX=0. Normalizer dùng USE_SHARED=1: lane zero
-nối tới u_div của top; ba lane còn lại là child instances. Package và generate
-scope không được tính thành module instance.
-
-Host là interface request/acknowledge nội bộ, không được gán nhãn APB hay AXI.
-Head và QK gửi request/issue qua mux của parent. Linear dùng ternary_dot32 riêng.
-SRAM portable là behavior model có thể thay bằng ASIC binding; Quartus là EDA
-demonstration backend, không phải ASIC signoff.
-
-## Preview và kiểm tra
-
-| Quartus hierarchy | Portable hierarchy |
-|---|---|
-| [00_TOP](rtl_hierarchy_00_TOP.svg) | [00_TOP](rtl_hierarchy_portable_00_TOP.svg) |
-| [01_LEVEL_1](rtl_hierarchy_01_LEVEL_1.svg) | [01_LEVEL_1](rtl_hierarchy_portable_01_LEVEL_1.svg) |
-| [02_LEVEL_2](rtl_hierarchy_02_LEVEL_2.svg) | [02_LEVEL_2](rtl_hierarchy_portable_02_LEVEL_2.svg) |
-| [03_LEVEL_3](rtl_hierarchy_03_LEVEL_3.svg) | [03_LEVEL_3](rtl_hierarchy_portable_03_LEVEL_3.svg) |
-| [04_LEVEL_4](rtl_hierarchy_04_LEVEL_4.svg) | Không có vendor primitive |
-
-SVG preview được tạo từ cùng label và geometry của file draw.io. Source XML
-vẫn là artifact chỉnh sửa chính. [Preview validation](preview_validation.json)
-ghi render từng trang; [Mermaid validation](../source_guide/diagram_validation.json)
-ghi hash và render của tất cả Mermaid blocks trong docs.
-[Kết quả kiểm tra](../verification/diagrams_20261006/results.json) ghi coverage,
-XML, source references, fonts, preview và các source hashes được giữ nguyên.
-
-Hình MNIST trong demo là ảnh input minh họa, không phải sơ đồ RTL. Các sơ đồ
-trong history/review vẫn ghi phạm vi implementation của bản lịch sử; bản trước
-đợt chỉnh sửa được lưu tại [before.zip](../verification/diagrams_20261006/before.zip).
-
-[Công cụ render](../../tools/docs/README.md) · [Source validator](../source_guide/validate.py)
+See [rebuild/validation workflow](../../tools/docs/README.md).

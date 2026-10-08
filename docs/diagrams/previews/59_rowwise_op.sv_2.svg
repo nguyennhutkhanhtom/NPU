@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1075" height="1387" viewBox="0 0 1075 1387">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="1075" height="1387" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">rowwise_op.sv — detail 1</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: rowwise_op.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="170.5,184 170.5,236 175.81,236 175.81,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="181.5,329 181.5,399" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="181.5,463 181.5,515 224.99,515 224.99,533" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="264.75,597 264.75,649 331.49,649 331.49,667" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="292,329 292,347 408.98,347 408.98,667" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="392.5,731 392.5,783 461.72,783 461.72,801" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="525,865 525,917 596.04,917 596.04,935" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="661,999 661,1051 717.94,1051 717.94,1069" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="770,1133 770,1185 805.52,1185 805.52,1203" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="563,597 563,649 473.93,649 473.93,667" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="643,597 643,917 716.88,917 716.88,935" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="683,164.66 665,164.66 665,236 218.87,236 218.87,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="683,167.4 665,167.4 665,515 304.51,515 304.51,533" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="742.88,184 742.88,783 605,783 605,801" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="819.78,184 819.78,1051 812.99,1051 812.99,1069" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="857.51,184 857.51,202 886.24,202 886.24,1203" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="40" y="120" width="261" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="170.50" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Lane selection + magnitude / sign</text>
+<rect x="51" y="254" width="261" height="75" fill="#f5f5f5" stroke="#666666"/>
+<text x="181.50" y="278.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">LOAD registers</text>
+<text x="181.50" y="295.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Magnitude U16 pairs + sign + lane</text>
+<text x="181.50" y="312.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S17</text>
+<rect x="79" y="399" width="205" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="181.50" y="426.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">2 shared unsigned 16 × 16</text>
+<text x="181.50" y="443.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">multipliers</text>
+<rect x="164.75" y="533" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="264.75" y="560.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">MULTIPLY registers</text>
+<text x="264.75" y="577.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">2 × U32</text>
+<rect x="276" y="667" width="233" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="392.50" y="694.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Sign correction / REC S33 sum</text>
+<text x="392.50" y="711.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Raw operation selection</text>
+<rect x="425" y="801" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="525.00" y="828.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">RAW registers</text>
+<text x="525.00" y="845.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">2 × S33</text>
+<rect x="555" y="935" width="212" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="661.00" y="971.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Shared scale_shift64 / RNE</text>
+<rect x="670" y="1069" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="770.00" y="1096.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">ROUND registers</text>
+<text x="770.00" y="1113.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">2 × S64</text>
+<rect x="721.5" y="1203" width="233" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="838.00" y="1230.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Saturation / tail / pack</text>
+<text x="838.00" y="1247.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Result register write at PACK</text>
+<rect x="463" y="533" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="563.00" y="569.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Latched opcode / shift</text>
+<rect x="683" y="120" width="200" height="64" fill="#f8cecc" stroke="#b85450"/>
+<text x="783.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">FSM phase enables</text>
+<text x="30.00" y="1373.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

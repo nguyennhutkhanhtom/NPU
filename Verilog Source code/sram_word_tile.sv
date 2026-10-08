@@ -1,3 +1,4 @@
+// ASIC exploration only: preserve this synchronous leaf as an SRAM placeholder.
 module sram_word_tile #(
     parameter int WIDTH = 32,
     parameter int ROWS = 1024
@@ -7,9 +8,11 @@ module sram_word_tile #(
     input logic [WIDTH - 1:0] wr_data,
     output logic [WIDTH - 1:0] rd_data
 );
+`ifndef SYNTH_RAM_BLACKBOX
     logic [WIDTH - 1:0] memory [0:ROWS - 1];
     always_ff @(posedge clk) begin
         if (wr_en) memory[wr_addr] <= wr_data;
         if (rd_en) rd_data <= memory[rd_addr];
     end
+`endif
 endmodule

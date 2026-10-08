@@ -15,51 +15,9 @@
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
-C["Compute workspace port<br/>Data 256 bit · address 8 bit"]
-    H["Host/debug port<br/>Data 32 bit · word-index 11 bit"]
-    subgraph WRAP["regfile.sv — module register"]
-        subgraph SRAM["sram_256_wrapper · ADDR_W=8"]
-            PORT["Masked write / shared synchronous read<br/>Host lane select + host_rvalid"]
-            MEM@{ shape: rect, label: "Workspace memory array 256 ×<br/>256 bit 8 bank ×<br/>32 bit 8 KiB" }
-            PORT <--> MEM
-        end
-    end
-    C <-->|"Read/write + valid"| PORT
-    H <-->|"32-bit lane access + host_rvalid"| PORT
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class C,H,PORT interface;
-class MEM buffer;
-style SRAM fill:#ffffff,stroke:#aaaaaa,color:#111111;
-style WRAP fill:#ffffff,stroke:#aaaaaa,color:#111111;
-```
+![regfile.sv — overview](../../diagrams/previews/54_regfile.sv_1.svg)
+
+[Editable draw.io — regfile.sv — overview](../../diagrams/architecture.drawio) · Page `54_regfile.sv_1`.
 
 ## Main flow
 

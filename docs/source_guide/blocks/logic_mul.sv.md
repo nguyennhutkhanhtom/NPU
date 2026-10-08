@@ -13,44 +13,9 @@
 
 ## Sơ đồ kiến trúc
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
-    A["Sign or zero extend A"] --> BIT["AND with each<br/>B bit and<br/>constant shift"]
-    B["B bits and sign bit"] --> BIT
-    BIT --> CSA["XOR sum and<br/>majority carry shifted<br/>left"]
-    CSA --> TREE["Compress three rows<br/>into two per<br/>level"]
-    TREE --> ADD["One final carry-propagate<br/>adder"]
-    ADD --> OUT["Low OUT_W product bits"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class A,B,TREE buffer;
-class BIT,CSA,ADD,OUT compute;
-```
+![logic_mul.sv — overview](../../diagrams/previews/34_logic_mul.sv_1.svg)
+
+[Editable draw.io — logic_mul.sv — overview](../../diagrams/architecture.drawio) · Page `34_logic_mul.sv_1`.
 
 ## Important state / datapath groups
 

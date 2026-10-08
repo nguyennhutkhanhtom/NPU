@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="583" viewBox="0 0 860 583">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="860" height="583" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">matmul_wrap.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: matmul_wrap.sv · CLOCK_50 → clk; SW[0] → rst_n; no CDC</text>
+<polyline points="140,184 140,269 290,269" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="390,184 390,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="640,184 640,269 490,269" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="319.07,318 319.07,370 241.5,370 241.5,388" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="460.93,318 460.93,375.5 538.5,375.5 538.5,393.5" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="40" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="140.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">CLOCK_50</text>
+<rect x="290" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="390.00" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">matmulfree</text>
+<text x="390.00" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">NPU core</text>
+<rect x="290" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="390.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">SW[0] / rst_n</text>
+<rect x="540" y="120" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="640.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host 32-bit interface</text>
+<rect x="121.5" y="388" width="240" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="241.50" y="412.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">LEDG&amp;ﬂ°°91¶ß0&amp;ﬂ°°93¶ß=ready</text>
+<text x="241.50" y="429.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">LEDG&amp;ﬂ°°91¶ß1&amp;ﬂ°°93¶ß=overflow</text>
+<text x="241.50" y="446.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">LEDG&amp;ﬂ°°91¶ß2&amp;ﬂ°°93¶ß=error</text>
+<rect x="411.5" y="393.5" width="254" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="538.50" y="421.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Local signals</text>
+<text x="538.50" y="438.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">running · pc_debug · instr_debug</text>
+<text x="30.00" y="569.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

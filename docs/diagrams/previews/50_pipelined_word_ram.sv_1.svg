@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1012" height="1105" viewBox="0 0 1012 1105">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="1012" height="1105" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">pipelined_word_ram.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: pipelined_word_ram.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="537.91,184 537.91,236 440.75,236 440.75,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="300.75,339 282.75,339 282.75,564 156.5,564 156.5,582" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="580.75,339 617.5,339 617.5,564 735.5,564 735.5,582" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="454.02,354 454.02,430 466.5,430 466.5,448" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="156.5,657 156.5,739.5" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="466.5,512 466.5,582" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="156.5,814.5 156.5,903 163.04,903 163.04,921" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="466.5,657 466.5,709 477.1,709 477.1,727" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="735.5,657 735.5,742 632.25,742" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="520.09,827 520.09,903 546.25,903 546.25,921" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="404.75,827 404.75,903 230.28,903 230.28,921" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="690.99,184 690.99,248.5 761.25,248.5 761.25,266.5" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="496.25" y="120" width="261" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="626.75" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">rd_en / wr_en + addresses / write</text>
+<text x="626.75" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">data</text>
+<polygon points="440.75,254 580.75,304.0 440.75,354 300.75,304.0" fill="#f8cecc" stroke="#b85450"/>
+<text x="440.75" y="308.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Elaboration backend</text>
+<rect x="56.5" y="582" width="200" height="75" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="156.50" y="606.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">g_ip_tiled.g_tile</text>
+<text x="156.50" y="623.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Local request FFs →</text>
+<text x="156.50" y="640.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">quartus_word_ram</text>
+<rect x="622.5" y="582" width="226" height="75" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="735.50" y="606.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">g_ip</text>
+<text x="735.50" y="623.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Request FFs → one whole-bank</text>
+<text x="735.50" y="640.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">quartus_word_ram</text>
+<rect x="332.5" y="448" width="268" height="64" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="466.50" y="475.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">g_model.g_tile</text>
+<text x="466.50" y="492.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Local request FFs → sram_word_tile</text>
+<rect x="40" y="739.5" width="233" height="75" fill="#f5f5f5" stroke="#666666"/>
+<text x="156.50" y="764.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Registered four-tile group</text>
+<text x="156.50" y="781.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">responses</text>
+<text x="156.50" y="798.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Balanced padded response tree</text>
+<rect x="360.5" y="582" width="212" height="75" fill="#f5f5f5" stroke="#666666"/>
+<text x="466.50" y="606.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Registered four-tile group</text>
+<text x="466.50" y="623.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">responses</text>
+<text x="466.50" y="640.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Masked group OR reduction</text>
+<rect x="44" y="921" width="247" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="167.50" y="948.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">rd_data output register</text>
+<text x="167.50" y="965.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">rd_valid at edge 4 for &gt;4 tiles</text>
+<polygon points="492.25,727 632.25,777.0 492.25,827 352.25,777.0" fill="#f8cecc" stroke="#b85450"/>
+<text x="492.25" y="781.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">GROUPS = 1?</text>
+<rect x="436.75" y="921" width="219" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="546.25" y="948.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">rd_data from response stage</text>
+<text x="546.25" y="965.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">rd_valid at edge 3</text>
+<rect x="630.75" y="266.5" width="261" height="75" fill="#f5f5f5" stroke="#666666"/>
+<text x="761.25" y="291.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">write_pending_q → wr_valid</text>
+<text x="761.25" y="308.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Leaf commit at edge 2; no storage</text>
+<text x="761.25" y="325.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">reset</text>
+<rect x="140.75" y="439.5" width="134" height="24" fill="white"/>
+<text x="207.75" y="455.50" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">Quartus, ROWS &gt; 4096</text>
+<rect x="625.5" y="439.5" width="134" height="24" fill="white"/>
+<text x="692.50" y="455.50" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">Quartus, ROWS ≤ 4096</text>
+<rect x="423.02" y="380.0" width="62" height="24" fill="white"/>
+<text x="454.02" y="396.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">Portable</text>
+<rect x="504.09000000000003" y="853.0" width="32" height="24" fill="white"/>
+<text x="520.09" y="869.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">yes</text>
+<rect x="304.515" y="891.0" width="26" height="24" fill="white"/>
+<text x="317.51" y="907.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">no</text>
+<text x="30.00" y="1091.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

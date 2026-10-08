@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="706" viewBox="0 0 800 706">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="706" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">banked_word_ram.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: banked_word_ram.sv · clk; SRAM storage has no reset</text>
+<polyline points="298.45,184 298.45,236 232.5,236 232.5,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="419.05,184 419.05,236 485,236 485,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="232.5,318 232.5,370 298.45,370 298.45,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="485,318 485,370 419.05,370 419.05,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="358.75,452 358.75,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="258.75" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="358.75" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Read and write requests</text>
+<rect x="132.5" y="254" width="200" height="64" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="232.50" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">1024-word leaf SRAM</text>
+<rect x="382.5" y="254" width="205" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="485.00" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Registered tile selection</text>
+<rect x="258.75" y="388" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="358.75" y="424.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">One-hot data reduction</text>
+<rect x="258.75" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="358.75" y="558.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Read data after one edge</text>
+<text x="30.00" y="692.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

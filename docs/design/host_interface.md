@@ -40,49 +40,9 @@ có register readback. Graph sở hữu KV và vector workspace.
 
 ## Một transaction
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- I["H_IDLE: host_en captures<br/>address / data<br/>/ write flag"] --> E["H_EXEC: decode registered request"]
- E -->|"Parameter read while idle"| R["H_READ: issue host_read_req"]
- R --> W["H_WAIT: wait for p_host_valid"]
- E -->|"Parameter write while idle"| W
- E -->|"Register / status / output / ignored access"| D["H_DONE: hold host_ready<br/>until host_en drops"]
- W -->|"Read payload captured or write committed"| D
- D -->|"host_en=0 for at least one clock"| I
- C["host_en=0 cancels frontend response<br/>Accepted writes can still commit"] -.-> I
- X["rst_n assertion cancels<br/>uncommitted queue entries<br/>SRAM contents retained"] -.-> I
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class C interface;
-class E,R,W,D buffer;
-class I compute;
-class X platform;
-```
+![host_interface — overview](../diagrams/previews/07_host_interface_1.svg)
+
+[Editable draw.io — host_interface — overview](../diagrams/architecture.drawio) · Page `07_host_interface_1`.
 
 
 1. Đặt address, write flag và data; assert `host_en`.

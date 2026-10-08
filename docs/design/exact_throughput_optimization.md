@@ -80,79 +80,10 @@ timing khớp source/config trước pretrained execution.
 Sơ đồ này tóm tắt các điều kiện điều khiển của parent; nó không bổ sung cache
 module instance. Các predicate trong source vẫn là nguồn chuẩn.
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- S["Parent input selection<br/>Source, shape and<br/>family"] --> T{"Matching valid tag?"}
- T -->|"Q/K/V or Gate/Up reuse"| C["Operand cache<br/>12 × 768 bit"]
- T -->|"miss or head entry"| L["Vector SRAM refill"]
- L --> C
- C --> A["Linear / head<br/>operands Parent-owned routing"]
- P["Producer / reset /<br/>launch / fault Invalidate<br/>per parent predicates"] -.-> T
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class T control;
-class S,C,A,P buffer;
-class L platform;
-```
+![exact_throughput_optimization — overview](../diagrams/previews/03_exact_throughput_optimization_1.svg)
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart LR
- R["RoPE position tag"] --> K{"Matching valid table?"}
- K -->|"yes"| U["Reuse cos /<br/>sin Read K<br/>vector separately"]
- K -->|"no"| F["Fetch table<br/>Update tag"]
- G["Norm gain load<br/>Shared payload invalidation"] -.-> K
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class K control;
-class R,U,F,G buffer;
-```
+[Editable draw.io — exact_throughput_optimization — overview](../diagrams/architecture.drawio) · Page `03_exact_throughput_optimization_1`.
+
+![exact_throughput_optimization — detail 1](../diagrams/previews/04_exact_throughput_optimization_2.svg)
+
+[Editable draw.io — exact_throughput_optimization — detail 1](../diagrams/architecture.drawio) · Page `04_exact_throughput_optimization_2`.

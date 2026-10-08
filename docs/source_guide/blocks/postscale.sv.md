@@ -18,44 +18,9 @@ không phải suy luận net type (NODNTW). Width/signedness và arithmetic gi�
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- A["Accumulator / scale<br/>S18 × U24"] --> M["Product<br/>S42"]
- M --> R["Signed RNE<br/>Shift U6"]
- R --> F["postscale_finish Bias S43,<br/>saturation and range<br/>flags"]
- B["Bias / output<br/>format S32; S16<br/>or S32 selection"] --> F
- X["Registered rounded result<br/>Alternative ternary_mul caller"] --> F
- F --> O["Result / overflow<br/>S16 or S32"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class A,M,R compute;
-class F,B,X,O output;
-```
+![postscale.sv — overview](../../diagrams/previews/51_postscale.sv_1.svg)
+
+[Editable draw.io — postscale.sv — overview](../../diagrams/architecture.drawio) · Page `51_postscale.sv_1`.
 
 Nét liền là dữ liệu, nét đứt là format/control. Hai module trong file này đều tổ hợp; product/round registers của engine nằm trong [ternary_mul](ternary_mul.sv.md), không nằm trong interface `postscale`.
 
@@ -81,47 +46,6 @@ Nét liền là dữ liệu, nét đứt là format/control. Hai module trong fi
 
 #### Sơ đồ khối phần cứng của nhóm
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
-    R["Rounded S42<br/>From wrapper or engine register"] --> EXT["Sign extension S43"]
-    B["Bias S32, in output units"] --> EXT_B["Sign extension S43"]
-    EXT --> ADD["Signed bias adder S43"]
-    EXT_B --> ADD
-    ADD --> S16["S16 clamp"]
-    ADD --> S32["S32 clamp"]
-    ADD --> DET["S16 / S32 overflow comparators"]
-    F["output_s32"] -.-> DET
-    S16 --> Y16["y_s16"]
-    S32 --> Y32["y_s32"]
-    DET --> OV["overflow"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class R,EXT,EXT_B,DET,Y16,Y32,OV buffer;
-class ADD compute;
-class B,S16,S32,F output;
-```
+![postscale.sv — detail 1](../../diagrams/previews/52_postscale.sv_2.svg)
+
+[Editable draw.io — postscale.sv — detail 1](../../diagrams/architecture.drawio) · Page `52_postscale.sv_2`.

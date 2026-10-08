@@ -20,146 +20,17 @@ Xem [flow server](../../../tools/server/README.md); evidence FPGA cũ không xá
 
 ## Architecture
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- H["Host<br/>Parameters, prompt and config"] <--> F["Host frontend<br/>Requests, ACK and output IDs"]
- subgraph PARENT["llm_soc ownership"]
-  C["Graph / operator FSMs<br/>Phase and resource ownership"]
-  O["Operand / metadata caches<br/>Validity and reuse tags"]
-  S["Scalar / vector processing<br/>Round, clamp and store"]
-  T["Token selection<br/>Greedy or sampled"]
- end
- F -.-> C
- C -.-> O & S & T
- O --> E["Operator engines<br/>Linear / head / QK / normalize"]
- E --> S
- S --> T
- T --> F
- B["Shared resource ports<br/>Memory / arithmetic adapters"] <--> E
- O --> B
- S --> B
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-style PARENT fill:#ffffff,stroke:#aaaaaa,color:#111111;
-class C control;
-class H,F,B interface;
-class O buffer;
-class E compute;
-class S,T output;
-```
+![llm_soc.sv — overview](../../diagrams/previews/31_llm_soc.sv_1.svg)
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- subgraph ROW["Ordered linear row processing"]
-  L["Linear engine<br/>One active row"] --> R["Retained completion<br/>S39 accumulator + fault"]
-  R --> W["Parent row wait<br/>Consume result once"]
-  W --> S["Scalar pipeline<br/>Coefficient, RNE and clamp"]
-  S --> V["Vector store<br/>Current row output"]
- end
- C["Row launch control<br/>At most one lookahead"] -.-> L
- S -.->|"launch next row"| C
- V ==>|"advance row"| W
- F["Reset / launch / fault<br/>Cancel or invalidate"] -.-> C & R
- P["Parameter / operand ports<br/>Parent-owned routing"] --> L
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-style ROW fill:#ffffff,stroke:#aaaaaa,color:#111111;
-class C,W,F control;
-class P interface;
-class R buffer;
-class L compute;
-class S,V output;
-```
+[Editable draw.io — llm_soc.sv — overview](../../diagrams/architecture.drawio) · Page `31_llm_soc.sv_1`.
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- R["Head row result<br/>Coefficient product + RNE24"] --> T{"Temperature zero?"}
- T -->|"yes"| G["Greedy score<br/>Advance PRNG once"]
- T -->|"no"| N["Gumbel score<br/>Add noise; advance PRNG once"]
- G --> S["Score clamp / eligibility<br/>Stable lowest-ID tie"]
- N --> S
- S --> B["Best token state<br/>Eligible updates only"]
- B ==>|"next vocabulary row"| R
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class T control;
-class R,G,N,S,B output;
-```
+![llm_soc.sv — detail 1](../../diagrams/previews/32_llm_soc.sv_2.svg)
+
+[Editable draw.io — llm_soc.sv — detail 1](../../diagrams/architecture.drawio) · Page `32_llm_soc.sv_2`.
+
+![llm_soc.sv — detail 2](../../diagrams/previews/33_llm_soc.sv_3.svg)
+
+[Editable draw.io — llm_soc.sv — detail 2](../../diagrams/architecture.drawio) · Page `33_llm_soc.sv_3`.
 
 ## Main flow
 
@@ -176,18 +47,21 @@ class R,G,N,S,B output;
 | `layer_q`, `position_q`, `generated_q` | Layer, context position and output progress |
 | Input/scale/RoPE tags | Reuse only operands compatible with the next phase |
 | `linear_active_q`, `linear_row_issue_q`, `linear_pipe_valid_q/linear_pipe_row_q` | One matrix stream; ordered engine results feed the existing scalar registers with stage validity and aligned row tags |
+| `head_result_ready`, `head_pipe_valid_q/head_pipe_row_q` | One vocabulary stream; six tagged scalar stages carry multiply partials, pair/high alignment, product, RNE/noise, sampled score and ordered selection |
 | `temperature_q`, `random_q`, selection score | Greedy or sampled selection; stable ID ordering |
 
 ## Important contracts
 
 Linear execution launches once in `L_ROW_START` and remains in `L_ROW_WAIT` while the engine issues consecutive rows. Its bounded result FIFO feeds coefficient multiplication, RNE, saturation and lane packing through the existing registers. The final lane is captured before the tagged bank write is accepted; a write may overlap packing the next bank. Fault consumption waits for older scalar packets to finish, then drains accepted memory/dot work. Completion waits for empty row results, scalar validity and bank write queues. Memory acceptance and write commitment are different events; host acknowledgement follows commitment. Shared-resource muxes are owned here, rather than direct engine-to-engine wiring.
 
-Diagram follow-up required: the existing ordered-linear diagram still depicts one-row lookahead and FSM-driven epilogue serialization.
+The diagrams above reflect continuous row streaming and the tagged scalar epilogue, including the registered upper multiply partial.
+
+Head execution launches once in `H_SCALE` after four hidden-vector cache reads, then stays in `H_STREAM_WAIT`. The engine owns weight and packed-scale reads; each accepted S39 sum/U24 coefficient enters the shared scalar registers. The upper multiply partial travels with its pair stage. Tags preserve row-scale association through exact RNE and sampled-score saturation. PRNG advances once per ordered row at the RNE/noise stage, including greedy and excluded rows. Selection uses strict greater-than and ascending IDs, preserving the eligible fallback and stable ties. Completion follows selection of row 4,095 and empty head validity/engine ownership. Reset/cancellation clears pipeline validity and prevents PRNG/selection updates; cancellation drains accepted engine responses before completion.
 
 ## Easy to misunderstand
 
 - SIMD lanes form one reduction, not independent completed outputs.
-- Zero temperature skips noise/sample states but still advances PRNG once per row, including excluded IDs.
+- Zero temperature adds zero noise in the head pipeline but still advances PRNG once per row, including excluded IDs.
 - Host supplies prompt/configuration, not hidden activations or continuation IDs.
 - Result slots include queued sums and rows already issued into the dot pipeline. Backpressure retains the oldest sum/fault pair and bounds further row issue.
 

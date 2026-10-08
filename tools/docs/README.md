@@ -1,3 +1,40 @@
+# Architecture diagram tooling
+
+The current editable sources are [architecture.drawio](../../docs/diagrams/architecture.drawio),
+[Quartus hierarchy](../../rtl_hierarchy.drawio) and
+[portable hierarchy](../../docs/diagrams/rtl_hierarchy_portable.drawio).
+[architecture_pages.json](architecture_pages.json) is the reviewed page specification,
+bound to source hashes. [architecture_manifest.json](../../docs/diagrams/architecture_manifest.json)
+indexes all module interfaces and configured instance maps. RTL remains authoritative.
+
+Run from the repository root, using the bundled Python/Node paths if they are not on PATH:
+
+```powershell
+python tools/docs/redesign_architecture.py prepare
+node tools/docs/layout_architecture.mjs
+python tools/docs/redesign_architecture.py emit
+python tools/docs/validate_architecture.py
+node tools/docs/preview_architecture.cjs
+```
+
+The prepare step reuses the reviewed specification only when all RTL/LUT hashes
+match. After a source change, first review and update its affected page facts and
+source hashes; do not carry old architectural claims forward automatically.
+Original diagram files are backed up before replacement. Each native page has
+editable boxes, text, parent containers and orthogonal connectors. Native SVG
+previews are drawn from those same geometry/labels and rendered in headless Edge.
+No RTL, configuration, tests, credentials or external services are modified.
+
+The browser may need to run outside the desktop sandbox. Set DOCS_BROWSER_PATH
+to an available headless Chromium browser if the default Edge path is unavailable.
+All results and known limitations are in the diagrams README and validation JSONs.
+
+The scripts below describe the retired Mermaid/black-and-white hierarchy workflow.
+Its outputs and older dated evidence are historical; running its generators would
+replace the redesigned files and is not part of the current workflow.
+
+---
+
 # Render documentation diagrams
 
 > **Category: GUIDE.**

@@ -8,7 +8,7 @@
 - Exception: documentation required to keep modified RTL synchronized is part of the RTL change.
 - Treat current repository source, configuration, tests, manifests, and matching generated evidence as the source of truth.
 - For server-related tasks, read `tools/server/README.md` for connection, credentials handling, SSH/X11, Slurm, transfer and EDA flow. Do not read the retired `SERVER_ACCESS.md`; credentials are local-only in `tools/server/.local/credentials.json` and must never be printed or committed.
-
+- On remote server, do not edit/remove any files/folders outside project or NPU folder on `$home`
 ## 2. Context efficiency
 
 Optimize for low context/token use.
@@ -130,7 +130,7 @@ For Quartus synthesis/fit/STA, long simulations, or similar jobs:
 - On continuation, inspect final status/report once, verify source/configuration/evidence provenance, and resume from `TASK_STATE.md`.
 - Do not relaunch a running/completed job merely because the previous Codex turn ended; relaunch only if evidence is invalid or source/configuration changed.
 - Short jobs completing within the current tool call need no handoff.
-- Before ending each turn, run an existing monitoring script or edit it in scratchpad section if those jobs will not be reused in the future to automatically update `TASK_STATE.md` based on actual task progress.
+- Before ending each long-job turn, provide a PowerShell command that I can run locally to execute an existing job-monitoring script. If the monitoring task is temporary and unlikely to be reused, create or modify the script in the `scratchpad` directory instead, and provide the corresponding PowerShell command. The script must run continuously monitoring until the job is done.
 - Only update the status within the relevant sections (e.g., `Timing`, `Simulating`), using exactly `Done` or `In progress`.
 - Mark a section as `Done` only when its tasks are fully completed and verified. Do not modify any other content in `TASK_STATE.md`.
 

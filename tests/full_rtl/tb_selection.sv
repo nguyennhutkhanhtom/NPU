@@ -13,6 +13,16 @@ module tb_llm_selection;
             $fatal(1,"SELECT_EDGE expected eligible token=%0d actual=%0d score=%0d",expected,dut.best_token_q,dut.best_score_q);
         checks++;
     endtask
+    task streamed_step(input integer token_id,input logic signed [63:0] score,input integer expected);
+        // Exercise the active tagged retirement path with the same edge cases.
+        force dut.op=dut.H_STREAM_WAIT;
+        force dut.head_pipe_valid_q=6'b100000;
+        force dut.head_pipe_row_q[5]=12'(token_id);
+        force dut.sampled_score_q=score;
+        @(negedge clk);check_best(expected);
+        release dut.head_pipe_valid_q;release dut.head_pipe_row_q[5];
+        force dut.op=dut.H_SELECT;
+    endtask
     task setup(input integer minimum);
         release dut.graph;release dut.op;release dut.vocabulary_row_q;release dut.sampled_score_q;
         @(negedge clk);rst_n=0;repeat(3) @(negedge clk);
@@ -68,6 +78,15 @@ module tb_llm_selection;
         setup(0);
         greedy_step(3,-64'sd36028797035741184,-64'sd2147483649,1);
         greedy_step(1,-64'sd36028797018963968,-64'sd2147483648,1);
+        setup(64);
+        streamed_step(3,-64'sd2147483648,3);
+        streamed_step(0,64'sd2147483647,3);streamed_step(2,64'sd2147483647,3);
+        streamed_step(1,64'sd2147483647,3);
+        streamed_step(3,10,3);streamed_step(7,10,3);
+        streamed_step(4,11,4);streamed_step(8,11,4);
+        streamed_step(9,64'sd2147483648,9);streamed_step(10,64'sd2147483649,9);
+        setup(0);
+        streamed_step(3,-64'sd2147483648,1);streamed_step(1,-64'sd2147483648,1);
         // Reset after a greedy row retires must discard both control and PRNG.
         release dut.op;release dut.graph;release dut.vocabulary_row_q;
         rst_n=0;repeat(3) @(negedge clk);rst_n=1;repeat(3) @(negedge clk);

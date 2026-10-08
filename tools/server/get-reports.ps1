@@ -5,23 +5,18 @@ param(
     [Parameter(Mandatory=$true)][ValidatePattern('^[A-Za-z0-9_./~-]+$')][string]$RemoteRoot,
     [switch]$AdminApprovedTransfer,
     [string]$OutputDirectory = (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'tests/full_rtl/build/server_reports'),
-    [Alias('UseRunbookPassword')][switch]$UseSavedPassword,
     [Alias('RunbookPath')][string]$CredentialPath = (Join-Path $PSScriptRoot '.local/credentials.json')
 )
 $ErrorActionPreference = 'Stop'
 if (-not $AdminApprovedTransfer) { throw 'Administrator authorization for report transfer is required.' }
-$auth = $null
-$ssh = (Get-Command ssh.exe).Source
-if ($UseSavedPassword) {
-    . (Join-Path $PSScriptRoot 'ssh-auth.ps1')
-    $auth = New-NpuSshAuth 'red.doelab.site' 'ee5303_09' $CredentialPath
-    $ssh = $auth.Ssh
-}
+. (Join-Path $PSScriptRoot 'ssh-auth.ps1')
+$auth = New-NpuSshAuth 'red.doelab.site' 'ee5303_09' $CredentialPath
+$ssh = $auth.Ssh
 $null = New-Item -ItemType Directory -Path $OutputDirectory -Force
 $archive = Join-Path ([IO.Path]::GetFullPath($OutputDirectory)) ($Tag + '.tar.gz')
 $start = New-Object Diagnostics.ProcessStartInfo
 $start.FileName = $ssh
-$start.Arguments = '-T -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o NumberOfPasswordPrompts=1 ee5303_09@red.doelab.site bash -s'
+$start.Arguments = '-T -o PubkeyAuthentication=no -o PreferredAuthentications=password -o StrictHostKeyChecking=yes -o ConnectTimeout=10 -o NumberOfPasswordPrompts=1 ee5303_09@red.doelab.site bash -s'
 $start.UseShellExecute = $false
 $start.RedirectStandardInput = $true
 $start.RedirectStandardOutput = $true

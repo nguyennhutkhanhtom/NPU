@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="862" viewBox="0 0 800 862">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="862" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">matmulfree.sv — detail 2</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: matmulfree.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="163.14,334.5 163.14,526 228.04,526 228.04,544" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="290,189.5 290,247 351.79,247 351.79,265" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="418,340 418,392 412.25,392 412.25,410" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="218.32,334.5 218.32,392 347.3,392 347.3,410" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="407,474 407,526 347.45,526 347.45,544" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="546,195 546,247 484.21,247 484.21,265" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="293,608 293,678" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="68" y="270.5" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="168.00" y="298.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Matrix descriptor Static</text>
+<text x="168.00" y="315.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">scale M/r</text>
+<rect x="190.5" y="544" width="205" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="293.00" y="580.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Effective scale selection</text>
+<rect x="190" y="125.5" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="290.00" y="153.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Norm completion quant_d</text>
+<text x="290.00" y="170.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">metadata</text>
+<rect x="318" y="265" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="418.00" y="289.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Runtime scale metadata</text>
+<text x="418.00" y="306.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Payload + valid</text>
+<text x="418.00" y="323.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">bits</text>
+<rect x="307" y="410" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="407.00" y="437.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">scale_compose</text>
+<text x="407.00" y="454.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Dynamic M/r</text>
+<rect x="440" y="120" width="212" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="546.00" y="144.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Workspace / descriptor</text>
+<text x="546.00" y="161.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">writes Invalidate matching</text>
+<text x="546.00" y="178.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">metadata</text>
+<rect x="193" y="678" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="293.00" y="705.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Ternary engine Effective</text>
+<text x="293.00" y="722.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">matrix descriptor</text>
+<text x="30.00" y="848.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

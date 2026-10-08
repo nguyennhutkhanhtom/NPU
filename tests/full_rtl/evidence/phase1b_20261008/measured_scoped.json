@@ -1,0 +1,143 @@
+{
+  "baseline": {
+    "status": "COMPLETED",
+    "job": "64343",
+    "head_profiles": [
+      {
+        "operator": 9,
+        "context": 1,
+        "temperature": 166,
+        "cycles": 121886,
+        "linear_startup": 0,
+        "linear_issue": 0,
+        "linear_drain": 0,
+        "head_startup": 20480,
+        "head_issue": 16384,
+        "head_drain": 40960
+      },
+      {
+        "operator": 9,
+        "context": 1,
+        "temperature": 0,
+        "cycles": 113694,
+        "linear_startup": 0,
+        "linear_issue": 0,
+        "linear_drain": 0,
+        "head_startup": 20480,
+        "head_issue": 16384,
+        "head_drain": 40960
+      },
+      {
+        "operator": 9,
+        "context": 128,
+        "temperature": 0,
+        "cycles": 113694,
+        "linear_startup": 0,
+        "linear_issue": 0,
+        "linear_drain": 0,
+        "head_startup": 20480,
+        "head_issue": 16384,
+        "head_drain": 40960
+      }
+    ],
+    "stream_profiles": [],
+    "verified_report_hashes": 5
+  },
+  "scoped": {
+    "status": "COMPLETED",
+    "job": "64347",
+    "head_profiles": [
+      {
+        "operator": 9,
+        "context": 1,
+        "temperature": 166,
+        "cycles": 16949,
+        "linear_startup": 0,
+        "linear_issue": 0,
+        "linear_drain": 0,
+        "head_startup": 6,
+        "head_issue": 16384,
+        "head_drain": 522
+      },
+      {
+        "operator": 9,
+        "context": 1,
+        "temperature": 0,
+        "cycles": 16949,
+        "linear_startup": 0,
+        "linear_issue": 0,
+        "linear_drain": 0,
+        "head_startup": 6,
+        "head_issue": 16384,
+        "head_drain": 522
+      },
+      {
+        "operator": 9,
+        "context": 128,
+        "temperature": 0,
+        "cycles": 16949,
+        "linear_startup": 0,
+        "linear_issue": 0,
+        "linear_drain": 0,
+        "head_startup": 6,
+        "head_issue": 16384,
+        "head_drain": 522
+      },
+      {
+        "operator": 9,
+        "context": 1,
+        "temperature": 166,
+        "cycles": 16957,
+        "linear_startup": 0,
+        "linear_issue": 0,
+        "linear_drain": 0,
+        "head_startup": 6,
+        "head_issue": 16384,
+        "head_drain": 530
+      }
+    ],
+    "stream_profiles": [
+      {
+        "rows": 4096,
+        "math_issues": 16384,
+        "row_interval_sum": 16891,
+        "intervals": 4095,
+        "max_rows_in_flight": 7,
+        "scale_read_cycles": 512,
+        "credit_stalls": 0,
+        "result_stalls": 0
+      },
+      {
+        "rows": 4096,
+        "math_issues": 16384,
+        "row_interval_sum": 16891,
+        "intervals": 4095,
+        "max_rows_in_flight": 7,
+        "scale_read_cycles": 512,
+        "credit_stalls": 0,
+        "result_stalls": 0
+      },
+      {
+        "rows": 4096,
+        "math_issues": 16384,
+        "row_interval_sum": 16891,
+        "intervals": 4095,
+        "max_rows_in_flight": 7,
+        "scale_read_cycles": 512,
+        "credit_stalls": 0,
+        "result_stalls": 0
+      },
+      {
+        "rows": 4096,
+        "math_issues": 16384,
+        "row_interval_sum": 16899,
+        "intervals": 4095,
+        "max_rows_in_flight": 10,
+        "scale_read_cycles": 512,
+        "credit_stalls": 8,
+        "result_stalls": 21
+      }
+    ],
+    "verified_report_hashes": 9
+  }
+}

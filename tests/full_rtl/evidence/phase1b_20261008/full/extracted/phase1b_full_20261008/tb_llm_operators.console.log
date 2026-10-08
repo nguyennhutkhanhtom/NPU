@@ -1,0 +1,445 @@
+TOOL:	xrun(64)	24.09-s005: Started on Oct 08, 2026 at 21:50:20 +07
+xrun(64): 24.09-s005: (c) Copyright 1995-2025 Cadence Design Systems, Inc.
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/npu_pkg.sv
+	package worklib.npu_pkg:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/llm_pkg.sv
+	package worklib.llm_pkg:sv
+		errors: 0, warnings: 0
+	module worklib.llm_exp_sample:svh
+		errors: 0, warnings: 0
+	module worklib.llm_gumbel_sample:svh
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/PC.sv
+	module worklib.PC:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/acc_mul.sv
+	module worklib.acc_mul:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/banked_word_ram.sv
+	module worklib.banked_word_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/descriptor_file.sv
+	module worklib.descriptor_file:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/div.sv
+	module worklib.div:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/ins_mem.sv
+	module worklib.ins_mem:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/isqrt_u64.sv
+	module worklib.isqrt_u64:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/llm_attention_engine.sv
+	module worklib.llm_attention_engine:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/llm_attention_normalize.sv
+	module worklib.llm_attention_normalize:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/llm_bank_ram.sv
+	module worklib.llm_bank_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/llm_head_engine.sv
+	module worklib.llm_head_engine:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/llm_linear_engine.sv
+	module worklib.llm_linear_engine:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/llm_math.sv
+	module worklib.llm_math:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/llm_parameter_ram.sv
+	module worklib.llm_parameter_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/llm_soc.sv
+	module worklib.llm_soc:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/logic_mul.sv
+	module worklib.logic_mul:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/matmul_wrap.sv
+	module worklib.matmul_wrap:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/matmulfree.sv
+	module worklib.matmulfree:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/mem_mapping.sv
+	module worklib.mem_mapping:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/mul.sv
+	module worklib.mul:sv
+		errors: 0, warnings: 0
+	module worklib.addsub:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/norm.sv
+	module worklib.norm:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/norm_dispatch.sv
+	module worklib.norm_dispatch:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/pipelined_word_ram.sv
+	module worklib.pipelined_word_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/postscale.sv
+	module worklib.postscale:sv
+		errors: 0, warnings: 0
+	module worklib.postscale_finish:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/regfile.sv
+	module worklib.register:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/reset_release.sv
+	module worklib.reset_release:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/rowwise_dispatch.sv
+	module worklib.rowwise_dispatch:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/rowwise_op.sv
+	module worklib.rowwise_op:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/scale_compose.sv
+	module worklib.scale_compose:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/sigmoid.sv
+	module worklib.sigmoid_sample:svh
+		errors: 0, warnings: 0
+	module worklib.sigmoid:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/sram_256_wrapper.sv
+	module worklib.sram_256_wrapper:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/sram_word_tile.sv
+	module worklib.sram_word_tile:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/ternary_dot32.sv
+	module worklib.ternary_dot32:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/rtl/ternary_mul.sv
+	module worklib.ternary_mul:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/tests/full_rtl/tb_operators.sv
+	module worklib.tb_llm_operators:sv
+		errors: 0, warnings: 0
+	Elaborating the design hierarchy:
+		Caching library 'worklib' ....... Done
+	Top level design units:
+		npu_pkg
+		llm_pkg
+		tb_llm_operators
+	Building instance overlay tables: .................... Done
+	Generating native compiled code:
+		worklib.sigmoid_sample:svh <0x5569cb77>
+			streams:   1, words:  8501
+		worklib.sigmoid:sv <0x50828e62>
+			streams:  22, words:  9640
+		worklib.div:sv <0x0f3400a9>
+			streams:  10, words:  6950
+		worklib.div:sv <0x5fa6732e>
+			streams:  10, words:  6868
+		worklib.isqrt_u64:sv <0x4225f139>
+			streams:   8, words:  5763
+		worklib.llm_attention_engine:sv <0x5c06e75e>
+			streams:  22, words:  9605
+		worklib.llm_exp_sample:svh <0x2cfb316e>
+			streams:   1, words:  7989
+		worklib.llm_gumbel_sample:svh <0x60b5376f>
+			streams:   1, words:  8517
+		worklib.reset_release:sv <0x668bf376>
+			streams:   3, words:   759
+		worklib.logic_mul:sv <0x0fdb0a12>
+			streams:  23, words:  9309
+		worklib.logic_mul:sv <0x64742e33>
+			streams:  31, words: 12456
+		worklib.logic_mul:sv <0x1ce888c2>
+			streams:  27, words: 10830
+		worklib.llm_parameter_ram:sv <0x6cf0a70e>
+			streams:  34, words: 16128
+		worklib.llm_bank_ram:sv <0x6e5229b9>
+			streams:  26, words: 11274
+		worklib.llm_bank_ram:sv <0x0a2b2b92>
+			streams:  26, words: 11327
+		worklib.llm_math:sv <0x591c8924>
+			streams:  23, words: 15342
+		worklib.logic_mul:sv <0x7159ddb3>
+			streams:  34, words: 13633
+		worklib.ternary_dot32:sv <0x472dd377>
+			streams:  19, words:  6833
+		worklib.llm_attention_normalize:sv <0x6d2eaf61>
+			streams:  40, words: 33483
+		worklib.tb_llm_operators:sv <0x4418c64e>
+			streams: 134, words: 429907
+		worklib.llm_linear_engine:sv <0x48df5a16>
+			streams:  52, words: 32720
+		worklib.llm_soc:sv <0x2a745e9f>
+			streams: 637, words: 1234767
+		worklib.npu_pkg:sv <0x720bc57c>
+			streams:   8, words:  6849
+		worklib.llm_pkg:sv <0x7eef30e7>
+			streams:   3, words:   889
+		worklib.logic_mul:sv <0x16ca8ed0>
+			streams:  29, words: 11422
+		worklib.pipelined_word_ram:sv <0x1b119c96>
+			streams:  24, words:  9008
+		worklib.pipelined_word_ram:sv <0x6d75de06>
+			streams:  20, words:  7995
+		worklib.pipelined_word_ram:sv <0x3992327f>
+			streams:  20, words:  8085
+		worklib.logic_mul:sv <0x17aaee1c>
+			streams:  23, words:  9159
+		worklib.logic_mul:sv <0x1cbdf601>
+			streams:  24, words:  9682
+		worklib.llm_head_engine:sv <0x037ee387>
+			streams:  36, words: 18061
+		worklib.sram_word_tile:sv <0x702c1b4a>
+			streams:   3, words:  1699
+		worklib.sram_word_tile:sv <0x5ec3b161>
+			streams:   3, words:  1660
+		worklib.sram_word_tile:sv <0x32dd432d>
+			streams:   3, words:  1364
+	Building instance specific data structures.
+	Loading native compiled code:     .................... Done
+	Design hierarchy summary:
+		                    Instances  Unique
+		Modules:                  590      20
+		Verilog packages:           2       2
+		Registers:              7,180     785
+		Scalar wires:           1,349       -
+		Expanded wires:        18,112     865
+		Vectored wires:         8,334       -
+		Always blocks:          2,675     112
+		Initial blocks:            35      35
+		Cont. assignments:      5,959     119
+		Pseudo assignments:     3,064       -
+		Process Clocks:         1,975      16
+		Simulation timescale:     1ps
+	Writing initial simulation snapshot: worklib.tb_llm_operators:sv
+Loading snapshot worklib.tb_llm_operators:sv .................... Done
+SVSEED default: 1
+xcelium> source /tools/eda/cadence/XCELIUM2409/tools/xcelium/files/xmsimrc
+xcelium> run
+LLM_TRAFFIC operator=0 clocks=104 parameter_reads=5 vector_reads=0 vector_writes=4 kv_reads=0
+SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=1 state=0 cycles=1
+SCHEDULE_STATE operator=1 state=1 cycles=1
+SCHEDULE_STATE operator=1 state=2 cycles=5
+SCHEDULE_STATE operator=1 state=3 cycles=4
+SCHEDULE_STATE operator=1 state=4 cycles=20
+SCHEDULE_STATE operator=1 state=10 cycles=4
+SCHEDULE_STATE operator=1 state=15 cycles=1
+SCHEDULE_STATE operator=1 state=103 cycles=4
+SCHEDULE_STATE operator=1 state=110 cycles=1
+SCHEDULE_STATE operator=1 state=111 cycles=660
+LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+SCHEDULE_PROFILE operator=10 context=1 temperature=166 cycles=2037 linear_startup=6 linear_issue=1536 linear_drain=388 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=10 state=0 cycles=1
+SCHEDULE_STATE operator=10 state=1 cycles=1
+SCHEDULE_STATE operator=10 state=2 cycles=5
+SCHEDULE_STATE operator=10 state=3 cycles=12
+SCHEDULE_STATE operator=10 state=4 cycles=60
+SCHEDULE_STATE operator=10 state=10 cycles=4
+SCHEDULE_STATE operator=10 state=15 cycles=1
+SCHEDULE_STATE operator=10 state=103 cycles=12
+SCHEDULE_STATE operator=10 state=110 cycles=1
+SCHEDULE_STATE operator=10 state=111 cycles=1940
+LLM_TRAFFIC operator=10 clocks=2037 parameter_reads=385 vector_reads=12 vector_writes=4 kv_reads=0
+SCHEDULE_PROFILE operator=11 context=1 temperature=166 cycles=1981 linear_startup=6 linear_issue=1536 linear_drain=388 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=11 state=0 cycles=1
+SCHEDULE_STATE operator=11 state=1 cycles=1
+SCHEDULE_STATE operator=11 state=2 cycles=5
+SCHEDULE_STATE operator=11 state=3 cycles=4
+SCHEDULE_STATE operator=11 state=4 cycles=20
+SCHEDULE_STATE operator=11 state=10 cycles=4
+SCHEDULE_STATE operator=11 state=15 cycles=1
+SCHEDULE_STATE operator=11 state=103 cycles=4
+SCHEDULE_STATE operator=11 state=110 cycles=1
+SCHEDULE_STATE operator=11 state=111 cycles=1940
+LLM_TRAFFIC operator=11 clocks=1981 parameter_reads=385 vector_reads=4 vector_writes=12 kv_reads=0
+SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=1 state=0 cycles=1
+SCHEDULE_STATE operator=1 state=1 cycles=1
+SCHEDULE_STATE operator=1 state=2 cycles=5
+SCHEDULE_STATE operator=1 state=3 cycles=4
+SCHEDULE_STATE operator=1 state=4 cycles=20
+SCHEDULE_STATE operator=1 state=10 cycles=4
+SCHEDULE_STATE operator=1 state=15 cycles=1
+SCHEDULE_STATE operator=1 state=103 cycles=4
+SCHEDULE_STATE operator=1 state=110 cycles=1
+SCHEDULE_STATE operator=1 state=111 cycles=660
+LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=1 state=0 cycles=1
+SCHEDULE_STATE operator=1 state=1 cycles=1
+SCHEDULE_STATE operator=1 state=2 cycles=5
+SCHEDULE_STATE operator=1 state=3 cycles=4
+SCHEDULE_STATE operator=1 state=4 cycles=20
+SCHEDULE_STATE operator=1 state=10 cycles=4
+SCHEDULE_STATE operator=1 state=15 cycles=1
+SCHEDULE_STATE operator=1 state=103 cycles=4
+SCHEDULE_STATE operator=1 state=110 cycles=1
+SCHEDULE_STATE operator=1 state=111 cycles=660
+LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=1 state=0 cycles=1
+SCHEDULE_STATE operator=1 state=1 cycles=1
+SCHEDULE_STATE operator=1 state=2 cycles=5
+SCHEDULE_STATE operator=1 state=3 cycles=4
+SCHEDULE_STATE operator=1 state=4 cycles=20
+SCHEDULE_STATE operator=1 state=10 cycles=4
+SCHEDULE_STATE operator=1 state=15 cycles=1
+SCHEDULE_STATE operator=1 state=103 cycles=4
+SCHEDULE_STATE operator=1 state=110 cycles=1
+SCHEDULE_STATE operator=1 state=111 cycles=660
+LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=1 state=0 cycles=1
+SCHEDULE_STATE operator=1 state=1 cycles=1
+SCHEDULE_STATE operator=1 state=2 cycles=5
+SCHEDULE_STATE operator=1 state=3 cycles=4
+SCHEDULE_STATE operator=1 state=4 cycles=20
+SCHEDULE_STATE operator=1 state=10 cycles=4
+SCHEDULE_STATE operator=1 state=15 cycles=1
+SCHEDULE_STATE operator=1 state=103 cycles=4
+SCHEDULE_STATE operator=1 state=110 cycles=1
+SCHEDULE_STATE operator=1 state=111 cycles=660
+LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=1 state=0 cycles=1
+SCHEDULE_STATE operator=1 state=1 cycles=1
+SCHEDULE_STATE operator=1 state=2 cycles=5
+SCHEDULE_STATE operator=1 state=3 cycles=4
+SCHEDULE_STATE operator=1 state=4 cycles=20
+SCHEDULE_STATE operator=1 state=10 cycles=4
+SCHEDULE_STATE operator=1 state=15 cycles=1
+SCHEDULE_STATE operator=1 state=103 cycles=4
+SCHEDULE_STATE operator=1 state=110 cycles=1
+SCHEDULE_STATE operator=1 state=111 cycles=660
+LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=701 linear_startup=6 linear_issue=512 linear_drain=132 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=1 state=0 cycles=1
+SCHEDULE_STATE operator=1 state=1 cycles=1
+SCHEDULE_STATE operator=1 state=2 cycles=5
+SCHEDULE_STATE operator=1 state=3 cycles=4
+SCHEDULE_STATE operator=1 state=4 cycles=20
+SCHEDULE_STATE operator=1 state=10 cycles=4
+SCHEDULE_STATE operator=1 state=15 cycles=1
+SCHEDULE_STATE operator=1 state=103 cycles=4
+SCHEDULE_STATE operator=1 state=110 cycles=1
+SCHEDULE_STATE operator=1 state=111 cycles=660
+LLM_TRAFFIC operator=1 clocks=701 parameter_reads=129 vector_reads=4 vector_writes=4 kv_reads=0
+LLM_TRAFFIC operator=2 clocks=386 parameter_reads=8 vector_reads=8 vector_writes=4 kv_reads=0
+LLM_TRAFFIC operator=2 clocks=386 parameter_reads=8 vector_reads=8 vector_writes=4 kv_reads=0
+LLM_TRAFFIC operator=2 clocks=386 parameter_reads=8 vector_reads=8 vector_writes=4 kv_reads=0
+LLM_TRAFFIC operator=2 clocks=386 parameter_reads=8 vector_reads=8 vector_writes=4 kv_reads=0
+LLM_TRAFFIC operator=3 clocks=159 parameter_reads=2 vector_reads=4 vector_writes=4 kv_reads=0
+LLM_TRAFFIC operator=4 clocks=70 parameter_reads=0 vector_reads=8 vector_writes=0 kv_reads=0
+LLM_TRAFFIC operator=5 clocks=2762 parameter_reads=0 vector_reads=4 vector_writes=4 kv_reads=32
+LLM_TRAFFIC operator=5 clocks=15162 parameter_reads=0 vector_reads=4 vector_writes=4 kv_reads=1024
+LLM_TRAFFIC operator=6 clocks=73 parameter_reads=0 vector_reads=8 vector_writes=4 kv_reads=0
+LLM_TRAFFIC operator=7 clocks=365 parameter_reads=0 vector_reads=24 vector_writes=12 kv_reads=0
+LLM_TRAFFIC operator=8 clocks=1254 parameter_reads=0 vector_reads=12 vector_writes=12 kv_reads=0
+HEAD_STREAM_PROFILE rows=4096 math_issues=16384 row_interval_sum=16891 intervals=4095 max_rows_in_flight=7 scale_read_cycles=512 credit_stalls=0 result_stalls=0
+SCHEDULE_PROFILE operator=9 context=1 temperature=166 cycles=16949 linear_startup=0 linear_issue=0 linear_drain=0 head_startup=6 head_issue=16384 head_drain=522
+SCHEDULE_STATE operator=9 state=0 cycles=1
+SCHEDULE_STATE operator=9 state=3 cycles=4
+SCHEDULE_STATE operator=9 state=4 cycles=20
+SCHEDULE_STATE operator=9 state=10 cycles=1
+SCHEDULE_STATE operator=9 state=68 cycles=1
+SCHEDULE_STATE operator=9 state=104 cycles=4
+SCHEDULE_STATE operator=9 state=106 cycles=16918
+LLM_TRAFFIC operator=9 clocks=16949 parameter_reads=16896 vector_reads=4 vector_writes=0 kv_reads=0
+SCHEDULE_PROFILE operator=10 context=128 temperature=166 cycles=2037 linear_startup=6 linear_issue=1536 linear_drain=388 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=10 state=0 cycles=1
+SCHEDULE_STATE operator=10 state=1 cycles=1
+SCHEDULE_STATE operator=10 state=2 cycles=5
+SCHEDULE_STATE operator=10 state=3 cycles=12
+SCHEDULE_STATE operator=10 state=4 cycles=60
+SCHEDULE_STATE operator=10 state=10 cycles=4
+SCHEDULE_STATE operator=10 state=15 cycles=1
+SCHEDULE_STATE operator=10 state=103 cycles=12
+SCHEDULE_STATE operator=10 state=110 cycles=1
+SCHEDULE_STATE operator=10 state=111 cycles=1940
+LLM_TRAFFIC operator=10 clocks=2037 parameter_reads=385 vector_reads=12 vector_writes=4 kv_reads=0
+SCHEDULE_PROFILE operator=11 context=128 temperature=166 cycles=1981 linear_startup=6 linear_issue=1536 linear_drain=388 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=11 state=0 cycles=1
+SCHEDULE_STATE operator=11 state=1 cycles=1
+SCHEDULE_STATE operator=11 state=2 cycles=5
+SCHEDULE_STATE operator=11 state=3 cycles=4
+SCHEDULE_STATE operator=11 state=4 cycles=20
+SCHEDULE_STATE operator=11 state=10 cycles=4
+SCHEDULE_STATE operator=11 state=15 cycles=1
+SCHEDULE_STATE operator=11 state=103 cycles=4
+SCHEDULE_STATE operator=11 state=110 cycles=1
+SCHEDULE_STATE operator=11 state=111 cycles=1940
+LLM_TRAFFIC operator=11 clocks=1981 parameter_reads=385 vector_reads=4 vector_writes=12 kv_reads=0
+SCHEDULE_PROFILE operator=11 context=128 temperature=166 cycles=1990 linear_startup=6 linear_issue=1536 linear_drain=397 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=11 state=0 cycles=1
+SCHEDULE_STATE operator=11 state=1 cycles=1
+SCHEDULE_STATE operator=11 state=2 cycles=5
+SCHEDULE_STATE operator=11 state=3 cycles=4
+SCHEDULE_STATE operator=11 state=4 cycles=20
+SCHEDULE_STATE operator=11 state=10 cycles=4
+SCHEDULE_STATE operator=11 state=15 cycles=1
+SCHEDULE_STATE operator=11 state=103 cycles=4
+SCHEDULE_STATE operator=11 state=110 cycles=1
+SCHEDULE_STATE operator=11 state=111 cycles=1949
+LLM_TRAFFIC operator=11 clocks=1990 parameter_reads=385 vector_reads=4 vector_writes=12 kv_reads=0
+HEAD_STREAM_PROFILE rows=4096 math_issues=16384 row_interval_sum=16891 intervals=4095 max_rows_in_flight=7 scale_read_cycles=512 credit_stalls=0 result_stalls=0
+SCHEDULE_PROFILE operator=9 context=1 temperature=0 cycles=16949 linear_startup=0 linear_issue=0 linear_drain=0 head_startup=6 head_issue=16384 head_drain=522
+SCHEDULE_STATE operator=9 state=0 cycles=1
+SCHEDULE_STATE operator=9 state=3 cycles=4
+SCHEDULE_STATE operator=9 state=4 cycles=20
+SCHEDULE_STATE operator=9 state=10 cycles=1
+SCHEDULE_STATE operator=9 state=68 cycles=1
+SCHEDULE_STATE operator=9 state=104 cycles=4
+SCHEDULE_STATE operator=9 state=106 cycles=16918
+LLM_TRAFFIC operator=9 clocks=16949 parameter_reads=16896 vector_reads=4 vector_writes=0 kv_reads=0
+HEAD_STREAM_PROFILE rows=4096 math_issues=16384 row_interval_sum=16891 intervals=4095 max_rows_in_flight=7 scale_read_cycles=512 credit_stalls=0 result_stalls=0
+SCHEDULE_PROFILE operator=9 context=128 temperature=0 cycles=16949 linear_startup=0 linear_issue=0 linear_drain=0 head_startup=6 head_issue=16384 head_drain=522
+SCHEDULE_STATE operator=9 state=0 cycles=1
+SCHEDULE_STATE operator=9 state=3 cycles=4
+SCHEDULE_STATE operator=9 state=4 cycles=20
+SCHEDULE_STATE operator=9 state=10 cycles=1
+SCHEDULE_STATE operator=9 state=68 cycles=1
+SCHEDULE_STATE operator=9 state=104 cycles=4
+SCHEDULE_STATE operator=9 state=106 cycles=16918
+LLM_TRAFFIC operator=9 clocks=16949 parameter_reads=16896 vector_reads=4 vector_writes=0 kv_reads=0
+HEAD_STREAM_PROFILE rows=4096 math_issues=16384 row_interval_sum=16899 intervals=4095 max_rows_in_flight=10 scale_read_cycles=512 credit_stalls=8 result_stalls=21
+SCHEDULE_PROFILE operator=9 context=1 temperature=166 cycles=16957 linear_startup=0 linear_issue=0 linear_drain=0 head_startup=6 head_issue=16384 head_drain=530
+SCHEDULE_STATE operator=9 state=0 cycles=1
+SCHEDULE_STATE operator=9 state=3 cycles=4
+SCHEDULE_STATE operator=9 state=4 cycles=20
+SCHEDULE_STATE operator=9 state=10 cycles=1
+SCHEDULE_STATE operator=9 state=68 cycles=1
+SCHEDULE_STATE operator=9 state=104 cycles=4
+SCHEDULE_STATE operator=9 state=106 cycles=16926
+LLM_TRAFFIC operator=9 clocks=16957 parameter_reads=16896 vector_reads=4 vector_writes=0 kv_reads=0
+SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=58 linear_startup=6 linear_issue=8 linear_drain=6 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=1 state=0 cycles=1
+SCHEDULE_STATE operator=1 state=1 cycles=1
+SCHEDULE_STATE operator=1 state=2 cycles=5
+SCHEDULE_STATE operator=1 state=3 cycles=4
+SCHEDULE_STATE operator=1 state=4 cycles=20
+SCHEDULE_STATE operator=1 state=10 cycles=5
+SCHEDULE_STATE operator=1 state=15 cycles=1
+SCHEDULE_STATE operator=1 state=103 cycles=4
+SCHEDULE_STATE operator=1 state=110 cycles=1
+SCHEDULE_STATE operator=1 state=111 cycles=16
+LLM_TRAFFIC operator=1 clocks=58 parameter_reads=4 vector_reads=4 vector_writes=0 kv_reads=0
+SCHEDULE_PROFILE operator=1 context=1 temperature=166 cycles=64 linear_startup=6 linear_issue=10 linear_drain=10 head_startup=0 head_issue=0 head_drain=0
+SCHEDULE_STATE operator=1 state=0 cycles=1
+SCHEDULE_STATE operator=1 state=1 cycles=1
+SCHEDULE_STATE operator=1 state=2 cycles=5
+SCHEDULE_STATE operator=1 state=3 cycles=4
+SCHEDULE_STATE operator=1 state=4 cycles=20
+SCHEDULE_STATE operator=1 state=10 cycles=1
+SCHEDULE_STATE operator=1 state=15 cycles=1
+SCHEDULE_STATE operator=1 state=103 cycles=4
+SCHEDULE_STATE operator=1 state=110 cycles=1
+SCHEDULE_STATE operator=1 state=111 cycles=26
+LLM_TRAFFIC operator=1 clocks=64 parameter_reads=5 vector_reads=4 vector_writes=0 kv_reads=0
+LLM_OPERATORS_PASS operators=30 checks=6623 scalar_cases=128 clamp_cases=516 scalar_reset_cases=6 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic
+Simulation complete via $finish(1) at time 1695640 NS + 0
+/home/yellow/ee5303_09/project/test_khanh/phase1b_after_20261008/retry2/tests/full_rtl/tb_operators.sv:952         $display("LLM_OPERATORS_PASS operators=%0d checks=%0d scalar_cases=%0d clamp_cases=%0d scalar_reset_cases=%0d round_cases=%0d round_reset_cases=%0d reference=S128 fixtures=synthetic",transactions,checks,scalar_checks,clamp_checks,scalar_reset_cases,round_cases,round_reset_cases);$finish;
+xcelium> exit
+TOOL:	xrun(64)	24.09-s005: Exiting on Oct 08, 2026 at 21:50:33 +07  (total: 00:00:13)

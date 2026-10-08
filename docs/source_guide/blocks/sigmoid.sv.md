@@ -15,65 +15,9 @@
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
-X["x_raw S16 + frac_bits"]
-    subgraph SIG["sigmoid"]
-        COORD["Coordinate S45 + boundary clamp<br/>Index U9 · fraction U24"]
-        CTRL["Controller + index/fraction storage"]
-        ADDR@{ shape: trap-t, label: "ROM address selector<br/>index or bounded index+1" }
-        ROM@{ shape: rect, label: "One shared ROM lookup<br/>257 × 16 bit · sigmoid_lut.svh" }
-        SAMPLES["Sample storage y0 / y1"]
-        INTERP["Interpolation pipeline<br/>Slope U10 → product U34 → integer sum U17<br/>RNE uses full integer-sum parity"]
-        OUT["Output storage U16/F15"]
-    end
-    X --> COORD
-    COORD --> CTRL
-    START["start"] -.-> CTRL
-    CTRL -.-> ADDR
-    ADDR --> ROM
-    ROM --> SAMPLES
-    CTRL -.->|"Sample load selects"| SAMPLES
-    SAMPLES --> INTERP
-    CTRL -->|"fraction"| INTERP
-    INTERP --> OUT
-    CTRL -.->|"Output enable"| OUT
-    OUT --> Y["y_raw U16/F15"]
-    CTRL -.-> STATUS["busy / done"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class CTRL control;
-class X,SAMPLES,START,Y,STATUS buffer;
-class INTERP compute;
-class COORD,OUT output;
-class ADDR,ROM platform;
-style SIG fill:#ffffff,stroke:#aaaaaa,color:#111111;
-```
+![sigmoid.sv — overview](../../diagrams/previews/61_sigmoid.sv_1.svg)
+
+[Editable draw.io — sigmoid.sv — overview](../../diagrams/architecture.drawio) · Page `61_sigmoid.sv_1`.
 
 ## Main flow
 
@@ -105,90 +49,13 @@ Các đoạn dưới đây bao phủ nguyên văn toàn bộ source hiện tại
 
 #### Sơ đồ khối phần cứng của nhóm
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- X["Input / fractional bits<br/>S16; F0…F24"] --> C["Coordinate conversion<br/>S45 and clamp"]
- C --> I["Index / fraction<br/>U9 / U24"]
- I --> A["Bounded sample addresses<br/>Index and index + 1"]
- A --> R["Shared sigmoid ROM<br/>257 × U16 samples"]
- R --> S["Adjacent sample storage<br/>y0 / y1"]
- T["Sample controller"] -.-> A & S
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class X,A interface;
-class C compute;
-class I,S buffer;
-class R platform;
-class T control;
-```
+![sigmoid.sv — detail 1](../../diagrams/previews/62_sigmoid.sv_2.svg)
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- S["Adjacent samples<br/>y0 / y1"] --> D["Monotone difference<br/>U10; at most 512"]
- D --> M["Interpolation multiply<br/>U10 × U24 → U34"]
- F["Fraction<br/>U24"] --> M
- M --> A["Integer sum<br/>y0 + upper product; U17"]
- S --> A
- M --> L["Fractional remainder<br/>Low product U24"]
- A --> R["RNE<br/>Full sum parity on ties"]
- L --> R
- R --> Y["Output<br/>U16/F15"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class S,F,L buffer;
-class D,M,A,R compute;
-class Y output;
-```
+[Editable draw.io — sigmoid.sv — detail 1](../../diagrams/architecture.drawio) · Page `62_sigmoid.sv_2`.
+
+![sigmoid.sv — detail 2](../../diagrams/previews/63_sigmoid.sv_3.svg)
+
+[Editable draw.io — sigmoid.sv — detail 2](../../diagrams/architecture.drawio) · Page `63_sigmoid.sv_3`.
 
 ### [Dòng 72–106: FSM lấy hai mẫu và chốt output](<../../../Verilog%20Source%20code/sigmoid.sv#L72>)
 

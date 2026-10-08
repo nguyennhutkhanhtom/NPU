@@ -15,46 +15,9 @@
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- C["Clients Host /<br/>instruction fetch"] --> R["Request selection /<br/>tags Address and<br/>client"]
- R --> M["Instruction memory 512<br/>× 13 bit"]
- M --> D["Read payload / response tag"]
- D --> V["Request match Address,<br/>client and validity"]
- V --> O["Client response 13-bit<br/>instruction"]
- C -->|"host write"| M
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class C,R,O interface;
-class M platform;
-class D buffer;
-class V control;
-```
+![ins_mem.sv — overview](../../diagrams/previews/20_ins_mem.sv_1.svg)
+
+[Editable draw.io — ins_mem.sv — overview](../../diagrams/architecture.drawio) · Page `20_ins_mem.sv_1`.
 
 Nét liền là dữ liệu, nét đứt là điều khiển và địa chỉ. Memory và read data register không có reset bất đồng bộ. Sơ đồ mô tả storage logic, không quy định macro vật lý.
 

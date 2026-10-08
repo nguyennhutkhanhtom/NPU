@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="840" viewBox="0 0 800 840">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="840" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">reset_release.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: reset_release.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="271.25,184 271.25,236 456.05,236 456.05,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="180.74,184 180.74,370 240.29,370 240.29,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="482.09,184 482.09,236 521.0,236 521.0,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="376.29,184 376.29,370 305.25,370 305.25,388" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="515.75,318 515.75,370 401.75,370 401.75,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="305.25,452 305.25,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="305.25,586 305.25,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="91.25" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="191.25" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Raw rst_n</text>
+<rect x="402.75" y="254" width="226" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="515.75" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">First release FF async clear</text>
+<rect x="188.75" y="388" width="233" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="305.25" y="424.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Second release FF async clear</text>
+<rect x="341.25" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="441.25" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">clk</text>
+<rect x="205.25" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="305.25" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">core_rst_n after two</text>
+<text x="305.25" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">rising edges</text>
+<rect x="188.75" y="656" width="233" height="64" fill="#f8cecc" stroke="#b85450"/>
+<text x="305.25" y="692.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Controller and adapter resets</text>
+<text x="30.00" y="826.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

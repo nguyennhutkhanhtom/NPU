@@ -295,7 +295,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
     logic [3:0] preload_chunk_q;
     logic rope_table_valid_q;
     logic [6:0] rope_table_position_q;
-    logic [255:0] head_scale_word_q;
     logic [511:0] table_q;
     logic [767:0] vector_q, second_q, cache_operand_q, write_vector_q, query_q;
     logic [6:0] write_vector_addr_q;
@@ -389,6 +388,13 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
     logic [14:0] head_parameter_address;
     logic [1:0] head_input_chunk;
     logic signed [38:0] head_dot_acc;
+    logic head_result_valid, head_busy;
+    logic [11:0] head_result_row;
+    logic [23:0] head_result_coefficient;
+    logic [5:0] head_pipe_valid_q;
+    logic [11:0] head_pipe_row_q [0:5];
+    wire head_result_ready = op[H_STREAM_WAIT_IDX] && !op_fault_q;
+    wire head_feed = head_result_ready && head_result_valid;
     logic attention_k_req, attention_capture, attention_math_issue, attention_scores_done;
     logic [11:0] attention_k_address;
     logic signed [31:0] attention_score, attention_max;
@@ -511,13 +517,32 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
         .a(math_a_q), .b(math_b_q), .busy(math_busy), .done(math_done),
         .product(math_product), .sum(math_sum), .in_ready(math_in_ready),
         .product_valid(math_product_valid), .sum_valid(math_sum_valid));
-    assign math_start = op[O_M_START_IDX] || head_math_issue || attention_math_issue;
+    assign math_start = op[O_M_START_IDX] || (head_math_issue && !op_fault_q) || attention_math_issue;
     llm_head_engine u_head_engine(.clk(clk), .rst_n(core_rst_n), .start_i(op[H_SCALE_IDX]),
-        .cancel_i(op_fault_q), .vocabulary_i(vocabulary_row_q),
+        .cancel_i(op_fault_q),
         .parameter_req_o(head_parameter_req), .parameter_address_o(head_parameter_address),
-        .parameter_valid_i(p_valid), .operand_capture_o(head_capture), .math_issue_o(head_math_issue),
+        .parameter_valid_i(p_valid), .parameter_data_i(p_data),
+        .operand_capture_o(head_capture), .math_issue_o(head_math_issue),
         .input_chunk_o(head_input_chunk), .sum_valid_i(math_sum_valid), .sum_i(math_sum),
-        .done_o(head_dot_done), .accumulator_o(head_dot_acc));
+        .result_ready_i(head_result_ready),
+        .result_valid_o(head_result_valid), .busy_o(head_busy), .row_o(head_result_row),
+        .coefficient_o(head_result_coefficient), .done_o(head_dot_done), .accumulator_o(head_dot_acc));
+    // Ordered tags share the existing scalar arithmetic with linear rows.
+    // The head owns it for the entire pass, including final selection drain.
+    always_ff @(posedge clk or negedge core_rst_n)
+        if (!core_rst_n) head_pipe_valid_q <= 0;
+        else if (op_fault_q || launch) head_pipe_valid_q <= 0;
+        else head_pipe_valid_q <= {head_pipe_valid_q[4:0], head_feed};
+    always_ff @(posedge clk)
+        if (core_rst_n && head_feed) head_pipe_row_q[0] <= head_result_row;
+    genvar head_stage;
+    generate
+    for (head_stage = 1; head_stage < 6; head_stage = head_stage + 1) begin : g_head_tag
+        always_ff @(posedge clk)
+            if (core_rst_n && head_pipe_valid_q[head_stage - 1])
+                head_pipe_row_q[head_stage] <= head_pipe_row_q[head_stage - 1];
+    end
+    endgenerate
     llm_attention_engine u_attention_engine(.clk(clk), .rst_n(core_rst_n), .start_i(op[A_QUERY_IDX]),
         .cancel_i(op_fault_q), .layer_i(layer_q), .head_i(head_q), .position_i(position_q),
         .kv_req_o(attention_k_req), .kv_address_o(attention_k_address), .kv_valid_i(k_valid),
@@ -983,18 +1008,39 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
             if (linear_feed) begin
                 scalar_a_q <= linear_dot_acc; scalar_b_q <= $signed({1'b0, coefficient_q});
             end
-            if (linear_pipe_valid_q[0]) begin
+            if (head_feed) begin
+                scalar_a_q <= head_dot_acc; scalar_b_q <= $signed({1'b0, head_result_coefficient});
+            end
+            if (linear_pipe_valid_q[0] || head_pipe_valid_q[0]) begin
                 scalar_partial_q[0] <= scalar_partial_comb[0];
                 scalar_partial_q[1] <= scalar_partial_comb[1];
                 scalar_partial_q[2] <= scalar_partial_comb[2];
             end
-            if (linear_pipe_valid_q[1]) begin
+            if (linear_pipe_valid_q[1] || head_pipe_valid_q[1]) begin
                 scalar_pair_q <= 56'(scalar_partial_q[0]) + (56'(scalar_partial_q[1]) <<< 8);
                 linear_scalar_hi_q <= scalar_partial_q[2];
             end
-            if (linear_pipe_valid_q[2])
+            if (linear_pipe_valid_q[2] || head_pipe_valid_q[2])
                 scalar_product_q <= 64'(scalar_pair_q) + (64'(linear_scalar_hi_q) <<< 16);
             if (linear_pipe_valid_q[3]) scalar_round_q <= rne_shift64(scalar_product_q, 6'd24);
+            if (head_pipe_valid_q[3] && !op_fault_q) begin
+                scalar_round_q <= rne_shift64(scalar_product_q, 6'd24);
+                noise_product_q <= noise_product_comb;
+                // Advance for every ordered row, even greedy/excluded tokens.
+                random_q <= llm_random_next(random_q);
+            end
+            if (head_pipe_valid_q[4] && !op_fault_q)
+                sampled_score_q <= scalar_round_q +
+                    (temperature_q == 0 ? 64'sd0 : rne_shift64(64'(noise_product_q), 6'd8));
+            if (head_pipe_valid_q[5] && !op_fault_q) begin
+                vocabulary_row_q <= head_pipe_row_q[5];
+                if (head_pipe_row_q[5] != 0 && head_pipe_row_q[5] != 2 &&
+                    (head_pipe_row_q[5] != 1 || generated_q >= min_new_q) &&
+                    sat_s32(sampled_score_q) > best_score_q) begin
+                    best_score_q <= sat_s32(sampled_score_q); best_token_q <= head_pipe_row_q[5];
+                end
+                if (head_pipe_row_q[5] == 4095) op <= O_FINISH;
+            end
             if (linear_pipe_valid_q[6] && !op_fault_q &&
                 scalar_cluster_valid_q[linear_pipe_row_q[6][4]] &&
                 (scalar_cluster_high_q[linear_pipe_row_q[6][4]] ||
@@ -1113,7 +1159,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
                         endcase
                     end
                 op[O_FINISH_IDX] : if (!v_write_busy && !k_write_busy && !linear_busy &&
-                    linear_pipe_valid_q == 0) begin op_done <= 1; op <= O_IDLE; end
+                    linear_pipe_valid_q == 0 && !head_busy && head_pipe_valid_q == 0)
+                    begin op_done <= 1; op <= O_IDLE; end
                 op[E_SCALE_IDX] : begin
                     coefficient_q <= parameter_word_q[(int'(token_q[2:0]) << 5) +: 24];
                     begin p_address_q <= {1'b0, token_q, 2'b00}; return_p <= RET_P_E_DATA; op <= O_P_REQ; end
@@ -1374,19 +1421,14 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
                 end
                 op[H_PRELOAD_IDX] : begin
                     if (preload_chunk_q == 3) begin
-                        p_address_q <= 15'(EMB_SCALE_BASE); return_p <= RET_P_H_SCALE; op <= O_P_REQ;
+                        op <= H_SCALE;
                     end else begin
                         preload_chunk_q <= preload_chunk_q + 1'b1;
                         v_address_q <= 7'(12 + preload_chunk_q + 1); return_v <= RET_V_H_PRELOAD; op <= O_V_REQ;
                     end
                 end
-                op[H_SCALE_IDX] : begin
-                    if (vocabulary_row_q[2:0] == 0) head_scale_word_q <= parameter_word_q;
-                    coefficient_q <= vocabulary_row_q[2:0] == 0 ? parameter_word_q[23:0] :
-                        head_scale_word_q[(int'(vocabulary_row_q[2:0]) << 5) +: 24];
-                    op <= H_STREAM_WAIT;
-                end
-                op[H_STREAM_WAIT_IDX] : if (head_dot_done) begin linear_acc_q <= head_dot_acc; op <= H_COEFF; end
+                op[H_SCALE_IDX] : op <= H_STREAM_WAIT;
+                op[H_STREAM_WAIT_IDX] : ; // Tagged results retire above; final row drains before O_FINISH.
                 op[H_COEFF_IDX] : begin
                     scalar_a_q <= linear_acc_q; scalar_b_q <= $signed({1'b0, coefficient_q});
                     op <= SC_MULTIPLY;

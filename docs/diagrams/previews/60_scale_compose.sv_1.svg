@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1242" viewBox="0 0 800 1242">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="1242" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">scale_compose.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: scale_compose.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="319.25,184 319.25,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="319.25,318 319.25,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="319.25,452 319.25,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="356.5,586 356.5,638 397.25,638 397.25,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="397.25,720 397.25,790" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="397.25,854 397.25,924" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="282.0,586 282.0,604 260.25,604 260.25,1040 282.0,1040 282.0,1058" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="397.25,988 397.25,1040 356.5,1040 356.5,1058" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="202.75" y="120" width="233" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="319.25" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">U24 factors and U6 base shift</text>
+<rect x="219.25" y="254" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="319.25" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Registered U48 product</text>
+<rect x="219.25" y="388" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="319.25" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">48 constant threshold</text>
+<text x="319.25" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">comparisons</text>
+<rect x="219.25" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="319.25" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Prefix boundary and</text>
+<text x="319.25" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">signed target shift</text>
+<rect x="297.25" y="656" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="397.25" y="683.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Registered numerator and</text>
+<text x="397.25" y="700.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">denominator</text>
+<rect x="297.25" y="790" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="397.25" y="826.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Divider U48 by U25</text>
+<rect x="277.25" y="924" width="240" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="397.25" y="960.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Remainder RNE and range checks</text>
+<rect x="219.25" y="1058" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="319.25" y="1094.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Result M and r</text>
+<text x="30.00" y="1228.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

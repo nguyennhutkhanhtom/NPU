@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="851" viewBox="0 0 800 851">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="851" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">llm_bank_ram.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_bank_ram.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="228.5,184 228.5,236 234.25,236 234.25,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="429.8,184 429.8,236 299.2,236 299.2,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="239.5,318 239.5,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="239.5,452 239.5,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="239.5,586 239.5,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="494.75,184 494.75,236 500.5,236 500.5,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="128.5" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="228.50" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Shared row requests</text>
+<rect x="139.5" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="239.50" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Requests per four lanes</text>
+<rect x="389.5" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="489.50" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Lane write mask</text>
+<rect x="133.5" y="388" width="212" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="239.50" y="424.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Per-lane request registers</text>
+<rect x="119.5" y="522" width="240" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="239.50" y="558.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Technology-selected word banks</text>
+<rect x="119.5" y="656" width="240" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="239.50" y="680.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">32 × WIDTH row</text>
+<text x="239.50" y="697.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Five edges at ROWS ≤ 4096; six</text>
+<text x="239.50" y="714.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">above 4096</text>
+<rect x="400.5" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="500.50" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Four-stage write pending</text>
+<text x="500.50" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">and wr_busy</text>
+<text x="30.00" y="837.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

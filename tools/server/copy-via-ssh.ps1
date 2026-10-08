@@ -1,8 +1,8 @@
 # Copy a file, or the CONTENTS of a folder, through SSH to a Linux directory.
 # Use only after administrator authorization for this transfer method.
 # Example: .\tools\server\copy-via-ssh.ps1 -AdminApprovedTransfer -SourcePath '.\tests\full_rtl\build\bundle_TAG' -TargetPath '~/project/test_khanh/bundle_TAG'
-# Requires Windows OpenSSH and Linux bash, realpath, base64, sha256sum.
-# Enter the SSH password at its normal console prompt; no password is saved.
+# Requires Git for Windows SSH and Linux bash, realpath, base64, sha256sum.
+# Uses the local saved password through the temporary SSH askpass helper.
 [CmdletBinding()]
 param(
     [string]$SourcePath,
@@ -11,7 +11,6 @@ param(
     [ValidatePattern('^[A-Za-z0-9.-]+$')][string]$Server = 'red.doelab.site',
     [ValidatePattern('^[A-Za-z0-9_.-]+$')][string]$User = 'ee5303_09',
     [ValidateRange(1, 65535)][int]$Port = 22,
-    [Alias('UseRunbookPassword')][switch]$UseSavedPassword,
     [Alias('RunbookPath')][string]$CredentialPath = (Join-Path $PSScriptRoot '.local/credentials.json')
 )
 
@@ -54,17 +53,13 @@ function Relative-Name($Entry) {
     }
     return $Entry.Name
 }
-$ssh = (Get-Command ssh.exe -ErrorAction Stop).Source
-$auth = $null
-if ($UseSavedPassword) {
-    . (Join-Path $PSScriptRoot 'ssh-auth.ps1')
-    $auth = New-NpuSshAuth $Server $User $CredentialPath
-    $ssh = $auth.Ssh
-}
+. (Join-Path $PSScriptRoot 'ssh-auth.ps1')
+$auth = New-NpuSshAuth $Server $User $CredentialPath
+$ssh = $auth.Ssh
 $start = New-Object System.Diagnostics.ProcessStartInfo
 $start.FileName = $ssh
 $knownHosts = Join-Path $env:USERPROFILE '.ssh/known_hosts'
-$start.Arguments = "-T -p $Port -o StrictHostKeyChecking=yes -o UserKnownHostsFile=`"$knownHosts`" -o ConnectTimeout=10 -o NumberOfPasswordPrompts=1 $User@$Server bash -s"
+$start.Arguments = "-T -p $Port -o PubkeyAuthentication=no -o PreferredAuthentications=password -o StrictHostKeyChecking=yes -o UserKnownHostsFile=`"$knownHosts`" -o ConnectTimeout=10 -o NumberOfPasswordPrompts=1 $User@$Server bash -s"
 $start.UseShellExecute = $false
 $start.RedirectStandardInput = $true
 $start.StandardInputEncoding = New-Object System.Text.UTF8Encoding($false)

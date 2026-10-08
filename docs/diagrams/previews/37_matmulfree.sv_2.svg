@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="985" viewBox="0 0 800 985">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="985" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">matmulfree.sv — detail 1</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: matmulfree.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="310.52,184 310.52,236 275,236 275,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="275,318 275,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="275,452 275,522" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="275,586 275,638 310.52,638 310.52,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="375.48,656 375.48,638 392,638 392,202 375.48,202 375.48,184" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="343,720 343,790" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="243" y="120" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="343.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">PC / instruction storage</text>
+<rect x="175" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="275.00" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Opcode decode</text>
+<rect x="175" y="388" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="275.00" y="424.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Single-issue scheduler</text>
+<rect x="175" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="275.00" y="558.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Selected compute engine</text>
+<rect x="243" y="656" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="343.00" y="692.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Completion / faults</text>
+<rect x="243" y="790" width="200" height="75" fill="#fff2cc" stroke="#d6b656"/>
+<text x="343.00" y="814.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host status Running,</text>
+<text x="343.00" y="831.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">ready and sticky</text>
+<text x="343.00" y="848.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">flags</text>
+<rect x="400.0" y="408.0" width="128" height="24" fill="white"/>
+<text x="464.00" y="424.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">advance instruction</text>
+<text x="30.00" y="971.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

@@ -13,47 +13,9 @@
 
 ## Sơ đồ kiến trúc
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
-    IN["U24 factors and U6 base shift"] --> MUL["Registered U48 product"]
-    MUL --> FIT["48 constant threshold<br/>comparisons"]
-    FIT --> SELECT["Prefix boundary and<br/>signed target shift"]
-    SELECT --> SHIFT["Registered numerator and<br/>denominator"]
-    SHIFT --> DIV["Divider U48 by U25"]
-    DIV --> RNE["Remainder RNE and range checks"]
-    SELECT --> OUT["Result M and r"]
-    RNE --> OUT
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class IN,SELECT,DIV,RNE compute;
-class MUL,FIT,SHIFT buffer;
-class OUT output;
-```
+![scale_compose.sv — overview](../../diagrams/previews/60_scale_compose.sv_1.svg)
+
+[Editable draw.io — scale_compose.sv — overview](../../diagrams/architecture.drawio) · Page `60_scale_compose.sv_1`.
 
 ## Important state / datapath groups
 

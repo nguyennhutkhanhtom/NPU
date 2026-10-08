@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="769" viewBox="0 0 1220 769">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="1220" height="769" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">full_graph — detail 2</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_soc.sv · clk; raw rst_n → u_reset → core_rst_n</text>
+<polyline points="413,169 431,169 431,236 717.5,236 717.5,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="190.87,184 190.87,236 112.78,236 112.78,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="289.5,184 289.5,236 356.1,236 356.1,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="166,169 148,169 148,237 273,237 273,463.35 615,463.35" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="752.91,440 752.91,336 749.5,336 749.5,318" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="614,318 614,336 597,336 597,455 615,455" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="711.81,515 711.81,567 712.25,567 712.25,585" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="722.75,585 722.75,533 723.19,533 723.19,515" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="800,440 800,422 854.5,422 854.5,164.24 413,164.24" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="200.9,254 200.9,202 278.99,202 278.99,184" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="483.51,254 483.51,236 393,236 393,184" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="166" y="120" width="247" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="289.50" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">llm_soc operand / phase routing</text>
+<rect x="594" y="254" width="247" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="717.50" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_div (div)</text>
+<text x="717.50" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">U64 numerator / U32 denominator</text>
+<rect x="40" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="140.00" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_root (isqrt_u64)</text>
+<text x="140.00" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">U64 radicand / U32 root</text>
+<rect x="290" y="254" width="254" height="64" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="417.00" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">g_sigmoid[0:3].u_sig</text>
+<text x="417.00" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S16/F12 inputs / U16/F15 outputs</text>
+<rect x="615" y="440" width="205" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="717.50" y="464.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_attention_normalize</text>
+<text x="717.50" y="481.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">32 S56 accumulators / U32</text>
+<text x="717.50" y="498.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">denominator</text>
+<rect x="597.5" y="585" width="240" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="717.50" y="612.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">g_divider[1:3].g_private.u_div</text>
+<text x="717.50" y="629.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Three private U64/U32 dividers</text>
+<rect x="691.91" y="362.0" width="122" height="52" fill="white"/>
+<text x="752.91" y="378.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">shared numerator /</text>
+<text x="752.91" y="394.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">denominator /</text>
+<text x="752.91" y="410.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">batch_start</text>
+<rect x="518.0" y="376.5" width="158" height="38" fill="white"/>
+<text x="597.00" y="392.50" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">shared busy / done / U64</text>
+<text x="597.00" y="408.50" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">quotient / U32 remainder</text>
+<rect x="569.75" y="145.24" width="128" height="38" fill="white"/>
+<text x="633.75" y="161.24" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">vector_o 768 bits /</text>
+<text x="633.75" y="177.24" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">done_o</text>
+<text x="30.00" y="755.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1010" height="1122" viewBox="0 0 1010 1122">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="1010" height="1122" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">full_rtl_development — detail 2</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current RTL replacement in a historical document; prose remains historical</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_soc.sv · clk; raw rst_n → u_reset → core_rst_n</text>
+<polyline points="320,195 360,195" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="640,195 680,195" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="820,250 820,340" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="680,395 640,395" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,395 320,395" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="180,450 180,540" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="320,595 360,595" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="640,595 680,595" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="820,650 820,740" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="680,795 640,795" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,795 320,795" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="40" y="140" width="280" height="110" fill="#f8cecc" stroke="#b85450"/>
+<text x="180.00" y="182.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_linear_engine</text>
+<text x="180.00" y="199.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">One launch per matrix; four result</text>
+<text x="180.00" y="216.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">slots</text>
+<rect x="360" y="140" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="500.00" y="190.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">scalar_a_q S39 / scalar_b_q S25</text>
+<text x="500.00" y="207.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Capture row tag [0]</text>
+<rect x="680" y="140" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="820.00" y="173.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Three u_scalar_* logic_mul</text>
+<text x="820.00" y="190.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">instances</text>
+<text x="820.00" y="207.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">scalar_partial_q[0:2] S48 · tag</text>
+<text x="820.00" y="224.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">[1]</text>
+<rect x="680" y="340" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="820.00" y="373.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">scalar_pair_q S56 +</text>
+<text x="820.00" y="390.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">linear_scalar_hi_q S48</text>
+<text x="820.00" y="407.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Registered low/mid pair and</text>
+<text x="820.00" y="424.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">aligned high · tag [2]</text>
+<rect x="360" y="340" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="500.00" y="390.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">scalar_product_q S64</text>
+<text x="500.00" y="407.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Pair + high shifted 16 · tag [3]</text>
+<rect x="40" y="340" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="180.00" y="390.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">scalar_round_q S64</text>
+<text x="180.00" y="407.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">RNE shift 24 · tag [4]</text>
+<rect x="40" y="540" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="180.00" y="582.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">scalar_packet_*</text>
+<text x="180.00" y="599.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Low24 + full-width clamp flags +</text>
+<text x="180.00" y="616.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">group · tag [5]</text>
+<rect x="360" y="540" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="500.00" y="590.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Two scalar_cluster_* register sets</text>
+<text x="500.00" y="607.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Group routing · tag [6]</text>
+<rect x="680" y="540" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="820.00" y="590.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Eight scalar_group_q S24 registers</text>
+<text x="820.00" y="607.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S24 clamp · tag [7]</text>
+<rect x="680" y="740" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="820.00" y="782.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">write_vector_q[767:0]</text>
+<text x="820.00" y="799.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Select lane with tagged row[4:0] ·</text>
+<text x="820.00" y="816.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">tag [8]</text>
+<rect x="360" y="740" width="280" height="110" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="500.00" y="790.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_vectors</text>
+<text x="500.00" y="807.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Full 32-lane bank write acceptance</text>
+<rect x="40" y="930" width="920" height="70" fill="#f5f5f5" stroke="#666666"/>
+<text x="500.00" y="960.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">linear_pipe_valid_q[8:0]</text>
+<text x="500.00" y="977.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">linear_pipe_row_q[0:8] U10</text>
+<rect x="40" y="740" width="280" height="110" fill="#f8cecc" stroke="#b85450"/>
+<text x="180.00" y="782.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Operator completion drain</text>
+<text x="180.00" y="799.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Engine empty + tags empty +</text>
+<text x="180.00" y="816.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">v_write_busy clear</text>
+<rect x="330.0" y="185.0" width="20" height="20" fill="white"/>
+<text x="340.00" y="199.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">1</text>
+<rect x="650.0" y="785.0" width="20" height="20" fill="white"/>
+<text x="660.00" y="799.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">2</text>
+<text x="30.00" y="1048.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">1. linear_feed = result_valid AND result_ready</text>
+<text x="30.00" y="1065.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">2. linear_write: row[4:0]=31 or final row</text>
+<text x="30.00" y="1108.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="911" viewBox="0 0 800 911">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="911" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">exact_throughput_optimization — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_soc.sv · clk; raw rst_n → u_reset → core_rst_n</text>
+<polyline points="210.88,195 210.88,247 262.86,247 262.86,265" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="262.9,365 262.9,575 268.35,575 268.35,593" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="411.35,365 411.35,441 481.12,441 481.12,459" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="481.12,523 481.12,575 405.9,575 405.9,593" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="337.12,657 337.12,727" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="463.38,195 463.38,247 411.39,247 411.39,265" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="110.875" y="120" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="210.88" y="144.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent input selection</text>
+<text x="210.88" y="161.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Source, shape and</text>
+<text x="210.88" y="178.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">family</text>
+<polygon points="337.125,265 477.125,315.0 337.125,365 197.125,315.0" fill="#f8cecc" stroke="#b85450"/>
+<text x="337.12" y="319.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Matching valid tag?</text>
+<rect x="237.125" y="593" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="337.12" y="620.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Operand cache</text>
+<text x="337.12" y="637.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">12 × 768 bit</text>
+<rect x="381.125" y="459" width="200" height="64" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="481.12" y="495.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Vector SRAM refill</text>
+<rect x="220.625" y="727" width="233" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="337.12" y="754.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Linear / head</text>
+<text x="337.12" y="771.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">operands Parent-owned routing</text>
+<rect x="360.875" y="120" width="205" height="75" fill="#f8cecc" stroke="#b85450"/>
+<text x="463.38" y="144.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Producer / reset /</text>
+<text x="463.38" y="161.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">launch / fault Invalidate</text>
+<text x="463.38" y="178.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">per parent predicates</text>
+<rect x="189.89999999999998" y="458.0" width="146" height="24" fill="white"/>
+<text x="262.90" y="474.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">Q/K/V or Gate/Up reuse</text>
+<rect x="350.35" y="391.0" width="122" height="24" fill="white"/>
+<text x="411.35" y="407.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">miss or head entry</text>
+<text x="30.00" y="897.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

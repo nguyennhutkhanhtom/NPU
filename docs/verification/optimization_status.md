@@ -4,6 +4,8 @@
 
 ## At a glance
 
+Phase 1B head streaming is functionally verified by remote Xcelium job 64351 on black with mandatory X11: all nine groups PASS, zero simulator diagnostics, and matching current/frozen inputs and 37 report hashes. Existing operators pass 6,623 checks with every head row's scale/score/PRNG order, backpressure, six reset/cancellation boundaries and final drain checked; tagged selection passes 36 edge checks. Sampled/greedy head cycles decrease 121,886/113,694 → 16,949. Parameter-read/SIMD utilization reaches 99.69%/96.67%; the shared parameter port and 512 scale reads limit throughput. [Measured results](../../tests/full_rtl/evidence/phase1b_20261008/metrics.json), [full regression](../../tests/full_rtl/evidence/phase1b_20261008/full/extracted/phase1b_full_20261008/results.json). Baseline/after remote Genus comparison is pending in the existing RAM-blackbox flow; Phase 1B remains IN PROGRESS. No new Fmax/resource claim. [Handoff](../../tests/full_rtl/build/scratchpad/phase1b_handoff_20261008.md).
+
 Branch `remote` now runs Xcelium/Genus on Slurm with mandatory `--x11`.
 SSH/X11 probe on black succeeded; [scoped server evidence](../../tests/full_rtl/evidence/server_x11_20261008_verified/x11_scoped3_20261008/results.json)
 records job 64318: memory 464 checks and host cancellation 14 checks PASS,
@@ -29,7 +31,7 @@ The identical five-cycle-memory engine fixture changes average row initiation fr
 
 Five groups in the [seven-group attempt](../../tests/full_rtl/evidence/phase1a_20261008/seven_groups_attempt.json) pass (memory, math, RAM, protocol, selection). The operator group encounters the same `$deposit` scalar fixture failure as unchanged baseline RTL under ModelSim; graph regression remains pending. Questa is unavailable while another session holds its single-session license. Vendor-free Verilator elaboration of `llm_soc` with behavioral memory completes with zero errors and diagnostic warnings; this is not synthesis or ASIC signoff.
 
-Full-top synthesis/fit/STA is running under `phase1a_linear_20261008`; see [continuation state](../../TASK_STATE.md). New Fmax/resource results and the complete regression are pending, so `NPU_V2_EXECUTION.md` remains at CURRENT Phase 1A. The prior 95.61 MHz timing source hashes match the preserved pre-change snapshot, not the modified RTL.
+Phase 1A is closed with its matching full-top synthesis/fit/STA evidence: worst FPGA Fmax 101.28 MHz and 60,124 ALMs. These historical results do not validate Phase 1B RTL. See [execution contract](../NPU_V2_EXECUTION.md) for phase-specific evidence and the pending Genus comparison.
 
 ## Prior verified checkpoint (before Phase 1A)
 

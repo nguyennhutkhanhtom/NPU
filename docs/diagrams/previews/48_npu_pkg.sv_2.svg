@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="875" viewBox="0 0 800 875">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="875" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">npu_pkg.sv — detail 1</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: npu_pkg.sv · Combinational logic / compile-time definitions; no private clock domain</text>
+<polyline points="208.49,184 208.49,241.5 203.14,241.5 203.14,259.5" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="407.85,184 407.85,241.5 264.28,241.5 264.28,259.5" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="285.15,184 285.15,236 419.05,236 419.05,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="484.51,184 484.51,236 490.69,236 490.69,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="246.82,323.5 246.82,405 392.9,405 392.9,423" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="485,329 485,405 463.58,405 463.58,423" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="203.83,323.5 203.83,539 275.1,539 275.1,557" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="449,487 449,539 395.46,539 395.46,557" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="346.5,621 346.5,691" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="119" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="219.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">x signed S64</text>
+<rect x="108" y="259.5" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="208.00" y="287.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Arithmetic right shift</text>
+<text x="208.00" y="304.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">q = floor(x / 2^shift)</text>
+<rect x="374" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="474.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">shift U6</text>
+<rect x="358" y="254" width="254" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="485.00" y="278.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Unsigned left shift by 64-shift</text>
+<text x="485.00" y="295.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">7-bit shift amount</text>
+<text x="485.00" y="312.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">guard=MSB · sticky=OR lower bits</text>
+<rect x="346.5" y="423" width="205" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="449.00" y="450.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Increment decision</text>
+<text x="449.00" y="467.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">guard AND sticky-or-q-LSB</text>
+<rect x="246.5" y="557" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="346.50" y="593.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Signed q + increment</text>
+<rect x="246.5" y="691" width="200" height="64" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="346.50" y="718.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">RNE signed S64</text>
+<text x="346.50" y="735.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">shift=0: output=input</text>
+<rect x="267.86" y="393.0" width="44" height="24" fill="white"/>
+<text x="289.86" y="409.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">q LSB</text>
+<text x="30.00" y="861.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

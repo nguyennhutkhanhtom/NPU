@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="927" height="840" viewBox="0 0 927 840">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="927" height="840" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">postscale.sv — detail 1</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: postscale.sv · Combinational logic / compile-time definitions; no private clock domain</text>
+<polyline points="163.5,184 163.5,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="439.5,184 439.5,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="163.5,318 163.5,403 316.5,403" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="439.5,318 439.5,370 427.49,370 427.49,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="316.5,437 298.5,437 298.5,504 165.5,504 165.5,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="416.02,452 416.02,504 415.5,504 415.5,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="486.23,452 486.23,504 627.28,504 627.28,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="697.5,452 697.5,504 691.75,504 691.75,522" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="165.5,586 165.5,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="415.5,586 415.5,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="686.5,586 686.5,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="40" y="120" width="247" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="163.50" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Rounded S42</text>
+<text x="163.50" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">From wrapper or engine register</text>
+<rect x="63.5" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="163.50" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Sign extension S43</text>
+<rect x="337" y="120" width="205" height="64" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="439.50" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Bias S32, in output units</text>
+<rect x="339.5" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="439.50" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Sign extension S43</text>
+<rect x="316.5" y="388" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="416.50" y="424.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Signed bias adder S43</text>
+<rect x="65.5" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="165.50" y="558.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S16 clamp</text>
+<rect x="315.5" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="415.50" y="558.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S32 clamp</text>
+<rect x="566.5" y="522" width="240" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="686.50" y="558.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S16 / S32 overflow comparators</text>
+<rect x="597.5" y="388" width="200" height="64" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="697.50" y="424.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">output_s32</text>
+<rect x="65.5" y="656" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="165.50" y="692.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">y_s16</text>
+<rect x="315.5" y="656" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="415.50" y="692.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">y_s32</text>
+<rect x="586.5" y="656" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="686.50" y="692.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">overflow</text>
+<text x="30.00" y="826.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

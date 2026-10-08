@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1211" viewBox="0 0 1080 1211">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="1080" height="1211" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">ternary_mul.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: ternary_mul.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<rect x="40" y="254" width="601" height="558" fill="none" stroke="#999999" stroke-dasharray="5 4"/>
+<text x="48.00" y="271.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666" font-weight="bold">Legacy ternary reduction</text>
+<polyline points="176,353 176,405 208.83,405 208.83,423" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="426,353 426,405 324,405 324,423" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="244,498 244,568" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="244,632 244,689.5 281.99,689.5 281.99,707.5" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="312,771.5 312,899.67 679.5,899.67" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="779.5,777 779.5,882" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="779.5,946 779.5,998 818.24,998 818.24,1016" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="405,169 387,169 387,271 176,271 176,289" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="467.27,184 467.27,271 426,271 426,289" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="532.22,184 532.22,202 543,202 543,722.5 412,722.5" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="605,168.22 623,168.22 623,864 845.65,864 845.65,882" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="605,167.4 901.26,167.4 901.26,1016" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="405" y="120" width="200" height="64" fill="#f8cecc" stroke="#b85450"/>
+<text x="505.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Descriptor / row control</text>
+<rect x="76" y="289" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="176.00" y="316.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Activation buffer</text>
+<text x="176.00" y="333.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">32 × S8</text>
+<rect x="144" y="423" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="244.00" y="447.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Ternary sign /</text>
+<text x="244.00" y="464.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">zero terms 32</text>
+<text x="244.00" y="481.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">× S9</text>
+<rect x="326" y="289" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="426.00" y="316.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Weight buffer 256-bit</text>
+<text x="426.00" y="333.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">words</text>
+<rect x="144" y="568" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="244.00" y="595.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Reduction trees S12</text>
+<text x="244.00" y="612.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">then S14</text>
+<rect x="212" y="707.5" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="312.00" y="735.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Row accumulator</text>
+<text x="312.00" y="752.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S18</text>
+<rect x="679.5" y="882" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="779.50" y="909.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Postscale pipeline S42</text>
+<text x="779.50" y="926.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">product and RNE</text>
+<rect x="677" y="702" width="205" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="779.50" y="726.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Scale / bias</text>
+<text x="779.50" y="743.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">metadata U24 coefficient,</text>
+<text x="779.50" y="760.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S32 bias</text>
+<rect x="759.75" y="1016" width="200" height="75" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="859.75" y="1040.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Bias / saturation</text>
+<text x="859.75" y="1057.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">/ pack S16</text>
+<text x="859.75" y="1074.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">or S32 output</text>
+<text x="30.00" y="1197.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

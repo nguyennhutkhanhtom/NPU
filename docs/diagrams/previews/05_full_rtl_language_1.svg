@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1437" viewBox="0 0 800 1437">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="1437" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">full_rtl_language — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_soc.sv · clk; raw rst_n → u_reset → core_rst_n</text>
+<polyline points="343,212 343,282" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="272.66,357 272.66,409 207,409 207,427" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="207,491 207,543 235,543 235,561" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="315,561 315,543 343,543 343,357" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="275,661 275,769" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="275,844 275,914" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="275,989 275,1041 311.24,1041 311.24,1059" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="363,1159 363,1253" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="434.76,1059 434.76,375 416.45,375 416.45,357" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="209" y="120" width="268" height="92" fill="#fff2cc" stroke="#d6b656"/>
+<text x="343.00" y="144.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host loads parameters / prompt /</text>
+<text x="343.00" y="161.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">config</text>
+<text x="343.00" y="178.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">START validates prompt + max_new ≤</text>
+<text x="343.00" y="195.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">128</text>
+<rect x="209" y="282" width="268" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="343.00" y="306.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">G_EMBED</text>
+<text x="343.00" y="323.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Prompt or feedback token committed</text>
+<text x="343.00" y="340.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">by parent</text>
+<rect x="107" y="427" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="207.00" y="454.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Four transformer layers</text>
+<text x="207.00" y="471.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">G_ANORM through G_MADD</text>
+<polygon points="275.0,561 415,611.0 275.0,661 135,611.0" fill="#f8cecc" stroke="#b85450"/>
+<text x="275.00" y="615.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">More prompt positions?</text>
+<rect x="151.5" y="769" width="247" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="275.00" y="793.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">G_FNORM → G_HEAD</text>
+<text x="275.00" y="810.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">4096 vocabulary rows; RTL token</text>
+<text x="275.00" y="827.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">selection</text>
+<rect x="144.5" y="914" width="261" height="75" fill="#f5f5f5" stroke="#666666"/>
+<text x="275.00" y="938.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">G_ADVANCE</text>
+<text x="275.00" y="955.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">output_memory[generated_q] stores</text>
+<text x="275.00" y="972.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">selected ID</text>
+<polygon points="363.0,1059 526.5,1109.0 363.0,1159 199.5,1109.0" fill="#f8cecc" stroke="#b85450"/>
+<text x="363.00" y="1113.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">max_new / EOS=1 / position=127?</text>
+<rect x="239.5" y="1253" width="247" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="363.00" y="1280.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">G_DONE → G_IDLE</text>
+<text x="363.00" y="1297.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host reads IDs and decodes text</text>
+<rect x="351.0" y="438.0" width="80" height="24" fill="white"/>
+<text x="391.00" y="454.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">yes: G_NEXT</text>
+<rect x="262.0" y="703.0" width="26" height="24" fill="white"/>
+<text x="275.00" y="719.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">no</text>
+<rect x="347.0" y="1194.0" width="32" height="24" fill="white"/>
+<text x="363.00" y="1210.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">yes</text>
+<rect x="373.76" y="698.0" width="122" height="38" fill="white"/>
+<text x="434.76" y="714.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">no: selected token</text>
+<text x="434.76" y="730.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">feedback</text>
+<text x="30.00" y="1423.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

@@ -29,95 +29,13 @@ kiểm chứng lại theo [verification guide](../verification/README.md).
 
 ## Luồng inference
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- H["Host load /<br/>START Parameters, prompt<br/>and configuration"] --> E["Embedding Current input<br/>token"]
- E --> L["Transformer layers Four<br/>ordered layer passes"]
- L --> P{"More prompt positions?"}
- P -->|"yes"| E
- P -->|"no"| N["Final norm /<br/>tied head RTL<br/>token selection"]
- N --> O["Output token buffer<br/>Append selected ID"]
- O --> D{"Count / EOS / context stop?"}
- D -->|"yes"| F["Complete Host decodes<br/>IDs to text"]
- D ==>|"no: selected token"| E
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class P,D control;
-class H interface;
-class E,L buffer;
-class N,O,F output;
-```
+![full_rtl_language — overview](../diagrams/previews/05_full_rtl_language_1.svg)
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- subgraph ATTENTION["Attention sublayer"]
-  A["Affine RMSNorm"] --> Q["Q / K<br/>/ V projections<br/>Ternary weights"]
-  Q --> R["RoPE / KV<br/>write Rotate Q<br/>and K"]
-  R --> T["Causal attention QK,<br/>softmax and value<br/>reduction"]
-  T --> O["O projection / residual"]
- end
- subgraph FFN["Feed-forward sublayer"]
-  N["Affine RMSNorm"] --> G["Gate / Up projections"]
-  G --> S["SiLU / element product"]
-  S --> D["Down projection / residual"]
- end
- O --> N
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class A,Q,R,T,O,N,G,S,D compute;
-style ATTENTION fill:#ffffff,stroke:#aaaaaa,color:#111111;
-style FFN fill:#ffffff,stroke:#aaaaaa,color:#111111;
-```
+[Editable draw.io — full_rtl_language — overview](../diagrams/architecture.drawio) · Page `05_full_rtl_language_1`.
+
+![full_rtl_language — detail 1](../diagrams/previews/06_full_rtl_language_2.svg)
+
+[Editable draw.io — full_rtl_language — detail 1](../diagrams/architecture.drawio) · Page `06_full_rtl_language_2`.
 
 
 1. Host ghi parameters và prompt, rồi ghi cấu hình và START.

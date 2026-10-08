@@ -15,49 +15,9 @@
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- I["Clients Host 32-bit<br/>/ compute 256-bit"] --> R["Read / write<br/>routing Host write<br/>priority"]
- R --> M["Eight RAM banks<br/>32 bits per<br/>bank"]
- M --> D["Read payload<br/>256-bit row"]
- D --> L["Client data selection<br/>Host lane /<br/>compute row"]
- L --> O["Response data / valid"]
- T["Request / response<br/>tags Address, lane<br/>and owner"] -.-> V["Current-request match"]
- I -.-> T
- V -.-> O
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class I,R,L interface;
-class M platform;
-class D,T buffer;
-class V control;
-class O output;
-```
+![sram_256_wrapper.sv — overview](../../diagrams/previews/64_sram_256_wrapper.sv_1.svg)
+
+[Editable draw.io — sram_256_wrapper.sv — overview](../../diagrams/architecture.drawio) · Page `64_sram_256_wrapper.sv_1`.
 
 Nét liền biểu diễn dữ liệu; nét đứt biểu diễn địa chỉ, enable và valid. Hộp RAM mô tả storage logic, không quy định SRAM macro hoặc block RAM vật lý. Reset chỉ xóa control/tag; dữ liệu chỉ được dùng khi valid.
 
@@ -102,53 +62,8 @@ Các đoạn dưới đây bao phủ nguyên văn toàn bộ source hiện tại
 
 #### Sơ đồ khối phần cứng của nhóm
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
-    IN["Host / compute read request"] -.-> REQ["Request tags Address,<br/>lane and owner"]
-    REQ -.-> RAM@{ shape: rect, label: "Eight RAM banks<br/>DEPTH × 32<br/>bit" }
-    RAM --> DATA["read_row_q 256 bit"]
-    REQ -.-> TAG["Response tags Address,<br/>lane and owner"]
-    DATA --> HM@{ shape: trap-t, label: "Host lane mux<br/>256 → 32 bit" }
-    TAG -.-> HM
-    HM --> H["host_rdata"]
-    IN -.-> VALID["Current-request match"]
-    REQ -.-> VALID
-    TAG -.-> VALID
-    VALID -.-> HV["host_rvalid"]
-    TAG -.-> CV["Compute response-valid"]
-    DATA --> C["rd_data"]
-    RESET["Reset tags"] -.-> REQ
-    RESET -.-> TAG
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class RESET control;
-class IN,REQ,TAG,CV,HM interface;
-class DATA,H,VALID,HV,C,CLK,RAM buffer;
-```
+![sram_256_wrapper.sv — detail 1](../../diagrams/previews/65_sram_256_wrapper.sv_2.svg)
+
+[Editable draw.io — sram_256_wrapper.sv — detail 1](../../diagrams/architecture.drawio) · Page `65_sram_256_wrapper.sv_2`.
 
 `read_row_q` chỉ có clock và capture enable. Tag/valid bảo đảm client không tiêu thụ dữ liệu chưa hợp lệ.

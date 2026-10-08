@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="717" viewBox="0 0 800 717">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="717" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">descriptor_file.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: descriptor_file.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="363,184 363,254" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="301.87,318 301.87,370 235,370 235,388" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="424.13,318 424.13,370 491,370 491,388" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="235,452 235,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="491,452 491,527.5" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="263" y="120" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="363.00" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host access 32-bit</text>
+<text x="363.00" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">read / write</text>
+<rect x="263" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="363.00" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Entry / word selection</text>
+<rect x="135" y="388" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="235.00" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Workspace descriptors 8</text>
+<text x="235.00" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">× 32-bit registers</text>
+<rect x="391" y="388" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="491.00" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Matrix descriptors 8</text>
+<text x="491.00" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">× 96-bit registers</text>
+<rect x="129" y="522" width="212" height="75" fill="#fff2cc" stroke="#d6b656"/>
+<text x="235.00" y="546.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Workspace descriptor ports</text>
+<text x="235.00" y="563.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">src0 / src1</text>
+<text x="235.00" y="580.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">/ dst</text>
+<rect x="391" y="527.5" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="491.00" y="555.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Matrix descriptor port</text>
+<text x="491.00" y="572.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">96-bit descriptor</text>
+<text x="30.00" y="703.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1330" height="1163" viewBox="0 0 1330 1163">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="1330" height="1163" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">llm_head_engine.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_head_engine.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="320,185 520,185" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="660,240 660,312 180,312 180,330" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="660,240 660,330" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="320,385 338,385 338,457 982,457 982,385 1000,385" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="800,385 1000,385" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="1140,440 1140,530" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="1140,640 1140,730" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="1000,585 800,585" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="520,585 320,585" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="180,640 180,730" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="320,785 520,785" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="1000,785 800,785" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="660,840 660,930" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="690,930 690,840" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="690,730 690,712 817,712 817,458 690,458 690,440" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="800,185 1000,185" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="520,985 320,985" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="40" y="130" width="280" height="110" fill="#f8cecc" stroke="#b85450"/>
+<text x="180.00" y="189.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">start_i / cancel_i</text>
+<rect x="520" y="130" width="280" height="110" fill="#f8cecc" stroke="#b85450"/>
+<text x="660.00" y="172.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Ordered 4096-row vocabulary stream</text>
+<text x="660.00" y="189.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Request / response / sum / retire</text>
+<text x="660.00" y="206.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">counters</text>
+<rect x="40" y="330" width="280" height="110" fill="#b1ddf0" stroke="#10739e"/>
+<text x="180.00" y="380.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Scale read per eight rows</text>
+<text x="180.00" y="397.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">23040 + row[11:3]</text>
+<rect x="520" y="330" width="280" height="110" fill="#b1ddf0" stroke="#10739e"/>
+<text x="660.00" y="380.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Four int8 weight reads per row</text>
+<text x="660.00" y="397.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">{row[11:0], chunk[1:0]}</text>
+<rect x="1000" y="330" width="280" height="110" fill="#b1ddf0" stroke="#10739e"/>
+<text x="1140.00" y="389.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent parameter request mux</text>
+<rect x="1000" y="530" width="280" height="110" fill="#b1ddf0" stroke="#10739e"/>
+<text x="1140.00" y="589.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Scale / weight response routing</text>
+<rect x="1000" y="730" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="1140.00" y="772.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">scale_word_q[255:0]</text>
+<text x="1140.00" y="789.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Eight U24 coefficients in 32-bit</text>
+<text x="1140.00" y="806.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">slots</text>
+<rect x="520" y="530" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="660.00" y="572.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent operand registers</text>
+<text x="660.00" y="589.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Cached S24 inputs and returned</text>
+<text x="660.00" y="606.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">int8 weights</text>
+<rect x="40" y="530" width="280" height="110" fill="#b1ddf0" stroke="#10739e"/>
+<text x="180.00" y="580.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent u_math</text>
+<text x="180.00" y="597.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">math_issue_o on next edge</text>
+<rect x="40" y="730" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="180.00" y="780.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Four ordered sums per row</text>
+<text x="180.00" y="797.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S39 sum_acc_q</text>
+<rect x="520" y="730" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="660.00" y="780.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Eight reserved result slots</text>
+<text x="660.00" y="797.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">result_q S39 / coefficient_q U24</text>
+<rect x="520" y="930" width="280" height="110" fill="#b1ddf0" stroke="#10739e"/>
+<text x="660.00" y="980.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent tagged scale / RNE /</text>
+<text x="660.00" y="997.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">selection</text>
+<rect x="1000" y="130" width="280" height="110" fill="#f8cecc" stroke="#b85450"/>
+<text x="1140.00" y="172.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Cancellation retains ownership</text>
+<text x="1140.00" y="189.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Drain parameter_pending_q and</text>
+<text x="1140.00" y="206.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">math_pending_q</text>
+<rect x="40" y="930" width="280" height="110" fill="#f8cecc" stroke="#b85450"/>
+<text x="180.00" y="972.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">done_o after final result pop</text>
+<text x="180.00" y="989.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent separately drains selection</text>
+<text x="180.00" y="1006.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">pipeline</text>
+<rect x="1076.0" y="466.0" width="128" height="38" fill="white"/>
+<text x="1140.00" y="482.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">parameter_valid_i /</text>
+<text x="1140.00" y="498.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">data_i[255:0]</text>
+<rect x="836.0" y="566.0" width="128" height="38" fill="white"/>
+<text x="900.00" y="582.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">operand_capture_o /</text>
+<text x="900.00" y="598.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">input_chunk_o</text>
+<rect x="104.0" y="673.0" width="152" height="24" fill="white"/>
+<text x="180.00" y="689.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">sum_valid_i / sum_i S61</text>
+<rect x="506.0" y="859.0" width="146" height="52" fill="white"/>
+<text x="579.00" y="875.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">result_valid_o / row_o</text>
+<text x="579.00" y="891.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">U12 / coefficient_o /</text>
+<text x="579.00" y="907.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">accumulator_o</text>
+<rect x="680.0" y="875.0" width="20" height="20" fill="white"/>
+<text x="690.00" y="889.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">1</text>
+<rect x="698.5" y="668.0" width="110" height="38" fill="white"/>
+<text x="753.50" y="684.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">issued_rows_q -</text>
+<text x="753.50" y="700.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">retire_row_q &lt; 8</text>
+<text x="30.00" y="1106.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">1. result_ready_i</text>
+<text x="30.00" y="1149.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

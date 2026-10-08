@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1376" viewBox="0 0 800 1376">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="1376" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">llm_attention_normalize.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_attention_normalize.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="425.25,184 425.25,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="322.75,303 304.75,303 304.75,370 151.75,370 151.75,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="425.25,318 425.25,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="151.75,452 151.75,504 223.19,504 223.19,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="425.25,452 425.25,504 353.81,504 353.81,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="288.5,586 288.5,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="288.5,720 288.5,790" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="288.5,854 288.5,924" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="288.5,988 288.5,1040 331.99,1040 331.99,1058" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="461.25,1058 461.25,1040 565.75,1040 565.75,336 503.1,336 503.1,318" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="371.75,1122 371.75,1192" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="319.25" y="120" width="212" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="425.25" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">32 signed S56 accumulators</text>
+<text x="425.25" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Shared U32 denominator</text>
+<rect x="322.75" y="254" width="205" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="425.25" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Batch operand capture</text>
+<text x="425.25" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Magnitude U64 / sign bits</text>
+<rect x="51.75" y="388" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="151.75" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Lane 0 external u_div</text>
+<text x="151.75" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">USE_SHARED=1 in llm_soc</text>
+<rect x="301.75" y="388" width="247" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="425.25" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Lanes 1 to 3 private dividers</text>
+<text x="425.25" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">U64 numerator / U32 denominator</text>
+<rect x="158" y="522" width="261" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="288.50" y="558.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Capture quotient and RNE decision</text>
+<rect x="188.5" y="656" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="288.50" y="683.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">ROUND</text>
+<text x="288.50" y="700.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Increment ties to even</text>
+<rect x="188.5" y="790" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="288.50" y="817.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">SIGN</text>
+<text x="288.50" y="834.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Restore original sign</text>
+<rect x="186" y="924" width="205" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="288.50" y="951.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">CLAMP</text>
+<text x="288.50" y="968.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S24 output lane registers</text>
+<rect x="262.25" y="1058" width="219" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="371.75" y="1085.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">NEXT_BATCH</text>
+<text x="371.75" y="1102.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Eight batches at four lanes</text>
+<rect x="265.75" y="1192" width="212" height="64" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="371.75" y="1228.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">vector_o 768 bits / done_o</text>
+<rect x="528.75" y="676.0" width="74" height="24" fill="white"/>
+<text x="565.75" y="692.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">More lanes</text>
+<text x="30.00" y="1362.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

@@ -1,0 +1,39 @@
+{
+  "sampled_cycles": {
+    "before": 121886,
+    "after": 16949,
+    "reduction_percent": 86.0943832761761
+  },
+  "greedy_cycles": {
+    "before": 113694,
+    "after": 16949,
+    "reduction_percent": 85.09244111386705
+  },
+  "parameter_read_utilization_percent": {
+    "sampled_before": 13.86213346897921,
+    "greedy_before": 14.86094252994881,
+    "after": 99.68729718567467
+  },
+  "dot_issue_utilization_percent": {
+    "sampled_before": 13.442068818404083,
+    "greedy_before": 14.41061093813218,
+    "after": 96.66646999822999
+  },
+  "rows_in_flight": {
+    "before": 1,
+    "after": 7,
+    "after_backpressure": 10,
+    "engine_reservation_limit": 8
+  },
+  "row_initiation_interval_clocks": {
+    "sampled_before_derived": 29.74871794871795,
+    "greedy_before_derived": 27.74871794871795,
+    "after_measured": 4.124786324786324
+  },
+  "scale_read_cycles": 512,
+  "after_credit_stalls": 0,
+  "after_result_stalls": 0,
+  "full_regression_job": "64351",
+  "report_hashes_verified": 37,
+  "synthesis": "In progress; blackbox SRAM logic comparison; no current Fmax/resource claim"
+}

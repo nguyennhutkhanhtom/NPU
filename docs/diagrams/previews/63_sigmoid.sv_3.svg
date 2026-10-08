@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="882" height="974" viewBox="0 0 882 974">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="882" height="974" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">sigmoid.sv — detail 2</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: sigmoid.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="253,184 253,236 140,236 140,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="140,318 140,370 205.3,370 205.3,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="390,318 390,370 324.7,370 324.7,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="265,452 265,504 300.52,504 300.52,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="413,184 413,202 507,202 507,504 413,504 413,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="365,436.88 383,436.88 383,504 662,504 662,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="333,586 333,638 398.3,638 398.3,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="662,586 662,638 538,638 538,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="458,720 458,790" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="233" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="333.00" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Adjacent samples</text>
+<text x="333.00" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">y0 / y1</text>
+<rect x="40" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="140.00" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Monotone difference</text>
+<text x="140.00" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">U10; at most 512</text>
+<rect x="165" y="388" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="265.00" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Interpolation multiply</text>
+<text x="265.00" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">U10 × U24 → U34</text>
+<rect x="290" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="390.00" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Fraction</text>
+<text x="390.00" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">U24</text>
+<rect x="233" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="333.00" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Integer sum</text>
+<text x="333.00" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">y0 + upper product; U17</text>
+<rect x="562" y="522" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="662.00" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Fractional remainder</text>
+<text x="662.00" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Low product U24</text>
+<rect x="358" y="656" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="458.00" y="683.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">RNE</text>
+<text x="458.00" y="700.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Full sum parity on ties</text>
+<rect x="358" y="790" width="200" height="64" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="458.00" y="817.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Output</text>
+<text x="458.00" y="834.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">U16/F15</text>
+<text x="30.00" y="960.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

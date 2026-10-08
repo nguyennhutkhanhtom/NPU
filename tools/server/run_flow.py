@@ -30,11 +30,17 @@ def main():
     p.add_argument('--stage', choices=('test', 'application', 'legacy', 'syn', 'all'), default='test')
     p.add_argument('--tag', default=datetime.now(timezone.utc).strftime('run_%Y%m%d_%H%M%S'))
     p.add_argument('--lib', type=Path, action='append', default=[])
+    p.add_argument('--syn-ram-blackbox', action='store_true',
+                   help='Genus only: preserve sram_word_tile as SRAM black boxes')
+    p.add_argument('--syn-top', choices=('llm_soc', 'llm_parameter_ram', 'llm_bank_ram'), default='llm_soc',
+                   help='Use a RAM wrapper top for a lightweight mapped synthesis check')
     p.add_argument('--sdc', type=Path, default=ROOT / 'tools/server/asic.sdc')
     p.add_argument('--only', nargs='+', help='Select test tops; does not claim full regression PASS')
     p.add_argument('--fixture', type=Path, default=ROOT / 'tests/full_rtl/build')
     p.add_argument('--check-inputs', action='store_true')
     a = p.parse_args()
+    if (a.syn_ram_blackbox or a.syn_top != 'llm_soc') and a.stage not in ('syn', 'all'):
+        p.error('--syn-ram-blackbox/--syn-top require syn/all; Xcelium always uses functional RAM')
     if not re.fullmatch(r'[A-Za-z0-9_-]{1,64}', a.tag):
         p.error('tag must contain only letters, digits, underscore or hyphen')
     manifest_path = ROOT / 'bundle_manifest.json'
@@ -117,6 +123,8 @@ def main():
                'inputs': manifest['files'], 'commands': [], 'tests': {},
                'scope': 'New server evidence; separate from local FPGA gates and ASIC physical signoff'}
     libs = [lib.resolve() for lib in a.lib]
+    results['synthesis_top'] = a.syn_top
+    results['synthesis_ram_blackbox'] = a.syn_ram_blackbox
     results['libraries'] = {str(lib): digest(lib) for lib in libs}
     results['sdc_sha256'] = digest(a.sdc)
     if a.stage == 'application':
@@ -183,23 +191,55 @@ def main():
                 results['application_scope'] = 'Functional fixture token matching only; no FPGA hardware gate or ASIC signoff claim'
                 shutil.copyfile(isolated / 'rtl_tokens.txt', report / 'rtl_tokens.txt')
         if a.stage in ('syn', 'all'):
+            run(['genus', '-version'], report / 'genus.version.log', build)
             setup = report / 'genus_setup.tcl'
             synth_sources = [f for f in sources if f.name != 'quartus_word_ram.sv']
             setup.write_text('set task_root ' + tcl_string(ROOT) + '\nset task_rtl ' + tcl_string(rtl) + '\nset task_report ' + tcl_string(report) +
                              '\nset task_libs [list ' + ' '.join(tcl_string(f) for f in libs) + ']' +
                              '\nset task_sdc ' + tcl_string(a.sdc.resolve()) +
+                             '\nset task_top ' + tcl_string(a.syn_top) +
+                             '\nset task_ram_blackbox ' + ('1' if a.syn_ram_blackbox else '0') +
                              '\nset task_sources [list ' + ' '.join(tcl_string(f) for f in synth_sources) + ']\n' +
                              'source ' + tcl_string(ROOT / 'tools/server/genus.tcl') + '\n')
             log = report / 'genus.console.log'
             run(['genus', '-no_gui', '-batch', '-files', str(setup)], log, build)
-            if 'GENUS_FLOW_COMPLETED' not in log.read_text(errors='replace'):
+            synth_log = log.read_text(errors='replace')
+            if 'GENUS_FLOW_COMPLETED' not in synth_log:
                 raise RuntimeError('Missing Genus completion marker')
-            for name in ('llm_soc.v', 'llm_soc.sdc', 'area.rpt', 'timing.rpt', 'check_design.rpt'):
+            if re.search(r'^\s*(?:Error\s*:|Fatal\s*:|GENUS_FLOW_FAILED:)', synth_log, re.MULTILINE):
+                raise RuntimeError('Genus error diagnostic; inspect genus.console.log')
+            for name in (a.syn_top + '.v', a.syn_top + '.sdc', 'area.rpt', 'timing.rpt',
+                         'generic_area.rpt', 'check_design.rpt', 'check_design_mapped.rpt'):
                 if not (report / name).is_file() or not (report / name).stat().st_size:
                     raise RuntimeError('Missing synthesis output: ' + name)
-            if re.search(r'\baltsyncram\b', (report / 'llm_soc.v').read_text(errors='replace')):
+            if re.search(r'\baltsyncram\b', (report / (a.syn_top + '.v')).read_text(errors='replace')):
                 raise RuntimeError('FPGA RAM macro appeared in the ASIC netlist')
             results['synthesis'] = 'GENUS_FLOW_COMPLETED; review check_design/area/timing reports'
+            results['synthesis_review'] = 'REQUIRED: unresolved references, mapping, warnings and 10 ns timing; inferred RAM has no SRAM binding'
+            if a.syn_ram_blackbox:
+                # Genus 21.1 represents empty HDL leaves as logic abstracts,
+                # not mapped insts with is_black_box. Check their emitted bodies.
+                netlist = (report / (a.syn_top + '.v')).read_text(errors='replace')
+                netlist = re.sub(r'/\*.*?\*/|//[^\n]*', '', netlist, flags=re.DOTALL)
+                leaves = re.findall(r'\bmodule\s+(sram_word_tile\w*)\s*\([^;]*\);(.*?)\bendmodule',
+                                    netlist, re.DOTALL)
+                if not leaves:
+                    raise RuntimeError('No RAM black-box modules in mapped netlist')
+                counts = {}
+                for name, body in leaves:
+                    statements = [s.strip() for s in body.split(';') if s.strip()]
+                    if not statements or any(not re.match(r'^(input|output|inout|wire)\b', s) for s in statements):
+                        raise RuntimeError('RAM leaf contains mapped logic/storage: ' + name)
+                    if not all(re.search(r'\b' + port + r'\b', body) for port in
+                               ('clk', 'rd_en', 'wr_en', 'rd_addr', 'wr_addr', 'wr_data', 'rd_data')):
+                        raise RuntimeError('RAM black-box interface incomplete: ' + name)
+                    counts[name] = len(re.findall(r'\b' + re.escape(name) + r'\s+\S+\s*\(', netlist))
+                    if not counts[name]:
+                        raise RuntimeError('RAM black-box module has no instances: ' + name)
+                results['ram_blackboxes'] = counts
+                (report / 'ram_blackboxes.rpt').write_text(json.dumps(counts, indent=2) + '\n')
+                print('RAM_BLACKBOX_CHECK_PASS instances=' + str(sum(counts.values())), flush=True)
+                results['synthesis_review'] = 'REQUIRED: RAM black boxes have no SRAM area/timing arcs; wrapper/logic reports are not complete ASIC PPA'
         for name, expected in manifest['files'].items():
             if digest(ROOT / name) != expected:
                 raise RuntimeError('Input changed during run: ' + name)

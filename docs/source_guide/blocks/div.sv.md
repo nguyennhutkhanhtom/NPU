@@ -15,48 +15,9 @@
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- I["Input transaction Numerator<br/>/ denominator"] --> W["Quotient / remainder<br/>state Captured operands"]
- W --> A["Restoring divide step<br/>Shift, compare and<br/>subtract"]
- A ==>|"next bit"| W
- A --> O["Result registers Quotient<br/>/ remainder"]
- C["Start / completion<br/>control NUM_W iterations"] -.-> W & O
- I -.-> Z["Zero-divisor path Sentinel<br/>result; div_zero"]
- Z --> O
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class I interface;
-class W buffer;
-class A compute;
-class O,Z output;
-class C control;
-```
+![div.sv — overview](../../diagrams/previews/18_div.sv_1.svg)
+
+[Editable draw.io — div.sv — overview](../../diagrams/architecture.drawio) · Page `18_div.sv_1`.
 
 ## Main flow
 
@@ -92,45 +53,9 @@ Start khi rảnh chốt numerator/denominator. Mỗi cycle busy tiến một bit
 
 #### Sơ đồ khối phần cứng của nhóm
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- Q["Quotient state<br/>q_work"] --> S["Shift / bit append"]
- R["Remainder state<br/>rem_work"] --> S
- S --> A["Extended compare /<br/>subtract DEN_W+2"]
- D["Captured denominator den_reg"] --> A
- A --> N["Next quotient /<br/>remainder Subtract or<br/>retain remainder"]
- N ==>|"iterate"| Q
- N ==>|"iterate"| R
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class Q,R,D buffer;
-class S,A,N compute;
-```
+![div.sv — detail 1](../../diagrams/previews/19_div.sv_2.svg)
+
+[Editable draw.io — div.sv — detail 1](../../diagrams/architecture.drawio) · Page `19_div.sv_2`.
 
 ### [Dòng 38–58: Reset/start](<../../../Verilog%20Source%20code/div.sv#L38>)
 

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1558" viewBox="0 0 800 1558">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="1558" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">llm_attention_engine.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_attention_engine.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="353,184 353,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="353,318 353,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="353,452 353,546" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="353,610 353,680" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="353,744 353,838" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="353,902 353,972" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="353,1036 353,1106" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="353,1170 353,1240" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="353,1304 353,1374" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="240" y="120" width="226" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="353.00" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">start_i / layer_i / head_i /</text>
+<text x="353.00" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">position_i</text>
+<rect x="247" y="254" width="212" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="353.00" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Ordered causal KV requests</text>
+<text x="353.00" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">0 through position_i</text>
+<rect x="253" y="388" width="200" height="64" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="353.00" y="424.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent KV SRAM</text>
+<rect x="240" y="546" width="226" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="353.00" y="573.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">operand_capture_o</text>
+<text x="353.00" y="590.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent Q/K operand registers</text>
+<rect x="253" y="680" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="353.00" y="707.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">math_issue_o</text>
+<text x="353.00" y="724.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent shared u_math</text>
+<rect x="253" y="838" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="353.00" y="874.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">RNE16 and S39 register</text>
+<rect x="253" y="972" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="353.00" y="999.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_scale logic_mul</text>
+<text x="353.00" y="1016.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S39 x 11585 to S55</text>
+<rect x="253" y="1106" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="353.00" y="1133.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Registered product</text>
+<text x="353.00" y="1150.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">RNE16 and S32 clamp</text>
+<rect x="236.5" y="1240" width="233" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="353.00" y="1267.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">128-entry score array</text>
+<text x="353.00" y="1284.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Maximum comparator / register</text>
+<rect x="233" y="1374" width="240" height="64" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="353.00" y="1401.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">score_o / max_score_o / done_o</text>
+<text x="353.00" y="1418.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent softmax and V pass</text>
+<rect x="316.0" y="487.0" width="74" height="24" fill="white"/>
+<text x="353.00" y="503.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">kv_valid_i</text>
+<rect x="289.0" y="779.0" width="128" height="24" fill="white"/>
+<text x="353.00" y="795.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">sum_i / sum_valid_i</text>
+<text x="30.00" y="1544.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

@@ -67,17 +67,50 @@ This is the compact source of truth for staged NPU v2 implementation. Work only 
 
 DONE:
 
-- none
+- Phase 1A — continuous linear-row execution
 
 CURRENT:
 
-- Phase 1A — continuous linear-row execution
+- Phase 1B — LM-head streaming — IN PROGRESS (functional validation passed; remote synthesis comparison pending)
 
 NEXT:
 
-- Phase 1B — LM-head streaming
+- Phase 1C — attention value-pass streaming
+
+### Phase 1A closure
+
+Phase 1A is CLOSED. Frozen-source scoped engine/SoC tests, the operator and graph groups, and full-top synthesis/fit/STA/extraction pass. The other five regression groups retain matching-source PASS evidence. Questa operators pass 6,611 checks and graph passes at 570,837 compute clocks with exact token, causal and memory-traffic assertions. The ModelSim `$deposit` fixture failure reproduces on unchanged baseline and does not reproduce in Questa. No Phase 1B implementation was performed.
+
+| Existing linear fixture | Before cycles | After cycles | Reduction |
+|---|---:|---:|---:|
+| Q: 128 inputs, 128 rows | 2,227 | 701 | 68.52% |
+| Down: 384 inputs, 128 rows | 3,563 | 2,037 | 42.83% |
+| Gate: 128 inputs, 384 rows | 6,579 | 1,981 | 69.89% |
+
+Average engine row initiation changes from 17 to approximately 5 clocks for 128 inputs and 27 to approximately 15 for 384 inputs. Q/Down/Gate dot-issue utilization changes from 23.0/43.1/23.3% to 73.0/75.4/77.5%; parameter-request utilization changes from 5.8/10.8/5.9% to 18.4/18.9/19.4%. Parameter and vector traffic is unchanged. Isolated parameter-stall counts were not measured; the two-word credit window still exposes parameter-response gaps.
+
+Worst fitted Fmax improves from 95.61 to **101.28 MHz** (+5.93%), with all four corners passing the 100 MHz target and no unconstrained paths. Worst setup is +0.126 ns at slow 1.1 V, 85°C. Resources: 60,124 ALMs (+404), 67,027 registers (+82), 1,187 RAM blocks (+1), 9,516,700 memory bits (+156), zero DSPs. This is FPGA evidence, not ASIC signoff.
+
+Evidence: [scoped results and metrics](../tests/full_rtl/evidence/phase1a_20261008/metrics.json), [operator/graph completion](../tests/full_rtl/evidence/phase1a_20261008/closing_groups.json), [timing manifest](verification/timing/phase1a_linear_20261008/manifest.json). Current RTL/configuration and result-log hashes were verified before closure; no rerun or RTL/configuration change was required.
 
 ## Measurement gates
+
+### Phase 1B functional results; synthesis pending
+
+Remote Xcelium scoped tests and all nine groups PASS (jobs 64347/64351, black, mandatory X11). Current/frozen inputs and all 37 full-regression report hashes were verified. The existing operator fixture checks every row's dot, packed scale, exact score and PRNG order, delayed result consumption, six reset/cancellation boundaries including final-row retirement, and complete drain. Selection adds tagged-path excluded-token, minimum-score, stable-tie and saturated-tie checks. Graph tokens and traffic remain exact; compute clocks fall from 570,837 to 280,602.
+
+| Head fixture | Before | Phase 1B |
+|---|---:|---:|
+| Sampled cycles/pass, temperature 166 | 121,886 | 16,949 (-86.09%) |
+| Greedy cycles/pass, context 1 and 128 | 113,694 | 16,949 (-85.09%) |
+| Parameter-read utilization, sampled / greedy | 13.86% / 14.86% | 99.69% |
+| SIMD dot-issue utilization, sampled / greedy | 13.44% / 14.41% | 96.67% |
+| Average row initiation, sampled / greedy | 29.75 / 27.75 clocks (derived from baseline schedule) | 4.125 clocks (measured) |
+| Maximum rows in flight | 1 | 7; 10 with forced backpressure (8 engine reservations plus epilogue) |
+
+Each pass still reads 16,384 weight words and 512 packed-scale words and issues 16,384 SIMD dots. Scale words occupy 512 shared-port clocks; zero steady-state credit or result-consumption stalls were measured. A forced 24-clock result pause gives 8 credit-stall and 21 result-stall clocks, adding 8 pass clocks without changing output. Scaling/selection runs concurrently with weights instead of blocking each next row. The remaining head throughput limit is the single parameter-read port, including its scale traffic.
+
+Evidence: [measured comparison](../tests/full_rtl/evidence/phase1b_20261008/metrics.json), [full remote results](../tests/full_rtl/evidence/phase1b_20261008/full/extracted/phase1b_full_20261008/results.json). Baseline/after Genus jobs use the existing RAM-blackbox mode, confirmed slow library SHA256 `dec616b7b53aa5166eac9660ba83561a4057ee3b7e62f59f3d4bebad495ffe10` and unchanged 10 ns SDC. Fmax/resource impact remains unverified; SRAM area/timing is excluded from this comparison. [Synthesis handoff](../tests/full_rtl/build/scratchpad/phase1b_handoff_20261008.md). Keep Phase 1B IN PROGRESS and Phase 1C NEXT until synthesis reports are reviewed.
 
 - Phase 1A must measure linear-phase cycles, ternary-dot issue utilization, parameter stalls/utilization, row initiation interval, and Fmax.
 - Phase 1B must measure head cycles/token, rows in flight, weight/scale bandwidth, SIMD utilization, and selection/epilogue stalls.

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="899" viewBox="0 0 800 899">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="899" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">div.sv — detail 1</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: div.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="471.27,184 471.27,236 430,236 430,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="610.56,715 610.56,336 510,336 510,318" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="372.28,318 372.28,394 294.04,394 294.04,412" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="224.72,318 224.72,394 302.96,394 302.96,412" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="298.5,476 298.5,561 398,561" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="533.17,546 533.17,528 547,528 547,202 536.22,202 536.22,184" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="498,621 498,697 538.46,697 538.46,715" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="409" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="509.00" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Quotient state</text>
+<text x="509.00" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">q_work</text>
+<rect x="330" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="430.00" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Shift / bit append</text>
+<rect x="466" y="715" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="566.00" y="742.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Remainder state</text>
+<text x="566.00" y="759.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">rem_work</text>
+<rect x="198.5" y="412" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="298.50" y="439.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Extended compare /</text>
+<text x="298.50" y="456.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">subtract DEN_W+2</text>
+<rect x="54" y="254" width="226" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="167.00" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Captured denominator den_reg</text>
+<rect x="398" y="546" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="498.00" y="570.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Next quotient /</text>
+<text x="498.00" y="587.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">remainder Subtract or</text>
+<text x="498.00" y="604.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">retain remainder</text>
+<rect x="519.0" y="353.0" width="56" height="24" fill="white"/>
+<text x="547.00" y="369.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">iterate</text>
+<rect x="470.0" y="647.0" width="56" height="24" fill="white"/>
+<text x="498.00" y="663.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">iterate</text>
+<text x="30.00" y="885.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

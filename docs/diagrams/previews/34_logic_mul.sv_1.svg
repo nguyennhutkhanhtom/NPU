@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1007" viewBox="0 0 800 1007">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="1007" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">logic_mul.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: logic_mul.sv · Combinational logic / compile-time definitions; no private clock domain</text>
+<polyline points="235,184 235,236 295.34,236 295.34,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="485,184 485,236 424.66,236 424.66,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,329 360,399" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,474 360,544" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,619 360,689" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="360,753 360,823" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="135" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="235.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Sign or zero extend A</text>
+<rect x="260" y="254" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="278.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">AND with each</text>
+<text x="360.00" y="295.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">B bit and</text>
+<text x="360.00" y="312.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">constant shift</text>
+<rect x="385" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="485.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">B bits and sign bit</text>
+<rect x="260" y="399" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="423.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">XOR sum and</text>
+<text x="360.00" y="440.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">majority carry shifted</text>
+<text x="360.00" y="457.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">left</text>
+<rect x="260" y="544" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="568.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Compress three rows</text>
+<text x="360.00" y="585.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">into two per</text>
+<text x="360.00" y="602.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">level</text>
+<rect x="257.5" y="689" width="205" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="716.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">One final carry-propagate</text>
+<text x="360.00" y="733.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">adder</text>
+<rect x="260" y="823" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="360.00" y="859.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Low OUT_W product bits</text>
+<text x="30.00" y="993.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1190" height="1146" viewBox="0 0 1190 1146">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="1190" height="1146" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">full_graph — detail 1</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_soc.sv · clk; raw rst_n → u_reset → core_rst_n</text>
+<polyline points="211.04,184 211.04,236 140,236 140,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="376,164.01 394,164.01 394,810 918.99,810 918.99,828" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="276,184 276,810 329.37,810 329.37,828" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="240,298.22 258,298.22 258,370 688.25,370 688.25,388" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="974.06,828 974.06,437 797.75,437" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="384.44,828 384.44,810 443,810 443,437 578.75,437" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="982.24,828 982.24,571 790.75,571" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="461,843 725.25,843 725.25,604 717.74,604 717.74,586" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="688.25,452 688.25,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="639.89,586 639.89,638 587,638 587,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="687,720 687,810 927.17,810 927.17,828" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="480,720 480,810 337.56,810 337.56,828" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="140,318 140,977 475.25,977" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="969.5,892 969.5,977 708.25,977" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="176" y="120" width="200" height="64" fill="#f8cecc" stroke="#b85450"/>
+<text x="276.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">llm_soc controller</text>
+<rect x="40" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="140.00" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_linear_engine</text>
+<text x="140.00" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Own ternary_dot32</text>
+<rect x="869.5" y="828" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="969.50" y="855.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_head_engine</text>
+<text x="969.50" y="872.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Eight reserved results</text>
+<rect x="261" y="828" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="361.00" y="855.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_attention_engine</text>
+<text x="361.00" y="872.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Causal QK scores</text>
+<rect x="578.75" y="388" width="219" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="688.25" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent memory / input-cache</text>
+<text x="688.25" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">routing</text>
+<rect x="585.75" y="522" width="205" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="688.25" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent Q/K / head operand</text>
+<text x="688.25" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">registers</text>
+<rect x="460" y="656" width="254" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="587.00" y="683.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_math STREAMING=1</text>
+<text x="587.00" y="700.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">32 lane products / dot reduction</text>
+<rect x="475.25" y="962" width="233" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="591.75" y="998.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent tagged scalar epilogue</text>
+<rect x="758.085" y="766.0" width="98" height="38" fill="white"/>
+<text x="807.09" y="782.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">math_sum S61 /</text>
+<text x="807.09" y="798.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">math_sum_valid</text>
+<rect x="488.0" y="746.0" width="98" height="38" fill="white"/>
+<text x="537.00" y="762.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">math_sum S61 /</text>
+<text x="537.00" y="778.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">math_sum_valid</text>
+<text x="30.00" y="1132.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

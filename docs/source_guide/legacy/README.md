@@ -54,50 +54,9 @@ Tài liệu và RTL dùng hexadecimal cho giá trị gắn trực tiếp với b
 
 ## 2. Sơ đồ kiến trúc tổng quan đang chạy
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- H["Host<br/>32-bit transactions"] <--> F["Host frontend Control<br/>and memory windows"]
- F <--> D["Configuration storage Workspace<br/>/ matrix descriptors"]
- F <--> M["Memory ports Parameters<br/>and workspace"]
- P["Program storage PC<br/>and instruction memory"] --> C["Single-issue scheduler Opcode<br/>and engine ownership"]
- D --> C
- C -.-> E["Compute engines Rowwise,<br/>norm and ternary"]
- E <--> M
- E -.-> S["Status Done, error<br/>and overflow"]
- S -.-> F
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class H,F,M interface;
-class D,P buffer;
-class C control;
-class E compute;
-class S output;
-```
+![README — overview](../../diagrams/previews/73_README_1.svg)
+
+[Editable draw.io — README — overview](../../diagrams/architecture.drawio) · Page `73_README_1`.
 
 Các hộp biểu diễn khối phần cứng hoặc giao diện; nét liền là đường dữ liệu, nét đứt là điều khiển/cấu hình. Mũi tên hồi tiếp biểu diễn kết nối phần cứng. Sơ đồ không biểu diễn thứ tự chu kỳ, trạng thái FSM hoặc các tầng pipeline CPU.
 

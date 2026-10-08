@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1126" height="1522" viewBox="0 0 1126 1522">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="1126" height="1522" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">sigmoid.sv — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: sigmoid.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<rect x="40" y="254" width="729.5" height="1014" fill="none" stroke="#999999" stroke-dasharray="5 4"/>
+<text x="48.00" y="271.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666" font-weight="bold">sigmoid</text>
+<polyline points="203,184 203,289" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="203,353 203,438 403.75,438" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="805.5,338 787.5,338 787.5,405 595.64,405 595.64,423" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="403.75,472 385.75,472 385.75,539 201.25,539 201.25,557" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="201.25,621 201.25,715" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="201.25,779 201.25,855 238.28,855 238.28,873" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="438.74,487 438.74,855 301.47,855 301.47,873" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="263.5,937 263.5,989 297.2,989 297.2,1007" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="513.25,487 513.25,989 439.04,989 439.04,1007" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="341.5,1099 341.5,1151 384.99,1151 384.99,1169" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="574.5,487 574.5,1184 524.75,1184" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="424.75,1233 424.75,1338" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="602.75,487 602.75,539 825.5,539 825.5,557" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="103" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="203.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">x_raw S16 + frac_bits</text>
+<rect x="79.5" y="289" width="247" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="203.00" y="316.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Coordinate S45 + boundary clamp</text>
+<text x="203.00" y="333.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Index U9 · fraction U24</text>
+<rect x="403.75" y="423" width="219" height="64" fill="#f8cecc" stroke="#b85450"/>
+<text x="513.25" y="450.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Controller + index/fraction</text>
+<text x="513.25" y="467.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">storage</text>
+<rect x="101.25" y="557" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="201.25" y="584.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">ROM address selector</text>
+<text x="201.25" y="601.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">index or bounded index+1</text>
+<rect x="81.25" y="715" width="240" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="201.25" y="742.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">One shared ROM lookup</text>
+<text x="201.25" y="759.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">257 × 16 bit · sigmoid_lut.svh</text>
+<rect x="163.5" y="873" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="263.50" y="909.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Sample storage y0 / y1</text>
+<rect x="211" y="1007" width="261" height="92" fill="#b1ddf0" stroke="#10739e"/>
+<text x="341.50" y="1031.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Interpolation pipeline</text>
+<text x="341.50" y="1048.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Slope U10 → product U34 → integer</text>
+<text x="341.50" y="1065.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">sum U17</text>
+<text x="341.50" y="1082.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">RNE uses full integer-sum parity</text>
+<rect x="324.75" y="1169" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="424.75" y="1205.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Output storage U16/F15</text>
+<rect x="805.5" y="289" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="905.50" y="325.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">start</text>
+<rect x="324.75" y="1338" width="200" height="64" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="424.75" y="1374.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">y_raw U16/F15</text>
+<rect x="805.5" y="557" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="905.50" y="593.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">busy / done</text>
+<rect x="374.74" y="659.0" width="128" height="24" fill="white"/>
+<text x="438.74" y="675.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">Sample load selects</text>
+<rect x="482.25" y="726.0" width="62" height="24" fill="white"/>
+<text x="513.25" y="742.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">fraction</text>
+<rect x="528.5" y="823.5" width="92" height="24" fill="white"/>
+<text x="574.50" y="839.50" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">Output enable</text>
+<text x="30.00" y="1508.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

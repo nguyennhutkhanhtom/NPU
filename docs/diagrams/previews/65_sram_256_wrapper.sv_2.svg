@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1148" height="985" viewBox="0 0 1148 985">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="1148" height="985" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">sram_256_wrapper.sv — detail 1</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: sram_256_wrapper.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="493.52,184 493.52,236 398.45,236 398.45,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="444,297.8 462,297.8 462,370 912,370 912,388" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="912,463 912,533" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="311.52,318 311.52,375.5 238.01,375.5 238.01,393.5" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="812,575.36 794,575.36 794,649 199.7,649 199.7,667" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="177.99,457.5 177.99,649 140,649 140,667" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="140,731 140,801" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="531.25,184 531.25,515 465.96,515 465.96,533" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="349.25,318 349.25,515 379.03,515 379.03,533" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="238.01,457.5 238.01,515 341.3,515 341.3,533" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="406.25,597 406.25,649 412,649 412,667" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="308,441.47 326,441.47 326,515 662,515 662,533" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="919.52,597 919.52,649 927.75,649 927.75,667" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="240.48,184 240.48,236 311.52,236 311.52,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="202.75,184 202.75,375.5 203.14,375.5 203.14,393.5" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="416.5" y="120" width="219" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="526.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host / compute read request</text>
+<rect x="244" y="254" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="344.00" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Request tags Address,</text>
+<text x="344.00" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">lane and owner</text>
+<rect x="812" y="388" width="200" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="912.00" y="412.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Eight RAM banks</text>
+<text x="912.00" y="429.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">DEPTH × 32</text>
+<text x="912.00" y="446.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">bit</text>
+<rect x="812" y="533" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="912.00" y="569.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">read_row_q 256 bit</text>
+<rect x="108" y="393.5" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="208.00" y="421.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Response tags Address,</text>
+<text x="208.00" y="438.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">lane and owner</text>
+<rect x="40" y="667" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="140.00" y="694.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host lane mux</text>
+<text x="140.00" y="711.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">256 → 32 bit</text>
+<rect x="40" y="801" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="140.00" y="837.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">host_rdata</text>
+<rect x="301" y="533" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="401.00" y="569.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Current-request match</text>
+<rect x="312" y="667" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="412.00" y="703.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">host_rvalid</text>
+<rect x="562" y="533" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="662.00" y="569.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Compute response-valid</text>
+<rect x="827.75" y="667" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="927.75" y="703.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">rd_data</text>
+<rect x="108" y="120" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="208.00" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Reset tags</text>
+<text x="30.00" y="971.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

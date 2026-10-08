@@ -51,91 +51,17 @@ cells. See [ASIC portability](../design/asic_portability.md) for the technology 
 
 Historical illustration of the recorded implementation; see the [current graph](../design/full_rtl_language.md) for current engine ownership.
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- H["CPU checkpoint / tokenizer"] --> P["Parameters / prompt IDs"]
- P --> E["RTL embedding"]
- E --> L["Transformer layer passes<br/>Historical flow below"]
- L --> C{"Layer / position progress?"}
- C ==>|"next layer"| L
- C -->|"prompt position"| E
- C -->|"decode"| F["Final norm / tied head"]
- F --> T["Greedy / Gumbel selection"]
- T --> S{"Stop?"}
- S ==>|"next token"| E
- S -->|"finished"| O["Output token SRAM<br/>CPU text decode"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class H,P interface;
-class E,L,F compute;
-class C,S control;
-class T,O output;
-```
+Current RTL replacement; surrounding discussion is historical.
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- A["Affine RMSNorm"] --> Q["Q / K / V projections"]
- Q --> R["RoPE / KV write"]
- R --> T["Causal attention / softmax"]
- T --> O["O projection / residual"]
- O --> N["Affine RMSNorm"]
- N --> F["Gate / Up / SiLU / multiply / Down"]
- F --> S["Residual"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class A,Q,R,T,O,N,F compute;
-class S output;
-```
+![full_rtl_development — overview](../diagrams/previews/09_full_rtl_development_1.svg)
+
+[Editable draw.io — full_rtl_development — overview](../diagrams/architecture.drawio) · Page `09_full_rtl_development_1`.
+
+Current RTL replacement; surrounding discussion is historical.
+
+![full_rtl_development — detail 1](../diagrams/previews/10_full_rtl_development_2.svg)
+
+[Editable draw.io — full_rtl_development — detail 1](../diagrams/architecture.drawio) · Page `10_full_rtl_development_2`.
 
 `llm_soc` contains two state machines: `graph` chooses the transformer stage;
 `op` sequences memory requests and arithmetic. `llm_math` has 32 signed lanes
@@ -389,48 +315,11 @@ remain within the existing5M compute/100ms graph bound; no expected values or
 token/phase/causal assertions change. Memory-only dont_merge now also preserves
 group and IP read/write enables. Memory latency and reset contract are unchanged.
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
-    WEIGHT["Weights and chunk"] --> CODE["Registered U2 code per lane"]
-    CODE --> DECODE["Registered ternary S32"]
-    DECODE --> MATH["Portable SIMD byte pipeline"]
-    LUT["Exp endpoints U25"] --> DELTA["Registered U25 delta"]
-    DELTA --> INTERP["Registered U37 interpolation"]
-    ROUND["Scalar RNE S64"] --> FLAGS["Private group flags and low24"]
-    FLAGS --> CLAMP["Registered group S24 clamp"]
-    CLAMP --> VECTOR["Selected vector lane"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class WEIGHT,CODE,DECODE,DELTA,INTERP,FLAGS,VECTOR buffer;
-class MATH interface;
-class LUT,ROUND compute;
-class CLAMP output;
-```
+Current RTL replacement; surrounding discussion is historical.
+
+![full_rtl_development — detail 2](../diagrams/previews/11_full_rtl_development_3.svg)
+
+[Editable draw.io — full_rtl_development — detail 2](../diagrams/architecture.drawio) · Page `11_full_rtl_development_3`.
 
 QSF selects an ordinary LVDS input buffer for clk, feeding direct GCLK without
 PLL, DLL, SERDES or ALTLVDS. This requires a100MHz differential source and a

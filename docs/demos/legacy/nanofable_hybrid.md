@@ -41,46 +41,9 @@ Checkpoint safetensors lưu weight ternary đã dequantize dưới dạng FP16. 
 
 ## Luồng kiểm chứng
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
-    A["Pinned checkpoint and tokenizer"] --> B["CPU executes the NanoFable graph"]
-    B --> C["3 prompt · greedy 32 token<br/>Repeat and compare tokens"]
-    B --> D["28 linears; six activations per tensor<br/>Prompt and continuation"]
-    D --> E["S8 absmax + scale M/r<br/>reference S32 F16"]
-    E --> F["Host loads each tensor<br/>RTL TMATMUL and HALT"]
-    F --> G["168 runs; 33792 outputs<br/>Compare bit-exact outputs and flags"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class F interface;
-class A,B,C,D buffer;
-class E compute;
-class G output;
-```
+![nanofable_hybrid — overview](../../diagrams/previews/02_nanofable_hybrid_1.svg)
+
+[Editable draw.io — nanofable_hybrid — overview](../../diagrams/architecture.drawio) · Page `02_nanofable_hybrid_1`.
 
 Mỗi prompt cung cấp hai context: prompt ban đầu và prompt nối với 32 token sinh ra. Hook lấy activation của token cuối tại từng linear. Input được lượng tử hóa absmax/127 với nearest-even thành S8; postscale đưa tích ternary về **S32 F16**. Reference dùng tích số nguyên và RNE độc lập; host đọc lại output, trạng thái và flags của core.
 

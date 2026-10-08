@@ -15,50 +15,9 @@
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- A["Operand A<br/>S16"] --> M["Signed multiply<br/>S16 × S17 → S33"]
- B["Operand B<br/>16-bit signed / unsigned"] --> E["Sign / zero extension"]
- E --> M
- M --> P["Raw product<br/>Low 32 bits"]
- M --> R["Scale / RNE<br/>Sign-extended S64"]
- R --> S["S16 saturation<br/>Result and overflow"]
- B -.-> G["Unsigned gate range<br/>Check above 0x8000"]
- G -.-> S
- C["Unsigned mode / rshift"] -.-> E & R & G
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class A,B interface;
-class E buffer;
-class M,R compute;
-class P,S output;
-class C,G control;
-```
+![mul.sv — overview](../../diagrams/previews/40_mul.sv_1.svg)
+
+[Editable draw.io — mul.sv — overview](../../diagrams/architecture.drawio) · Page `40_mul.sv_1`.
 
 ## Main flow
 

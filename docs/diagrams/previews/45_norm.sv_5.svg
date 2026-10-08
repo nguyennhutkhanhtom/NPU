@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="857" height="1668" viewBox="0 0 857 1668">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="857" height="1668" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">norm.sv — detail 4</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current legacy RTL; separate from llm_soc</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: norm.sv · clk / rst_n at module boundary; see configured parent port map</text>
+<polyline points="149.5,318 149.5,370 187.5,370 187.5,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="222.25,452 222.25,504 289.12,504 289.12,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="478.25,452 478.25,504 411.38,504 411.38,522" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="314.67,586 314.67,638 275.75,638 275.75,656" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="275.75,720 275.75,814" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="275.75,878 275.75,930 314.67,930 314.67,948" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="426.67,586 426.67,948" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="350.25,1012 350.25,1082" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="350.25,1146 350.25,1216" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="350.25,1280 350.25,1332 392.82,1332 392.82,1350" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="431.75,1414 431.75,1466 468.84,1466 468.84,1484" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="496.75,169 478.75,169 478.75,236 149.5,236 149.5,254" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="516.75,184 516.75,370 308.25,370 308.25,388" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="622.0,184 622.0,1332 517.75,1332 517.75,1350" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="661.17,184 661.17,1466 582.75,1466 582.75,1484" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<rect x="40" y="254" width="219" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="149.50" y="281.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Workspace scratch read port</text>
+<text x="149.50" y="298.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">256 bit = 8 S32 slots</text>
+<rect x="116.25" y="388" width="212" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="222.25" y="415.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Read buffer + two S24 lane</text>
+<text x="222.25" y="432.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">selectors</text>
+<rect x="223.25" y="522" width="254" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="350.25" y="549.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">P3_CAPTURE</text>
+<text x="350.25" y="566.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Operand S25 / shift U6 registers</text>
+<rect x="378.25" y="388" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="478.25" y="424.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">quant_m U24 / quant_r U6</text>
+<rect x="162.75" y="656" width="226" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="275.75" y="683.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Two shared multipliers in P3</text>
+<text x="275.75" y="700.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">z × quant_m</text>
+<rect x="175.75" y="814" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="275.75" y="841.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">P3_MUL</text>
+<text x="275.75" y="858.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Product registers S48</text>
+<rect x="250.25" y="948" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="350.25" y="984.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Shared RNE paths</text>
+<rect x="250.25" y="1082" width="200" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="350.25" y="1109.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">P3_ROUND</text>
+<text x="350.25" y="1126.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Rounded registers S64</text>
+<rect x="250.25" y="1216" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="350.25" y="1252.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S8 clamp</text>
+<rect x="325.75" y="1350" width="212" height="64" fill="#f5f5f5" stroke="#666666"/>
+<text x="431.75" y="1377.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">256-bit output pack buffer</text>
+<text x="431.75" y="1394.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">32 q values S8</text>
+<rect x="402.75" y="1484" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="502.75" y="1520.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Workspace q write port</text>
+<rect x="496.75" y="120" width="240" height="64" fill="#f8cecc" stroke="#b85450"/>
+<text x="616.75" y="147.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Read/write controller</text>
+<text x="616.75" y="164.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Address / lane / pack counters</text>
+<rect x="404.67" y="755.0" width="44" height="24" fill="white"/>
+<text x="426.67" y="771.00" font-family="Arial" font-size="11" text-anchor="middle" fill="#111111">Shift</text>
+<text x="30.00" y="1654.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

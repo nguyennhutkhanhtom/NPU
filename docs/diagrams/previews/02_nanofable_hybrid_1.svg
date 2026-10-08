@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="996" viewBox="0 0 800 996">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="800" height="996" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">nanofable_hybrid — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">historical software/application context; no RTL connectivity claim</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: matmulfree.sv · Software/application context; no RTL clock-domain claim</text>
+<polyline points="351.25,184 351.25,254" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="284.5,318 284.5,375.5 211.5,375.5 211.5,393.5" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="418.0,318 418.0,370 491,370 491,388" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="491,463 491,533" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="491,597 491,667" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="491,731 491,801" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="227.75" y="120" width="247" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="351.25" y="156.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Pinned checkpoint and tokenizer</text>
+<rect x="224.25" y="254" width="254" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="351.25" y="290.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">CPU executes the NanoFable graph</text>
+<rect x="105.5" y="393.5" width="212" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="211.50" y="421.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">3 prompt · greedy 32 token</text>
+<text x="211.50" y="438.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Repeat and compare tokens</text>
+<rect x="367.5" y="388" width="247" height="75" fill="#b1ddf0" stroke="#10739e"/>
+<text x="491.00" y="412.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">28 linears; six activations per</text>
+<text x="491.00" y="429.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">tensor</text>
+<text x="491.00" y="446.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Prompt and continuation</text>
+<rect x="391" y="533" width="200" height="64" fill="#b1ddf0" stroke="#10739e"/>
+<text x="491.00" y="560.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S8 absmax + scale M/r</text>
+<text x="491.00" y="577.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">reference S32 F16</text>
+<rect x="391" y="667" width="200" height="64" fill="#fff2cc" stroke="#d6b656"/>
+<text x="491.00" y="694.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host loads each tensor</text>
+<text x="491.00" y="711.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">RTL TMATMUL and HALT</text>
+<rect x="374.5" y="801" width="233" height="75" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="491.00" y="825.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">168 runs; 33792 outputs</text>
+<text x="491.00" y="842.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Compare bit-exact outputs and</text>
+<text x="491.00" y="859.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">flags</text>
+<text x="30.00" y="982.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

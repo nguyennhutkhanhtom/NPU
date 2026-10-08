@@ -13,48 +13,6 @@
 
 ## Sơ đồ kiến trúc
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- I["start / U64 radicand"] --> R["Radicand work register<br/>Shift left by two per step"]
- R --> A["Append next two bits<br/>U34 remainder_shift"]
- M["U34 remainder register"] --> A
- Q["U32 root register"] --> T["Trial: root shifted left two OR 1"]
- A --> S["U35 subtractor<br/>Borrow selects acceptance"]
- T --> S
- S --> M
- S --> Q
- C["Controller / 32-step counter"] -.-> R
- C -.-> Q
- C -.-> M
- Q --> O["root U32 / busy / done"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class C control;
-class I,R,M,Q,O buffer;
-class A,T,S compute;
-```
+![isqrt_u64.sv — overview](../../diagrams/previews/21_isqrt_u64.sv_1.svg)
+
+[Editable draw.io — isqrt_u64.sv — overview](../../diagrams/architecture.drawio) · Page `21_isqrt_u64.sv_1`.

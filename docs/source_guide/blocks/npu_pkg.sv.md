@@ -15,48 +15,9 @@
 
 ## Sơ đồ kiến trúc tổng quan
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
- subgraph DEFINITIONS["Compile-time package; no module instance"]
- S["Widths / descriptor<br/>types Compile-time definitions"]
- A["Pure arithmetic helpers<br/>RNE, shift and<br/>saturation"]
- C["Pure descriptor checks<br/>Words, bounds and<br/>overlap"]
- end
- S -.-> U["RTL callers Top,<br/>adapters and engines"]
- A & C -.-> U
- style DEFINITIONS fill:#ffffff,stroke:#aaaaaa,color:#111111;
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class S buffer;
-class A compute;
-class C control;
-class U interface;
-```
+![npu_pkg.sv — overview](../../diagrams/previews/47_npu_pkg.sv_1.svg)
+
+[Editable draw.io — npu_pkg.sv — overview](../../diagrams/architecture.drawio) · Page `47_npu_pkg.sv_1`.
 
 ## Main flow
 
@@ -102,48 +63,9 @@ class U interface;
 
 #### Sơ đồ khối phần cứng của nhóm
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#ffffff",
-    "primaryTextColor": "#111111",
-    "secondaryTextColor": "#111111",
-    "tertiaryTextColor": "#111111",
-    "lineColor": "#444444",
-    "clusterBkg": "#ffffff",
-    "clusterBorder": "#aaaaaa",
-    "edgeLabelBackground": "#ffffff",
-    "fontSize": "17px"
-  },
-  "flowchart": {
-    "curve": "linear",
-    "nodeSpacing": 30,
-    "rankSpacing": 40,
-    "htmlLabels": true,
-    "useMaxWidth": true
-  }
-}}%%
-flowchart TB
-    X["x signed S64"] --> SH["Arithmetic right shift<br/>q = floor(x / 2^shift)"]
-    R["shift U6"] -.-> SH
-    X --> BITS["Unsigned left shift by 64-shift<br/>7-bit shift amount<br/>guard=MSB · sticky=OR lower bits"]
-    R -.-> BITS
-    SH -->|"q LSB"| ROUND["Increment decision<br/>guard AND sticky-or-q-LSB"]
-    BITS --> ROUND
-    SH --> ADD["Signed q + increment"]
-    ROUND -.-> ADD
-    ADD --> OUT["RNE signed S64<br/>shift=0: output=input"]
-classDef control fill:#f8cecc,stroke:#b85450,color:#111111;
-classDef interface fill:#fff2cc,stroke:#d6b656,color:#111111;
-classDef buffer fill:#f5f5f5,stroke:#666666,color:#111111;
-classDef compute fill:#b1ddf0,stroke:#10739e,color:#111111;
-classDef output fill:#dae8fc,stroke:#6c8ebf,color:#111111;
-classDef platform fill:#e1d5e7,stroke:#9673a6,color:#111111;
-class X,ROUND,ADD buffer;
-class SH,R,BITS compute;
-class OUT output;
-```
+![npu_pkg.sv — detail 1](../../diagrams/previews/48_npu_pkg.sv_2.svg)
+
+[Editable draw.io — npu_pkg.sv — detail 1](../../diagrams/architecture.drawio) · Page `48_npu_pkg.sv_2`.
 
 ### [Dòng 84–102: RNE đúng độ rộng S42](<../../../Verilog%20Source%20code/npu_pkg.sv#L84>)
 

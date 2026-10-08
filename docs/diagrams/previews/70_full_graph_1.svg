@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1330" height="890" viewBox="0 0 1330 890">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="1330" height="890" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">full_graph — overview</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">current-RTL functional architecture</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_soc.sv · clk; raw rst_n → u_reset → core_rst_n</text>
+<polyline points="320,185 360,185" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="640,185 680,185" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="360,185 342,185 342,395 320,395" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="820,240 820,258 500,258 500,480" fill="none" stroke="#444444" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+<polyline points="360,535 342,535 342,395 320,395" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="360,535 342,535 342,565 320,565" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="360,535 342,535 342,735 320,735" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="640,535 658,535 658,395 680,395" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="640,535 658,535 658,565 680,565" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="640,535 658,535 658,735 680,735" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="640,535 658,535 658,493 982,493 982,565 1000,565" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="640,535 658,535 658,463 982,463 982,395 1000,395" fill="none" stroke="#444444" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="1140,340 1140,240" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="1000,185 982,185 982,113 658,113 658,185 640,185" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="40" y="130" width="280" height="110" fill="#fff2cc" stroke="#d6b656"/>
+<text x="180.00" y="180.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Host request / ACK</text>
+<text x="180.00" y="197.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">host_addr / wdata / rdata: 32 bits</text>
+<rect x="360" y="130" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="500.00" y="163.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Registered H_IDLE / EXEC / READ /</text>
+<text x="500.00" y="180.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">WAIT / DONE</text>
+<text x="500.00" y="197.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Prompt / config / output-token</text>
+<text x="500.00" y="214.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">registers</text>
+<rect x="680" y="130" width="280" height="110" fill="#f8cecc" stroke="#b85450"/>
+<text x="820.00" y="163.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Graph + 112-bit one-hot operator</text>
+<text x="820.00" y="180.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">control</text>
+<text x="820.00" y="197.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Ownership / cancellation /</text>
+<text x="820.00" y="214.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">completion drain</text>
+<rect x="40" y="340" width="280" height="110" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="180.00" y="382.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_parameters (llm_parameter_ram)</text>
+<text x="180.00" y="399.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">24576 × 256 bits; host 32-bit lane</text>
+<text x="180.00" y="416.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">access</text>
+<rect x="360" y="480" width="280" height="110" fill="#b1ddf0" stroke="#10739e"/>
+<text x="500.00" y="522.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent resource muxes</text>
+<text x="500.00" y="539.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Memory requests, operands and</text>
+<text x="500.00" y="556.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">returned results</text>
+<rect x="40" y="510" width="280" height="110" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="180.00" y="560.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_vectors (llm_bank_ram)</text>
+<text x="180.00" y="577.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">96 × 768 bits; 32 × S24 lanes</text>
+<rect x="40" y="680" width="280" height="110" fill="#e1d5e7" stroke="#9673a6"/>
+<text x="180.00" y="730.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_cache (llm_bank_ram)</text>
+<text x="180.00" y="747.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">4096 × 768 bits; causal K/V</text>
+<rect x="680" y="340" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="820.00" y="382.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent caches / payload registers</text>
+<text x="820.00" y="399.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Input 12 × 768; metadata / RoPE</text>
+<text x="820.00" y="416.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">reuse tags</text>
+<rect x="680" y="510" width="280" height="110" fill="#b1ddf0" stroke="#10739e"/>
+<text x="820.00" y="552.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_linear_engine</text>
+<text x="820.00" y="569.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Own ternary_dot32; four queued row</text>
+<text x="820.00" y="586.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">results</text>
+<rect x="680" y="680" width="280" height="110" fill="#b1ddf0" stroke="#10739e"/>
+<text x="820.00" y="722.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_head_engine / u_attention_engine</text>
+<text x="820.00" y="739.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent capture and shared SIMD</text>
+<text x="820.00" y="756.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">issue</text>
+<rect x="1000" y="510" width="280" height="110" fill="#b1ddf0" stroke="#10739e"/>
+<text x="1140.00" y="552.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">u_math STREAMING=1</text>
+<text x="1140.00" y="569.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">32 S24 × S32; products S56 / sum</text>
+<text x="1140.00" y="586.00" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">S61</text>
+<rect x="1000" y="340" width="280" height="110" fill="#b1ddf0" stroke="#10739e"/>
+<text x="1140.00" y="390.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Parent scalar / vector epilogues</text>
+<text x="1140.00" y="407.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Tagged scale / RNE / clamp / pack</text>
+<rect x="1000" y="130" width="280" height="110" fill="#f5f5f5" stroke="#666666"/>
+<text x="1140.00" y="180.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Greedy / Gumbel selection</text>
+<text x="1140.00" y="197.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Output token buffer and feedback</text>
+<text x="30.00" y="876.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

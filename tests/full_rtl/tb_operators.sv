@@ -78,8 +78,15 @@ module tb_llm_operators;
     integer profile_context=0;
     integer op_cycles[0:111];
     integer linear_startup,linear_issue,linear_drain,head_startup,head_issue,head_drain;
+    integer head_rows_issued,head_rows_retired,head_max_flight,head_last_issue,head_interval_sum;
+    integer head_scale_cycles,head_credit_stalls,head_result_stalls,head_math_issues,head_profile_clock;
+    logic [31:0] head_checked_random;
+    logic signed [127:0] head_expected_scores [0:4095];
+    logic signed [127:0] head_reference_dot [0:1];
+    logic [31:0] scale=32'h00100000;
     bit profile_active=0;
     bit delay_linear_result=0;
+    bit delay_head_result=0;
     bit linear_extremes=0;
     always @(posedge clk) if(dut.core_rst_n && profile_active) begin
         for(integer s=0;s<112;s++) if(dut.op[s]) op_cycles[s]++;
@@ -93,12 +100,51 @@ module tb_llm_operators;
             else if(dut.u_head_engine.response_q==0) head_startup++;
             else head_drain++;
         end
+        if(dut.graph==dut.G_HEAD) begin
+            head_profile_clock++;
+            if(dut.head_math_issue) head_math_issues++;
+            if(dut.head_parameter_req && dut.head_parameter_address>=23040) head_scale_cycles++;
+            if(dut.head_parameter_req && dut.head_parameter_address<16384 &&
+               dut.head_parameter_address[1:0]==0) begin
+                if(head_rows_issued) head_interval_sum+=head_profile_clock-head_last_issue;
+                head_last_issue=head_profile_clock;head_rows_issued++;
+            end
+            if(head_rows_issued-head_rows_retired>head_max_flight)
+                head_max_flight=head_rows_issued-head_rows_retired;
+            if(dut.head_busy && dut.u_head_engine.reserved_rows==8 &&
+               dut.u_head_engine.request_chunk_q==0 && !dut.head_parameter_req) head_credit_stalls++;
+            if(dut.head_result_valid && !dut.head_feed) head_result_stalls++;
+            if(dut.u_head_engine.reserved_rows>8) $fatal(1,"Head result reservation overflow");
+            if(dut.head_feed) begin
+                if(dut.head_dot_acc!==39'(dut.head_result_row==42 ? head_reference_dot[0] :
+                   dut.head_result_row==4095 ? head_reference_dot[1] : 128'sd0) ||
+                   dut.head_result_coefficient!==24'(scale+(dut.head_result_row%8)*17))
+                    $fatal(1,"Head dot/packed-scale association row=%0d",dut.head_result_row);
+            end
+            if(dut.head_pipe_valid_q[3]) begin
+                automatic integer token_id=int'(dut.head_pipe_row_q[3]);
+                automatic real noise=-$ln(-$ln((real'(head_checked_random[31:24])+0.5)/256.0))*65536.0;
+                automatic integer gumbel=$rtoi(noise+(noise<0 ? -0.5 : 0.5));
+                if(dut.random_q!==head_checked_random) $fatal(1,"Head PRNG advancement row=%0d",token_id);
+                head_expected_scores[token_id]=rne((token_id==42 ? head_reference_dot[0] :
+                    token_id==4095 ? head_reference_dot[1] : 128'sd0)*(128'(scale)+(token_id%8)*17),128'd16777216)+
+                    (dut.temperature_q==0 ? 128'sd0 : rne(128'(gumbel)*dut.temperature_q,256));
+                head_checked_random=head_checked_random^(head_checked_random<<13);
+                head_checked_random=head_checked_random^(head_checked_random>>17);
+                head_checked_random=head_checked_random^(head_checked_random<<5);
+            end
+            if(dut.head_pipe_valid_q[5]) begin
+                if(dut.head_pipe_row_q[5]!==12'(head_rows_retired) ||
+                   dut.sampled_score_q!==64'(head_expected_scores[head_rows_retired]))
+                    $fatal(1,"Head ordered score/PRNG retirement row=%0d",head_rows_retired);
+                head_rows_retired++;
+            end
+        end
     end
     logic [31:0] head_reference_random;
     logic signed [127:0] head_reference_best;
     real head_reference_noise;
     integer head_reference_gumbel;
-    logic signed [127:0] head_reference_dot [0:1];
     always @(posedge clk) if(dut.core_rst_n) begin
         if(!$onehot0({dut.op[dut.O_P_REQ_IDX],dut.head_parameter_req,dut.linear_parameter_req}))
             $fatal(1,"Shared parameter SRAM has multiple owners");
@@ -116,7 +162,6 @@ module tb_llm_operators;
     logic signed [127:0] expected,acc,value;
     logic [255:0] packed_parameter;
     logic [767:0] packed_vector;
-    logic [31:0] scale=32'h00100000;
     logic [15:0] sigmoid_lut[0:256];
     function automatic logic signed [127:0] rne(input logic signed [127:0] n,input logic [127:0] d);
         logic [127:0] mag,q,r;
@@ -336,6 +381,9 @@ module tb_llm_operators;
         for(integer s=0;s<112;s++) op_cycles[s]=0;
         linear_startup=0;linear_issue=0;linear_drain=0;
         head_startup=0;head_issue=0;head_drain=0;
+        head_rows_issued=0;head_rows_retired=0;head_max_flight=0;head_last_issue=0;head_interval_sum=0;
+        head_scale_cycles=0;head_credit_stalls=0;head_result_stalls=0;head_math_issues=0;head_profile_clock=0;
+        head_checked_random=dut.random_q;
         profile_active=1;
         case(which)
             0: begin
@@ -365,9 +413,23 @@ module tb_llm_operators;
                     $fatal(1,"Overlapped linear result did not survive delayed consumption");
                 release dut.linear_result_ready; delay_linear_result=0;
             end
+            if(delay_head_result && dut.u_head_engine.retire_row_q==33) begin
+                force dut.head_result_ready=1'b0;
+                repeat(24) begin @(negedge clk);clocks++;end
+                if(!dut.head_result_valid || dut.u_head_engine.reserved_rows!=8)
+                    $fatal(1,"Head delayed result/reservation mismatch");
+                release dut.head_result_ready;delay_head_result=0;
+            end
         end
         if(!dut.op_done) $fatal(1,"Operator timeout which=%0d op=%0d",which,dut.op);
         profile_active=0;
+        if(which==9) begin
+            if(head_rows_issued!=4096 || head_rows_retired!=4096 || head_math_issues!=16384 ||
+               dut.head_busy || dut.head_pipe_valid_q!=0)
+                $fatal(1,"Head final row/pipeline drain mismatch");
+            $display("HEAD_STREAM_PROFILE rows=%0d math_issues=%0d row_interval_sum=%0d intervals=4095 max_rows_in_flight=%0d scale_read_cycles=%0d credit_stalls=%0d result_stalls=%0d",
+                head_rows_retired,head_math_issues,head_interval_sum,head_max_flight,head_scale_cycles,head_credit_stalls,head_result_stalls);
+        end
         if(which==1 || which==9 || which==10 || which==11) begin
             $display("SCHEDULE_PROFILE operator=%0d context=%0d temperature=%0d cycles=%0d linear_startup=%0d linear_issue=%0d linear_drain=%0d head_startup=%0d head_issue=%0d head_drain=%0d",which,dut.position_q+1,dut.temperature_q,clocks,linear_startup,linear_issue,linear_drain,head_startup,head_issue,head_drain);
             for(integer s=0;s<112;s++) if(op_cycles[s]) $display("SCHEDULE_STATE operator=%0d state=%0d cycles=%0d",which,s,op_cycles[s]);
@@ -385,6 +447,42 @@ module tb_llm_operators;
             endcase
         end
         transactions++;
+    endtask
+    task automatic check_head_abort(input integer boundary,input bit cancel);
+        integer waits;
+        logic [31:0] held_random;
+        logic [11:0] held_best;
+        reset_fixture();
+        force dut.graph=dut.G_HEAD;
+        waits=0;
+        while(waits<20000 && !(boundary==0 ? dut.u_head_engine.parameter_pending_q>=2 :
+              boundary==1 ? dut.head_math_issue :
+              boundary==2 ? dut.head_pipe_valid_q[0] :
+              boundary==3 ? dut.head_pipe_valid_q[3] :
+              boundary==4 ? dut.head_pipe_valid_q[5] :
+              dut.head_pipe_valid_q[5] && dut.head_pipe_row_q[5]==4095)) begin
+            @(negedge clk);waits++;
+        end
+        if(waits==20000) $fatal(1,"Head abort boundary timeout boundary=%0d",boundary);
+        held_random=dut.random_q;held_best=dut.best_token_q;
+        if(cancel) begin
+            force dut.op_fault_q=1'b1;force dut.op=dut.O_FINISH;
+            #1;release dut.op_fault_q;release dut.op;
+            waits=0;
+            while(!dut.op_done && waits<64) begin @(negedge clk);waits++;end
+            if(!dut.op_done || dut.head_busy || dut.head_pipe_valid_q!=0 ||
+               dut.head_result_valid || dut.head_math_issue || dut.random_q!==held_random ||
+               dut.best_token_q!==held_best || dut.u_head_engine.parameter_pending_q!=0 ||
+               dut.u_head_engine.math_pending_q!=0)
+                $fatal(1,"Head cancel leaked work boundary=%0d",boundary);
+        end else begin
+            rst_n=0;release dut.graph;repeat(3) @(negedge clk);
+            rst_n=1;repeat(3) @(negedge clk);
+            if(dut.head_busy || dut.head_pipe_valid_q!=0 || dut.head_result_valid ||
+               dut.head_math_issue || dut.random_q!==32'd1 || dut.op!==dut.O_IDLE)
+                $fatal(1,"Head reset leaked work boundary=%0d",boundary);
+        end
+        checks++;
     endtask
     task automatic check_linear_shape(input integer columns,rows,buffer_id,meta,phase,dst);
         reset_fixture();
@@ -822,6 +920,13 @@ module tb_llm_operators;
             value=rne(head_reference_dot[0]*(128'(scale)+34),128'd16777216);
             if(dut.best_score_q!==value[31:0]) $fatal(1,"Greedy exact head score mismatch");
             checks++;
+        end
+        reset_fixture();delay_head_result=1;
+        begin_operator(9);
+        if(dut.best_token_q!==12'd42 || dut.best_score_q!==head_reference_best[31:0] ||
+           dut.random_q!==head_reference_random) $fatal(1,"Backpressured head changed output");
+        for(integer boundary=0;boundary<6;boundary++) begin
+            check_head_abort(boundary,0);check_head_abort(boundary,1);
         end
         reset_fixture();
         packed_parameter=0;packed_parameter[14:0]=16384;packed_parameter[24:15]=128;
