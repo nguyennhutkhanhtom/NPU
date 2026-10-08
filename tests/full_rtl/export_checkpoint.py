@@ -30,7 +30,7 @@ def main():
     if sys.platform != 'linux' or not os.environ.get('SLURM_JOB_ID'):
         parser.error('Reference inference requires Linux in an approved Slurm compute allocation')
     import socket, subprocess
-    nodes = subprocess.check_output(['scontrol', 'show', 'hostnames', os.environ['SLURM_JOB_NODELIST']], text=True).split()
+    nodes = subprocess.check_output(['scontrol', 'show', 'hostnames', os.environ['SLURM_JOB_NODELIST']], universal_newlines=True).split()
     if socket.gethostname().split('.')[0] not in nodes:
         parser.error('Current host is outside the Slurm allocation')
     if args.output.exists():

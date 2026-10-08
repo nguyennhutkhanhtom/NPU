@@ -17,7 +17,9 @@ local ModelSim/Questa/Verilator/Quartus đã ngừng hoạt động.
 
 Theo [runbook riêng](../../SERVER_ACCESS.md) trước kết nối; không commit/upload
 runbook hoặc credential. Transfer và allocation cần authorization phù hợp.
-Module Genus, Liberty và quyền transfer chưa được xác nhận cho migration này.
+Transfer đã được người dùng xác nhận cho phép; X11 và modules Xcelium/Genus đã
+được kiểm tra trên `black`. Dùng launcher `slurm_x11.sh` từ SSH hoặc RDP và giữ
+`--x11`; Liberty vẫn cần xác nhận trước synthesis.
 `--check-inputs` kiểm tra file/config/manifest, không phải simulator hay synthesis PASS.
 
 Reports nằm ở `reports/TAG`, database ở `build/TAG`. Tags mới bắt buộc; runner

@@ -19,6 +19,9 @@ Không dùng các runner PowerShell local; chúng trả lỗi hướng sang flow
 | host_cancel_contract.sv | tb_host_cancel_contract | Accepted portable SRAM commit trước ACK và cancel |
 
 Default `--stage test` chạy cả 9 nhóm. `--only TOP ...` chỉ là selected PASS.
+Runner truyền đường dẫn tuyệt đối của `sigmoid_257.mem` bằng `+SIGMOID_LUT=...`;
+operator fixture từ chối LUT bị thiếu trước kiểm tra số học. Database riêng của
+từng top không phụ thuộc working directory gốc của checkout.
 Memory coverage của FPGA-IP equivalence trước đây được giữ trong evidence cũ;
 flow hiện tại không kiểm chứng FPGA IP và không dùng library altera_mf.
 

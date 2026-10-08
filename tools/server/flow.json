@@ -2,7 +2,7 @@
   "packages": ["npu_pkg.sv", "llm_pkg.sv"],
   "legacy": ["host", "scalar", "divprofiles", "postscale", "sigmoid", "arithmetic", "rowwise", "imem", "sram"],
   "exclude": ["quartus_word_ram.sv"],
-  "modules": {"simulation": "cadence/xcelium/2409", "synthesis": null},
+  "modules": {"simulation": "cadence/xcelium/2409", "synthesis": "cadence/genus/211"},
   "tests": [
     {"file": "tb_memory_ip.sv", "top": "tb_llm_memory", "marker": "LLM_MEMORY_PASS"},
     {"file": "tb_math.sv", "top": "tb_llm_math", "marker": "LLM_MATH_PASS"},

@@ -14,8 +14,8 @@ máy người dùng trước khi kết nối; file này chứa secret và không
 | `tools/server/genus.tcl` | Read/elaborate/check/syn_generic/syn_map/syn_opt và xuất reports |
 | `tools/server/run_flow.py` | Preflight, lựa chọn stage/top, log và hash provenance |
 
-Module `cadence/xcelium/2409` lấy từ hướng dẫn lab, chưa xác nhận trên compute
-node cho migration này. `modules.synthesis` để `null` cho đến khi xác nhận Genus.
+Đã xác nhận `cadence/xcelium/2409` và `cadence/genus/211` trên compute node `black`
+trong Slurm job `64315`; các version nằm trong `flow.json`.
 Liberty `.lib` phải do lab cung cấp, truyền `--lib` cho từng library; không đoán
 module, technology/process corner hoặc cài phần mềm. Có thể tự load modules rồi
 gọi Python trực tiếp; wrapper `run.sh` dùng cấu hình JSON.
@@ -37,9 +37,44 @@ echo "$SLURM_JOB_ID"
 module avail
 ```
 
-Chỉ đổi node hoặc bỏ `--x11` sau khi xác nhận chính sách lab. Phiên tối đa 5 giờ
+Giữ `--x11` bắt buộc; không có fallback bỏ flag này. Phiên tối đa 5 giờ
 theo hướng dẫn. Login node chỉ dùng thao tác nhẹ; runner kiểm tra Linux, job ID
 và hostname thuộc node list, không tự cấp allocation.
+
+### SSH có X11 từ phiên Remote Desktop của cùng tài khoản
+
+SSH không bị cấm chạy `srun --x11`. Lỗi `No DISPLAY variable set` xảy ra khi SSH
+chưa có display xác thực. Máy Windows hiện không có X server local; phiên RDP
+Linux đang hoạt động của cùng tài khoản cung cấp display dùng được. Probe từ SSH
+đã xác nhận `xdpyinfo` trên login node, allocation `64315` trên `black` và
+`COMPUTE_X11_CONNECTION_OK` với display Slurm `localhost:98.0`.
+
+Sau transfer được phép và authorization chạy job, từ terminal Windows:
+
+```powershell
+ssh -t ee5303_09@red.doelab.site 'bash -l "$HOME/project/test_khanh/bundle_TAG/tools/server/slurm_x11.sh" test --tag test_next'
+```
+
+`slurm_x11.sh` dùng `resolve_x11.py` kiểm tra DISPLAY hiện tại hoặc display của
+process thuộc **chính UID**, xác thực bằng `xdpyinfo`, rồi chạy
+`srun --pty --x11 --nodelist=black -c 2` với giới hạn 5 giờ. Script không ghi cứng
+display, không in cookie, không sửa Xauthority, không dùng `xhost +`, không mở
+port hay đổi sshd. Nó fail trước allocation nếu không có display hợp lệ.
+`run.sh` và Python runner kiểm tra kết nối X11 một lần nữa trên compute node.
+
+Nếu phiên RDP/X11 đã đóng, mở lại desktop của tài khoản rồi thử launcher. Cũng
+có thể dùng SSH `-X` khi có X server local và forwarding hoạt động; không tự gán
+DISPLAY giả. Theo [OpenSSH](https://man.openbsd.org/ssh.1) và
+[Slurm srun](https://slurm.schedmd.com/srun.html), SSH forwarding và Slurm X11
+là hai bước riêng. Login node hiện không có `module`; module chỉ được load sau
+allocation trên compute node.
+
+Trong terminal của Remote Desktop cũng dùng cùng launcher:
+
+```bash
+cd "$HOME/project/test_khanh/bundle_TAG"
+bash -l tools/server/slurm_x11.sh test --tag gui_test_next
+```
 
 Trong thư mục source trên compute node:
 
@@ -140,7 +175,40 @@ errors, tại `/home/yellow/ee5303_09/project/test_khanh/server_migration_f8983f
 Server preflight: `FLOW_INPUTS_VERIFIED files=58`. Cú pháp Python/Bash, file
 list/config và bundle hashes đã được kiểm tra; chưa phải EDA PASS.
 
-Shell login không có `module` hoặc `DISPLAY`. Lệnh Slurm có `--x11` bị từ chối:
-`No DISPLAY variable set, cannot setup x11 forwarding`. Chưa có allocation/job
-EDA. Tiếp tục sau khi X11 hoạt động hoặc lab xác nhận cho phép CLI bỏ `--x11`,
-rồi khám phá module compute và Liberty library. Không tự bỏ `--x11` để thử lại.
+Lỗi ban đầu do SSH thiếu DISPLAY đã được giải quyết bằng X11 của phiên RDP
+thuộc tài khoản. Slurm probe `64315` xác nhận X11 trên `black` và modules EDA;
+Allocation probe đã kết thúc. Mọi lượt mới giữ `--x11`; full regression PASS
+được ghi bên dưới. Liberty library vẫn cần xác nhận trước mapped synthesis.
+
+Launcher cũng cấp thành công job `64316`. Runner dừng trước EDA vì Python 3.6
+trên compute không hỗ trợ keyword `subprocess(..., text=True)`; đã đổi sang
+`universal_newlines=True`. Launcher/full-graph stdlib flow tương thích Python 3.6; legacy reference cần
+Python 3.8+ (`math.isqrt`), checkpoint cần Python/dependencies do lab cung cấp.
+
+Scoped job `64318` PASS hai nhóm memory (464 checks) và host cancel (14 checks)
+qua SSH/X11, zero simulator diagnostics. Evidence đã download và xác minh mọi
+report/frozen input SHA256 tại
+[`server_x11_20261008_verified`](../../tests/full_rtl/evidence/server_x11_20261008_verified/x11_scoped3_20261008/results.json).
+Xcelium NODNTW được sửa bằng input net type rõ ràng trong `postscale.sv`, không
+waive warnings và không đổi arithmetic.
+
+Full job `64319` pass memory/math/RAM/protocol/selection rồi dừng ở operators:
+fixture dùng đường dẫn LUT tương đối không tồn tại trong database riêng
+(`RMEMNOF`). Runner hiện truyền `+SIGMOID_LUT=` tuyệt đối; fixture fail sớm khi
+file thiếu, giữ nguyên expected arithmetic.
+
+**Full regression PASS:** job `64320`, `x11_full2_20261008`, trên black qua
+SSH/X11 đã kết thúc và giải phóng allocation. Đủ 9 nhóm, zero simulator
+diagnostics, `FLOW_COMPLETED` và `FULL_SERVER_REGRESSION_PASS`. Đã download và
+verify mọi report/frozen input SHA256, cùng current RTL/tests/runtime scripts:
+[`full server evidence`](../../tests/full_rtl/evidence/server_x11_full_20261008/x11_full2_20261008/results.json).
+Reports server còn nguyên tại
+`/home/yellow/ee5303_09/project/test_khanh/server_x11_lut_20261008/reports/x11_full2_20261008`.
+Không relaunch lượt đã hoàn tất. Synthesis chưa chạy; cần Liberty library được
+xác nhận. Legacy/application là gates riêng, chưa được kiểm chứng trong lượt này.
+
+Download riêng reports của tag được phép:
+
+```powershell
+./tools/server/get-reports.ps1 -AdminApprovedTransfer -RemoteRoot '~/project/test_khanh/server_x11_lut_20261008' -Tag x11_full2_20261008 -UseRunbookPassword
+```

@@ -70,7 +70,7 @@ If an RTL change makes a diagram inaccurate and diagram work is out of scope, re
 
 ## 5. Verification
 
-- Current flow on branch `remote`: read `tools/server/README.md`; run Xcelium/Genus only on an approved Linux Slurm compute node. Do not run local Quartus/ModelSim/Questa/Verilator entry points.
+- Current flow on branch `remote`: read `tools/server/README.md`; run Xcelium/Genus only on an approved Linux Slurm compute node with mandatory `--x11`. Use `slurm_x11.sh` from SSH or the account's RDP terminal; never omit `--x11`. Do not run local Quartus/ModelSim/Questa/Verilator entry points.
 - Run the smallest directly affected verification first with `tools/server/run_flow.py --stage test --only TOP --tag NEW_TAG`.
 - Run all nine full-graph groups (the seven original groups plus linear stream and host cancel) when shared behavior changed or the milestone requires it. Legacy regression uses `--stage legacy` only when implicated.
 - Do not rerun expensive regression/timing for unchanged source/configuration when valid matching evidence already exists.

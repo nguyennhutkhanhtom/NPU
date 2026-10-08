@@ -4,6 +4,19 @@
 
 ## At a glance
 
+Branch `remote` now runs Xcelium/Genus on Slurm with mandatory `--x11`.
+SSH/X11 probe on black succeeded; [scoped server evidence](../../tests/full_rtl/evidence/server_x11_20261008_verified/x11_scoped3_20261008/results.json)
+records job 64318: memory 464 checks and host cancellation 14 checks PASS,
+matching frozen RTL/test/report hashes and zero simulator diagnostics. These are
+two selected groups. [Full server regression evidence](../../tests/full_rtl/evidence/server_x11_full_20261008/x11_full2_20261008/results.json)
+now records all nine groups PASS in job 64320 on black with Xcelium 24.09-s005
+and mandatory X11. Downloaded report hashes, frozen bundle inputs and current
+RTL/tests/runtime scripts match. Zero simulator diagnostics; allocation and SSH
+session completed. Synthesis, legacy and application are separate unverified gates;
+mapped Genus synthesis still needs the lab Liberty library. See
+[server flow](../../tools/server/README.md#trạng-thái-migration).
+Prior FPGA and simulator evidence below belongs to its recorded source/configuration.
+
 Phase 1A RTL now streams consecutive linear rows with two parameter-word credits, four reserved row-result slots, and tagged validity through the existing scalar/pack registers. Architectural completion drains results, scalar validity and accepted writes. [Matching scoped evidence](../../tests/full_rtl/evidence/phase1a_20261008/results.json) records exact engine rows, backpressure, fault/drain/cancel/reset, and 1,920 SRAM/scaling/RNE/saturation/packing checks. ModelSim compilation has zero errors and nine checking warnings; the scoped SoC fixture retains the same 32 force-select warnings as the preserved baseline.
 
 | Existing numeric fixture | Before cycles | Phase 1A cycles | Parameter reads / vector writes (unchanged) |

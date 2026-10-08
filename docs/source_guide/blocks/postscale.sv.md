@@ -7,6 +7,9 @@
 
 **Source:** [postscale.sv](<../../../Verilog%20Source%20code/postscale.sv>).
 
+Input ports khai báo rõ `wire logic` dưới `default_nettype none` để Xcelium
+không phải suy luận net type (NODNTW). Width/signedness và arithmetic giữ nguyên.
+
 ## At a glance
 
 | Item | Description |

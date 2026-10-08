@@ -25,7 +25,7 @@ def main():
     for file in (ROOT / 'tests/full_rtl').iterdir():
         if file.is_file() and file.suffix == '.sv':
             files['tests/full_rtl/' + file.name] = file
-    for name in ('run_flow.py', 'run.sh', 'flow.json', 'genus.tcl', 'asic.sdc', 'README.md'):
+    for name in ('run_flow.py', 'run.sh', 'resolve_x11.py', 'slurm_x11.sh', 'flow.json', 'genus.tcl', 'asic.sdc', 'README.md'):
         files['tools/server/' + name] = ROOT / 'tools/server' / name
     for name in ('reference.py', 'tb_all.sv'):
         files['tests/' + name] = ROOT / 'tests' / name

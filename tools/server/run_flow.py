@@ -80,9 +80,13 @@ def main():
     import socket
     if sys.platform != 'linux' or not os.environ.get('SLURM_JOB_ID'):
         p.error('Compute stages require an existing Slurm allocation; do not run on the login node.')
-    nodes = subprocess.check_output(['scontrol', 'show', 'hostnames', os.environ['SLURM_JOB_NODELIST']], text=True).split()
+    nodes = subprocess.check_output(['scontrol', 'show', 'hostnames', os.environ['SLURM_JOB_NODELIST']], universal_newlines=True).split()
     if socket.gethostname().split('.')[0] not in nodes:
         p.error('Current host is outside the Slurm allocation')
+    if not os.environ.get('DISPLAY') or not shutil.which('xdpyinfo'):
+        p.error('Authenticated X11 is required; launch with srun --x11')
+    if subprocess.run(['xdpyinfo'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5).returncode:
+        p.error('Compute X11 connection failed; do not omit --x11')
     for tool in (['xrun'] if a.stage in ('test', 'application', 'legacy', 'all') else []) + (['genus'] if a.stage in ('syn', 'all') else []):
         if not shutil.which(tool):
             p.error('Missing tool on PATH: ' + tool + '; load the lab module in your allocated shell')
@@ -107,6 +111,8 @@ def main():
     build.mkdir(parents=True)
     results = {'status': 'RUNNING', 'stage': a.stage, 'slurm_job_id': os.environ['SLURM_JOB_ID'],
                'started_utc': datetime.now(timezone.utc).isoformat(), 'node': socket.gethostname(),
+               'display': os.environ['DISPLAY'], 'x11_connection': 'VERIFIED',
+               'python_version': sys.version,
                'bundle_manifest_sha256': digest(manifest_path) if manifest_path.exists() else None,
                'inputs': manifest['files'], 'commands': [], 'tests': {},
                'scope': 'New server evidence; separate from local FPGA gates and ASIC physical signoff'}
@@ -166,7 +172,8 @@ def main():
             tool_log = report / (top + '.log')
             run(['xrun', '-64bit', '-timescale', '1ns/1ps', '-access', '+rwc', '-top', top,
                  '-xmlibdirname', str(working / 'xcelium.d'), '+incdir+' + str(rtl),
-                 '+incdir+' + str(include), '-f', str(listing), '-l', str(tool_log)], log, working)
+                 '+incdir+' + str(include), '+SIGMOID_LUT=' + str(rtl / 'sigmoid_257.mem'),
+                 '-f', str(listing), '-l', str(tool_log)], log, working)
             text = log.read_text(errors='replace') + (tool_log.read_text(errors='replace') if tool_log.exists() else '')
             if not re.search(r'\b' + marker + r'\b', text) or re.search(r'\*[EFW],|\*\*\s+(?:Error|Fatal|Warning)|\$fatal', text):
                 raise RuntimeError('Missing completion marker or simulator diagnostic: ' + top)

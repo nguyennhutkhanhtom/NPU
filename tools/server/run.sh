@@ -3,11 +3,14 @@
 set -euo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.."
 : "${SLURM_JOB_ID:?Run inside an approved Slurm compute allocation}"
+: "${DISPLAY:?X11 must be available; keep --x11 on srun}"
+xdpyinfo >/dev/null 2>&1 || { echo 'Compute X11 connection failed' >&2; exit 1; }
+printf 'NPU_COMPUTE_JOB_ID=%s NODE=%s DISPLAY=%s\n' "$SLURM_JOB_ID" "$(hostname)" "$DISPLAY"
 if ! type module >/dev/null 2>&1; then
     echo 'module is unavailable; initialize the lab environment in your allocated shell.' >&2
     exit 1
 fi
-# Discovery first; the guide supplies Xcelium only, Genus must be confirmed.
+# Modules confirmed on black during the X11 probe; keep versions in flow.json.
 stage=${1:-test}
 if [[ $# -gt 0 ]]; then shift; fi
 case "$stage" in

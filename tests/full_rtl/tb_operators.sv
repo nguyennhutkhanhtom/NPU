@@ -487,7 +487,14 @@ module tb_llm_operators;
         for(integer row=0;row<128;row++) begin observe_v=7'(24+row/32);expect_lane(row%32,rne(acc,16));end
     endtask
     initial begin
-        $readmemh("Verilog Source code/sigmoid_257.mem",sigmoid_lut);
+        string lut_path;
+        integer lut_file;
+        if(!$value$plusargs("SIGMOID_LUT=%s",lut_path))
+            lut_path="Verilog Source code/sigmoid_257.mem";
+        lut_file=$fopen(lut_path,"r");
+        if(lut_file==0) $fatal(1,"Missing sigmoid reference LUT: %s",lut_path);
+        $fclose(lut_file);
+        $readmemh(lut_path,sigmoid_lut);
         // A scoped entry point retains the full operator suite below. It runs
         // the actual SRAM/epilogue/write-drain fixtures for Phase 1A alone.
         if($test$plusargs("linear_only")) begin

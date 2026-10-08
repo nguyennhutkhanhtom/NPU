@@ -1,10 +1,10 @@
 `default_nettype none
 module postscale (
-    input logic signed [17:0] acc,
-    input logic [23:0] scale_m,
-    input logic [5:0] scale_r,
-    input logic signed [31:0] bias,
-    input logic output_s32,
+    input wire logic signed [17:0] acc,
+    input wire logic [23:0] scale_m,
+    input wire logic [5:0] scale_r,
+    input wire logic signed [31:0] bias,
+    input wire logic output_s32,
     output logic signed [31:0] y_s32,
     output logic signed [15:0] y_s16,
     output logic overflow
@@ -26,9 +26,9 @@ endmodule
 // Reused by the combinational reference interface above and the registered
 // ternary datapath. An S42 rounded product plus S32 bias fits exactly in S43.
 module postscale_finish (
-    input logic signed [41:0] rounded,
-    input logic signed [31:0] bias,
-    input logic output_s32,
+    input wire logic signed [41:0] rounded,
+    input wire logic signed [31:0] bias,
+    input wire logic output_s32,
     output logic signed [31:0] y_s32,
     output logic signed [15:0] y_s16,
     output logic overflow
