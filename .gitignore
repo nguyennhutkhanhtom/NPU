@@ -1,5 +1,6 @@
 # Local-only folders. Keep their contents on this computer, not in GitHub.
 /SERVER_ACCESS.md
+/tools/server/.local/
 /ee5303_09.conf
 /build/
 /reports/

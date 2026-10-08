@@ -5,16 +5,16 @@ param(
     [Parameter(Mandatory=$true)][ValidatePattern('^[A-Za-z0-9_./~-]+$')][string]$RemoteRoot,
     [switch]$AdminApprovedTransfer,
     [string]$OutputDirectory = (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'tests/full_rtl/build/server_reports'),
-    [switch]$UseRunbookPassword,
-    [string]$RunbookPath = (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'SERVER_ACCESS.md')
+    [Alias('UseRunbookPassword')][switch]$UseSavedPassword,
+    [Alias('RunbookPath')][string]$CredentialPath = (Join-Path $PSScriptRoot '.local/credentials.json')
 )
 $ErrorActionPreference = 'Stop'
 if (-not $AdminApprovedTransfer) { throw 'Administrator authorization for report transfer is required.' }
 $auth = $null
 $ssh = (Get-Command ssh.exe).Source
-if ($UseRunbookPassword) {
+if ($UseSavedPassword) {
     . (Join-Path $PSScriptRoot 'ssh-auth.ps1')
-    $auth = New-NpuSshAuth 'red.doelab.site' 'ee5303_09' $RunbookPath
+    $auth = New-NpuSshAuth 'red.doelab.site' 'ee5303_09' $CredentialPath
     $ssh = $auth.Ssh
 }
 $null = New-Item -ItemType Directory -Path $OutputDirectory -Force

@@ -11,8 +11,8 @@ param(
     [ValidatePattern('^[A-Za-z0-9.-]+$')][string]$Server = 'red.doelab.site',
     [ValidatePattern('^[A-Za-z0-9_.-]+$')][string]$User = 'ee5303_09',
     [ValidateRange(1, 65535)][int]$Port = 22,
-    [switch]$UseRunbookPassword,
-    [string]$RunbookPath = (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'SERVER_ACCESS.md')
+    [Alias('UseRunbookPassword')][switch]$UseSavedPassword,
+    [Alias('RunbookPath')][string]$CredentialPath = (Join-Path $PSScriptRoot '.local/credentials.json')
 )
 
 $ErrorActionPreference = 'Stop'
@@ -41,7 +41,8 @@ if ($source.PSIsContainer) {
 } else { $entries = @($source) }
 foreach ($entry in $entries) {
     if ($entry.Name -in @('SERVER_ACCESS.md', 'ee5303_09.conf') -or
-        ($entry.PSIsContainer -and $entry.Name -in @('.git', '.ssh', '.aws'))) {
+        $entry.Name -eq 'credentials.json' -or
+        ($entry.PSIsContainer -and $entry.Name -in @('.git', '.ssh', '.aws', '.local'))) {
         throw "Protected local file/folder found: $($entry.FullName). Choose a source folder containing only files intended for transfer."
     }
 }
@@ -55,9 +56,9 @@ function Relative-Name($Entry) {
 }
 $ssh = (Get-Command ssh.exe -ErrorAction Stop).Source
 $auth = $null
-if ($UseRunbookPassword) {
+if ($UseSavedPassword) {
     . (Join-Path $PSScriptRoot 'ssh-auth.ps1')
-    $auth = New-NpuSshAuth $Server $User $RunbookPath
+    $auth = New-NpuSshAuth $Server $User $CredentialPath
     $ssh = $auth.Ssh
 }
 $start = New-Object System.Diagnostics.ProcessStartInfo

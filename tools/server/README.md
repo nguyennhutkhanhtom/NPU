@@ -2,8 +2,84 @@
 
 Đây là hướng dẫn chạy hiện tại trên branch `remote`. EDA chạy trên Linux compute
 node trong Slurm: **Xcelium (`xrun`) cho test, Genus cho synthesis**. Không dùng
-Quartus, ModelSim, Questa hoặc Verilator local. Đọc `SERVER_ACCESS.md` riêng trên
-máy người dùng trước khi kết nối; file này chứa secret và không được đưa lên Git/server.
+Quartus, ModelSim, Questa hoặc Verilator local. File này là điểm đọc duy nhất cho
+kết nối, SSH/X11, transfer, test và synthesis; `SERVER_ACCESS.md` đã được thay
+bằng thông báo chuyển hướng.
+
+## Kết nối và xác thực server
+
+| Thiết lập | Giá trị |
+|---|---|
+| VPN | WireGuard tunnel `ee5303_09`, đã bật trên máy thực thi SSH |
+| VPN config | `ee5303_09.conf`, chỉ lưu riêng ở local; không đọc/in/copy nội dung |
+| SSH host / port | `red.doelab.site`, TCP `22` |
+| Tài khoản Linux | `ee5303_09` |
+| Compute nodes | `black`, `gray`, `white`, cấp qua Slurm |
+| Task directory | `$HOME/project/test_khanh`, kiểm tra đường dẫn resolved/symlink trước khi ghi |
+| Remote Desktop | Cùng host/tài khoản, màu 16-bit theo hướng dẫn lab; giữ phiên X11 hoạt động |
+
+Người dùng bật VPN trên chính máy thực thi SSH; Codex không đọc VPN config hoặc
+đổi VPN/DNS. Kết nối từ sandbox/cloud không được mặc định là có VPN. Từ terminal:
+
+```powershell
+ssh ee5303_09@red.doelab.site
+```
+
+Xác minh host key với nguồn tin cậy khi gặp host mới/mismatch; không tự chấp nhận
+key lạ và không tắt host-key checking. Đổi mật khẩu lần đầu/MFA do người dùng
+thực hiện ở prompt tin cậy; không đoán hoặc retry mật khẩu bị từ chối.
+
+Mật khẩu không nằm trong Markdown. Dữ liệu xác thực local đã được tách vào
+`tools/server/.local/credentials.json`, ignored bởi Git, ACL chỉ cho tài khoản
+Windows hiện tại và SYSTEM. Không đọc/in mật khẩu, commit, upload hay đưa nó vào
+command arguments, environment, transcript hoặc logs. File lưu thông tin
+`host`, `user`, `password`; nếu cần cập nhật thì chỉ sửa riêng tại local, không
+chép giá trị vào tài liệu. Có thể bỏ `-UseSavedPassword` và dùng prompt SSH thủ công.
+
+Sau đợt gộp tài liệu, credential đã được chuyển và kiểm tra readback tại local;
+kiểm tra cú pháp helper đạt. Lần thử SSH bằng credential này bị server từ chối
+(`Permission denied`); chưa xác nhận lại login. Kiểm tra/cập nhật mật khẩu hiện
+tại trực tiếp trong file local hoặc ở SSH prompt, không gửi giá trị vào chat.
+Không retry tự động khi chưa có thông tin xác thực mới. Kết quả regression đã
+ghi trước đó vẫn thuộc phiên/source được lưu trong evidence, không phải lần login này.
+
+`ssh-auth.ps1` dùng Git for Windows SSH và temporary askpass helper: đọc JSON
+trong bộ nhớ, chỉ trả mật khẩu vào đúng prompt của tài khoản/host trên. Không
+chạy helper standalone; stdout chỉ được SSH tiêu thụ. Helper được xóa sau phiên,
+environment chỉ được đặt cho process SSH. `DISPLAY=codex:0` của askpass là giá trị
+local để bật helper, không phải display X11 trên server; X11 thật được xác thực
+riêng bằng launcher bên dưới. Dùng `StrictHostKeyChecking=yes`, known_hosts của
+người dùng, timeout 10 giây và tối đa một password prompt.
+
+### Phạm vi thao tác
+
+SSH login, kiểm tra chỉ đọc và chỉnh sửa liên quan task đã được người dùng cho
+phép trong phiên làm việc; không cần hỏi lại cùng thao tác đã được cho phép.
+Authorization chỉ áp dụng cho task hiện tại, không phải quyền làm việc khác.
+Transfer, Slurm allocation và job dài cần authorization tương ứng; không tự đổi
+VPN, cài phần mềm, đổi account/security hoặc commit/push nếu chưa được yêu cầu.
+
+Remote writes giới hạn ở `.sv`, `.md` liên quan task và các file trong resolved
+`$HOME/project/test_khanh`. Giữ work/evidence cũ; không xóa hoặc ghi đè phá hủy.
+Không chạy compute nặng trên login node. Xác nhận connection, allocation,
+module, tool và output từ kết quả thực tế; không coi tài liệu là EDA PASS.
+
+SFTP/SCP mặc định bị lab hạn chế. Chỉ dùng phương thức admin đã cho phép; không
+đổi giao thức hoặc tunnel để vượt hạn chế. Trong phiên migration này, người dùng
+đã xác nhận quyền dùng scripts copy/download SSH. Khi gặp từ chối transfer,
+dừng và liên hệ admin. Không nới quyền từ một hướng dẫn Markdown.
+
+### Xử lý lỗi kết nối
+
+| Lỗi | Kiểm tra tiếp |
+|---|---|
+| Không resolve/timeout | VPN trên cùng máy/network namespace; dùng escalation bình thường nếu sandbox không có network |
+| Host key mismatch | Dừng để người dùng/admin xác minh, không disable checking |
+| Authentication rejected | Kiểm tra credential hiện tại; không retry nếu chưa có thông tin mới |
+| `module` không có trên login node | Cấp compute node trước; module đã được xác nhận trên black |
+| X11 thiếu DISPLAY | Giữ `--x11`; dùng phiên RDP/X11 của chính tài khoản qua launcher bên dưới |
+| Slurm thiếu tài nguyên | Kiểm tra availability/policy của black/gray/white, không tạo nhiều phiên hoặc request lặp |
+| Transfer bị từ chối | Xác nhận quyền admin cho đúng phương thức, không tìm cách vượt chặn |
 
 ## Cấu hình cần sửa khi đổi môi trường
 
@@ -22,7 +98,7 @@ gọi Python trực tiếp; wrapper `run.sh` dùng cấu hình JSON.
 
 ## Chuẩn bị source và phiên làm việc
 
-1. Bật VPN theo runbook, dùng SSH với host key đã xác minh. Không đổi VPN/DNS.
+1. Bật VPN theo phần kết nối ở trên, dùng SSH với host key đã xác minh. Không đổi VPN/DNS.
 2. Chỉ truyền file bằng phương thức được admin cho phép. SFTP/SCP bị chặn mặc định;
    không dùng stream SSH/base64/tar, Git clone hay giao thức khác để vượt hạn chế.
    Bản GitHub là deliverable; việc lấy source lên server cũng phải theo chính sách lab.
@@ -160,11 +236,11 @@ không truyền file. Chạy source trực tiếp từ checkout cũng được.
 Sau khi admin cho phép phương thức SSH của script, copy từ PowerShell:
 
 ```powershell
-./tools/server/copy-via-ssh.ps1 -AdminApprovedTransfer -SourcePath tests/full_rtl/build/bundle_TAG -TargetPath '~/project/test_khanh/bundle_TAG' -UseRunbookPassword
+./tools/server/copy-via-ssh.ps1 -AdminApprovedTransfer -SourcePath tests/full_rtl/build/bundle_TAG -TargetPath '~/project/test_khanh/bundle_TAG' -UseSavedPassword
 ```
 
 Script chỉ nhận thư mục task dưới `~/project/test_khanh`, giữ file giống hash,
-từ chối file khác hash/symlink và bảo vệ runbook/VPN config. Password được SSH
+từ chối file khác hash/symlink và bảo vệ credentials/VPN config. Password được SSH
 askpass đọc trong bộ nhớ; không truyền trong command arguments hoặc bundle.
 
 ## Trạng thái migration
@@ -210,5 +286,5 @@ xác nhận. Legacy/application là gates riêng, chưa được kiểm chứng 
 Download riêng reports của tag được phép:
 
 ```powershell
-./tools/server/get-reports.ps1 -AdminApprovedTransfer -RemoteRoot '~/project/test_khanh/server_x11_lut_20261008' -Tag x11_full2_20261008 -UseRunbookPassword
+./tools/server/get-reports.ps1 -AdminApprovedTransfer -RemoteRoot '~/project/test_khanh/server_x11_lut_20261008' -Tag x11_full2_20261008 -UseSavedPassword
 ```

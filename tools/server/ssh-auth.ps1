@@ -1,9 +1,9 @@
 # Local-only SSH askpass setup. The password is read in memory by SSH's helper.
-function New-NpuSshAuth([string]$Server, [string]$User, [string]$RunbookPath) {
+function New-NpuSshAuth([string]$Server, [string]$User, [string]$CredentialPath) {
     if ($Server -ne 'red.doelab.site' -or $User -ne 'ee5303_09') {
-        throw 'Runbook password authentication is restricted to the documented lab account.'
+        throw 'Saved password authentication is restricted to the documented lab account.'
     }
-    $runbook = (Resolve-Path -LiteralPath $RunbookPath).Path
+    $credential = (Resolve-Path -LiteralPath $CredentialPath).Path
     $ssh = Join-Path $env:ProgramFiles 'Git/usr/bin/ssh.exe'
     if (-not (Test-Path -LiteralPath $ssh)) { throw 'Git for Windows SSH is required for askpass.' }
     $python = Join-Path $env:USERPROFILE '.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'
@@ -14,23 +14,23 @@ function New-NpuSshAuth([string]$Server, [string]$User, [string]$RunbookPath) {
     $helper = Join-Path $helperDir 'askpass.py'
     $shim = Join-Path $helperDir 'askpass.sh'
     $helperCode = @'
-import os, re, sys
+import json, os, sys
 if len(sys.argv) != 2 or sys.argv[1].strip() != "ee5303_09@red.doelab.site's password:":
     sys.exit(1)
-with open(os.environ['DOELAB_RUNBOOK'], encoding='utf-8') as f:
-    for line in f:
-        if line.startswith('| Linux account password (user-provided) |'):
-            match = re.search(r'`([^`]+)`', line)
-            if match:
-                sys.stdout.write(match.group(1) + '\n')
-                sys.exit(0)
-sys.exit(1)
+with open(os.environ['DOELAB_CREDENTIAL_FILE'], encoding='utf-8-sig') as f:
+    credential = json.load(f)
+if credential.get('host') != 'red.doelab.site' or credential.get('user') != 'ee5303_09':
+    sys.exit(1)
+password = credential.get('password', '')
+if not isinstance(password, str) or not password or '\n' in password or '\r' in password:
+    sys.exit(1)
+sys.stdout.write(password + '\n')
 '@
     [IO.File]::WriteAllText($helper, $helperCode, [Text.UTF8Encoding]::new($false))
     $shell = "#!/bin/sh`nexec `"$($python.Replace('\','/'))`" `"$($helper.Replace('\','/'))`" `"`$@`"`n"
     [IO.File]::WriteAllText($shim, $shell, [Text.UTF8Encoding]::new($false))
     [pscustomobject]@{ Ssh = $ssh; HelperDir = $helperDir; TempRoot = $tempRoot; Environment = @{
-        SSH_ASKPASS = $shim.Replace('\','/'); SSH_ASKPASS_REQUIRE = 'force'; DISPLAY = 'codex:0'; DOELAB_RUNBOOK = $runbook
+        SSH_ASKPASS = $shim.Replace('\','/'); SSH_ASKPASS_REQUIRE = 'force'; DISPLAY = 'codex:0'; DOELAB_CREDENTIAL_FILE = $credential
     } }
 }
 function Remove-NpuSshAuth($Auth) {

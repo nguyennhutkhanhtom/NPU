@@ -7,7 +7,7 @@
 - Prefer the smallest correct change. Avoid unrelated RTL, architecture, configuration, cleanup, or documentation changes.
 - Exception: documentation required to keep modified RTL synchronized is part of the RTL change.
 - Treat current repository source, configuration, tests, manifests, and matching generated evidence as the source of truth.
-- For server-related tasks, read `SERVER_ACCESS.md` first and follow its connection and security instructions.
+- For server-related tasks, read `tools/server/README.md` for connection, credentials handling, SSH/X11, Slurm, transfer and EDA flow. Do not read the retired `SERVER_ACCESS.md`; credentials are local-only in `tools/server/.local/credentials.json` and must never be printed or committed.
 
 ## 2. Context efficiency
 

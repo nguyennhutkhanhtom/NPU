@@ -15,8 +15,8 @@ local ModelSim/Questa/Verilator/Quartus đã ngừng hoạt động.
 | Application | `--stage application --fixture PATH --tag TAG` | Functional checkpoint token matching |
 | Legacy shared RTL | `--stage legacy --tag TAG` | 9 legacy tops bằng Xcelium |
 
-Theo [runbook riêng](../../SERVER_ACCESS.md) trước kết nối; không commit/upload
-runbook hoặc credential. Transfer và allocation cần authorization phù hợp.
+Theo [hướng dẫn server](../../tools/server/README.md) trước kết nối; không
+commit/upload credential hoặc VPN config. Transfer và allocation cần authorization phù hợp.
 Transfer đã được người dùng xác nhận cho phép; X11 và modules Xcelium/Genus đã
 được kiểm tra trên `black`. Dùng launcher `slurm_x11.sh` từ SSH hoặc RDP và giữ
 `--x11`; Liberty vẫn cần xác nhận trước synthesis.
