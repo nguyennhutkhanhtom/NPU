@@ -122,9 +122,25 @@ tests/full_rtl/build/bundle_TAG` (thêm `--application` để lấy fixtures đ�
 bị trong `tests/full_rtl/build`). Bundle loại secret/vendor model/evidence và
 không truyền file. Chạy source trực tiếp từ checkout cũng được.
 
+Sau khi admin cho phép phương thức SSH của script, copy từ PowerShell:
+
+```powershell
+./tools/server/copy-via-ssh.ps1 -AdminApprovedTransfer -SourcePath tests/full_rtl/build/bundle_TAG -TargetPath '~/project/test_khanh/bundle_TAG' -UseRunbookPassword
+```
+
+Script chỉ nhận thư mục task dưới `~/project/test_khanh`, giữ file giống hash,
+từ chối file khác hash/symlink và bảo vệ runbook/VPN config. Password được SSH
+askpass đọc trong bộ nhớ; không truyền trong command arguments hoặc bundle.
+
 ## Trạng thái migration
 
-SSH login và `srun` đã được xác nhận. Shell login không có `module`; chưa cấp
-Slurm/chưa truyền source/chưa chạy Xcelium hoặc Genus. Kiểm tra cú pháp/config
-và manifest không thay cho EDA PASS. Cần xác nhận module compute, Liberty và
-quyền transfer trước lần chạy server đầu tiên.
+Branch `remote` đã push commit source `f8983f4`. Sau khi người dùng xác nhận admin
+cho phép transfer, script copy đã xác nhận 59 file (58 inputs + manifest), zero
+errors, tại `/home/yellow/ee5303_09/project/test_khanh/server_migration_f8983f4`.
+Server preflight: `FLOW_INPUTS_VERIFIED files=58`. Cú pháp Python/Bash, file
+list/config và bundle hashes đã được kiểm tra; chưa phải EDA PASS.
+
+Shell login không có `module` hoặc `DISPLAY`. Lệnh Slurm có `--x11` bị từ chối:
+`No DISPLAY variable set, cannot setup x11 forwarding`. Chưa có allocation/job
+EDA. Tiếp tục sau khi X11 hoạt động hoặc lab xác nhận cho phép CLI bỏ `--x11`,
+rồi khám phá module compute và Liberty library. Không tự bỏ `--x11` để thử lại.
