@@ -1098,5 +1098,27 @@
     "preview": "previews/h_portable_pipelined_word_ram_2.svg",
     "markdown": null,
     "ordinal": null
+  },
+  {
+    "key": "33a_llm_soc_attention_value",
+    "title": "llm_soc — attention value datapath",
+    "source": "llm_soc.sv",
+    "scope": "Current RTL: pipelined attention value pass",
+    "kind": "functional",
+    "drawio": "architecture.drawio",
+    "preview": "previews/33a_llm_soc_attention_value.svg",
+    "markdown": "docs/source_guide/blocks/llm_soc.sv.md",
+    "ordinal": 4
+  },
+  {
+    "key": "33b_llm_soc_attention_control",
+    "title": "llm_soc — attention credits and completion",
+    "source": "llm_soc.sv",
+    "scope": "Current RTL: pipelined attention value pass",
+    "kind": "functional",
+    "drawio": "architecture.drawio",
+    "preview": "previews/33b_llm_soc_attention_control.svg",
+    "markdown": "docs/source_guide/blocks/llm_soc.sv.md",
+    "ordinal": 5
   }
 ]

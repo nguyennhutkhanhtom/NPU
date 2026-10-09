@@ -122,11 +122,29 @@ Phase 1B is DONE. Baseline/after Genus jobs 64352/64350 completed synthesis, map
 
 Critical paths remain in the shared `llm_math` product-to-first-reduction stage. The head remains parameter-bandwidth limited; synthesis timing has effectively no reported margin. RAM black boxes exclude SRAM area/timing, and these Genus results do not establish physical timing closure or a new FPGA Fmax.
 
-Evidence: [measured comparison](../tests/full_rtl/evidence/phase1b_20261008/metrics.json), [full remote results](../tests/full_rtl/evidence/phase1b_20261008/full/extracted/phase1b_full_20261008/results.json), [synthesis review](../tests/full_rtl/evidence/phase1b_20261008/synthesis_review.json), [baseline synthesis](../tests/full_rtl/evidence/phase1b_20261008/syn_baseline/extracted/phase1b_baseline_syn_final/results.json), [Phase 1B synthesis](../tests/full_rtl/evidence/phase1b_20261008/syn_after/extracted/phase1b_after_syn_20261008/results.json). Library SHA256: `dec616b7b53aa5166eac9660ba83561a4057ee3b7e62f59f3d4bebad495ffe10`. Phase 1C is CURRENT; no Phase 1C implementation was started.
+Evidence: [measured comparison](../tests/full_rtl/evidence/phase1b_20261008/metrics.json), [full remote results](../tests/full_rtl/evidence/phase1b_20261008/full/extracted/phase1b_full_20261008/results.json), [synthesis review](../tests/full_rtl/evidence/phase1b_20261008/synthesis_review.json), [baseline synthesis](../tests/full_rtl/evidence/phase1b_20261008/syn_baseline/extracted/phase1b_baseline_syn_final/results.json), [Phase 1B synthesis](../tests/full_rtl/evidence/phase1b_20261008/syn_after/extracted/phase1b_after_syn_20261008/results.json). Library SHA256: `dec616b7b53aa5166eac9660ba83561a4057ee3b7e62f59f3d4bebad495ffe10`. Phase 1C is CURRENT; implementation and scoped results are recorded below.
 
 - Phase 1A must measure linear-phase cycles, ternary-dot issue utilization, parameter stalls/utilization, row initiation interval, and Fmax.
 - Phase 1B must measure head cycles/token, rows in flight, weight/scale bandwidth, SIMD utilization, and selection/epilogue stalls.
 - Phase 1C must measure attention cycles versus context, KV bandwidth/stalls, `llm_math` utilization, and normalization share.
+
+### Phase 1C verification — closure pending
+
+`llm_soc` pipelines exact exp interpolation into eight reserved V-response slots and retires tagged SIMD lane products in timestep order. Q×K, shared arithmetic and exact normalization RTL are unchanged. Xcelium scoped job 64357 on black with mandatory X11 passes math, operators and host cancellation with zero simulator diagnostics. All 60 current/frozen runtime inputs and 13 report hashes match. Operators pass 113,131 checks, including independent per-timestep probabilities, signed products, running denominators/accumulators, exact outputs, contexts 1/2/4/7/8/9/127/128, score bubbles, forced SIMD backpressure and 20 reset/cancellation boundaries through final-product/reduction drain. Existing Phase 1A/1B operator checks retain PASS.
+
+| Attention fixture (four heads) | Phase 1B baseline | Phase 1C scoped |
+|---|---:|---:|
+| Context 4, total clocks | 2,762 | 2,482 (-10.14%) |
+| Context 128, total clocks | 15,162 | 3,474 (-77.09%) |
+| Context 128, value-loop clocks | 12,288 (derived: 24 × 128 × 4) | 600 (measured, includes drain) |
+| Timestep initiation interval | 24 clocks (derived schedule) | 1 clock (measured) |
+| Maximum timesteps in flight | 1 | 15; 17 with forced backpressure |
+
+Context-128 value-pass KV-request/product utilization is 512/600 = 85.33%, with zero steady-state credit/operand stalls. A 24-clock forced SIMD pause fills all eight reserved response slots, produces 22 credit-stall and 24 operand-stall clocks, and adds exactly 24 clocks without changing output. Seven score-bubble clocks add exactly seven clocks. KV traffic remains 1,024 reads (K plus V), with four query reads and four output writes. Normalization remains 2,248 clocks for four heads and occupies 64.71% of the improved context-128 attention pass.
+
+Full Xcelium job 64359 passes all nine groups with zero simulator diagnostics; all 60 current/frozen runtime inputs and 37 report hashes match. Exact graph tokens/causal behavior/traffic are preserved. Graph clocks decrease 280,602 → 278,330 (-0.81%); attention-phase clocks decrease 41,808 → 39,536 (-5.43%). The fixture generates three tokens after a two-token prompt: average clocks per generated token, including prefill, decrease 93,534 → 92,776.67. These short-context graph gains differ from the isolated context-128 attention improvement.
+
+Evidence: [scoped results](../tests/full_rtl/evidence/phase1c_20261009/scoped3/extracted/phase1c_scoped3_20261009/results.json), [full regression](../tests/full_rtl/evidence/phase1c_20261009/full/extracted/phase1c_full_20261009/results.json), [profiles](../tests/full_rtl/evidence/phase1c_20261009/metrics.json). Baseline Phase 1B regression/synthesis hashes and the unchanged 10 ns SDC were reverified. Matching Genus job 64360 on black with mandatory X11 completed all stages; all 60 input/12 report hashes and 352 intended SRAM black boxes are verified, with zero errors or unexpected unresolved modules. Mapped logic area is 870,961.790 (+6.43%), cell count 249,803 and reported 10 ns setup slack +16 ps; the 9,744 ps critical data path runs from SIMD product to lane accumulator. Library/SDC hashes match Phase 1B. [Synthesis review](../tests/full_rtl/evidence/phase1c_20261009/syn_checked/review.json). SRAM area/timing and physical closure are excluded; overall trade-off acceptance remains pending. See [continuation](../tests/full_rtl/build/scratchpad/phase1c_20261009/handoff.md). Phase 1C is not DONE; Phase 2 has not started. Genus timing is separate from physical timing closure.
 - Additional scratchpad ports/banks wait for measured simultaneous-client stalls; DMA buffer depth waits for measured compute time, transfer latency, and bytes/token.
 - A second clock waits for a real asynchronous interface requirement.
 - Wider tensor, activation, normalization, or multi-tile compute waits for evidence that memory and scheduling can keep it busy.

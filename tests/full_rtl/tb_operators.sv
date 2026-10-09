@@ -87,6 +87,13 @@ module tb_llm_operators;
     bit profile_active=0;
     bit delay_linear_result=0;
     bit delay_head_result=0;
+    bit delay_attention_math=0, bubble_attention_score=0;
+    bit attention_reference_active=0;
+    integer attention_context,attention_value_cycles,attention_norm_cycles;
+    integer attention_requests,attention_products,attention_max_flight,attention_credit_stalls,attention_operand_stalls;
+    integer attention_last_request,attention_interval_sum,attention_intervals,attention_abort_cases=0;
+    logic signed [127:0] attention_reference_scores[0:3][0:127],attention_reference_weights[0:3][0:127];
+    logic signed [127:0] attention_reference_sum,attention_reference_acc[0:31];
     bit linear_extremes=0;
     always @(posedge clk) if(dut.core_rst_n && profile_active) begin
         for(integer s=0;s<112;s++) if(dut.op[s]) op_cycles[s]++;
@@ -169,6 +176,85 @@ module tb_llm_operators;
         if(2*r>d || (2*r==d && q[0])) q++;
         return n<0 ? -$signed(q) : $signed(q);
     endfunction
+    task automatic prepare_attention_reference(input integer context_size,input bit nonuniform);
+        logic signed [127:0] maximum,difference,hi,lo;
+        attention_context=context_size;attention_reference_active=1;
+        for(integer h=0;h<4;h++) begin
+            maximum=-(128'd1<<31);
+            for(integer t=0;t<context_size;t++) begin
+                attention_reference_scores[h][t]=nonuniform ?
+                    rne(rne(128'((h%2 ? -2 : 3)*65536)*attention_key(t),65536)*11585,65536) : 0;
+                if(attention_reference_scores[h][t]>maximum) maximum=attention_reference_scores[h][t];
+            end
+            for(integer t=0;t<context_size;t++) begin
+                difference=maximum-attention_reference_scores[h][t];
+                if(difference>=1048576) attention_reference_weights[h][t]=0;
+                else begin
+                    hi=$rtoi($exp(-real'(difference/4096)/16.0)*16777216.0+0.5);
+                    lo=$rtoi($exp(-real'(difference/4096+1)/16.0)*16777216.0+0.5);
+                    attention_reference_weights[h][t]=hi-((hi-lo)*(difference%4096)+2048)/4096;
+                end
+            end
+        end
+    endtask
+    // Independently check every probability, tagged product, running sum and
+    // ordered accumulator, rather than relying only on normalized outputs.
+    always @(posedge clk) if(dut.core_rst_n && profile_active && attention_reference_active) begin
+        if(dut.attention_value_start) begin
+            attention_reference_sum=0;
+            for(integer i=0;i<32;i++) attention_reference_acc[i]=0;
+            attention_last_request=0;
+        end
+        if(dut.attention_value_run) begin
+            attention_value_cycles++;
+            if(dut.attention_value_reserved>8 ||
+               dut.attention_value_response_q>dut.attention_value_request_q ||
+               dut.attention_value_capture_q>dut.attention_value_response_q)
+                $fatal(1,"Attention reservation/response ordering");
+            if(dut.attention_value_score_q-dut.attention_value_retire_q>attention_max_flight)
+                attention_max_flight=dut.attention_value_score_q-dut.attention_value_retire_q;
+            if(dut.attention_exp_valid_q[3] && !dut.attention_value_req) attention_credit_stalls++;
+            if(dut.attention_value_response_q!=dut.attention_value_capture_q && !dut.attention_value_capture)
+                attention_operand_stalls++;
+            if(dut.attention_score_read && dut.attention_score!==32'(attention_reference_scores[dut.head_q][dut.attention_value_score_q]))
+                $fatal(1,"Attention score mismatch head=%0d t=%0d",dut.head_q,dut.attention_value_score_q);
+            if(dut.attention_value_req) begin
+                if(dut.attention_exp_time_q[3]!==7'(dut.attention_value_request_q) ||
+                   dut.attention_probability!==25'(attention_reference_weights[dut.head_q][dut.attention_value_request_q]) ||
+                   dut.probability_sum_q!==32'(attention_reference_sum) ||
+                   dut.k_read_address!=={dut.layer_q,dut.attention_exp_time_q[3],1'b1,dut.head_q})
+                    $fatal(1,"Attention probability/request alignment head=%0d t=%0d p=%0d expected=%0d",dut.head_q,dut.attention_value_request_q,dut.attention_probability,attention_reference_weights[dut.head_q][dut.attention_value_request_q]);
+                attention_reference_sum+=attention_reference_weights[dut.head_q][dut.attention_value_request_q];
+                if(dut.attention_value_request_q!=0) begin
+                    attention_interval_sum+=attention_value_cycles-attention_last_request;attention_intervals++;
+                end
+                attention_last_request=attention_value_cycles;attention_requests++;checks++;
+            end
+            if(dut.attention_value_accumulate) begin
+                if(dut.attention_product_time_q[3]!==7'(dut.attention_value_retire_q))
+                    $fatal(1,"Attention product tag mismatch");
+                for(integer i=0;i<32;i++) begin
+                    if(dut.attention_acc_q[i]!==56'(attention_reference_acc[i]) ||
+                       dut.math_product[i]!==56'(attention_reference_weights[dut.head_q][dut.attention_value_retire_q]*
+                           (dut.layer_q==3 ? attention_value(dut.head_q,dut.attention_value_retire_q,i) :
+                            int'(dut.head_q)*4096+int'(dut.attention_value_retire_q)*3+i-16)))
+                        $fatal(1,"Attention product/accumulator mismatch head=%0d t=%0d lane=%0d",dut.head_q,dut.attention_value_retire_q,i);
+                    attention_reference_acc[i]+=attention_reference_weights[dut.head_q][dut.attention_value_retire_q]*
+                        (dut.layer_q==3 ? attention_value(dut.head_q,dut.attention_value_retire_q,i) :
+                         int'(dut.head_q)*4096+int'(dut.attention_value_retire_q)*3+i-16);
+                    checks++;
+                end
+                attention_products++;
+            end
+        end
+        if(dut.op[dut.A_LANE_IDX] || dut.op[dut.A_NORM_WAIT_IDX]) attention_norm_cycles++;
+        if(dut.op[dut.A_LANE_IDX]) begin
+            if(dut.attention_value_active_q || dut.math_busy || dut.probability_sum_q!==32'(attention_reference_sum))
+                $fatal(1,"Attention normalization started before final sum/drain");
+            for(integer i=0;i<32;i++)
+                if(dut.attention_acc_q[i]!==56'(attention_reference_acc[i])) $fatal(1,"Attention final accumulator mismatch");
+        end
+    end
     function automatic logic signed [23:0] clamp24(input logic signed [127:0] n);
         return n>8388607 ? 24'sh7fffff : n< -8388608 ? 24'sh800000 : 24'(n);
     endfunction
@@ -220,6 +306,7 @@ module tb_llm_operators;
         return int'(rne($signed(n),4096));
     endfunction
     task automatic reset_fixture;
+        attention_reference_active=0;
         release dut.graph;
         @(negedge clk);rst_n=0;host_en=0;seed_v=0;seed_p=0;seed_k=0;round_seed=0;
         repeat(3) @(negedge clk);
@@ -384,6 +471,9 @@ module tb_llm_operators;
         head_rows_issued=0;head_rows_retired=0;head_max_flight=0;head_last_issue=0;head_interval_sum=0;
         head_scale_cycles=0;head_credit_stalls=0;head_result_stalls=0;head_math_issues=0;head_profile_clock=0;
         head_checked_random=dut.random_q;
+        attention_value_cycles=0;attention_norm_cycles=0;attention_requests=0;attention_products=0;
+        attention_max_flight=0;attention_credit_stalls=0;attention_operand_stalls=0;
+        attention_last_request=0;attention_interval_sum=0;attention_intervals=0;
         profile_active=1;
         case(which)
             0: begin
@@ -420,9 +510,29 @@ module tb_llm_operators;
                     $fatal(1,"Head delayed result/reservation mismatch");
                 release dut.head_result_ready;delay_head_result=0;
             end
+            if(delay_attention_math && dut.attention_value_request_q==16) begin
+                force dut.math_in_ready=1'b0;
+                repeat(24) begin @(negedge clk);clocks++;end
+                if(dut.attention_value_reserved!=8 || dut.attention_value_response_q-dut.attention_value_capture_q!=8)
+                    $fatal(1,"Attention response capacity under stalled SIMD");
+                release dut.math_in_ready;delay_attention_math=0;
+            end
+            if(bubble_attention_score && dut.attention_value_score_q==4) begin
+                force dut.attention_score_read=1'b0;
+                repeat(7) begin @(negedge clk);clocks++;end
+                release dut.attention_score_read;bubble_attention_score=0;
+            end
         end
         if(!dut.op_done) $fatal(1,"Operator timeout which=%0d op=%0d",which,dut.op);
         profile_active=0;
+        if(which==5 && attention_reference_active) begin
+            if(attention_requests!=4*attention_context || attention_products!=4*attention_context ||
+               dut.attention_value_active_q || dut.math_busy || kv_reads!=8*attention_context)
+                $fatal(1,"Attention final counts/traffic/drain");
+            $display("ATTENTION_STREAM_PROFILE context=%0d cycles=%0d value_cycles=%0d normalization_cycles=%0d requests=%0d products=%0d max_in_flight=%0d interval_sum=%0d intervals=%0d credit_stalls=%0d operand_stalls=%0d",
+                attention_context,clocks,attention_value_cycles,attention_norm_cycles,attention_requests,attention_products,
+                attention_max_flight,attention_interval_sum,attention_intervals,attention_credit_stalls,attention_operand_stalls);
+        end
         if(which==9) begin
             if(head_rows_issued!=4096 || head_rows_retired!=4096 || head_math_issues!=16384 ||
                dut.head_busy || dut.head_pipe_valid_q!=0)
@@ -430,7 +540,7 @@ module tb_llm_operators;
             $display("HEAD_STREAM_PROFILE rows=%0d math_issues=%0d row_interval_sum=%0d intervals=4095 max_rows_in_flight=%0d scale_read_cycles=%0d credit_stalls=%0d result_stalls=%0d",
                 head_rows_retired,head_math_issues,head_interval_sum,head_max_flight,head_scale_cycles,head_credit_stalls,head_result_stalls);
         end
-        if(which==1 || which==9 || which==10 || which==11) begin
+        if(which==1 || which==5 || which==9 || which==10 || which==11) begin
             $display("SCHEDULE_PROFILE operator=%0d context=%0d temperature=%0d cycles=%0d linear_startup=%0d linear_issue=%0d linear_drain=%0d head_startup=%0d head_issue=%0d head_drain=%0d",which,dut.position_q+1,dut.temperature_q,clocks,linear_startup,linear_issue,linear_drain,head_startup,head_issue,head_drain);
             for(integer s=0;s<112;s++) if(op_cycles[s]) $display("SCHEDULE_STATE operator=%0d state=%0d cycles=%0d",which,s,op_cycles[s]);
         end
@@ -483,6 +593,59 @@ module tb_llm_operators;
                 $fatal(1,"Head reset leaked work boundary=%0d",boundary);
         end
         checks++;
+    endtask
+    task automatic check_attention_abort(input integer boundary,input bit cancel);
+        integer waits;
+        logic [31:0] held_sum;
+        logic signed [55:0] held_acc[0:31];
+        reset_fixture();
+        force dut.layer_q=2'd3;#1;release dut.layer_q;
+        force dut.position_q=7'd127;#1;release dut.position_q;
+        force dut.graph=dut.G_ATTENTION;
+        waits=0;
+        while(waits<2000 && !(boundary<4 ? dut.attention_exp_valid_q[boundary] :
+              boundary==4 ? dut.attention_value_request_q==5 :
+              boundary==5 ? dut.attention_value_capture :
+              boundary==6 ? dut.attention_value_math_issue :
+              boundary==7 ? dut.attention_value_accumulate :
+              boundary==8 ? dut.attention_value_accumulate && dut.attention_product_time_q[3]==127 :
+              dut.attention_value_retire_q==128 && dut.math_busy)) begin
+            @(negedge clk);waits++;
+        end
+        if(waits==2000) $fatal(1,"Attention abort boundary timeout boundary=%0d",boundary);
+        held_sum=dut.probability_sum_q;
+        for(integer i=0;i<32;i++) held_acc[i]=dut.attention_acc_q[i];
+        if(cancel) begin
+            force dut.op_fault_q=1'b1;
+            release dut.graph;
+            @(negedge clk);release dut.op_fault_q;
+            // Exercise retained abort ownership even after architectural fault
+            // status clears; queued memory and math must never resume retirement.
+            $deposit(dut.op_fault_q,1'b0);
+            waits=0;
+            while(dut.attention_value_active_q && waits<64) begin
+                @(negedge clk);waits++;
+                if(dut.attention_value_req || dut.attention_value_math_issue || dut.attention_value_accumulate ||
+                   dut.probability_sum_q!==held_sum)
+                    $fatal(1,"Attention cancel resumed work boundary=%0d",boundary);
+                if(dut.attention_value_active_q && dut.graph!==dut.G_DONE)
+                    $fatal(1,"Attention cancel released graph before physical drain");
+                for(integer i=0;i<32;i++)
+                    if(dut.attention_acc_q[i]!==held_acc[i]) $fatal(1,"Attention cancel changed accumulator");
+            end
+            if(dut.attention_value_active_q || dut.math_busy ||
+               dut.attention_value_request_q!=dut.attention_value_response_q)
+                $fatal(1,"Attention cancel failed to drain");
+            repeat(3) @(negedge clk);
+            if(dut.op!==dut.O_IDLE || !ready || !error) $fatal(1,"Attention cancel stranded operation/status");
+        end else begin
+            rst_n=0;release dut.graph;repeat(3) @(negedge clk);
+            rst_n=1;repeat(3) @(negedge clk);
+            if(dut.attention_value_active_q || dut.attention_exp_valid_q || dut.attention_operand_valid_q ||
+               dut.attention_product_valid_q || dut.math_busy || dut.k_valid || dut.op!==dut.O_IDLE)
+                $fatal(1,"Attention reset leaked work boundary=%0d",boundary);
+        end
+        attention_abort_cases++;checks++;
     endtask
     task automatic check_linear_shape(input integer columns,rows,buffer_id,meta,phase,dst);
         reset_fixture();
@@ -787,6 +950,7 @@ module tb_llm_operators;
                 seed_vector_row(t*8+4+head,packed_vector,1);
             end
         end
+        prepare_attention_reference(4,0);
         force dut.position_q=7'd3;release dut.position_q;begin_operator(5);
         for(integer head=0;head<4;head++) begin
             observe_v=7'(60+head);
@@ -808,6 +972,7 @@ module tb_llm_operators;
             end
         end
         force dut.layer_q=2'd3;release dut.layer_q;
+        prepare_attention_reference(128,1);
         force dut.position_q=7'd127;release dut.position_q;begin_operator(5);
         for(integer head=0;head<4;head++) begin
             ref_max=-(128'd1<<31);ref_weight_sum=0;
@@ -833,6 +998,37 @@ module tb_llm_operators;
                 expect_lane(i,rne(acc,ref_weight_sum));
             end
         end
+
+        // SRAM contents survive reset. Sweep warmup, FIFO wrap and partial tails
+        // using the same independently computed score/probability references.
+        for(integer scenario=0;scenario<9;scenario++) begin
+            reset_fixture();
+            attention_context=scenario==0 ? 1 : scenario==1 ? 2 : scenario==2 ? 7 :
+                scenario==3 ? 8 : scenario==4 ? 9 : scenario==5 ? 127 : 128;
+            prepare_attention_reference(attention_context,1);
+            delay_attention_math=scenario==7;bubble_attention_score=scenario==8;
+            force dut.layer_q=2'd3;#1;release dut.layer_q;
+            force dut.position_q=7'(attention_context-1);#1;release dut.position_q;
+            begin_operator(5);
+            for(integer h=0;h<4;h++) begin
+                ref_weight_sum=0;
+                for(integer t=0;t<attention_context;t++) ref_weight_sum+=attention_reference_weights[h][t];
+                observe_v=7'(60+h);
+                for(integer i=0;i<32;i++) begin
+                    acc=0;
+                    for(integer t=0;t<attention_context;t++) acc+=attention_reference_weights[h][t]*attention_value(h,t,i);
+                    expect_lane(i,rne(acc,ref_weight_sum));
+                end
+            end
+        end
+        for(integer boundary=0;boundary<10;boundary++) begin
+            check_attention_abort(boundary,0);check_attention_abort(boundary,1);
+        end
+        // A fresh complete pass after cancellation also checks stale-response isolation.
+        reset_fixture();prepare_attention_reference(128,1);
+        force dut.layer_q=2'd3;#1;release dut.layer_q;
+        force dut.position_q=7'd127;#1;release dut.position_q;begin_operator(5);
+        $display("ATTENTION_ABORT_PASS cases=%0d",attention_abort_cases);
 
         reset_fixture();
         for(integer row=0;row<4;row++) begin

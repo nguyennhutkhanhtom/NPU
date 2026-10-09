@@ -337,9 +337,11 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
     logic [32:0] exp_difference_q;
     logic [36:0] exp_interpolation_q;
     logic [24:0] exp_delta_q;
+    logic [11:0] exp_fraction_lookup_q, exp_fraction_delta_q;
+    logic [24:0] exp_hi_delta_q, exp_hi_product_q;
     wire [36:0] exp_interpolation_comb;
     logic_mul #(.A_W(25), .B_W(12), .OUT_W(37), .SIGNED_A(0), .SIGNED_B(0)) u_exp_mul
-        (.a(exp_delta_q), .b(exp_difference_q[11:0]), .product(exp_interpolation_comb));
+        (.a(exp_delta_q), .b(exp_fraction_delta_q), .product(exp_interpolation_comb));
     wire signed [23:0] gumbel_value;
     wire [32:0] noise_product_comb;
     logic_mul #(.A_W(24), .B_W(8), .OUT_W(33), .SIGNED_A(1), .SIGNED_B(0)) u_noise_mul
@@ -398,6 +400,18 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
     logic attention_k_req, attention_capture, attention_math_issue, attention_scores_done;
     logic [11:0] attention_k_address;
     logic signed [31:0] attention_score, attention_max;
+    localparam int ATTENTION_VALUE_SLOTS = 8;
+    logic attention_value_active_q, attention_value_abort_q;
+    logic [7:0] attention_value_score_q, attention_value_request_q;
+    logic [7:0] attention_value_response_q, attention_value_capture_q, attention_value_retire_q;
+    logic [3:0] attention_exp_valid_q, attention_product_valid_q;
+    logic [6:0] attention_exp_time_q [0:3], attention_product_time_q [0:3];
+    logic [24:0] attention_probability_fifo_q [0:ATTENTION_VALUE_SLOTS - 1];
+    logic [6:0] attention_time_fifo_q [0:ATTENTION_VALUE_SLOTS - 1];
+    logic signed [23:0] attention_value_fifo_q [0:31][0:ATTENTION_VALUE_SLOTS - 1];
+    logic attention_operand_valid_q;
+    logic [6:0] attention_operand_time_q;
+    wire attention_value_req, attention_value_math_issue;
     logic [255:0] p_data;
     logic [31:0] p_host_data;
     llm_parameter_ram #(.ADDR_W(15), .DEPTH(PARAM_ROWS),
@@ -500,13 +514,14 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
     logic k_read, k_valid, k_write_busy;
     logic [11:0] k_address_q, k_write_address_q;
     logic [767:0] k_data;
-    wire [11:0] k_read_address = attention_k_req ? attention_k_address : k_address_q;
+    wire [11:0] k_read_address = attention_k_req ? attention_k_address :
+        attention_value_req ? {layer_q, attention_exp_time_q[3], 1'b1, head_q} : k_address_q;
     // Address = layer*1024 + position*8 + K/V*4 + head.
     llm_bank_ram #(.USE_QUARTUS_MEMORY(USE_QUARTUS_MEMORY)) u_cache(
         .clk(clk), .rst_n(core_rst_n), .rd_en(k_read), .rd_addr(k_read_address),
         .rd_data(k_data), .rd_valid(k_valid), .wr_busy(k_write_busy), .wr_addr(k_write_address_q),
         .wr_mask(op[C_STORE_IDX] ? 32'hffffffff : 32'h0), .wr_data(vector_q));
-    assign k_read = op[O_K_REQ_IDX] || attention_k_req;
+    assign k_read = op[O_K_REQ_IDX] || attention_k_req || attention_value_req;
 
     logic math_start, math_busy, math_done, math_in_ready, math_product_valid, math_sum_valid;
     logic signed [23:0] math_a_q [0:31];
@@ -517,7 +532,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
         .a(math_a_q), .b(math_b_q), .busy(math_busy), .done(math_done),
         .product(math_product), .sum(math_sum), .in_ready(math_in_ready),
         .product_valid(math_product_valid), .sum_valid(math_sum_valid));
-    assign math_start = op[O_M_START_IDX] || (head_math_issue && !op_fault_q) || attention_math_issue;
+    assign math_start = op[O_M_START_IDX] || (head_math_issue && !op_fault_q) || attention_math_issue || attention_value_math_issue;
     llm_head_engine u_head_engine(.clk(clk), .rst_n(core_rst_n), .start_i(op[H_SCALE_IDX]),
         .cancel_i(op_fault_q),
         .parameter_req_o(head_parameter_req), .parameter_address_o(head_parameter_address),
@@ -547,8 +562,87 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
         .cancel_i(op_fault_q), .layer_i(layer_q), .head_i(head_q), .position_i(position_q),
         .kv_req_o(attention_k_req), .kv_address_o(attention_k_address), .kv_valid_i(k_valid),
         .operand_capture_o(attention_capture), .math_issue_o(attention_math_issue),
-        .sum_valid_i(math_sum_valid), .sum_i(math_sum), .score_address_i(time_q),
+        .sum_valid_i(math_sum_valid), .sum_i(math_sum),
+        .score_address_i(attention_value_active_q ? attention_value_score_q[6:0] : time_q),
         .score_o(attention_score), .max_score_o(attention_max), .done_o(attention_scores_done));
+
+    // Value-pass ownership is local to this head. Eight credits reserve both
+    // metadata and storage for every accepted, unbackpressured KV response.
+    // The exp pipeline stalls as a unit; the memory/operand/product tails drain
+    // independently. Products retire before the unused reduction tail drains.
+    wire attention_value_start = op[A_STREAM_WAIT_IDX] && attention_scores_done && !op_fault_q;
+    wire attention_value_run = attention_value_active_q && !attention_value_abort_q && !op_fault_q;
+    assign attention_value_math_issue = attention_value_run && attention_operand_valid_q && math_in_ready;
+    wire attention_value_capture = attention_value_run &&
+        attention_value_response_q != attention_value_capture_q && (!attention_operand_valid_q || math_in_ready);
+    wire [7:0] attention_value_reserved = attention_value_request_q - attention_value_capture_q;
+    assign attention_value_req = attention_value_run && attention_exp_valid_q[3] &&
+        (attention_value_reserved < 8'(ATTENTION_VALUE_SLOTS) || attention_value_capture);
+    wire attention_exp_step = attention_value_run && (!attention_exp_valid_q[3] || attention_value_req);
+    wire attention_score_read = attention_exp_step && attention_value_score_q <= {1'b0, position_q};
+    wire attention_value_response = attention_value_active_q && k_valid &&
+        attention_value_response_q < attention_value_request_q;
+    wire [24:0] attention_probability = exp_hi_product_q - 25'((exp_interpolation_q + 37'd2048) >> 12);
+    wire attention_value_accumulate = attention_value_run && attention_product_valid_q[3] && math_product_valid;
+    wire attention_value_finished = attention_value_run &&
+        attention_value_retire_q == {1'b0, position_q} + 8'd1 &&
+        attention_exp_valid_q == 0 && attention_value_request_q == attention_value_response_q &&
+        attention_value_response_q == attention_value_capture_q && !attention_operand_valid_q &&
+        attention_product_valid_q == 0 && !math_busy;
+    always_ff @(posedge clk or negedge core_rst_n) begin
+        if (!core_rst_n) begin
+            attention_value_active_q <= 0; attention_value_abort_q <= 0;
+            attention_value_score_q <= 0; attention_value_request_q <= 0;
+            attention_value_response_q <= 0; attention_value_capture_q <= 0; attention_value_retire_q <= 0;
+            attention_exp_valid_q <= 0; attention_product_valid_q <= 0; attention_operand_valid_q <= 0;
+        end else if (attention_value_start && !attention_value_active_q) begin
+            attention_value_active_q <= 1; attention_value_abort_q <= 0;
+            attention_value_score_q <= 0; attention_value_request_q <= 0;
+            attention_value_response_q <= 0; attention_value_capture_q <= 0; attention_value_retire_q <= 0;
+            attention_exp_valid_q <= 0; attention_product_valid_q <= 0; attention_operand_valid_q <= 0;
+        end else if (attention_value_active_q) begin
+            if (attention_value_response) attention_value_response_q <= attention_value_response_q + 1'b1;
+            if (op_fault_q || attention_value_abort_q) begin
+                attention_value_abort_q <= 1;
+                attention_exp_valid_q <= 0; attention_product_valid_q <= 0; attention_operand_valid_q <= 0;
+                // Keep ownership even if a new host launch clears op_fault_q.
+                if (attention_value_response_q == attention_value_request_q && !math_busy)
+                    attention_value_active_q <= 0;
+            end else begin
+                if (attention_exp_step) attention_exp_valid_q <= {attention_exp_valid_q[2:0], attention_score_read};
+                if (attention_score_read) attention_value_score_q <= attention_value_score_q + 1'b1;
+                if (attention_value_req) attention_value_request_q <= attention_value_request_q + 1'b1;
+                if (attention_value_capture) attention_value_capture_q <= attention_value_capture_q + 1'b1;
+                if (attention_value_capture || attention_value_math_issue)
+                    attention_operand_valid_q <= attention_value_capture;
+                attention_product_valid_q <= {attention_product_valid_q[2:0], attention_value_math_issue};
+                if (attention_value_accumulate) attention_value_retire_q <= attention_value_retire_q + 1'b1;
+                if (attention_value_finished) attention_value_active_q <= 0;
+            end
+        end
+    end
+    always_ff @(posedge clk) begin
+        if (core_rst_n) begin
+            if (attention_score_read) attention_exp_time_q[0] <= attention_value_score_q[6:0];
+            if (attention_value_req) begin
+                attention_probability_fifo_q[attention_value_request_q[2:0]] <= attention_probability;
+                attention_time_fifo_q[attention_value_request_q[2:0]] <= attention_exp_time_q[3];
+            end
+            if (attention_value_capture) attention_operand_time_q <= attention_time_fifo_q[attention_value_capture_q[2:0]];
+            if (attention_value_math_issue) attention_product_time_q[0] <= attention_operand_time_q;
+        end
+    end
+    genvar attention_stage;
+    generate
+    for (attention_stage = 1; attention_stage < 4; attention_stage = attention_stage + 1) begin : g_attention_value_tags
+        always_ff @(posedge clk) begin
+            if (core_rst_n && attention_exp_step && attention_exp_valid_q[attention_stage - 1])
+                attention_exp_time_q[attention_stage] <= attention_exp_time_q[attention_stage - 1];
+            if (core_rst_n && attention_product_valid_q[attention_stage - 1])
+                attention_product_time_q[attention_stage] <= attention_product_time_q[attention_stage - 1];
+        end
+    end
+    endgenerate
     generate
     for (input_lane = 0; input_lane < 32; input_lane = input_lane + 1) begin : g_linear_operand
         assign linear_operand[input_lane] = input_cache_q[linear_input_chunk][input_lane * 24 +: 24];
@@ -751,7 +845,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
                         layer_q <= 0; graph <= G_EMBED;
                     end
                 end
-                G_DONE : graph <= G_IDLE;
+                G_DONE : if (!attention_value_active_q) graph <= G_IDLE;
                 default : ;
             endcase
         end
@@ -836,7 +930,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
             cache_operand_q[lane * 24 +: 24] <= k_data[lane * 24 +: 24];
         always_ff @(posedge clk) begin
             if (core_rst_n) begin
-                if (head_capture) math_a_q[lane] <= input_cache_q[{2'b0, head_input_chunk}][lane * 24 +: 24];
+                if (attention_value_capture) math_a_q[lane] <= attention_value_fifo_q[lane][attention_value_capture_q[2:0]];
+                else if (head_capture) math_a_q[lane] <= input_cache_q[{2'b0, head_input_chunk}][lane * 24 +: 24];
                 else if (attention_capture) math_a_q[lane] <= query_q[lane * 24 +: 24];
                 else unique case (1'b1)
                     op[E_DATA_IDX] : math_a_q[lane] <= 24'($signed(parameter_word_q[lane * 8 +: 8]));
@@ -853,7 +948,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
         end
         always_ff @(posedge clk) begin
             if (core_rst_n) begin
-                if (head_capture) math_b_q[lane] <= 32'($signed(p_data[lane * 8 +: 8]));
+                if (attention_value_capture) math_b_q[lane] <= {7'h0, attention_probability_fifo_q[attention_value_capture_q[2:0]]};
+                else if (head_capture) math_b_q[lane] <= 32'($signed(p_data[lane * 8 +: 8]));
                 else if (attention_capture) math_b_q[lane] <= 32'($signed(k_data[lane * 24 +: 24]));
                 else unique case (1'b1)
                     op[E_DATA_IDX] : math_b_q[lane] <= {8'h0, coefficient_q};
@@ -900,9 +996,12 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
         always_ff @(posedge clk)
             if (core_rst_n && op[R_COS_IDX]) rotation_cos_q[lane] <= math_product[lane];
         always_ff @(posedge clk)
+            if (core_rst_n && attention_value_response && attention_value_run)
+                attention_value_fifo_q[lane][attention_value_response_q[2:0]] <= k_data[lane * 24 +: 24];
+        always_ff @(posedge clk)
             if (core_rst_n) begin
                 if (op[A_QUERY_IDX]) attention_acc_q[lane] <= 0;
-                else if (op[A_ACC_IDX]) attention_acc_q[lane] <= attention_acc_q[lane] + math_product[lane];
+                else if (attention_value_accumulate) attention_acc_q[lane] <= attention_acc_q[lane] + math_product[lane];
             end
         always_ff @(posedge clk)
             if (core_rst_n && op[SG_CLAMP_IDX]) sigmoid_inputs_q[lane] <= sat_s16(lane_round_q[lane]);
@@ -1048,8 +1147,27 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
             if (linear_pipe_valid_q[7] && !op_fault_q)
                 matrix_row_q <= linear_pipe_row_q[7] + (linear_pipe_row_q[7] + 1'b1 < matrix_rows_q ? 10'd1 : 10'd0);
             if (launch && graph == G_IDLE) begin overflow_out <= 0; random_q <= seed_q; op_fault_q <= 0; end
+            if (attention_exp_step) begin
+                if (attention_score_read) exp_difference_q <= 33'(max_score_q) - 33'(attention_score);
+                if (attention_exp_valid_q[0]) begin
+                    exp_hi_q <= exp_difference_q >= 33'd1048576 ? 25'd0 : exp_value_hi;
+                    exp_lo_q <= exp_difference_q >= 33'd1048576 ? 25'd0 : exp_value_lo;
+                    exp_fraction_lookup_q <= exp_difference_q[11:0];
+                end
+                if (attention_exp_valid_q[1]) begin
+                    exp_delta_q <= exp_hi_q - exp_lo_q;
+                    exp_hi_delta_q <= exp_hi_q; exp_fraction_delta_q <= exp_fraction_lookup_q;
+                end
+                if (attention_exp_valid_q[2]) begin
+                    exp_interpolation_q <= exp_interpolation_comb; exp_hi_product_q <= exp_hi_delta_q;
+                end
+            end
+            if (attention_value_req) begin
+                probability_q <= attention_probability;
+                probability_sum_q <= probability_sum_q + exp_hi_product_q - 32'((exp_interpolation_q + 37'd2048) >> 12);
+            end
             unique case (1'b1)
-                op[O_IDLE_IDX] : if (core_running && !op_done) begin
+                op[O_IDLE_IDX] : if (core_running && !op_done && !attention_value_active_q) begin
                     row_q <= 0; chunk_q <= 0; head_q <= 0; time_q <= 0; lane_q <= 0;
                     source_q <= 1; destination_q <= 1; linear_acc_q <= 0;
                     case (graph)
@@ -1158,7 +1276,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
                             default: begin op_fault_q <= 1; op <= O_FINISH; end
                         endcase
                     end
-                op[O_FINISH_IDX] : if (!v_write_busy && !k_write_busy && !linear_busy &&
+                op[O_FINISH_IDX] : if (!v_write_busy && !k_write_busy && !linear_busy && !attention_value_active_q &&
                     linear_pipe_valid_q == 0 && !head_busy && head_pipe_valid_q == 0)
                     begin op_done <= 1; op <= O_IDLE; end
                 op[E_SCALE_IDX] : begin
@@ -1330,33 +1448,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
                 op[A_STREAM_WAIT_IDX] : if (attention_scores_done) begin
                     max_score_q <= attention_max; time_q <= 0; op <= A_EXP_READ;
                 end
-                op[A_EXP_READ_IDX] : begin
-                    exp_difference_q <= 33'(max_score_q) - 33'(attention_score); op <= A_EXP_PREP;
-                end
-                op[A_EXP_PREP_IDX] : begin
-                    if (exp_difference_q >= 33'd1048576) begin exp_hi_q <= 0; exp_lo_q <= 0; end
-                    else begin
-                        exp_hi_q <= exp_value_hi;
-                        exp_lo_q <= exp_value_lo;
-                    end
-                    op <= A_EXP_DELTA;
-                end
-                op[A_EXP_DELTA_IDX] : begin exp_delta_q <= exp_hi_q - exp_lo_q; op <= A_EXP_MUL; end
-                op[A_EXP_MUL_IDX] : begin
-                    exp_interpolation_q <= exp_interpolation_comb; op <= A_EXP_STORE;
-                end
-                op[A_EXP_STORE_IDX] : begin
-                    probability_q <= exp_hi_q - 25'((exp_interpolation_q + 37'd2048) >> 12);
-                    probability_sum_q <= probability_sum_q + exp_hi_q - 32'((exp_interpolation_q + 37'd2048) >> 12);
-                    k_address_q <= {layer_q, time_q, 1'b1, head_q}; return_k <= RET_K_A_WEIGHT; op <= O_K_REQ;
-                end
-                op[A_WEIGHT_IDX] : begin
-                    begin return_m <= RET_M_A_ACC; op <= O_M_START; end
-                end
-                op[A_ACC_IDX] : begin
-                    if (time_q == position_q) begin lane_q <= 0; op <= A_LANE; end
-                    else begin time_q <= time_q + 1'b1; op <= A_EXP_READ; end
-                end
+                op[A_EXP_READ_IDX] : if (op_fault_q || attention_value_abort_q) op <= O_FINISH;
+                    else if (attention_value_finished) begin lane_q <= 0; op <= A_LANE; end
                 op[A_LANE_IDX] : if (attention_norm_ready) op <= A_NORM_WAIT;
                 op[A_NORM_WAIT_IDX] : if (attention_norm_done) begin
                     write_vector_addr_q <= 7'(60 + head_q); write_vector_mask_q <= 32'hffffffff; op <= O_WRITE;

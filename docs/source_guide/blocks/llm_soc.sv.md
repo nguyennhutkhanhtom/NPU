@@ -32,6 +32,14 @@ Xem [flow server](../../../tools/server/README.md); evidence FPGA cũ không xá
 
 [Editable draw.io — llm_soc.sv — detail 2](../../diagrams/architecture.drawio) · Page `33_llm_soc.sv_3`.
 
+![llm_soc — attention value datapath](../../diagrams/previews/33a_llm_soc_attention_value.svg)
+
+[Editable draw.io — attention value datapath](../../diagrams/architecture.drawio) · Page `33a_llm_soc_attention_value`.
+
+![llm_soc — attention credits and completion](../../diagrams/previews/33b_llm_soc_attention_control.svg)
+
+[Editable draw.io — attention credits and completion](../../diagrams/architecture.drawio) · Page `33b_llm_soc_attention_control`.
+
 ## Main flow
 
 1. Accept host parameters, prompt IDs and configuration; validate START.
@@ -48,6 +56,7 @@ Xem [flow server](../../../tools/server/README.md); evidence FPGA cũ không xá
 | Input/scale/RoPE tags | Reuse only operands compatible with the next phase |
 | `linear_active_q`, `linear_row_issue_q`, `linear_pipe_valid_q/linear_pipe_row_q` | One matrix stream; ordered engine results feed the existing scalar registers with stage validity and aligned row tags |
 | `head_result_ready`, `head_pipe_valid_q/head_pipe_row_q` | One vocabulary stream; six tagged scalar stages carry multiply partials, pair/high alignment, product, RNE/noise, sampled score and ordered selection |
+| `attention_exp_valid_q/attention_exp_time_q`, `attention_value_*`, `attention_product_valid_q/attention_product_time_q` | One value stream per head; exact interpolation, eight reserved KV response slots, staged SIMD operands and ordered product retirement |
 | `temperature_q`, `random_q`, selection score | Greedy or sampled selection; stable ID ordering |
 
 ## Important contracts
@@ -58,9 +67,15 @@ The diagrams above reflect continuous row streaming and the tagged scalar epilog
 
 Head execution launches once in `H_SCALE` after four hidden-vector cache reads, then stays in `H_STREAM_WAIT`. The engine owns weight and packed-scale reads; each accepted S39 sum/U24 coefficient enters the shared scalar registers. The upper multiply partial travels with its pair stage. Tags preserve row-scale association through exact RNE and sampled-score saturation. PRNG advances once per ordered row at the RNE/noise stage, including greedy and excluded rows. Selection uses strict greater-than and ascending IDs, preserving the eligible fallback and stable ties. Completion follows selection of row 4,095 and empty head validity/engine ownership. Reset/cancellation clears pipeline validity and prevents PRNG/selection updates; cancellation drains accepted engine responses before completion.
 
+After the unchanged Q×K engine completes the score array and maximum, `A_EXP_READ` holds the value stream. Four tagged registers carry score difference, LUT endpoints/fraction, delta/high/fraction and interpolation/high; the next edge accepts the matching V request and adds its U25 probability to the U32 denominator. The whole exp pipeline pauses when eight response reservations are occupied. Each request reserves probability, timestep and a 32-lane V slot before memory acceptance. Ordered `k_valid` responses fill those slots; an operand holding register feeds the existing shared SIMD only when ready. Four SIMD tags align with `product_valid`, independently of `sum_valid` and legacy `done`. Signed 56-bit accumulators retire ascending timesteps without changing arithmetic or normalization.
+
+Normalization starts only after the final accumulator update and complete memory/operand/product/reduction drain. Reset cancels validity through the existing memory/math reset boundary. Fault cancellation stops issue and suppresses denominator/accumulator updates; latched abort ownership drains accepted reads and SIMD work even if fault status clears. Operator completion and `G_DONE` retain ownership until that drain ends. The KV interface and its five-edge, one-vector-per-clock read contract are unchanged.
+
+The attention diagrams above show the overlapped exp/V/product flow, eight response reservations and completion drain. The denominator updates once per accepted V request; lane products retire independently in timestep order. QK and normalization retain their existing contracts.
+
 ## Easy to misunderstand
 
-- SIMD lanes form one reduction, not independent completed outputs.
+- SIMD products have earlier validity than their reduction; the value pass consumes lane products, while Q×K and the head consume sums.
 - Zero temperature adds zero noise in the head pipeline but still advances PRNG once per row, including excluded IDs.
 - Host supplies prompt/configuration, not hidden activations or continuation IDs.
 - Result slots include queued sums and rows already issued into the dot pipeline. Backpressure retains the oldest sum/fault pair and bounds further row issue.

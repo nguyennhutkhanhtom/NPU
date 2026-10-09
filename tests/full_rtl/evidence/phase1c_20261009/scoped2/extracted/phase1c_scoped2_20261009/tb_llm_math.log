@@ -1,0 +1,204 @@
+xrun(64): 24.09-s005: (c) Copyright 1995-2025 Cadence Design Systems, Inc.
+TOOL:	xrun(64)	24.09-s005: Started on Oct 09, 2026 at 00:50:47 +07
+xrun
+	-64bit
+	-timescale 1ns/1ps
+	-access +rwc
+	-top tb_llm_math
+	-xmlibdirname /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/build/phase1c_scoped2_20261009/tb_llm_math/xcelium.d
+	+incdir+/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl
+	+incdir+/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl
+	+SIGMOID_LUT=/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/sigmoid_257.mem
+	-f /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/reports/phase1c_scoped2_20261009/tb_llm_math_sources.f
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/npu_pkg.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_pkg.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/PC.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/acc_mul.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/banked_word_ram.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/descriptor_file.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/div.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/ins_mem.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/isqrt_u64.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_attention_engine.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_attention_normalize.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_bank_ram.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_head_engine.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_linear_engine.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_math.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_parameter_ram.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_soc.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/logic_mul.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/matmul_wrap.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/matmulfree.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/mem_mapping.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/mul.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/norm.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/norm_dispatch.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/pipelined_word_ram.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/postscale.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/regfile.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/reset_release.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/rowwise_dispatch.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/rowwise_op.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/scale_compose.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/sigmoid.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/sram_256_wrapper.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/sram_word_tile.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/ternary_dot32.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/ternary_mul.sv
+		/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/tests/full_rtl/tb_math.sv
+	-l /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/reports/phase1c_scoped2_20261009/tb_llm_math.log
+
+   User defined plus("+") options:
+	+SIGMOID_LUT=/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/sigmoid_257.mem
+
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/npu_pkg.sv
+	package worklib.npu_pkg:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_pkg.sv
+	package worklib.llm_pkg:sv
+		errors: 0, warnings: 0
+	module worklib.llm_exp_sample:svh
+		errors: 0, warnings: 0
+	module worklib.llm_gumbel_sample:svh
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/PC.sv
+	module worklib.PC:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/acc_mul.sv
+	module worklib.acc_mul:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/banked_word_ram.sv
+	module worklib.banked_word_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/descriptor_file.sv
+	module worklib.descriptor_file:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/div.sv
+	module worklib.div:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/ins_mem.sv
+	module worklib.ins_mem:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/isqrt_u64.sv
+	module worklib.isqrt_u64:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_attention_engine.sv
+	module worklib.llm_attention_engine:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_attention_normalize.sv
+	module worklib.llm_attention_normalize:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_bank_ram.sv
+	module worklib.llm_bank_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_head_engine.sv
+	module worklib.llm_head_engine:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_linear_engine.sv
+	module worklib.llm_linear_engine:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_math.sv
+	module worklib.llm_math:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_parameter_ram.sv
+	module worklib.llm_parameter_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_soc.sv
+        attention_value_req ? {layer_q, attention_exp_time_q[3], 1'b1, head_q} : k_address_q;
+                          |
+xmvlog: *E,UNDIDN (/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_soc.sv,506|26): 'attention_value_req': undeclared identifier [12.5(IEEE)].
+        attention_value_req ? {layer_q, attention_exp_time_q[3], 1'b1, head_q} : k_address_q;
+                                                           |
+xmvlog: *E,UNDIDN (/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_soc.sv,506|59): 'attention_exp_time_q': undeclared identifier [12.5(IEEE)].
+    assign k_read = op[O_K_REQ_IDX] || attention_k_req || attention_value_req;
+                                                                            |
+xmvlog: *E,UNDIDN (/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_soc.sv,512|76): 'attention_value_req': undeclared identifier [12.5(IEEE)].
+    assign math_start = op[O_M_START_IDX] || (head_math_issue && !op_fault_q) || attention_math_issue || attention_value_math_issue;
+                                                                                                                                  |
+xmvlog: *E,UNDIDN (/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_soc.sv,523|130): 'attention_value_math_issue': undeclared identifier [12.5(IEEE)].
+        .score_address_i(attention_value_active_q ? attention_value_score_q[6:0] : time_q),
+                                                                          |
+xmvlog: *E,UNDIDN (/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_soc.sv,554|74): 'attention_value_score_q': undeclared identifier [12.5(IEEE)].
+        .score_address_i(attention_value_active_q ? attention_value_score_q[6:0] : time_q),
+                                                |
+xmvlog: *E,DUPIMP (/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_soc.sv,554|48): Identifier 'attention_value_active_q', implicitly declared here, first as a wire, is subsequently redeclared.
+    logic attention_value_active_q, attention_value_abort_q;
+                                 |
+xmvlog: *E,DUPIDN (/home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_soc.sv,562|33): identifier 'attention_value_active_q' previously declared in file /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/llm_soc.sv at line 554 [12.5(IEEE)].
+	module worklib.llm_soc:sv
+		errors: 7, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/logic_mul.sv
+	module worklib.logic_mul:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/matmul_wrap.sv
+	module worklib.matmul_wrap:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/matmulfree.sv
+	module worklib.matmulfree:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/mem_mapping.sv
+	module worklib.mem_mapping:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/mul.sv
+	module worklib.mul:sv
+		errors: 0, warnings: 0
+	module worklib.addsub:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/norm.sv
+	module worklib.norm:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/norm_dispatch.sv
+	module worklib.norm_dispatch:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/pipelined_word_ram.sv
+	module worklib.pipelined_word_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/postscale.sv
+	module worklib.postscale:sv
+		errors: 0, warnings: 0
+	module worklib.postscale_finish:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/regfile.sv
+	module worklib.register:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/reset_release.sv
+	module worklib.reset_release:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/rowwise_dispatch.sv
+	module worklib.rowwise_dispatch:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/rowwise_op.sv
+	module worklib.rowwise_op:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/scale_compose.sv
+	module worklib.scale_compose:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/sigmoid.sv
+	module worklib.sigmoid_sample:svh
+		errors: 0, warnings: 0
+	module worklib.sigmoid:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/sram_256_wrapper.sv
+	module worklib.sram_256_wrapper:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/sram_word_tile.sv
+	module worklib.sram_word_tile:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/ternary_dot32.sv
+	module worklib.ternary_dot32:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/rtl/ternary_mul.sv
+	module worklib.ternary_mul:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/phase1c_scoped2_20261009/tests/full_rtl/tb_math.sv
+	module worklib.tb_llm_math:sv
+		errors: 0, warnings: 0
+	module worklib.llm_stream_checker:sv
+		errors: 0, warnings: 0
+	module worklib.llm_ternary_checker:sv
+		errors: 0, warnings: 0
+	module worklib.llm_normalize_checker:sv
+		errors: 0, warnings: 0
+xrun: *E,VLGERR: An error occurred during parsing.  Review the log file for errors with the code *E and fix those identified problems to proceed.  Exiting with code (status 1).
+TOOL:	xrun(64)	24.09-s005: Exiting on Oct 09, 2026 at 00:50:50 +07  (total: 00:00:03)

@@ -16,7 +16,7 @@
     "llm_math.sv": "1280302be8a07422c547c62b470b51f43324e92519cc0d69b55dd58f94c5d0bd",
     "llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
     "llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
-    "llm_soc.sv": "bd04e8e99a9d20c3bc9a1deba998b1778335ed2ca68c287f550fd09fc9b143d3",
+    "llm_soc.sv": "a4b0b7915641add5671c17952355cedf2500f354c7239f07369f05ab471d92e6",
     "logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
     "matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
     "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
@@ -3021,6 +3021,26 @@
           "TOP.u_cache.g_bank[31].u_storage.g_model.g_tile[3].u_tile"
         ]
       }
+    },
+    {
+      "key": "33a_llm_soc_attention_value",
+      "title": "llm_soc — attention value datapath",
+      "source": "llm_soc.sv",
+      "kind": "functional",
+      "scope": "Current RTL: pipelined attention value pass",
+      "file": "docs/source_guide/blocks/llm_soc.sv.md",
+      "index": 4,
+      "graph": "flowchart TB\n N0[\"Causal scores: timesteps 0 through position_q<br/>Read a score with its timestep tag\"]\n N1[\"Four-stage exp interpolation + timestep tags<br/>Whole pipeline stalls when its output cannot issue a V read\"]\n N2[\"Reserve one of eight slots before each KV V request<br/>Store probability U25 + timestep; five-edge KV read latency\"]\n N3[\"Accepted V responses fill the reserved FIFO<br/>Eight vectors, each 32 signed S24 lanes\"]\n N4[\"Capture oldest probability / V pair into operand registers<br/>Preserve FIFO order; wait for math_in_ready\"]\n N5[\"Issue shared llm_math SIMD: 32 signed lane products<br/>Four stages of validity / timestep tags track the products\"]\n N6[\"Retire lane products in timestep order<br/>Accumulate S56 products into S64 attention_acc_q lanes\"]\n N7[\"Drain exp, KV, operands, product tags and math_busy<br/>Then launch unchanged exact attention normalization\"]\n N0 --> N1\n N1 --> N2\n N2 --> N3\n N3 --> N4\n N4 --> N5\n N5 --> N6\n N6 --> N7"
+    },
+    {
+      "key": "33b_llm_soc_attention_control",
+      "title": "llm_soc — attention credits and completion",
+      "source": "llm_soc.sv",
+      "kind": "functional",
+      "scope": "Current RTL: pipelined attention value pass",
+      "file": "docs/source_guide/blocks/llm_soc.sv.md",
+      "index": 5,
+      "graph": "flowchart TB\n N0[\"Launch when QK scores complete without a fault<br/>Reset score / request / response / capture / retire counters\"]\n N1[\"Exp output requests V only with a reserved slot available<br/>request - capture < 8, or capture frees a slot this clock\"]\n N2[\"KV responses use slots reserved at request acceptance<br/>Capture oldest pair; math ready controls operand consumption\"]\n N3[\"Retirement requires both tagged validity and math_product_valid<br/>Final retired timestep alone does not finish the operator\"]\n N4[\"Normal completion waits for all ownership to drain<br/>Exp empty; request = response = capture; no operand / product; math idle\"]\n N5[\"Completion permits exact normalization / operator progression<br/>Graph completion retains ownership until accepted work drains\"]\n N0 --> N1\n N1 --> N2\n N2 --> N3\n N3 --> N4\n N4 --> N5"
     }
   ]
 }

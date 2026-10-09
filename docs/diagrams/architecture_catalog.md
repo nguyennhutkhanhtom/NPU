@@ -37,6 +37,8 @@ All pages use native draw.io shapes and connectors. RTL source is authoritative.
 | `31_llm_soc.sv_1` — llm_soc.sv — overview | `llm_soc.sv` | [Open](architecture.drawio) | [SVG](previews/31_llm_soc.sv_1.svg) |
 | `32_llm_soc.sv_2` — llm_soc.sv — detail 1 | `llm_soc.sv` | [Open](architecture.drawio) | [SVG](previews/32_llm_soc.sv_2.svg) |
 | `33_llm_soc.sv_3` — llm_soc.sv — detail 2 | `llm_soc.sv` | [Open](architecture.drawio) | [SVG](previews/33_llm_soc.sv_3.svg) |
+| `33a_llm_soc_attention_value` — attention value datapath | `llm_soc.sv` | [Open](architecture.drawio) | [SVG](previews/33a_llm_soc_attention_value.svg) |
+| `33b_llm_soc_attention_control` — attention credits and completion | `llm_soc.sv` | [Open](architecture.drawio) | [SVG](previews/33b_llm_soc_attention_control.svg) |
 | `34_logic_mul.sv_1` — logic_mul.sv — overview | `logic_mul.sv` | [Open](architecture.drawio) | [SVG](previews/34_logic_mul.sv_1.svg) |
 | `35_matmul_wrap.sv_1` — matmul_wrap.sv — overview | `matmul_wrap.sv` | [Open](architecture.drawio) | [SVG](previews/35_matmul_wrap.sv_1.svg) |
 | `36_matmulfree.sv_1` — matmulfree.sv — overview | `matmulfree.sv` | [Open](architecture.drawio) | [SVG](previews/36_matmulfree.sv_1.svg) |

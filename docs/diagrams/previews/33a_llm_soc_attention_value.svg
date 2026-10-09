@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1105" viewBox="0 0 900 1105">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#444444"/></marker></defs>
+<rect width="900" height="1105" fill="white"/>
+<text x="30.00" y="42.00" font-family="Arial" font-size="20" text-anchor="start" fill="#111111" font-weight="bold">llm_soc — attention value datapath</text>
+<text x="30.00" y="66.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">Current RTL: pipelined attention value pass</text>
+<text x="30.00" y="83.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">RTL: llm_soc.sv · clk; raw rst_n → u_reset → core_rst_n</text>
+<polyline points="450,201 450,230" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="450,306 450,335" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="450,411 450,440" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="450,516 450,545" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="450,621 450,650" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="450,726 450,755" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<polyline points="450,831 450,860" fill="none" stroke="#444444" marker-end="url(#arrow)"/>
+<rect x="200" y="125" width="500" height="76" fill="#f5f5f5" stroke="#666666"/>
+<text x="450.00" y="158.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Causal scores: timesteps 0 through position_q</text>
+<text x="450.00" y="175.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Read a score with its timestep tag</text>
+<rect x="200" y="230" width="500" height="76" fill="#b1ddf0" stroke="#10739e"/>
+<text x="450.00" y="263.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Four-stage exp interpolation + timestep tags</text>
+<text x="450.00" y="280.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Whole pipeline stalls when its output cannot issue a V read</text>
+<rect x="200" y="335" width="500" height="76" fill="#f8cecc" stroke="#b85450"/>
+<text x="450.00" y="368.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Reserve one of eight slots before each KV V request</text>
+<text x="450.00" y="385.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Store probability U25 + timestep; five-edge KV read latency</text>
+<rect x="200" y="440" width="500" height="76" fill="#f5f5f5" stroke="#666666"/>
+<text x="450.00" y="473.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Accepted V responses fill the reserved FIFO</text>
+<text x="450.00" y="490.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Eight vectors, each 32 signed S24 lanes</text>
+<rect x="200" y="545" width="500" height="76" fill="#f5f5f5" stroke="#666666"/>
+<text x="450.00" y="578.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Capture oldest probability / V pair into operand registers</text>
+<text x="450.00" y="595.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Preserve FIFO order; wait for math_in_ready</text>
+<rect x="200" y="650" width="500" height="76" fill="#b1ddf0" stroke="#10739e"/>
+<text x="450.00" y="683.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Issue shared llm_math SIMD: 32 signed lane products</text>
+<text x="450.00" y="700.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Four stages of validity / timestep tags track the products</text>
+<rect x="200" y="755" width="500" height="76" fill="#b1ddf0" stroke="#10739e"/>
+<text x="450.00" y="788.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Retire lane products in timestep order</text>
+<text x="450.00" y="805.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Accumulate S56 products into S64 attention_acc_q lanes</text>
+<rect x="200" y="860" width="500" height="76" fill="#dae8fc" stroke="#6c8ebf"/>
+<text x="450.00" y="893.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Drain exp, KV, operands, product tags and math_busy</text>
+<text x="450.00" y="910.50" font-family="Arial" font-size="12" text-anchor="middle" fill="#111111">Then launch unchanged exact attention normalization</text>
+<text x="30.00" y="1031.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">QK score generation and normalization are unchanged. Products are consumed before the unused SIMD reduction tail drains.</text>
+<text x="30.00" y="1048.00" font-family="Arial" font-size="12" text-anchor="start" fill="#666666">Datapath arrows show ordered payload flow; independent stages can overlap across timesteps.</text>
+<text x="30.00" y="1091.00" font-family="Arial" font-size="11" text-anchor="start" fill="#666666">Red: control · Yellow: interface · Gray: registers / buffers · Blue: compute / output · Purple: memory / technology</text>
+</svg>

@@ -1,0 +1,16 @@
+2026/10/09 01:04:27 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/10/09 01:04:27 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+TMPDIR is being set to /tmp/genus_temp_696927_black.doelab.site_ee5303_09_t8NSJ3
+Program Name: Genus(TM) Synthesis Solution, Version: 21.19-s055_1
+@(#)CDS: SYNTECH 21.18-s007_1 () May 30 2023 04:07:20 ( )
+@(#)CDS: SGN 21.10-d001 (04-May-2021) (64 bit executable, TkQt5.9.0)
+@(#)CDS: STYLUS 21.12-s019_1 (12/20/2022 05:13 PST)
+@(#)CDS: AAE 21.18-s012
+@(#)CDS: Ext/IQuantus 21.11-s966
+@(#)CDS: humroute 21.18-s002
+@(#)CDS: preRoute 21.18-s001
+@(#)CDS: halo 21.16-s003
+@(#)CDS: ncprot 20.09-s025
+
+This build will expire on 12/23/2020. Contact Cadence Support for assistance.
+Normal exit.

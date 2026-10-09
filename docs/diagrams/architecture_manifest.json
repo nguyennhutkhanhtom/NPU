@@ -17,7 +17,7 @@
     "llm_math.sv": "1280302be8a07422c547c62b470b51f43324e92519cc0d69b55dd58f94c5d0bd",
     "llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
     "llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
-    "llm_soc.sv": "bd04e8e99a9d20c3bc9a1deba998b1778335ed2ca68c287f550fd09fc9b143d3",
+    "llm_soc.sv": "a4b0b7915641add5671c17952355cedf2500f354c7239f07369f05ab471d92e6",
     "logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
     "matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
     "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
@@ -2083,10 +2083,10 @@
           },
           "ports": {
             "a": "exp_delta_q",
-            "b": "exp_difference_q[11:0]",
+            "b": "exp_fraction_delta_q",
             "product": "exp_interpolation_comb"
           },
-          "line": 341,
+          "line": 343,
           "port_directions": {
             "a": "input",
             "b": "input",
@@ -2108,7 +2108,7 @@
             "b": "temperature_q",
             "product": "noise_product_comb"
           },
-          "line": 345,
+          "line": 347,
           "port_directions": {
             "a": "input",
             "b": "input",
@@ -2123,7 +2123,7 @@
             "index": "random_q[31:24]",
             "value": "gumbel_value"
           },
-          "line": 349,
+          "line": 351,
           "port_directions": {
             "index": "input",
             "value": "output"
@@ -2137,7 +2137,7 @@
             "index": "{1'b0, exp_difference_q[19:12]}",
             "value": "exp_value_hi"
           },
-          "line": 350,
+          "line": 352,
           "port_directions": {
             "index": "input",
             "value": "output"
@@ -2151,7 +2151,7 @@
             "index": "{1'b0, exp_difference_q[19:12]} + 9'd1",
             "value": "exp_value_lo"
           },
-          "line": 351,
+          "line": 353,
           "port_directions": {
             "index": "input",
             "value": "output"
@@ -2181,7 +2181,7 @@
             "host_rdata": "p_host_data",
             "host_rvalid": "p_host_valid"
           },
-          "line": 403,
+          "line": 417,
           "port_directions": {
             "clk": "input",
             "rst_n": "input",
@@ -2219,7 +2219,7 @@
             "wr_mask": "linear_write ? 32'hffffffff : op[O_WRITE_IDX] ? write_vector_mask_q : 32'h0",
             "wr_data": "write_vector_q"
           },
-          "line": 493,
+          "line": 507,
           "port_directions": {
             "clk": "input",
             "rst_n": "input",
@@ -2251,7 +2251,7 @@
             "wr_mask": "op[C_STORE_IDX] ? 32'hffffffff : 32'h0",
             "wr_data": "vector_q"
           },
-          "line": 505,
+          "line": 520,
           "port_directions": {
             "clk": "input",
             "rst_n": "input",
@@ -2285,7 +2285,7 @@
             "product_valid": "math_product_valid",
             "sum_valid": "math_sum_valid"
           },
-          "line": 516,
+          "line": 531,
           "port_directions": {
             "clk": "input",
             "rst_n": "input",
@@ -2327,7 +2327,7 @@
             "done_o": "head_dot_done",
             "accumulator_o": "head_dot_acc"
           },
-          "line": 521,
+          "line": 536,
           "port_directions": {
             "clk": "input",
             "rst_n": "input",
@@ -2370,12 +2370,12 @@
             "math_issue_o": "attention_math_issue",
             "sum_valid_i": "math_sum_valid",
             "sum_i": "math_sum",
-            "score_address_i": "time_q",
+            "score_address_i": "attention_value_active_q ? attention_value_score_q[6:0] : time_q",
             "score_o": "attention_score",
             "max_score_o": "attention_max",
             "done_o": "attention_scores_done"
           },
-          "line": 546,
+          "line": 561,
           "port_directions": {
             "clk": "input",
             "rst_n": "input",
@@ -2425,7 +2425,7 @@
             "dot_issue_o": "linear_dot_issue",
             "accumulator_o": "linear_dot_acc"
           },
-          "line": 595,
+          "line": 689,
           "port_directions": {
             "clk": "input",
             "rst_n": "input",
@@ -2464,7 +2464,7 @@
             "done": "root_done",
             "root": "root"
           },
-          "line": 605,
+          "line": 699,
           "port_directions": {
             "clk": "input",
             "rst_n": "input",
@@ -2500,7 +2500,7 @@
             "done_o": "attention_norm_done",
             "vector_o": "attention_normalized"
           },
-          "line": 618,
+          "line": 712,
           "port_directions": {
             "clk": "input",
             "rst_n": "input",
@@ -2539,7 +2539,7 @@
             "quotient": "div_quotient",
             "remainder": "div_remainder"
           },
-          "line": 626,
+          "line": 720,
           "port_directions": {
             "clk": "input",
             "rst_n": "input",
@@ -2567,7 +2567,7 @@
             "done": "sig_done[sig_lane]",
             "y_raw": "sig_y[sig_lane]"
           },
-          "line": 642,
+          "line": 736,
           "port_directions": {
             "clk": "input",
             "rst_n": "input",
@@ -2607,6 +2607,10 @@
         [
           "head_stage = 1; head_stage < 6; head_stage = head_stage + 1",
           "g_head_tag"
+        ],
+        [
+          "attention_stage = 1; attention_stage < 4; attention_stage = attention_stage + 1",
+          "g_attention_value_tags"
         ],
         [
           "input_lane = 0; input_lane < 32; input_lane = input_lane + 1",
@@ -2763,6 +2767,7 @@
         "A_NORM_WAIT_IDX": "109",
         "L_ROW_START_IDX": "110",
         "L_ROW_WAIT_IDX": "111",
+        "ATTENTION_VALUE_SLOTS": "8",
         "SIGMOID_SHIFT": "$clog2(SIGMOID_LANES)"
       },
       "signals": [
@@ -2829,6 +2834,8 @@
         "[32:0] exp_difference_q",
         "[36:0] exp_interpolation_q",
         "[24:0] exp_delta_q",
+        "[11:0] exp_fraction_lookup_q, exp_fraction_delta_q",
+        "[24:0] exp_hi_delta_q, exp_hi_product_q",
         "[36:0] exp_interpolation_comb",
         "signed [23:0] gumbel_value",
         "[32:0] noise_product_comb",
@@ -2860,6 +2867,17 @@
         "attention_k_req, attention_capture, attention_math_issue, attention_scores_done",
         "[11:0] attention_k_address",
         "signed [31:0] attention_score, attention_max",
+        "attention_value_active_q, attention_value_abort_q",
+        "[7:0] attention_value_score_q, attention_value_request_q",
+        "[7:0] attention_value_response_q, attention_value_capture_q, attention_value_retire_q",
+        "[3:0] attention_exp_valid_q, attention_product_valid_q",
+        "[6:0] attention_exp_time_q [0:3], attention_product_time_q [0:3]",
+        "[24:0] attention_probability_fifo_q [0:ATTENTION_VALUE_SLOTS - 1]",
+        "[6:0] attention_time_fifo_q [0:ATTENTION_VALUE_SLOTS - 1]",
+        "signed [23:0] attention_value_fifo_q [0:31][0:ATTENTION_VALUE_SLOTS - 1]",
+        "attention_operand_valid_q",
+        "[6:0] attention_operand_time_q",
+        "attention_value_req, attention_value_math_issue",
         "[255:0] p_data",
         "[31:0] p_host_data",
         "v_read, v_valid, v_write_busy",
@@ -2870,12 +2888,22 @@
         "k_read, k_valid, k_write_busy",
         "[11:0] k_address_q, k_write_address_q",
         "[767:0] k_data",
-        "[11:0] k_read_address = attention_k_req ? attention_k_address : k_address_q",
+        "[11:0] k_read_address = attention_k_req ? attention_k_address :\n        attention_value_req ? {layer_q, attention_exp_time_q[3], 1'b1, head_q} : k_address_q",
         "math_start, math_busy, math_done, math_in_ready, math_product_valid, math_sum_valid",
         "signed [23:0] math_a_q [0:31]",
         "signed [31:0] math_b_q [0:31]",
         "signed [55:0] math_product [0:31]",
         "signed [60:0] math_sum",
+        "attention_value_start = op[A_STREAM_WAIT_IDX] && attention_scores_done && !op_fault_q",
+        "attention_value_run = attention_value_active_q && !attention_value_abort_q && !op_fault_q",
+        "attention_value_capture = attention_value_run &&\n        attention_value_response_q != attention_value_capture_q && (!attention_operand_valid_q || math_in_ready)",
+        "[7:0] attention_value_reserved = attention_value_request_q - attention_value_capture_q",
+        "attention_exp_step = attention_value_run && (!attention_exp_valid_q[3] || attention_value_req)",
+        "attention_score_read = attention_exp_step && attention_value_score_q <= {1'b0, position_q}",
+        "attention_value_response = attention_value_active_q && k_valid &&\n        attention_value_response_q < attention_value_request_q",
+        "[24:0] attention_probability = exp_hi_product_q - 25'((exp_interpolation_q + 37'd2048) >> 12)",
+        "attention_value_accumulate = attention_value_run && attention_product_valid_q[3] && math_product_valid",
+        "attention_value_finished = attention_value_run &&\n        attention_value_retire_q == {1'b0, position_q} + 8'd1 &&\n        attention_exp_valid_q == 0 && attention_value_request_q == attention_value_response_q &&\n        attention_value_response_q == attention_value_capture_q && !attention_operand_valid_q &&\n        attention_product_valid_q == 0 && !math_busy",
         "linear_active_q, linear_result_valid_q, linear_result_fault_q",
         "[8:0] linear_pipe_valid_q",
         "[9:0] linear_row_issue_q, linear_pipe_row_q [0:8]",

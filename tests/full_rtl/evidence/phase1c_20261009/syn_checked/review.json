@@ -1,0 +1,21 @@
+{
+  "status": "VERIFIED_FLOW_COMPLETED",
+  "job_id": "64360",
+  "rtl_sha256": "a4b0b7915641add5671c17952355cedf2500f354c7239f07369f05ab471d92e6",
+  "report_hashes_verified": 12,
+  "inputs_verified": 60,
+  "ram_blackboxes": {
+    "sram_word_tile_WIDTH32_ROWS1024": 192,
+    "sram_word_tile_WIDTH24_ROWS1024": 128,
+    "sram_word_tile_WIDTH24_ROWS96": 32
+  },
+  "error_diagnostics": 0,
+  "mapped_cell_count": 249803,
+  "mapped_cell_area": 870961.79,
+  "baseline_cell_area": 818368.756,
+  "area_increase_percent": 6.426569149225925,
+  "setup_slack_ps": 16,
+  "critical_data_path_ps": 9744,
+  "period_ps": 10000,
+  "scope": "Mapped logic with 352 SRAM black boxes; excludes SRAM area/timing and physical closure. Phase 1C overall closure/trade-off acceptance is separate."
+}
