@@ -1,8 +1,15 @@
 # Hierarchy matmulfree: legacy notes
 
-> **Category: LEGACY.**
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive](../../archive/README.md) → This page
 
-[Project](<../../../README.md>) → [Documents](<../../README.md>) → **Hierarchy and data flow**
+| Reading guide | Document |
+|---|---|
+| Read first | [Legacy architecture](../../design/legacy/architecture.md) |
+| Continue / related lookup | [Current evidence](../../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
+> **Category: LEGACY.**
 
 <details>
 <summary>Page table of contents</summary>

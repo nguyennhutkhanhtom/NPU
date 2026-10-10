@@ -1,5 +1,14 @@
 # llm_soc
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [02 · Architecture](../../02-architecture/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](../full_graph.md) |
+| Related implementation | [llm_linear_engine.sv](llm_linear_engine.sv.md) |
+<!-- reading-navigation:end -->
+
 **Structural generation.** Named SystemVerilog generate constructs are retained without the optional `generate`/`endgenerate` regions, following lowRISC. Loop bounds, conditional branches, instance names and lane ownership are unchanged.
 
 > **Role:** Own autonomous fixed-point inference and route shared resources.

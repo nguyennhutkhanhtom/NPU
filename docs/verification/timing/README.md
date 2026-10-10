@@ -1,8 +1,15 @@
 # Đọc và tái tạo timing full-top
 
-> **Category: GUIDE.**
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [05 · Implementation](../../05-implementation/README.md) → This page
 
-[Tài liệu](../../README.md) → [Kiểm chứng](../README.md) → **Timing**
+| Reading guide | Document |
+|---|---|
+| Read first | [Current evidence and backend scope](../optimization_status.md) |
+| Continue / related lookup | [Historical FPGA timing development](../../history/timing_development.md) |
+<!-- reading-navigation:end -->
+
+> **Category: GUIDE.**
 
 Timing hiện tại cần đọc cùng [trang trạng thái](../optimization_status.md).
 Trang này mô tả quy trình và cách hiểu một checkpoint đã hoàn tất.

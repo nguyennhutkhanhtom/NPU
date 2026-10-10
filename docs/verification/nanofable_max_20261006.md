@@ -1,8 +1,15 @@
 # Full-top timing and NanoFable demo in the maximum RTL context
 
-> **Category: HISTORICAL SNAPSHOT — 2026-10-06.** Results below refer only to this saved run; use [current status](optimization_status.md) for workspace applicability.
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [Archive](../archive/README.md) → This page
 
-[Documentation](../README.md) → [Verification](README.md) → **NanoFable 06/10/2026**
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../archive/README.md) |
+| Continue / related lookup | [Current evidence](optimization_status.md) |
+<!-- reading-navigation:end -->
+
+> **Category: HISTORICAL SNAPSHOT — 2026-10-06.** Results below refer only to this saved run; use [current status](optimization_status.md) for workspace applicability.
 
 ## Scope and timing results
 

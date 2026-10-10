@@ -37,6 +37,15 @@ them. No parallel copies of architecture or verification claims are created.
 
 ## Direct lookups
 
+Choose a reading route based on your task; each page links back to its topic.
+
+| Goal | Reading order |
+|---|---|
+| Understand the hardware | [System overview](design/full_rtl_language.md) → [Full RTL graph](source_guide/full_graph.md) → [Module guides](source_guide/blocks/README.md) |
+| Run a checkpoint | [Quickstart](00-start-here/quickstart.md) → [Model compatibility](demos/candidates.md) → [Demo flow](00-start-here/demo-flow.md) → [Application evidence](verification/optimization_status.md) |
+| Change or evaluate RTL | [Architecture map](02-architecture/README.md) → [RTL policy](design/rtl_style.md) → [Verification workflow](verification/README.md) → [Implementation evidence](verification/optimization_status.md) |
+| Review optimization decisions | [Execution contract](NPU_V2_EXECUTION.md) → [Research map](06-research/README.md) → [Reviews](decisions/README.md) → [Measured results](verification/optimization_status.md) |
+
 | Need | Authoritative page |
 |---|---|
 | Current architecture and numeric contracts | [Full RTL language](design/full_rtl_language.md) |

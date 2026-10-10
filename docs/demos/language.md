@@ -1,11 +1,17 @@
 # Run the real NanoFable on llm_soc
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [00 · Start here](../00-start-here/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Demo reading flow](../00-start-here/demo-flow.md) |
+| Continue / related lookup | [Current server application workflow](../../tools/server/README.md#application-checkpoint) |
+<!-- reading-navigation:end -->
+
 > Branch `remote`: the local commands in this document are historical. Run the checkpoint using [flow server](../../tools/server/README.md#application-checkpoint); do not use the old FPGA hardware gate for the new configuration.
 
-
 > **Category: GUIDE.**
-
-[Document](../README.md) → [Demo](README.md) → **NanoFable**
 
 The runner uses the pinned checkpoint **NanoFable-1M-ternary seed1**. The host loads parameters,
 prompt and configuration; all prefill/decode, attention, head, and token selection runs

@@ -1,5 +1,14 @@
 # Codex Guide — Create Architecture Diagrams in the Style of `Ethos_U85_mini.drawio`
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [Decisions](../decisions/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Diagram index](README.md) |
+| Continue / related lookup | [Editable diagram catalog](architecture_catalog.md) |
+<!-- reading-navigation:end -->
+
 > **Purpose:** Help Codex create or modify **editable diagrams.net / draw.io (`.drawio`) architecture block diagrams** that visually match `Ethos_U85_mini.drawio`.
 >
 > **Reference file:** `Ethos_U85_mini.drawio` (required; place it in the workspace or supply its exact path).

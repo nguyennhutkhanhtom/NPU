@@ -1,7 +1,15 @@
 # mul.sv — Helper multiplying S16 and gate
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [02 · Architecture](../../02-architecture/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](../full_graph.md) |
+| Related implementation | [logic_mul.sv](logic_mul.sv.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Documentation](../../README.md) → [RTL Hierarchy](<../legacy/README.md>) → [File index](README.md)
 
 **Status:** Helper — not instantiated in the current top.
 

@@ -1,8 +1,15 @@
 # Diagram references
 
-> **Category: GUIDE.** The former combined-document diagrams were exact copies of the owners below. Use these links to avoid loading duplicate diagrams; historical and legacy owners retain their scope labels.
+<!-- reading-navigation:start -->
+[Documentation](README.md) → [01 · System](01-system/README.md) → This page
 
-[Documentation](README.md) · [Diagram style](diagrams/diagram_style.md) · [Diagram navigation](diagrams/README.md)
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](source_guide/full_graph.md) |
+| Continue / related lookup | [Editable diagram catalog](diagrams/architecture_catalog.md) |
+<!-- reading-navigation:end -->
+
+> **Category: GUIDE.** The former combined-document diagrams were exact copies of the owners below. Use these links to avoid loading duplicate diagrams; historical and legacy owners retain their scope labels.
 
 - [demos/legacy/model_candidates.md](demos/legacy/model_candidates.md)
 - [demos/legacy/nanofable_hybrid.md](demos/legacy/nanofable_hybrid.md)

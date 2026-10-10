@@ -1,5 +1,13 @@
 # Editable architecture diagram catalog
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [01 · System](../01-system/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](../source_guide/full_graph.md) |
+<!-- reading-navigation:end -->
+
 All pages use native draw.io shapes and connectors. RTL source is authoritative.
 
 | Page | Source | Editable file | Preview |

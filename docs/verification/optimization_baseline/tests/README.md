@@ -1,6 +1,15 @@
 # Full RTL language inference
 
-[Design and implementation status](../../docs/design/full_rtl_language.md) · [Language demo hub](../../docs/demos/language.md)
+<!-- reading-navigation:start -->
+[Documentation](../../../README.md) → [Archive](../../../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../../../archive/README.md) |
+| Continue / related lookup | [Current evidence](../../optimization_status.md) |
+<!-- reading-navigation:end -->
+
+[Design and implementation status](../../../design/full_rtl_language.md) · [Language demo hub](../../../demos/language.md)
 
 `run_units.ps1` checks arithmetic, operators and the autonomous graph with synthetic fixtures. It does
 not load a trained application checkpoint. `run_application.ps1` first checks
@@ -79,7 +88,7 @@ python tests/full_rtl/memory_model.py --timing docs/verification/timing/fullrtl1
 ```
 
 Do not recompile/overwrite an active work library or evidence tag. Current jobs
-and reproduction commands are in [TASK_STATE](../../TASK_STATE.md). Application
+and reproduction commands are in [TASK_STATE](../../../../TASK_STATE.md). Application
 preparation/reference execution remain blocked until exact-current hardware
 AND all-seven-unit gates pass.
 
@@ -146,7 +155,6 @@ Quartus uses a C9 device to verify packing and timing. The replaceable memory
 adapter isolates altsyncram M10K from compute RTL. AUTO_DSP_RECOGNITION OFF
 and DSP_BLOCK_BALANCING LOGIC ELEMENTS prohibit DSP inference; the application
 gate also requires actual fit summary DSP=0 and PLL=0.
-
 
 Current arithmetic timing revision pipelines SIMD byte products and pair sums:
 exact done latency9 clocks, reset coverage9 phases,503transactions and unchanged

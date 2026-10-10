@@ -1,5 +1,14 @@
 # NPU 100 MHz microarchitecture change review
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive](../../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../../archive/README.md) |
+| Continue / related lookup | [Current evidence](../../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
 
 Plan version: 1. Date: 2026-10-05, Asia/Saigon.

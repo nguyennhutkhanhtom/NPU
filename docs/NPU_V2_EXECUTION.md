@@ -1,5 +1,14 @@
 # NPU v2 execution contract
 
+<!-- reading-navigation:start -->
+[Documentation](README.md) → [Decisions](decisions/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Architecture contract](design/full_rtl_language.md) |
+| Continue / related lookup | [Matching verification evidence](verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 This is the compact source of truth for staged NPU v2 implementation. Work only on the current phase; do not pull later-phase architecture into an earlier change.
 
 ## Frozen architecture decisions

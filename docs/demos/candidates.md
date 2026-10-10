@@ -1,8 +1,15 @@
 # Models compatible with llm_soc
 
-> **Category: GUIDE.**
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [03 · Model](../03-model/README.md) → This page
 
-[Documentation](../README.md) → [Demo](README.md) → **Model compatibility**
+| Reading guide | Document |
+|---|---|
+| Read first | [Geometry and numerical contracts](../design/full_rtl_language.md) |
+| Continue / related lookup | [Checkpoint demo flow](../00-start-here/demo-flow.md) |
+<!-- reading-navigation:end -->
+
+> **Category: GUIDE.**
 
 ## Models currently supported by the exporter
 

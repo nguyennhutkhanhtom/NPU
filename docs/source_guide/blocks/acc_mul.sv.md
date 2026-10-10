@@ -1,7 +1,15 @@
 # acc_mul.sv — 32-term tertiary adder tree
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive · Legacy](../../archive/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Legacy architecture](../../design/legacy/architecture.md) |
+| Related implementation | [ternary_mul.sv](ternary_mul.sv.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Documentation](../../README.md) → [RTL Hierarchy](<../legacy/README.md>) → [File-level index](README.md)
 
 **Status:** In use — in ternary_mul.
 

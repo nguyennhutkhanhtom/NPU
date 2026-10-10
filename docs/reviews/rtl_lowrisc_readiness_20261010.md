@@ -1,5 +1,14 @@
 # RTL coding readiness review — 2026-10-10
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [Decisions](../decisions/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Execution contract](../NPU_V2_EXECUTION.md) |
+| Continue / related lookup | [Matching verification evidence](../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 Scope: the current `llm_soc` graph, its arithmetic/memory/reset leaves, packages
 and included LUT definitions. Legacy top/control is outside this refactor.
 The user's primary reference is the [lowRISC Verilog Coding Style Guide](https://github.com/lowRISC/style-guides/blob/master/VerilogCodingStyle.md).

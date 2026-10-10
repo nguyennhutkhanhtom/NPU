@@ -1,9 +1,17 @@
 # llm_pkg.sv — Layout, saturation and sampler
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [02 · Architecture](../../02-architecture/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](../full_graph.md) |
+| Related implementation | [llm_soc.sv](llm_soc.sv.md) |
+<!-- reading-navigation:end -->
+
 **Package constants.** The fixed graph constants use typed package `parameter` declarations according to the lowRISC package convention. Values, signed `int` types and all references are preserved; module geometry remains unchanged.
 
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Document](../../README.md) → [Source guide](../README.md) → [Table of contents](README.md)
 
 **Source:** [llm_pkg.sv](<../../../Verilog%20Source%20code/llm_pkg.sv>).
 

@@ -1,7 +1,15 @@
 # reset_release.sv — Standard-FF reset release boundary
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [02 · Architecture](../../02-architecture/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](../full_graph.md) |
+| Related implementation | [llm_soc.sv](llm_soc.sv.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Document](../../README.md) → [Source guide](../README.md) → [Table of contents](README.md)
 
 **Source:** [reset_release.sv](<../../../Verilog%20Source%20code/reset_release.sv>).
 

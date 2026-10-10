@@ -1,8 +1,15 @@
 # SRAM Connection When Transitioning to ASIC
 
-> **Category: GUIDE.**
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [05 · Implementation](../05-implementation/README.md) → This page
 
-[Documentation](../README.md) · [RTL portability policy](asic_portability.md) · [Full graph](full_rtl_language.md) · [Memory test](../../tests/full_rtl/tb_memory_ip.sv)
+| Reading guide | Document |
+|---|---|
+| Read first | [ASIC portability](asic_portability.md) |
+| Continue / related lookup | [Portable SRAM implementation](../source_guide/blocks/sram_word_tile.sv.md) |
+<!-- reading-navigation:end -->
+
+> **Category: GUIDE.**
 
 The compute/control block still uses synthesizable SystemVerilog. Current technology leaf
 is `quartus_word_ram`, accessed via `pipelined_word_ram`; only this source

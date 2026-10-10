@@ -1,8 +1,15 @@
 # Host interface of llm_soc
 
-> **Category: GUIDE.**
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [02 · Architecture](../02-architecture/README.md) → This page
 
-[Documentation](../README.md) → [Design](README.md) → **Host interface**
+| Reading guide | Document |
+|---|---|
+| Read first | [System architecture](full_rtl_language.md) |
+| Continue / related lookup | [Controller implementation](../source_guide/blocks/llm_soc.sv.md) |
+<!-- reading-navigation:end -->
+
+> **Category: GUIDE.**
 
 Host and DUT use the same `clk`. All addresses below are byte addresses, aligned to
 4 bytes. The matmulfree core has its own host contract in [legacy interface](<legacy/interfaces.md>).

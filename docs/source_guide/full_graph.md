@@ -1,8 +1,15 @@
 # RTL blocks of the full graph
 
-> **Category: GUIDE.**
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [02 · Architecture](../02-architecture/README.md) → This page
 
-[Documentation](../README.md) → [Source guide](README.md) → **Full graph**
+| Reading guide | Document |
+|---|---|
+| Read first | [System architecture](../design/full_rtl_language.md) |
+| Continue / related lookup | [Module catalog](blocks/README.md) |
+<!-- reading-navigation:end -->
+
+> **Category: GUIDE.**
 
 ## Top and configuration
 

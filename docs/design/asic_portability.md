@@ -1,8 +1,15 @@
 # Ability to switch to ASIC and allowed implementation cells
 
-> **Category: POLICY.**
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [05 · Implementation](../05-implementation/README.md) → This page
 
-[Document](../README.md) · [Complete RTL graph](full_rtl_language.md) · [Arithmetic source](../source_guide/blocks/logic_mul.sv.md) · [Memory boundary](../source_guide/blocks/quartus_word_ram.sv.md)
+| Reading guide | Document |
+|---|---|
+| Read first | [Architecture map](../02-architecture/README.md) |
+| Continue / related lookup | [SRAM binding contract](asic_memory_binding.md) |
+<!-- reading-navigation:end -->
+
+> **Category: POLICY.**
 
 [SRAM binding guide for ASIC](asic_memory_binding.md) records the contract
 leaf/client, all small arrays are inferred and evidenced by full-top elaboration

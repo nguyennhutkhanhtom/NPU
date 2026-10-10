@@ -1,7 +1,15 @@
 # quartus_word_ram.sv — FPGA memory technology binding
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [02 · Architecture](../../02-architecture/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](../full_graph.md) |
+| Related implementation | [sram_word_tile.sv](sram_word_tile.sv.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Document](../../README.md) → [Source guide](../README.md) → [Table of Contents](README.md)
 
 **Source:** [quartus_word_ram.sv](<../../../Verilog%20Source%20code/quartus_word_ram.sv>).
 

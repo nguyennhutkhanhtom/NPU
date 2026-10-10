@@ -1,6 +1,13 @@
 # RTL architecture diagrams
 
-[Documentation](../README.md) · [All 100 editable pages](architecture_catalog.md)
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [01 · System](../01-system/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](../source_guide/full_graph.md) |
+| Continue / related lookup | [Editable diagram catalog](architecture_catalog.md) |
+<!-- reading-navigation:end -->
 
 Current RTL is the source of architectural truth. The redesign replaces all
 73 existing Markdown flowcharts with native draw.io pages and linked SVG

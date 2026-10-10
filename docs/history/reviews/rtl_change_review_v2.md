@@ -1,5 +1,14 @@
 # RTL change review — version 2
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive](../../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../../archive/README.md) |
+| Continue / related lookup | [Current evidence](../../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
 
 Status: IMPLEMENTED / HISTORICAL. The approval below applies only to the recorded milestone. The user approved the presented ARCH_RESEARCH.md section 18 P1–P4 with: "Do plan above and report result for me".

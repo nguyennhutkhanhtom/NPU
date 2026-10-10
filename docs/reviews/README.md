@@ -1,5 +1,14 @@
 # Implementation reviews
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [Decisions](../decisions/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Execution contract](../NPU_V2_EXECUTION.md) |
+| Continue / related lookup | [Matching verification evidence](../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE.** Reviews explain decisions at a named source snapshot; they do not define live status.
 
 | Review | Scope |

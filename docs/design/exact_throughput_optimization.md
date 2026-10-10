@@ -1,8 +1,15 @@
 # Optimize throughput and resource usage
 
-> **Category: GUIDE.**
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [06 · Research](../06-research/README.md) → This page
 
-[Document](../README.md) → [Design](README.md) → **Throughput**
+| Reading guide | Document |
+|---|---|
+| Read first | [Architecture and numeric contracts](full_rtl_language.md) |
+| Continue / related lookup | [Measured results and evidence](../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
+> **Category: GUIDE.**
 
 Optimize while keeping the graph geometry fixed: four layers, 128 channels, four heads,
 FFN 384 channels, vocabulary 4,096 and context 128. The goal is to reduce compute clocks

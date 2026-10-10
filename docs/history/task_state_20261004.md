@@ -1,5 +1,14 @@
 # NPU resume checkpoint
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [Archive](../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../archive/README.md) |
+| Continue / related lookup | [Current evidence](../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
 
 Updated 2026-10-04 22:25 Asia/Saigon. Repo/reports/hashes are authoritative. Preserve valid changes and immutable evidence; no reset/revert.

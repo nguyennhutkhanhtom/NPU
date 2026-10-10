@@ -1,7 +1,15 @@
 # sram_256_wrapper.sv — Synchronous SRAM with 32-bit mask
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive · Legacy](../../archive/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Legacy architecture](../../design/legacy/architecture.md) |
+| Related implementation | [banked_word_ram.sv](banked_word_ram.sv.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Documentation](../../README.md) → [RTL Hierarchy](<../legacy/README.md>) → [File Table of Contents](README.md)
 
 **Status:** In use — shared for parameters and workspace.
 

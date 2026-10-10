@@ -1,12 +1,19 @@
 # ISA, descriptor, and host interface
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive](../../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Legacy architecture](architecture.md) |
+| Continue / related lookup | [Current evidence](../../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: LEGACY.**
 
 > **Legacy scope:** this page describes the matmulfree core.
 > The current top llm_soc has [architecture](<../full_rtl_language.md>) and
 > [host interface](<../host_interface.md>) separately.
-
-[Project](<../../../README.md>) → [Documentation](<../../README.md>) → **ISA and host**
 
 This page describes the ISA/host of the instruction-driven legacy core. Host map and
 parameter/config/prompt contract of the current top `llm_soc` are located at

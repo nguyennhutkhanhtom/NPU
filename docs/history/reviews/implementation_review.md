@@ -1,8 +1,15 @@
 # Rà soát và tích hợp source NPU hiện hành
 
-> **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive](../../archive/README.md) → This page
 
-[Project](<../../../README.md>) → [Tài liệu](<../../README.md>) → **Implementation review**
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../../archive/README.md) |
+| Continue / related lookup | [Current evidence](../../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
+> **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
 
 Phạm vi dưới đây là core legacy `matmulfree`. Top mới `llm_soc` có graph
 đầy đủ và adapter SRAM khác; xem [thiết kế hiện tại](<../../design/full_rtl_language.md>)

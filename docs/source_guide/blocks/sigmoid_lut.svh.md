@@ -1,7 +1,15 @@
 # sigmoid_lut.svh — Sigmoid U16/F15: 1/(1+exp(-index/16+8))
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [02 · Architecture](../../02-architecture/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](../full_graph.md) |
+| Related implementation | [sigmoid.sv](sigmoid.sv.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Source guide](../README.md) · [Table of contents](README.md)
 
 **Source:** [sigmoid_lut.svh](<../../../Verilog%20Source%20code/sigmoid_lut.svh>).
 

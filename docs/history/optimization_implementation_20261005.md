@@ -1,5 +1,14 @@
 # Optimization implementation history
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [Archive](../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../archive/README.md) |
+| Continue / related lookup | [Current evidence](../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
 
 The workspace cleanup on 2026-10-05 preserves the one-shot optimization scripts

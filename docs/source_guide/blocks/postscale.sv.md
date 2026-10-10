@@ -1,7 +1,15 @@
 # postscale.sv — Change scale, add bias and saturation
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive · Legacy](../../archive/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Legacy architecture](../../design/legacy/architecture.md) |
+| Related implementation | [scale_compose.sv](scale_compose.sv.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Documentation](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [File index](README.md)
 
 **Status:** In use — postscale_finish after registers in ternary_mul; postscale maintains combinational interface for checking.
 

@@ -1,5 +1,14 @@
 # RTL Policy Overview
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [Decisions](../decisions/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Architecture map](../02-architecture/README.md) |
+| Continue / related lookup | [Coding readiness review](../reviews/rtl_lowrisc_readiness_20261010.md) |
+<!-- reading-navigation:end -->
+
 > **Category: POLICY.** Maintain clear hardware structure, timing boundary, and register ownership.
 
 ## Overview

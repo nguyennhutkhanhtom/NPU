@@ -1,5 +1,14 @@
 # Lịch sử runner và kiểm chứng full graph
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [Archive](../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../archive/README.md) |
+| Continue / related lookup | [Current evidence](../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
 
 Trang này giữ nội dung trước đợt cập nhật 06/10/2026. Các trạng thái “current”
@@ -154,7 +163,6 @@ Quartus uses a C9 device to verify packing and timing. The replaceable memory
 adapter isolates altsyncram M10K from compute RTL. AUTO_DSP_RECOGNITION OFF
 and DSP_BLOCK_BALANCING LOGIC ELEMENTS prohibit DSP inference; the application
 gate also requires actual fit summary DSP=0 and PLL=0.
-
 
 Current arithmetic timing revision pipelines SIMD byte products and pair sums:
 exact done latency9 clocks, reset coverage9 phases,503transactions and unchanged

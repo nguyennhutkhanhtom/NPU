@@ -1,5 +1,14 @@
 # NanoFable synthesis and fitter warning review
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [Archive](../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../archive/README.md) |
+| Continue / related lookup | [Current evidence](optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: REVIEW — 2026-10-05 snapshot.** This snapshot must not determine current architecture, live status or active tasks.
 
 Scope: the recorded `nanofable_long_20261005` synthesis log and incomplete fitter log. The user requested fixes for material RTL/ASIC problems and acceptance of warnings confined to the FPGA demonstration backend.

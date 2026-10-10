@@ -1,5 +1,14 @@
 # Current verification and implementation status
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [04 · Verification](../04-verification/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Verification gates](README.md) |
+| Continue / related lookup | [Execution milestones](../NPU_V2_EXECUTION.md) |
+<!-- reading-navigation:end -->
+
 > **Category: CURRENT.** Single owner of live checkpoint results. Updated 2026-10-10 (Asia/Saigon); manifests/logs remain primary evidence.
 
 ## At a glance
@@ -87,4 +96,4 @@ The first fit, [arch_fulltop1_20261007](timing/arch_fulltop1_20261007/manifest.j
 
 ## Verification and application gate
 
-[Verification procedure and gate](README.md#pretrained-application-gate) owns the requirements. [Language demo](../demos/language.md) owns execution commands. Keep the 100 MHz constraints and report measured Fmax even when timing fails. Quartus evidence is FPGA implementation evidence only.
+[Verification procedure and gate](README.md) owns the requirements. [Server application workflow](../../tools/server/README.md#application-checkpoint) owns current execution commands; [language demo](../demos/language.md) retains checkpoint context and earlier local examples. Keep the 100 MHz constraints and report measured Fmax even when timing fails. Quartus evidence is FPGA implementation evidence only.

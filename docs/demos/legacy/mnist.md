@@ -1,8 +1,15 @@
 # Demo checkpoint BitNetMCU on NPU
 
-> **Category: LEGACY.**
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive](../../archive/README.md) → This page
 
-[Project](<../../../README.md>) → [Documentation](<../../README.md>) → [Demo](<../README.md>) → **Binary-MNIST160**
+| Reading guide | Document |
+|---|---|
+| Read first | [Legacy architecture](../../design/legacy/architecture.md) |
+| Continue / related lookup | [Current evidence](../../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
+> **Category: LEGACY.**
 
 Ran the model **Binary-MNIST width160_160_160** recommended in the [model list](<../candidates.md>), using publicly trained weights. Actual graph is **256→160→160→160→10**, three ReLUs, RMSNorm without affine before each linear layer; no bias. RTL uses the portable version after timing optimization; [design review](<../../history/reviews/design_review.md>) recorded new register boundaries.
 

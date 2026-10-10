@@ -1,12 +1,19 @@
 # NanoFable hybrid: historical results
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive](../../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Legacy architecture](../../design/legacy/architecture.md) |
+| Continue / related lookup | [Current evidence](../../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: LEGACY.**
 
 This document was saved before the update on 06/10/2026. The sentences recorded
 “current” or “running” below refer to the time of writing; the workspace status
 can be read at [current verification page](../../verification/optimization_status.md).
-
-[Project](../../../README.md) → [Documentation](../../README.md) → [Model demo](../README.md) → **NanoFable**
 
 This is the previous hybrid proof, kept for reference. [Full new RTL graph](../../design/full_rtl_language.md)
 has implemented all computation and token selection; pretrained
@@ -21,7 +28,6 @@ coherence/fluency criteria did not reach the author's threshold. Numeric/token m
 export must be recorded separately from the actual quality of RTL returned paragraphs.
 Runner currently has seed1 loaded; seed0 has not been exported/run and a training replica has not supported the second model architecture. Only run the next checkpoint when the hardware
 gates for the current source/config are met and the exporter verifies the configuration is correct.
-
 
 Demo using trained checkpoint **NanoFable-1M-ternary**: runs the entire text generation graph on CPU, then verifies actual linear ternaries with the current RTL core. **168 RTL PASS cycles, 33,792 S32 outputs match bit-exact with integer reference**, compilation and simulation both **0 error/0 warning**. The entire text generation graph has not yet run on RTL.
 

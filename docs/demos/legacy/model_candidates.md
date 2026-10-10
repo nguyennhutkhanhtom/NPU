@@ -1,12 +1,19 @@
 # Model survey for core matmulfree
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive](../../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Legacy architecture](../../design/legacy/architecture.md) |
+| Continue / related lookup | [Current evidence](../../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: LEGACY.**
 
 The document was saved before the update on 10/06/2026. The sentences written
 “current” or “running” below belong to the time of writing; the workspace status
 can be read at the [current verification page](../../verification/optimization_status.md).
-
-[Project](../../../README.md) → [Documentation](../../README.md) → [Demo](../README.md) → **Model candidates**
 
 **Updated on 01/10/2026:** RTL passed 9 regression items and demo synthesis. Checkpoint **Binary-MNIST width160_160_160** has been exported, running original CPU/reference integer/RTL correctly labels 10/10 sample images; 40 layers matched bit-exact with integer reference. See [demo checkpoint](<mnist.md>) and [integration report](<../../history/reviews/implementation_review.md>). Added [NanoFable demo](nanofable_hybrid.md): CPU generation 3 prompts × 32 tokens with deterministic repeat, RTL replay 168 real linear steps and 33,792 S32 bit-exact outputs. Full MNIST evaluation or running the full language graph on NPU has not yet been done.
 

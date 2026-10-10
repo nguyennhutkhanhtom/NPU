@@ -1,5 +1,14 @@
 # llm_exp_lut.svh
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [02 · Architecture](../../02-architecture/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](../full_graph.md) |
+| Related implementation | [llm_attention_engine.sv](llm_attention_engine.sv.md) |
+<!-- reading-navigation:end -->
+
 > **Role:** Combinational U25/F24 samples of exp(-index/16).
 > **Scope:** CURRENT. **Category:** GUIDE.
 > **Source:** [llm_exp_lut.svh](<../../../Verilog Source code/llm_exp_lut.svh>).

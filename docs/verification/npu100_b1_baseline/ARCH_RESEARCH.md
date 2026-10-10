@@ -1,5 +1,14 @@
 # Architecture research
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive](../../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../../archive/README.md) |
+| Continue / related lookup | [Current evidence](../optimization_status.md) |
+<!-- reading-navigation:end -->
+
 Reviewed and updated 2026-10-05, Asia/Saigon. Git baseline: commit
 [`ca82b2f39ade227ee5e015f9ed02e9d7df6d5f67`](https://github.com/nguyennhutkhanhtom/NPU/commit/ca82b2f39ade227ee5e015f9ed02e9d7df6d5f67).
 This document replaces the example Commit A/B/C headings with actual revisions
@@ -61,9 +70,9 @@ snapshot, not all current sources. No pretrained application PASS is
 established. Quartus is an EDA demonstration backend;
 these results are neither board deployment nor ASIC signoff.
 
-Sources: [full graph and formats](docs/design/full_rtl_language.md),
-[ASIC portability](docs/design/asic_portability.md),
-[SRAM binding](docs/design/asic_memory_binding.md), [rules](AGENTS.md).
+Sources: [full graph and formats](../../design/full_rtl_language.md),
+[ASIC portability](../../design/asic_portability.md),
+[SRAM binding](../../design/asic_memory_binding.md), [rules](../../../AGENTS.md).
 
 ## 2. Module hierarchy
 
@@ -120,7 +129,7 @@ matmul_wrap → matmulfree
   └── scale_compose → div, logic_mul
 ```
 
-Sources: [source guide](docs/source_guide/README.md),
+Sources: [source guide](../../source_guide/README.md),
 [llm_math](<Verilog Source code/llm_math.sv>),
 [parameter RAM](<Verilog Source code/llm_parameter_ram.sv>),
 [bank RAM](<Verilog Source code/llm_bank_ram.sv>),
@@ -224,7 +233,7 @@ occupy byte addresses below `0x000c0000`; top-level response staging is in
 addition to adapter latency. The host keeps address/data stable until ready,
 then drops `host_en` for at least one clock. Parameter accesses are excluded
 while the graph owns the port. See the exact
-[host map](tests/full_rtl/README.md) and controller source.
+[host map](../../../tests/full_rtl/README.md) and controller source.
 
 Storage and payload registers are unreset. Reset cancels queued enables and
 response validity, retaining already committed contents. Cancelling a host
@@ -233,7 +242,7 @@ preserve common-clock 1R1W ports, accepted-request rate, old-data collision
 behavior and adapter latency. Mapping small controller arrays to new SRAM
 macros would require accounting for any new read edge.
 
-Sources: [memory binding and inferred-array accounting](docs/design/asic_memory_binding.md),
+Sources: [memory binding and inferred-array accounting](../../design/asic_memory_binding.md),
 [word adapter](<Verilog Source code/pipelined_word_ram.sv>),
 [actual-memory tests](tests/full_rtl/tb_memory_ip.sv).
 
@@ -552,7 +561,7 @@ Sources: [current manifest](docs/verification/timing/npu100_a3/manifest.json),
 [current fit summary](docs/verification/timing/npu100_a3/llm_soc.fit.summary),
 [current unconstrained report](docs/verification/timing/npu100_a3/extracted_unconstrained.rpt),
 [stop and audit record](docs/verification/timing/npu100_a3/decision_summary.json),
-[timing history](docs/verification/timing/README.md).
+[timing history](../timing/README.md).
 
 ## 12. Candidate timing optimizations
 

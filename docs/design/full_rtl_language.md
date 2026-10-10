@@ -1,8 +1,15 @@
 # llm_soc architecture: all language graph
 
-> **Category: CURRENT.**
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [01 · System](../01-system/README.md) → This page
 
-[Documentation](../README.md) → [Design](README.md) → **llm_soc**
+| Reading guide | Document |
+|---|---|
+| Read first | [Quickstart](../00-start-here/quickstart.md) |
+| Continue / related lookup | [Full RTL graph](../source_guide/full_graph.md) |
+<!-- reading-navigation:end -->
+
+> **Category: CURRENT.**
 
 `llm_soc.sv` is the current top. The host loads parameters, prompt token IDs, and configuration;
 RTL performs the entire prefill, transformer blocks, language head, token selection

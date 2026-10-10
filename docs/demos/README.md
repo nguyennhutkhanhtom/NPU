@@ -1,5 +1,14 @@
 # Demos
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [03 · Model](../03-model/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Demo reading flow](../00-start-here/demo-flow.md) |
+| Continue / related lookup | [Model compatibility](candidates.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE.** Choose the execution flow before running a model.
 
 | Demo | Purpose |

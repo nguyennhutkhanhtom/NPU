@@ -1,7 +1,15 @@
 # sigmoid.sv — Sigmoid using ROM and interpolation
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [02 · Architecture](../../02-architecture/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](../full_graph.md) |
+| Related implementation | [sigmoid_lut.svh](sigmoid_lut.svh.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Documentation](../../README.md) → [Source guide](../README.md) → [Table of contents for each file](README.md)
 
 **Status:** In use — called from rowwise_op.
 

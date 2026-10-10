@@ -1,5 +1,14 @@
 # llm_gumbel_lut.svh
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [02 · Architecture](../../02-architecture/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](../full_graph.md) |
+| Related implementation | [llm_soc.sv](llm_soc.sv.md) |
+<!-- reading-navigation:end -->
+
 > **Role:** Combinational S24/F16 samples of -ln(-ln((index+0.5)/256)).
 > **Scope:** CURRENT. **Category:** GUIDE.
 > **Source:** [llm_gumbel_lut.svh](<../../../Verilog Source code/llm_gumbel_lut.svh>).

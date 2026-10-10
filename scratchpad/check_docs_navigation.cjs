@@ -6,8 +6,7 @@ const root = path.resolve(__dirname, '..');
 const docs = path.join(root, 'docs');
 const files = cp.execFileSync('rg', ['--files', 'docs', '-g', '*.md'],
   { cwd: root, encoding: 'utf8' }).trim().split(/\r?\n/).map(p => path.resolve(root, p));
-const fresh = files.filter(p => p === path.join(docs, 'README.md') ||
-  /[\\/](?:0[0-6]-[^\\/]+|decisions|archive)[\\/]/.test(p));
+const fresh = files;
 const content = new Map();
 const read = p => {
   if (!content.has(p)) content.set(p, fs.readFileSync(p, 'utf8'));
@@ -30,6 +29,7 @@ function anchors(p) {
 const errors = [];
 let checked = 0;
 for (const p of fresh) for (const link of links(p)) {
+  if (!/\.md$/i.test(link.target)) continue;
   checked++;
   if (!fs.existsSync(link.target)) errors.push(`${path.relative(root, p)}: missing ${link.target}`);
   else if (link.fragment && /\.md$/i.test(link.target) && !anchors(link.target).includes(link.fragment))

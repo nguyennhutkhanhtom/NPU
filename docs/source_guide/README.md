@@ -1,5 +1,14 @@
 # Source Guide
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [02 · Architecture](../02-architecture/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [System architecture](../design/full_rtl_language.md) |
+| Continue / related lookup | [Module catalog](blocks/README.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE.** Navigate the current RTL without loading source listing copies.
 
 | Start from | Purpose |

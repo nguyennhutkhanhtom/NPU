@@ -1,5 +1,14 @@
 # Exact arithmetic throughput optimization, version 3
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [Decisions](../decisions/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Execution contract](../NPU_V2_EXECUTION.md) |
+| Continue / related lookup | [Matching verification evidence](../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: REVIEW — 2026-10-06.** This snapshot must not determine current architecture, live status or active tasks.
 
 Approval: the user approved the supplied phased optimization ideas and the seven corrections presented in the preceding review by requesting implementation. This document records that approved scope; no additional approval is required for those changes.

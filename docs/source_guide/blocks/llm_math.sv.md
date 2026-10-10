@@ -1,9 +1,17 @@
 # llm_math.sv
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [02 · Architecture](../../02-architecture/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Full RTL graph](../full_graph.md) |
+| Related implementation | [logic_mul.sv](logic_mul.sv.md) |
+<!-- reading-navigation:end -->
+
 **Structural generation.** Named SystemVerilog generate constructs are retained without the optional `generate`/`endgenerate` regions, following lowRISC. Loop bounds, conditional branches, instance names and lane ownership are unchanged.
 
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Documentation](../../README.md) → [Source guide](../full_graph.md) → [RTL index](README.md)
 
 **Source:** [llm_math.sv](<../../../Verilog%20Source%20code/llm_math.sv>).
 

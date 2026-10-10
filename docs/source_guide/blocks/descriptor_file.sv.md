@@ -1,7 +1,15 @@
 # descriptor_file.sv — Table describing tensors and matrices
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive · Legacy](../../archive/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Legacy architecture](../../design/legacy/architecture.md) |
+| Related implementation | [rowwise_dispatch.sv](rowwise_dispatch.sv.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Document](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Table of contents of each file](README.md)
 
 **Status:** In use.
 

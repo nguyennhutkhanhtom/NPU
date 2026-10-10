@@ -1,8 +1,15 @@
 # Design
 
-> **Category: GUIDE.**
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [02 · Architecture](../02-architecture/README.md) → This page
 
-[Documentation](../README.md) → **Design**
+| Reading guide | Document |
+|---|---|
+| Read first | [System map](../01-system/README.md) |
+| Continue / related lookup | [Module catalog](../source_guide/blocks/README.md) |
+<!-- reading-navigation:end -->
+
+> **Category: GUIDE.**
 
 ## Current llm_soc Design
 

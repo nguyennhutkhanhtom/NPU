@@ -1,12 +1,19 @@
 # Các mốc timing đã ghi
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [Archive](../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../archive/README.md) |
+| Continue / related lookup | [Current evidence](../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
 
 Bản tài liệu được lưu trước đợt cập nhật ngày 06/10/2026. Các câu ghi
 “current” hoặc “đang chạy” bên dưới thuộc thời điểm viết; trạng thái workspace
 đọc tại [trang kiểm chứng hiện tại](../verification/optimization_status.md).
-
-[Project](../../README.md) → [Tài liệu](../README.md) → [Verification](../verification/README.md) → **Timing**
 
 Trang này ghi cách đọc report post-fit, constraints và thay đổi RTL dựa trên critical path. Phần full graph dùng Cyclone V C9; các snapshot legacy bên dưới dùng thiết bị riêng được ghi trong manifest. Các phép đo là FPGA demo, chưa xác nhận ASIC signoff.
 

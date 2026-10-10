@@ -1,5 +1,14 @@
 # Architecture research — historical 2026-10-05
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [Archive](../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../archive/README.md) |
+| Continue / related lookup | [Current evidence](../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: HISTORICAL SNAPSHOT — 2026-10-05.** This snapshot must not determine current architecture, live status or active tasks.
 
 This is a research reference for the baseline and milestones identified below.

@@ -1,8 +1,15 @@
 # Rà soát design và thống nhất RTL ngày 01/10/2026
 
-> **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive](../../archive/README.md) → This page
 
-[Project](<../../../README.md>) → [Tài liệu](<../../README.md>) → **Design review**
+| Reading guide | Document |
+|---|---|
+| Read first | [Historical context](../../archive/README.md) |
+| Continue / related lookup | [Current evidence](../../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
+> **Category: HISTORICAL SNAPSHOT — see dated checkpoints below.** This snapshot must not determine current architecture, live status or active tasks.
 
 Báo cáo này ghi core `matmulfree` và các snapshot trước. Rà soát top ngôn ngữ
 hiện tại nằm ở [full RTL design](<../../design/full_rtl_language.md>),

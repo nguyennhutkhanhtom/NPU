@@ -1,5 +1,14 @@
 # Ordinary I/O cell characterization
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [04 · Verification](../../04-verification/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Verification gates](../README.md) |
+| Continue / related lookup | [Current evidence](../optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: HISTORICAL SNAPSHOT — archived Quartus 18.1 I/O characterization.** This experiment is not current full-top implementation evidence.
 
 [Documentation hub](../../README.md) · [Full-top timing](../timing/README.md) · [ASIC portability](../../design/asic_portability.md)

@@ -1,5 +1,13 @@
 # Verification of llm_soc on the server
 
+<!-- reading-navigation:start -->
+[Documentation](../README.md) → [04 · Verification](../04-verification/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Continue / related lookup | [Current evidence](optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE.**
 
 [Flow server and configuration](../../tools/server/README.md) is the current running guide

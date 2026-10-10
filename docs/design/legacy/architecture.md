@@ -1,12 +1,18 @@
 # Small ASIC inference with ternary weights and 256-bit SRAM
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive](../../archive/README.md) → This page
+
+| Reading guide | Document |
+|---|---|
+| Continue / related lookup | [Current evidence](../../verification/optimization_status.md) |
+<!-- reading-navigation:end -->
+
 > **Category: LEGACY.**
 
 > **Legacy scope:** this page describes the matmulfree core.
 > The current llm_soc top has [architecture](<../full_rtl_language.md>) and
 > [host interface](<../host_interface.md>) separately.
-
-[Project](<../../../README.md>) → [Documentation](<../../README.md>) → **Architecture**
 
 This page describes the instruction-driven core `matmulfree` and architectural decisions
 made earlier. The current top language and memory/latency/number format are in

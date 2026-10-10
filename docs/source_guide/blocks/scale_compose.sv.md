@@ -1,7 +1,15 @@
 # scale_compose.sv — Compose scales using parallel shift selection
 
+<!-- reading-navigation:start -->
+[Documentation](../../README.md) → [Archive · Legacy](../../archive/README.md) → [Module catalog](README.md)
+
+| Reading guide | Document |
+|---|---|
+| Read first | [Legacy architecture](../../design/legacy/architecture.md) |
+| Related implementation | [npu_pkg.sv](npu_pkg.sv.md) |
+<!-- reading-navigation:end -->
+
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Document](../../README.md) → [Source guide](<../legacy/README.md>) → [Table of contents](README.md)
 
 **Source:** [scale_compose.sv](<../../../Verilog%20Source%20code/scale_compose.sv>).
 
