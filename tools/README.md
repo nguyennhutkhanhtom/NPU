@@ -2,6 +2,12 @@
 
 Run test/synthesis according to the [flow server](server/README.md); `timing` below is the backend/evidence FPGA history.
 
+Tools prepare inputs, launch approved flows, validate diagrams, or collect
+evidence; they are not themselves architecture owners. Before using a tool,
+identify its input files, output location, and the claim its result supports.
+The [fundamentals](../docs/00-start-here/fundamentals.md#from-rtl-to-evidence)
+explain the difference between functional and implementation stages.
+
 
 > **Category: GUIDE.**
 

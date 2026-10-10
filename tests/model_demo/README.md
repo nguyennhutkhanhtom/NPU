@@ -2,6 +2,10 @@
 
 > **Category: GUIDE.**
 
+This directory belongs to the legacy demonstration path, not the current
+`llm_soc` language graph. New readers should first review the distinction between
+[current and legacy tops](../../docs/00-start-here/fundamentals.md#what-this-repository-builds).
+
 [Documentation hub](../../docs/README.md) · [Historical report](<../../docs/demos/legacy/mnist.md>) · [Current full RTL application](../full_rtl/README.md)
 
 The legacy MNIST runners/exporter/testbench have been retired. This directory

@@ -5,11 +5,21 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [Verification gates](README.md) |
 | Continue / related lookup | [Execution milestones](../NPU_V2_EXECUTION.md) |
 <!-- reading-navigation:end -->
 
 > **Category: CURRENT.** Single owner of live checkpoint results. Updated 2026-10-10 (Asia/Saigon); manifests/logs remain primary evidence.
+
+## How to read this status page
+
+Each row is a separate claim tied to named evidence. “Matching” means source,
+configuration, test inputs, and relevant tool context agree with the evidence
+manifest. A previous result is retained for comparison but cannot certify newer
+RTL. Cycle count describes functional execution work; Fmax and slack describe a
+specific fitted or synthesized implementation; resource counts describe that
+same backend. Do not combine the best number from unrelated snapshots.
 
 ## At a glance
 

@@ -2,6 +2,12 @@
 
 > **Category: GUIDE.**
 
+Each testbench instantiates a named top, drives clocked transactions, and checks
+specific assertions against an independent expectation. A testbench PASS covers
+only the behaviors listed below and the exact compiled snapshot. For an
+introduction to the verification levels, read
+[From RTL to evidence](../../docs/00-start-here/fundamentals.md#from-rtl-to-evidence).
+
 Run from the repo root on Linux Slurm using `tools/server/run_flow.py`.
 [Running, configuration, and evidence guide](../../tools/server/README.md).
 Do not use local PowerShell runners; they give errors pointing to the server flow.

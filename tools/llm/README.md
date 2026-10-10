@@ -2,6 +2,11 @@
 
 > **Category: GUIDE.**
 
+Lookup tables store precomputed fixed-point function samples so hardware does not
+evaluate expensive transcendental functions at runtime. See [fixed-point
+fundamentals](../../docs/00-start-here/fundamentals.md#bits-signed-values-and-fixed-point-numbers)
+before changing formats or rounding.
+
 [Documentation hub](../../docs/README.md) · [Numeric tables](../../docs/design/full_rtl_language.md)
 
 `generate_tables.py` regenerates the explicit exp/Gumbel combinational tables.

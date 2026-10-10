@@ -5,10 +5,17 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Continue / related lookup | [Current evidence](optimization_status.md) |
 <!-- reading-navigation:end -->
 
 > **Category: GUIDE.**
+
+For a beginner-friendly explanation of why compile, simulation, application,
+synthesis, and timing are separate claims, read [From RTL to evidence](../00-start-here/fundamentals.md#from-rtl-to-evidence).
+The practical rule is simple: run the smallest test that directly exercises the
+change, then expand to the required regression gates. Never infer a broader PASS
+than the completion marker and matching manifest establish.
 
 [Flow server and configuration](../../tools/server/README.md) is the current running guide
 on branch `remote`. Run Xcelium/Genus in Slurm allocation; the entry points

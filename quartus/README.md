@@ -1,5 +1,9 @@
 # Quartus EDA backend
 
+New to FPGA implementation? Read [From RTL to evidence](../docs/00-start-here/fundamentals.md#from-rtl-to-evidence)
+first. Quartus results describe the selected FPGA project and constraints; they
+do not establish ASIC timing or physical signoff.
+
 > Backend FPGA history, no longer the flow running currently on branch `remote`. See [flow server](../tools/server/README.md).
 
 

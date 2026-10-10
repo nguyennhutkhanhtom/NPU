@@ -5,6 +5,7 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [Full RTL graph](../source_guide/full_graph.md) |
 <!-- reading-navigation:end -->
 

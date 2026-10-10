@@ -5,11 +5,18 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [Demo reading flow](../00-start-here/demo-flow.md) |
 | Continue / related lookup | [Model compatibility](candidates.md) |
 <!-- reading-navigation:end -->
 
 > **Category: GUIDE.** Choose the execution flow before running a model.
+
+A model demo is considered an RTL result only after the exported fixture, integer
+reference, compiled source, run configuration, and returned token IDs all match.
+Generating readable text by itself is not the gate. See [the fundamentals](../00-start-here/fundamentals.md#from-rtl-to-evidence)
+for the distinction between application, simulation, synthesis, and timing
+evidence.
 
 | Demo | Purpose |
 |---|---|

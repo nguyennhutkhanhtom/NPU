@@ -2,6 +2,12 @@
 
 [Documentation map](../README.md)
 
+Implementation tools turn behavioral RTL into a concrete hardware structure.
+Synthesis chooses gates or generic cells; FPGA fit places and routes resources on
+an FPGA; ASIC implementation binds standard cells and SRAM macros for a target
+process. Results from these targets answer different questions and must remain
+separate.
+
 | Topic | Read | Scope |
 |---|---|---|
 | ASIC synthesis | [Server synthesis workflow](../../tools/server/README.md) | Slurm/X11, Genus, approved Liberty and reports |
@@ -17,3 +23,11 @@ timing reports are distinct evidence. These navigation entries add no new power
 measurement or physical signoff claim.
 
 Continue with [06 · Research](../06-research/README.md).
+
+## Reading timing and resource numbers
+
+Always pair a number with its target, tool, constraints, corner, and source
+snapshot. Fmax is not an intrinsic property of the algorithm. Area estimates can
+change when memories are inferred as flip-flops instead of macros, and positive
+setup slack does not imply that hold, recovery, removal, pulse-width, or
+unconstrained-path checks passed. The status page records these fields together.

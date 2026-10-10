@@ -5,11 +5,18 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [Architecture map](../02-architecture/README.md) |
 | Continue / related lookup | [SRAM binding contract](asic_memory_binding.md) |
 <!-- reading-navigation:end -->
 
 > **Category: POLICY.**
+
+“Portable” means the functional RTL expresses standard synchronous logic that
+multiple tools can elaborate and synthesize. It does not mean one netlist is
+optimal for every technology, nor that an FPGA timing result predicts ASIC
+timing. Technology-specific SRAMs, clock cells, I/O cells, and physical
+constraints belong behind explicit integration boundaries.
 
 [SRAM binding guide for ASIC](asic_memory_binding.md) records the contract
 leaf/client, all small arrays are inferred and evidenced by full-top elaboration

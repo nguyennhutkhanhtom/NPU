@@ -5,11 +5,20 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [Geometry and numerical contracts](../design/full_rtl_language.md) |
 | Continue / related lookup | [Checkpoint demo flow](../00-start-here/demo-flow.md) |
 <!-- reading-navigation:end -->
 
 > **Category: GUIDE.**
+
+## What “compatible” means
+
+A checkpoint is compatible when every required tensor can be transformed into
+the fixed graph's shapes, numeric formats, packed addresses, and tokenizer ID
+space without inventing an unsupported operation. Similar model names or parameter
+counts are insufficient. Compatibility also does not mean the model has already
+passed RTL application testing; it only means the exporter has a defined mapping.
 
 ## Models currently supported by the exporter
 

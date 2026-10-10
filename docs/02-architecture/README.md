@@ -5,6 +5,13 @@
 The controller, datapath and memory groups below are reading sections on one
 page. Individual RTL guides remain in the flat [module catalog](../source_guide/blocks/README.md).
 
+In hardware, *ownership* means exactly one block is responsible for updating a
+piece of state or accepting a transaction. This matters because modules operate
+concurrently: an engine may calculate while a memory pipeline returns an older
+request and the controller prepares the next operator. The tables below separate
+control, arithmetic, and storage so you can trace that concurrency without
+reading the entire top module first.
+
 ## Controller and host
 
 | Topic | Read |
@@ -42,3 +49,11 @@ The instruction/descriptor ISA belongs to legacy `matmulfree`; see
 Use the module catalog for remaining shared, helper, asset and legacy guides;
 its scope column distinguishes their ownership. Continue with
 [03 · Model](../03-model/README.md).
+
+## A practical source-reading method
+
+Pick one value, such as a vector row. Find who creates it, which valid signal
+marks it meaningful, where it is registered, who may stall it, and where it is
+finally committed. Then repeat for the control tag that identifies the row.
+Tracing data and its tag together usually reveals pipeline alignment errors more
+quickly than reading every state in source order.

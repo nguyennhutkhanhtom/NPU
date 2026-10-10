@@ -1,5 +1,9 @@
 # Source RTL
 
+New to RTL? Read [NPU and RTL fundamentals](../docs/00-start-here/fundamentals.md)
+before opening individual modules, then use the [module catalog](../docs/source_guide/blocks/README.md)
+to find the block that owns the behavior you want to understand.
+
 Current flow: [Xcelium/Genus in Slurm](../tools/server/README.md), packages before modules, remove `quartus_word_ram.sv`, default top `USE_QUARTUS_MEMORY=0`.
 
 

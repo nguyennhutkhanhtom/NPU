@@ -5,11 +5,21 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [ASIC portability](asic_portability.md) |
 | Continue / related lookup | [Portable SRAM implementation](../source_guide/blocks/sram_word_tile.sv.md) |
 <!-- reading-navigation:end -->
 
 > **Category: GUIDE.**
+
+## Why a binding contract is needed
+
+Behavioral RTL can model a large memory, but an ASIC normally uses a compiled
+SRAM macro. Replacing the model safely requires more than matching address and
+data widths: read latency, write commit, byte/lane mask behavior, same-address
+read/write behavior, reset semantics, and response validity must also agree. The
+wrappers isolate those requirements so the compute graph does not depend on one
+foundry macro.
 
 The compute/control block still uses synthesizable SystemVerilog. Current technology leaf
 is `quartus_word_ram`, accessed via `pipelined_word_ram`; only this source

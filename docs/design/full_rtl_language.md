@@ -5,11 +5,26 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [Quickstart](../00-start-here/quickstart.md) |
 | Continue / related lookup | [Full RTL graph](../source_guide/full_graph.md) |
 <!-- reading-navigation:end -->
 
 > **Category: CURRENT.**
+
+## Before the details
+
+This page describes the complete current machine, not a software model and not
+the older instruction-driven core. `llm_soc` contains control state that walks a
+fixed transformer graph, while specialized engines and shared memories perform
+the work. The host loads inputs and starts the run; it does not schedule every
+matrix or attention operation.
+
+If terms such as S24/F16, pipeline, causal attention, or timing evidence are new,
+read [NPU and RTL fundamentals](../00-start-here/fundamentals.md). In the tables
+below, *geometry* means compile-time model sizes, *contract* means behavior that
+callers and verification rely on, and *ownership* identifies the one block that
+may update a resource at a given stage.
 
 `llm_soc.sv` is the current top. The host loads parameters, prompt token IDs, and configuration;
 RTL performs the entire prefill, transformer blocks, language head, token selection

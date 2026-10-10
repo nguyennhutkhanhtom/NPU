@@ -2,6 +2,10 @@
 
 > **Category: GUIDE.**
 
+This helper records and compares artifacts; it does not turn an estimate into a
+verified result. Read [the evidence levels](../../docs/00-start-here/fundamentals.md#from-rtl-to-evidence)
+and compare only snapshots with matching source, configuration, and constraints.
+
 Run commands from the repository root:
 
 ```powershell

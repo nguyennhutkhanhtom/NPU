@@ -5,6 +5,7 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../../00-start-here/fundamentals.md) · [Glossary](../../00-start-here/glossary.md) |
 | Read first | [Legacy architecture](../../design/legacy/architecture.md) |
 | Related implementation | [norm.sv](norm.sv.md) |
 <!-- reading-navigation:end -->

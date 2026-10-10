@@ -5,11 +5,25 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [System architecture](../design/full_rtl_language.md) |
 | Continue / related lookup | [Module catalog](blocks/README.md) |
 <!-- reading-navigation:end -->
 
 > **Category: GUIDE.**
+
+## How to use this map
+
+Start from a visible behavior, not from the longest source file. Host behavior
+leads to `llm_soc`; linear rows lead to `llm_linear_engine`; Q/K score generation
+leads to `llm_attention_engine`; storage latency leads to the RAM wrappers. Read
+the module guide next, then open only the linked RTL region and follow its data,
+tag, valid, ready, and completion signals together.
+
+A box in the graph means a hardware instance or owned resource that can operate
+concurrently with others. An arrow means data/control dependency, not a software
+function call. New readers can review [hardware and pipeline fundamentals](../00-start-here/fundamentals.md)
+before following the graph.
 
 ## Top and configuration
 

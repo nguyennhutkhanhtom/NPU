@@ -5,6 +5,7 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [Execution contract](../NPU_V2_EXECUTION.md) |
 | Continue / related lookup | [Matching verification evidence](../verification/optimization_status.md) |
 <!-- reading-navigation:end -->

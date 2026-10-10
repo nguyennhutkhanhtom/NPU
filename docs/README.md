@@ -3,6 +3,12 @@
 Read from `00` to `06`, or choose a topic below. The current full-graph top is
 `llm_soc`; `matmulfree` documentation belongs to the legacy core.
 
+If you are new to digital hardware, start with [NPU and RTL fundamentals](00-start-here/fundamentals.md)
+and keep the [glossary](00-start-here/glossary.md) nearby. The documentation does
+not require prior knowledge of SystemVerilog, fixed-point arithmetic, transformer
+hardware, or EDA terminology; those two pages explain the shared foundations so
+specialist pages can focus on their exact contracts.
+
 ## Reading map
 
 ```text
@@ -41,6 +47,7 @@ Choose a reading route based on your task; each page links back to its topic.
 
 | Goal | Reading order |
 |---|---|
+| Learn from the beginning | [Fundamentals](00-start-here/fundamentals.md) → [Glossary](00-start-here/glossary.md) → [System overview](design/full_rtl_language.md) |
 | Understand the hardware | [System overview](design/full_rtl_language.md) → [Full RTL graph](source_guide/full_graph.md) → [Module guides](source_guide/blocks/README.md) |
 | Run a checkpoint | [Quickstart](00-start-here/quickstart.md) → [Model compatibility](demos/candidates.md) → [Demo flow](00-start-here/demo-flow.md) → [Application evidence](verification/optimization_status.md) |
 | Change or evaluate RTL | [Architecture map](02-architecture/README.md) → [RTL policy](design/rtl_style.md) → [Verification workflow](verification/README.md) → [Implementation evidence](verification/optimization_status.md) |

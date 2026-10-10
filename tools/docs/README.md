@@ -1,5 +1,10 @@
 # Architecture diagram tooling
 
+New to the repository? Read [NPU and RTL fundamentals](../../docs/00-start-here/fundamentals.md)
+before interpreting generated hierarchy and timing labels. Diagram validation
+checks documentation artifacts; it does not prove RTL behavior or implementation
+timing.
+
 The current editable sources are [architecture.drawio](../../docs/diagrams/architecture.drawio),
 [Quartus hierarchy](../../rtl_hierarchy.drawio) and
 [portable hierarchy](../../docs/diagrams/rtl_hierarchy_portable.drawio).

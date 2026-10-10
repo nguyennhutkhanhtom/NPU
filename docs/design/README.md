@@ -5,11 +5,17 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [System map](../01-system/README.md) |
 | Continue / related lookup | [Module catalog](../source_guide/blocks/README.md) |
 <!-- reading-navigation:end -->
 
 > **Category: GUIDE.**
+
+Architecture documentation answers “what exists, who owns it, and what behavior
+must remain stable.” It is broader than a module guide but more concrete than a
+research proposal. Start with [the fundamentals](../00-start-here/fundamentals.md)
+if you have not previously read synchronous RTL or fixed-point datapaths.
 
 ## Current llm_soc Design
 

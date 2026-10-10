@@ -1,5 +1,10 @@
 # Decisions and reviews
 
+New to the subject? Read [NPU and RTL fundamentals](../00-start-here/fundamentals.md)
+and use the [glossary](../00-start-here/glossary.md). Decision records explain
+why a direction was chosen; the current RTL and matching evidence determine what
+is actually implemented and verified.
+
 [Documentation map](../README.md)
 
 | Document | Purpose |

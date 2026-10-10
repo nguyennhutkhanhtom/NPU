@@ -5,6 +5,7 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](00-start-here/fundamentals.md) · [Glossary](00-start-here/glossary.md) |
 | Read first | [Architecture contract](design/full_rtl_language.md) |
 | Continue / related lookup | [Matching verification evidence](verification/optimization_status.md) |
 <!-- reading-navigation:end -->

@@ -5,11 +5,18 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [Architecture map](../02-architecture/README.md) |
 | Continue / related lookup | [Coding readiness review](../reviews/rtl_lowrisc_readiness_20261010.md) |
 <!-- reading-navigation:end -->
 
 > **Category: POLICY.** Maintain clear hardware structure, timing boundary, and register ownership.
+
+These rules are about making the resulting circuit reviewable. Source code that
+looks shorter is not necessarily simpler hardware: a loop may replicate a large
+combinational network, an implicit cast may change arithmetic width, and a helper
+may hide state ownership. Read [the hardware fundamentals](../00-start-here/fundamentals.md#hardware-is-not-software-executed-line-by-line)
+before applying software-programming intuitions to RTL.
 
 ## Overview
 

@@ -13,6 +13,12 @@ kept for design and regression legacy.
 **Start at [documentation table of contents](docs/README.md)** or
 **[NanoFable run guide](docs/demos/language.md)**.
 
+New to RTL or NPU design? Read [NPU and RTL fundamentals](docs/00-start-here/fundamentals.md)
+first. It explains clocks, pipelines, handshakes, fixed-point formats, the
+transformer flow, memories, and what each verification stage can actually prove.
+The companion [glossary](docs/00-start-here/glossary.md) defines abbreviations
+used across module guides and reports.
+
 ## Read as needed
 
 | What you need to do? | Page to read |

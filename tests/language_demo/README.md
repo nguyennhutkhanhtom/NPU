@@ -2,6 +2,10 @@
 
 > **Category: GUIDE.**
 
+These files are inputs to export/reference/application flows, not an RTL result
+by themselves. Read the [demo flow](../../docs/00-start-here/demo-flow.md) for how
+checkpoint, tokenizer, integer reference, and returned RTL token IDs fit together.
+
 [Documentation](../../docs/README.md) → [NanoFable Demo](../../docs/demos/language.md) → **Assets**
 
 This folder provides checkpoint/tokenizer and dependencies for the application

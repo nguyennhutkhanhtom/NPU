@@ -1,3 +1,8 @@
+> **Reader note:** This is a proposal, not proof that every described phase is
+> implemented. Read [NPU and RTL fundamentals](docs/00-start-here/fundamentals.md)
+> for background, then consult the [execution contract](docs/NPU_V2_EXECUTION.md)
+> and [current evidence](docs/verification/optimization_status.md) for status.
+
 I completed the architectural reassessment against the active RTL. I did **not modify any RTL**. The active full-language design is `llm_soc`; the source guide identifies `llm_soc.qsf` as the full-top Quartus flow, while the instruction-driven `matmulfree` path is legacy/supporting RTL. Pasted text
 
 I use the requested labels throughout:

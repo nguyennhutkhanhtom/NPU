@@ -5,10 +5,18 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../../00-start-here/fundamentals.md) · [Glossary](../../00-start-here/glossary.md) |
 | Read first | [Full RTL graph](../full_graph.md) |
 <!-- reading-navigation:end -->
 
 > **Category: GUIDE.** Read [full graph](../full_graph.md) first; [hierarchy legacy](../legacy/README.md) describes `matmulfree`.
+
+For every module page, “responsibility” names the behavior the block owns;
+“contract” names behavior its callers may rely on; and a cycle/edge count starts
+from the documented acceptance event. A diagram is an architectural aid, not a
+replacement for exact RTL. New readers should review [RTL fundamentals](../../00-start-here/fundamentals.md)
+and the [glossary](../../00-start-here/glossary.md) before interpreting widths or
+pipeline labels.
 
 The source links point to the current implementation. The annotation describes the responsibility
 tasks and contracts without copying RTL. The diagram follows the [shared visual style](../../diagrams/diagram_style.md).

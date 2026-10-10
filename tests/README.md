@@ -1,5 +1,9 @@
 # Test System
 
+New readers should start with [verification fundamentals](../docs/00-start-here/fundamentals.md#from-rtl-to-evidence).
+A test PASS applies to the named top, cases, compiled source, and configuration;
+the tables below show which behavior each testbench actually owns.
+
 > **Category: GUIDE.**
 
 [Home page](../README.md) · [Document table of contents](../docs/README.md) · [Verification results](../docs/verification/README.md) · [Model demos](../docs/demos/README.md)

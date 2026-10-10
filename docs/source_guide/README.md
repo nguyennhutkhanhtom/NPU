@@ -5,11 +5,18 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [System architecture](../design/full_rtl_language.md) |
 | Continue / related lookup | [Module catalog](blocks/README.md) |
 <!-- reading-navigation:end -->
 
 > **Category: GUIDE.** Navigate the current RTL without loading source listing copies.
+
+The guide is organized by ownership rather than source-file size. Each module
+page first states what the block owns, then its timing/protocol contract, major
+state groups, and related blocks. Read [the fundamentals](../00-start-here/fundamentals.md)
+if you need an introduction to registers, combinational logic, FSMs, pipelines,
+handshakes, memory latency, or fixed-point notation.
 
 | Start from | Purpose |
 |---|---|

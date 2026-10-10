@@ -1,5 +1,11 @@
 # Flow test and synthesis on DOE Lab
 
+This page is an operational runbook. If simulation, synthesis, timing, Slurm, or
+X11 are unfamiliar, read [NPU and RTL fundamentals](../../docs/00-start-here/fundamentals.md)
+and the [glossary](../../docs/00-start-here/glossary.md) first. Follow the commands
+here exactly because tool modules, compute allocation, and display forwarding are
+part of the approved EDA environment.
+
 This is the current running guide on branch `remote`. EDA runs on Linux compute
 node in Slurm: **Xcelium (`xrun`) for testing, Genus for synthesis**. Do not use
 Quartus, ModelSim, Questa, or local Verilator. This file is the only reading point for

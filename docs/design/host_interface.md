@@ -5,11 +5,26 @@
 
 | Reading guide | Document |
 |---|---|
+| New to the subject | [NPU and RTL fundamentals](../00-start-here/fundamentals.md) · [Glossary](../00-start-here/glossary.md) |
 | Read first | [System architecture](full_rtl_language.md) |
 | Continue / related lookup | [Controller implementation](../source_guide/blocks/llm_soc.sv.md) |
 <!-- reading-navigation:end -->
 
 > **Category: GUIDE.**
+
+## Mental model
+
+The host interface behaves like a small memory-mapped device. The host presents
+an address and either write data or a read request, then waits for
+`host_ready`. One accepted request must be completed before the host changes its
+meaning. The address selects either bulk storage, such as parameters and token
+buffers, or a control/status register.
+
+“Write accepted” and “data committed” are not always the same clock edge. Memory
+wrappers delay acknowledgement until their documented commit point. Likewise,
+the host must not read generated output while `running` is still asserted unless
+the register contract explicitly permits it. See the [fundamentals](../00-start-here/fundamentals.md#requests-acknowledgements-and-backpressure)
+for handshake terminology.
 
 Host and DUT use the same `clk`. All addresses below are byte addresses, aligned to
 4 bytes. The matmulfree core has its own host contract in [legacy interface](<legacy/interfaces.md>).
