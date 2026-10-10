@@ -48,6 +48,7 @@ Choose a reading route based on your task; each page links back to its topic.
 | Goal | Reading order |
 |---|---|
 | Learn from the beginning | [Fundamentals](00-start-here/fundamentals.md) → [Glossary](00-start-here/glossary.md) → [System overview](design/full_rtl_language.md) |
+| Learn to read the RTL | [SystemVerilog reading guide](00-start-here/reading-systemverilog.md) → [Full RTL graph](source_guide/full_graph.md) → [Module catalog](source_guide/blocks/README.md) |
 | Understand the hardware | [System overview](design/full_rtl_language.md) → [Full RTL graph](source_guide/full_graph.md) → [Module guides](source_guide/blocks/README.md) |
 | Run a checkpoint | [Quickstart](00-start-here/quickstart.md) → [Model compatibility](demos/candidates.md) → [Demo flow](00-start-here/demo-flow.md) → [Application evidence](verification/optimization_status.md) |
 | Change or evaluate RTL | [Architecture map](02-architecture/README.md) → [RTL policy](design/rtl_style.md) → [Verification workflow](verification/README.md) → [Implementation evidence](verification/optimization_status.md) |

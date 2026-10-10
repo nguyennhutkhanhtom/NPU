@@ -19,7 +19,14 @@ module register (
     output logic [31:0] host_rdata,
     output logic host_rvalid
 );
-    // Shared implementation keeps host packing and read latency consistent.
+    // This is a permanent hardware instance, not a function call. ADDR_W=8
+    // configures 2^8 rows; 256 rows * 256 bits/row = 8 KiB of workspace.
+    // The workspace stores packed tensors selected by descriptors: for example
+    // 32 S8, 16 S16/U16, or 8 S32 values per row. It can hold activations,
+    // q/scratch/state/logit regions; the RAM itself only stores raw bits.
+    // In every .port(signal) connection, the left name is the child u_sram
+    // port and the right name is this wrapper's signal. There is no extra FSM,
+    // storage, or cycle added here; sram_256_wrapper owns those behaviors.
     sram_256_wrapper #(.ADDR_W(8)) u_sram (
         .clk(clk),
         .rst_n(rst_n),

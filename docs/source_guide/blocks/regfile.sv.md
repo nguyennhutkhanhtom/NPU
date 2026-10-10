@@ -6,6 +6,7 @@
 | Reading guide | Document |
 |---|---|
 | New to the subject | [NPU and RTL fundamentals](../../00-start-here/fundamentals.md) · [Glossary](../../00-start-here/glossary.md) |
+| Learn the RTL syntax | [How to read the SystemVerilog](../../00-start-here/reading-systemverilog.md) |
 | Read first | [Legacy architecture](../../design/legacy/architecture.md) |
 | Related implementation | [sram_256_wrapper.sv](sram_256_wrapper.sv.md) |
 <!-- reading-navigation:end -->
@@ -21,6 +22,41 @@
 | Item | Description |
 |---|---|
 | Responsibility | This file maintains the private interface for the workspace but shares `sram_256_wrapper` with ADDR_W=8. The module is named `register`; the registers here are workspace SRAM, not an 8-vector register bank as the historical name might suggest. |
+
+## Reading the `u_sram` instance line by line
+
+`sram_256_wrapper #(.ADDR_W(8)) u_sram (` creates one permanent child hardware
+instance. It is not a function call. `ADDR_W=8` makes the child address bus eight
+bits wide and leaves its default depth at `1 << 8 = 256` rows. With 256 bits
+(32 bytes) per row, this is `256 × 32 = 8192` bytes = 8 KiB.
+
+The instance name `u_sram` identifies this child in hierarchy and simulation
+waveforms. In `.rd_en(rd_en)`, the left name is the child port; the right name is
+the parent signal. Direction comes from the child declaration:
+
+| Connection | Hardware meaning |
+|---|---|
+| `.clk(clk)`, `.rst_n(rst_n)` | Both levels share the same clock/reset. Reset cancels control validity but does not erase workspace bits. |
+| `.rd_en(rd_en)`, `.rd_addr(rd_addr)` | The active compute engine requests one 256-bit workspace row. |
+| `.rd_data(rd_data)`, `.rd_valid(rd_valid)` | The child returns that row; the engine consumes it only when `rd_valid=1`. |
+| `.wr_en(wr_en)`, `.wr_addr(wr_addr)`, `.wr_data(wr_data)` | The active compute engine writes all 256 bits of one row when `wr_en=1`. |
+| `.host_en(host_en)`, `.host_we(host_we)` | The host requests access; `host_we=1` means write and `0` means read. |
+| `.host_addr(host_addr)` | Bits `[10:3]` select one of 256 rows and `[2:0]` select one of eight 32-bit lanes. |
+| `.host_wdata(host_wdata)` | The 32-bit value written into the selected lane. |
+| `.host_rdata(host_rdata)`, `.host_rvalid(host_rvalid)` | Selected 32-bit lane and the indication that it belongs to the held host request. |
+
+### What is stored in this RAM?
+
+The storage holds raw packed bits, not a single permanently assigned data type.
+Workspace descriptors give a base row, element count, format, and fractional-bit
+count. Depending on the active instruction, a row can contain 32 S8 values,
+16 S16/U16 values, or 8 S32 values. Regions may hold input/output activations,
+NORM's quantized `q`, S24 scratch `z` stored in S32 cells, recurrent state/gates,
+or logits. The RAM does not decode those meanings; the descriptor and consuming
+datapath do.
+
+See [How to read the SystemVerilog](../../00-start-here/reading-systemverilog.md)
+for the same code example with syntax diagrams and enable tracing.
 
 ## Overview Architecture Diagram
 
@@ -49,10 +85,13 @@ Compute read/write 256-word; host selects a 32-bit slice. The wrapper does not a
 
 **Main signals and data.** `rd_en`: compute read request; `rd_addr`: word address to read; `rd_data`: read data word; `rd_valid`: valid read response; `wr_en`: compute write enable; `wr_addr`: word address to write; and 6 other auxiliary signals in the code segment.
 
-### [Lines 22–40: SRAM Instance](<../../../Verilog%20Source%20code/regfile.sv#L22>)
+### [Lines 22–47: SRAM instance and transparent port wiring](<../../../Verilog%20Source%20code/regfile.sv#L22>)
 
-**Purpose.** The parameter ADDR_W determines the depth; named ports connect directly with the same function.
+**Purpose.** `ADDR_W` determines row-address width and default depth. Named ports
+transparently connect the workspace interface to the shared SRAM implementation.
 
-**How the code works.** There is an instance of a submodule; named ports in this group precisely define the control/data path between two hierarchy levels.
+**How the code works.** Elaboration creates one child instance. There is no
+procedural call, local storage, or extra cycle in this wrapper. Storage,
+write-mask selection, read tagging, and response latency belong to `u_sram`.
 
 **Main signals and data.** `rd_en`: compute read request; `rd_addr`: word address to read; `rd_data`: read-out data word; `rd_valid`: valid read response; `wr_en`: compute write enable; `wr_addr`: word address to write; and 6 other auxiliary signals in the code segment.

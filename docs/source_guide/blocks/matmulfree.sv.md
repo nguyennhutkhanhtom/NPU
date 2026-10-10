@@ -6,6 +6,7 @@
 | Reading guide | Document |
 |---|---|
 | New to the subject | [NPU and RTL fundamentals](../../00-start-here/fundamentals.md) · [Glossary](../../00-start-here/glossary.md) |
+| Learn the RTL syntax | [How to read the SystemVerilog](../../00-start-here/reading-systemverilog.md) |
 | Read first | [Legacy architecture](../../design/legacy/architecture.md) |
 | Related implementation | [descriptor_file.sv](descriptor_file.sv.md) |
 <!-- reading-navigation:end -->
@@ -115,6 +116,13 @@ Control/descriptor needs two rising edges; SRAM/imem needs four rising edges fro
 
 **Purpose.** Each workspace descriptor has D/base/length cache. `selected_quant_d` is 0 when the entry is not valid; `input_has_runtime_scale` scans input overlap with all valid q extents to block static TM via descriptor alias. scale_compose receives the weight/output factors and valid D of the q source.
 
+**How the `always_comb` scan becomes hardware.** The loop bound is the constant
+eight, so synthesis builds eight overlap checks in parallel and ORs their effect
+into `input_has_runtime_scale`; it is not an eight-cycle search. The default 0
+means “no protected quantized region overlaps.” A valid matching entry overrides
+it to 1. `q_valid[i]` is the enable/guard that prevents uninitialized
+`q_base/q_length` payload from affecting the result.
+
 **Signals and main data.** `q_d`: D associated with each descriptor q; `q_base`: base SRAM that cache q describes; `q_length`: length that cache q describes; `q_valid`: scale q valid bitmask; `composed_m`: effective M from scale_compose; `composed_r`: effective r from scale_compose; and 15 other auxiliary signals in the code segment.
 
 ### [Lines 344–379: Metadata validity](<../../../Verilog%20Source%20code/matmulfree.sv#L344>)
@@ -129,7 +137,12 @@ Control/descriptor needs two rising edges; SRAM/imem needs four rising edges fro
 
 **Purpose.** The unit start is a pulse according to the state. The PC only advances after the previous instruction has completed.
 
-**How the code section works.** There is combinational logic: output/intermediate values are calculated from the current input; default values at the beginning of the block help avoid inferring latches.
+**How the code section works.** Defaults drive every pulse low. In `S_START`, the
+opcode raises exactly one of `row_start` or `norm_start`; `tm_start` is delayed
+until `S_TM_START` because dynamic scale composition may be required first.
+`pc_clear` pulses only for a new idle launch. `pc_advance` pulses only in
+`S_ADVANCE`, after the active unit has completed. These are one-cycle enables for
+neighboring registered blocks, not separate clocks.
 
 **Main signals and data.** `pc_clear`: reset PC to 0; `running`: core is executing the program; `pc_advance`: increment PC by 1; `sched`: scheduler state; `instr_q`: currently executing 13-bit instruction; `pc`: current instruction address.
 
@@ -137,7 +150,15 @@ Control/descriptor needs two rising edges; SRAM/imem needs four rising edges fro
 
 **Purpose.** Only the unit selected by active_unit has the right to issue address, data, and enable signals to the workspace.
 
-**Main signals and data.** `ws_rd_en`: request to read workspace; `ws_rd_addr`: workspace read address; `ws_wr_en`: allow workspace write; `ws_wr_addr`: workspace write address; `ws_wr_data`: 256-word workspace write; `active_unit`: unit granted workspace port.
+**How the workspace mux works.** All shared SRAM outputs first default to disabled
+and zero. `active_unit=1/2/3` then copies the complete read/write bundle from
+rowwise/NORM/TMATMUL respectively. Address, data, and enable move together; for
+example `ws_wr_en=1` is meaningful only with the selected unit's `ws_wr_addr` and
+`ws_wr_data`. `active_unit=0` leaves both enables low, so no memory transaction is
+created. This combinational mux grants wiring; the scheduler register decides
+which grant remains active across cycles.
+
+**Main signals and data.** `ws_rd_en`: request to read workspace; `ws_rd_addr`: workspace read address; `ws_wr_en`: allow workspace write; `ws_wr_addr`: workspace write address; `ws_wr_data`: one 256-bit workspace row; `active_unit`: unit granted workspace port.
 
 ### [Lines 431–542: Scheduler](<../../../Verilog%20Source%20code/matmulfree.sv#L431>)
 
@@ -155,7 +176,12 @@ Control/descriptor needs two rising edges; SRAM/imem needs four rising edges fro
 
 **Purpose.** Generate control data according to the finalized read address and parallel mux five responses using one-hot region. This combinational data only goes into the response register, does not drive host_rdata directly.
 
-**How the code section works.** There is combinational logic: output/intermediate is calculated from the current input; default values at the start of the block help avoid inferring latches. There is continuous assignment: the expression always drives the target signal, no start or clock edge needed.
+**How the code section works.** The `case` decodes one control-register word from
+the saved address. The five `host_read_region_q` bits are one-hot enables. Each
+32-bit candidate is ANDed with 32 copies of its enable, then all candidates are
+ORed. Exactly one region therefore reaches `host_response_data`; zero selected
+regions produce zero. The response FSM later captures this combinational value,
+so it does not bypass the host request/address checks.
 
 **Key signals and data.** `host_read_address_q`: address selecting control word; `host_control_data`: status/config combinational; `host_read_region_q`: finalized one-hot region; `host_response_data`: data to latch the response; `pc_debug/instr_debug`: debug scheduler.
 

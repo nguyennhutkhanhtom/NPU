@@ -23,6 +23,15 @@ same backend. Do not combine the best number from unrelated snapshots.
 
 ## At a glance
 
+Documentation follow-up after commit `db92f6f` adds `//` comments only to the
+legacy `regfile.sv`, `mem_mapping.sv`, and `sram_256_wrapper.sv`. Removing line
+comments and whitespace produces source identical to `db92f6f` for all three;
+no executable RTL token changed. Their raw file hashes nevertheless differ, so
+the archived receipts below remain evidence for their frozen inputs rather than
+an exact raw-hash match to this checkout. No regression or synthesis was rerun
+for comment-only changes. The active Genus job uses its already frozen remote
+bundle and is not changed by these local comments.
+
 The 2026-10-10 lowRISC readiness refactor is In progress. Current RTL has
 optional generate-region removal, head-engine constant/layout
 cleanup and package-constant declarations; static refactor checks pass. Scoped

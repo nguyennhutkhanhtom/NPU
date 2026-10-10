@@ -211,3 +211,5 @@ Use three layers instead of opening every file at once:
 For an experiment, first read the relevant workflow and current evidence page.
 Keep functional, application, synthesis, and timing claims separate. The
 [glossary](glossary.md) provides short definitions for terms used across pages.
+For source syntax and worked RTL examples, continue with [How to read the
+SystemVerilog](reading-systemverilog.md).

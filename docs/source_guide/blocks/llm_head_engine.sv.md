@@ -6,6 +6,7 @@
 | Reading guide | Document |
 |---|---|
 | New to the subject | [NPU and RTL fundamentals](../../00-start-here/fundamentals.md) · [Glossary](../../00-start-here/glossary.md) |
+| Learn the RTL syntax | [How to read the SystemVerilog](../../00-start-here/reading-systemverilog.md) |
 | Read first | [Full RTL graph](../full_graph.md) |
 | Related implementation | [llm_parameter_ram.sv](llm_parameter_ram.sv.md) |
 <!-- reading-navigation:end -->

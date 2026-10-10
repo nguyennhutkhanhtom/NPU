@@ -19,7 +19,12 @@ module mem_mapping (
     output logic [31:0] host_rdata,
     output logic host_rvalid
 );
-    // Shared implementation keeps host packing and read latency consistent.
+    // This permanent instance configures 2^10 rows; 1024 rows * 256 bits/row
+    // = 32 KiB of parameter SRAM. Loaded layout/program metadata determines
+    // whether a row contains packed ternary weights, biases, embeddings, or
+    // scales; the RAM stores raw bits and does not decode those meanings.
+    // Each .port(signal) connects one port of child u_sram to the like-named
+    // signal in this wrapper. No storage, arbitration, or latency is added here.
     sram_256_wrapper #(.ADDR_W(10)) u_sram (
         .clk(clk),
         .rst_n(rst_n),

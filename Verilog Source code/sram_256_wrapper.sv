@@ -6,6 +6,8 @@ module sram_256_wrapper #(
 ) (
     input logic clk,
     input logic rst_n,
+    // Compute port: rd_en requests one full 256-bit row. rd_data must only be
+    // consumed when rd_valid is asserted. wr_en writes all eight 32-bit banks.
     input logic rd_en,
     input logic [ADDR_W - 1 : 0] rd_addr,
     output logic [255:0] rd_data,
@@ -13,6 +15,9 @@ module sram_256_wrapper #(
     input logic wr_en,
     input logic [ADDR_W - 1 : 0] wr_addr,
     input logic [255:0] wr_data,
+    // Host port: host_en marks a request and host_we selects write (1) or read
+    // (0). host_addr counts 32-bit lanes, so its low three bits select one of
+    // eight lanes and the remaining bits select the 256-bit row.
     input logic host_en,
     input logic host_we,
     input logic [ADDR_W + 2 : 0] host_addr,
@@ -25,12 +30,19 @@ module sram_256_wrapper #(
     logic [7:0] write_mask;
 
 
-    // One masked write port. Top-level arbitration makes the clients exclusive.
+    // This combinational block synthesizes a write-data/address mux plus eight
+    // lane enables. Defaults select the compute client. Assigning every output
+    // before the if covers all input cases, so no state/latch is inferred.
+    // Top-level arbitration makes the clients exclusive; the host branch has
+    // priority only to keep the mux deterministic if that contract is violated.
     always_comb begin
         write_address = wr_addr;
         write_data = wr_data;
+        // Compute writes are whole-row writes: wr_en=1 enables all eight banks.
         write_mask = {8{wr_en}};
         if (host_en && host_we) begin
+            // Remove three lane bits to obtain the row address. Replicate the
+            // 32-bit payload to all banks, then enable only the selected bank.
             write_address = host_addr[ADDR_W + 2 : 3];
             write_data = {8{host_wdata}};
             write_mask = 8'b1 << host_addr[2:0];

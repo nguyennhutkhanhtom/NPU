@@ -6,6 +6,7 @@
 | Reading guide | Document |
 |---|---|
 | New to the subject | [NPU and RTL fundamentals](../../00-start-here/fundamentals.md) · [Glossary](../../00-start-here/glossary.md) |
+| Learn the RTL syntax | [How to read the SystemVerilog](../../00-start-here/reading-systemverilog.md) |
 | Read first | [Full RTL graph](../full_graph.md) |
 <!-- reading-navigation:end -->
 
@@ -20,6 +21,41 @@ pipeline labels.
 
 The source links point to the current implementation. The annotation describes the responsibility
 tasks and contracts without copying RTL. The diagram follows the [shared visual style](../../diagrams/diagram_style.md).
+
+## What each `always_comb` block is doing
+
+`always_comb` describes combinational equations: muxes, decoders, comparisons,
+next-value arithmetic, or table lookup. It does not itself add a register or wait
+for a clock edge. Most blocks assign safe defaults first and then override them
+for a state/opcode; this produces mux logic and prevents unintended latches.
+The [SystemVerilog reading guide](../../00-start-here/reading-systemverilog.md#always_comb-describes-combinational-hardware)
+explains the syntax with the SRAM write mux as a worked example.
+
+| Source | What its `always_comb` block(s) implement | Enables or outputs to follow |
+|---|---|---|
+| `sram_256_wrapper.sv` | Select compute whole-row write or host single-lane write; create eight bank enables | `write_address`, `write_data`, `write_mask[lane]` |
+| `descriptor_file.sv` | Select a workspace descriptor or one of three 32-bit words of a matrix descriptor for host readback | `host_is_matrix`, `host_word_sel`, `host_rdata` |
+| `matmulfree.sv` | Check overlap with valid dynamic-scale regions; decode one-cycle engine/PC starts; mux one active engine onto workspace; mux one host response region | `input_has_runtime_scale`, `row_start`, `norm_start`, `tm_start`, `pc_*`, `ws_*`, `host_response_data` |
+| `rowwise_dispatch.sv` | Validate formats/length/overlap and calculate tail size; map FSM states to workspace reads/writes | `invalid`, `valid_elems`, `ws_rd_en`, `ws_wr_en` |
+| `rowwise_op.sv` | Select two lane operands and shared multiplier inputs; insert rounded/saturated lane results into the next packed word | `multiply_a/b`, `lane_valid_q`, `result_buffer_next`, error flags |
+| `norm_dispatch.sv` | Reject an invalid source/destination descriptor before the normalization core starts | `invalid`, `start && !invalid`, `rejected` |
+| `norm.sv` | Select lane values and shared arithmetic by pass; build divider/sqrt operands; clamp scratch/quantized values; decode FSM into memory and scalar-unit requests | `multiply_a/b`, `arithmetic_shift`, `div_start`, `sqrt_start`, `ws_rd_en`, `ws_wr_en` |
+| `ternary_mul.sv` | Calculate packed weight extent; decode each 2-bit weight into `+q/-q/0`; decode FSM into workspace/parameter transactions | `terms[]`, `reserved_weight`, `ws_rd_en`, `param_rd_en`, `ws_wr_en` |
+| `scale_compose.sv` | Select the largest fitting shift and apply quotient/remainder RNE after the divider | `selected_shift`, `target_r`, `round_up`, `rounded` |
+| `div.sv` | One restoring-division step: shift remainder, trial subtract, and generate the next quotient bit | `rem_shift`, `difference`, `q_next` |
+| `isqrt_u64.sv` | One radix-four integer-square-root step: form trial remainder and next root bit | `difference`, `root_next`, `remainder_next` |
+| `mul.sv` | Choose signed/unsigned operand interpretation, round and saturate; `addsub` chooses add/sub and detects overflow | `b_s17`, `rounded`, `result`, `overflow` |
+| `postscale.sv` | Round the scaled product, add sign-extended bias, select S16/S32 limits, and report saturation | `rounded`, `biased`, `y_s16`, `y_s32`, `overflow` |
+| `sigmoid.sv` | Convert fixed-point input to a clamped LUT index plus interpolation fraction | `grid`, `index_next`, `fraction_next` |
+| `pipelined_word_ram.sv` | OR-mux the one selected tile response within each static group | `read_tile_q`, `selected`, `group_data_q` capture enable |
+| `sigmoid_lut.svh` | Pure case-table lookup of one sigmoid sample | LUT address and sample output; no request/valid state |
+| `llm_exp_lut.svh` | Pure case-table lookup of one exponential sample | LUT index and sample output; no request/valid state |
+| `llm_gumbel_lut.svh` | Pure case-table lookup of one Gumbel sample | LUT index and sample output; no request/valid state |
+
+For complex rows, use the linked module page rather than reading this table as a
+cycle schedule. The combinational block chooses current values; the neighboring
+`always_ff` FSM/pipeline determines when those values are captured and become
+architecturally visible.
 
 ## Controller and graph configuration
 
