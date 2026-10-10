@@ -11,7 +11,7 @@
 |---|---|
 | Responsibility | Legacy three-pass RMS normalization and quantization. Two shared structural multipliers, one divider and the separately defined isqrt_u64 serve the explicit pass controller. Workspace scratch and final quantized values are packed in 256-bit words. |
 
-## Sơ đồ kiến trúc
+## Architecture diagram
 
 ![banked_word_ram.sv — overview](../../diagrams/previews/16_banked_word_ram.sv_1.svg)
 

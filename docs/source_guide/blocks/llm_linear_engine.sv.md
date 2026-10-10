@@ -1,5 +1,7 @@
 # llm_linear_engine.sv
 
+**Structural generation.** Named SystemVerilog generate constructs are retained without the optional `generate`/`endgenerate` regions, following lowRISC. Loop bounds, conditional branches, instance names and lane ownership are unchanged.
+
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Documentation](../../README.md) → [Source guide](../full_graph.md) → [RTL index](README.md)
 
@@ -15,7 +17,7 @@
 
 The diagram below reflects the matrix stream, two-word credit window and four reserved result slots.
 
-## Sơ đồ kiến trúc
+## Architecture diagram
 
 ![llm_linear_engine.sv — overview](../../diagrams/previews/26_llm_linear_engine.sv_1.svg)
 

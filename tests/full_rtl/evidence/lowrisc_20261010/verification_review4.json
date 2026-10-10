@@ -1,0 +1,59 @@
+{
+  "status": "VERIFIED_XCELIUM_PASS",
+  "runs": [
+    {
+      "kind": "scoped4",
+      "tag": "lowrisc_scoped4_20261010",
+      "job_id": "64471",
+      "inputs_verified": 60,
+      "report_hashes_verified": 5,
+      "simulator_diagnostics": 0,
+      "markers": {
+        "tb_llm_operators": [
+          "LLM_OPERATORS_PASS operators=40 checks=113131 scalar_cases=128 clamp_cases=516 scalar_reset_cases=6 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic"
+        ]
+      },
+      "archive_sha256": "ab715f5b6187a862d5c8bbc4b435683ea278874589d74306add4312be7ede29b"
+    },
+    {
+      "kind": "full4",
+      "tag": "lowrisc_full4_20261010",
+      "job_id": "64472",
+      "inputs_verified": 60,
+      "report_hashes_verified": 37,
+      "simulator_diagnostics": 0,
+      "markers": {
+        "tb_llm_memory": [
+          "LLM_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked"
+        ],
+        "tb_llm_math": [
+          "LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128"
+        ],
+        "tb_llm_ram": [
+          "LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3"
+        ],
+        "tb_llm_protocol": [
+          "LLM_PROTOCOL_PASS transactions=175 cancellations=12 token_pipeline_cases=15 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2"
+        ],
+        "tb_llm_selection": [
+          "SELECT_EDGE_PASS checks=36 minimum_score_ties=2 excluded=5 stable_ties=2"
+        ],
+        "tb_llm_operators": [
+          "LLM_OPERATORS_PASS operators=40 checks=113131 scalar_cases=128 clamp_cases=516 scalar_reset_cases=6 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic"
+        ],
+        "tb_llm_graph": [
+          "LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=278330 host_commands=196619 fixtures=synthetic"
+        ],
+        "tb_llm_linear_stream": [
+          "LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked"
+        ],
+        "tb_host_cancel_contract": [
+          "HOST_CANCEL_CONTRACT_PASS phases=7 checks=14 pre_execute_cancel=1 accepted_write_commits=6 own_commit_before_ack=7 idle_edges=1"
+        ]
+      },
+      "archive_sha256": "1b39524be2ca77517c5ccad0027f5840ed188f3113fe90052d22e9c0e688e4c3"
+    }
+  ],
+  "synthesis": "In progress",
+  "scope": "Fresh matching functional regression; no mapped PPA/physical timing claim"
+}

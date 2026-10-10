@@ -1,9 +1,9 @@
-# rowwise_dispatch.sv — Đọc tensor, gọi ALU và ghi output
+# rowwise_dispatch.sv — Read tensor, call ALU, and write output
 
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
+[Document](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [File Index](README.md)
 
-**Trạng thái:** Đang dùng — điều phối rowwise.
+**Status:** In use — rowwise dispatch.
 
 **Source:** [rowwise_dispatch.sv](<../../../Verilog%20Source%20code/rowwise_dispatch.sv>).
 
@@ -11,9 +11,9 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | Dispatcher làm việc ở mức memory và descriptor, còn rowwise_op làm số học trên một word. A/B/destination phải có length phù hợp. ADD/SUB cần cùng scale nguồn; MUL cho phép scale nguồn khác; REC yêu cầu candidate và state có cùng scale, gate U16/F15. |
+| Responsibility | The Dispatcher works at the memory and descriptor level, while rowwise_op performs arithmetic on a single word. A/B/destination must have appropriate length. ADD/SUB require the same source scale; MUL allows different source scales; REC requires candidate and state to have the same scale, gate U16/F15. |
 
-## Sơ đồ kiến trúc tổng quan
+## Overall Architecture Diagram
 
 ![rowwise_dispatch.sv — overview](../../diagrams/previews/56_rowwise_dispatch.sv_1.svg)
 
@@ -21,78 +21,78 @@
 
 ## Main flow
 
-Đọc A; nếu SIG/RELU thì gọi ALU ngay. Nếu phép hai nguồn thì đọc B; REC còn đọc destination cũ thành C-word. Sau ALU done, nếu không lỗi format thì WRITE. Lặp đến ceil(length/16) word. In-place cùng base được hỗ trợ ở các trường hợp đã kiểm tra; overlap lệch base bị từ chối.
+Read A; if SIG/RELU then call ALU immediately. If it is a two-source operation, then read B; REC also reads the old destination into C-word. After ALU is done, if there is no format error, then WRITE. Loop until ceil(length/16) word. In-place with base is supported in the verified cases; offset overlaps from the base are rejected.
 
-1. Dispatcher validate descriptor trước lần đọc đầu: format, length, F15 của gate và overlap memory.
-2. Mỗi word bắt đầu bằng REQ_A/WAIT_A. SIG và RELU dùng ngay A; phép hai nguồn tiếp tục đọc B.
-3. REC đọc destination cũ thành H qua REQ_C/WAIT_C. Candidate nằm ở A, gate ở B.
-4. START_ALU phát xung một chu kỳ; WAIT_ALU giữ input đến `alu_done`. Format error ngăn ghi word lỗi.
-5. WRITE ghi một word 256 bit rồi tăng word index. `valid_elems` bảo đảm tail của word cuối không trở thành dữ liệu thật.
+1. Dispatcher validates descriptor before the first read: format, length, F15 of the gate, and memory overlap.
+2. Each word starts with REQ_A/WAIT_A. SIG and RELU use A immediately; two-source operations continue to read B.
+3. REC reads the old destination into H through REQ_C/WAIT_C. Candidate is in A, gate is in B.
+4. START_ALU triggers a one-cycle pulse; WAIT_ALU holds input until `alu_done`. Format error prevents writing the erroneous word.
+5. WRITE writes a 256-bit word and then increments the word index. `valid_elems` ensures that the tail of the last word does not become real data.
 
-**Quy ước RTL.** Số phần tử hữu ích của word được cast 5 bit, word count cast 8 bit. Tail vẫn bị mask và output padding zero; không đổi descriptor/ALU contract.
+**RTL convention.** The number of useful elements in a word is cast to 5 bits, word count cast to 8 bits. Tail is still masked and output padding zero; descriptor/ALU contract remains unchanged.
 
 ## Important state / datapath groups
 
-### [Dòng 1–22: Giao diện và state](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L1>)
+### [Lines 1–22: Interface and state](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L1>)
 
-**Mục đích.** Một request đọc tại một thời điểm, các word nguồn được giữ trong buffer.
+**Purpose.** One read request at a time, source words are kept in a buffer.
 
-**Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
+**How the code section works.** This group defines interfaces, widths, types, or intermediate signals. It creates a structure for subsequent processing groups to use, but does not itself represent a separate runtime step.
 
-**Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `op`: operand hoặc opcode, theo giao diện module; `a_desc`: metadata nguồn A; `b_desc`: metadata nguồn B; `dst_desc`: metadata tensor đích; `ws_rd_en`: request đọc workspace; và 23 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `start`: request to start transaction; `op`: operand or opcode, according to module interface; `a_desc`: source A metadata; `b_desc`: source B metadata; `dst_desc`: target tensor metadata; `ws_rd_en`: workspace read request; and 23 other auxiliary signals in the code segment.
 
-### [Dòng 23–51: Validate và tail](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L23>)
+### [Lines 23–51: Validate and tail](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L23>)
 
-**Mục đích.** Kiểm tra format, scale, độ dài và overlap. valid_elems=min(16, số phần tử còn lại).
+**Purpose.** Check format, scale, length, and overlap. valid_elems=min(16, remaining elements).
 
-**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
+**How the code works.** There is combinational logic: output/intermediate is calculated from the current input; default block values help avoid inferring latches.
 
-**Tín hiệu và dữ liệu chính.** `invalid`: descriptor/operation bị từ chối; `a_desc`: metadata nguồn A; `dst_desc`: metadata tensor đích; `length`: số phần tử tensor; `op`: operand hoặc opcode, theo giao diện module; `frac_bits`: số bit phần lẻ của input; và 5 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `invalid`: descriptor/operation denied; `a_desc`: source metadata A; `dst_desc`: destination tensor metadata; `length`: number of tensor elements; `op`: operand or opcode, according to module interface; `frac_bits`: number of fractional bits of input; and 5 other auxiliary signals in the code segment.
 
-### [Dòng 52–71: Nối ALU](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L52>)
+### [Lines 52–71: ALU connection](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L52>)
 
-**Mục đích.** F_t, unsigned flag và số lane hữu ích đi kèm từng giao dịch.
+**Purpose.** F_t, unsigned flag, and useful lane count accompanying each transaction.
 
-**Cách phần code hoạt động.** Có instance module con; named-port ở nhóm này xác định chính xác đường control/data giữa hai cấp hierarchy.
+**How the code works.** There is a submodule instance; named-ports in this group precisely define the control/data path between two hierarchy levels.
 
-**Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `state`: trạng thái FSM của khối; `select`: opcode chọn phép rowwise; `operation_q`: opcode đã chốt; `a_word`: word A; `b_word`: word B; và 15 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `start`: request to start transaction; `state`: FSM status of the block; `select`: opcode selecting rowwise operation; `operation_q`: finalized opcode; `a_word`: word A; `b_word`: word B; and 15 other auxiliary signals in the code segment.
 
-### [Dòng 72–94: Request memory](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L72>)
+### [Lines 72–94: Request memory](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L72>)
 
-**Mục đích.** REQ_A/B/C chọn base tương ứng; WRITE dùng alu_result.
+**Purpose.** REQ_A/B/C selects the corresponding base; WRITE uses alu_result.
 
-**Tín hiệu và dữ liệu chính.** `ws_rd_en`: request đọc workspace; `ws_rd_addr`: địa chỉ đọc workspace; `ws_wr_en`: cho phép ghi workspace; `ws_wr_addr`: địa chỉ ghi workspace; `destination_desc_q`: descriptor đích đã chốt; `base_word`: địa chỉ word 256 đầu tensor; và 6 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `ws_rd_en`: request to read workspace; `ws_rd_addr`: workspace read address; `ws_wr_en`: enable workspace write; `ws_wr_addr`: workspace write address; `destination_desc_q`: finalized destination descriptor; `base_word`: address of the first 256 tensor words; and 6 other auxiliary signals in the code segment.
 
-### [Dòng 95–113: Reset](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L95>)
+### [Lines 95–113: Reset](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L95>)
 
-**Mục đích.** Xóa control, descriptor đã chốt và word buffer.
+**Purpose.** Clear the control, latched descriptor, and word buffer.
 
-**Cách phần code hoạt động.** Có logic tuần tự: register/FSM chỉ cập nhật tại cạnh clock; nonblocking assignment đọc giá trị cũ ở vế phải rồi chốt đồng thời.
+**How the code works.** There is sequential logic: registers/FSM only update on the clock edge; nonblocking assignments read the old value on the right-hand side and latch simultaneously.
 
-**Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `busy`: khối đang xử lý; `done`: xung báo hoàn tất; `overflow`: cờ kết quả vượt miền số; `format_error`: cờ format/metadata không hợp lệ; `source_a_desc_q`: descriptor nguồn A đã chốt; và 8 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `state`: FSM state of the block; `busy`: block being processed; `done`: completion pulse; `overflow`: out-of-range result flag; `format_error`: invalid format/metadata flag; `source_a_desc_q`: source A descriptor latched; and 8 other auxiliary signals in this code segment.
 
-### [Dòng 114–135: Nhận lệnh và đọc A](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L114>)
+### [Lines 114–135: Receive command and read A](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L114>)
 
-**Mục đích.** Chốt descriptor một lần. SIG/RELU xóa nguồn B không cần dùng.
+**Purpose.** Latch the descriptor once. SIG/RELU clears source B if not needed.
 
-**Cách phần code hoạt động.** Các câu lệnh thuộc cùng một nhánh/pha xử lý và phải được đọc liền nhau; tách riêng từng dòng sẽ làm mất quan hệ điều kiện và dữ liệu.
+**How the code section works.** The statements belong to the same branch/processing phase and must be read consecutively; separating each line will lose the conditional and data relationships.
 
-**Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `source_a_desc_q`: descriptor nguồn A đã chốt; `a_desc`: metadata nguồn A; `source_b_desc_q`: descriptor nguồn B đã chốt; `b_desc`: metadata nguồn B; `destination_desc_q`: descriptor đích đã chốt; và 15 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `start`: request to start the transaction; `source_a_desc_q`: source A descriptor latched; `a_desc`: source A metadata; `source_b_desc_q`: source B descriptor latched; `b_desc`: source B metadata; `destination_desc_q`: target descriptor latched; and 15 other auxiliary signals in the code segment.
 
-#### Sơ đồ khối phần cứng của nhóm
+#### Hardware block diagram of the group
 
 ![rowwise_dispatch.sv — detail 1](../../diagrams/previews/57_rowwise_dispatch.sv_2.svg)
 
 [Editable draw.io — rowwise_dispatch.sv — detail 1](../../diagrams/architecture.drawio) · Page `57_rowwise_dispatch.sv_2`.
 
-### [Dòng 136–151: Đọc B/state và chờ ALU](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L136>)
+### [Lines 136–151: Read B/state and wait for ALU](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L136>)
 
-**Mục đích.** REC lấy state từ destination; lỗi format từ ALU ngăn write word đó.
+**Purpose.** REC takes state from the destination; format errors from the ALU prevent writing that word.
 
-**Tín hiệu và dữ liệu chính.** `state`: trạng thái FSM của khối; `ws_rd_valid`: workspace trả dữ liệu hợp lệ; `b_word`: word B; `ws_rd_data`: word 256 trả từ workspace; `operation_q`: opcode đã chốt; `c_word`: word state cũ của REC; và 2 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `state`: FSM state of the block; `ws_rd_valid`: workspace returns valid data; `b_word`: word B; `ws_rd_data`: 256-bit word returned from workspace; `operation_q`: finalized opcode; `c_word`: old state word of REC; and 2 other auxiliary signals in the code section.
 
-### [Dòng 152–166: Tiến word và kết thúc](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L152>)
+### [Lines 152–166: Advance word and finish](<../../../Verilog%20Source%20code/rowwise_dispatch.sv#L152>)
 
-**Mục đích.** Tăng word_index hoặc FINISH, phát done một chu kỳ.
+**Purpose.** Increment word_index or FINISH, complete one cycle.
 
-**Tín hiệu và dữ liệu chính.** `word_index_q`: chỉ số word tensor đang đọc; `word_count_q`: số word cần xử lý; `state`: trạng thái FSM của khối; `busy`: khối đang xử lý; `done`: xung báo hoàn tất.
+**Main signals and data.** `word_index_q`: currently reading word tensor index; `word_count_q`: number of words to process; `state`: FSM status of the block; `busy`: block currently processing; `done`: completion pulse.

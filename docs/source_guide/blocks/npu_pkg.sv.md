@@ -1,9 +1,9 @@
-# npu_pkg.sv — Kiểu dữ liệu, saturation và rounding
+# npu_pkg.sv — Data types, saturation, and rounding
 
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục từng file](README.md)
+[Documentation](../../README.md) → [Source guide](../README.md) → [Table of contents for each file](README.md)
 
-**Trạng thái:** Đang dùng — package chung.
+**Status:** In use — common package.
 
 **Source:** [npu_pkg.sv](<../../../Verilog%20Source%20code/npu_pkg.sv>).
 
@@ -11,9 +11,9 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | Package thống nhất format tensor, layout descriptor và các hàm số học. Đây là chỗ nên đọc trước các datapath. `logic signed` có sign bit nằm trong độ rộng đã ghi; S16 gồm cả bit dấu. `struct packed` ghép các trường thành một vector bit liên tục theo thứ tự khai báo. |
+| Responsibility | Package standardizes tensor format, layout descriptor, and arithmetic functions. This is the place to read before the datapaths. `logic signed` has the sign bit within the recorded width; S16 includes the sign bit. `struct packed` combines fields into a continuous bit vector in declaration order. |
 
-## Sơ đồ kiến trúc tổng quan
+## Overall Architecture Diagram
 
 ![npu_pkg.sv — overview](../../diagrams/previews/47_npu_pkg.sv_1.svg)
 
@@ -21,66 +21,66 @@
 
 ## Main flow
 
-`sat_s16/sat_s32` clamp về miền biểu diễn. `rne_shift64` dịch phải số có dấu để tạo thương floor, rồi dùng guard/sticky/LSB quyết định cộng một; kết quả là ties-to-even cho cả số dương và âm. `rne_shift42` là bản đúng độ rộng cho tích postscale S42; shift≥42 trả zero với ties-to-even. `scale_shift64` dùng RNE S64 khi chia cho 2^shift, hoặc shift trái khi phải tăng scale raw. Các hàm kiểm tra workspace tính số word bằng phép chia làm tròn lên.
+`sat_s16/sat_s32` clamps to the display domain. `rne_shift64` performs signed division to create the floor quotient, then uses guard/sticky/LSB to decide whether to add one; the result is ties-to-even for both positive and negative numbers. `rne_shift42` is the width-correct version for postscale S42 multiplication; shift ≥ 42 returns zero with ties-to-even. `scale_shift64` uses RNE S64 when dividing by 2^shift, or left shift when needing to increase raw scale. Workspace check functions calculate the number of words using rounding-up division.
 
-1. Các parameter xác định biên thiết kế: word 256 bit, 32 ternary lane, hai vector lane và K tối đa 512. Một số module vẫn có literal theo cấu hình này, nên đổi package chưa đủ để tái cấu hình toàn chip.
-2. Workspace descriptor mô tả địa chỉ, length, format và F_t. Matrix descriptor mô tả weight, bias, K, số hàng và postscale.
-3. `rne_shift64` bắt đầu từ `q = x >>> shift`. Các bit bị bỏ biểu diễn phần dư không âm so với thương floor; guard/sticky và parity của q quyết định tăng thương để chọn số gần nhất, ties-to-even.
-4. `sat_s16/sat_s32` clamp sau số học S64, tránh wrap-around khi lấy bit thấp.
-5. `ws_words`, `ws_valid` và `ranges_overlap` là lớp kiểm tra memory được nhiều execution unit dùng chung.
+1. Parameters defining the design margins: 256-bit word, 32 ternary lanes, two vector lanes, and a maximum K of 512. Some modules still have literals according to this configuration, so changing the package alone is not enough to reconfigure the entire chip.
+2. The workspace descriptor describes address, length, format, and F_t. The matrix descriptor describes weight, bias, K, number of rows, and postscale.
+3. `rne_shift64` starts from `q = x >>> shift`. The discarded bits represent the non-negative remainder relative to the floor quotient; the guard/sticky and parity of q determine whether to increase the quotient to select the nearest number, ties-to-even.
+4. `sat_s16/sat_s32` clamps after S64 arithmetic, avoiding wrap-around when taking the low bits.
+5. `ws_words`, `ws_valid`, and `ranges_overlap` are the memory check layer used by multiple shared execution units.
 
-**Tối ưu 01/10.** RNE bỏ hai mạch đổi dấu magnitude và mask dạng `(1<<shift)-1`. Dịch trái raw input với shift amount 7 bit `64-shift` đưa phần dư lên MSB để lấy guard/sticky. Khi shift=0, phép dịch 64 bit cho zero, nên increment=0. Mọi biến được gán trên mọi path, giúp logic tổ hợp có định nghĩa đầy đủ. Regression đối chiếu 37.189 trường hợp với phép chia/phần dư độc lập, gồm S64 min/max và mọi shift 0..63.
+**Optimized 01/10.** RNE removed two circuits for magnitude sign change and mask in `(1<<shift)-1` format. Left shift raw input with shift amount 7 bits `64-shift` brings the remainder to the MSB to get guard/sticky bits. When shift=0, the 64-bit shift yields zero, so increment=0. All variables are assigned on all paths, ensuring full definition for combinational logic. Regression compared 37,189 cases against independent division/remainder, including S64 min/max and all shifts 0..63.
 
 ## Important state / datapath groups
 
-### [Dòng 1–17: Thông số chung](<../../../Verilog%20Source%20code/npu_pkg.sv#L1>)
+### [Lines 1–17: General parameters](<../../../Verilog%20Source%20code/npu_pkg.sv#L1>)
 
-**Mục đích.** SRAM 256 bit, 32 ternary lane, 2 vector lane, K tối đa 512. Thay hằng số riêng lẻ chưa đủ để tái cấu hình toàn RTL vì một số khối còn width cố định.
+**Purpose.** 256-bit SRAM, 32 ternary lanes, 2 vector lanes, maximum K 512. Changing individual constants is not enough to reconfigure the entire RTL because some blocks still have fixed widths.
 
-**Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
+**How this part of the code works.** This group defines interfaces, width, type, or intermediate signals. It creates structures for subsequent processing groups to use, without representing a separate runtime step itself.
 
-### [Dòng 18–46: Format và descriptor](<../../../Verilog%20Source%20code/npu_pkg.sv#L18>)
+### [Lines 18–46: Format and descriptor](<../../../Verilog%20Source%20code/npu_pkg.sv#L18>)
 
-**Mục đích.** Length là số phần tử. Matrix row bắt đầu trên ranh giới word; bias S32 pack 8 phần tử/word.
+**Purpose.** Length is the number of elements. Matrix rows start on word boundaries; S32 bias packs 8 elements per word.
 
-**Tín hiệu và dữ liệu chính.** `base_word`: địa chỉ word 256 đầu tensor; `length`: số phần tử tensor; `frac_bits`: số bit phần lẻ của input; `reserved`: bit để dành hoặc flag mở rộng theo loại descriptor; `weight_base`: base word 256 của weight; `bias_base`: base word 256 của bias; và 5 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `base_word`: first 256-word address of the tensor; `length`: number of tensor elements; `frac_bits`: number of fractional bits of input; `reserved`: reserved bit or extension flag according to descriptor type; `weight_base`: base 256-word of weight; `bias_base`: base 256-word of bias; and 5 other auxiliary signals in this code section.
 
-### [Dòng 47–58: Saturation](<../../../Verilog%20Source%20code/npu_pkg.sv#L47>)
+### [Lines 47–58: Saturation](<../../../Verilog%20Source%20code/npu_pkg.sv#L47>)
 
-**Mục đích.** So sánh trong S64 trước khi lấy bit thấp, tránh wrap-around.
+**Purpose.** Compare in S64 before taking the lower bits, avoiding wrap-around.
 
-**Cách phần code hoạt động.** Có function tổ hợp dùng lại tại nơi gọi; function không giữ trạng thái qua các chu kỳ.
+**How the code works.** There is a combinational function reused at the call site; the function does not maintain state across cycles.
 
-**Tín hiệu và dữ liệu chính.** `x`: giá trị đầu vào hàm số học.
+**Main signals and data.** `x`: input value of the arithmetic function.
 
-### [Dòng 59–83: RNE](<../../../Verilog%20Source%20code/npu_pkg.sv#L59>)
+### [Lines 59–83: RNE](<../../../Verilog%20Source%20code/npu_pkg.sv#L59>)
 
-**Mục đích.** Guard là bit ngay dưới phần giữ lại. Sticky OR các bit thấp hơn; khi đúng nửa đơn vị, chỉ tăng nếu LSB đang lẻ.
+**Purpose.** Guard is the bit immediately below the retained part. Sticky OR the lower bits; when exactly half a unit, only increment if the LSB is odd.
 
-**Tín hiệu và dữ liệu chính.** `x`: input S64; `shift`: số bit chia 0..63; `q`: thương floor S64; `discarded`: các bit phần dư được đưa lên MSB; `guard`: bit phần dư cao nhất; `sticky`: OR các bit phần dư thấp hơn; `inc`: guard && (sticky || q[0]).
+**Main signals and data.** `x`: input S64; `shift`: bit number ranging 0..63; `q`: floor quotient S64; `discarded`: remainder bits shifted to MSB; `guard`: most significant remainder bit; `sticky`: OR of lower remainder bits; `inc`: guard && (sticky || q[0]).
 
-**Điểm cần đọc kỹ.** Dịch phải arithmetic tạo floor ngay cả với số âm: −3/2 có q=−2 và phần dư 1. Tie giữ −2 vì q chẵn; −5/2 có q=−3 lẻ nên cộng một thành −2. Cách này tránh lấy abs(S64 min) trong datapath.
+**Points to read carefully.** Division must be arithmetic to produce floor even for negative numbers: −3/2 has q=−2 and remainder 1. Tie keeps −2 because q is even; −5/2 has q=−3 odd so add one to get −2. This method avoids taking abs(S64 min) in the datapath.
 
-#### Sơ đồ khối phần cứng của nhóm
+#### Hardware block diagram of the group
 
 ![npu_pkg.sv — detail 1](../../diagrams/previews/48_npu_pkg.sv_2.svg)
 
 [Editable draw.io — npu_pkg.sv — detail 1](../../diagrams/architecture.drawio) · Page `48_npu_pkg.sv_2`.
 
-### [Dòng 84–102: RNE đúng độ rộng S42](<../../../Verilog%20Source%20code/npu_pkg.sv#L84>)
+### [Lines 84–102: RNE at width S42](<../../../Verilog%20Source%20code/npu_pkg.sv#L84>)
 
-**Mục đích.** rne_shift42 giữ signed-floor, guard/sticky/parity trên tích postscale S42. Với shift≥42, toàn miền S42 làm tròn về zero; giá trị nhỏ nhất ở shift=42 là tie −0,5 và chọn số chẵn zero. Không thay thế RNE S64 ở NORM/rowwise.
+**Purpose.** rne_shift42 maintains signed-floor, guard/sticky/parity on the postscale product S42. With shift≥42, the entire S42 domain rounds toward zero; the smallest value at shift=42 is tie −0.5 and chooses even zero. Does not replace RNE S64 in NORM/rowwise.
 
-**Cách hoạt động.** Barrel shifter và cộng một dùng độ rộng 42 bit. Hàm tổ hợp gán đủ intermediate, không thêm latency; ternary_mul đặt register tại nơi gọi. Regression postscale đối chiếu với reference S128 ở mọi shift 0…63.
+**Operation.** Barrel shifter and add-one use 42-bit width. Combinational function assigns enough intermediate signals, adding no latency; ternary_mul places registers at the call site. Postscale regression compares with S128 reference at all shifts 0…63.
 
-### [Dòng 103–112: Đổi scale](<../../../Verilog%20Source%20code/npu_pkg.sv#L103>)
+### [Lines 103–112: Change scale](<../../../Verilog%20Source%20code/npu_pkg.sv#L103>)
 
-**Mục đích.** Shift dương chia và RNE; shift âm nhân lũy thừa hai. Caller phải bảo đảm miền shift và operand không tràn.
+**Purpose.** Positive shift divides and RNE; negative shift multiplies squared. Caller must ensure that the shift range and operand do not overflow.
 
-**Tín hiệu và dữ liệu chính.** `x`: giá trị đầu vào hàm số học; `shift`: độ dịch để biểu diễn scale; ý nghĩa dấu theo hàm đang dùng.
+**Signals and main data.** `x`: input value of the arithmetic function; `shift`: shift to represent scale; the meaning of the sign according to the function being used.
 
-### [Dòng 113–128: Kiểm tra memory](<../../../Verilog%20Source%20code/npu_pkg.sv#L113>)
+### [Lines 113–128: Memory check](<../../../Verilog%20Source%20code/npu_pkg.sv#L113>)
 
-**Mục đích.** Tính ceil(length/elements_per_word), kiểm tra cuối vùng SRAM và phép giao nhau của hai khoảng nửa mở [base, base+size).
+**Purpose.** Calculate ceil(length/elements_per_word), check the end of the SRAM region and the intersection of two half-open intervals [base, base+size).
 
-**Tín hiệu và dữ liệu chính.** `length`: số phần tử tensor; `frac_bits`: số bit phần lẻ của input; `base_word`: địa chỉ word 256 đầu tensor; `a`: operand A; `b`: operand B.
+**Signals and main data.** `length`: number of tensor elements; `frac_bits`: number of fractional input bits; `base_word`: address of the first 256-word tensor; `a`: operand A; `b`: operand B.

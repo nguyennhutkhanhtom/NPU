@@ -1,5 +1,9 @@
 # llm_head_engine.sv
 
+**Fixed geometry.** Named, explicitly sized constants define the 4,096-row limit, eight result slots, four chunks and eight packed scale lanes. `SCALE_BASE` uses `llm_pkg::EMB_SCALE_BASE`; arrays derive their bounds from `RESULT_DEPTH`. Geometry, arithmetic, register ownership and cycle behavior are preserved.
+
+**Readability.** The modified engine uses two-space nesting, one register update per line, explicit zero/one literals and blocks around wrapped statements. Payload remains unreset and is overwritten before validity. Counter update priority and cancellation/drain behavior are unchanged.
+
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Documentation](../../README.md) → [Source guide](../full_graph.md) → [RTL index](README.md)
 
@@ -17,7 +21,7 @@ The request counter reserves a result slot before the first weight chunk. Ordere
 
 The diagram below reflects the vocabulary stream, packed-scale reads and eight backpressured result slots.
 
-## Sơ đồ kiến trúc
+## Architecture diagram
 
 ![llm_head_engine.sv — overview](../../diagrams/previews/25_llm_head_engine.sv_1.svg)
 

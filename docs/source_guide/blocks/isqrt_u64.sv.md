@@ -11,7 +11,7 @@
 |---|---|
 | Responsibility | Unsigned floor square root with 32 radix-four iterations. Append two radicand bits per step; one U35 subtractor supplies the trial remainder and borrow decision. Root and remainder feedback are explicit registers. start is accepted only when idle; busy/done frame the result. |
 
-## Sơ đồ kiến trúc
+## Architecture diagram
 
 ![isqrt_u64.sv — overview](../../diagrams/previews/21_isqrt_u64.sv_1.svg)
 

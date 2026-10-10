@@ -1,9 +1,9 @@
 # matmul_wrap.sv — Wrapper clock/reset/LED
 
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
+[Document](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Per-file table of contents](README.md)
 
-**Trạng thái:** Đang dùng nếu chọn board top.
+**Status:** Used when selecting the top board.
 
 **Source:** [matmul_wrap.sv](<../../../Verilog%20Source%20code/matmul_wrap.sv>).
 
@@ -11,9 +11,9 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | Wrapper đưa CLOCK_50 vào clk và SW[0] vào rst_n của core. LEDG[0]=ready, [1]=overflow, [2]=error. Tín hiệu running/PC/instruction được giữ nội bộ, không đưa ra LED. |
+| Responsibility | Wrapper brings CLOCK_50 into clk and SW[0] into core's rst_n. LEDG[0]=ready, [1]=overflow, [2]=error. The running/PC/instruction signals are kept internal, not output to LEDs. |
 
-## Sơ đồ kiến trúc tổng quan
+## Overall architecture diagram
 
 ![matmul_wrap.sv — overview](../../diagrams/previews/35_matmul_wrap.sv_1.svg)
 
@@ -21,27 +21,27 @@
 
 ## Main flow
 
-Không có datapath hay chương trình riêng trong wrapper. Host bên ngoài vẫn phải nạp đầy đủ memory/descriptor/program. SW[0]=0 giữ reset; đưa lên 1 mới thoát reset. Khi đóng gói ASIC sẽ cần thay giao diện board phù hợp.
+There is no datapath or individual program in the wrapper. The external host still needs to fully load memory/descriptor/program. SW[0]=0 holds reset; setting it to 1 releases reset. When packaging into ASIC, the board interface will need to be adapted accordingly.
 
-1. Wrapper chỉ nối pin board với core, không thêm datapath hay instruction.
-2. CLOCK_50 cấp trực tiếp cho core; SW[0] là reset active-low.
-3. Host bus đi thẳng vào matmulfree nên giữ nguyên memory map và quy tắc chỉ ghi khi idle.
-4. LED báo ready, overflow và error; running/PC/instruction debug chỉ tồn tại nội bộ.
+1. The wrapper only connects the board pins to the core, without adding a datapath or instructions.
+2. CLOCK_50 is supplied directly to the core; SW[0] is an active-low reset.
+3. The host bus goes directly into matmulfree, so it keeps the original memory map and the rule to write only when idle.
+4. LEDs indicate ready, overflow, and error; running/PC/instruction debug exist only internally.
 
 ## Important state / datapath groups
 
-### [Dòng 1–14: Port và debug nội bộ](<../../../Verilog%20Source%20code/matmul_wrap.sv#L1>)
+### [Lines 1–14: Ports and internal debug](<../../../Verilog%20Source%20code/matmul_wrap.sv#L1>)
 
-**Mục đích.** Tên clock theo board không phải tần số timing signoff.
+**Purpose.** The clock name according to the board is not the timing signoff frequency.
 
-**Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
+**How the code works.** This group defines the interface, width, type, or intermediate signals. It creates structure for subsequent processing groups to use and does not itself represent a separate runtime step.
 
-**Tín hiệu và dữ liệu chính.** `CLOCK_50`: clock từ board wrapper; `SW`: switch0 dùng làm rst_n; `LEDG`: ba LED chỉ ready/overflow/error; `host_en`: host đang yêu cầu truy cập; `host_we`: host chọn ghi thay vì đọc; `host_addr`: địa chỉ phía host; và 6 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `CLOCK_50`: clock from the wrapper board; `SW`: switch0 used as rst_n; `LEDG`: three LEDs indicating ready/overflow/error; `host_en`: host is requesting access; `host_we`: host chooses write instead of read; `host_addr`: host-side address; and 6 other auxiliary signals in the code snippet.
 
-### [Dòng 15–29: Instance core](<../../../Verilog%20Source%20code/matmul_wrap.sv#L15>)
+### [Lines 15–29: Core instance](<../../../Verilog%20Source%20code/matmul_wrap.sv#L15>)
 
-**Mục đích.** Named ports đưa host thẳng vào matmulfree và status đến LED.
+**Purpose.** Named ports bring the host directly into matmulfree and status to the LED.
 
-**Cách phần code hoạt động.** Có instance module con; named-port ở nhóm này xác định chính xác đường control/data giữa hai cấp hierarchy.
+**How the code works.** There is a child module instance; named ports in this group precisely define the control/data path between the two hierarchy levels.
 
-**Tín hiệu và dữ liệu chính.** `CLOCK_50`: clock từ board wrapper; `SW`: switch0 dùng làm rst_n; `host_en`: host đang yêu cầu truy cập; `host_we`: host chọn ghi thay vì đọc; `host_addr`: địa chỉ phía host; `host_wdata`: data 32 host muốn ghi; và 9 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `CLOCK_50`: clock from the board wrapper; `SW`: switch0 used as rst_n; `host_en`: host is requesting access; `host_we`: host chooses to write instead of read; `host_addr`: host-side address; `host_wdata`: 32-bit data the host wants to write; and 9 other auxiliary signals in the code segment.

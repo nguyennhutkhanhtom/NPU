@@ -23,7 +23,6 @@ module ternary_dot32 (
             valid_q <= {valid_q[2:0], valid_i};
             reserved_q <= {reserved_q[2:0], valid_i && |reserved_lane};
         end
-    generate
     for (lane = 0; lane < 32; lane = lane + 1) begin : g_term
         wire signed [24:0] extended_x = {x_i[lane][23], x_i[lane]};
         assign reserved_lane[lane] = w_i[lane] == 2'b10;
@@ -50,6 +49,5 @@ module ternary_dot32 (
         always_ff @(posedge clk)
             half_q[node] <= 29'(oct_q[node * 2]) + 29'(oct_q[node * 2 + 1]);
     end
-    endgenerate
     always_ff @(posedge clk) sum_o <= 30'(half_q[0]) + 30'(half_q[1]);
 endmodule

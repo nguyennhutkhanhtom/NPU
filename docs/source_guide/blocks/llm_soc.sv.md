@@ -1,12 +1,14 @@
 # llm_soc
 
+**Structural generation.** Named SystemVerilog generate constructs are retained without the optional `generate`/`endgenerate` regions, following lowRISC. Loop bounds, conditional branches, instance names and lane ownership are unchanged.
+
 > **Role:** Own autonomous fixed-point inference and route shared resources.
 > **Scope:** CURRENT. **Category:** GUIDE.
 > **Source:** [llm_soc.sv](<../../../Verilog Source code/llm_soc.sv>).
 
-Mặc định `USE_QUARTUS_MEMORY=0`: test Xcelium và synthesis Genus dùng RAM portable.
-Backend Quartus chỉ còn phục vụ snapshot FPGA cũ khi chọn tham số 1 rõ ràng.
-Xem [flow server](../../../tools/server/README.md); evidence FPGA cũ không xác minh cấu hình mới.
+By default `USE_QUARTUS_MEMORY=0`: test Xcelium and Genus synthesis using portable RAM.
+Backend Quartus only serves old FPGA snapshots when selecting parameter 1 explicitly.
+See [flow server](../../../tools/server/README.md); evidence of old FPGA does not verify the new configuration.
 
 ## At a glance
 
@@ -61,7 +63,7 @@ Xem [flow server](../../../tools/server/README.md); evidence FPGA cũ không xá
 
 ## Important contracts
 
-Linear execution launches once in `L_ROW_START` and remains in `L_ROW_WAIT` while the engine issues consecutive rows. Its bounded result FIFO feeds coefficient multiplication, RNE, saturation and lane packing through the existing registers. The final lane is captured before the tagged bank write is accepted; a write may overlap packing the next bank. Fault consumption waits for older scalar packets to finish, then drains accepted memory/dot work. Completion waits for empty row results, scalar validity and bank write queues. Memory acceptance and write commitment are different events; host acknowledgement follows commitment. Shared-resource muxes are owned here, rather than direct engine-to-engine wiring.
+Linear execution launches once in `L_ROW_START` and remains in `L_ROW_WAIT` while the engine issues consecutive rows. Its bounded result FIFO feeds coefficient multiplication, RNE, saturation, and lane packing through the existing registers. The final lane is captured before the tagged bank write is accepted; a write may overlap packing the next bank. Fault consumption waits for older scalar packets to finish, then drains accepted memory/dot work. Completion waits for empty row results, scalar validity, and bank write queues. Memory acceptance and write commitment are different events; host acknowledgement follows commitment. Shared-resource multiplexers are owned here, rather than direct engine-to-engine wiring.
 
 The diagrams above reflect continuous row streaming and the tagged scalar epilogue, including the registered upper multiply partial.
 

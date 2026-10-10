@@ -31,7 +31,6 @@ module llm_bank_ram #(
         else write_pending_q <= {write_pending_q[2:0], |wr_mask};
     assign wr_busy = |write_pending_q;
     genvar lane, group_id;
-    generate
     for (group_id = 0; group_id < GROUPS; group_id = group_id + 1) begin : g_request
         (* dont_merge *) logic [ADDR_W - 1:0] read_address_q, write_address_q;
         (* dont_merge *) logic read_enable_q;
@@ -71,6 +70,5 @@ module llm_bank_ram #(
             .rd_addr(read_address_q), .wr_addr(write_address_q), .wr_data(write_data_q),
             .rd_data(rd_data[lane * WIDTH +: WIDTH]), .rd_valid(lane_read_valid[lane]), .wr_valid());
     end
-    endgenerate
     assign rd_valid = lane_read_valid[0];
 endmodule

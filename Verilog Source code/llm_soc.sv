@@ -357,7 +357,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
     wire [6:0] op_debug_index;
     wire [OP_COUNT:0] op_debug_prefix [0:6];
     genvar debug_bit, debug_state;
-    generate
     if (ENABLE_DEBUG_INDEX) begin : g_debug_enabled
     for (debug_bit = 0; debug_bit < 7; debug_bit = debug_bit + 1) begin : g_debug_bit
         assign op_debug_prefix[debug_bit][0] = 1'b0;
@@ -370,8 +369,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
     end else begin : g_debug_disabled
         assign op_debug_index = 7'd0;
     end
-    endgenerate
-
     // Registered host transactions. Hold address/data until ready, then deassert
     // host_en for at least one clock before issuing another transaction.
     typedef enum logic [2:0] {H_IDLE, H_EXEC, H_READ, H_WAIT, H_DONE} host_t;
@@ -551,13 +548,11 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
     always_ff @(posedge clk)
         if (core_rst_n && head_feed) head_pipe_row_q[0] <= head_result_row;
     genvar head_stage;
-    generate
     for (head_stage = 1; head_stage < 6; head_stage = head_stage + 1) begin : g_head_tag
         always_ff @(posedge clk)
             if (core_rst_n && head_pipe_valid_q[head_stage - 1])
                 head_pipe_row_q[head_stage] <= head_pipe_row_q[head_stage - 1];
     end
-    endgenerate
     llm_attention_engine u_attention_engine(.clk(clk), .rst_n(core_rst_n), .start_i(op[A_QUERY_IDX]),
         .cancel_i(op_fault_q), .layer_i(layer_q), .head_i(head_q), .position_i(position_q),
         .kv_req_o(attention_k_req), .kv_address_o(attention_k_address), .kv_valid_i(k_valid),
@@ -633,7 +628,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
         end
     end
     genvar attention_stage;
-    generate
     for (attention_stage = 1; attention_stage < 4; attention_stage = attention_stage + 1) begin : g_attention_value_tags
         always_ff @(posedge clk) begin
             if (core_rst_n && attention_exp_step && attention_exp_valid_q[attention_stage - 1])
@@ -642,12 +636,9 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
                 attention_product_time_q[attention_stage] <= attention_product_time_q[attention_stage - 1];
         end
     end
-    endgenerate
-    generate
     for (input_lane = 0; input_lane < 32; input_lane = input_lane + 1) begin : g_linear_operand
         assign linear_operand[input_lane] = input_cache_q[linear_input_chunk][input_lane * 24 +: 24];
     end
-    endgenerate
     // One matrix launch owns the parameter stream until memory/dot drain.
     // Row sums are queued in the engine; row tags follow the existing scalar
     // registers through scaling, RNE, clamp, lane packing and bank acceptance.
@@ -679,13 +670,11 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
     always_ff @(posedge clk)
         if (core_rst_n && linear_feed) linear_pipe_row_q[0] <= linear_row_issue_q;
     genvar linear_stage;
-    generate
     for (linear_stage = 1; linear_stage < 9; linear_stage = linear_stage + 1) begin : g_linear_tag
         always_ff @(posedge clk)
             if (core_rst_n && linear_pipe_valid_q[linear_stage - 1])
                 linear_pipe_row_q[linear_stage] <= linear_pipe_row_q[linear_stage - 1];
     end
-    endgenerate
     llm_linear_engine u_linear_engine(.clk(clk), .rst_n(core_rst_n), .start_i(linear_start),
         .cancel_i(op_fault_q), .weight_base_i(weight_row_q), .chunks_i(matrix_chunks_q),
         .rows_i(matrix_rows_q), .result_ready_i(linear_result_ready),
@@ -731,7 +720,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
     logic signed [15:0] sigmoid_inputs_q [0:31];
     logic [15:0] sig_y [0:SIGMOID_LANES - 1];
     logic [15:0] sigmoid_values_q [0:31];
-    generate
     for (sig_lane = 0; sig_lane < SIGMOID_LANES; sig_lane = sig_lane + 1) begin : g_sigmoid
         sigmoid u_sig(.clk(clk), .rst_n(core_rst_n), .start(op[S_SIG_IDX]),
             .x_raw(sig_x_q[sig_lane]), .frac_bits(5'd12), .busy(sig_busy[sig_lane]),
@@ -739,9 +727,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
         always_ff @(posedge clk)
             if (core_rst_n && op[SG_GROUP_IDX]) sig_x_q[sig_lane] <= sigmoid_inputs_q[int'(lane_q) + sig_lane];
     end
-    endgenerate
     assign core_running = graph != G_IDLE;
-    generate
     if (PERF_COUNTERS) begin : g_perf
         logic [63:0] total_cycles, parameter_reads, vector_reads, vector_writes;
         logic [63:0] kv_reads, kv_writes, math_starts, divider_starts, sigmoid_starts;
@@ -774,7 +760,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
                     graph_cycles[phase] <= graph_cycles[phase] + 1'b1;
         end
     end
-    endgenerate
     always_ff @(posedge clk or negedge core_rst_n) begin
         if (!core_rst_n) begin running <= 0; ready <= 1; pc_debug <= 0; instr_debug <= 0; end
         else begin
@@ -884,13 +869,11 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
         if (core_rst_n && !token_abort && token_read_valid_q)
             token_prompt_bank_q <= token_prompt_address_q[6:4];
     genvar prompt_bank;
-    generate
     for (prompt_bank = 0; prompt_bank < 8; prompt_bank = prompt_bank + 1) begin : g_prompt_read
         always_ff @(posedge clk)
             if (core_rst_n && !token_abort && token_read_valid_q)
                 token_prompt_word_q[prompt_bank] <= prompt_memory[{3'(prompt_bank), token_prompt_address_q[3:0]}];
     end
-    endgenerate
     always_ff @(posedge clk or negedge core_rst_n)
         if (!core_rst_n) token_q <= 0;
         else if (!token_abort && token_commit_valid_q)
@@ -914,7 +897,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
             scalar_packet_linear_q <= op[L_FLAGS_IDX] || linear_pipe_valid_q[4];
         end
     genvar lane, scalar_group, scalar_cluster, round_group;
-    generate
     // Prepare each four-lane enable on the existing raw-product capture edge.
     for (round_group = 0; round_group < 8; round_group = round_group + 1) begin : g_round_control
         always_ff @(posedge clk or negedge core_rst_n)
@@ -1050,8 +1032,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
                 scalar_group_q[scalar_group] <= scalar_cluster_high_q[scalar_group / 4] ? 24'sh7fffff :
                     scalar_cluster_lower_q[scalar_group / 4] ? 24'sh800000 : scalar_cluster_low_q[scalar_group / 4];
     end
-    endgenerate
-
     always_ff @(posedge clk) begin
         if (core_rst_n) begin
             if (op[B_INPUT0_IDX]) second_q <= vector_q;
@@ -1069,14 +1049,11 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 0,
                 default : ;
             endcase
         end
-
-    generate
     for (cache_row = 0; cache_row < 12; cache_row = cache_row + 1) begin : g_input_cache
         always_ff @(posedge clk)
             if (core_rst_n && (op[L_PRELOAD_IDX] || op[H_PRELOAD_IDX]) && preload_chunk_q == 4'(cache_row))
                 input_cache_q[cache_row] <= vector_q;
     end
-    endgenerate
     wire [6:0] cache_source_base = 7'((int'(input_cache_source_q) << 3) + (int'(input_cache_source_q) << 2));
     always_ff @(posedge clk or negedge core_rst_n) begin
         if (!core_rst_n) begin input_cache_valid_q <= 0; rope_table_valid_q <= 0; end

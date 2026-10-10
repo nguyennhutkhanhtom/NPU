@@ -1,86 +1,86 @@
-# Liên kết SRAM khi chuyển sang ASIC
+# SRAM Connection When Transitioning to ASIC
 
 > **Category: GUIDE.**
 
-[Tài liệu](../README.md) · [Chính sách RTL portable](asic_portability.md) · [Toàn graph](full_rtl_language.md) · [Kiểm tra bộ nhớ](../../tests/full_rtl/tb_memory_ip.sv)
+[Documentation](../README.md) · [RTL portability policy](asic_portability.md) · [Full graph](full_rtl_language.md) · [Memory test](../../tests/full_rtl/tb_memory_ip.sv)
 
-Khối compute/control vẫn dùng SystemVerilog có thể tổng hợp. Technology leaf
-hiện tại là `quartus_word_ram`, được truy cập qua `pipelined_word_ram`; chỉ source
-này instantiate trực tiếp `altsyncram`. Khi triển khai ASIC, cần cung cấp bản thay
-thế dành riêng cho technology nhưng giữ cùng public leaf interface, rồi chọn source
-đó trong ASIC file list. Giữ nguyên adapter branch và các client interface hiện có.
-Tên `USE_QUARTUS_MEMORY` hiện chọn leaf branch này; nó không yêu cầu logic số học
-hoặc điều khiển của Quartus.
+The compute/control block still uses synthesizable SystemVerilog. Current technology leaf
+is `quartus_word_ram`, accessed via `pipelined_word_ram`; only this source
+instantiates `altsyncram` directly. When implementing ASIC, a
+technology-specific replacement must be provided while keeping the same public leaf interface, then select that source
+in the ASIC file list. Keep the adapter branch and existing client interfaces unchanged.
+The name `USE_QUARTUS_MEMORY` currently selects this leaf branch; it does not require arithmetic logic
+or Quartus control.
 
-Core chỉ có một `clk`. Các signal request/data của host phải đáp ứng contract
-setup/hold của clock này và giữ ổn định trong suốt handshake. RTL không cung cấp
-host clock độc lập hoặc cầu nối data CDC. Khi tích hợp ASIC với host thuộc clock
-domain khác, phải bổ sung cầu nối đó ở upstream; hai reset-release FF chỉ đồng bộ
-thời điểm deassert reset, không đồng bộ dữ liệu host.
+The Core only has one `clk`. The host request/data signals must meet the contract
+setup/hold of this clock and remain stable throughout the handshake. RTL does not provide
+a separate host clock or CDC data bridge. When integrating ASIC with a host in a different clock
+domain, that bridge must be added upstream; two reset-release FFs only synchronize
+the timing of deasserting reset, not host data.
 
-Nhánh portable (`USE_QUARTUS_MEMORY=0`) dùng các mảng `sram_word_tile` được infer.
-Vendor-free elaboration chỉ kiểm tra tính độc lập với vendor model; kết quả này
-không chứng minh implementation/signoff ASIC. Xem [trạng thái kiểm chứng](../verification/optimization_status.md).
+The portable branch (`USE_QUARTUS_MEMORY=0`) uses `sram_word_tile` arrays that are inferred.
+Vendor-free elaboration only checks independence from the vendor model; this result
+does not prove ASIC implementation/signoff. See [verification status](../verification/optimization_status.md).
 
-## Leaf contract và client
+## Leaf contract and client
 
-Leaf có một rising-edge clock dùng chung, một read port và một write port, địa chỉ
-riêng biệt và whole-word write enable. Khi read được enable, địa chỉ được lấy mẫu
-tại rising edge và word tương ứng xuất hiện sau edge đó. Khi read bị disable,
-kết quả gần nhất được giữ nguyên. Write được enable sẽ commit tại edge đó. Nếu
-read/write đồng thời trên cùng địa chỉ, read trả về word cũ. Leaf không có reset
-port; nội dung/output khi power-up không được xác định. Client và test không được
-đọc memory chưa khởi tạo. Reset điều khiển adapter hủy các enable đang chờ và
-valid response, nhưng giữ dữ liệu đã commit; payload register không được reset.
+Leaf has a shared rising-edge clock, one read port, and one write port, with
+separate addresses and whole-word write enable. When read is enabled, the address is sampled
+at the rising edge and the corresponding word appears after that edge. When read is disabled,
+the most recent result is held. Write enabled will commit at that edge. If
+read/write occur simultaneously at the same address, read returns the old word. Leaf has no reset
+port; content/output at power-up is undefined. Client and test are not allowed to
+read uninitialized memory. Adapter control reset cancels pending enables and
+valid response, but keeps committed data; payload register is not reset.
 
 | Full-top client | Leaf instances and geometry | Adapter contract |
 |---|---|---|
-| Parameter SRAM | 8 × 32 bits × 24576 rows | Compute read 5 edges; host read lane selection thêm 1 edge trước controller response. Write ACK theo actual leaf commit. |
-| KV cache | 32 × 24 bits × 4096 rows | Read 5 edges; lane-masked write commit tại edge 4; busy bao phủ pending write. |
-| Vector workspace | 32 × 24 bits × 96 rows | Read 5 edges; lane-masked write commit tại edge 4; dùng cùng reset/collision contract. |
+| Parameter SRAM | 8 × 32 bits × 24576 rows | Compute read 5 edges; host read lane selection adds 1 edge before controller response. Write ACK according to actual leaf commit. |
+| KV cache | 32 × 24 bits × 4096 rows | Read 5 edges; lane-masked write commit at edge 4; busy covers pending write. |
+| Vector workspace | 32 × 24 bits × 96 rows | Read 5 edges; lane-masked write commit at edge 4; use the same reset/collision contract. |
 
-Latency tính edge tiếp nhận là edge 1. Word adapter dùng read 3 edges khi có
-<=4096 rows và 4 edges trong trường hợp còn lại; write commit tại edge 2. Các
-stage request group/lane tạo nên latency của bank adapter nêu trên. Throughput
-và collision behavior được kiểm tra bằng expected data độc lập cùng Quartus model
-thực tế trong [trạng thái kiểm chứng hiện tại](../verification/optimization_status.md).
-Khi thay đổi macro port, read latency hoặc collision semantics, phải điều chỉnh
-boundary này và chạy lại các kiểm tra tương ứng. Collision response không xác định
-không thể được xem là tương đương OLD_DATA. Việc chọn macro phải tính đến quy tắc
-này và accepted request rate của adapter.
+Latency for the edge receiving is edge 1. Word adapter uses read 3 edges when there are
+<=4096 rows and 4 edges in the remaining case; write commit at edge 2. The
+stage request group/lane creates the latency of the above bank adapter. Throughput
+and collision behavior are checked by independent expected data along with the actual Quartus model
+in [current verification status](../verification/optimization_status.md).
+When changing macro port, read latency, or collision semantics, adjustments must be made
+this boundary and rerun the corresponding tests. Collision response is undefined
+cannot be considered equivalent to OLD_DATA. Macro selection must take into account the rules
+and the accepted request rate of the adapter.
 
-## Các mảng nhỏ do graph controller sở hữu
+## Small arrays owned by the graph controller
 
-`llm_soc` còn chứa bốn mảng 128 entry với thao tác read/write hiển thị rõ trong
-các FSM host/graph/operator. Đây là các mảng RTL được infer thông thường, không
-instantiate vendor trực tiếp. Chúng có thể giữ dạng register/mux trong implementation
-ASIC standard-cell. Nếu chuyển sang SRAM, phải bảo toàn cách lấy mẫu read và các
-FSM stage hiện có; thêm một read edge chưa được tính đến sẽ làm thay đổi hành vi graph.
+`llm_soc` also contains four 128-entry arrays with clearly visible read/write operations in
+the host/graph/operator FSMs. These are regular inferred RTL arrays, not
+directly instantiated from vendors. They can maintain register/mux forms in the implementation
+of the ASIC standard-cell. If switched to SRAM, the read sampling method and the
+Current FSM stage; adding an unconsidered read edge will change the behavior of the graph.
 
 | Array | Logical payload | Source ownership and initialization |
 |---|---:|---|
-| prompt_memory | 128 × 12 bits = 192 bytes | Host ghi prompt ID trước khi launch; graph đọc các ID này trong prefill. |
-| output_memory | 128 × 12 bits = 192 bytes | Graph ghi token đã chọn; host đọc các ID trả về. |
-| score_memory | 128 × S32 = 512 bytes | Operator ghi causal score từ 0..position trước khi exponentiation đọc chúng. |
-| probability_memory | 128 × U25 = 400 bytes | Operator ghi exponent weight từ 0..position trước khi value reduction đọc chúng. |
+| prompt_memory | 128 × 12 bits = 192 bytes | Host writes prompt ID before launch; graph reads these IDs during prefill. |
+| output_memory | 128 × 12 bits = 192 bytes | Graph writes the selected token; host reads these returned IDs. |
+| score_memory | 128 × S32 = 512 bytes | Operator writes causal score from 0..position before exponentiation reads them. |
+| probability_memory | 128 × U25 = 400 bytes | Operator writes exponent weight from 0..position before value reduction reads them. |
 
-Các mảng này không được reset; ownership của count/state xác định entry nào hợp lệ.
+These arrays are not reset; ownership of count/state determines which entry is valid.
 [Fanout1 fitter report](../verification/timing/fullrtl100_fanout1/llm_soc.fit.rpt)
-ánh xạ 1536 bits của output_memory và 3200 bits của probability_memory vào hai RAM
-block bổ sung. 72 leaf instance trực tiếp chiếm 9510912 logical bits; cộng thêm
-4736 inferred bits cho ra 9515648 block-memory bits như báo cáo. Các mảng prompt/score
-dùng logic resource trong lần fit này. ASIC mapping không cần sao chép cách packing
-đó. Forwarding logic report276020 của output RAM được infer bảo toàn read-during-write
-semantics trong source; đây không phải một datapath IP instance riêng.
+map 1536 bits of output_memory and 3200 bits of probability_memory into two RAMs
+additional block. 72 leaf instances directly occupy 9,510,912 logical bits; plus
+4,736 inferred bits resulting in 9,515,648 block-memory bits as reported. The prompt/score arrays
+use logic resources in this fit. ASIC mapping does not need to copy that packing method.
+Forwarding logic report276020 of output RAM is inferred to preserve read-during-write
+semantics in the source; this is not a separate datapath IP instance.
 
-## EDA input khi có foundry target
+## EDA input when there is a foundry target
 
-Sử dụng cùng source compute/control, package và combinational LUT include của
-`llm_soc` trong [source guide](../source_guide/blocks/README.md). Thay source của
-memory technology leaf và cung cấp các view behavioral/Liberty/LEF của SRAM đã
-chọn cùng standard-cell library. Giữ nguyên contract numeric/reset/handshake và
-chạy lại các test unit, collision, cancellation và autonomous graph với leaf đó.
-Dùng constraint synthesis/STA ASIC cho clock thực tế, môi trường I/O và library
-corner; hoàn tất DFT và physical signoff bằng các technology tương ứng. Các
-assignment device, pin, fanout và delay trong Quartus QSF chỉ thuộc demonstration
-backend. Công việc này không bao gồm tích hợp board.
+Use the same source compute/control, package, and combinational LUT include of
+`llm_soc` in the [source guide](../source_guide/blocks/README.md). Replace the source of
+memory technology leaf and provide the behavioral/Liberty/LEF views of the selected SRAM
+along with the standard-cell library. Keep the contract numeric/reset/handshake unchanged and
+rerun unit, collision, cancellation, and autonomous graph tests with that leaf.
+Use synthesis/STA ASIC constraints for real clock, I/O environment, and library
+corner; complete DFT and physical signoff using the corresponding technologies. The
+assignment of device, pin, fanout, and delay in Quartus QSF only belongs to demonstration
+backend. This work does not include board integration.

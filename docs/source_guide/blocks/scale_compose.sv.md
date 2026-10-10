@@ -1,7 +1,7 @@
-# scale_compose.sv — Ghép scale bằng lựa chọn shift song song
+# scale_compose.sv — Compose scales using parallel shift selection
 
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Source guide](<../legacy/README.md>) → [Mục lục](README.md)
+[Document](../../README.md) → [Source guide](<../legacy/README.md>) → [Table of contents](README.md)
 
 **Source:** [scale_compose.sv](<../../../Verilog%20Source%20code/scale_compose.sv>).
 
@@ -9,9 +9,9 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | Ghép factor_m/factor_r với quant_d thành result_m U24 và result_r U6. Chốt tích U48, đánh giá song song 48 threshold hằng, chọn shift lớn nhất còn vừa U24, rồi thực hiện một divider U48/U25 và RNE. Không còn vòng decrement candidate. |
+| Responsibility | Compose factor_m/factor_r with quant_d into result_m U24 and result_r U6. Lock U48 product, evaluate 48 constant thresholds in parallel, select the largest shift that still fits U24, then perform a U48/U25 divider and RNE. No more candidate decrement loop. |
 
-## Sơ đồ kiến trúc
+## Architecture diagram
 
 ![scale_compose.sv — overview](../../diagrams/previews/60_scale_compose.sv_1.svg)
 
@@ -19,26 +19,26 @@
 
 ## Important state / datapath groups
 
-### [Dòng 1–29: Interface and state](<../../../Verilog%20Source%20code/scale_compose.sv#L1>)
+### [Lines 1–29: Interface and state](<../../../Verilog%20Source%20code/scale_compose.sv#L1>)
 
-Valid factors dùng factor_r≤47 và quant_d khác zero. factor_m=0 trả zero hợp lệ. Control dùng MULTIPLY, SELECT_SHIFT và SHIFT trước DIV_START.
+Valid factors use factor_r≤47 and quant_d not zero. factor_m=0 returns valid zero. Control uses MULTIPLY, SELECT_SHIFT, and SHIFT before DIV_START.
 
-### [Dòng 30–53: Parallel threshold selection](<../../../Verilog%20Source%20code/scale_compose.sv#L30>)
+### [Lines 30–53: Parallel threshold selection](<../../../Verilog%20Source%20code/scale_compose.sv#L30>)
 
-positive_fit là prefix ones. COEFFICIENT_LIMIT=0x7EFF_FFC0_8000; strict inequality loại tie U24_max+1/2. Boundary encoder chọn shift mà không tạo chuỗi decrement.
+positive_fit is the prefix ones. COEFFICIENT_LIMIT=0x7EFF_FFC0_8000; strict inequality excludes tie U24_max+1/2. Boundary encoder selects shift without generating decrement sequence.
 
-### [Dòng 54–67: Registered multiplication and shift](<../../../Verilog%20Source%20code/scale_compose.sv#L54>)
+### [Lines 54–67: Registered multiplication and shift](<../../../Verilog%20Source%20code/scale_compose.sv#L54>)
 
-Multiply không asynchronous reset; control bảo đảm capture trước use. Shift âm tối thiểu −2, nên denominator không vượt U25.
+Multiply without asynchronous reset; control ensures capture before use. Minimum negative shift −2, so denominator does not exceed U25.
 
-### [Dòng 68–76: Divider](<../../../Verilog%20Source%20code/scale_compose.sv#L68>)
+### [Lines 68–76: Divider](<../../../Verilog%20Source%20code/scale_compose.sv#L68>)
 
-Một lần chia 48 bước. Quotient U48, remainder U25; twice_rem U26 và rounded U49 giữ carry để RNE ties-even.
+One division takes 48 steps. Quotient U48, remainder U25; twice_rem U26 and rounded U49 hold carry for RNE ties-even.
 
-### [Dòng 77–116: Launch and selection control](<../../../Verilog%20Source%20code/scale_compose.sv#L77>)
+### [Lines 77–116: Launch and selection control](<../../../Verilog%20Source%20code/scale_compose.sv#L77>)
 
-Target r=base_r+selected_shift. Nếu target>47, clamp r về47 và điều chỉnh shift; target âm hoặc input sai báo format_error.
+Target r = base_r + selected_shift. If target > 47, clamp r to 47 and adjust shift; negative target or incorrect input reports format_error.
 
-### [Dòng 117–154: Result and completion](<../../../Verilog%20Source%20code/scale_compose.sv#L117>)
+### [Lines 117–154: Result and completion](<../../../Verilog%20Source%20code/scale_compose.sv#L117>)
 
-DIV_WAIT kiểm tra zero, underflow và range; kết quả vượt U24 không thể xuất hiện khi selector đúng. Unit regression ghi compose_max_clocks=54.
+DIV_WAIT checks zero, underflow, and range; results exceeding U24 cannot occur when the selector is correct. Unit regression records compose_max_clocks = 54.

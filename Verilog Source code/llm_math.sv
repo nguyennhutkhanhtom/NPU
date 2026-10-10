@@ -17,14 +17,12 @@ module llm_math #(parameter bit STREAMING = 0) (
     logic signed [32:0] partial_q [0:31][0:3];
     wire [32:0] partial_comb [0:31][0:3];
     genvar mul_lane, mul_part;
-    generate
     for (mul_lane = 0; mul_lane < 32; mul_lane = mul_lane + 1) begin : g_mul_lane
         for (mul_part = 0; mul_part < 4; mul_part = mul_part + 1) begin : g_byte
             logic_mul #(.A_W(24), .B_W(8), .OUT_W(33), .SIGNED_A(1), .SIGNED_B(mul_part == 3)) u_mul
                 (.a(a_q[mul_lane]), .b(b_q[mul_lane][(mul_part << 3) +: 8]), .product(partial_comb[mul_lane][mul_part]));
         end
     end
-    endgenerate
     logic signed [40:0] pair_q [0:31][0:1];
     logic signed [56:0] level1 [0:15];
     logic signed [57:0] level2 [0:7];
@@ -41,7 +39,6 @@ module llm_math #(parameter bit STREAMING = 0) (
         else valid_q <= {valid_q[8:0], start && in_ready};
     end
     genvar pipe_lane, pipe_part, reduction_node;
-    generate
     for (pipe_lane = 0; pipe_lane < 32; pipe_lane = pipe_lane + 1) begin : g_lane_pipeline
         always_ff @(posedge clk) begin
             if (rst_n && start && in_ready) begin a_q[pipe_lane] <= a[pipe_lane]; b_q[pipe_lane] <= b[pipe_lane]; end
@@ -70,7 +67,6 @@ module llm_math #(parameter bit STREAMING = 0) (
         always_ff @(posedge clk)
             level4[reduction_node] <= 60'(level3[2 * reduction_node]) + 60'(level3[2 * reduction_node + 1]);
     end
-    endgenerate
     always_ff @(posedge clk)
         sum <= 61'(level4[0]) + 61'(level4[1]);
 endmodule

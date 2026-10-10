@@ -1,33 +1,33 @@
-# Kiến trúc llm_soc: toàn graph ngôn ngữ
+# llm_soc architecture: all language graph
 
 > **Category: CURRENT.**
 
-[Tài liệu](../README.md) → [Thiết kế](README.md) → **llm_soc**
+[Documentation](../README.md) → [Design](README.md) → **llm_soc**
 
-`llm_soc.sv` là top hiện tại. Host nạp parameters, prompt token IDs và cấu hình;
-RTL thực hiện toàn bộ prefill, transformer blocks, language head, token selection
-và autoregressive decode. Tokenizer và bước decode token thành chữ chạy trên host.
+`llm_soc.sv` is the current top. The host loads parameters, prompt token IDs, and configuration;
+RTL performs the entire prefill, transformer blocks, language head, token selection
+and autoregressive decode. Tokenizer and the step of decoding token into text run on the host.
 
-## Cấu hình và bộ nhớ
+## Configuration and memory
 
-| Thành phần | Geometry |
+| Component | Geometry |
 |---|---|
-| Model đã pin | NanoFable-1M-ternary seed1, 1.377.408 parameters |
-| Transformer | 4 layer; hidden width 128; 4 head × 32 channel |
-| Feed-forward | 384 channel; Gate, Up và Down |
-| Vocabulary | 4.096 ID; embedding và head dùng chung codes/scales |
-| Context | 128 vị trí, gồm prompt và số token mới yêu cầu |
-| Parameter SRAM | 24.576 × 256 bit = 768 KiB |
-| KV cache | 4.096 × 768 bit = 384 KiB |
-| Vector workspace | 96 × 768 bit = 9 KiB, chứa 8 buffer × 384 phần tử S24 |
-| Prompt/output buffer | Mỗi buffer 128 × 12-bit ID; host truyền word 32 bit |
+| Pinned model | NanoFable-1M-ternary seed1, 1,377,408 parameters |
+| Transformer | 4 layers; hidden width 128; 4 heads × 32 channels |
+| Feed-forward | 384 channels; Gate, Up, and Down |
+| Vocabulary | 4,096 IDs; embedding and head share codes/scales |
+| Context | 128 positions, including prompt and newly requested tokens |
+| Parameter SRAM | 24,576 × 256 bits = 768 KiB |
+| KV cache | 4,096 × 768 bits = 384 KiB |
+| Vector workspace | 96 × 768 bits = 9 KiB, contains 8 buffers × 384 S24 elements |
+| Prompt/output buffer | Each buffer 128 × 12-bit IDs; host transmits 32-bit words |
 
-Cấu hình mặc định có `ATTN_DIV_LANES=4`, `SIGMOID_LANES=4`,
-`PERF_COUNTERS=0`, `ENABLE_DEBUG_INDEX=0` và `USE_QUARTUS_MEMORY=0` (portable RAM cho server).
-Evidence đã đo áp dụng cho cấu hình được ghi trong manifest; đổi tham số cần
-kiểm chứng lại theo [verification guide](../verification/README.md).
+Default configuration includes `ATTN_DIV_LANES=4`, `SIGMOID_LANES=4`,
+`PERF_COUNTERS=0`, `ENABLE_DEBUG_INDEX=0` and `USE_QUARTUS_MEMORY=0` (portable RAM for server).
+Evidence has been measured as applied to the configuration recorded in the manifest; changing parameters requires
+re-verify according to [verification guide](../verification/README.md).
 
-## Luồng inference
+## Inference Flow
 
 ![full_rtl_language — overview](../diagrams/previews/05_full_rtl_language_1.svg)
 
@@ -38,90 +38,90 @@ kiểm chứng lại theo [verification guide](../verification/README.md).
 [Editable draw.io — full_rtl_language — detail 1](../diagrams/architecture.drawio) · Page `06_full_rtl_language_2`.
 
 
-1. Host ghi parameters và prompt, rồi ghi cấu hình và START.
-2. RTL lấy embedding của token ở vị trí hiện tại.
-3. Mỗi layer chạy affine RMSNorm → Q/K/V → RoPE cho Q/K → ghi KV → causal
-   attention/softmax → O projection và residual.
-4. Nhánh FFN chạy affine RMSNorm → Gate/Up → SiLU và phép nhân phần tử → Down
-   → residual. Sau đó chuyển layer hoặc vị trí tiếp theo.
-5. Ở vị trí cần sinh token, RTL chạy final norm và tied language head, duyệt
-   vocabulary theo thứ tự, rồi chọn token.
-6. Token được ghi vào output buffer. RTL dùng token vừa chọn cho vòng tiếp theo,
-   dừng khi đạt giới hạn count, EOS hợp lệ hoặc cuối context.
+1. Host writes parameters and prompt, then writes configuration and START.
+2. RTL takes the embedding of the token at the current position.
+3. Each layer runs affine RMSNorm → Q/K/V → RoPE for Q/K → write KV → causal
+   attention/softmax → O projection and residual.
+4. FFN branch runs affine RMSNorm → Gate/Up → SiLU and elementwise multiplication → Down
+   → residual. Then move to the next layer or position.
+5. At the position where a token needs to be generated, RTL runs final norm and tied language head, scans
+   the vocabulary in order, then selects a token.
+6. The token is written to the output buffer. RTL uses the selected token for the next round,
+   stopping when the count limit is reached, a valid EOS, or the end of the context.
 
-Graph FSM chọn giai đoạn inference. Operator FSM và các engine điều phối
-memory/arithmetic của giai đoạn đó. Host không cấp hidden activations, logits
-hay continuation IDs cho DUT. Reference CPU dùng trong application chỉ cung
-cấp giá trị kỳ vọng cho testbench so sánh.
+Graph FSM selects the inference stage. Operator FSM and engines coordinate
+memory/arithmetic of that stage. The host does not provide hidden activations, logits
+or continuation IDs to the DUT. The reference CPU used in the application only
+provides expected values for the testbench comparison.
 
-## Quyền sở hữu control và tài nguyên
+## Ownership of control and resources
 
-Graph FSM chọn các phase inference; operator FSM sở hữu việc định tuyến tài nguyên
-dùng chung, xử lý scalar và ghi vector. Trách nhiệm của từng engine/module được
-liệt kê trong [full graph](../source_guide/full_graph.md). [Contract cache và streaming](exact_throughput_optimization.md)
-giải thích cơ chế reuse và request có giới hạn.
+The Graph FSM selects inference phases; the operator FSM owns the routing of
+shared resources, scalar processing and vector write. Responsibilities of each engine/module are
+listed in [full graph](../source_guide/full_graph.md). [Contract cache and streaming](exact_throughput_optimization.md)
+explain the reuse mechanism and limited requests.
 
-Linear execution chỉ cho phép tối đa một next row trong phần coefficient/round/store
-tail của row hiện tại. Parent giữ accumulator và fault cho đến khi chúng được tiêu
-thụ đúng thứ tự; start protection và draining ngăn nhiễm chéo giữa các row. Cơ chế
-này không tạo thêm linear engine hoặc output stream.
+Linear execution only allows a maximum of one next row in the coefficient/round/store section
+tail of the current row. Parent holds the accumulator and faults until they are consumed
+in the correct order; start protection and draining prevent cross-contamination between rows. This mechanism
+does not create additional linear engines or output streams.
 
-## Hợp đồng số học
+## Arithmetic Contracts
 
-`S24/F16` nghĩa là số nguyên signed 24 bit có 16 bit phần lẻ: giá trị thực bằng
-raw integer / 2^16. `U` là unsigned. RNE là làm tròn nearest, ties to even.
+`S24/F16` means a signed 24-bit integer with 16 fractional bits: the real value equals
+raw integer / 2^16. `U` is unsigned. RNE is rounding to nearest, ties to even.
 
-| Đại lượng | Format và phép chuyển |
+| Quantity | Format and conversion |
 |---|---|
-| Activations, vectors và KV | S24/F16; saturation trong khoảng -2^23…2^23-1 |
-| Embedding và tied head | S8 codes, scale mỗi hàng U24/F24 |
-| Ternary weight | 00/01/11 tương ứng 0/+1/-1; mã 10 gây format fault |
+| Activations, vectors, and KV | S24/F16; saturation in the range -2^23…2^23-1 |
+| Embedding and tied head | S8 codes, scale each row U24/F24 |
+| Ternary weight | 00/01/11 corresponds to 0/+1/-1; code 10 causes format fault |
 | Linear/head reduction | S39 accumulation; S64 coefficient product; RNE shift 24 |
-| RMSNorm | U64 tổng bình phương; floor mean, epsilon 42.950 ở F32, floor sqrt; RNE reciprocal 2^32/root |
-| Norm affine gain | S16/F12; normalized activation được round/clamp trước gain |
+| RMSNorm | U64 sum of squares; floor mean, epsilon 42.950 in F32, floor sqrt; RNE reciprocal 2^32/root |
+| Norm affine gain | S16/F12; normalized activation is rounded/clamped before gain |
 | RoPE | S16/F15 cos/sin; S56 product; S64 sum; RNE shift 15 |
-| Attention score | Dot RNE16, nhân hằng 11.585 rồi RNE16 để scale 1/sqrt(32) |
-| Softmax | Trừ maximum; exp U25/F24, bảng bước 1/16 và nội suy half-up; chênh lệch ≥16 trả 0 |
-| Value reduction | S56 weighted sum; chia magnitude cho U32 weight sum bằng RNE, rồi phục hồi dấu |
-| SiLU | RNE F16→F12, clamp S16; sigmoid U16/F15; product và RNE15 |
-| Sampling | Xorshift32, Gumbel S24/F16; temperature U8/F8; so sánh S32 có saturation |
+| Attention score | Dot RNE16, multiply by constant 11.585 then RNE16 to scale 1/sqrt(32) |
+| Softmax | Subtract maximum; exp U25/F24, step table 1/16 and half-up interpolation; difference ≥16 return 0 |
+| Value reduction | S56 weighted sum; divide magnitude by U32 weight sum using RNE, then restore the sign |
+| SiLU | RNE F16→F12, clamp S16; sigmoid U16/F15; product and RNE15 |
+| Sampling | Xorshift32, Gumbel S24/F16; temperature U8/F8; comparison S32 with saturation |
 
-Một số phép làm tròn có quy tắc riêng như exp interpolation ở trên; không thay
-chúng bằng cùng một rounding mode. ID 0 và 2 bị loại khỏi sampling; EOS ID 1 bị
-loại đến `min_new`. Khi score bằng nhau, ID hợp lệ nhỏ nhất thắng, kể cả S32_MIN.
-Khi temperature bằng 0, selection bỏ qua các state noise/sample nhưng vẫn advance
-PRNG một lần cho mỗi vocabulary row, kể cả các ID bị loại. Vì vậy, khi chuyển lại
-sang sampling, random stream vẫn được bảo toàn.
+Some rounding methods have their own rules like the exp interpolation above; do not change
+they use the same rounding mode. IDs 0 and 2 are excluded from sampling; EOS ID 1 is
+type up to `min_new`. When the scores are equal, the smallest valid ID wins, including S32_MIN.
+When the temperature is 0, selection skips the noise/sample states but still advances
+PRNG once for each vocabulary row, including the excluded IDs. Therefore, when transferring back
+During sampling, the random stream is still preserved.
 
-Exporter giữ ternary weights đã train và lượng tử hóa embedding/head; token
-matching được đối chiếu với reference integer của layout này.
+The exporter keeps the trained ternary weights and quantizes the embedding/head; token
+matching is compared with the reference integer of this layout.
 
-## Memory, pipeline và reset
+## Memory, pipeline and reset
 
-| Interface | Hợp đồng hiện tại |
+| Interface | Current contract |
 |---|---|
-| pipelined_word_ram | Read 3 edge với tối đa 4 tile, 4 edge khi nhiều tile hơn; write commit ở edge thứ 2 |
-| llm_parameter_ram | Compute read 5 edge ở depth hiện tại; host thêm bước chọn lane; write ACK sau leaf commit |
-| llm_bank_ram | Read 5 edge; lane-mask/address/data đi cùng nhau; write commit edge thứ 4, wr_busy báo drain |
-| llm_math streaming | Accept ở E0; product_valid E3, sum_valid E8, legacy done E9 |
+| pipelined_word_ram | Read 3 edges with up to 4 tiles, 4 edges when there are more tiles; write commit on the 2nd edge |
+| llm_parameter_ram | Compute read 5 edges at the current depth; host adds lane selection step; write ACK after leaf commit |
+| llm_bank_ram | Read 5 edges; lane-mask/address/data go together; write commit on the 4th edge, wr_busy signals drain |
+| llm_math streaming | Accept at E0; product_valid E3, sum_valid E8, legacy done E9 |
 
-Hai FF trong `reset_release` nhả internal reset sau hai rising edge. Reset hủy
-control/validity và những write chưa commit, đồng thời giữ dữ liệu SRAM đã ghi.
-Payload không hợp lệ không được tiêu thụ. Reset cần đi qua một rising edge để
-hủy cả trạng thái operator đồng bộ.
+Two FFs in `reset_release` release internal reset after two rising edges. Reset cancels
+control/validity and uncommitted writes, while retaining written SRAM data.
+Invalid payloads are not consumed. Reset needs to go through one rising edge to
+cancel all synchronized operator states.
 
-Chỉ technology leaf `quartus_word_ram` instantiate `altsyncram`. Nhánh
-`USE_QUARTUS_MEMORY=0` dùng portable behavioral memory cho elaboration và fixture;
-ASIC cần một binding SRAM có cùng latency/collision/reset contract hoặc phần
-bù trong adapter. [SRAM binding guide](asic_memory_binding.md) ghi chi tiết.
+Only technology leaf `quartus_word_ram` instantiates `altsyncram`. Branch
+`USE_QUARTUS_MEMORY=0` uses portable behavioral memory for elaboration and fixture;
+ASIC requires an SRAM binding with the same latency/collision/reset contract or part
+offset in the adapter. The [SRAM binding guide](asic_memory_binding.md) details this.
 
-## Kiểm chứng và chạy model
+## Verification and running the model
 
-Regression tổng hợp kiểm tra các operator, protocol, selection, memory và toàn
-graph. [Trạng thái kiểm chứng](../verification/optimization_status.md) nêu source,
-configuration và phạm vi của từng PASS. Application dùng checkpoint thật chỉ
-chạy sau khi gate unit/graph và all-corner post-fit timing đạt yêu cầu.
+Synthetic regression checks operators, protocols, selection, memory, and the entire
+graph. The [Verification status](../verification/optimization_status.md) specifies the source,
+configuration, and scope of each PASS. Applications use real checkpoints only
+after the gate unit/graph and all-corner post-fit timing requirements are met.
 
-- [Host map và trình tự START](host_interface.md)
-- [Lệnh chạy NanoFable](../demos/language.md)
-- [Lịch sử phát triển](../history/full_rtl_development.md)
+- [Host map and START sequence](host_interface.md)
+- [NanoFable run commands](../demos/language.md)
+- [Development history](../history/full_rtl_development.md)

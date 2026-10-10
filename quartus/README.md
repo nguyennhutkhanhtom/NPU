@@ -1,6 +1,6 @@
 # Quartus EDA backend
 
-> Backend FPGA lịch sử, không còn là flow chạy hiện tại trên branch `remote`. Xem [flow server](../tools/server/README.md).
+> Backend FPGA history, no longer the flow running currently on branch `remote`. See [flow server](../tools/server/README.md).
 
 
 > **Category: GUIDE.**
@@ -22,7 +22,7 @@ Git. Their original QSF relative paths describe their original locations;
 do not build them in place after relocation. Use their preserved source/config
 archives and recorded commands under `docs/verification/timing` for a fresh replay.
 
-Trạng thái source/config hiện tại: [verification status](../docs/verification/optimization_status.md).
+Current source/config status: [verification status](../docs/verification/optimization_status.md).
 Current verification and implementation status: [optimization status](../docs/verification/optimization_status.md).
 Experiment locations: [historical project index](../docs/history/quartus_projects.md).
 Quartus results are an EDA demonstration, not ASIC signoff.

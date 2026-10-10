@@ -1,0 +1,276 @@
+xrun(64): 24.09-s005: (c) Copyright 1995-2025 Cadence Design Systems, Inc.
+TOOL:	xrun(64)	24.09-s005: Started on Oct 10, 2026 at 10:08:19 +07
+xrun
+	-64bit
+	-timescale 1ns/1ps
+	-access +rwc
+	-top tb_llm_selection
+	-xmlibdirname /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/build/lowrisc_full4_20261010/tb_llm_selection/xcelium.d
+	+incdir+/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl
+	+incdir+/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl
+	+SIGMOID_LUT=/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/sigmoid_257.mem
+	-f /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/reports/lowrisc_full4_20261010/tb_llm_selection_sources.f
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/npu_pkg.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_pkg.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/PC.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/acc_mul.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/banked_word_ram.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/descriptor_file.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/div.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/ins_mem.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/isqrt_u64.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_attention_engine.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_attention_normalize.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_bank_ram.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_head_engine.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_linear_engine.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_math.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_parameter_ram.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_soc.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/logic_mul.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/matmul_wrap.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/matmulfree.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/mem_mapping.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/mul.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/norm.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/norm_dispatch.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/pipelined_word_ram.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/postscale.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/regfile.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/reset_release.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/rowwise_dispatch.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/rowwise_op.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/scale_compose.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/sigmoid.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/sram_256_wrapper.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/sram_word_tile.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/ternary_dot32.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/ternary_mul.sv
+		/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/tests/full_rtl/tb_selection.sv
+	-l /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/reports/lowrisc_full4_20261010/tb_llm_selection.log
+
+   User defined plus("+") options:
+	+SIGMOID_LUT=/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/sigmoid_257.mem
+
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/npu_pkg.sv
+	package worklib.npu_pkg:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_pkg.sv
+	package worklib.llm_pkg:sv
+		errors: 0, warnings: 0
+	module worklib.llm_exp_sample:svh
+		errors: 0, warnings: 0
+	module worklib.llm_gumbel_sample:svh
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/PC.sv
+	module worklib.PC:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/acc_mul.sv
+	module worklib.acc_mul:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/banked_word_ram.sv
+	module worklib.banked_word_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/descriptor_file.sv
+	module worklib.descriptor_file:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/div.sv
+	module worklib.div:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/ins_mem.sv
+	module worklib.ins_mem:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/isqrt_u64.sv
+	module worklib.isqrt_u64:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_attention_engine.sv
+	module worklib.llm_attention_engine:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_attention_normalize.sv
+	module worklib.llm_attention_normalize:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_bank_ram.sv
+	module worklib.llm_bank_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_head_engine.sv
+	module worklib.llm_head_engine:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_linear_engine.sv
+	module worklib.llm_linear_engine:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_math.sv
+	module worklib.llm_math:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_parameter_ram.sv
+	module worklib.llm_parameter_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_soc.sv
+	module worklib.llm_soc:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/logic_mul.sv
+	module worklib.logic_mul:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/matmul_wrap.sv
+	module worklib.matmul_wrap:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/matmulfree.sv
+	module worklib.matmulfree:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/mem_mapping.sv
+	module worklib.mem_mapping:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/mul.sv
+	module worklib.mul:sv
+		errors: 0, warnings: 0
+	module worklib.addsub:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/norm.sv
+	module worklib.norm:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/norm_dispatch.sv
+	module worklib.norm_dispatch:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/pipelined_word_ram.sv
+	module worklib.pipelined_word_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/postscale.sv
+	module worklib.postscale:sv
+		errors: 0, warnings: 0
+	module worklib.postscale_finish:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/regfile.sv
+	module worklib.register:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/reset_release.sv
+	module worklib.reset_release:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/rowwise_dispatch.sv
+	module worklib.rowwise_dispatch:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/rowwise_op.sv
+	module worklib.rowwise_op:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/scale_compose.sv
+	module worklib.scale_compose:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/sigmoid.sv
+	module worklib.sigmoid_sample:svh
+		errors: 0, warnings: 0
+	module worklib.sigmoid:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/sram_256_wrapper.sv
+	module worklib.sram_256_wrapper:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/sram_word_tile.sv
+	module worklib.sram_word_tile:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/ternary_dot32.sv
+	module worklib.ternary_dot32:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/ternary_mul.sv
+	module worklib.ternary_mul:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/tests/full_rtl/tb_selection.sv
+	module worklib.tb_llm_selection:sv
+		errors: 0, warnings: 0
+	Elaborating the design hierarchy:
+		Caching library 'worklib' ....... Done
+	Top level design units:
+		npu_pkg
+		llm_pkg
+		tb_llm_selection
+	Building instance overlay tables: .................... Done
+	Generating native compiled code:
+		worklib.sigmoid_sample:svh <0x6c2e718b>
+			streams:   1, words:  8501
+		worklib.sigmoid:sv <0x557510ce>
+			streams:  22, words:  9640
+		worklib.div:sv <0x44e1b9e9>
+			streams:  10, words:  6950
+		worklib.div:sv <0x1473ca6e>
+			streams:  10, words:  6868
+		worklib.isqrt_u64:sv <0x202d866d>
+			streams:   8, words:  5763
+		worklib.llm_attention_engine:sv <0x354b8650>
+			streams:  22, words:  9605
+		worklib.llm_head_engine:sv <0x6b5f42d3>
+			streams:  36, words: 17842
+		worklib.sram_word_tile:sv <0x25ae192c>
+			streams:   3, words:  1257
+		worklib.sram_word_tile:sv <0x0b41b307>
+			streams:   3, words:  1296
+		worklib.sram_word_tile:sv <0x47c06ebb>
+			streams:   3, words:  1168
+		worklib.llm_exp_sample:svh <0x15bc8b92>
+			streams:   1, words:  7989
+		worklib.llm_gumbel_sample:svh <0x59f28d93>
+			streams:   1, words:  8517
+		worklib.reset_release:sv <0x4367751e>
+			streams:   3, words:   759
+		worklib.tb_llm_selection:sv <0x268efaf7>
+			streams:  43, words: 90618
+		worklib.logic_mul:sv <0x376aef73>
+			streams:  23, words:  9309
+		worklib.logic_mul:sv <0x3e4bc8d0>
+			streams:  31, words: 12456
+		worklib.logic_mul:sv <0x123632ee>
+			streams:  27, words: 10830
+		worklib.llm_parameter_ram:sv <0x1ad2cf57>
+			streams:  34, words: 16128
+		worklib.llm_bank_ram:sv <0x6ff5dfb6>
+			streams:  26, words: 11274
+		worklib.llm_bank_ram:sv <0x054afc9d>
+			streams:  26, words: 11327
+		worklib.llm_math:sv <0x7a469324>
+			streams:  23, words: 15342
+		worklib.logic_mul:sv <0x76057583>
+			streams:  34, words: 13633
+		worklib.ternary_dot32:sv <0x6bd05a5c>
+			streams:  19, words:  6833
+		worklib.llm_linear_engine:sv <0x75d0b18b>
+			streams:  52, words: 32630
+		worklib.llm_attention_normalize:sv <0x6ee15dcf>
+			streams:  40, words: 33483
+		worklib.llm_soc:sv <0x5a11d1ea>
+			streams: 618, words: 1570047
+		worklib.npu_pkg:sv <0x4fc777c3>
+			streams:   8, words:  6849
+		worklib.llm_pkg:sv <0x2e3f85d4>
+			streams:   3, words:   889
+		worklib.logic_mul:sv <0x5560d33a>
+			streams:  29, words: 11422
+		worklib.pipelined_word_ram:sv <0x23d47767>
+			streams:  24, words:  8824
+		worklib.pipelined_word_ram:sv <0x0acebe39>
+			streams:  20, words:  7825
+		worklib.pipelined_word_ram:sv <0x463d10c4>
+			streams:  20, words:  7915
+		worklib.logic_mul:sv <0x742d14f7>
+			streams:  23, words:  9159
+		worklib.logic_mul:sv <0x1db3f7fb>
+			streams:  24, words:  9682
+	Building instance specific data structures.
+	Loading native compiled code:     .................... Done
+	Design hierarchy summary:
+		                   Instances  Unique
+		Modules:                 590      20
+		Verilog packages:          2       2
+		Registers:             6,957     562
+		Scalar wires:          1,359       -
+		Expanded wires:        1,536      33
+		Vectored wires:        8,976       -
+		Always blocks:         2,325     109
+		Initial blocks:            9       9
+		Cont. assignments:     5,779     128
+		Pseudo assignments:    3,065       -
+		Process Clocks:        2,107      16
+		Simulation timescale:    1ps
+	Writing initial simulation snapshot: worklib.tb_llm_selection:sv
+Loading snapshot worklib.tb_llm_selection:sv .................... Done
+xcelium> source /tools/eda/cadence/XCELIUM2409/tools/xcelium/files/xmsimrc
+xcelium> run
+SELECT_EDGE_PASS checks=36 minimum_score_ties=2 excluded=5 stable_ties=2
+Simulation complete via $finish(1) at time 920 NS + 0
+/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/tests/full_rtl/tb_selection.sv:95         $display("SELECT_EDGE_PASS checks=%0d minimum_score_ties=2 excluded=5 stable_ties=2",checks);$finish;
+xcelium> exit
+TOOL:	xrun(64)	24.09-s005: Exiting on Oct 10, 2026 at 10:08:22 +07  (total: 00:00:03)

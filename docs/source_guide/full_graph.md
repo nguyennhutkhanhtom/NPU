@@ -1,25 +1,25 @@
-# Các khối RTL của full graph
+# RTL blocks of the full graph
 
 > **Category: GUIDE.**
 
-[Tài liệu](../README.md) → [Source guide](README.md) → **Full graph**
+[Documentation](../README.md) → [Source guide](README.md) → **Full graph**
 
-## Top và cấu hình
+## Top and configuration
 
-File chính là [llm_soc.sv](<../../Verilog Source code/llm_soc.sv>).
-Nó quản lý host, graph và tài nguyên dùng chung. [matmulfree.sv](<../../Verilog Source code/matmulfree.sv>)
-là top legacy, dùng ISA/descriptor và memory map khác.
+The main file is [llm_soc.sv](<../../Verilog Source code/llm_soc.sv>).
+It manages the host, graph, and shared resources. [matmulfree.sv](<../../Verilog Source code/matmulfree.sv>)
+is the legacy top, using a different ISA/descriptor and memory map.
 
-`llm_soc` có 32 SIMD lane, mỗi lane tạo một term của dot product; reduction tạo
-một output. Số lane không đồng nghĩa với 32 output hoàn chỉnh cùng lúc. Bốn
-sigmoid lane và bốn divider lane mặc định tăng throughput cho các batch tương ứng.
+`llm_soc` has 32 SIMD lanes, each lane generating a term of the dot product; reduction creates
+a single output. The number of lanes does not mean 32 complete outputs simultaneously. Four
+sigmoid lanes and four divider lanes by default increase throughput for the respective batches.
 
-## Sơ đồ tài nguyên và đường dữ liệu
+## Resource and Data Path Diagram
 
-Đây là functional overview. Các đường qua **Parent request and operand muxes**
-được thực hiện trong llm_soc, không phải dây nối trực tiếp giữa hai engine. Xem
-[hierarchy và port-map manifest](../diagrams/README.md) để tra instance, generate
-scope và kết nối chính xác.
+This is a functional overview. The paths through **Parent request and operand muxes**
+are implemented in llm_soc, not direct wiring between two engines. See
+[hierarchy and port-map manifest](../diagrams/README.md) to look up instances, generate
+scope and correct connections.
 
 ![full_graph — overview](../diagrams/previews/70_full_graph_1.svg)
 
@@ -33,74 +33,74 @@ scope và kết nối chính xác.
 
 [Editable draw.io — full_graph — detail 2](../diagrams/architecture.drawio) · Page `72_full_graph_3`.
 
-## Đọc source theo luồng
+## Read source by flow
 
-| Thứ tự | Source | Nên tìm gì? |
+| Order | Source | What to look for? |
 |---|---|---|
-| 1 | [llm_pkg](<../../Verilog Source code/llm_pkg.sv>) | Constants, layout và helper nhỏ |
-| 2 | [llm_soc](<../../Verilog Source code/llm_soc.sv>) | Host FSM, graph FSM, operator states và register owners |
-| 3 | [linear engine](<../../Verilog Source code/llm_linear_engine.sv>) | Prefetch, operand chunk, reduction và format fault |
-| 4 | [attention engine](<../../Verilog Source code/llm_attention_engine.sv>) | Causal requests, Q/K score pipeline và score memory |
-| 5 | [attention normalizer](<../../Verilog Source code/llm_attention_normalize.sv>) | Quotient/remainder, RNE, dấu và clamp |
-| 6 | [head engine](<../../Verilog Source code/llm_head_engine.sv>) | Vocabulary row, ordered chunks và shared SIMD |
+| 1 | [llm_pkg](<../../Verilog Source code/llm_pkg.sv>) | Constants, layout and small helpers |
+| 2 | [llm_soc](<../../Verilog Source code/llm_soc.sv>) | Host FSM, graph FSM, operator states and register owners |
+| 3 | [linear engine](<../../Verilog Source code/llm_linear_engine.sv>) | Prefetch, operand chunk, reduction and format fault |
+| 4 | [attention engine](<../../Verilog Source code/llm_attention_engine.sv>) | Causal requests, Q/K score pipeline and score memory |
+| 5 | [attention normalizer](<../../Verilog Source code/llm_attention_normalize.sv>) | Quotient/remainder, RNE, sign and clamp |
+| 6 | [head engine](<../../Verilog Source code/llm_head_engine.sv>) | Vocabulary row, ordered chunks and shared SIMD |
 | 7 | [memory adapters](<../../Verilog Source code/llm_parameter_ram.sv>) | Accepted requests, response-valid, write commitment |
 
-## Control và các engine
+## Control and the engines
 
-| Module | Input/output hoặc state cần theo dõi |
+| Module | Input/output or state to monitor |
 |---|---|
-| llm_soc | graph, op, layer_q, position_q, generated_q, error, overflow_out và host FSM |
-| llm_linear_engine | Hai-word FIFO, credits, chunk index, operand capture, accumulator, fault và response drain |
-| llm_head_engine | Bốn parameter chunks của một row, request/response counts và S39 accumulator |
-| llm_attention_engine | position bound, KV request tags, sum_valid, score pipeline và maximum |
-| llm_attention_normalize | Batch/lane progress, shared divider lane zero, rounding metadata và result-valid |
+| llm_soc | graph, op, layer_q, position_q, generated_q, error, overflow_out and host FSM |
+| llm_linear_engine | Two-word FIFO, credits, chunk index, operand capture, accumulator, fault and response drain |
+| llm_head_engine | Four parameter chunks of a row, request/response counts and S39 accumulator |
+| llm_attention_engine | position bound, KV request tags, sum_valid, score pipeline and maximum |
+| llm_attention_normalize | Batch/lane progress, shared divider lane zero, rounding metadata and result-valid |
 
-Parent có thể overlap một next linear row với scalar/store tail hiện tại; completion
-được giữ lại để bảo đảm thứ tự tiêu thụ.
+Parent can overlap a next linear row with the current scalar/store tail; completion
+is retained to ensure consumption order.
 
-Graph chọn một phase tại một thời điểm. Engine có thể giữ nhiều request hoặc
-arithmetic transaction trong pipeline của phase đó. Parent chỉ đổi quyền dùng
-tài nguyên sau khi các response của pass đã được drain.
+Graph selects one phase at a time. Engine can hold multiple requests or
+arithmetic transaction in the pipeline of that phase. Parent only changes resource usage rights
+after the responses of the pass have been drained.
 
-`llm_soc` giữ một operand cache 12 × 768 bit. Q/K/V và Gate/Up chỉ reuse khi
-source, shape và family hợp lệ; head reload input khi vào pass. Parent còn giữ
-scale word cho tám vocabulary row và table RoPE có position tag. Các điều kiện
-invalidate ở [hợp đồng cache](../design/exact_throughput_optimization.md).
+`llm_soc` holds a 12 × 768 bit operand cache. Q/K/V and Gate/Up only reuse when
+source, shape, and family are valid; head reloads input when entering the pass. Parent also holds
+the scale word for eight vocabulary rows and RoPE table with position tag. The invalidation conditions
+are in the [cache contract](../design/exact_throughput_optimization.md).
 
-## Số học chung
+## Common Arithmetic
 
-| Module | Hợp đồng |
+| Module | Contract |
 |---|---|
-| [ternary_dot32](<../../Verilog Source code/ternary_dot32.sv>) | Mã 00/01/11 → zero/positive/negative; term mở rộng S25, reduction S30; code 10 gây fault |
-| [llm_math](<../../Verilog Source code/llm_math.sv>) | STREAMING=1 accept theo start && in_ready; product E3, sum E8, done E9 tính từ E0 |
-| [logic_mul](<../../Verilog Source code/logic_mul.sv>) | Cây nhân bằng bit products và cộng; không runtime multiplication operator |
-| [div](<../../Verilog Source code/div.sv>) | Unsigned divide bằng shift/subtract; caller xử lý rounding/sign |
-| [isqrt_u64](<../../Verilog Source code/isqrt_u64.sv>) | Integer square root dùng chung; file đã tách khỏi norm legacy |
-| [sigmoid](<../../Verilog Source code/sigmoid.sv>) | ROM/interpolation; các lane dùng cùng quy tắc số học |
+| [ternary_dot32](<../../Verilog Source code/ternary_dot32.sv>) | Code 00/01/11 → zero/positive/negative; term extends S25, reduction S30; code 10 causes fault |
+| [llm_math](<../../Verilog Source code/llm_math.sv>) | STREAMING=1 accept according to start && in_ready; product E3, sum E8, done E9 calculated from E0 |
+| [logic_mul](<../../Verilog Source code/logic_mul.sv>) | Bit-product multiplication tree and addition; no runtime multiplication operator |
+| [div](<../../Verilog Source code/div.sv>) | Unsigned divide by shift/subtract; caller handles rounding/sign |
+| [isqrt_u64](<../../Verilog Source code/isqrt_u64.sv>) | Shared integer square root; file has been separated from norm legacy |
+| [sigmoid](<../../Verilog Source code/sigmoid.sv>) | ROM/interpolation; lanes use the same arithmetic rules |
 
-Tín hiệu product_valid, sum_valid và done thuộc các stage khác nhau. Không dùng
-product của một transaction với sum của transaction khác. Reset hủy validity;
-payload register không reset vẫn phải được bảo vệ bởi protocol hợp lệ.
+Signals product_valid, sum_valid, and done belong to different stages. Do not use
+The product of one transaction with the sum of another transaction. Reset cancels validity;
+The payload register, if not reset, still must be protected by a valid protocol.
 
-## Memory và reset
+## Memory and reset
 
-| Module | Vai trò |
+| Module | Role |
 |---|---|
-| [llm_parameter_ram](<../../Verilog Source code/llm_parameter_ram.sv>) | Parameter window, host lane selection và ACK sau commit |
-| [llm_bank_ram](<../../Verilog Source code/llm_bank_ram.sv>) | Các bank S24 của vectors/KV; lane mask và wr_busy |
+| [llm_parameter_ram](<../../Verilog Source code/llm_parameter_ram.sv>) | Parameter window, host lane selection, and ACK after commit |
+| [llm_bank_ram](<../../Verilog Source code/llm_bank_ram.sv>) | S24 banks of vectors/KV; lane mask and wr_busy |
 | [pipelined_word_ram](<../../Verilog Source code/pipelined_word_ram.sv>) | Tiled request/response adapter |
-| [quartus_word_ram](<../../Verilog Source code/quartus_word_ram.sv>) | Technology leaf duy nhất chứa altsyncram |
+| [quartus_word_ram](<../../Verilog Source code/quartus_word_ram.sv>) | Only technology leaf containing altsyncram |
 | [sram_word_tile](<../../Verilog Source code/sram_word_tile.sv>) | Portable behavioral leaf |
-| [reset_release](<../../Verilog Source code/reset_release.sv>) | Assert reset ngay; nhả sau hai rising edge |
+| [reset_release](<../../Verilog Source code/reset_release.sv>) | Assert reset immediately; release after two rising edges |
 
-[Host interface](../design/host_interface.md) ghi cách software điều khiển top.
-[SRAM binding](../design/asic_memory_binding.md) ghi latency/collision/reset cần
-bảo toàn khi thay technology leaf.
+[Host interface](../design/host_interface.md) records how software controls the top.
+[SRAM binding](../design/asic_memory_binding.md) records latency/collision/reset that need
+to be preserved when changing leaf technology.
 
-## Chú giải và sơ đồ đã lưu
+## Saved annotations and diagrams
 
-[Mục lục từng file](blocks/README.md) có hai đường đọc: source hiện tại và trang
-chú giải snapshot. Cột trạng thái hash cho biết code trong snapshot có khớp với
-file đang compile hay không. Những trang có hash cũ cần được đọc cùng RTL hiện tại;
-sơ đồ/code excerpt sẽ được refresh trong đợt riêng. [Hierarchy legacy](<legacy/README.md>)
-lưu sơ đồ matmulfree.
+[Table of contents for each file](blocks/README.md) has two read paths: current source and snapshot
+annotation page. The hash status column indicates whether the code in the snapshot matches
+whether the file is being compiled or not. Pages with the old hash need to be read along with the current RTL;
+the diagram/code excerpt will be refreshed in a separate batch. [Hierarchy legacy](<legacy/README.md>)
+save the matmulfree diagram.

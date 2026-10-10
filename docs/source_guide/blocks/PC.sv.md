@@ -1,9 +1,9 @@
 # PC.sv — Program counter
 
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
+[Document](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Table of contents for each file](README.md)
 
-**Trạng thái:** Đang dùng.
+**Status:** In use.
 
 **Source:** [PC.sv](<../../../Verilog%20Source%20code/PC.sv>).
 
@@ -11,9 +11,9 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | PC 9 bit chọn một trong 512 instruction. Clear đưa về 0, advance tăng1; khi cả hai có hiệu lực, clear ưu tiên. Không có branch/jump trong module này. |
+| Responsibility | 9-bit PC selects one of 512 instructions. Clear resets to 0, advance increments by 1; when both are active, clear has priority. No branch/jump in this module. |
 
-## Sơ đồ kiến trúc tổng quan
+## Overall architecture diagram
 
 ![PC.sv — overview](../../diagrams/previews/49_PC.sv_1.svg)
 
@@ -21,29 +21,29 @@
 
 ## Main flow
 
-Reset active-low asynchronous. Clear là điều kiện synchronous tại cạnh clk; advance chỉ được top phát sau instruction hoàn tất. Bản thân phép cộng 9 bit có thể wrap, nhưng scheduler chặn advance tại511.
+Reset active-low asynchronous. Clear is a synchronous condition at the clock edge; advance is only allowed by the top after the instruction completes. The 9-bit addition itself can wrap, but the scheduler blocks advance at 511.
 
-1. Reset active-low asynchronous đưa PC về zero ngay khi `rst_n=0`.
-2. Clear được xét ở cạnh clock và ưu tiên hơn advance; top dùng clear khi start chương trình.
-3. Advance tăng PC sau khi instruction hoàn tất. Không có control thì flip-flop giữ giá trị.
-4. Phép cộng 9 bit có thể wrap, nhưng top chặn advance tại PC 0x1FF (511).
+1. Active-low asynchronous reset brings the PC to zero immediately when `rst_n=0`.
+2. Clear is checked at the clock edge and has priority over advance; the top uses clear when starting the program.
+3. Advance increments the PC after the instruction completes. Without control, the flip-flop holds its value.
+4. The 9-bit addition can wrap, but the top blocks advance at PC 0x1FF (511).
 
-**Quy ước RTL.** Nhánh `if (!rst_n)` chỉ reset asynchronous; `else if (clear)` là clear synchronous riêng, ưu tiên hơn advance. Không gộp clear vào điều kiện reset bất đồng bộ.
+**RTL conventions.** Branch `if (!rst_n)` only resets asynchronously; `else if (clear)` is a separate synchronous clear, prioritized over advance. Do not combine clear into asynchronous reset conditions.
 
 ## Important state / datapath groups
 
-### [Dòng 1–7: Giao diện](<../../../Verilog%20Source%20code/PC.sv#L1>)
+### [Lines 1–7: Interface](<../../../Verilog%20Source%20code/PC.sv#L1>)
 
-**Mục đích.** clk/reset và hai control clear/advance.
+**Purpose.** clk/reset and two control signals clear/advance.
 
-**Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
+**How the code works.** This group defines the interface, width, type, or intermediary signals. It creates a structure for later processing groups to use, not representing a separate runtime step itself.
 
-**Tín hiệu và dữ liệu chính.** `clear`: đưa PC về 0; `advance`: tăng PC lên instruction kế tiếp; `pc_out`: register PC9 bit.
+**Key signals and data.** `clear`: reset PC to 0; `advance`: increment PC to the next instruction; `pc_out`: 9-bit PC register.
 
-### [Dòng 8–16: Register PC](<../../../Verilog%20Source%20code/PC.sv#L8>)
+### [Lines 8–16: Register PC](<../../../Verilog%20Source%20code/PC.sv#L8>)
 
-**Mục đích.** Reset hoặc clear về 0; nếu chỉ advance thì tăng; nếu không có control thì giữ giá trị.
+**Purpose.** Reset or clear to 0; if only advancing, then increment; if no control, then hold the value.
 
-**Cách phần code hoạt động.** Có logic tuần tự: register/FSM chỉ cập nhật tại cạnh clock; nonblocking assignment đọc giá trị cũ ở vế phải rồi chốt đồng thời.
+**How the code works.** There is sequential logic: register/FSM only updates on the clock edge; nonblocking assignment reads the old value on the right-hand side then latches simultaneously.
 
-**Tín hiệu và dữ liệu chính.** `clear`: đưa PC về 0; `pc_out`: register PC9 bit; `advance`: tăng PC lên instruction kế tiếp.
+**Main signals and data.** `clear`: bring PC to 0; `pc_out`: 9-bit PC register; `advance`: increment PC to the next instruction.

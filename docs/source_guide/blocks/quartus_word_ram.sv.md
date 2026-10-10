@@ -1,7 +1,7 @@
 # quartus_word_ram.sv — FPGA memory technology binding
 
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
+[Document](../../README.md) → [Source guide](../README.md) → [Table of Contents](README.md)
 
 **Source:** [quartus_word_ram.sv](<../../../Verilog%20Source%20code/quartus_word_ram.sv>).
 
@@ -9,9 +9,9 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | IP duy nhất của Quartus trong graph là altsyncram M10K. Một read và một write dùng chung clock, raw read một cạnh; OLD_DATA khi cùng địa chỉ. Storage/output không reset, không khởi tạo. ASIC thay module này phía sau adapter, giữ nguyên interface và contract. |
+| Responsibility | The only Quartus IP in the graph is the altsyncram M10K. One read and one write share the same clock, raw read on one edge; OLD_DATA when the address is the same. Storage/output is not reset, not initialized. ASIC replaces this module behind the adapter, keeping the interface and contract unchanged. |
 
-## Sơ đồ kiến trúc
+## Architecture diagram
 
 ![quartus_word_ram.sv — overview](../../diagrams/previews/53_quartus_word_ram.sv_1.svg)
 
@@ -19,14 +19,14 @@
 
 ## Important state / datapath groups
 
-### [Dòng 1–15: Technology boundary and ports](<../../../Verilog%20Source%20code/quartus_word_ram.sv#L1>)
+### [Lines 1–15: Technology boundary and ports](<../../../Verilog%20Source%20code/quartus_word_ram.sv#L1>)
 
-Compute/control không instantiate vendor primitive. Client chỉ truy cập qua pipelined_word_ram; địa chỉ phải nhỏ hơn ROWS.
+Compute/control does not instantiate vendor primitive. Client only accesses through pipelined_word_ram; address must be less than ROWS.
 
-### [Dòng 16–29: Memory configuration](<../../../Verilog%20Source%20code/quartus_word_ram.sv#L16>)
+### [Lines 16–29: Memory configuration](<../../../Verilog%20Source%20code/quartus_word_ram.sv#L16>)
 
-Port A write và port B read. Address/read control B chốt CLOCK0; output unregistered giữ raw latency một cạnh. M10K không dùng DSP hay PLL.
+Port A write and port B read. Address/read control B latches CLOCK0; output unregistered keeps raw latency one edge. M10K does not use DSP or PLL.
 
-### [Dòng 30–39: Clock and port binding](<../../../Verilog%20Source%20code/quartus_word_ram.sv#L30>)
+### [Lines 30–39: Clock and port binding](<../../../Verilog%20Source%20code/quartus_word_ram.sv#L30>)
 
-Clock enables bypass và các cổng không dùng tie constant. Reset/cancellation thuộc adapter ngoài; memory không có reset.
+Clock enables bypass and ports do not use tie constant. Reset/cancellation belongs to external adapter; memory has no reset.

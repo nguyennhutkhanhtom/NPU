@@ -1,0 +1,161 @@
+TOOL:	xrun(64)	24.09-s005: Started on Oct 10, 2026 at 10:08:45 +07
+xrun(64): 24.09-s005: (c) Copyright 1995-2025 Cadence Design Systems, Inc.
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/npu_pkg.sv
+	package worklib.npu_pkg:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_pkg.sv
+	package worklib.llm_pkg:sv
+		errors: 0, warnings: 0
+	module worklib.llm_exp_sample:svh
+		errors: 0, warnings: 0
+	module worklib.llm_gumbel_sample:svh
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/PC.sv
+	module worklib.PC:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/acc_mul.sv
+	module worklib.acc_mul:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/banked_word_ram.sv
+	module worklib.banked_word_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/descriptor_file.sv
+	module worklib.descriptor_file:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/div.sv
+	module worklib.div:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/ins_mem.sv
+	module worklib.ins_mem:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/isqrt_u64.sv
+	module worklib.isqrt_u64:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_attention_engine.sv
+	module worklib.llm_attention_engine:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_attention_normalize.sv
+	module worklib.llm_attention_normalize:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_bank_ram.sv
+	module worklib.llm_bank_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_head_engine.sv
+	module worklib.llm_head_engine:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_linear_engine.sv
+	module worklib.llm_linear_engine:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_math.sv
+	module worklib.llm_math:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_parameter_ram.sv
+	module worklib.llm_parameter_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/llm_soc.sv
+	module worklib.llm_soc:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/logic_mul.sv
+	module worklib.logic_mul:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/matmul_wrap.sv
+	module worklib.matmul_wrap:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/matmulfree.sv
+	module worklib.matmulfree:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/mem_mapping.sv
+	module worklib.mem_mapping:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/mul.sv
+	module worklib.mul:sv
+		errors: 0, warnings: 0
+	module worklib.addsub:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/norm.sv
+	module worklib.norm:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/norm_dispatch.sv
+	module worklib.norm_dispatch:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/pipelined_word_ram.sv
+	module worklib.pipelined_word_ram:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/postscale.sv
+	module worklib.postscale:sv
+		errors: 0, warnings: 0
+	module worklib.postscale_finish:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/regfile.sv
+	module worklib.register:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/reset_release.sv
+	module worklib.reset_release:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/rowwise_dispatch.sv
+	module worklib.rowwise_dispatch:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/rowwise_op.sv
+	module worklib.rowwise_op:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/scale_compose.sv
+	module worklib.scale_compose:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/sigmoid.sv
+	module worklib.sigmoid_sample:svh
+		errors: 0, warnings: 0
+	module worklib.sigmoid:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/sram_256_wrapper.sv
+	module worklib.sram_256_wrapper:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/sram_word_tile.sv
+	module worklib.sram_word_tile:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/ternary_dot32.sv
+	module worklib.ternary_dot32:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/rtl/ternary_mul.sv
+	module worklib.ternary_mul:sv
+		errors: 0, warnings: 0
+file: /home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/tests/full_rtl/tb_linear_stream.sv
+	module worklib.tb_llm_linear_stream:sv
+		errors: 0, warnings: 0
+	Elaborating the design hierarchy:
+		Caching library 'worklib' ....... Done
+	Top level design units:
+		tb_llm_linear_stream
+	Building instance overlay tables: .................... Done
+	Generating native compiled code:
+		worklib.ternary_dot32:sv <0x6bd05a5c>
+			streams:  19, words:  6833
+		worklib.tb_llm_linear_stream:sv <0x6cc332a0>
+			streams:  64, words: 57528
+		worklib.llm_linear_engine:sv <0x6128bda8>
+			streams:  51, words: 32649
+	Building instance specific data structures.
+	Loading native compiled code:     .................... Done
+	Design hierarchy summary:
+		                 Instances  Unique
+		Modules:                 3       3
+		Registers:             115     115
+		Scalar wires:           70       -
+		Vectored wires:         73       -
+		Always blocks:         109      12
+		Initial blocks:         32      32
+		Cont. assignments:     104      20
+		Pseudo assignments:     25       -
+		Process Clocks:         74       2
+		Simulation timescale:  1ps
+	Writing initial simulation snapshot: worklib.tb_llm_linear_stream:sv
+Loading snapshot worklib.tb_llm_linear_stream:sv .................... Done
+xcelium> source /tools/eda/cadence/XCELIUM2409/tools/xcelium/files/xmsimrc
+xcelium> run
+LINEAR_STREAM_METRIC k=128 rows=128 latency=5 cycles=653 dot_issues=512 parameter_reads=128 row_ii_sum=634 row_ii_count=127 row_ii_min=4 row_ii_max=6
+LINEAR_STREAM_METRIC k=384 rows=128 latency=5 cycles=1933 dot_issues=1536 parameter_reads=384 row_ii_sum=1904 row_ii_count=127 row_ii_min=14 row_ii_max=16
+LINEAR_STREAM_METRIC k=128 rows=384 latency=5 cycles=1933 dot_issues=1536 parameter_reads=384 row_ii_sum=1914 row_ii_count=383 row_ii_min=4 row_ii_max=6
+LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked
+Simulation complete via $finish(1) at time 86691 NS + 0
+/home/yellow/ee5303_09/project/test_khanh/bundle_lowrisc4_20261010/tests/full_rtl/tb_linear_stream.sv:186         $finish;
+xcelium> exit
+TOOL:	xrun(64)	24.09-s005: Exiting on Oct 10, 2026 at 10:08:46 +07  (total: 00:00:01)

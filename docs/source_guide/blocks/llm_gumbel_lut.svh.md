@@ -10,4 +10,4 @@
 
 ## Related docs
 
-[Numeric contracts](../../design/full_rtl_language.md#hợp-đồng-số-học) · [RTL math tests](../../../tests/full_rtl/tb_math.sv) · [Source index](README.md)
+[Numeric contracts](../../design/full_rtl_language.md#arithmetic-contracts) · [RTL math tests](../../../tests/full_rtl/tb_math.sv) · [Source index](README.md)

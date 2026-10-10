@@ -36,7 +36,6 @@ module logic_mul #(
     localparam int LEVELS = tree_depth();
     wire [OUT_W - 1:0] extended_a;
     genvar level, bit_id, group_id, tail;
-    generate
     if (SIGNED_A) assign extended_a = OUT_W'($signed(a));
     else assign extended_a = OUT_W'(a);
     for (level = 0; level <= LEVELS; level = level + 1) begin : g_level
@@ -70,5 +69,4 @@ module logic_mul #(
     end
     if (rows_at(LEVELS) == 1) assign product = g_level[LEVELS].row[0];
     else assign product = g_level[LEVELS].row[0] + g_level[LEVELS].row[1];
-    endgenerate
 endmodule

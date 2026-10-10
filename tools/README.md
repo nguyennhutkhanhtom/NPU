@@ -1,19 +1,19 @@
-# Công cụ hỗ trợ
+# Support Tools
 
-Chạy test/synthesis theo [flow server](server/README.md); `timing` bên dưới là backend/evidence FPGA lịch sử.
+Run test/synthesis according to the [flow server](server/README.md); `timing` below is the backend/evidence FPGA history.
 
 
 > **Category: GUIDE.**
 
 [Project](../README.md) → **Tools**
 
-| Thư mục | Công việc |
+| Folder | Task |
 |---|---|
-| [timing](timing/README.md) | Chạy Quartus, extract reports và ghi timing evidence |
-| [optimization](optimization/README.md) | Archive checkpoint và tính tỷ lệ thay đổi RTL |
-| [llm](llm/README.md) | Generate/kiểm tra bảng số học của graph |
-| [docs](docs/README.md) | Công cụ source guide và render tài liệu/sơ đồ |
+| [timing](timing/README.md) | Run Quartus, extract reports, and record timing evidence |
+| [optimization](optimization/README.md) | Archive checkpoint and calculate RTL change ratio |
+| [llm](llm/README.md) | Generate/check arithmetic table of the graph |
+| [docs](docs/README.md) | Source guide tool and render documents/diagrams |
 
-Sơ đồ đang giữ snapshot cũ; đợt cập nhật docs 06/10/2026 chưa chạy render hoặc
-sửa diagram definitions. Chỉ chạy công cụ tương ứng với phần cần thay đổi và
-giữ evidence/archive trước khi tạo output mới.
+The diagram is holding an old snapshot; the docs update on 06/10/2026 has not been rendered yet or
+edit diagram definitions. Only run the tool corresponding to the part that needs to be changed and
+keep evidence/archive before creating new output.

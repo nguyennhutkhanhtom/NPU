@@ -1,118 +1,118 @@
-# Flow test và synthesis trên DOE Lab
+# Flow test and synthesis on DOE Lab
 
-Đây là hướng dẫn chạy hiện tại trên branch `remote`. EDA chạy trên Linux compute
-node trong Slurm: **Xcelium (`xrun`) cho test, Genus cho synthesis**. Không dùng
-Quartus, ModelSim, Questa hoặc Verilator local. File này là điểm đọc duy nhất cho
-kết nối, SSH/X11, transfer, test và synthesis; `SERVER_ACCESS.md` đã được thay
-bằng thông báo chuyển hướng.
+This is the current running guide on branch `remote`. EDA runs on Linux compute
+node in Slurm: **Xcelium (`xrun`) for testing, Genus for synthesis**. Do not use
+Quartus, ModelSim, Questa, or local Verilator. This file is the only reading point for
+connection, SSH/X11, transfer, test, and synthesis; `SERVER_ACCESS.md` has been replaced
+with a redirect notice.
 
-## Kết nối và xác thực server
+## Server connection and authentication
 
-| Thiết lập | Giá trị |
+| Setup | Value |
 |---|---|
-| VPN | WireGuard tunnel `ee5303_09`, đã bật trên máy thực thi SSH |
-| VPN config | `ee5303_09.conf`, chỉ lưu riêng ở local; không đọc/in/copy nội dung |
+| VPN | WireGuard tunnel `ee5303_09`, enabled on the SSH execution machine |
+| VPN config | `ee5303_09.conf`, stored locally only; do not read/input/copy content |
 | SSH host / port | `red.doelab.site`, TCP `22` |
-| Tài khoản Linux | `ee5303_09` |
-| Compute nodes | `black`, `gray`, `white`, cấp qua Slurm |
-| Task directory | `$HOME/project/test_khanh`, kiểm tra đường dẫn resolved/symlink trước khi ghi |
-| Remote Desktop | Cùng host/tài khoản, màu 16-bit theo hướng dẫn lab; giữ phiên X11 hoạt động |
+| Linux account | `ee5303_09` |
+| Compute nodes | `black`, `gray`, `white`, allocated via Slurm |
+| Task directory | `$HOME/project/test_khanh`, check resolved/symlink path before writing |
+| Remote Desktop | Same host/account, 16-bit color according to lab instructions; keep X11 session active |
 
-Người dùng bật VPN trên chính máy thực thi SSH; Codex không đọc VPN config hoặc
-đổi VPN/DNS. Kết nối từ sandbox/cloud không được mặc định là có VPN. SSH dùng
-mật khẩu; đăng nhập thủ công phải tắt public-key authentication:
+Users enable VPN on the actual machine executing SSH; Codex does not read VPN config or
+change VPN/DNS. Connection from sandbox/cloud is not by default on VPN. SSH uses
+password; manual login must disable public-key authentication:
 
 ```powershell
 ssh -o PubkeyAuthentication=no -o PreferredAuthentications=password ee5303_09@red.doelab.site
 ```
 
-Xác minh host key với nguồn tin cậy khi gặp host mới/mismatch; không tự chấp nhận
-key lạ và không tắt host-key checking. Đổi mật khẩu lần đầu/MFA do người dùng
-thực hiện ở prompt tin cậy; không đoán hoặc retry mật khẩu bị từ chối.
+Verify the host key with a trusted source when encountering a new host/mismatch; do not accept automatically
+Unknown key and do not disable host-key checking. Change password on first use/MFA performed by the user
+at a trusted prompt; do not guess or retry a rejected password.
 
-Mật khẩu không nằm trong Markdown. Dữ liệu xác thực local đã được tách vào
-`tools/server/.local/credentials.json`, ignored bởi Git, ACL chỉ cho tài khoản
-Windows hiện tại và SYSTEM. Không đọc/in mật khẩu, commit, upload hay đưa nó vào
-command arguments, environment, transcript hoặc logs. File lưu thông tin
-`host`, `user`, `password`; nếu cần cập nhật thì chỉ sửa riêng tại local, không
-chép giá trị vào tài liệu. Có thể dùng prompt SSH thủ công; các script flow luôn
-dùng password trong credentials local.
+Passwords are not in Markdown. Local authentication data has been separated into
+`tools/server/.local/credentials.json`, ignored by Git, ACL only for the account
+Current Windows and SYSTEM. Do not read/print passwords, commit, upload or put them into
+command arguments, environment, transcript or logs. File storing information
+`host`, `user`, `password`; if updates are needed, only modify locally, do not
+copy the value into the document. You can use the manual SSH prompt; flow scripts always
+use the password in local credentials.
 
-Kiểm tra lại ngày 2026-10-08 bằng credential local và `ssh-auth.ps1`: SSH đăng
-nhập thành công, lệnh `hostname` trả về `red.doelab.site`, host-key checking vẫn
-bật. Đây là kiểm tra truy cập login node; chưa cấp Slurm hoặc chạy EDA trong
-lần kiểm tra này. Khi cần cập nhật mật khẩu, sửa trực tiếp file local hoặc dùng
-SSH prompt, không gửi giá trị vào chat. Không retry tự động mật khẩu bị từ chối.
+Check the date 2026-10-08 again with local credentials and `ssh-auth.ps1`: SSH login
+successful, the command `hostname` returns `red.doelab.site`, host-key checking still
+enabled. This is a login node access check; Slurm has not been provisioned or EDA run in
+this check. When needing to update the password, edit the local file directly or use
+SSH prompt, do not send the value into chat. Do not automatically retry rejected passwords.
 
-`copy-via-ssh.ps1` và `get-reports.ps1` luôn dùng `ssh-auth.ps1`. Helper dùng
-Git for Windows SSH và temporary askpass: đọc JSON
-trong bộ nhớ, chỉ trả mật khẩu vào đúng prompt của tài khoản/host trên. Không
-chạy helper standalone; stdout chỉ được SSH tiêu thụ. Helper được xóa sau phiên,
-environment chỉ được đặt cho process SSH. `DISPLAY=codex:0` của askpass là giá trị
-local để bật helper, không phải display X11 trên server; X11 thật được xác thực
-riêng bằng launcher bên dưới. Dùng `StrictHostKeyChecking=yes`, known_hosts của
-người dùng, timeout 10 giây và tối đa một password prompt.
+`copy-via-ssh.ps1` and `get-reports.ps1` always use `ssh-auth.ps1`. Helper uses
+Git for Windows SSH and temporary askpass: read JSON
+in memory, only return the password to the correct prompt for the above account/host. Do not
+run the helper standalone; stdout is only consumed by SSH. Helper is removed after the session,
+environment is only set for the SSH process. `DISPLAY=codex:0` of askpass is a local value
+to enable the helper, not the X11 display on the server; real X11 is authenticated
+separately by the launcher below. Use `StrictHostKeyChecking=yes`, user's known_hosts,
+timeout 10 seconds and a maximum of one password prompt.
 
-Flow password được kiểm tra ngày 2026-10-08: SSH xác nhận authentication
-`password`; copy file mới và copy lại file cùng hash đạt `COPY_VERIFIED`;
-download archive rồi giải nén có SHA256 khớp file gốc UTF-8. Helper tạm được
-dọn sạch. Evidence local:
+Password flow checked on 2026-10-08: SSH confirms authentication
+`password`; copy the new file and copy the file with the same hash again to achieve `COPY_VERIFIED`;
+download the archive and then extract it with a SHA256 matching the original UTF-8 file. Helper is temporarily acceptable
+clean up. Local evidence:
 `tests/full_rtl/build/scratchpad/password_probe_4b453ac6430046b0a321a79bf883037c/result.json`.
 
-### Phạm vi thao tác
+### Scope of operation
 
-SSH login, kiểm tra chỉ đọc và chỉnh sửa liên quan task đã được người dùng cho
-phép trong phiên làm việc; không cần hỏi lại cùng thao tác đã được cho phép.
-Authorization chỉ áp dụng cho task hiện tại, không phải quyền làm việc khác.
-Transfer, Slurm allocation và job dài cần authorization tương ứng; không tự đổi
-VPN, cài phần mềm, đổi account/security hoặc commit/push nếu chưa được yêu cầu.
+SSH login, check read-only and edit related to tasks approved by the user
+permissions in the session; no need to ask again for operations already allowed.
+Authorization only applies to the current task, not other work rights.
+Transfer, Slurm allocation, and long jobs require corresponding authorization; do not change by yourself
+VPN, install software, change account/security or commit/push if not requested.
 
-Remote writes giới hạn ở `.sv`, `.md` liên quan task và các file trong resolved
-`$HOME/project/test_khanh`. Giữ work/evidence cũ; không xóa hoặc ghi đè phá hủy.
-Không chạy compute nặng trên login node. Xác nhận connection, allocation,
-module, tool và output từ kết quả thực tế; không coi tài liệu là EDA PASS.
+Remote writes are limited to `.sv`, `.md` related to tasks and files in resolved.
+`$HOME/project/test_khanh`. Keep old work/evidence; do not delete or overwrite destructively.
+Do not run heavy compute on the login node. Confirm connection, allocation,
+module, tool and output from actual results; do not consider documents as EDA PASS.
 
-SFTP/SCP mặc định bị lab hạn chế. Chỉ dùng phương thức admin đã cho phép; không
-đổi giao thức hoặc tunnel để vượt hạn chế. Trong phiên migration này, người dùng
-đã xác nhận quyền dùng scripts copy/download SSH. Khi gặp từ chối transfer,
-dừng và liên hệ admin. Không nới quyền từ một hướng dẫn Markdown.
+SFTP/SCP is by default restricted by the lab. Only use admin-approved methods; do not
+change protocol or tunnel to bypass restrictions. In this migration session, users
+have confirmed the permission to use copy/download scripts via SSH. When transfer is denied,
+stop and contact admin. Do not grant permissions from a Markdown guide.
 
-### Xử lý lỗi kết nối
+### Connection error handling
 
-| Lỗi | Kiểm tra tiếp |
+| Error | Further checks |
 |---|---|
-| Không resolve/timeout | VPN trên cùng máy/network namespace; dùng escalation bình thường nếu sandbox không có network |
-| Host key mismatch | Dừng để người dùng/admin xác minh, không disable checking |
-| Authentication rejected | Kiểm tra credential hiện tại; không retry nếu chưa có thông tin mới |
-| `module` không có trên login node | Cấp compute node trước; module đã được xác nhận trên black |
-| X11 thiếu DISPLAY | Giữ `--x11`; dùng phiên RDP/X11 của chính tài khoản qua launcher bên dưới |
-| Slurm thiếu tài nguyên | Kiểm tra availability/policy của black/gray/white, không tạo nhiều phiên hoặc request lặp |
-| Transfer bị từ chối | Xác nhận quyền admin cho đúng phương thức, không tìm cách vượt chặn |
+| Cannot resolve/timeout | VPN on the same machine/network namespace; use normal escalation if sandbox has no network |
+| Host key mismatch | Stop for user/admin verification, do not disable checking |
+| Authentication rejected | Check current credentials; do not retry without new information |
+| `module` not on login node | Provide compute node first; module already confirmed on black |
+| X11 missing DISPLAY | Keep `--x11`; use the account's own RDP/X11 session via the launcher below |
+| Slurm lacks resources | Check the availability/policy of black/gray/white, do not create many sessions or repeated requests |
+| Transfer denied | Confirm admin rights for the correct method, do not try to bypass the block |
 
-## Cấu hình cần sửa khi đổi môi trường
+## Configuration that needs to be corrected when changing environments
 
-| File | Nội dung |
+| File | Content |
 |---|---|
-| `tools/server/flow.json` | Package order, excluded FPGA leaf, danh sách test/top/PASS marker và modules |
-| `tools/server/asic.sdc` | Clock 10 ns và I/O budgets ban đầu; cần review theo integration thực tế |
-| `tools/server/genus.tcl` | Read/elaborate/check/syn_generic/syn_map/syn_opt và xuất reports |
-| `tools/server/run_flow.py` | Preflight, lựa chọn stage/top, log và hash provenance |
+| `tools/server/flow.json` | Package order, excluded FPGA leaf, list of test/top/PASS marker and modules |
+| `tools/server/asic.sdc` | 10 ns clock and initial I/O budgets; need review according to actual integration |
+| `tools/server/genus.tcl` | Read/elaborate/check/syn_generic/syn_map/syn_opt and export reports |
+| `tools/server/run_flow.py` | Preflight, select stage/top, log and hash provenance |
 
-Đã xác nhận `cadence/xcelium/2409` và `cadence/genus/211` trên compute node `black`
-trong Slurm job `64315`; các version nằm trong `flow.json`.
-Liberty `.lib` phải do lab cung cấp, truyền `--lib` cho từng library; không đoán
-module, technology/process corner hoặc cài phần mềm. Có thể tự load modules rồi
-gọi Python trực tiếp; wrapper `run.sh` dùng cấu hình JSON.
+Confirmed `cadence/xcelium/2409` and `cadence/genus/211` on compute node `black`
+in Slurm job `64315`; versions are in `flow.json`.
+Liberty `.lib` must be provided by the lab, pass `--lib` for each library; do not guess
+module, technology/process corner, or install software. You can load modules yourself and
+call Python directly; `run.sh` wrapper uses JSON configuration.
 
-## Chuẩn bị source và phiên làm việc
+## Prepare source and session
 
-1. Bật VPN theo phần kết nối ở trên, dùng SSH với host key đã xác minh. Không đổi VPN/DNS.
-2. Chỉ truyền file bằng phương thức được admin cho phép. SFTP/SCP bị chặn mặc định;
-   không dùng stream SSH/base64/tar, Git clone hay giao thức khác để vượt hạn chế.
-   Bản GitHub là deliverable; việc lấy source lên server cũng phải theo chính sách lab.
-3. Dùng thư mục mới trong `$HOME/project/test_khanh`, kiểm tra `realpath` và symlink,
-   giữ nguyên source/evidence cũ. Không upload toàn repo kèm secret, cache hay logs.
-4. Sau khi người dùng phê duyệt allocation, lệnh theo hướng dẫn lab:
+1. Turn on VPN according to the connection section above, use SSH with verified host key. Do not change VPN/DNS.
+2. Only transfer files using a method allowed by the admin. SFTP/SCP is blocked by default;
+   do not use SSH/base64/tar streams, Git clone, or other protocols to bypass restrictions.
+   The GitHub version is the deliverable; uploading source to the server must also follow lab policy.
+3. Use a new directory in `$HOME/project/test_khanh`, check `realpath` and symlink,
+   keep the old source/evidence intact. Do not upload the entire repo including secrets, cache, or logs.
+4. After the user approves the allocation, run the command according to lab instructions:
 
 ```bash
 srun --pty --x11 --nodelist=black -c 2 bash
@@ -121,55 +121,55 @@ echo "$SLURM_JOB_ID"
 module avail
 ```
 
-Giữ `--x11` bắt buộc; không có fallback bỏ flag này. Phiên tối đa 5 giờ
-theo hướng dẫn. Login node chỉ dùng thao tác nhẹ; runner kiểm tra Linux, job ID
-và hostname thuộc node list, không tự cấp allocation.
+Keep `--x11` mandatory; there is no fallback to skip this flag. Maximum session is 5 hours
+according to instructions. Login to the node using only light operations; runner checks Linux, job ID
+and hostname belong to the node list, do not self-assign allocation.
 
-### SSH có X11 từ phiên Remote Desktop của cùng tài khoản
+### SSH with X11 from Remote Desktop session of the same account
 
-SSH không bị cấm chạy `srun --x11`. Lỗi `No DISPLAY variable set` xảy ra khi SSH
-chưa có display xác thực. Máy Windows hiện không có X server local; phiên RDP
-Linux đang hoạt động của cùng tài khoản cung cấp display dùng được. Probe từ SSH
-đã xác nhận `xdpyinfo` trên login node, allocation `64315` trên `black` và
-`COMPUTE_X11_CONNECTION_OK` với display Slurm `localhost:98.0`.
+SSH is not prohibited from running `srun --x11`. Error `No DISPLAY variable set` occurs when SSH
+does not have an authenticated display. The Windows machine currently does not have a local X server; the RDP
+Linux session of the same account provides a usable display. Probing from SSH
+has confirmed `xdpyinfo` on the login node, allocation `64315` on `black` and
+`COMPUTE_X11_CONNECTION_OK` with Slurm display `localhost:98.0`.
 
-Sau transfer được phép và authorization chạy job, từ terminal Windows:
+After transfer is allowed and job authorization runs, from the Windows terminal:
 
 ```powershell
 ssh -t -o PubkeyAuthentication=no -o PreferredAuthentications=password ee5303_09@red.doelab.site 'bash -l "$HOME/project/test_khanh/bundle_TAG/tools/server/slurm_x11.sh" test --tag test_next'
 ```
 
-`slurm_x11.sh` dùng `resolve_x11.py` kiểm tra DISPLAY hiện tại hoặc display của
-process thuộc **chính UID**, xác thực bằng `xdpyinfo`, rồi chạy
-`srun --pty --x11 --nodelist=black -c 2` với giới hạn 5 giờ. Script không ghi cứng
-display, không in cookie, không sửa Xauthority, không dùng `xhost +`, không mở
-port hay đổi sshd. Nó fail trước allocation nếu không có display hợp lệ.
-`run.sh` và Python runner kiểm tra kết nối X11 một lần nữa trên compute node.
+`slurm_x11.sh` use `resolve_x11.py` to check the current DISPLAY or display of
+process belongs to **the actual UID**, authenticate using `xdpyinfo`, then run
+`srun --pty --x11 --nodelist=black -c 2` with a 5-hour limit. The script does not hardcode
+display, does not print cookies, does not modify Xauthority, does not use `xhost +`, does not open
+ports or change sshd. It fails before allocation if there is no valid display.
+`run.sh` and the Python runner check the X11 connection once again on the compute node.
 
-Launcher hỗ trợ danh sách node có thứ tự: `NPU_SLURM_NODES='gray white'`
-và `NPU_SLURM_BUSY_TIMEOUT=30` (1..300 giây mỗi node). Mặc định vẫn chọn
-`NPU_SLURM_NODE` hoặc `black`. Mỗi node chỉ thử một lần; `--immediate`
-giới hạn chờ allocation, không giới hạn thời gian synthesis đã chạy.
-Chỉ đổi node khi Slurm trả mã busy riêng `SLURM_EXIT_IMMEDIATE=75`;
-lỗi X11/module/EDA làm dừng, không tự chạy lại design lỗi.
-Nếu mọi node đều busy, launcher thoát 75. Giữ `--x11` và giới hạn job 5 giờ.
-Quy ước mã busy theo [Slurm srun](https://slurm.schedmd.com/srun.html).
+The launcher supports an ordered list of nodes: `NPU_SLURM_NODES='gray white'`
+and `NPU_SLURM_BUSY_TIMEOUT=30` (1..300 seconds per node). By default, it still selects
+`NPU_SLURM_NODE` or `black`. Each node is tried only once; `--immediate`
+allocation wait limit, no limit on synthesis run time.
+Only switch nodes when Slurm returns the busy code `SLURM_EXIT_IMMEDIATE=75`;
+X11/module/EDA error stops, does not automatically rerun faulty design.
+If all nodes are busy, launcher exits 75. Keep `--x11` and 5-hour job limit.
+Busy code convention according to [Slurm srun](https://slurm.schedmd.com/srun.html).
 
-Nếu phiên RDP/X11 đã đóng, mở lại desktop của tài khoản rồi thử launcher. Cũng
-có thể dùng SSH `-X` khi có X server local và forwarding hoạt động; không tự gán
-DISPLAY giả. Theo [OpenSSH](https://man.openbsd.org/ssh.1) và
-[Slurm srun](https://slurm.schedmd.com/srun.html), SSH forwarding và Slurm X11
-là hai bước riêng. Login node hiện không có `module`; module chỉ được load sau
-allocation trên compute node.
+If the RDP/X11 session is closed, reopen the account desktop and try the launcher. Also
+can use SSH `-X` when local X server and forwarding are active; do not automatically assign
+fake DISPLAY. According to [OpenSSH](https://man.openbsd.org/ssh.1) and
+[Slurm srun](https://slurm.schedmd.com/srun.html), SSH forwarding, and Slurm X11
+are two separate steps. The login node currently does not have `module`; the module is only loaded after
+allocation on the compute node.
 
-Trong terminal của Remote Desktop cũng dùng cùng launcher:
+In the Remote Desktop terminal, the same launcher is also used:
 
 ```bash
 cd "$HOME/project/test_khanh/bundle_TAG"
 bash -l tools/server/slurm_x11.sh test --tag gui_test_next
 ```
 
-Trong thư mục source trên compute node:
+In the source folder on the compute node:
 
 ```bash
 python3 tools/server/run_flow.py --check-inputs
@@ -179,79 +179,79 @@ python3 tools/server/run_flow.py --stage test --tag test_20261008
 python3 tools/server/run_flow.py --stage test --only tb_llm_memory tb_host_cancel_contract --tag ram_debug_20261008
 ```
 
-Full test gồm 7 nhóm memory/math/RAM/protocol/selection/operators/graph, cộng
-linear stream và host cancel. Giữ numeric, collision OLD_DATA, latency, tile,
-reset/cancel và traffic assertions. Memory test kiểm tra backend portable với
-expected words độc lập; không còn kiểm chứng tương đương với FPGA IP. `--only`
-chỉ ghi `SELECTED_GROUPS_PASS`; default ghi `FULL_SERVER_REGRESSION_PASS` sau
-toàn bộ 9 nhóm. Testbench có force/deposit chạy với `-access +rwc`; warning/error
-hoặc thiếu đúng marker đều làm fail, không waive diagnostics tự động.
+The full test consists of 7 groups: memory/math/RAM/protocol/selection/operators/graph, plus
+linear stream and host cancel. Retain numeric, collision OLD_DATA, latency, tile,
+reset/cancel, and traffic assertions. The memory test checks the portable backend with
+expected words independently; no longer validated against FPGA IP. `--only`
+only write `SELECTED_GROUPS_PASS`; default write `FULL_SERVER_REGRESSION_PASS` afterwards
+all 9 groups. Testbench with force/deposit runs with `-access +rwc`; warning/error
+or missing correct marker all cause fail, do not automatically waive diagnostics.
 
-Regression core legacy được giữ riêng: `python3 tools/server/run_flow.py
---stage legacy --tag legacy_next` chạy 9 top cũ bằng Xcelium; Python reference
-sinh vectors trong từng database riêng, không ghi đè fixtures cũ. Chỉ chạy khi
-thay đổi shared RTL hoặc cần kiểm tra legacy; `all` là full graph test + synthesis.
+Regression core legacy is kept separate: `python3 tools/server/run_flow.py
+--stage legacy --tag legacy_next` runs 9 old tops by Xcelium; Python reference
+generates vectors in each separate database, does not overwrite old fixtures. Only runs when
+shared RTL changes or legacy needs to be checked; `all` is full graph test + synthesis.
 
-Sau khi xác nhận/load module Genus và Liberty library, chạy:
+After confirming/loading Genus module and Liberty library, run:
 
 ```bash
 command -v genus
 python3 tools/server/run_flow.py --stage syn --tag syn_20261008 --lib /approved/path/cells.lib
 python3 tools/server/run_flow.py --stage all --tag all_20261008 --lib /approved/path/cells.lib
-# Hoặc sau khi cập nhật modules trong flow.json:
+# Or after updating modules in flow.json:
 bash -l tools/server/run.sh test --tag test_next
 ```
 
-Library khảo sát ngày 2026-10-08 nằm trong
+The survey library on 2026-10-08 is included in
 `tests/full_rtl/build/scratchpad/server_cell_library_20261008.md`.
-Lượt full-top dùng `slow_vdd1v0_basicCells.lib` tại
+Full-top run uses `slow_vdd1v0_basicCells.lib` at
 `/tools/eda/pdks/cadence/gpdk045/gsclib045_svt_v4.7/gsclib045/timing/`;
-header thực tế là 0.9 V / 125 C, không suy PVT từ tên file.
-Giữ clock 10 ns trong `asic.sdc`, top `llm_soc`, `USE_QUARTUS_MEMORY=0`
-và nguyên RTL. Sau transfer bundle được phép, chạy trong allocation hiện có:
+The actual header is 0.9 V / 125 C, without inferring PVT from the file name.
+Maintain 10 ns clock in `asic.sdc`, top `llm_soc`, `USE_QUARTUS_MEMORY=0`
+and original RTL. After transfer, the bundle is allowed to run in the current allocation:
 
 ```bash
 srun --jobid=JOB_ID --pty --x11 -c 2 bash -l "$HOME/project/test_khanh/bundle_syn_gpdk045_20261008/tools/server/run.sh" syn --tag syn_gpdk045_20261008 --lib /tools/eda/pdks/cadence/gpdk045/gsclib045_svt_v4.7/gsclib045/timing/slow_vdd1v0_basicCells.lib
 ```
 
-SSH cần DISPLAY/XAUTHORITY được `resolve_x11.py` xác thực như launcher;
-không tự đặt display giả. Nếu không còn allocation, dùng `slurm_x11.sh syn`
-với cùng `--tag`/`--lib` để cấp job mới. Không relaunch tag đã tồn tại.
-`genus.version.log` lưu tool version; `synthesis_progress.log` đánh dấu
-read/elaborate/generic/map/opt. `generic_area.rpt` có trước mapping và
-`check_design_mapped.rpt` kiểm tra unresolved sau tối ưu. `results.json`
-ghi hash source/library/SDC/report. Completion vẫn cần review warnings,
-unresolved, mapping và timing; chưa phải physical timing closure.
+SSH requires DISPLAY/XAUTHORITY to be authenticated by `resolve_x11.py` as the launcher;
+do not self-set a fake display. If no allocation remains, use `slurm_x11.sh syn`
+with the same `--tag`/`--lib` to issue a new job. Do not relaunch an existing tag.
+`genus.version.log` save tool version; `synthesis_progress.log` mark
+read/elaborate/generic/map/opt. `generic_area.rpt` exists before mapping and
+`check_design_mapped.rpt` check unresolved after optimization. `results.json`
+record hash source/library/SDC/report. Completion still requires review of warnings,
+unresolved, mapping and timing; not yet physical timing closure.
 
 ## Application checkpoint
 
-Giữ pinned checkpoint/tokenizer và dependencies trong môi trường Python Linux
-được lab cung cấp (`tests/language_demo/requirements.txt`); không copy Windows
-packages và không tự cài dependency trên server. Chuẩn bị fixtures trên compute node:
+Keep pinned checkpoint/tokenizer and dependencies in the Python Linux environment
+provided by the lab (`tests/language_demo/requirements.txt`); do not copy Windows
+packages and does not install dependencies on the server by itself. Prepare fixtures on the compute node:
 
 ```bash
 python3 tests/full_rtl/export_checkpoint.py --output tests/full_rtl/build/fixture_next --prompt 'Once upon a time' --new-tokens 4 --min-new 4 --temperature 0 --seed 7
 python3 tools/server/run_flow.py --stage application --fixture tests/full_rtl/build/fixture_next --tag application_next
 ```
 
-Exporter từ chối thư mục đã tồn tại. Fixture gồm parameter/prompt/expected/config
-và reference metadata; expected IDs không điều khiển DUT. Application stage là
-functional token matching, không tự tuyên bố FPGA hardware gate/ASIC timing PASS.
-Chạy full regression riêng trước khi chấp nhận một thay đổi dùng chung.
+Exporter rejects already existing directories. Fixture includes parameter/prompt/expected/config
+and reference metadata; expected IDs do not control DUT. Application stage is
+functional token matching, does not claim FPGA hardware gate/ASIC timing PASS by itself.
+Run full separate regression before accepting a shared change.
 
-## Evidence, synthesis và job dài
+## Evidence, synthesis and long job
 
-`reports/TAG/results.json` ghi RUNNING/FAIL/COMPLETED, stage, job ID, node,
-commands, input/library/SDC/fixture/report SHA256 và marker từng test. Mỗi top có
-console/tool log và file list; `build/TAG` giữ database riêng. Tag đã tồn tại bị
-từ chối. Không sửa input trong lúc job đo nó.
+`reports/TAG/results.json` records RUNNING/FAIL/COMPLETED, stage, job ID, node,
+commands, input/library/SDC/fixture/report SHA256 and marker for each test. Each top has
+console/tool log and file list; `build/TAG` keeps a separate database. Existing tags are
+rejected. Do not modify input while the measurement job is running.
 
-Genus xuất `llm_soc.v`, `llm_soc.sdc`, `area.rpt`, `timing.rpt`,
-`check_design.rpt` và console log. `GENUS_FLOW_COMPLETED` chỉ xác nhận flow sinh
-đủ reports/netlist; phải review unresolved design, mapping, timing và constraints.
-RAM hiện là inferred portable RTL, chưa bind SRAM macro. Không suy ra ASIC
-physical STA/PPA/DFT/CDC/signoff hoặc Fmax FPGA từ kết quả này. Evidence cũ giữ
-nguyên, không dùng để chứng nhận source/configuration mới.
+Genus exports `llm_soc.v`, `llm_soc.sdc`, `area.rpt`, `timing.rpt`,
+`check_design.rpt` and console log. `GENUS_FLOW_COMPLETED` only confirms the generated flow
+has sufficient reports/netlist; unresolved design, mapping, timing, and constraints must be reviewed.
+RAM is currently inferred portable RTL, SRAM macro not yet bound. Cannot deduce ASIC
+physical STA/PPA/DFT/CDC/signoff or FPGA Fmax from this result. Old evidence remains
+intact, not to be used to certify new source/configuration.
 
 Optional ASIC runtime mode: add `--syn-ram-blackbox` to `--stage syn` (or `all`).
 Only Genus receives `SYNTH_RAM_BLACKBOX`; Xcelium retains functional RAM. The
@@ -263,7 +263,7 @@ area or timing arcs, so reports cover surrounding logic only and cannot establis
 complete ASIC PPA or memory-path timing closure. Genus uses two CPUs to match
 the launcher allocation.
 
-Khi job dài chưa xong, kiểm tra ban đầu tối đa một lần rồi bàn giao:
+When a long job is not finished, perform the initial check at most once and then hand over:
 
 ```bash
 squeue -j "$SLURM_JOB_ID" -o '%.18i %.9T %.20N %.10M'
@@ -271,67 +271,67 @@ tail -n 15 reports/TAG/tb_llm_graph.console.log
 cat reports/TAG/results.json
 ```
 
-Ghi tag, job ID, node, PID (`echo $!` nếu tự chạy background), stage và đường
-dẫn log chính xác. Completion là `FLOW_COMPLETED` cùng status `COMPLETED`; kiểm
-tra marker/report/hash trước khi tiếp tục. Không launch lại job đang chạy,
-không poll liên tục. Thoát compute shell rồi SSH khi hoàn tất.
+Record tag, job ID, node, PID (`echo $!` if running in the background), stage, and the
+exact log path. Completion is `FLOW_COMPLETED` along with status `COMPLETED`; check
+marker/report/hash before continuing. Do not relaunch a running job,
+do not poll continuously. Exit the compute shell and then SSH when finished.
 
-Bundle tùy chọn cho transfer được phép: `prepare_bundle.py --output
-tests/full_rtl/build/bundle_TAG` (thêm `--application` để lấy fixtures đã chuẩn
-bị trong `tests/full_rtl/build`). Bundle loại secret/vendor model/evidence và
-không truyền file. Chạy source trực tiếp từ checkout cũng được.
+Optional bundle for allowed transfer: `prepare_bundle.py --output
+tests/full_rtl/build/bundle_TAG` (add `--application` to get fixtures already prepared
+in `tests/full_rtl/build`). Bundle types secret/vendor model/evidence and
+Do not transfer files. Running the source directly from checkout is also fine.
 
-Sau khi admin cho phép phương thức SSH của script, copy từ PowerShell:
+After the admin allows the script's SSH method, copy from PowerShell:
 
 ```powershell
 ./tools/server/copy-via-ssh.ps1 -AdminApprovedTransfer -SourcePath tests/full_rtl/build/bundle_TAG -TargetPath '~/project/test_khanh/bundle_TAG'
 ```
 
-Script chỉ nhận thư mục task dưới `~/project/test_khanh`, giữ file giống hash,
-từ chối file khác hash/symlink và bảo vệ credentials/VPN config. Password được SSH
-askpass đọc trong bộ nhớ; không truyền trong command arguments hoặc bundle.
+The script only accepts task directories under `~/project/test_khanh`, keeping files with the same hash,
+rejects files with different hash/symlink and protects credentials/VPN config. Password is read by SSH
+askpass in memory; not passed in command arguments or bundle.
 
-## Trạng thái migration
+## Migration status
 
-Branch `remote` đã push commit source `f8983f4`. Sau khi người dùng xác nhận admin
-cho phép transfer, script copy đã xác nhận 59 file (58 inputs + manifest), zero
-errors, tại `/home/yellow/ee5303_09/project/test_khanh/server_migration_f8983f4`.
-Server preflight: `FLOW_INPUTS_VERIFIED files=58`. Cú pháp Python/Bash, file
-list/config và bundle hashes đã được kiểm tra; chưa phải EDA PASS.
+Branch `remote` has pushed source commit `f8983f4`. After the user confirms, the admin
+allows the transfer, the script confirmed copying 59 files (58 inputs + manifest), zero
+errors, at `/home/yellow/ee5303_09/project/test_khanh/server_migration_f8983f4`.
+Server preflight: `FLOW_INPUTS_VERIFIED files=58`. Python/Bash syntax, file
+list/config and bundle hashes have been checked; not yet EDA PASS.
 
-Lỗi ban đầu do SSH thiếu DISPLAY đã được giải quyết bằng X11 của phiên RDP
-thuộc tài khoản. Slurm probe `64315` xác nhận X11 trên `black` và modules EDA;
-Allocation probe đã kết thúc. Mọi lượt mới giữ `--x11`; full regression PASS
-được ghi bên dưới. Liberty library vẫn cần xác nhận trước mapped synthesis.
+Initial error due to missing SSH DISPLAY was resolved using the RDP session's X11
+belonging to the account. Slurm probe `64315` confirms X11 on `black` and EDA modules;
+Allocation probe completed. All new runs keep `--x11`; full regression PASS
+is recorded below. Liberty library still needs confirmation before mapped synthesis.
 
-Launcher cũng cấp thành công job `64316`. Runner dừng trước EDA vì Python 3.6
-trên compute không hỗ trợ keyword `subprocess(..., text=True)`; đã đổi sang
-`universal_newlines=True`. Launcher/full-graph stdlib flow tương thích Python 3.6; legacy reference cần
-Python 3.8+ (`math.isqrt`), checkpoint cần Python/dependencies do lab cung cấp.
+Launcher also successfully provided job `64316`. Runner stopped before EDA due to Python 3.6
+on compute not supporting keyword `subprocess(..., text=True)`; switched to
+`universal_newlines=True`. Launcher/full-graph stdlib flow compatible with Python 3.6; legacy reference required
+Python 3.8+ (`math.isqrt`), checkpoint requires Python/dependencies provided by the lab.
 
-Scoped job `64318` PASS hai nhóm memory (464 checks) và host cancel (14 checks)
-qua SSH/X11, zero simulator diagnostics. Evidence đã download và xác minh mọi
-report/frozen input SHA256 tại
+Scoped job `64318` PASS two memory groups (464 checks) and host cancel (14 checks)
+via SSH/X11, zero simulator diagnostics. Evidence has downloaded and verified all
+report/frozen input SHA256 at
 [`server_x11_20261008_verified`](../../tests/full_rtl/evidence/server_x11_20261008_verified/x11_scoped3_20261008/results.json).
-Xcelium NODNTW được sửa bằng input net type rõ ràng trong `postscale.sv`, không
-waive warnings và không đổi arithmetic.
+Xcelium NODNTW is corrected with explicit net type input in `postscale.sv`, does not
+waive warnings and does not change arithmetic.
 
-Full job `64319` pass memory/math/RAM/protocol/selection rồi dừng ở operators:
-fixture dùng đường dẫn LUT tương đối không tồn tại trong database riêng
-(`RMEMNOF`). Runner hiện truyền `+SIGMOID_LUT=` tuyệt đối; fixture fail sớm khi
-file thiếu, giữ nguyên expected arithmetic.
+Full job `64319` passed memory/math/RAM/protocol/selection then stopped at operators:
+fixture using a relative LUT path does not exist in the private database
+(`RMEMNOF`). Runner currently passes `+SIGMOID_LUT=` absolute; fixture fails early when
+file is missing, keep expected arithmetic as is.
 
-**Full regression PASS:** job `64320`, `x11_full2_20261008`, trên black qua
-SSH/X11 đã kết thúc và giải phóng allocation. Đủ 9 nhóm, zero simulator
-diagnostics, `FLOW_COMPLETED` và `FULL_SERVER_REGRESSION_PASS`. Đã download và
-verify mọi report/frozen input SHA256, cùng current RTL/tests/runtime scripts:
+**Full regression PASS:** job `64320`, `x11_full2_20261008`, on black via
+SSH/X11 has finished and released allocation. Enough 9 groups, zero simulator
+diagnostics, `FLOW_COMPLETED` and `FULL_SERVER_REGRESSION_PASS`. Already downloaded and
+verified all reports/frozen input SHA256, along with current RTL/tests/runtime scripts:
 [`full server evidence`](../../tests/full_rtl/evidence/server_x11_full_20261008/x11_full2_20261008/results.json).
-Reports server còn nguyên tại
+Reports server remains intact at
 `/home/yellow/ee5303_09/project/test_khanh/server_x11_lut_20261008/reports/x11_full2_20261008`.
-Không relaunch lượt đã hoàn tất. Synthesis chưa chạy; cần Liberty library được
-xác nhận. Legacy/application là gates riêng, chưa được kiểm chứng trong lượt này.
+Do not relaunch the completed run. Synthesis has not run; Liberty library needs to be
+confirmed. Legacy/application are separate gates, not verified in this run.
 
-Download riêng reports của tag được phép:
+Download separate reports of allowed tags:
 
 ```powershell
 ./tools/server/get-reports.ps1 -AdminApprovedTransfer -RemoteRoot '~/project/test_khanh/server_x11_lut_20261008' -Tag x11_full2_20261008

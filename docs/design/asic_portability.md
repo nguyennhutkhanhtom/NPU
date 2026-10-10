@@ -1,61 +1,61 @@
-# Khả năng chuyển sang ASIC và các implementation cell được phép
+# Ability to switch to ASIC and allowed implementation cells
 
 > **Category: POLICY.**
 
-[Tài liệu](../README.md) · [Toàn RTL graph](full_rtl_language.md) · [Source số học](../source_guide/blocks/logic_mul.sv.md) · [Memory boundary](../source_guide/blocks/quartus_word_ram.sv.md)
+[Document](../README.md) · [Complete RTL graph](full_rtl_language.md) · [Arithmetic source](../source_guide/blocks/logic_mul.sv.md) · [Memory boundary](../source_guide/blocks/quartus_word_ram.sv.md)
 
-[Hướng dẫn liên kết SRAM cho ASIC](asic_memory_binding.md) ghi lại contract
-leaf/client, toàn bộ các mảng nhỏ được infer và evidence full-top elaboration
-không phụ thuộc vendor memory.
+[SRAM binding guide for ASIC](asic_memory_binding.md) records the contract
+leaf/client, all small arrays are inferred and evidenced by full-top elaboration
+independent of vendor memory.
 
-RTL compute và control hiện tại dùng register, mux, phép so sánh, logic bitwise,
-phép shift, phép cộng/trừ, counter và FSM. RTL không instantiate vendor arithmetic,
-DSP, MAC, divider, square-root, FIFO, PLL, shift-register, floating-point hoặc
-Qsys/Platform Designer IP. Multiplier dùng `logic_mul`; datapath không có toán tử
-nhân hoặc chia số học tại runtime. Các biểu thức về generate geometry và constant
-bit-slice offset là phép toán tại elaboration, không phải multiplier hoặc divider
-phần cứng. Phép tính address/word-count lũy thừa hai tại runtime dùng shift trực
-tiếp; các address factor hằng số nhỏ dùng shift/add.
+Current RTL compute and control uses registers, muxes, comparison operations, bitwise logic,
+shifts, addition/subtraction, counters, and FSMs. RTL does not instantiate vendor arithmetic,
+DSP, MAC, divider, square-root, FIFO, PLL, shift-register, floating-point or
+Qsys/Platform Designer IP. Multiplier uses `logic_mul`; datapath does not have a
+multiply or divide arithmetic operator at runtime. Expressions for generate geometry and constant
+bit-slice offset are operations at elaboration, not multiplier or divider
+hardware. Address/word-count calculations of power-of-two at runtime use direct shift;
+small constant address factors use shift/add.
 
-[Quy tắc RTL](rtl_style.md) cấm synthesizable task, ownership tuần tự bị che khuất
-và loop biến thiên/không giới hạn. Cả 61 request helper trước đây đều là inline
-FSM update. Các phần replication lớn và pipeline stage dùng generate block; LUT
-là combinational module tường minh. SIMD payload stage chạy từ operand đã capture,
-với response contract chín clock. Hai FF tiêu chuẩn assert internal reset ngay lập
-tức và release sau hai rising edge. Xem [chính sách RTL](rtl_style.md).
+[RTL rules](rtl_style.md) prohibit synthesizable tasks, sequential ownership being obscured
+and variable/unbounded loops. All 61 previous request helpers were inline
+FSM update. Large replication parts and pipeline stage use generate block; LUT
+is an explicit combinational module. The SIMD payload stage runs from captured operands,
+with a nine-clock response contract. Two standard FFs assert internal reset immediately
+and release after two rising edges. See [RTL policy](rtl_style.md).
 
-`logic_mul` chọn signedness độc lập cho A và B. A được mở rộng đến output width,
-sau đó mỗi bit của B mask một row đã shift theo hằng số. Signed top bit đóng góp
-negative shifted row thông qua phép bù cộng một. Mỗi compressor thay ba row bằng
-XOR sum và shifted majority carry. Một adder thông thường kết hợp hai row cuối.
-Kết quả theo modulo `2^OUT_W`; caller sở hữu logic rounding, saturation và overflow.
-Register cùng pipeline valid/reset vẫn nằm trong caller, bảo toàn operation latency
-hiện tại. Divider dùng shift/subtract với borrow flag; integer square root xử lý
-radicand theo từng hai bit và dùng trial subtraction. Không có compute branch dành
-riêng cho synthesis chọn thuật toán khác.
+`logic_mul` selects independent signedness for A and B. A is extended to output width,
+then each bit of B masks a row shifted by a constant. The signed top bit contributes
+the negative shifted row through two's complement. Each compressor replaces three rows with
+XOR sum and shifted majority carry. A normal adder combines the last two rows.
+Result according to modulo `2^OUT_W`; caller owns logic rounding, saturation, and overflow.
+Register along with valid/reset pipeline still resides within caller, preserving operation latency
+currently. Divider uses shift/subtract with borrow flag; integer square root processes
+radicand two bits at a time and uses trial subtraction. There is no compute branch dedicated
+specifically for synthesis to choose another algorithm.
 
-Vendor primitive trực tiếp duy nhất là `altsyncram`, được giới hạn trong
-`quartus_word_ram`. Client truy cập primitive này qua `pipelined_word_ram` và
-các bank/parameter adapter. Khi tích hợp ASIC, thay memory technology leaf bằng
-foundry SRAM đã chọn và giữ đúng contract: common-clock 1R/1W, một raw read edge,
-OLD_DATA khi read/write đồng thời trên cùng địa chỉ và không reset storage. Nếu
-macro có collision rule hoặc latency khác, hãy điều chỉnh bên trong boundary này
-và xác minh lại các test collision/reset/cancellation hiện có. Compute interface
-và thuật toán số học không đổi. Physical constraint, library, SRAM view và kiểm tra
-signoff ASIC vẫn là công việc theo technology; Quartus fitting chỉ minh họa
+The only direct vendor primitive is `altsyncram`, limited within
+`quartus_word_ram`. Client accesses this primitive via `pipelined_word_ram` and
+the banks/parameter adapters. When integrating ASIC, replace the memory technology leaf with
+The chosen foundry SRAM follows and maintains the correct contract: common-clock 1R/1W, one raw read edge,
+OLD_DATA when reading/writing simultaneously at the same address and without resetting storage. If
+the macro has a different collision rule or latency, adjust it within this boundary
+and re-verify the existing collision/reset/cancellation tests. Compute interface
+and arithmetic algorithm remain unchanged. Physical constraint, library, SRAM view, and ASIC signoff checks
+remain tasks according to technology; Quartus fitting only illustrates
 synthesis/timing.
 
-Hint `dont_merge` cục bộ trong memory chỉ ảnh hưởng đến placement register trên
-FPGA. ASIC tool có thể bỏ qua hoặc loại bỏ các hint này tại memory binding;
-compute/control không dùng chúng. QSF vô hiệu hóa DSP và automatic shift-register
-recognition. I/O standard, pin location và packed output-register request trong
-QSF là FPGA physical binding, không phải RTL portable hoặc arithmetic IP.
+Local Hint `dont_merge` in memory only affects the placement register on
+FPGA. ASIC tools can ignore or remove these hints during memory binding;
+compute/control do not use them. QSF disables DSP and automatic shift-register
+recognition. I/O standard, pin location, and packed output-register requests in
+QSF are FPGA physical bindings, not RTL portable or arithmetic IP.
 
-Quartus là EDA demonstration backend. Các assignment về device, pin, I/O standard,
-fanout và physical delay nằm trong QSF; chúng không trở thành dependency của
-datapath/control ASIC. Demo SDC vẫn giữ 10 ns với input/output budget ban đầu,
-không có false path hoặc multicycle path. Công việc này không bao gồm routing,
-termination và peripheral bring-up trên board FPGA. Synthesis/STA ASIC thực tế
-dùng standard-cell library, SRAM view và physical constraint đã chọn.
+Quartus is an EDA demonstration backend. Assignments for device, pin, I/O standard,
+fanout, and physical delay are in QSF; they do not become dependencies of
+datapath/control ASIC. Demo SDC still maintains 10 ns with the initial input/output budget,
+with no false path or multicycle path. This work does not include routing,
+termination and peripheral bring-up on the FPGA board. Actual ASIC Synthesis/STA
+using the chosen standard-cell library, SRAM view, and physical constraints.
 
-Trạng thái verification và implementation hiện tại: [optimization status](../verification/optimization_status.md).
+Current verification and implementation status: [optimization status](../verification/optimization_status.md).

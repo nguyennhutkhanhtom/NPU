@@ -1,7 +1,7 @@
 # reset_release.sv — Standard-FF reset release boundary
 
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
+[Document](../../README.md) → [Source guide](../README.md) → [Table of contents](README.md)
 
 **Source:** [reset_release.sv](<../../../Verilog%20Source%20code/reset_release.sv>).
 
@@ -9,9 +9,9 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | Hai FF chuẩn dùng cùng clock: reset assert bất đồng bộ ngay, release core_rst_n sau hai cạnh lên. Không vendor IP, clock mới, timing exception hay nhánh synthesis. Raw reset chỉ tới hai FF; reset nội bộ tới controller, datapath validity và memory adapters. Storage SRAM không reset. |
+| Responsibility | Two standard FFs using the same clock: reset asserts asynchronously immediately, core_rst_n releases after two rising edges. No vendor IP, new clock, timing exception, or synthesis branch. Raw reset only reaches two FFs; internal reset reaches controller, datapath validity, and memory adapters. Storage SRAM is not reset. |
 
-## Sơ đồ kiến trúc
+## Architecture diagram
 
 ![reset_release.sv — overview](../../diagrams/previews/55_reset_release.sv_1.svg)
 
@@ -19,14 +19,14 @@
 
 ## Important state / datapath groups
 
-### [Dòng 1–6: Reset contract and interface](<../../../Verilog%20Source%20code/reset_release.sv#L1>)
+### [Lines 1–6: Reset contract and interface](<../../../Verilog%20Source%20code/reset_release.sv#L1>)
 
-Assert ngay kể cả giữa clock; host phải giữ request đến ready. Reset release không tạo response hay write mới; transaction bắt đầu sau khi core_rst_n lên high.
+Assert immediately even between clocks; host must maintain request until ready. Reset release does not generate response or new write; transaction begins after core_rst_n goes high.
 
-### [Dòng 7–11: First release register](<../../../Verilog%20Source%20code/reset_release.sv#L7>)
+### [Lines 7–11: First release register](<../../../Verilog%20Source%20code/reset_release.sv#L7>)
 
-Một always_ff sở hữu release_first_q. Cạnh lên đầu tiên sau rst_n high chỉ chốt one vào FF đầu.
+An always_ff owns release_first_q. First rising edge after rst_n high only latches one into the first FF.
 
-### [Dòng 12–15: Final internal reset register](<../../../Verilog%20Source%20code/reset_release.sv#L12>)
+### [Lines 12–15: Final internal reset register](<../../../Verilog%20Source%20code/reset_release.sv#L12>)
 
-Always_ff thứ hai sở hữu core_rst_n. Cạnh thứ hai chốt one từ FF đầu. Tất cả recovery/removal vẫn được STA; đây không phải ASIC signoff hay bằng chứng MTBF.
+The second always_ff owns core_rst_n. The second edge latches one from the first FF. All recovery/removal is still handled by STA; this is not ASIC signoff or MTBF proof.

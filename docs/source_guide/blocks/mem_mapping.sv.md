@@ -1,9 +1,9 @@
 # mem_mapping.sv — Wrapper SRAM 32 KiB
 
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
+[Document](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [File list index](README.md)
 
-**Trạng thái:** Đang dùng.
+**Status:** In use.
 
 **Source:** [mem_mapping.sv](<../../../Verilog%20Source%20code/mem_mapping.sv>).
 
@@ -11,9 +11,9 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | File này giữ interface riêng cho parameter memory nhưng dùng chung `sram_256_wrapper` với ADDR_W=10. Module có tên `mem_mapping`; đường compute của instance trong top chỉ đọc; host nạp weight/bias qua cổng32 bit. |
+| Responsibility | This file maintains a separate interface for memory parameters but shares `sram_256_wrapper` with ADDR_W=10. The module is named `mem_mapping`; the compute path of the instance in the top only reads; host loads weight/bias via 32-bit port. |
 
-## Sơ đồ kiến trúc tổng quan
+## Overview Architecture Diagram
 
 ![mem_mapping.sv — overview](../../diagrams/previews/39_mem_mapping.sv_1.svg)
 
@@ -21,29 +21,29 @@
 
 ## Main flow
 
-Compute đọc/ghi word 256; host chọn một slice32. Wrapper không thêm FSM hay đổi latency. Mỗi port được nối một-một vào implementation chung; xem sram_256_wrapper để hiểu timing và write mask.
+Compute reads/writes 256-word; host selects a slice32. Wrapper does not add FSM or change latency. Each port is connected one-to-one to the common implementation; see sram_256_wrapper to understand timing and write mask.
 
-1. Đây là wrapper parameter SRAM 32 KiB: compute address 10 bit chọn 1024 word, host thêm ba bit lane.
-2. Trong top, compute write bị buộc zero nên ternary core chỉ đọc; host nạp weight/bias khi idle.
-3. Tín hiệu nối trực tiếp vào wrapper chung; module không còn mapping FIFO/vector kiểu thesis.
-4. Adapter SRAM macro phải giữ read-valid contract mà ternary core đang chờ.
+1. This is a wrapper parameter for 32 KiB SRAM: compute 10-bit address selects 1024 words, host adds three lane bits.
+2. In top, compute write is forced zero so ternary core only reads; host loads weight/bias when idle.
+3. The signal is connected directly to the common wrapper; the module no longer maps FIFO/vector in the thesis style.
+4. The SRAM macro adapter must maintain the read-valid contract that the ternary core is waiting for.
 
-**Quy ước RTL.** Wrapper nối `host_rvalid` từ SRAM lên top. Backend nhận read/address từ frontend và trả host_rvalid sau hai cạnh lên. Frontend top chốt request/response, nên host ngoài giữ read/address bốn cạnh lên đến host_ready. Memory có tám bank 32 bit, write-enable riêng từng lane. Wrapper chỉ nối cổng, không thêm register hoặc đổi latency. Simulation và synthesis dùng cùng hợp đồng memory. Xem [implementation và sơ đồ SRAM](sram_256_wrapper.sv.md).
+**RTL convention.** The wrapper connects `host_rvalid` from SRAM to the top. The backend receives read/address from the frontend and returns host_rvalid after two rising edges. The frontend top latches request/response, so the external host holds read/address for four rising edges until host_ready. The memory has eight 32-bit banks, with write-enable for each lane separately. The wrapper only connects ports, without adding registers or changing latency. Simulation and synthesis use the same memory contract. See [implementation and SRAM diagram](sram_256_wrapper.sv.md).
 
 ## Important state / datapath groups
 
-### [Dòng 1–21: Hai giao diện](<../../../Verilog%20Source%20code/mem_mapping.sv#L1>)
+### [Lines 1–21: Two interfaces](<../../../Verilog%20Source%20code/mem_mapping.sv#L1>)
 
-**Mục đích.** Địa chỉ compute đếm word 256, host đếm word 32. Host address byte đã được top bỏ hai bit alignment.
+**Purpose.** Compute address counts 256 words, host counts 32 words. Host byte address has had two alignment bits removed by top.
 
-**Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
+**How the code works.** This group defines interfaces, width, type, or intermediate signals. It creates a structure for subsequent processing groups to use, and does not itself represent a separate runtime step.
 
-**Tín hiệu và dữ liệu chính.** `rd_en`: request đọc của compute; `rd_addr`: địa chỉ word cần đọc; `rd_data`: word dữ liệu đọc ra; `rd_valid`: response đọc hợp lệ; `wr_en`: cho phép ghi compute; `wr_addr`: địa chỉ word cần ghi; và 6 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `rd_en`: compute read request; `rd_addr`: word address to read; `rd_data`: word data read out; `rd_valid`: valid read response; `wr_en`: compute write enable; `wr_addr`: word address to write; and 6 other auxiliary signals in the code segment.
 
-### [Dòng 22–40: Instance SRAM](<../../../Verilog%20Source%20code/mem_mapping.sv#L22>)
+### [Lines 22–40: SRAM Instance](<../../../Verilog%20Source%20code/mem_mapping.sv#L22>)
 
-**Mục đích.** Parameter ADDR_W quyết định depth; các named port nối trực tiếp cùng chức năng.
+**Purpose.** The parameter ADDR_W determines the depth; the named ports are connected directly with the same function.
 
-**Cách phần code hoạt động.** Có instance module con; named-port ở nhóm này xác định chính xác đường control/data giữa hai cấp hierarchy.
+**How the code works.** There is a submodule instance; the named ports in this group precisely define the control/data paths between the two hierarchy levels.
 
-**Tín hiệu và dữ liệu chính.** `rd_en`: request đọc của compute; `rd_addr`: địa chỉ word cần đọc; `rd_data`: word dữ liệu đọc ra; `rd_valid`: response đọc hợp lệ; `wr_en`: cho phép ghi compute; `wr_addr`: địa chỉ word cần ghi; và 6 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `rd_en`: compute read request; `rd_addr`: word address to read; `rd_data`: word data read out; `rd_valid`: valid read response; `wr_en`: compute write enable; `wr_addr`: word address to write; and 6 other auxiliary signals in the code segment.

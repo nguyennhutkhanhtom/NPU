@@ -1,37 +1,37 @@
-# Thiết kế
+# Design
 
 > **Category: GUIDE.**
 
-[Tài liệu](../README.md) → **Thiết kế**
+[Documentation](../README.md) → **Design**
 
-## Thiết kế llm_soc hiện tại
+## Current llm_soc Design
 
-| Thứ tự | Trang | Nội dung |
+| Order | Page | Content |
 |---|---|---|
-| 1 | [Toàn graph](full_rtl_language.md) | Model shape, các bước inference, định dạng số và bộ nhớ |
-| 2 | [Host interface](host_interface.md) | Ports, memory map, handshake, reset và trình tự chạy |
-| 3 | [Tối ưu throughput](exact_throughput_optimization.md) | Cache, streaming, resource ownership và traffic |
-| 4 | [ASIC portability](asic_portability.md) | Logic portable và giới hạn technology binding |
-| 5 | [SRAM binding](asic_memory_binding.md) | Hợp đồng cần giữ khi thay SRAM leaf |
-| 6 | [Quy tắc viết RTL](rtl_style.md) | Cấu trúc phần cứng rõ ràng, register ownership và coding policy |
+| 1 | [Full graph](full_rtl_language.md) | Model shape, inference steps, number format, and memory |
+| 2 | [Host interface](host_interface.md) | Ports, memory map, handshake, reset, and execution sequence |
+| 3 | [Throughput optimization](exact_throughput_optimization.md) | Cache, streaming, resource ownership, and traffic |
+| 4 | [ASIC portability](asic_portability.md) | Logic portability and technology binding limits |
+| 5 | [SRAM binding](asic_memory_binding.md) | Contract that must be maintained when replacing SRAM leaf |
+| 6 | [RTL writing guidelines](rtl_style.md) | Clear hardware structure, register ownership, and coding policy |
 
-Sau khi hiểu kiến trúc, mở [danh mục module](../source_guide/blocks/README.md)
-hoặc [hướng dẫn chạy NanoFable](../demos/language.md).
+After understanding the architecture, open the [module catalog](../source_guide/blocks/README.md)
+or [NanoFable run guide](../demos/language.md).
 
-## Thiết kế legacy
+## Legacy design
 
-| Trang | Phạm vi |
+| Page | Scope |
 |---|---|
-| [Kiến trúc matmulfree](<legacy/architecture.md>) | Core instruction-driven 32 PE; parameter 32 KiB và workspace 8 KiB |
-| [ISA và interface matmulfree](<legacy/interfaces.md>) | Opcode, descriptor, dynamic scale và host map của core cũ |
-| [Hierarchy đã lưu](<../source_guide/legacy/README.md>) | Luồng NORM, TMATMUL, vector operations và sơ đồ legacy |
+| [Matmulfree architecture](<legacy/architecture.md>) | Core instruction-driven 32 PE; 32 KiB parameter and 8 KiB workspace |
+| [Matmulfree ISA and interface](<legacy/interfaces.md>) | Opcode, descriptor, dynamic scale, and host map of old core |
+| [Saved Hierarchy](<../source_guide/legacy/README.md>) | NORM flow, TMATMUL, vector operations, and legacy diagram |
 
-Các interface và dung lượng của core legacy thuộc top `matmulfree`, còn
-`llm_soc` dùng graph cố định và host map ở trang riêng phía trên.
+The interfaces and capacity of the legacy core belong to top `matmulfree`, while
+`llm_soc` uses a fixed graph and host map on a separate page above.
 
-## Nghiên cứu và quyết định
+## Research and Decision
 
-[Architecture research](<../history/architecture_research_20261005.md>) ghi baseline và các mốc
-được nêu trong tài liệu. [Review version 3](../reviews/rtl_change_review_v3.md)
-ghi implementation tại snapshot tương ứng; [trạng thái kiểm chứng](../verification/optimization_status.md)
-cho biết evidence nào vẫn còn áp dụng cho workspace.
+[Architecture research](<../history/architecture_research_20261005.md>) records the baseline and milestones
+as stated in the document. [Review version 3](../reviews/rtl_change_review_v3.md)
+records the implementation at the corresponding snapshot; [verification status](../verification/optimization_status.md)
+indicates which evidence still applies to the workspace.

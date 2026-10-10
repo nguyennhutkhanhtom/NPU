@@ -1,9 +1,9 @@
-# matmulfree.sv — Top-level: điều phối toàn NPU
+# matmulfree.sv — Top-level: coordination of the entire NPU
 
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
+[Documentation](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [File index](README.md)
 
-**Trạng thái:** Đang dùng — core chính.
+**Status:** In use — main core.
 
 **Source:** [matmulfree.sv](<../../../Verilog%20Source%20code/matmulfree.sv>).
 
@@ -11,11 +11,11 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | Đây là nơi nối host, instruction memory, descriptor, SRAM và ba execution unit. Core không đưa nhiều instruction vào pipeline. Một FSM chọn unit, đợi kết quả rồi mới tăng PC. Vì vậy khi đọc file này, cần theo dõi đồng thời `sched` (bước điều khiển) và `active_unit` (unit được nối với workspace). |
+| Responsibility | This is where the host, instruction memory, descriptor, SRAM, and three execution units are connected. The core does not push many instructions into the pipeline. A FSM selects a unit, waits for the result, and only then increments the PC. Therefore, when reading this file, it is necessary to simultaneously follow `sched` (control steps) and `active_unit` (unit connected to the workspace). |
 
-Port host là bus đơn giản 32 bit, không phải AXI/APB. Địa chỉ host tính theo byte; SRAM compute tính theo word 256 bit. Host write dữ liệu chỉ được cho phép khi core không chạy.
+The host port is a simple 32-bit bus, not AXI/APB. Host addresses are in bytes; compute SRAM is in 256-bit words. Host write operations are only allowed when the core is not running.
 
-## Sơ đồ kiến trúc tổng quan
+## General architecture diagram
 
 ![matmulfree.sv — overview](../../diagrams/previews/36_matmulfree.sv_1.svg)
 
@@ -23,137 +23,137 @@ Port host là bus đơn giản 32 bit, không phải AXI/APB. Địa chỉ host 
 
 ## Main flow
 
-`start → S_FETCH → S_START → S_WAIT → S_ADVANCE`. TMATMUL dùng scale động đi qua `S_COMPOSE_START/WAIT` trước `S_TM_START`. HALT hoặc lỗi dẫn đến `S_HALT`, đưa ready lên 1. Overflow được giữ đến lần start kế tiếp; error và overflow là hai trạng thái khác nhau.
+`start → S_FETCH → S_START → S_WAIT → S_ADVANCE`. TMATMUL uses a dynamic scale to go through `S_COMPOSE_START/WAIT` before `S_TM_START`. HALT or errors lead to `S_HALT`, setting ready to 1. Overflow is retained until the next start; error and overflow are two different states.
 
-Cache q giữ D, base và length để scale gắn đúng tensor. Bất kỳ ghi đè vùng q nào cũng làm metadata cũ mất hiệu lực. Static TM kiểm tra overlap với mọi entry q hợp lệ, nên descriptor alias không thể bỏ qua scale động. Dynamic TM yêu cầu đúng ID và exact base/length.
+Cache q holds D, base, and length to ensure the scale is attached to the correct tensor. Any overwrite of the q region invalidates the old metadata. Static TM checks for overlap with all valid q entries, so descriptor alias cannot ignore dynamic scale. Dynamic TM requires the correct ID and exact base/length.
 
-1. Khi idle, host nạp parameter, workspace, descriptor và instruction. `host_ready` chỉ xác nhận địa chỉ hợp lệ được chấp nhận; nó không kiểm tra nội dung model.
-2. Start đưa PC về 0, xóa cờ của lần chạy trước và chuyển scheduler sang FETCH. Scheduler giữ fetch request và chờ `instr_fetch_valid`; instruction được chốt vào `instr_q`, nên opcode và các descriptor ID ổn định suốt lệnh nhiều chu kỳ.
-3. S_START chọn execution unit. NORM và rowwise đi thẳng tới WAIT. TMATMUL có thể phải chạy `scale_compose` trước nếu q mang scale động từ NORM.
-4. `active_unit` điều khiển mux workspace. Chỉ rowwise, norm hoặc ternary được nối với SRAM ở một thời điểm.
-5. Khi unit báo done, top gom overflow/error. Lệnh hợp lệ làm PC tăng; lỗi hoặc HALT đưa core về ready.
-6. Cache `q_d/q_base/q_length/q_valid` buộc D đi cùng đúng tensor. Ghi đè q hoặc sửa descriptor làm cache mất hiệu lực. Chỉ `q_valid` có reset; 336 bit tuple được ghi trọn khi NORM hoàn thành thành công qua tám process generate với index hằng và được đọc sau valid guard.
+1. When idle, the host loads parameters, workspace, descriptor, and instructions. `host_ready` only verifies that allowed addresses are accepted; it does not check the model content.
+2. Start by setting the PC to 0, clear the flag from the previous run, and switch the scheduler to FETCH. The scheduler holds the fetch request and waits for `instr_fetch_valid`; the instruction is locked into `instr_q`, so the opcode and descriptor IDs remain stable throughout the multi-cycle instruction.
+3. S_START selects the execution unit. NORM and rowwise go straight to WAIT. TMATMUL may need to run `scale_compose` first if q carries a dynamic scale from NORM.
+4. `active_unit` controls the workspace mux. Only rowwise, norm, or ternary is connected to SRAM at one time.
+5. When the unit signals done, the top collects overflow/error. Valid instructions increment the PC; errors or HALT bring the core back to ready.
+6. Cache `q_d/q_base/q_length/q_valid` forces D to go along with the correct tensor. Overriding q or modifying the descriptor makes the cache invalid. Only `q_valid` has reset; the 336-bit tuple is fully written when NORM successfully completes through eight generate processes with a constant index and is read after the valid guard.
 
-**Quy ước RTL.** Host read chốt request/address/region rồi chốt response/data/tag: control/descriptor cần hai cạnh lên, SRAM/imem cần bốn cạnh lên từ lần sample đầu. Data chỉ hợp lệ khi ready đúng address. Held request giữ snapshot response đầu; poll mới cùng địa chỉ cần idle qua một cạnh lên. Address change/drop enable/write hủy read cũ. Write trực tiếp và memory access bị chặn khi running; control/status read được phép. Payload request/response không reset, reset valid mask output về zero. Backend adapter vẫn read-valid hai cạnh lên.
+**RTL conventions.** Host reads request/address/region and then latches response/data/tag: control/descriptor require two rising edges, SRAM/imem require four rising edges from the first sample. Data is only valid when ready on the correct address. Held request keeps a snapshot of the initial response; a new poll at the same address requires idle through one rising edge. Address change/drop enable/write cancels the old read. Write is direct and memory access is blocked when running; control/status read is allowed. Payload request/response do not reset, reset valid mask output to zero. Backend adapter still reads valid on two rising edges.
 
 ## Important state / datapath groups
 
-### [Dòng 1–25: Giao diện và opcode](<../../../Verilog%20Source%20code/matmulfree.sv#L1>)
+### [Lines 1–25: Interface and opcode](<../../../Verilog%20Source%20code/matmulfree.sv#L1>)
 
-**Mục đích.** Khai báo host port, trạng thái thực thi và mã instruction. Các tên DIV/EXP/LDV/STV không có nghĩa scheduler hỗ trợ chúng.
+**Purpose.** Declare host port, execution status, and instruction code. The names DIV/EXP/LDV/STV have no meaning; the scheduler supports them.
 
-**Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
+**How this part of the code works.** This group defines interfaces, width, type, or intermediate signals. It creates a structure for subsequent processing groups to use, but does not represent a separate runtime step itself.
 
-**Tín hiệu và dữ liệu chính.** `host_en`: host đang yêu cầu truy cập; `host_we`: host chọn ghi thay vì đọc; `host_addr`: địa chỉ phía host; `host_wdata`: data 32 host muốn ghi; `host_rdata`: data 32 trả về host; `host_ready`: giao dịch host được chấp nhận; và 6 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `host_en`: host is requesting access; `host_we`: host chooses to write instead of read; `host_addr`: host-side address; `host_wdata`: 32-bit data host wants to write; `host_rdata`: 32-bit data returned to host; `host_ready`: host transaction is accepted; and 6 other auxiliary signals in the code segment.
 
-### [Dòng 26–103: Giải mã và frontend đọc host](<../../../Verilog%20Source%20code/matmulfree.sv#L26>)
+### [Line 26–103: Decode and frontend read host](<../../../Verilog%20Source%20code/matmulfree.sv#L26>)
 
-**Mục đích.** Giải mã vùng/alignment, chốt read request và response có tag để ngắt đường tổ hợp host address → data. Control đọc khi running; các vùng khác chỉ khi idle.
+**Purpose.** Decode region/alignment, latch read request and response with tag to break down host address → data combinational path. Control reads when running; other regions only when idle.
 
-**Cách phần code hoạt động.** Request hợp lệ ghi address và one-hot region tại cạnh đầu. Backend dùng address đã chốt; control/descriptor sẵn cho response ở cạnh thứ hai, SRAM/imem qua adapter đọc rồi chốt response ở cạnh thứ tư. Region hợp lệ loại trừ nhau. Read address hiện tại phải khớp response tag mới có ready. Response đầu được giữ đến idle/write/address change; không liên tục sample lại status khi enable giữ nguyên. Write acknowledge và commit vẫn trực tiếp. Reset chỉ xóa pending/region/valid/control, còn 96 bit address/data payload không async reset và bị valid mask.
+**How the code works.** Valid request writes address and one-hot region at the first edge. Backend uses latched address; control/descriptor ready for response at the second edge, SRAM/imem read via adapter then latch response at the fourth edge. Valid regions are mutually exclusive. Current read address must match response tag to be ready. First response is held until idle/write/address change; do not continuously sample status when enable is held. Write acknowledge and commit are still direct. Reset only clears pending/region/valid/control, while 96-bit address/data payload does not async reset and is masked by valid.
 
-**Tín hiệu và dữ liệu chính.** `host_read_address_q`: address đã chốt; `host_read_region_q`: chọn một trong năm vùng; `host_response_address_q`: tag trả về; `host_response_data_q`: data trả về; `host_response_valid_q`: payload đã được ghi; `host_read_matches`: request hiện tại còn khớp tag.
+**Main signals and data.** `host_read_address_q`: address locked; `host_read_region_q`: select one of five regions; `host_response_address_q`: returned tag; `host_response_data_q`: returned data; `host_response_valid_q`: payload has been written; `host_read_matches`: current request still matches tag.
 
-#### Sơ đồ khối phần cứng của nhóm
+#### Hardware block diagram of the group
 
 ![matmulfree.sv — detail 1](../../diagrams/previews/37_matmulfree.sv_2.svg)
 
 [Editable draw.io — matmulfree.sv — detail 1](../../diagrams/architecture.drawio) · Page `37_matmulfree.sv_2`.
 
-Control/descriptor cần hai cạnh lên; SRAM/imem cần bốn cạnh lên từ sample đầu. Mux data dùng region đã chốt, output data đi từ register response. Comparator address/tag giữ ready gắn đúng giao dịch; host phải lấy data cùng ready.
+Control/descriptor needs two rising edges; SRAM/imem needs four rising edges from the first sample. Data mux uses the fixed region, output data goes from the response register. Comparator address/tag keeps ready attached to the correct transaction; host must take data with ready.
 
-### [Dòng 104–126: Program counter và instruction memory](<../../../Verilog%20Source%20code/matmulfree.sv#L104>)
+### [Lines 104–126: Program counter and instruction memory](<../../../Verilog%20Source%20code/matmulfree.sv#L104>)
 
-**Mục đích.** PC 9 bit chọn một trong 512 instruction; host chỉ ghi 13 bit thấp của word vào program.
+**Purpose.** 9-bit PC selects one of 512 instructions; host only writes the lower 13 bits of the word into the program.
 
-**Cách phần code hoạt động.** Có instance module con; named-port ở nhóm này xác định chính xác đường control/data giữa hai cấp hierarchy.
+**How the code works.** There is a submodule instance; named-port in this group precisely determines the control/data paths between the two hierarchy levels.
 
-**Tín hiệu và dữ liệu chính.** `pc`: địa chỉ instruction hiện tại; `pc_clear`: đưa PC về 0; `pc_advance`: cho PC tiến1; `instr_fetch`: instruction đọc tại PC; `instr_q`: instruction13 bit đang thực thi; `clear`: đưa PC về 0; và 11 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `pc`: current instruction address; `pc_clear`: reset PC to 0; `pc_advance`: increment PC by 1; `instr_fetch`: instruction read at PC; `instr_q`: 13-bit instruction currently executing; `clear`: reset PC to 0; and 11 other auxiliary signals in the code segment.
 
-### [Dòng 127–156: Descriptor](<../../../Verilog%20Source%20code/matmulfree.sv#L127>)
+### [Lines 127–156: Descriptor](<../../../Verilog%20Source%20code/matmulfree.sv#L127>)
 
-**Mục đích.** Ba ID trong instruction chọn source0, source1 và destination. TMATMUL dùng trường source1 để chọn matrix descriptor.
+**Purpose.** Three IDs in the instruction select source0, source1, and destination. TMATMUL uses the source1 field to select the matrix descriptor.
 
-**Cách phần code hoạt động.** Có continuous assignment: biểu thức luôn lái tín hiệu đích, không cần start hoặc cạnh clock. Có instance module con; named-port ở nhóm này xác định chính xác đường control/data giữa hai cấp hierarchy.
+**How the code works.** There is a continuous assignment: the expression always drives the destination signal, no start or clock edge needed. There is a sub-module instance; named-port in this group precisely determines the control/data paths between two hierarchy levels.
 
-**Tín hiệu và dữ liệu chính.** `d_src0`: descriptor source0 đang được instruction chọn; `d_src1`: descriptor source1 đang được instruction chọn; `d_dst`: descriptor destination đang được chọn; `d_mat`: matrix descriptor gốc; `effective_mat`: matrix descriptor với hệ số postscale hiệu dụng; `desc_host_matrix`: host đang chọn matrix descriptor; và 20 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `d_src0`: descriptor source0 is being selected by the instruction; `d_src1`: descriptor source1 is being selected by the instruction; `d_dst`: descriptor destination is selected; `d_mat`: original matrix descriptor; `effective_mat`: matrix descriptor with effective postscale factor; `desc_host_matrix`: host is selecting matrix descriptor; and 20 other auxiliary signals in the code segment.
 
-### [Dòng 157–203: Hai SRAM](<../../../Verilog%20Source%20code/matmulfree.sv#L157>)
+### [Lines 157–203: Two SRAMs](<../../../Verilog%20Source%20code/matmulfree.sv#L157>)
 
-**Mục đích.** Workspace đọc/ghi bởi unit đang hoạt động. Parameter SRAM chỉ đọc ở phía compute; host nạp weight và bias.
+**Purpose.** Workspace read/written by the active unit. Parameter SRAM is read-only on the compute side; host loads weight and bias.
 
-**Tín hiệu và dữ liệu chính.** `ws_rd_en`: request đọc workspace; `ws_wr_en`: cho phép ghi workspace; `ws_rd_valid`: workspace trả dữ liệu hợp lệ; `ws_rd_addr`: địa chỉ đọc workspace; `ws_wr_addr`: địa chỉ ghi workspace; `ws_rd_data`: word 256 trả từ workspace; và 16 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `ws_rd_en`: request to read workspace; `ws_wr_en`: allow writing to workspace; `ws_rd_valid`: workspace returns valid data; `ws_rd_addr`: workspace read address; `ws_wr_addr`: workspace write address; `ws_rd_data`: word 256 returned from workspace; and 16 other auxiliary signals in the code segment.
 
-### [Dòng 204–230: Rowwise unit](<../../../Verilog%20Source%20code/matmulfree.sv#L204>)
+### [Lines 204–230: Rowwise unit](<../../../Verilog%20Source%20code/matmulfree.sv#L204>)
 
-**Mục đích.** Đưa descriptor và opcode vào dispatcher; dữ liệu workspace dùng chung được nhận qua valid.
+**Purpose.** Provide descriptor and opcode to the dispatcher; shared workspace data is received through valid.
 
-**Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `op`: operand hoặc opcode, theo giao diện module; `instr_q`: instruction13 bit đang thực thi; `a_desc`: metadata nguồn A; `d_src0`: descriptor source0 đang được instruction chọn; `b_desc`: metadata nguồn B; và 14 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `start`: request to start transaction; `op`: operand or opcode, according to module interface; `instr_q`: 13-bit instruction currently executing; `a_desc`: source A metadata; `d_src0`: source0 descriptor selected by the instruction; `b_desc`: source B metadata; and 14 other auxiliary signals in the code snippet.
 
-### [Dòng 231–266: NORM + QUANT](<../../../Verilog%20Source%20code/matmulfree.sv#L231>)
+### [Lines 231–266: NORM + QUANT](<../../../Verilog%20Source%20code/matmulfree.sv#L231>)
 
-**Mục đích.** Nối scratch, epsilon, delta và metadata D. M/r đầu ra có thể đọc qua control window để debug.
+**Purpose.** Connect scratch, epsilon, delta, and D metadata. Output M/r can be read through the control window for debugging.
 
-**Tín hiệu và dữ liệu chính.** `quant_d`: D=max(absmax,delta); `norm_m`: multiplier U24 của RMSNorm; `quant_m`: multiplier U24 của QUANT; `norm_r`: shift của RMSNorm; `quant_r`: shift của QUANT; `start`: yêu cầu bắt đầu giao dịch; và 18 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `quant_d`: D=max(absmax,delta); `norm_m`: multiplier U24 of RMSNorm; `quant_m`: multiplier U24 of QUANT; `norm_r`: shift of RMSNorm; `quant_r`: shift of QUANT; `start`: request to start transaction; and 18 other auxiliary signals in the code segment.
 
-### [Dòng 267–300: Ternary unit](<../../../Verilog%20Source%20code/matmulfree.sv#L267>)
+### [Lines 267–300: Ternary unit](<../../../Verilog%20Source%20code/matmulfree.sv#L267>)
 
-**Mục đích.** Đưa descriptor đã ghép scale vào TMATMUL. Cổng đọc parameter được nối riêng.
+**Purpose.** Insert the descriptor with scale into TMATMUL. The parameter read port is connected separately.
 
-**Tín hiệu và dữ liệu chính.** `start`: yêu cầu bắt đầu giao dịch; `q_desc`: metadata nguồn activation S8; `d_src0`: descriptor source0 đang được instruction chọn; `out_desc`: metadata output TMATMUL; `d_dst`: descriptor destination đang được chọn; `mat_desc`: metadata ma trận và postscale; và 16 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `start`: request to start transaction; `q_desc`: activation S8 source metadata; `d_src0`: source0 descriptor currently selected by instruction; `out_desc`: TMATMUL output metadata; `d_dst`: destination descriptor currently selected; `mat_desc`: matrix and postscale metadata; and 16 other auxiliary signals in the code segment.
 
-### [Dòng 301–343: Scale động](<../../../Verilog%20Source%20code/matmulfree.sv#L301>)
+### [Lines 301–343: Dynamic Scale](<../../../Verilog%20Source%20code/matmulfree.sv#L301>)
 
-**Mục đích.** Mỗi workspace descriptor có cache D/base/length. `selected_quant_d` bằng 0 khi entry chưa valid; `input_has_runtime_scale` quét overlap input với mọi extent q valid để chặn static TM qua descriptor alias. scale_compose nhận hệ số weight/output và D hợp lệ của nguồn q.
+**Purpose.** Each workspace descriptor has D/base/length cache. `selected_quant_d` is 0 when the entry is not valid; `input_has_runtime_scale` scans input overlap with all valid q extents to block static TM via descriptor alias. scale_compose receives the weight/output factors and valid D of the q source.
 
-**Tín hiệu và dữ liệu chính.** `q_d`: D gắn với từng descriptor q; `q_base`: base SRAM mà cache q mô tả; `q_length`: length mà cache q mô tả; `q_valid`: bitmask hiệu lực scale q; `composed_m`: M hiệu dụng từ scale_compose; `composed_r`: r hiệu dụng từ scale_compose; và 15 tín hiệu phụ khác trong đoạn code.
+**Signals and main data.** `q_d`: D associated with each descriptor q; `q_base`: base SRAM that cache q describes; `q_length`: length that cache q describes; `q_valid`: scale q valid bitmask; `composed_m`: effective M from scale_compose; `composed_r`: effective r from scale_compose; and 15 other auxiliary signals in the code segment.
 
-### [Dòng 344–379: Hiệu lực metadata](<../../../Verilog%20Source%20code/matmulfree.sv#L344>)
+### [Lines 344–379: Metadata validity](<../../../Verilog%20Source%20code/matmulfree.sv#L344>)
 
-**Mục đích.** Ghi tensor làm vô hiệu scale cũ. Chỉ `q_valid` dùng reset; 336 bit D/base/length payload dùng tám clock-only process generate với index hằng, ghi đủ tuple khi NORM hoàn thành thành công cùng cạnh đặt valid. Các phép so sánh extent chỉ chạy khi q_valid=1, nên payload chưa khởi tạo không ảnh hưởng control.
+**Purpose.** Writing tensor invalidates the old scale. Only `q_valid` uses reset; 336-bit D/base/length payload uses eight clock-only generate processes with constant index, writing full tuples when NORM completes successfully along with the valid edge. Extent comparisons only run when q_valid=1, so uninitialized payload does not affect control.
 
-**Cách phần code hoạt động.** Có logic tuần tự: register/FSM chỉ cập nhật tại cạnh clock; nonblocking assignment đọc giá trị cũ ở vế phải rồi chốt đồng thời.
+**How the code section works.** There is sequential logic: registers/FSM only update on the clock edge; nonblocking assignments read the old value on the right-hand side and then latch simultaneously.
 
-**Tín hiệu và dữ liệu chính.** `q_valid`: bitmask hiệu lực scale q; `q_d`: D gắn với từng descriptor q; `q_base`: base SRAM mà cache q mô tả; `q_length`: length mà cache q mô tả; `ws_wr_en`: cho phép ghi workspace; `ws_wr_addr`: địa chỉ ghi workspace; và 12 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `q_valid`: effective bitmask for scale q; `q_d`: D attached to each descriptor q; `q_base`: base SRAM that cache q describes; `q_length`: length that cache q describes; `ws_wr_en`: workspace write enable; `ws_wr_addr`: workspace write address; and 12 other auxiliary signals in the code section.
 
-### [Dòng 380–397: Phát start và điều khiển PC](<../../../Verilog%20Source%20code/matmulfree.sv#L380>)
+### [Lines 380–397: Start signal and PC control](<../../../Verilog%20Source%20code/matmulfree.sv#L380>)
 
-**Mục đích.** Start của unit là xung theo state. PC chỉ advance sau khi instruction trước đã kết thúc.
+**Purpose.** The unit start is a pulse according to the state. The PC only advances after the previous instruction has completed.
 
-**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
+**How the code section works.** There is combinational logic: output/intermediate values are calculated from the current input; default values at the beginning of the block help avoid inferring latches.
 
-**Tín hiệu và dữ liệu chính.** `pc_clear`: đưa PC về 0; `running`: core đang thực thi chương trình; `pc_advance`: cho PC tiến1; `sched`: trạng thái scheduler; `instr_q`: instruction13 bit đang thực thi; `pc`: địa chỉ instruction hiện tại.
+**Main signals and data.** `pc_clear`: reset PC to 0; `running`: core is executing the program; `pc_advance`: increment PC by 1; `sched`: scheduler state; `instr_q`: currently executing 13-bit instruction; `pc`: current instruction address.
 
-### [Dòng 398–430: Mux workspace](<../../../Verilog%20Source%20code/matmulfree.sv#L398>)
+### [Lines 398–430: Mux workspace](<../../../Verilog%20Source%20code/matmulfree.sv#L398>)
 
-**Mục đích.** Chỉ unit được active_unit chọn có quyền phát địa chỉ, data và enable ra workspace.
+**Purpose.** Only the unit selected by active_unit has the right to issue address, data, and enable signals to the workspace.
 
-**Tín hiệu và dữ liệu chính.** `ws_rd_en`: request đọc workspace; `ws_rd_addr`: địa chỉ đọc workspace; `ws_wr_en`: cho phép ghi workspace; `ws_wr_addr`: địa chỉ ghi workspace; `ws_wr_data`: word 256 ghi workspace; `active_unit`: unit được cấp cổng workspace.
+**Main signals and data.** `ws_rd_en`: request to read workspace; `ws_rd_addr`: workspace read address; `ws_wr_en`: allow workspace write; `ws_wr_addr`: workspace write address; `ws_wr_data`: 256-word workspace write; `active_unit`: unit granted workspace port.
 
-### [Dòng 431–542: Scheduler](<../../../Verilog%20Source%20code/matmulfree.sv#L431>)
+### [Lines 431–542: Scheduler](<../../../Verilog%20Source%20code/matmulfree.sv#L431>)
 
-**Mục đích.** Bắt đầu lượt chạy, chốt instruction, kiểm tra scale q, đợi done, gom lỗi và dừng ở HALT. Dynamic TM cần valid rồi mới đọc tuple để so khớp ID/base/length; static TM bị reject khi input overlap bất kỳ q extent valid. Cả hai guard đều trước S_TM_START, nên không ghi output khi reject. Các phép gán trong một clock dùng giá trị cũ ở vế phải.
+**Purpose.** Start a run, latch instructions, check q scale, wait for done, collect errors, and stop at HALT. Dynamic TM needs to be valid before reading a tuple to match ID/base/length; static TM is rejected when any input overlaps a valid q extent. Both guards are before S_TM_START, so do not write output when rejected. Assignments within one clock use the old value on the right-hand side.
 
-**Tín hiệu và dữ liệu chính.** `sched`: trạng thái scheduler; `instr_q`: instruction13 bit đang thực thi; `active_unit`: unit được cấp cổng workspace; `running`: core đang thực thi chương trình; `ready`: core đã dừng, sẵn sàng cho host; `error`: cờ lỗi của lượt chạy; và 16 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `sched`: scheduler status; `instr_q`: currently executing 13-bit instruction; `active_unit`: unit allocated workspace port; `running`: core executing program; `ready`: core stopped, ready for host; `error`: run error flag; and 16 other auxiliary signals in the code segment.
 
-#### Sơ đồ khối phần cứng của nhóm
+#### Hardware block diagram of the group
 
 ![matmulfree.sv — detail 2](../../diagrams/previews/38_matmulfree.sv_3.svg)
 
 [Editable draw.io — matmulfree.sv — detail 2](../../diagrams/architecture.drawio) · Page `38_matmulfree.sv_3`.
 
-### [Dòng 543–568: Mux response và status](<../../../Verilog%20Source%20code/matmulfree.sv#L543>)
+### [Lines 543–568: Mux response and status](<../../../Verilog%20Source%20code/matmulfree.sv#L543>)
 
-**Mục đích.** Tạo control data theo read address đã chốt và mux song song năm response bằng one-hot region. Data tổ hợp này chỉ đi vào response register, không lái trực tiếp host_rdata.
+**Purpose.** Generate control data according to the finalized read address and parallel mux five responses using one-hot region. This combinational data only goes into the response register, does not drive host_rdata directly.
 
-**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch. Có continuous assignment: biểu thức luôn lái tín hiệu đích, không cần start hoặc cạnh clock.
+**How the code section works.** There is combinational logic: output/intermediate is calculated from the current input; default values at the start of the block help avoid inferring latches. There is continuous assignment: the expression always drives the target signal, no start or clock edge needed.
 
-**Tín hiệu và dữ liệu chính.** `host_read_address_q`: address chọn control word; `host_control_data`: status/config tổ hợp; `host_read_region_q`: region one-hot đã chốt; `host_response_data`: data để chốt response; `pc_debug/instr_debug`: debug scheduler.
+**Key signals and data.** `host_read_address_q`: address selecting control word; `host_control_data`: status/config combinational; `host_read_region_q`: finalized one-hot region; `host_response_data`: data to latch the response; `pc_debug/instr_debug`: debug scheduler.
 
-### [Dòng 569–572: Host ghi cấu hình](<../../../Verilog%20Source%20code/matmulfree.sv#L569>)
+### [Lines 569–572: Host writes configuration](<../../../Verilog%20Source%20code/matmulfree.sv#L569>)
 
-**Mục đích.** Control register giữ base scratch, epsilon 64 bit và delta. Chỉ cập nhật khi không running.
+**Purpose.** Control register holds base scratch, 64-bit epsilon, and delta. Only updates when not running.
 
-**Cách phần code hoạt động.** Có logic tuần tự: register/FSM chỉ cập nhật tại cạnh clock; nonblocking assignment đọc giá trị cũ ở vế phải rồi chốt đồng thời. Có continuous assignment: biểu thức luôn lái tín hiệu đích, không cần start hoặc cạnh clock.
+**How the code works.** There is sequential logic: register/FSM only updates on the clock edge; nonblocking assignment reads the old value on the right-hand side then latches simultaneously. There is continuous assignment: the expression continuously drives the destination signal, no start or clock edge needed.
 
-**Tín hiệu và dữ liệu chính.** `host_ctrl`: địa chỉ host thuộc control window; `host_we`: host chọn ghi thay vì đọc; `host_addr`: địa chỉ phía host; `host_wdata`: data 32 host muốn ghi; `scratch_z_base`: word đầu scratch z; `epsilon_raw32`: epsilon theo đơn vị raw-square có 32 fractional bit; và 2 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `host_ctrl`: host address belongs to control window; `host_we`: host selects write instead of read; `host_addr`: host-side address; `host_wdata`: 32-bit data the host wants to write; `scratch_z_base`: first word of scratch z; `epsilon_raw32`: epsilon in raw-square units with 32 fractional bits; and 2 other auxiliary signals in the code segment.

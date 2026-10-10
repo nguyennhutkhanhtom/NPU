@@ -1,8 +1,22 @@
 # Current verification and implementation status
 
-> **Category: CURRENT.** Single owner of live checkpoint results. Updated 2026-10-09 (Asia/Saigon); manifests/logs remain primary evidence.
+> **Category: CURRENT.** Single owner of live checkpoint results. Updated 2026-10-10 (Asia/Saigon); manifests/logs remain primary evidence.
 
 ## At a glance
+
+The 2026-10-10 lowRISC readiness refactor is In progress. Current RTL has
+optional generate-region removal, head-engine constant/layout
+cleanup and package-constant declarations; static refactor checks pass. Scoped
+Xcelium job 64471 and all nine full-graph groups in job 64472 pass with zero
+simulator diagnostics. All 60 current/frozen input hashes and 5 scoped/37 full
+report hashes match [the verified receipt](../../tests/full_rtl/evidence/lowrisc_20261010/verification_review4.json).
+Mapped Genus job 64473 is In progress on black against the frozen
+`bundle_lowrisc4_20261010` inputs. Ports retain requested `input logic`;
+new nettype guards were removed. Preceding jobs 64467/64468 belong to superseded hashes.
+Prior Phase 1C results below belong to
+their recorded pre-refactor hashes and do not establish PASS or PPA for these
+changed files. [Refactor and exceptions](../reviews/rtl_lowrisc_readiness_20261010.md),
+[continuation](../../tests/full_rtl/build/scratchpad/rtl_guidelines_20261010/handoff.md).
 
 Phase 1C is CURRENT and In progress. Scoped Xcelium job 64357 on black with mandatory X11 passes math/operators/host cancellation, zero simulator diagnostics, with all 60 runtime inputs and 13 report hashes verified. Operators pass 113,131 checks including each attention probability/product/running sum/accumulator, final outputs, FIFO backpressure, score bubbles and 20 reset/cancellation boundaries. Attention clocks at contexts 4/128 decrease 2,762/15,162 → 2,482/3,474; measured value initiation is one clock with 15 timesteps in flight (17 under forced stalls). Matching Genus flow and report integrity are verified; overall Phase 1C trade-off acceptance remains pending. No physical timing closure is claimed. [Scoped evidence](../../tests/full_rtl/evidence/phase1c_20261009/scoped3/extracted/phase1c_scoped3_20261009/results.json), [measured profiles](../../tests/full_rtl/evidence/phase1c_20261009/metrics.json).
 
@@ -26,7 +40,7 @@ and mandatory X11. Downloaded report hashes, frozen bundle inputs and current
 RTL/tests/runtime scripts match. Zero simulator diagnostics; allocation and SSH
 session completed. Synthesis, legacy and application are separate unverified gates;
 mapped Genus synthesis still needs the lab Liberty library. See
-[server flow](../../tools/server/README.md#trạng-thái-migration).
+[server flow](../../tools/server/README.md#migration-status).
 Prior FPGA and simulator evidence below belongs to its recorded source/configuration.
 
 Phase 1A RTL now streams consecutive linear rows with two parameter-word credits, four reserved row-result slots, and tagged validity through the existing scalar/pack registers. Architectural completion drains results, scalar validity and accepted writes. [Matching scoped evidence](../../tests/full_rtl/evidence/phase1a_20261008/results.json) records exact engine rows, backpressure, fault/drain/cancel/reset, and 1,920 SRAM/scaling/RNE/saturation/packing checks. ModelSim compilation has zero errors and nine checking warnings; the scoped SoC fixture retains the same 32 force-select warnings as the preserved baseline.

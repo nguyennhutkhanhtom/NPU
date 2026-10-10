@@ -1,5 +1,7 @@
 # llm_math.sv
 
+**Structural generation.** Named SystemVerilog generate constructs are retained without the optional `generate`/`endgenerate` regions, following lowRISC. Loop bounds, conditional branches, instance names and lane ownership are unchanged.
+
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
 [Documentation](../../README.md) → [Source guide](../full_graph.md) → [RTL index](README.md)
 
@@ -11,7 +13,7 @@
 |---|---|
 | Responsibility | Thirty-two S24 by S32 lanes use four structural byte multipliers per lane. Captured operands feed continuously clocked product/reduction stages. STREAMING=1 accepts every cycle while reset is released; STREAMING=0 admits one outstanding transaction. Relative to acceptance E0, product_valid is E3, sum_valid E8 and legacy done E9. |
 
-## Sơ đồ kiến trúc
+## Architecture diagram
 
 ![llm_math.sv — overview](../../diagrams/previews/27_llm_math.sv_1.svg)
 

@@ -139,7 +139,6 @@ module llm_linear_engine (
             if (state != IDLE && parameter_valid_i && response_q < request_q)
                 fifo_q[response_q[0]] <= parameter_data_i;
         end
-    generate
     for (lane = 0; lane < 32; lane = lane + 1) begin : g_operand
         always_ff @(posedge clk)
             if (rst_n && operand_capture) begin
@@ -147,5 +146,4 @@ module llm_linear_engine (
                 w_q[lane] <= fifo_q[words_consumed[0]][(int'(input_chunk_q[1:0]) << 6) + lane * 2 +: 2];
             end
     end
-    endgenerate
 endmodule

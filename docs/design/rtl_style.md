@@ -1,58 +1,58 @@
-# Chính sách RTL có thể tổng hợp
+# RTL Policy Overview
 
-> **Category: POLICY.** Giữ cấu trúc phần cứng, timing boundary và register ownership tường minh.
+> **Category: POLICY.** Maintain clear hardware structure, timing boundary, and register ownership.
 
-## Tổng quan
+## Overview
 
-| Phạm vi | Quy tắc |
+| Scope | Rule |
 |---|---|
 | Sequential logic | One clear owner per register/array element; no multiple drivers or unintended latches |
-| FSMs | Explicit state transitions, clock enables, pipeline registers and handshakes |
+| FSMs | Explicit state transitions, clock enables, pipeline registers, and handshakes |
 | Replication | `generate` for module/interface replication and independently owned lane registers |
 | Procedural loops | Statically determinable bounds; review the resulting combinational depth and replicated hardware |
 | Helpers | Small pure combinational or elaboration functions only |
 | Memory | Technology macros confined to leaves behind explicit portable contracts |
 
-## State và control
+## State and control
 
-- Giữ FSM transition, register update, memory request và response capture hiển thị rõ trong RTL.
-- Không dùng synthesizable task hoặc helper abstraction che khuất datapath, state, timing hay transaction quan trọng.
-- Ưu tiên register/lane ownership tường minh. Có thể dùng procedural loop có giới hạn khi cấu trúc phần cứng tạo ra vẫn rõ ràng.
-- Dùng clock enable. Không dùng logic tổ hợp để gate clock; technology clock gating thuộc integration boundary.
-- Không dùng simulation delay, force/release, file I/O hoặc hành vi system-task trong RTL compute/control.
+- Keep FSM transition, register update, memory request, and response capture clearly visible in RTL.
+- Do not use synthesizable tasks or helper abstractions that obscure datapath, state, timing, or important transactions.
+- Prioritize clear register/lane ownership. Procedural loops with limits can be used when the resulting hardware structure remains clear.
+- Use clock enable. Do not use combinational logic to gate the clock; technology clock gating belongs to the integration boundary.
+- Do not use simulation delay, force/release, file I/O, or system-task behavior in RTL compute/control.
 
 ## Arithmetic
 
-Thể hiện tường minh width, signedness, fixed-point scale, extension, truncation,
-rounding và saturation. Dùng toán tử có thể tổng hợp thông thường khi chúng mô tả
-rõ cấu trúc phần cứng mong muốn.
+Explicitly show width, signedness, fixed-point scale, extension, truncation,
+rounding, and saturation. Use normally synthesizable operators when they clearly describe
+the desired hardware structure.
 
-Giữ nguyên chủ đích tránh multiplier/divider: không thay datapath cấu trúc của NPU
-bằng `*`, `/` tại runtime hoặc vendor arithmetic IP nếu chưa có thay đổi kiến trúc
-được phê duyệt rõ ràng và verification về số học/PPA. Cho phép phép toán geometry/index
-hằng số tại elaboration.
+Keep the intention of avoiding multiplier/divider: do not change the NPU structural datapath
+by `*`, `/` at runtime or vendor arithmetic IP if no architectural
+change has been clearly approved along with verification for arithmetic/PPA. Allow geometric/index
+constant operations at elaboration.
 
-Giữ các helper thuần túy về saturation, rounding, extension và constant geometry
-ở quy mô nhỏ. Arithmetic pipeline quan trọng phải nằm trong module tường minh.
+Keep the helpers purely about saturation, rounding, extension, and constant geometry
+on a small scale. The arithmetic pipeline must be located in an explicit module.
 
 ## Memory and reset
 
-- Xác định read latency, write commitment, collision behavior, reset cancellation và response validity tại từng adapter boundary.
-- Reset control/validity theo yêu cầu; không được sử dụng payload không reset nếu chưa có transaction hợp lệ.
-- Bảo toàn nội dung SRAM đã commit khi reset contract yêu cầu giữ dữ liệu.
-- Không suy diễn rằng reset một request sẽ hủy write đã commit.
-- Quartus memory primitive chỉ được nằm trong `quartus_word_ram`; các assignment về placement/routing/pin/physical thuộc backend.
-- SRAM ASIC, clock-gating cell và các technology cell khác cần wrapper hoặc integration layer riêng với portable contract tường minh.
+- Determine read latency, write commitment, collision behavior, reset cancellation, and response validity at each adapter boundary.
+- Reset control/validity as required; do not use a non-reset payload if there is no valid transaction yet.
+- Preserve committed SRAM contents when the reset contract requires data retention.
+- Do not infer that resetting a request will cancel a committed write.
+- Quartus memory primitive can only be in `quartus_word_ram`; assignments regarding placement/routing/pin/physical belong to the backend.
+- SRAM ASIC, clock-gating cell and other technology cells require a separate wrapper or integration layer with an explicit portable contract.
 
-## Nên dùng / tránh dùng
+## Should Use / Avoid Using
 
-| Nên dùng | Tránh dùng |
+| Should Use | Avoid Using |
 |---|---|
 | Named pipeline valid and operand registers | A helper that implicitly advances transactions |
 | Explicit extension before addition and a named rounding step | Unsized arithmetic with accidental truncation |
 | Static lane replication with clear owners | Runtime-bounded hardware loops |
 | Adapter response-valid and commit/busy signals | Assuming that request acceptance means completion |
 
-## Tài liệu liên quan
+## Related Documents
 
-[Current numeric contracts](full_rtl_language.md#hợp-đồng-số-học) · [Memory binding](asic_memory_binding.md) · [Verification](../verification/README.md) · [Repository working policy](../../AGENTS.md)
+[Current numeric contracts](full_rtl_language.md#arithmetic-contracts) · [Memory binding](asic_memory_binding.md) · [Verification](../verification/README.md) · [Repository working policy](../../AGENTS.md)

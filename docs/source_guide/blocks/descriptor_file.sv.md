@@ -1,9 +1,9 @@
-# descriptor_file.sv — Bảng mô tả tensor và ma trận
+# descriptor_file.sv — Table describing tensors and matrices
 
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
+[Document](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Table of contents of each file](README.md)
 
-**Trạng thái:** Đang dùng.
+**Status:** In use.
 
 **Source:** [descriptor_file.sv](<../../../Verilog%20Source%20code/descriptor_file.sv>).
 
@@ -11,9 +11,9 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | Tám workspace descriptor 32 bit và tám matrix descriptor 96 bit giúp instruction ngắn vẫn mô tả tensor có địa chỉ, length và scale. Đọc descriptor là combinational; host ghi đồng bộ theo word 32. Ba cổng workspace đọc độc lập cho hai nguồn và đích. |
+| Responsibility | Eight 32-bit workspace descriptors and eight 96-bit matrix descriptors help short instructions still describe tensors with address, length, and scale. Reading descriptors is combinational; the host writes synchronously by 32-bit word. Three workspace ports read independently for two sources and a destination. |
 
-## Sơ đồ kiến trúc tổng quan
+## Overview Architecture Diagram
 
 ![descriptor_file.sv — overview](../../diagrams/previews/17_descriptor_file.sv_1.svg)
 
@@ -21,42 +21,42 @@
 
 ## Main flow
 
-Host chọn loại bằng host_is_matrix, ID bằng host_id. Workspace ghi một word. Matrix ghi ba word: thấp 31:0, giữa63:32, cao95:64. Reset xóa descriptor; tensor data trong SRAM vẫn phải được host nạp riêng.
+The host selects the type using host_is_matrix, and the ID using host_id. Workspace records one word. Matrix records three words: low 31:0, middle 63:32, high 95:64. Reset clears the descriptor; tensor data in SRAM still needs to be loaded separately by the host.
 
-1. Có tám workspace descriptor và tám matrix descriptor. Reset xóa metadata nhưng không xóa nội dung SRAM.
-2. Ba workspace ID đọc tổ hợp source0, source1 và destination cho instruction hiện tại.
-3. Matrix ID đọc descriptor 96 bit. Host đọc/ghi matrix qua ba slice 32 bit thấp, giữa và cao.
-4. Host write workspace thay toàn bộ descriptor; matrix write chỉ thay slice được chọn, nên phải nạp đủ ba word trước start.
-5. File không validate nội dung; từng execution unit kiểm tra descriptor theo phép toán của nó.
+1. There are eight workspace descriptors and eight matrix descriptors. Reset clears metadata but does not erase SRAM contents.
+2. Three workspace IDs read combinations of source0, source1, and destination for the current instruction.
+3. Matrix ID reads a 96-bit descriptor. Host reads/writes matrix through three 32-bit slices: low, middle, and high.
+4. Host write to workspace replaces the entire descriptor; matrix write only replaces the selected slice, so all three words need to be loaded before start.
+5. File does not validate content; each execution unit checks the descriptor according to its operation.
 
-Descriptor được biểu diễn bằng 1.024 bit thanh ghi với reset và đọc tổ hợp. Matrix có layout 96 bit; implementation dùng ba thanh ghi 32 bit cho mỗi entry, ghi nguyên word với index hằng từ generate. Đọc slice bằng index thay đổi là mux tổ hợp.
+The descriptor is represented by a 1,024-bit register with reset and combinational read. The matrix has a 96-bit layout; the implementation uses three 32-bit registers per entry, writing the entire word with a constant index from the generate. Slice reading with a variable index is a combinational mux.
 
 ## Important state / datapath groups
 
-Các đoạn dưới đây bao phủ nguyên văn toàn bộ source hiện tại, theo thứ tự dòng.
+The sections below cover the full text of the current source, in line order.
 
-### [Dòng 1–22: Giao diện và descriptor arrays](<../../../Verilog%20Source%20code/descriptor_file.sv#L1>)
+### [Lines 1–22: Interface and descriptor arrays](<../../../Verilog%20Source%20code/descriptor_file.sv#L1>)
 
-**Mục đích.** Tám workspace descriptor 32 bit và tám matrix descriptor 96 bit.
+**Purpose.** Eight 32-bit workspace descriptors and eight 96-bit matrix descriptors.
 
-**Cách phần code hoạt động.** Kiểu packed giữ nguyên layout host/ISA. Các port workspace đọc source0/source1/destination; matrix đọc qua mat_id.
+**How the code part works.** The packed type preserves the host/ISA layout. Workspace ports read source0/source1/destination; matrix reads through mat_id.
 
-**Tín hiệu và dữ liệu chính.** `ws[0:7]`, `md[0:7]`, `ws_desc_t`, `mat_desc_t`, các host và compute IDs.
+**Main signals and data.** `ws[0:7]`, `md[0:7]`, `ws_desc_t`, `mat_desc_t`, the host and compute IDs.
 
-### [Dòng 23–40: Đọc descriptor tổ hợp](<../../../Verilog%20Source%20code/descriptor_file.sv#L23>)
+### [Lines 23–40: Reading combined descriptor](<../../../Verilog%20Source%20code/descriptor_file.sv#L23>)
 
-**Mục đích.** Chọn entry và word host mà không thêm latency.
+**Purpose.** Select host entry and word without adding latency.
 
-**Cách phần code hoạt động.** Continuous assignment chọn descriptor compute theo ID. Host mux workspace hoặc một trong ba slice matrix; word_sel ngoài 0..2 trả zero.
+**How the code part works.** Continuous assignment selects compute descriptor by ID. Host mux workspace or one of three matrix slices; word_sel beyond 0..2 returns zero.
 
-**Tín hiệu và dữ liệu chính.** `ws_id0/1/2`, `mat_id`, `host_id`, `host_word_sel`, `host_rdata`.
+**Main signals and data.** `ws_id0/1/2`, `mat_id`, `host_id`, `host_word_sel`, `host_rdata`.
 
-### [Dòng 41–70: Generate FF và ghi nguyên word](<../../../Verilog%20Source%20code/descriptor_file.sv#L41>)
+### [Lines 41–70: Generate FF and write the entire word](<../../../Verilog%20Source%20code/descriptor_file.sv#L41>)
 
-**Mục đích.** Mô tả bank thanh ghi bằng whole-word write và index hằng; mỗi entry có reset rõ ràng và word-enable riêng.
+**Purpose.** Describes a register bank with whole-word write and constant index; each entry has a clear reset and separate word-enable.
 
-**Cách phần code hoạt động.** Generate ngoài tạo tám entry workspace với write-enable riêng. Generate trong tạo ba word_q 32 bit mỗi matrix. Mỗi process clock chỉ ghi nguyên word; constant slices ghép matrix_bits rồi cast thành mat_desc_t. Reset active-low xóa đủ 256 + 768 bit metadata.
+**How the code works.** The outer generate creates eight workspace entries with separate write-enable. The inner generate creates three 32-bit word_q for each matrix. Each clock process writes only the whole word; constant slices combine matrix_bits then cast into mat_desc_t. Active-low reset clears all 256 + 768 bits of metadata.
 
-**Tín hiệu và dữ liệu chính.** `g_descriptor`, `g_word`, `word_q`, `matrix_bits`, `host_id == 3'(entry)`, `host_word_sel == 2'(word_index)`.
+**Main signals and data.** `g_descriptor`, `g_word`, `word_q`, `matrix_bits`, `host_id == 3'(entry)`, `host_word_sel == 2'(word_index)`.
 
-**Điểm cần đọc kỹ.** `genvar` được khai báo trước vòng lặp và có `generate/endgenerate` rõ ràng theo cú pháp generate SystemVerilog. Các entry được tạo song song khi elaboration; vòng generate không chạy qua tám entry trong tám clock. Host vẫn phải ghi đủ ba matrix word trước khi start.
+**Points to read carefully.** `genvar` is declared before the loop and has `generate/endgenerate` clearly according to SystemVerilog generate syntax. The entries are generated in parallel during elaboration; the generate loop does not run through eight entries in eight clocks. The host still has to write all three matrix words before starting.

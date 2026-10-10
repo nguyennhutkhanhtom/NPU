@@ -54,7 +54,6 @@ module llm_parameter_ram #(
         end
     end
     genvar stage, lane;
-    generate
     for (stage = 1; stage < READ_LATENCY; stage = stage + 1) begin : g_read_stage
         always_ff @(posedge clk or negedge rst_n) begin
             if (!rst_n) begin read_valid_q[stage] <= 0; read_host_q[stage] <= 0; end
@@ -66,8 +65,6 @@ module llm_parameter_ram #(
         end
         always_ff @(posedge clk) read_address_q[stage] <= read_address_q[stage - 1];
     end
-    endgenerate
-    generate
     for (lane = 0; lane < 8; lane = lane + 1) begin : g_ram_lane
         (* dont_merge *) logic [ADDR_W - 1:0] read_address_local_q, write_address_q;
         (* dont_merge *) logic [31:0] write_data_q;
@@ -91,5 +88,4 @@ module llm_parameter_ram #(
             .rd_data(read_row[lane * 32 +: 32]), .rd_valid(lane_read_valid[lane]),
             .wr_valid(lane_write_valid[lane]));
     end
-    endgenerate
 endmodule

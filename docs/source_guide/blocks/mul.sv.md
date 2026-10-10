@@ -1,9 +1,9 @@
-# mul.sv — Helper nhân S16 và gate
+# mul.sv — Helper multiplying S16 and gate
 
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
+[Documentation](../../README.md) → [RTL Hierarchy](<../legacy/README.md>) → [File index](README.md)
 
-**Trạng thái:** Helper — không instantiate trong top hiện tại.
+**Status:** Helper — not instantiated in the current top.
 
 **Source:** [mul.sv](<../../../Verilog%20Source%20code/mul.sv>).
 
@@ -11,9 +11,9 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | Helper nhân a signed 16 với b signed 16 hoặc unsigned gate. Rowwise_op đã có đường nhân chia sẻ MUL/REC riêng; không cộng helper này vào số multiplier của top. |
+| Responsibility | Helper multiplies a signed 16 with b signed 16 or unsigned gate. Rowwise_op already has its own dedicated MUL/REC path; do not add this helper to the top's multiplier count. |
 
-## Sơ đồ kiến trúc tổng quan
+## Overview of architecture diagram
 
 ![mul.sv — overview](../../diagrams/previews/40_mul.sv_1.svg)
 
@@ -21,28 +21,28 @@
 
 ## Main flow
 
-b_s17 giữ đúng sign hoặc zero-extend gate. Tích p33 được RNE theo rshift rồi clamp S16. product chỉ xuất32 bit thấp của p33. Gate unsigned vượt raw `0x8000` bị báo overflow; không nên dùng helper như multiplier U16 tổng quát không giới hạn.
+b_s17 keeps the correct sign or zero-extend gate. The p33 product is rounded to nearest even (RNE) according to rshift then clamped to S16. The product only outputs the lower 32 bits of p33. Unsigned gates exceeding raw `0x8000` trigger overflow; general U16 multipliers without limits should not be used as helpers.
 
-1. A luôn là S16. B được sign-extend nếu signed hoặc zero-extend nếu là gate U16.
-2. Tích S33 giữ trường hợp S16×0x8000; `product` chỉ xuất 32 bit thấp vì interface helper cũ.
-3. Đường result mở rộng lên S64, RNE theo rshift rồi clamp S16.
-4. Gate trên raw 0x8000 bị báo overflow vì ngoài miền 0…1 của U16/F15.
-5. Helper không được top instantiate; rowwise_op có đường multiplier/scale hoàn chỉnh hơn.
+1. A is always S16. B is sign-extended if signed or zero-extended if it is a U16 gate.
+2. The S33 product keeps the S16×0x8000 case; `product` only outputs the lower 32 bits because of the old helper interface.
+3. The result path extends to S64, RNE according to rshift then clamps to S16.
+4. The gate on raw 0x8000 reports overflow because it is outside the 0…1 range of U16/F15.
+5. Helper should not be top-level instantiated; rowwise_op has a more complete multiplier/scale path.
 
 ## Important state / datapath groups
 
-### [Dòng 1–15: Giao diện và intermediate](<../../../Verilog%20Source%20code/mul.sv#L1>)
+### [Lines 1–15: Interface and intermediate](<../../../Verilog%20Source%20code/mul.sv#L1>)
 
-**Mục đích.** b_unsigned quyết định cách diễn giải cùng16 bit của b.
+**Purpose.** b_unsigned determines how to interpret the 16 bits of b.
 
-**Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
+**How the code works.** This group defines interface, width, type, or intermediate signals. It creates a structure for subsequent processing groups to use, not yet representing a separate runtime step itself.
 
-**Tín hiệu và dữ liệu chính.** `a`: operand A; `b`: operand B; `b_unsigned`: B là gate unsigned; `rshift`: số bit chia lũy thừa 2 trước saturation; `product`: tích trung gian trước rescale; `result`: kết quả đã saturation; và 4 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `a`: operand A; `b`: operand B; `b_unsigned`: B is an unsigned gate; `rshift`: number of bits to divide by power of 2 before saturation; `product`: intermediate product before rescale; `result`: result after saturation; and 4 other auxiliary signals in the code segment.
 
-### [Dòng 16–43: Multiply/round/clamp](<../../../Verilog%20Source%20code/mul.sv#L16>)
+### [Lines 16–43: Multiply/round/clamp](<../../../Verilog%20Source%20code/mul.sv#L16>)
 
-**Mục đích.** Output result được làm tròn; output product không phải result đã đổi scale.
+**Purpose.** Output result is rounded; output product is not the scaled result.
 
-**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
+**How the code works.** There is combinational logic: output/intermediate is calculated from the current input; default block values help avoid inferring latches.
 
-**Tín hiệu và dữ liệu chính.** `b_s17`: B S17 sau chọn signed/gate; `b_unsigned`: B là gate unsigned; `b`: operand B; `p33`: tích đầy đủ S33 của helper mul; `a`: operand A; `product`: tích trung gian trước rescale; và 4 tín hiệu phụ khác trong đoạn code.
+**Main signals and data.** `b_s17`: B S17 after selecting signed/gate; `b_unsigned`: B is unsigned gate; `b`: operand B; `p33`: full S33 product of helper mul; `a`: operand A; `product`: intermediate product before rescale; and 4 other auxiliary signals in the code segment.

@@ -29,7 +29,6 @@ module pipelined_word_ram #(
         end
     end
     genvar tile, group_id, member, leaf, node;
-    generate
     if (USE_QUARTUS_MEMORY && ROWS > 4096) begin : g_ip_tiled
         // Each deep-memory tile has a local address and enable owner. Write
         // payload is captured once per four-tile group on the same edge.
@@ -169,5 +168,4 @@ module pipelined_word_ram #(
         assign rd_valid = read_valid_q[3];
     end
     end
-    endgenerate
 endmodule

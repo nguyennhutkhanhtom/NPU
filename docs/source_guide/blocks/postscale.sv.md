@@ -1,50 +1,50 @@
-# postscale.sv — Đổi scale, cộng bias và saturation
+# postscale.sv — Change scale, add bias and saturation
 
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
+[Documentation](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [File index](README.md)
 
-**Trạng thái:** Đang dùng — postscale_finish sau các register trong ternary_mul; postscale giữ interface tổ hợp cho kiểm tra.
+**Status:** In use — postscale_finish after registers in ternary_mul; postscale maintains combinational interface for checking.
 
 **Source:** [postscale.sv](<../../../Verilog%20Source%20code/postscale.sv>).
 
-Input ports khai báo rõ `wire logic` dưới `default_nettype none` để Xcelium
-không phải suy luận net type (NODNTW). Width/signedness và arithmetic giữ nguyên.
+Input ports declared clearly `wire logic` under `default_nettype none` for Xcelium
+so that net type does not have to be inferred (NODNTW). Width/signedness and arithmetic remain unchanged.
 
 ## At a glance
 
 | Item | Description |
 |---|---|
-| Responsibility | File có hai module. `postscale` giữ interface tổ hợp: accumulator S18 nhân hệ số U24, RNE rồi cộng bias và saturation. `postscale_finish` chỉ nhận rounded S42 rồi cộng bias S32/clamp. Ternary engine chốt product và rounded result trước khi gọi module finish; không instantiate toàn chuỗi tổ hợp nữa. |
+| Responsibility | The file has two modules. `postscale` holds the combinational interface: accumulator S18 multiplied by U24, RNE then adds bias and saturation. `postscale_finish` only receives rounded S42 then adds bias S32/clamp. The ternary engine latches product and rounded result before calling the finish module; it does not instantiate the entire combinational chain anymore. |
 
-## Sơ đồ kiến trúc tổng quan
+## Overall architectural diagram
 
 ![postscale.sv — overview](../../diagrams/previews/51_postscale.sv_1.svg)
 
 [Editable draw.io — postscale.sv — overview](../../diagrams/architecture.drawio) · Page `51_postscale.sv_1`.
 
-Nét liền là dữ liệu, nét đứt là format/control. Hai module trong file này đều tổ hợp; product/round registers của engine nằm trong [ternary_mul](ternary_mul.sv.md), không nằm trong interface `postscale`.
+A solid line represents data, a dashed line represents format/control. Both modules in this file are combinational; the engine's product/round registers are in [ternary_mul](ternary_mul.sv.md), not in interface `postscale`.
 
 ## Main flow
 
-1. S18×U24 vừa tích S42. M được thêm bit zero trước cast signed để không đổi nghĩa U24.
-2. `rne_shift42` giữ thương floor và guard/sticky/parity như RNE S64. Khi r≥42, mọi giá trị S42 làm tròn về zero; S42 min tại r=42 là tie −0,5 và chọn zero chẵn.
-3. Rounded S42 cộng bias S32 trong S43, không cắt bit trung gian. Bias đã ở đơn vị output nên cộng sau rounding.
-4. `postscale_finish` sign-extend S43 khi gọi hàm saturation chung, đồng thời báo overflow theo format S16/S32 đang chọn.
-5. Interface tổ hợp vẫn dùng cho reference regression. Engine gọi `postscale_finish` sau SCALE_PRODUCT → SCALE_ROUND → SCALE, thêm hai clock mỗi output row.
+1. S18×U24 just accumulated to S42. M has a zero bit added before casting to signed so as not to change the meaning of U24.
+2. `rne_shift42` keeps the floor quotient and guard/sticky/parity like RNE S64. When r≥42, all S42 values are rounded to zero; the minimum S42 at r=42 is tie −0.5 and chooses even zero.
+3. Rounded S42 adds bias S32 in S43, without cutting intermediate bits. Bias is already in output units, so it is added after rounding.
+4. `postscale_finish` sign-extends S43 when calling the general saturation function, while also reporting overflow according to the selected S16/S32 format.
+5. The combinational interface is still used for reference regression. The engine calls `postscale_finish` after SCALE_PRODUCT → SCALE_ROUND → SCALE, adding two clocks per output row.
 
-[12.720 ca postscale](../../../tests/results.json) kiểm tra tương đương với reference rộng, gồm shift 0…63, accumulator/M/bias cực trị và clamp. [Timing hub](../../verification/timing/README.md) ghi ảnh hưởng Fmax và chu kỳ model.
+[12.720 postscale case](../../../tests/results.json) checks equivalence with the wide reference, including shift 0…63, accumulator/M/bias extrema, and clamp. [Timing hub](../../verification/timing/README.md) records Fmax impact and model cycles.
 
 ## Important state / datapath groups
 
-### [Dòng 1–26: Interface postscale tổ hợp](<../../../Verilog%20Source%20code/postscale.sv#L1>)
+### [Lines 1–26: Combinational postscale interface](<../../../Verilog%20Source%20code/postscale.sv#L1>)
 
-**Mục đích.** Wrapper giữ accumulator/M/r/bias ports như trước. Tích S42 được RNE bằng hàm đúng độ rộng; module finish thực hiện cộng bias/clamp. Wrapper không có clock hoặc handshake.
+**Purpose.** Wrapper keeps accumulator/M/r/bias ports as before. S42 product is RNE rounded with correct width; module finish performs bias addition/clamp. Wrapper has no clock or handshake.
 
-### [Dòng 27–46: Bias adder S43 và saturation dùng chung](<../../../Verilog%20Source%20code/postscale.sv#L27>)
+### [Lines 27–46: Bias adder S43 and shared saturation](<../../../Verilog%20Source%20code/postscale.sv#L27>)
 
-**Mục đích.** Rounded S42 cộng bias S32 trong S43. Hai output được clamp song song; output_s32 chọn miền kiểm tra overflow. Engine registered và wrapper tổ hợp dùng đúng một implementation finish.
+**Purpose.** Rounded S42 added to bias S32 in S43. The two outputs are clamped in parallel; output_s32 selects the overflow check domain. The engine is registered, and the combinational wrapper uses a single implementation finish.
 
-#### Sơ đồ khối phần cứng của nhóm
+#### Hardware block diagram of the group
 
 ![postscale.sv — detail 1](../../diagrams/previews/52_postscale.sv_2.svg)
 

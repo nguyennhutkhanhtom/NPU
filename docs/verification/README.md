@@ -1,36 +1,36 @@
-# Kiểm chứng llm_soc trên server
+# Verification of llm_soc on the server
 
 > **Category: GUIDE.**
 
-[Flow server và cấu hình](../../tools/server/README.md) là hướng dẫn chạy hiện tại
-trên branch `remote`. Chạy Xcelium/Genus trong allocation Slurm; các entry point
-local ModelSim/Questa/Verilator/Quartus đã ngừng hoạt động.
+[Flow server and configuration](../../tools/server/README.md) is the current running guide
+on branch `remote`. Run Xcelium/Genus in Slurm allocation; the entry points
+for local ModelSim/Questa/Verilator/Quartus have stopped working.
 
-| Mức kiểm chứng | Entry point từ repo root trên compute node | Phạm vi |
+| Verification level | Entry point from repo root on compute node | Scope |
 |---|---|---|
-| Full regression | `python3 tools/server/run_flow.py --stage test --tag TAG` | 7 nhóm graph + linear stream + host cancel |
-| Debug nhóm | `--stage test --only tb_llm_ram --tag TAG` | Selected groups, không full PASS |
+| Full regression | `python3 tools/server/run_flow.py --stage test --tag TAG` | 7 graph groups + linear stream + host cancel |
+| Debug group | `--stage test --only tb_llm_ram --tag TAG` | Selected groups, not full PASS |
 | Synthesis | `--stage syn --lib /approved/cells.lib --tag TAG` | Genus mapped netlist, design/area/timing reports |
-| Test + synthesis | `--stage all --lib /approved/cells.lib --tag TAG` | Hai claim được ghi riêng |
+| Test + synthesis | `--stage all --lib /approved/cells.lib --tag TAG` | Two claims recorded separately |
 | Application | `--stage application --fixture PATH --tag TAG` | Functional checkpoint token matching |
-| Legacy shared RTL | `--stage legacy --tag TAG` | 9 legacy tops bằng Xcelium |
+| Legacy shared RTL | `--stage legacy --tag TAG` | 9 legacy tops using Xcelium |
 
-Theo [hướng dẫn server](../../tools/server/README.md) trước kết nối; không
-commit/upload credential hoặc VPN config. Transfer và allocation cần authorization phù hợp.
-Transfer đã được người dùng xác nhận cho phép; X11 và modules Xcelium/Genus đã
-được kiểm tra trên `black`. Dùng launcher `slurm_x11.sh` từ SSH hoặc RDP và giữ
-`--x11`; Liberty vẫn cần xác nhận trước synthesis.
-`--check-inputs` kiểm tra file/config/manifest, không phải simulator hay synthesis PASS.
+According to [server instructions](../../tools/server/README.md) before connecting; do not
+commit/upload credential or VPN config. Transfer and allocation require appropriate authorization.
+Transfer has been confirmed by the user; X11 and the Xcelium/Genus modules have
+been checked on `black`. Use the launcher `slurm_x11.sh` from SSH or RDP and keep
+`--x11`; Liberty still needs confirmation before synthesis.
+`--check-inputs` check file/config/manifest, not simulator or synthesis PASS.
 
-Reports nằm ở `reports/TAG`, database ở `build/TAG`. Tags mới bắt buộc; runner
-lưu node/job/commands/hashes/markers và từ chối input đổi giữa lượt chạy. Job dài
-chỉ kiểm tra ban đầu một lần rồi bàn giao theo hướng dẫn server, không poll/relaunch.
+Reports are located at `reports/TAG`, database at `build/TAG`. New tags are mandatory; runner
+stores node/job/commands/hashes/markers and rejects input switched between runs. Long jobs
+only check initially once then hand over according to server instructions, no poll/relaunch.
 
-Mặc định RAM portable; không compile vendor RAM leaf. Giữ nguyên numeric và
-protocol assertions. Chuyển backend/tool cần full regression mới; FPGA timing,
-unit PASS lịch sử và application PASS là các claim riêng, không tự chuyển sang
-source mới. Genus completion không xác nhận timing closure hay ASIC signoff.
+Default portable RAM; do not compile vendor RAM leaf. Keep numeric and
+protocol assertions. Backend/tool switch requires full regression; FPGA timing,
+Unit PASS history and application PASS are separate claims, they do not automatically transfer to
+new source. Genus completion does not confirm timing closure or ASIC signoff.
 
-[Trạng thái/evidence trước migration](optimization_status.md) vẫn giữ nguyên.
-Lệnh và diễn biến local cũ xem [lịch sử](../history/full_rtl_verification_development.md)
-và lịch sử Git. Không chạy runner snapshot để thay source hiện tại.
+[Status/evidence before migration](optimization_status.md) remains unchanged.
+Old local commands and progress can be seen in [history](../history/full_rtl_verification_development.md)
+and Git history. Do not run runner snapshot to replace the current source.

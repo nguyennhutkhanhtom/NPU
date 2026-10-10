@@ -52,7 +52,6 @@ module llm_attention_normalize #(parameter int DIV_LANES = 4, parameter bit USE_
     end
     always_ff @(posedge clk)
         if (rst_n && !cancel_i && ready_o && start_i) denominator_q <= denominator_i;
-    generate
     for (lane = 0; lane < DIV_LANES; lane = lane + 1) begin : g_divider
         wire signed [55:0] next_selected = accumulator_i[(int'(batch_q + 1'b1) << SHIFT) + lane];
         if (lane == 0 && USE_SHARED) begin : g_shared
@@ -91,5 +90,4 @@ module llm_attention_normalize #(parameter int DIV_LANES = 4, parameter bit USE_
             if (rst_n && !cancel_i && state == CLAMP && batch_q == lane / DIV_LANES)
                 vector_o[lane * 24 +: 24] <= llm_sat24(signed_q[lane % DIV_LANES]);
     end
-    endgenerate
 endmodule

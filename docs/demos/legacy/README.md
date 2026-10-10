@@ -1,15 +1,15 @@
-# Demo và khảo sát legacy
+# Demo and legacy survey
 
 > **Category: LEGACY.**
 
-[Tài liệu](../../README.md) → [Demo](../README.md) → **Legacy**
+[Documentation](../../README.md) → [Demo](../README.md) → **Legacy**
 
-| Tài liệu | Phạm vi |
+| Documentation | Scope |
 |---|---|
-| [NanoFable hybrid](nanofable_hybrid.md) | CPU generation, 168 lượt linear RTL và 33.792 output S32 |
-| [Binary-MNIST160](<mnist.md>) | Checkpoint classifier và core matmulfree trên 10 ảnh mẫu |
-| [Khảo sát model 32 PE](model_candidates.md) | Các model/layout cho parameter 32 KiB và workspace 8 KiB |
+| [NanoFable hybrid](nanofable_hybrid.md) | CPU generation, 168 linear RTL passes and 33,792 S32 outputs |
+| [Binary-MNIST160](<mnist.md>) | Checkpoint classifier and matmul-free core on 10 sample images |
+| [32 PE model survey](model_candidates.md) | Models/layouts for 32 KiB parameters and 8 KiB workspace |
 
-Các kết quả ở đây giữ giá trị trong phạm vi của từng báo cáo. Hướng dẫn chạy
-full graph hiện tại ở [NanoFable trên llm_soc](../language.md); trạng thái
-application ở [verification status](../../verification/optimization_status.md).
+The results here retain values within the scope of each report. Instructions to run
+current full graph are in [NanoFable on llm_soc](../language.md); status
+application at [verification status](../../verification/optimization_status.md).

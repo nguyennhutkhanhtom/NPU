@@ -1,7 +1,9 @@
-# llm_bank_ram.sv — SRAM lane-masked cho graph
+# llm_bank_ram.sv — Lane-masked SRAM for graph
+
+**Structural generation.** Named SystemVerilog generate constructs are retained without the optional `generate`/`endgenerate` regions, following lowRISC. Loop bounds, conditional branches, instance names, and lane ownership are unchanged.
 
 > **Category: GUIDE. Scope: CURRENT (may also have legacy callers).** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Source guide](../README.md) → [Mục lục](README.md)
+[Document](../../README.md) → [Source guide](../README.md) → [Table of contents](README.md)
 
 **Source:** [llm_bank_ram.sv](<../../../Verilog%20Source%20code/llm_bank_ram.sv>).
 
@@ -9,9 +11,9 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | 32 lane S24 tạo row 768 bit. USE_QUARTUS_MEMORY chọn FPGA IP hoặc model ASIC qua word adapter. Request qua group bốn lane, lane register và adapter register trước storage; read valid năm cạnh với ROWS≤4096, write commit ở cạnh thứ tư. wr_busy buộc operator drain trước completion. Reset hủy queue/valid, giữ storage/payload. |
+| Responsibility | 32-lane S24 creates 768-bit rows. USE_QUARTUS_MEMORY selects FPGA IP or ASIC model via word adapter. Requests go through a group of four lanes, lane register, and adapter register before storage; read valid on five edges with ROWS≤4096, write commit on the fourth edge. wr_busy forces the operator to drain before completion. Reset clears queue/valid, keeps storage/payload. |
 
-## Sơ đồ kiến trúc
+## Architecture diagram
 
 ![llm_bank_ram.sv — overview](../../diagrams/previews/24_llm_bank_ram.sv_1.svg)
 
@@ -19,14 +21,14 @@
 
 ## Important state / datapath groups
 
-### [Dòng 1–24: Interface and write pending](<../../../Verilog%20Source%20code/llm_bank_ram.sv#L1>)
+### [Lines 1–24: Interface and write pending](<../../../Verilog%20Source%20code/llm_bank_ram.sv#L1>)
 
-Client dùng rd_valid; operator phải chờ wr_busy hạ trước báo done. Latency bao gồm group, lane và tile stages.
+The client uses rd_valid; the operator must wait for wr_busy to lower before reporting done. Latency includes group, lane, and tile stages.
 
-### [Dòng 25–47: Group request distribution](<../../../Verilog%20Source%20code/llm_bank_ram.sv#L25>)
+### [Lines 25–47: Group request distribution](<../../../Verilog%20Source%20code/llm_bank_ram.sv#L25>)
 
-Địa chỉ/data payload chốt không enable mux. SRAM-only dont_merge giữ locality; read/write enables reset để hủy queued requests.
+Address/data payload is latched without enabling the mux. SRAM-only dont_merge maintains locality; read/write enables reset to cancel queued requests.
 
-### [Dòng 48–76: Lane banks and response](<../../../Verilog%20Source%20code/llm_bank_ram.sv#L48>)
+### [Lines 48–76: Lane banks and response](<../../../Verilog%20Source%20code/llm_bank_ram.sv#L48>)
 
-Leaf old-data collision theo cùng accepted cycle. Lane-valid có cùng latency; output dùng lane0 valid để xác nhận cả row.
+Leaf old-data collision tracks the same accepted cycle. Lane-valid has the same latency; output uses lane0 valid to confirm the entire row.

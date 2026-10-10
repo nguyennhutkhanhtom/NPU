@@ -1,9 +1,9 @@
-# acc_mul.sv — Cây cộng 32 term ternary
+# acc_mul.sv — 32-term tertiary adder tree
 
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
+[Documentation](../../README.md) → [RTL Hierarchy](<../legacy/README.md>) → [File-level index](README.md)
 
-**Trạng thái:** Đang dùng — trong ternary_mul.
+**Status:** In use — in ternary_mul.
 
 **Source:** [acc_mul.sv](<../../../Verilog%20Source%20code/acc_mul.sv>).
 
@@ -13,7 +13,7 @@
 |---|---|
 | Responsibility | Parameterized combinational signed reduction. Sign-extend input terms, pad to a power of two and instantiate explicit generated adders. Current legacy ternary_mul uses four S9-to-S12 eight-input reductions and one S12-to-S14 four-input reduction; its S18 accumulator is outside acc_mul. |
 
-## Sơ đồ kiến trúc tổng quan
+## Overview architecture diagram
 
 ![acc_mul.sv — overview](../../diagrams/previews/14_acc_mul.sv_1.svg)
 
@@ -21,34 +21,34 @@
 
 ## Main flow
 
-Nạp lá vào nửa cuối mảng tree, padding 0 nếu cần đến lũy thừa 2. Vòng lặp từ dưới lên tính parent=left+right. Đây là cây tổ hợp không có clock; với 32 lá có 5 tầng cộng về mặt cấu trúc, không phải 31 cycle.
+Load leaves into the second half of the tree array, padding with 0 if needed to reach a power of 2. Loop from bottom to top calculating parent = left + right. This is a combinational tree without a clock; with 32 leaves there are 5 structural levels, not 31 cycles.
 
-1. Các term S9 được sign-extend lên S18, giữ đúng số âm và giá trị +128 sinh từ đổi dấu −128.
-2. Mảng tree biểu diễn cây nhị phân; nếu số input không là lũy thừa hai, lá dư được pad zero.
-3. Với 32 input, năm tầng cộng tạo một partial sum. Vòng for mô tả mạng logic, không phải 31 cycle tuần tự.
-4. Module không có pipeline register, nên toàn bộ cây nằm trên combinational timing path.
+1. The S9 terms are sign-extended to S18, preserving the negative numbers and the value +128 generated from negating -128.
+2. The tree array represents a binary tree; if the number of inputs is not a power of two, the extra leaves are padded with zero.
+3. With 32 inputs, five adder stages create a partial sum. The for loop describes a logic network, not 31 sequential cycles.
+4. The module has no pipeline registers, so the entire tree lies on the combinational timing path.
 
 ## Important state / datapath groups
 
-### [Dòng 1–14: Kích thước cây](<../../../Verilog%20Source%20code/acc_mul.sv#L1>)
+### [Lines 1–14: Tree size](<../../../Verilog%20Source%20code/acc_mul.sv#L1>)
 
-**Mục đích.** LEAVES làm tròn NUM_INPUTS lên lũy thừa 2; tree có 2×LEAVES−1 node.
+**Purpose.** LEAVES round NUM_INPUTS up to the next power of 2; the tree has 2×LEAVES−1 nodes.
 
-**Cách phần code hoạt động.** Nhóm này định nghĩa giao diện, độ rộng, kiểu hoặc tín hiệu trung gian. Nó tạo cấu trúc để các nhóm xử lý sau sử dụng, chưa tự biểu diễn một bước runtime riêng.
+**How the code works.** This section defines interfaces, widths, types, or intermediate signals. It creates a structure for subsequent processing groups to use, without representing a standalone runtime step.
 
-**Tín hiệu và dữ liệu chính.** `term`: mảng các term ternary S9 cần cộng; `sum`: tổng của chunk 32 term; `tree`: các node S18 của cây cộng cân bằng.
+**Main signals and data.** `term`: array of ternary terms S9 to be added; `sum`: sum of a 32-term chunk; `tree`: S18 nodes of the balanced addition tree.
 
-### [Dòng 15–31: Reduction](<../../../Verilog%20Source%20code/acc_mul.sv#L15>)
+### [Lines 15–31: Reduction](<../../../Verilog%20Source%20code/acc_mul.sv#L15>)
 
-**Mục đích.** Sign-extend lá, cộng hai con vào cha, lấy tree[0]. Vòng for ở đây tạo logic song song khi elaboration/synthesis, không phải CPU loop.
+**Purpose.** Sign-extend the leaf, add two children into the parent, take tree[0]. The for loop here creates parallel logic during elaboration/synthesis, not a CPU loop.
 
-**Cách phần code hoạt động.** Có logic tổ hợp: output/intermediate được tính từ input hiện tại; các giá trị mặc định đầu khối giúp tránh suy ra latch.
+**How the code works.** There is combinational logic: output/intermediate is calculated from the current input; default values at the block's start help avoid latch inference.
 
-**Tín hiệu và dữ liệu chính.** `tree`: các node S18 của cây cộng cân bằng; `term`: mảng các term ternary S9 cần cộng; `sum`: tổng của chunk 32 term.
+**Main signals and data.** `tree`: S18 nodes of the balanced add tree; `term`: array of ternary S9 terms to be added; `sum`: sum of 32-term chunk.
 
-**Điểm cần đọc kỹ.** Vòng for thứ hai đi từ node cuối về node gốc để mỗi parent đọc hai child đã được gán. Khi synthesis, đây là cây dây/cổng song song chứ không phải một bộ cộng dùng lặp 31 lần.
+**Points to read carefully.** The second for loop goes from the last node to the root node so that each parent reads two already assigned children. During synthesis, this is a parallel wire/gate tree, not an adder reused 31 times.
 
-#### Sơ đồ khối phần cứng của nhóm
+#### Hardware block diagram of the group
 
 ![acc_mul.sv — detail 1](../../diagrams/previews/15_acc_mul.sv_2.svg)
 

@@ -19,7 +19,7 @@ The placeholder requires an SRAM implementation with the same synchronous read,
 output hold and OLD_DATA collision contract; its area and timing are unmodeled
 without SRAM libraries. The diagram below describes the functional model.
 
-## Sơ đồ kiến trúc
+## Architecture diagram
 
 ![sram_word_tile.sv — overview](../../diagrams/previews/66_sram_word_tile.sv_1.svg)
 

@@ -1,32 +1,32 @@
-# Chạy NanoFable thật trên llm_soc
+# Run the real NanoFable on llm_soc
 
-> Branch `remote`: các lệnh local trong tài liệu này là lịch sử. Chạy checkpoint bằng [flow server](../../tools/server/README.md#application-checkpoint); không dùng hardware gate FPGA cũ cho cấu hình mới.
+> Branch `remote`: the local commands in this document are historical. Run the checkpoint using [flow server](../../tools/server/README.md#application-checkpoint); do not use the old FPGA hardware gate for the new configuration.
 
 
 > **Category: GUIDE.**
 
-[Tài liệu](../README.md) → [Demo](README.md) → **NanoFable**
+[Document](../README.md) → [Demo](README.md) → **NanoFable**
 
-Runner dùng checkpoint **NanoFable-1M-ternary seed1** đã pin. Host nạp parameters,
-prompt và cấu hình; toàn bộ prefill/decode, attention, head và token selection chạy
-trong mô phỏng RTL. Reference số nguyên trên CPU dùng để kiểm tra token kết quả.
+The runner uses the pinned checkpoint **NanoFable-1M-ternary seed1**. The host loads parameters,
+prompt and configuration; all prefill/decode, attention, head, and token selection runs
+in RTL simulation. Integer reference on the CPU is used to verify the output tokens.
 
-## Trước khi chạy
+## Before running
 
-| Cần có | Giá trị đang dùng trên workspace này |
+| Required | Value currently used on this workspace |
 |---|---|
-| Top | llm_soc; không chọn matmulfree cho application này |
-| Python | 3.11 hoặc 3.12 cho packages đã pin |
-| Simulator | Questa Altera Starter 2025.2, trong C:/altera_lite/25.1std/questa_fse/win64 |
-| RAM model | altera_mf.v của bản Quartus được timing manifest ghi nhận |
-| Checkpoint/tokenizer | tests/language_demo/upstream, SHA-256 khớp upstream_manifest.json |
-| Evidence | Cả bảy nhóm PASS và full-top all-corner timing đạt ≥100 MHz, đúng RTL/config |
+| Top | llm_soc; do not select matmulfree for this application |
+| Python | 3.11 or 3.12 for pinned packages |
+| Simulator | Questa Altera Starter 2025.2, in C:/altera_lite/25.1std/questa_fse/win64 |
+| RAM model | altera_mf.v from the Quartus version recorded in timing manifest |
+| Checkpoint/tokenizer | tests/language_demo/upstream, SHA-256 matches upstream_manifest.json |
+| Evidence | All seven groups PASS and full-top all-corner timing reaches ≥100 MHz, correct RTL/config |
 
-Trạng thái verification và application hiện tại: [optimization status](../verification/optimization_status.md). Mỗi lần chỉ dùng một Questa session vì application dùng chung tên build.
+Current verification and application status: [optimization status](../verification/optimization_status.md). Only one Questa session is used each time because the application shares the build name.
 
-## Các bước chạy
+## Steps to run
 
-### 1. Mở PowerShell ở repository
+### 1. Open PowerShell in the repository
 
 ```powershell
 Set-Location -LiteralPath 'D:/2151097_Nguyen Nhut Khanh'
@@ -35,45 +35,45 @@ $simBin = 'C:/altera_lite/25.1std/questa_fse/win64'
 & $pythonExe --version
 ```
 
-Các đường dẫn trên trỏ đến runtime và tool đang dùng trong workspace. Khi đổi máy,
-hãy thay bằng installation tương ứng. `setup.ps1` yêu cầu Python 3.11/3.12.
+The above paths point to the runtime and tools currently used in the workspace. When changing machines,
+replace them with the corresponding installation. `setup.ps1` requires Python 3.11/3.12.
 
-### 2. Chuẩn bị checkpoint và dependencies
+### 2. Prepare checkpoints and dependencies
 
-Nếu assets đã có, chỉ cần kiểm tra file:
+If the assets already exist, just check the files:
 
 ```powershell
 & $pythonExe tests/language_demo/fetch_assets.py --check
 ```
 
-Nếu thiếu assets hoặc packages, chạy setup một lần:
+If assets or packages are missing, run the setup once:
 
 ```powershell
 & tests/language_demo/setup.ps1 -Python $pythonExe
 ```
 
-Setup cài NumPy, safetensors và tokenizers vào thư mục packages riêng, rồi tải
-và kiểm tra 12 file đã pin. Bước này chưa thực thi checkpoint inference.
+Setup installs NumPy, safetensors, and tokenizers into a separate packages folder, then download
+and verify the 12 pinned files. This step does not execute checkpoint inference.
 
-### 3. Chọn manifest đúng và kiểm tra gate
+### 3. Select the correct manifest and check the gate
 
-Chỉ chọn file `manifest.json` của một lượt timing đã hoàn tất. Manifest dưới đây
-là ví dụ lịch sử; chọn manifest áp dụng từ trang trạng thái và kiểm tra gate trước khi chạy.
+Only select the `manifest.json` file from a completed timing run. The manifest below
+is a historical example; select the applicable manifest from the status page and check the gate before running.
 
 ```powershell
 $timingManifest = 'docs/verification/timing/nanofable_max_20261006/manifest.json'
 if (-not (Test-Path -LiteralPath $timingManifest)) {
-    throw 'Timing chưa hoàn tất. Xem status/log của workflow hoặc tạo lượt timing mới.'
+    throw 'Timing has not completed. Check the workflow status/log or start a new timing run.'
 }
 & $pythonExe tests/full_rtl/check_gate.py $timingManifest
-if ($LASTEXITCODE -ne 0) { throw 'Gate chưa PASS; dừng trước export và application.' }
+if ($LASTEXITCODE -ne 0) { throw 'Gate has not passed; stop before export and application.' }
 ```
 
-Kết quả cần thấy: `FULL_RTL_APPLICATION_GATE_PASS`. Nếu source, tests, evidence
-logs hoặc QSF/QPF/SDC không khớp, xem [cách tái kiểm chứng](../verification/README.md).
-Không đổi hash, giới hạn timing hay expected tokens để vượt gate.
+Result to expect: `FULL_RTL_APPLICATION_GATE_PASS`. If source, tests, evidence
+logs or QSF/QPF/SDC do not match, see [reverification method](../verification/README.md).
+Do not change hash, timing limits, or expected tokens to pass the gate.
 
-### 4. Chạy thử ngắn: 8 token greedy
+### 4. Short test run: 8 token greedy
 
 ```powershell
 $appArgs = @{
@@ -89,27 +89,27 @@ $appArgs = @{
 & tests/full_rtl/run_application.ps1 @appArgs
 ```
 
-Runner kiểm tra gate, chuẩn bị RAM model, export parameter image và reference,
-compile testbench, mô phỏng rồi xác minh evidence. `MinNew=8` mask EOS trong
-8 token; `Temperature=0` dùng greedy. Bắt đầu với lượt ngắn để biết pipeline
-application hoạt động trước khi chọn continuation dài.
+Runner checks gate, prepares model RAM, exports parameter image and reference,
+compiles testbench, simulates, then verifies evidence. `MinNew=8` masks EOS in
+8 token; `Temperature=0` uses greedy. Start with a short pass to know the pipeline
+The application operates before selecting a long continuation.
 
-Để chạy thử chức năng khi RTL đã đổi hoặc timing/unit gate chưa PASS, bỏ qua
-bước gọi `check_gate.py` ở trên và dùng:
+To test the function when RTL has changed or timing/unit gate has not PASSED, skip
+the step calling `check_gate.py` above and use:
 
 ```powershell
 & tests/full_rtl/run_application.ps1 @appArgs -SkipGate
 ```
 
-Chế độ này vẫn cần `TimingManifest` để chọn RAM model của Quartus và vẫn
-kiểm tra token RTL khớp reference. Kết quả được lưu riêng trong
+This mode still requires `TimingManifest` to select the Quartus RAM model and still
+check that the RTL token matches the reference. The results are saved separately in
 `tests/full_rtl/application_functional_results.json` (`hardware_gate: SKIPPED`)
-và `tests/full_rtl/generated_functional_text.md`; không chứng minh timing hay
-bảy nhóm unit đã PASS cho RTL hiện tại.
+and `tests/full_rtl/generated_functional_text.md`; it does not prove the timing or
+seven unit groups have PASSED for the current RTL.
 
-### 5. Chạy continuation dài hơn
+### 5. Run a longer continuation
 
-Sau khi đã lưu kết quả lượt trước, thay các tham số trong cùng PowerShell:
+After saving the previous results, replace the parameters in the same PowerShell:
 
 ```powershell
 $appArgs.Prompt = 'Once upon a time, Lily found a tiny kitten.'
@@ -119,18 +119,18 @@ $appArgs.Temperature = 166
 & tests/full_rtl/run_application.ps1 @appArgs
 ```
 
-Temperature dùng định dạng raw U8/F8: 166 tương đương khoảng 0,6484. EOS có thể kết thúc
-sau `MinNew`; không phải lần nào cũng sinh đủ `NewTokens`. Exporter kiểm tra
-`prompt token count + NewTokens ≤128`; số token của prompt không phải số từ.
-Chọn prompt tiếng Anh ngắn cho checkpoint kể chuyện này. Độ dài mô phỏng trên PC
-phụ thuộc prompt/context và số token, khác với thời gian tính theo clock phần cứng.
+Temperature uses raw U8/F8 format: 166 corresponds to about 0.6484. EOS can terminate
+after `MinNew`; not every time does it generate `NewTokens`. Exporter check
+`prompt token count + NewTokens ≤128`; the number of prompt tokens is not the number of words.
+Choose a short English prompt for this storytelling checkpoint. The simulation length on PC
+depends on the prompt/context and the number of tokens, different from time calculated by hardware clock.
 
-### 6. Dùng hết context của RTL hiện tại
+### 6. Use up the current RTL context
 
-Checkpoint gốc khai báo context **512 token** trong `upstream/config.json`.
-RTL hiện tại hỗ trợ **128 token**, tính cả prompt và continuation. Vì vậy,
-demo tối đa của bản RTL này dùng prompt `Once upon a time` (4 token) và sinh
-124 token mới; đây là giới hạn của RTL đang kiểm chứng.
+The original checkpoint declares the context **512 tokens** in `upstream/config.json`.
+The current RTL supports **128 tokens**, including prompt and continuation. Therefore,
+demo of this RTL's maximum using prompt `Once upon a time` (4 tokens) and generating
+124 new tokens; this is the limit of the RTL being verified.
 
 ```powershell
 $appArgs.Prompt = 'Once upon a time'
@@ -141,47 +141,47 @@ $appArgs.Seed = 7
 & tests/full_rtl/run_application.ps1 @appArgs
 ```
 
-`MinNew=124` giữ EOS bị mask trong toàn bộ continuation để dùng đủ 128 vị trí.
-Đây là cấu hình sampling; token kết quả vẫn phải khớp reference số nguyên.
-Muốn dùng đủ context 512 của checkpoint cần mở rộng RTL, memory/address geometry,
-exporter và testbench, rồi chạy lại các gate trước application.
+`MinNew=124` keeps the masked EOS throughout the continuation to use all 128 positions.
+This is the sampling configuration; the resulting tokens must still match the integer reference.
+To use the full 512 context of the checkpoint, the RTL, memory/address geometry,
+exporter and testbench need to be expanded, then rerun the gates before the application.
 
-## Đọc tiến độ và kết quả
+## Reading progress and results
 
-Mở terminal thứ hai ở repository nếu muốn xem log trong lúc mô phỏng:
+Open a second terminal in the repository if you want to see the log during simulation:
 
 ```powershell
 Get-Content -LiteralPath 'tests/full_rtl/build/application.log' -Tail 20 -Wait
 ```
 
-Ctrl+C trong terminal theo dõi chỉ dừng `Get-Content`; để dừng mô phỏng, dùng
-terminal đang chạy runner. Log báo `FULL_RTL_LOAD_PROGRESS` mỗi 1.024 parameter
-rows trong lúc nạp checkpoint, rồi `FULL_RTL_GRAPH_START` khi bắt đầu inference.
-Log báo `FULL_RTL_PROGRESS` mỗi 100.000 compute clocks và
-`FULL_RTL_TOKEN_VERIFIED` cho từng token được so sánh. Runner dừng ngay khi mismatch.
+Ctrl+C in the monitoring terminal only stops `Get-Content`; to stop the simulation, use
+The terminal is running the runner. The log reports `FULL_RTL_LOAD_PROGRESS` every 1,024 parameters
+rows while loading the checkpoint, then `FULL_RTL_GRAPH_START` when starting inference.
+The log reports `FULL_RTL_PROGRESS` every 100,000 compute clocks and
+`FULL_RTL_TOKEN_VERIFIED` for each token compared. The runner stops immediately on mismatch.
 
-| File | Nội dung |
+| File | Content |
 |---|---|
-| tests/full_rtl/generated_text.md | Continuation decode từ token RTL thực tế |
-| tests/full_rtl/application_results.json | PASS, token IDs, RTL text, source/evidence hashes và text_quality |
-| tests/full_rtl/build/rtl_tokens.txt | Token IDs host đọc từ output window |
-| tests/full_rtl/build/application.log | Runtime log và FULL_RTL_APPLICATION_PASS |
+| tests/full_rtl/generated_text.md | Continuation decode from actual RTL tokens |
+| tests/full_rtl/application_results.json | PASS, token IDs, RTL text, source/evidence hashes, and text_quality |
+| tests/full_rtl/build/rtl_tokens.txt | Token IDs read by host from output window |
+| tests/full_rtl/build/application.log | Runtime log and FULL_RTL_APPLICATION_PASS |
 | tests/full_rtl/build/application_compile.log | Compile diagnostics |
-| tests/full_rtl/build/reference.json | Input config và continuation kỳ vọng của reference integer |
+| tests/full_rtl/build/reference.json | Input config and expected continuation of reference integer |
 
-Một lượt hoàn tất cần `FULL_RTL_APPLICATION_PASS` và
-`FULL_RTL_APPLICATION_EVIDENCE_PASS`. `application_results.json` ghi `status=PASS`
-khi token RTL khớp reference. Mục `text_quality=NOT_ASSESSED` cần được bổ sung
-bằng cách đọc paragraph thực tế; PASS numeric chưa xác nhận chất lượng văn bản.
+A full pass requires `FULL_RTL_APPLICATION_PASS` and
+`FULL_RTL_APPLICATION_EVIDENCE_PASS`. `application_results.json` records `status=PASS`
+when RTL token matches reference. Item `text_quality=NOT_ASSESSED` needs to be supplemented
+by reading the actual paragraph; PASS numeric has not confirmed text quality.
 
-## Lưu kết quả trước lượt kế tiếp
+## Save results before the next pass
 
-Runner hiện dùng chung thư mục build và output file cho các lượt application.
-Trước khi chạy lại, lưu một archive mới, ví dụ:
+The runner currently shares the build folder and output files for multiple application runs.
+Before running again, save a new archive, for example:
 
 ```powershell
 $appArchive = 'tests/full_rtl/evidence/my_nanofable_20261006'
-if (Test-Path -LiteralPath $appArchive) { throw 'Chọn một tên archive chưa có.' }
+if (Test-Path -LiteralPath $appArchive) { throw 'Choose an archive name that does not already exist.' }
 New-Item -ItemType Directory -Path $appArchive | Out-Null
 Copy-Item -LiteralPath 'tests/full_rtl/application_results.json','tests/full_rtl/generated_text.md' -Destination $appArchive
 $appFiles = @('application_compile.log','application_compile.console','application.log',
@@ -197,21 +197,21 @@ Get-ChildItem -LiteralPath $appArchive -File | ForEach-Object {
 $hashes | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $appArchive 'sha256.json') -Encoding utf8
 ```
 
-Archive này lưu kết quả/log/input, còn timing và source snapshot được tham chiếu qua
-manifest. Giữ cả RAM-model cache được application result tham chiếu. Không sửa
-archive cũ để biểu diễn một lần chạy khác.
+This archive stores results/log/input, while timing and source snapshots are referenced through
+the manifest. Keep the RAM-model cache referenced by the application result. Do not modify
+the old archive to represent a different run.
 
-## Khi runner dừng
+## When the runner stops
 
-| Thông báo / tình huống | Cách xử lý |
+| Message / Situation | Handling |
 |---|---|
-| Missing manifest hoặc Configuration changed after timing | Chờ/tạo full-top timing cho cấu hình hiện tại rồi kiểm tra gate |
-| RTL changed hoặc unit evidence stale | Chạy lại đúng unit/graph hoặc timing bị ảnh hưởng; giữ evidence cũ |
-| Missing pinned asset / import error | Chạy setup với Python 3.11/3.12 hoặc kiểm tra lại assets/packages |
-| License unavailable | Kết thúc phiên Questa đang dùng license trước khi mở phiên mới |
-| Prompt vượt context | Giảm prompt hoặc NewTokens; giữ tổng token ≤128 |
-| Token mismatch, timeout hoặc error | Giữ log/input/reference để debug; không đổi expected IDs hay watchdog để nhận PASS |
+| Missing manifest or Configuration changed after timing | Wait/create full-top timing for the current configuration and then check the gate |
+| RTL changed or unit evidence stale | Rerun the affected unit/graph or timing; keep the old evidence |
+| Missing pinned asset / import error | Run setup with Python 3.11/3.12 or check assets/packages |
+| License unavailable | End the current Questa session using the license before opening a new session |
+| Prompt exceeds context | Reduce the prompt or NewTokens; keep total tokens ≤128 |
+| Token mismatch, timeout or error | Keep log/input/reference for debugging; do not change expected IDs or watchdog to get PASS |
 
-[Host map](../design/host_interface.md) giải thích những gì testbench ghi vào DUT.
-[Báo cáo hybrid cũ](legacy/nanofable_hybrid.md) ghi CPU generation và linear-only
-RTL trước đây; kết quả đó thuộc một flow khác với application này.
+[Host map](../design/host_interface.md) explains what the testbench writes into the DUT.
+[Old hybrid report](legacy/nanofable_hybrid.md) records CPU generation and linear-only
+Previous RTL; that result belongs to a different flow than this application.

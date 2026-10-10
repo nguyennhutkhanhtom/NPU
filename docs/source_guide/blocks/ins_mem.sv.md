@@ -1,9 +1,9 @@
-# ins_mem.sv — Instruction RAM và fetch/host valid
+# ins_mem.sv — Instruction RAM and fetch/host valid
 
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
+[Document](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [File index](README.md)
 
-**Trạng thái:** Đang dùng.
+**Status:** In use.
 
 **Source:** [ins_mem.sv](<../../../Verilog%20Source%20code/ins_mem.sv>).
 
@@ -11,41 +11,41 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | Memory 512×13 bit do host nạp, không reset hoặc initialize nội dung. Một cổng đọc đồng bộ dùng chung cho fetch và host có tag/valid; top chặn host khi running và scheduler chờ `instr_valid`. Simulation và synthesis dùng cùng RTL và cùng latency, không phụ thuộc define hoặc thuộc tính memory của hãng. Reset chỉ xóa control/tag; host phải nạp chương trình hợp lệ và HALT trước khi start. |
+| Responsibility | Memory 512×13 bit loaded by host, does not reset or initialize contents. A synchronous read port shared for fetch and host with tag/valid; top blocks host when running and scheduler waits `instr_valid`. Simulation and synthesis use the same RTL and same latency, independent of define or vendor memory attributes. Reset only clears control/tag; host must load a valid program and HALT before start. |
 
-## Sơ đồ kiến trúc tổng quan
+## Overall architecture diagram
 
 ![ins_mem.sv — overview](../../diagrams/previews/20_ins_mem.sv_1.svg)
 
 [Editable draw.io — ins_mem.sv — overview](../../diagrams/architecture.drawio) · Page `20_ins_mem.sv_1`.
 
-Nét liền là dữ liệu, nét đứt là điều khiển và địa chỉ. Memory và read data register không có reset bất đồng bộ. Sơ đồ mô tả storage logic, không quy định macro vật lý.
+Solid line is data, dashed line is control and address. Memory and read data register do not have asynchronous reset. The diagram describes storage logic, it does not specify physical macros.
 
 ## Main flow
 
-1. Host write tại cạnh lên khi rst_n, host_en và host_we. Top chỉ chấp nhận khi core idle.
-2. Một request read ổn định qua hai cạnh lên: cạnh đầu chốt address/client, cạnh thứ hai chốt RAM data và response tag. Valid chỉ lên khi request hiện tại, request tag và response tag cùng địa chỉ/client.
-3. Fetch valid chỉ có khi fetch_en đang giữ. Scheduler ở S_FETCH đến khi valid rồi chốt instr_q ở cạnh tiếp theo. Fetch dùng cùng hai cạnh lên của hợp đồng bộ nhớ trong mọi build.
-4. Cổng host của RAM giữ en, we=0 và address đến host_rvalid; frontend top chốt request/response rồi trả host_ready sau bốn cạnh lên cho host ngoài. Write, idle hoặc đổi client làm response cũ mất hiệu lực; đọc lại cùng địa chỉ sau write vẫn phải chờ.
-5. Memory và read data register không reset; reset xóa tag/control nên response trước reset mất hiệu lực. Không được dùng data khi valid=0.
-6. Test độc lập kiểm tra toàn bộ 512 địa chỉ, chuyển client, overwrite/re-read, restart cùng PC và reset không xóa contents. Test top đi đến PC=511, restart và lỗi khi chương trình cố đi qua PC cuối.
+1. Host writes on the rising edge when rst_n, host_en, and host_we. Top only accepts if core is idle.
+2. A read request is stable over two rising edges: the first edge latches the address/client, the second edge latches RAM data and response tag. Valid is only high when the current request, request tag, and response tag have the same address/client.
+3. Fetch is valid only when fetch_en is held. Scheduler stays in S_FETCH until valid, then latches instr_q on the next edge. Fetch uses the same two rising edges of the memory contract in all builds.
+4. The RAM host port keeps en, we=0, and address until host_rvalid; the frontend top latches request/response and then returns host_ready after four rising edges to the external host. Write, idle, or switching client invalidates the old response; re-reading the same address after a write still must wait.
+5. Memory and read data registers are not reset; reset clears tag/control so the response before reset becomes invalid. Data must not be used when valid=0.
+6. Independent test checks all 512 addresses, switches client, overwrites/re-reads, restarts at the same PC, and reset does not clear contents. Top test goes to PC=511, restarts, and errors when the program tries to go past the last PC.
 
 ## Important state / datapath groups
 
-Các đoạn dưới đây bao phủ nguyên văn toàn bộ source hiện tại, theo thứ tự dòng.
+The sections below cover the entire current source verbatim, in line order.
 
-### [Dòng 1–19: Giao diện, memory và tag registers](<../../../Verilog%20Source%20code/ins_mem.sv#L1>)
+### [Lines 1–19: Interface, memory, and tag registers](<../../../Verilog%20Source%20code/ins_mem.sv#L1>)
 
-**Mục đích.** Địa chỉ U9 chọn một trong 512 instruction 13 bit. Hai client có enable/valid riêng nhưng chia sẻ memory và read data register. Tag chứa địa chỉ/client để response chỉ acknowledge đúng request hiện tại.
+**Purpose.** U9 address selects one of 512 13-bit instructions. Two clients have separate enable/valid but share memory and read data register. Tag contains address/client to respond only acknowledging the current request.
 
-### [Dòng 20–28: Host write và đọc memory đồng bộ](<../../../Verilog%20Source%20code/ins_mem.sv#L20>)
+### [Lines 20–28: Host write and synchronous memory read](<../../../Verilog%20Source%20code/ins_mem.sv#L20>)
 
-**Cách hoạt động.** Host write được chốt tại cạnh lên khi reset đã nhả và request write hợp lệ. Read dùng địa chỉ chốt ở cạnh trước; `read_pending_q` bật capture dữ liệu. Memory không initialize hoặc reset, read data register không asynchronous reset.
+**Operation.** Host write is latched on the rising edge when reset is released and write request is valid. Read uses the address latched on the previous edge; `read_pending_q` enables data capture. Memory is not initialized or reset; read data register has no asynchronous reset.
 
-### [Dòng 29–37: Dữ liệu chung và valid theo client](<../../../Verilog%20Source%20code/ins_mem.sv#L29>)
+### [Lines 29–37: General data and valid according to client](<../../../Verilog%20Source%20code/ins_mem.sv#L29>)
 
-**Cách hoạt động.** Cùng `read_data_q` lái cả output instruction. Valid chọn client phù hợp và yêu cầu hai tag cùng địa chỉ hiện tại. Fetch valid còn yêu cầu `fetch_en`; host valid yêu cầu read đang giữ. Data có thể còn giá trị cũ nhưng không được tiêu thụ khi valid=0.
+**Operation.** Together with `read_data_q` driving the entire output instruction. Valid selects the appropriate client and requests two tags at the current address. Fetch valid still requires `fetch_en`; host valid requires read being held. Data may still have old values but must not be consumed when valid=0.
 
-### [Dòng 38–61: Chốt request, chuyển response và reset](<../../../Verilog%20Source%20code/ins_mem.sv#L38>)
+### [Lines 38–61: Latching request, transferring response, and reset](<../../../Verilog%20Source%20code/ins_mem.sv#L38>)
 
-**Cách hoạt động.** Reset chỉ xóa control/tag. Cạnh lên chuyển request tag sang response và lấy request host read hoặc fetch mới. Khi request đổi địa chỉ hoặc client, response cũ không khớp nên phải đợi đủ hai cạnh lên. Top giữ host và fetch loại trừ nhau; priority host trong mux không tạo một cổng đọc thứ hai.
+**How it works.** Reset only clears the control/tag. The rising edge moves the request tag to the response and gets a new request host read or fetch. When the request changes address or client, the old response does not match, so it is necessary to wait for both rising edges. The top keeps the host and fetch mutually exclusive; host priority in mux does not create a second read port.

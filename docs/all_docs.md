@@ -170,4 +170,4 @@ matmul_wrap → matmulfree
   ├── ternary_mul → acc_mul, logic_mul, postscale_finish
   └── scale_compose → div, logic_mul
 ```
-![Ảnh mẫu, nhãn và dự đoán CPU/RTL](demos/mnist.png)
+![Sample image, label, and CPU/RTL prediction](demos/mnist.png)

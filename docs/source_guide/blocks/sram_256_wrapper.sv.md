@@ -1,9 +1,9 @@
-# sram_256_wrapper.sv — SRAM đồng bộ với mask 32 bit
+# sram_256_wrapper.sv — Synchronous SRAM with 32-bit mask
 
 > **Category: GUIDE. Scope: LEGACY.** RTL is authoritative; diagrams use the [shared visual style](../../diagrams/diagram_style.md).
-[Tài liệu](../../README.md) → [Hierarchy RTL](<../legacy/README.md>) → [Mục lục từng file](README.md)
+[Documentation](../../README.md) → [RTL Hierarchy](<../legacy/README.md>) → [File Table of Contents](README.md)
 
-**Trạng thái:** Đang dùng — chung cho parameter và workspace.
+**Status:** In use — shared for parameters and workspace.
 
 **Source:** [sram_256_wrapper.sv](<../../../Verilog%20Source%20code/sram_256_wrapper.sv>).
 
@@ -11,59 +11,59 @@
 
 | Item | Description |
 |---|---|
-| Responsibility | Compute đọc/ghi word 256 bit; host đọc/ghi một lane 32 bit. `ADDR_W=8` tạo workspace 8 KiB, `ADDR_W=10` tạo parameter 32 KiB; `llm_soc` dùng `ADDR_W=15, DEPTH=24576` cho 768 KiB. Tám bank 32 bit dùng cùng địa chỉ đọc đồng bộ và write-enable riêng theo mask; mỗi bank chia thành tile tối đa 1024 word trong [banked_word_ram](banked_word_ram.sv.md). RTL có một implementation cho simulation và synthesis, không có define hoặc thuộc tính của hãng FPGA. Leaf tile là ranh giới để thay bằng Quartus IP hoặc ASIC SRAM adapter. |
+| Responsibility | Compute reads/writes 256-bit words; host reads/writes a 32-bit lane. `ADDR_W=8` creates an 8 KiB workspace, `ADDR_W=10` creates a 32 KiB parameter; `llm_soc` uses `ADDR_W=15, DEPTH=24576` for 768 KiB. Eight 32-bit banks use the same synchronized read address and separate write-enable by mask; each bank is divided into tiles up to 1024 words in [banked_word_ram](banked_word_ram.sv.md). The RTL has one implementation for simulation and synthesis, with no defines or vendor-specific attributes. Leaf tiles are the boundary for replacement with Quartus IP or ASIC SRAM adapter. |
 
-## Sơ đồ kiến trúc tổng quan
+## Overall Architecture Diagram
 
 ![sram_256_wrapper.sv — overview](../../diagrams/previews/64_sram_256_wrapper.sv_1.svg)
 
 [Editable draw.io — sram_256_wrapper.sv — overview](../../diagrams/architecture.drawio) · Page `64_sram_256_wrapper.sv_1`.
 
-Nét liền biểu diễn dữ liệu; nét đứt biểu diễn địa chỉ, enable và valid. Hộp RAM mô tả storage logic, không quy định SRAM macro hoặc block RAM vật lý. Reset chỉ xóa control/tag; dữ liệu chỉ được dùng khi valid.
+Solid lines represent data; dashed lines represent address, enable, and valid. The RAM box describes storage logic, not specifying a physical SRAM macro or block RAM. Reset only clears control/tag; data is only used when valid.
 
 ## Main flow
 
-1. Top bảo đảm host và compute không truy cập đồng thời. Host write chọn một lane 32 bit; compute write chọn cả tám lane.
-2. Cạnh lên đầu tiên chốt read request, địa chỉ, client và lane. Cạnh lên tiếp theo đọc word vào `read_row_q` và chuyển tag/valid sang response. Hai client dùng cùng hợp đồng hai cạnh lên.
-3. Compute tiêu thụ word 256 bit khi `rd_valid=1`. Cổng host của adapter giữ `host_en=1`, `host_we=0` và địa chỉ đến `host_rvalid=1`. Frontend top chốt request và response, nên host ngoài nhận `host_ready` sau bốn cạnh lên; latency adapter vẫn hai cạnh.
-4. Host valid yêu cầu current request, request tag và response tag cùng row/lane và client. Đổi địa chỉ, write hoặc idle làm response cũ mất hiệu lực; đọc lại cùng địa chỉ sau write vẫn phải chờ.
-5. RAM và register dữ liệu đọc không asynchronous reset và không có vòng initialize. Reset chỉ xóa tag/control. Host phải nạp dữ liệu trước khi đọc; dữ liệu khi valid=0 không được sử dụng.
-6. Khi thay storage bằng SRAM macro, adapter phải giữ mask 32 bit, hợp đồng read/valid, arbitration và reset control. Leaf read/write cùng địa chỉ tại một cạnh trả old-data. Read request của wrapper chốt ở cạnh trước leaf read: collision được định nghĩa tại cạnh thực sự đọc leaf, không tại cạnh nhận wrapper request. Unit test xác minh tile boundaries và collision; nội dung không reset.
+1. The top ensures the host and compute do not access simultaneously. Host write selects one 32-bit lane; compute write selects all eight lanes.
+2. The first rising edge latches the read request, address, client, and lane. The next rising edge reads the word into `read_row_q` and transfers tag/valid to the response. Two clients use the same contract of the two rising edges.
+3. Compute the 256-bit word consumption when `rd_valid=1`. The host port of the adapter holds `host_en=1`, `host_we=0`, and the destination address `host_rvalid=1`. The frontend latches requests and responses, so the external host receives `host_ready` after four rising edges; adapter latency is still two edges.
+4. The host validates the current request, request tag, and response tag in the same row/lane and client. Changing the address, writing, or idling makes the old response invalid; reading the same address after a write still has to wait.
+5. RAM and data registers do not have asynchronous reset and do not have an initialization loop. Reset only clears the tag/control. The host must load data before reading; data when valid=0 cannot be used.
+6. When replacing storage with an SRAM macro, the adapter must maintain a 32-bit mask, read/valid contract, arbitration, and reset control. Leaf read/write to the same address on one edge returns old-data. The wrapper's read request latches on the edge before the leaf read: a collision is defined at the edge where the leaf is actually read, not at the edge where the wrapper request is received. Unit tests verify tile boundaries and collisions; the contents are not reset.
 
 ## Important state / datapath groups
 
-Các đoạn dưới đây bao phủ nguyên văn toàn bộ source hiện tại, theo thứ tự dòng.
+The sections below cover the full literal current source, in line order.
 
-### [Dòng 1–25: Giao diện và cổng ghi nội bộ](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L1>)
+### [Lines 1–25: Interface and internal write ports](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L1>)
 
-**Mục đích.** Công bố hai client và kích thước word; address host là chỉ số word 32 bit, gồm row và ba bit lane.
+**Purpose.** Expose two clients and word size; host address is a 32-bit word index, consisting of a row and three lane bits.
 
-**Tín hiệu chính.** `ADDR_W`, `DEPTH`, `rd_en/rd_addr/rd_data/rd_valid`, `wr_en/wr_addr/wr_data`, `host_en/host_we/host_addr/host_wdata/host_rdata/host_rvalid`. Ba tín hiệu `write_address`, `write_data`, `write_mask` nối write mux với các bank.
+**Main signals.** `ADDR_W`, `DEPTH`, `rd_en/rd_addr/rd_data/rd_valid`, `wr_en/wr_addr/wr_data`, `host_en/host_we/host_addr/host_wdata/host_rdata/host_rvalid`. Three signals `write_address`, `write_data`, `write_mask` connect the write mux with the banks.
 
-### [Dòng 26–41: Mux địa chỉ và mask ghi](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L26>)
+### [Lines 26–41: Address mux and write mask](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L26>)
 
-**Cách hoạt động.** Default chọn compute write, mask là tám bản sao `wr_en`. Host write chọn row từ `host_addr[ADDR_W+2:3]`, lặp dữ liệu 32 bit sang tám lane và bật một bit mask từ `host_addr[2:0]`. Mỗi bank chỉ nhận dữ liệu khi bit mask tương ứng bằng 1. Các default được gán đầy đủ trong `always_comb`, không tạo latch.
+**Operation.** Default selects compute write, mask is eight copies `wr_en`. Host write selects row from `host_addr[ADDR_W+2:3]`, replicates 32-bit data to eight lanes, and sets one mask bit from `host_addr[2:0]`. Each bank only receives data when the corresponding mask bit is 1. Defaults are fully assigned in `always_comb`, no latch is created.
 
-### [Dòng 42–60: Dữ liệu đọc và kiểm tra response](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L42>)
+### [Lines 42–60: Reading data and checking response](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L42>)
 
-**Cách hoạt động.** `read_row_q` lái compute data; response lane chọn host data 32 bit. Compute valid chọn response không phải host. Host valid còn kiểm tra enable/read hiện tại và cả hai bộ tag cùng row/lane, ngăn nhận data cũ sau một request khác.
+**How it works.** `read_row_q` drives compute data; the response lane selects 32-bit host data. Compute valid chooses response not from host. Host valid also checks current enable/read and both tags in the same row/lane, preventing old data from being received after a different request.
 
-**Tín hiệu chính.** `read_pending_q/read_host_q`, `shared_read_address_q/read_lane_q`, `read_valid_q/response_host_q`, `response_address_q/response_lane_q`, `read_row_q`.
+**Main signals.** `read_pending_q/read_host_q`, `shared_read_address_q/read_lane_q`, `read_valid_q/response_host_q`, `response_address_q/response_lane_q`, `read_row_q`.
 
-### [Dòng 61–75: Tám bank đọc đồng bộ và ghi nguyên word](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L61>)
+### [Lines 61–75: Eight banks synchronous read and full word write](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L61>)
 
-**Cách hoạt động.** `generate` tạo tám bank độc lập khi elaboration; index lane là hằng. Mỗi bank ghi toàn word 32 bit với enable riêng và chốt một slice của `read_row_q` từ địa chỉ đọc chung. RAM và read data register chỉ dùng `posedge clk`, giúp storage có thể ánh xạ bằng flow synthesis tương ứng.
+**How it works.** `generate` creates eight independent banks during elaboration; the lane index is constant. Each bank writes a full 32-bit word with a separate enable and latches a slice of `read_row_q` from the shared read address. RAM and the read data register only use `posedge clk`, allowing the storage to be mapped via the corresponding flow synthesis.
 
-**Điểm cần đọc kỹ.** `rst_n` chỉ gate write trong memory process. Nó không xóa memory hoặc data output; reset control phía dưới loại bỏ valid cũ.
+**Points to read carefully.** `rst_n` only gates writes in the memory process. It does not erase memory or data output; the reset control underneath removes old valid signals.
 
-### [Dòng 76–101: Request, response tag và reset control](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L76>)
+### [Lines 76–101: Request, response tag, and reset control](<../../../Verilog%20Source%20code/sram_256_wrapper.sv#L76>)
 
-**Cách hoạt động.** Reset xóa pending/valid và tag. Mỗi cạnh chuyển request tag sang response, đồng thời chốt request host read hoặc compute read mới. Khi không có read, pending về zero. Host có ưu tiên trong mux nhưng caller phải bảo đảm arbitration theo hợp đồng; ưu tiên này không hỗ trợ hai giao dịch đồng thời.
+**How it works.** Reset clears pending/valid and tag. Each edge transfers the request tag to the response, while also latching a new request host read or compute read. When there is no read, pending goes back to zero. The host has priority in the mux, but the caller must ensure arbitration according to the contract; this priority does not support two simultaneous transactions.
 
-#### Sơ đồ khối phần cứng của nhóm
+#### Hardware block diagram of the group
 
 ![sram_256_wrapper.sv — detail 1](../../diagrams/previews/65_sram_256_wrapper.sv_2.svg)
 
 [Editable draw.io — sram_256_wrapper.sv — detail 1](../../diagrams/architecture.drawio) · Page `65_sram_256_wrapper.sv_2`.
 
-`read_row_q` chỉ có clock và capture enable. Tag/valid bảo đảm client không tiêu thụ dữ liệu chưa hợp lệ.
+`read_row_q` only has clock and capture enable. Tag/valid ensures the client does not consume invalid data.

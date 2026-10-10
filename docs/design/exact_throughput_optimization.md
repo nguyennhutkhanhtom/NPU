@@ -1,84 +1,84 @@
-# Tối ưu throughput và quyền dùng tài nguyên
+# Optimize throughput and resource usage
 
 > **Category: GUIDE.**
 
-[Tài liệu](../README.md) → [Thiết kế](README.md) → **Throughput**
+[Document](../README.md) → [Design](README.md) → **Throughput**
 
-Tối ưu giữ geometry cố định của graph: bốn layer, 128 channel, bốn head,
-FFN 384 channel, vocabulary 4.096 và context 128. Mục tiêu là giảm compute clocks
-và SRAM transactions, đồng thời giữ rounding, saturation, faults, sampling ties
-và thứ tự cập nhật PRNG. Số liệu đo nằm trong [review version 3](../reviews/rtl_change_review_v3.md).
+Optimize while keeping the graph geometry fixed: four layers, 128 channels, four heads,
+FFN 384 channels, vocabulary 4,096 and context 128. The goal is to reduce compute clocks
+and SRAM transactions, while maintaining rounding, saturation, faults, sampling ties
+and PRNG update order. Measurement data is in [review version 3](../reviews/rtl_change_review_v3.md).
 
-## Quyền sở hữu tài nguyên
+## Resource ownership
 
-| Owner | Công việc | Tài nguyên dùng chung |
+| Owner | Task | Shared resources |
 |---|---|---|
-| llm_soc | Graph, metadata, operand cache, scaling, vector writes, probability/V pass và sampling | SRAM, SIMD và các scalar units |
-| llm_linear_engine | Một ternary row, hai-word prefetch credit, reserved-code fault và response drain | Parameter SRAM, immutable operand cache |
-| llm_head_engine | Bốn int8 chunk theo thứ tự và S39 row accumulation | Parameter SRAM, cached final hidden vector và SIMD |
-| llm_attention_engine | Q/K causal requests, score scaling, score storage và maximum | KV SRAM, held query và SIMD |
-| llm_attention_normalize | Exact RNE divide, sign restoration và S24 clamp theo batch | Lane 0 dùng chung divider RMSNorm; ba divider riêng bổ sung |
-| ternary_dot32 | S25 terms và balanced S30 reduction pipeline | Logic add/subtract riêng |
+| llm_soc | Graph, metadata, operand cache, scaling, vector writes, probability/V pass and sampling | SRAM, SIMD and scalar units |
+| llm_linear_engine | One ternary row, two-word prefetch credit, reserved-code fault and response drain | Parameter SRAM, immutable operand cache |
+| llm_head_engine | Four int8 chunks in order and S39 row accumulation | Parameter SRAM, cached final hidden vector and SIMD |
+| llm_attention_engine | Q/K causal requests, score scaling, score storage and maximum | KV SRAM, held query and SIMD |
+| llm_attention_normalize | Exact RNE divide, sign restoration and S24 clamp per batch | Lane 0 shares RMSNorm divider; three additional separate dividers |
+| ternary_dot32 | S25 terms and balanced S30 reduction pipeline | Separate logic add/subtract |
 
-Mỗi pass phải drain các response trước khi parent chuyển resource ownership.
-Parameter SRAM chỉ có một owner phát request tại một thời điểm. Các test kiểm
-tra ownership và giới hạn hai-word prefetch của linear engine.
+Each pass must drain the responses before the parent transfers resource ownership.
+SRAM parameter has only one owner issuing requests at a time. The tests check
+ownership and limit the linear engine's two-word prefetch.
 
-## Operand cache, scales và packed stores
+## Operand cache, scales, and packed stores
 
-Một register cache **12 × 768 bit = 9.216 payload bits** dùng chung cho linear
-và head. Q, O, Gate và Down preload input; Q/K/V và Gate/Up chỉ reuse khi source,
-geometry và family khớp. Producer writes, reset, launch, faults hoặc head entry
-làm mất hiệu lực linear cache. Head nạp lại bốn row của final-normalized vector
-ở mỗi pass; không thêm cache riêng cho head.
+A register cache **12 × 768 bits = 9,216 payload bits** shared between linear
+and head. Q, O, Gate, and Down preload input; Q/K/V and Gate/Up only reuse when source,
+geometry, and family match. Producer writes, reset, launch, faults, or head entry
+invalidate the linear cache. Head reloads four rows of the final-normalized vector
+in each pass; do not add a separate cache for the head.
 
-Head giữ một word scale 256 bit cho tám vocabulary row. Mỗi coefficient có
-24 bit trong slot 32 bit. Vocabulary order và PRNG updates giữ nguyên. RoPE K
-reuse bảng của Q khi position tag còn hợp lệ, đồng thời vẫn đọc K vector riêng.
-Nạp norm gains vào table storage dùng chung làm mất validity của RoPE tag.
+The head holds a 256-bit word scale for eight vocabulary rows. Each coefficient has
+24 bits in a 32-bit slot. Vocabulary order and PRNG updates remain unchanged. RoPE K
+reuses the Q table when the position tag is still valid, while still reading the separate K vector.
+Load norm gains into shared table storage, invalidating the RoPE tag.
 
-Linear pack 32 scalar outputs vào write_vector_q. Lane 31 được capture trước
-transaction full-mask kế tiếp; completion chờ write drain. Reset probes phủ
-prefetch, in-flight dot, coefficient processing và lane cuối trước flush.
+Linear pack 32 scalar outputs into write_vector_q. Lane 31 is captured before
+the next full-mask transaction; completion waits for write drain. Reset probes cover
+prefetch, in-flight dot, coefficient processing and the last lane before flush.
 
-## SIMD streaming và replication
+## SIMD streaming and replication
 
-llm_math giữ mode legacy mặc định. Với STREAMING=1, `start && in_ready` có thể
-accept mỗi clock khi pipeline còn các transaction trước. Tính từ acceptance E0,
-product_valid xuất ở E3, sum_valid ở E8 và legacy done ở E9. Các response có stage
-riêng; consumer phải dùng đúng valid channel. Reset hủy validity và deassert ready.
+llm_math keeps the default legacy mode. With STREAMING=1, `start && in_ready` is possible
+accept each clock when the pipeline still has previous transactions. Counting from acceptance E0,
+product_valid output in E3, sum_valid in E8, and legacy done in E9. The responses have stages
+Separate; the consumer must use the correct valid channel. Reset cancels validity and deasserts ready.
 
-Bốn sigmoid lane xử lý batch bốn phần tử với interpolation/RNE giữ nguyên.
-Normalizer capture quotient và rounding metadata, rồi tách round, phục hồi dấu
-và clamp thành các stage register.
+Four sigmoid lanes process a batch of four elements with interpolation/RNE kept unchanged.
+Normalizer captures quotient and rounding metadata, then separates rounding, restores the sign
+and clamp to the stage registers.
 
-ATTN_DIV_LANES và SIGMOID_LANES là elaboration parameters, hỗ trợ các lũy thừa
-hai chia hết 32: 1, 2, 4, 8, 16 hoặc 32. Geometry mặc định và phạm vi áp dụng của
-evidence được ghi tại [kiến trúc](full_rtl_language.md) và [trạng thái](../verification/optimization_status.md).
+ATTN_DIV_LANES and SIGMOID_LANES are elaboration parameters, supporting powers
+two divides evenly into 32: 1, 2, 4, 8, 16, or 32. Default geometry and scope of application of
+evidence are recorded in [architecture](full_rtl_language.md) and [status](../verification/optimization_status.md).
 
 ## Transaction geometry
 
-Việc reuse operand/scale có giới hạn và ghi vector dạng packed giúp giảm số
-SRAM transaction. Số liệu đo trước/sau thuộc [throughput review ngày 2026-10-06](../reviews/rtl_change_review_v3.md);
-số liệu hiện tại và phạm vi áp dụng được ghi trong [trạng thái kiểm chứng](../verification/optimization_status.md).
+The reuse of operand/scale is limited and recording vectors in packed form helps reduce the number of
+SRAM transactions. Measurements before/after are in [throughput review dated 2026-10-06](../reviews/rtl_change_review_v3.md);
+current measurements and scope of application are recorded in [verification status](../verification/optimization_status.md).
 
-## Source và kiểm chứng
+## Source and verification
 
-isqrt_u64 và sram_word_tile đã tách thành file dùng chung. Full-top Quartus file
-list không compile norm, banked_word_ram hoặc sram_256_wrapper legacy. Những
-module này vẫn được giữ cho caller và regression riêng. Operator IDs cần cho
-fixture cũ được giữ; chúng không thêm một graph operation mới.
+isqrt_u64 and sram_word_tile have been separated into a shared file. Full-top Quartus file
+list does not compile norm, banked_word_ram or sram_256_wrapper legacy. These
+modules are still kept for caller and separate regression. Operator IDs needed for
+the old fixture are retained; they do not add a new graph operation.
 
-Regression giữ reference S128 độc lập, kiểm tra sustained/sparse streaming,
-S24_MIN, reserved ternary code và normalization exact. Không dùng approximate
-reciprocal trong đường normalize này. [Verification status](../verification/optimization_status.md)
-ghi bằng chứng áp dụng cho workspace; application cần all-seven PASS và full-top
-timing khớp source/config trước pretrained execution.
+Regression keeps independent S128 reference, checks sustained/sparse streaming,
+S24_MIN, reserved ternary code and exact normalization. Approximate
+reciprocal is not used in this normalize path. [Verification status](../verification/optimization_status.md)
+records proof applied to workspace; application requires all-seven PASS and full-top
+timing matches source/config before pretrained execution.
 
-## Cache reuse và ownership
+## Cache reuse and ownership
 
-Sơ đồ này tóm tắt các điều kiện điều khiển của parent; nó không bổ sung cache
-module instance. Các predicate trong source vẫn là nguồn chuẩn.
+This diagram summarizes the control conditions of the parent; it does not add module instance cache.
+The predicates in the source remain the standard source.
 
 ![exact_throughput_optimization — overview](../diagrams/previews/03_exact_throughput_optimization_1.svg)
 
