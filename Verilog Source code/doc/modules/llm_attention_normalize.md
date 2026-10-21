@@ -90,6 +90,8 @@ stateDiagram-v2
     DRAIN --> IDLE : mọi bộ chia rảnh
 ```
 
+`cancel_i` đưa FSM về `DRAIN` từ **bất kỳ** trạng thái nào, không chỉ từ `IDLE`; sơ đồ chỉ vẽ một mũi tên cho gọn.
+
 ## 4. Hoạt động chi tiết
 
 ### 4.1 Nạp tử số

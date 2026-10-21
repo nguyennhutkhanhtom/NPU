@@ -32,7 +32,7 @@ Các khái niệm chung (thanh ghi, cạnh clock, pipeline, valid, fixed-point, 
 | Nhánh | Điều kiện | Lá | Độ trễ đọc |
 |---|---|---|---|
 | `g_ip_tiled` | `USE_QUARTUS_MEMORY && ROWS > 4096` | `quartus_word_ram` mỗi tile 1024 hàng | 4 cạnh |
-| `g_ip` | `USE_QUARTUS_MEMORY && ROWS ≤ 4096` | một `quartus_word_ram` nguyên khối | 3 cạnh (1 nhóm) / 4 cạnh |
+| `g_ip` | `USE_QUARTUS_MEMORY && ROWS ≤ 4096` | một `quartus_word_ram` nguyên khối | 3 cạnh (với ≤ 4096 hàng luôn `GROUPS = 1`, nên nhánh 4 cạnh `g_long` không bao giờ được chọn) |
 | `g_model` | `USE_QUARTUS_MEMORY = 0` | `sram_word_tile` mỗi tile | 3 cạnh (≤ 4 tile) / 4 cạnh |
 
 ## 2. Tham số và cổng

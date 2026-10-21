@@ -96,7 +96,7 @@ stateDiagram-v2
 ```
 
 - **One-hot**: mã hóa trạng thái sao cho mỗi trạng thái là một bit riêng. Ví dụ 112 trạng thái thì dùng 112 bit, và đúng một bit bằng 1. Kiểm tra "đang ở trạng thái X" chỉ cần đọc 1 bit, nên rất nhanh. `llm_soc` dùng one-hot cho FSM `op`.
-- **Trạng thái không reachable**: trạng thái có trong mã nhưng không đường chuyển nào dẫn tới. Tài liệu `llm_soc` đánh dấu chúng riêng.
+- **Trạng thái không reachable**: trạng thái có trong mã nhưng không đường chuyển nào dẫn tới. [modules/llm_soc.md](modules/llm_soc.md) §5 liệt kê chúng.
 - **Return address**: một số "chương trình con" của FSM (ví dụ "đọc một hàng tham số") được gọi từ nhiều nơi. Trước khi gọi, FSM lưu "trạng thái quay về" vào một thanh ghi `return_*`, giống lệnh `call/ret` trong CPU.
 
 ### 1.8 SIMD và làn (lane)
@@ -137,7 +137,10 @@ flowchart TB
 
 ### 2.3 Hazard đọc-sau-ghi (RAW)
 
-Nếu ghi vào hàng X rồi đọc hàng X ngay sau đó, nhưng phép ghi vẫn đang nằm trong pipeline, phép đọc sẽ lấy được giá trị cũ. Đó là **RAW hazard** (Read After Write). Thiết kế tránh bằng tín hiệu `wr_busy`: còn phép ghi chưa xong thì chưa đọc.
+Nếu ghi vào hàng X rồi đọc hàng X ngay sau đó, nhưng phép ghi vẫn đang nằm trong pipeline, phép đọc sẽ lấy được giá trị cũ. Đó là **RAW hazard** (Read After Write). `llm_soc` tránh nó bằng lịch truy cập, không chặn từng lần đọc:
+
+- Trong một pha, ghi hàng r luôn đi kèm đọc hàng r + 1 hoặc một khe khác, không bao giờ đọc lại đúng hàng vừa ghi.
+- Cuối mỗi pha, trạng thái `O_FINISH` chờ `wr_busy` của `u_vectors` và `u_cache` về 0. Nhờ vậy pha sau luôn đọc thấy dữ liệu pha trước đã ghi xong.
 
 ### 2.4 FPGA và ASIC
 
