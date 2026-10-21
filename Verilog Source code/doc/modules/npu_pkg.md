@@ -1,11 +1,11 @@
-# `npu_pkg` — Package hằng số, kiểu và hàm của NPU legacy
+# `npu_pkg` — Package hằng số, kiểu và hàm làm tròn / bão hòa dùng chung
 
 | Mục | Giá trị |
 |---|---|
 | File | `npu_pkg.sv` |
 | Loại | `package` (không phải phần cứng độc lập) |
-| Nhóm | Hạ tầng |
-| Được dùng bởi | `matmulfree`, `descriptor_file`, các dispatcher, `norm`, `rowwise_op`, `ternary_mul`, `scale_compose`, `postscale` … |
+| Nhóm | Hạ tầng — dùng chung |
+| Được dùng bởi | **`llm_soc`**: `llm_soc`, `llm_attention_engine`, `sigmoid` (dùng `rne_shift64`, `sat_s16`, `sat_s32`). **Legacy**: `matmulfree`, `descriptor_file`, `rowwise_dispatch`, `rowwise_op`, `norm_dispatch`, `norm`, `ternary_mul`, `postscale`, `mul` |
 
 ## 0. Kiến thức cần biết trước
 
@@ -21,7 +21,7 @@ Các khái niệm chung (thanh ghi, cạnh clock, pipeline, valid, fixed-point, 
 
 ## 1. Tổng quan
 
-`npu_pkg` gom mọi quy ước dùng chung của NPU `matmulfree`: kích thước bộ nhớ, độ rộng dữ liệu, định dạng tensor, cấu trúc descriptor, và các hàm làm tròn/bão hòa. Các hàm này là **hàm thuần tổ hợp**: mỗi chỗ gọi sinh ra một khối logic riêng.
+`npu_pkg` gom các quy ước của NPU `matmulfree`: kích thước bộ nhớ, độ rộng dữ liệu, định dạng tensor, cấu trúc descriptor. Ngoài ra nó chứa các hàm làm tròn/bão hòa (`rne_shift64`, `sat_s16`, `sat_s32`) mà **cả `llm_soc`** cũng import và dùng (RNE ở mọi bước `*_ROUND`, `sat_s32` cho logit, `sat_s16` cho đầu vào sigmoid). Các hàm này là **hàm thuần tổ hợp**: mỗi chỗ gọi sinh ra một khối logic riêng.
 
 ## 2. Hằng số
 

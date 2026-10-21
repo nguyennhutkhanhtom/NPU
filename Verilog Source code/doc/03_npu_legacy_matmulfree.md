@@ -163,8 +163,8 @@ Hệ quả cho người viết chương trình: `NORM` và `TMATMUL` theo sau n�
 
 | Vùng | Địa chỉ byte | Nội dung |
 |---|---|---|
-| Tham số | 0x00000 – 0x07FFC | `mem_mapping`: trọng số ternary, bias, gain |
-| Bộ nhớ lệnh | 0x0C000 – 0x0C7FC | 512 lệnh |
+| Tham số | 0x00000 – 0x07FFC | `mem_mapping`: trọng số ternary và bias |
+| Bộ nhớ lệnh | 0x30000 – 0x307FC | 512 lệnh |
 | Workspace | 0x10000 – 0x11FFC | `addr[12:5]` = từ, `addr[4:2]` = mảnh 32 bit |
 | ws descriptor i | 0x20000 + 16i | 32 bit: `base_word 8 · length 10 · fmt 2 · frac_bits 5 · reserved 7` |
 | mat descriptor i | 0x20100 + 16i + 4w | 96 bit (3 word): `weight_base, bias_base, k_len, n_rows, scale_m, scale_r, output_s32, reserved` |
@@ -183,4 +183,4 @@ Trình tự host: ghi tham số → ghi x vào workspace → ghi descriptor → 
 | Hàm phi tuyến | Sigmoid, ReLU, cổng hồi quy | RMSNorm, RoPE, softmax, SiLU, Gumbel |
 | Phát hiện lỗi | Kiểm tra descriptor, bảng q-scale | Kiểm tra metadata ma trận, cấu hình launch |
 
-Hai thiết kế dùng chung các khối số học `logic_mul`, `div`, `isqrt_u64`, `sigmoid` và lá bộ nhớ `sram_word_tile` / `quartus_word_ram`.
+Hai thiết kế dùng chung các khối số học `logic_mul`, `div`, `isqrt_u64`, `sigmoid`, các hàm RNE/bão hòa của `npu_pkg` và lá bộ nhớ `sram_word_tile`. `quartus_word_ram` chỉ có ở `llm_soc`; nhánh legacy luôn dùng `sram_word_tile`.
