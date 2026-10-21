@@ -60,7 +60,7 @@ Lệnh 13 bit:
 | Workspace | 0x0001_0000 – 0x0001_1FFC | 256 từ 256 bit; `addr[12:5]` = từ, `addr[4:2]` = mảnh 32 bit |
 | ws descriptor i | 0x0002_0000 + 16·i | 1 từ 32 bit, i = 0…7 |
 | mat descriptor i | 0x0002_0100 + 16·i + 4·w | 3 từ 32 bit (w = 0…2), i = 0…7 |
-| Bộ nhớ lệnh | 0x0000_C000 – 0x0000_C7FC | 512 lệnh 13 bit |
+| Bộ nhớ lệnh | 0x0003_0000 – 0x0003_07FC | 512 lệnh 13 bit (`host_addr[31:11] = 0x60`) |
 | Điều khiển | 0x0004_0000 + 4·k | Thanh ghi k, bảng dưới |
 
 | k | Tên | R/W | Ý nghĩa (giá trị reset) |
@@ -198,4 +198,4 @@ Tính `y = W · RMSNorm(x)` rồi `ReLU`, với ws desc 0 = x (S16), 1 = q (S8),
 
 Mã = `opcode << 9 | dst << 6 | src1 << 3 | src0`. Ví dụ dòng 1: 8·512 + 2·64 + 3·8 + 1 = 4249 = 0x1099.
 
-Trình tự host: ghi tham số W → ghi x vào workspace → ghi descriptor → ghi 4 lệnh vào 0xC000… → ghi `1` vào 0x40000 → đọc 0x40000 đến khi `ready = 1` → kiểm tra `error` → đọc y từ workspace.
+Trình tự host: ghi tham số W → ghi x vào workspace → ghi descriptor → ghi 4 lệnh vào 0x30000… → ghi `1` vào 0x40000 → đọc 0x40000 đến khi `ready = 1` → kiểm tra `error` → đọc y từ workspace.

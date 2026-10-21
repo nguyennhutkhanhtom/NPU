@@ -52,6 +52,6 @@ flowchart LR
 - **Tầng 2.** Khi `read_pending_q = 1`, `read_data_q <= mem[read_address_q]`. Các bit valid, chủ sở hữu và địa chỉ dịch sang tầng phản hồi.
 - **Hợp lệ.** `instr_valid` yêu cầu `fetch_en` còn bật, cả hai tầng đều là fetch, và cả hai địa chỉ bằng `addr` hiện tại. `host_rvalid` có điều kiện tương tự cho phía host.
 
-Khi `PC` đổi địa chỉ, ví dụ sau một lệnh nhảy, phản hồi cũ tự động bị bỏ, vì địa chỉ đã lưu không còn khớp `addr`. Bộ fetch chỉ cần chờ `instr_valid`.
+Khi `PC` đổi địa chỉ (tập lệnh không có lệnh nhảy; PC chỉ tăng 1 hoặc về 0 khi start), phản hồi cũ tự động bị bỏ, vì địa chỉ đã lưu không còn khớp `addr`. Bộ fetch chỉ cần chờ `instr_valid`.
 
 Không có reset cho mảng `mem` hay `read_data_q`. Chỉ các bit điều khiển pipeline được reset bất đồng bộ.

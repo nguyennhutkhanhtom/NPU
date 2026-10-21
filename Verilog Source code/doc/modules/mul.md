@@ -65,7 +65,7 @@ flowchart LR
 
 1. `b_s17 = b_unsigned ? {0, b} : {b[15], b}`.
 2. `logic_mul` cho tích chính xác `p33` (S33). Tích 16 × 17 bit cần đúng 33 bit nên không mất thông tin.
-3. `product` chỉ lấy 32 bit thấp, nên có thể sai khi tích cần đủ 33 bit (ví dụ `a = −32768`, `b = 65535`).
+3. `product` lấy 32 bit thấp của `p33`. Cách này luôn chính xác: độ lớn lớn nhất của tích là 32 768 × 65 535 = 2 147 450 880 < 2³¹, nên mọi tích S16 × (S16 hoặc U16) đều vừa S32. Ví dụ `a = −32768`, `b = 65535` (U16) cho −2 147 450 880, vẫn nằm trong S32. `p33` rộng 33 bit chỉ vì đó là độ rộng tự nhiên của `logic_mul` 16 × 17.
 4. `p33` được mở rộng dấu lên 64 bit, rồi `rne_shift64` dịch phải `rshift` bit có làm tròn RNE.
 5. `result = sat_s16(rounded)`.
 6. `overflow` bật khi `rounded` nằm ngoài khoảng S16, **hoặc** khi `b_unsigned = 1` và `b > 0x8000`. Điều kiện thứ hai là một quy ước của kiểm thử: hệ số không dấu chỉ được phép tới 1,0 (0x8000 trong Q15).
