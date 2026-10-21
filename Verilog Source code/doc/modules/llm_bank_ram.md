@@ -81,7 +81,7 @@ Cả `u_vectors` (96 hàng) và `u_cache` (4096 hàng) đều có `GROUPS = 1` b
 | 3 | `pipelined_word_ram` chốt yêu cầu |
 | 4 | Ghi vào lá SRAM |
 
-`wr_busy = |write_pending_q`, trong đó `write_pending_q` là thanh ghi dịch 4 bit của `|wr_mask`. `llm_soc` dùng `wr_busy` để chặn đọc một hàng vừa ghi (tránh RAW hazard) và để chờ trước khi kết thúc một op (`O_FINISH`).
+`wr_busy = |write_pending_q`, trong đó `write_pending_q` là thanh ghi dịch 4 bit của `|wr_mask`. `llm_soc` chỉ dùng `wr_busy` ở một chỗ: trạng thái `O_FINISH` chờ nó về 0 trước khi báo `op_done`. Như vậy mọi phép ghi của một pha đã chạm lá trước khi pha sau bắt đầu đọc. Trong cùng một pha, lịch truy cập không đọc lại hàng vừa ghi, nên không cần chặn từng lần đọc.
 
 ### 4.3 Va chạm và reset
 

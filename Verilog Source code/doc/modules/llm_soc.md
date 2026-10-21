@@ -6,6 +6,7 @@
 | Loại | Top chính: giao tiếp host + FSM đồ thị 24 trạng thái + FSM thao tác one-hot 87 trạng thái |
 | Nhóm | Top / điều khiển — NPU chính |
 | Con | `reset_release`, `llm_parameter_ram` (`u_parameters`), `llm_bank_ram` × 2 (`u_vectors`, `u_cache`), `llm_math` (`u_math`), `llm_linear_engine`, `llm_head_engine`, `llm_attention_engine`, `llm_attention_normalize`, `isqrt_u64` (`u_root`), `div` (`u_div`), `sigmoid` × `SIGMOID_LANES`, `logic_mul` × 5, `llm_exp_sample` × 2, `llm_gumbel_sample` |
+| Package | `llm_pkg` (hằng số, `llm_sat24`, `llm_random_next`), `npu_pkg` (`rne_shift64`, `sat_s16`, `sat_s32`) |
 | Được dùng bởi | Top của thiết kế (FPGA: `quartus/llm_soc`) |
 
 ## 0. Kiến thức cần biết trước
@@ -96,7 +97,7 @@ Mỗi "khe" gồm 12 hàng; hàng = 32 làn × S24. Vector 128 kênh dùng 4 hà
 | `host_en`, `host_we`, `host_addr`, `host_wdata` | in | 1/1/32/32 | Giao dịch host |
 | `host_rdata`, `host_ready` | out | 32/1 | Kết quả / hoàn tất |
 | `running`, `ready` | out | 1 | Đang suy luận / rảnh |
-| `error`, `overflow_out` | out | 1 | Lỗi / có bão hòa |
+| `error`, `overflow_out` | out | 1 | Lỗi / có kết quả nhân ma trận ternary bị kẹp S24 (chỉ đường linear bật cờ này, xem §4.6) |
 | `pc_debug` | out | 9 | Vị trí token hiện tại |
 | `instr_debug` | out | 13 | `{0, pha đồ thị[4:0], chỉ số trạng thái op[6:0]}` |
 
@@ -190,7 +191,7 @@ flowchart TB
     STEP -->|"return_k"| K["O_K_REQ → O_K_WAIT<br/>đọc KV"]:::move
     STEP -->|"return_m"| M["O_M_START → O_M_WAIT<br/>llm_math"]:::mac
     STEP -->|"return_w"| W["O_WRITE<br/>ghi vector"]:::move
-    STEP -->|"return_scalar"| S["SC_MULTIPLY → SC_PAIR → SC_SUM<br/>nhân hệ số 39 × 25 bit"]:::mac
+    STEP -->|"return_scalar"| S["SC_MULTIPLY → SC_PAIR → SC_SUM<br/>nhân hệ số 39 × 25 bit (chỉ G_HEAD)"]:::mac
     P --> STEP
     V --> STEP
     K --> STEP
@@ -200,6 +201,8 @@ flowchart TB
     STEP --> FIN["O_FINISH<br/>chờ ghi xong → op_done"]:::ctrl
     FIN --> IDLE
 ```
+
+Trong thực tế chỉ `G_HEAD` gọi chuỗi `SC_MULTIPLY → SC_PAIR → SC_SUM` (từ `H_COEFF`). Kết quả của `llm_linear_engine` không đi qua các trạng thái này: chúng chạy trên đường ống riêng điều khiển bởi `linear_pipe_valid_q[0..8]`, dùng chung ba bộ nhân `u_scalar_lo/mid/hi`. Xem §4.6.
 
 ## 4. Hoạt động chi tiết
 
@@ -258,6 +261,22 @@ Prompt 3 token [17, 250, 9], sinh tối đa 5 token, greedy:
 
 Thứ tự tính toán: vị trí 0 (token 17) qua 4 lớp → vị trí 1 (250) qua 4 lớp → vị trí 2 (9) qua 4 lớp → FNORM, HEAD → token mới ở vị trí 3 → 4 lớp → HEAD → … tối đa 5 lần HEAD.
 
+### 4.6 Đường ống kết quả linear và cờ `overflow_out`
+
+Mỗi tổng hàng `llm_linear_engine` trả ra (`linear_feed`) đi qua 9 tầng, đánh dấu bằng `linear_pipe_valid_q[0..8]`, số hàng đi kèm trong `linear_pipe_row_q`:
+
+| Tầng | Việc |
+|---|---|
+| 0 | Ba tích riêng `acc × coeff[7:0]`, `[15:8]`, `[24:16]` (`u_scalar_lo/mid/hi`) |
+| 1–2 | Cộng các tích riêng → `scalar_product_q` |
+| 3 | `rne_shift64(·, 24)` → `scalar_round_q` |
+| 4–5 | Tách cờ vượt trên / dưới S24, chuyển qua cụm (`scalar_packet_*`, `scalar_cluster_*`) |
+| 6 | Kẹp S24 vào `scalar_group_q`; **bị kẹp → `overflow_out = 1`** |
+| 7 | Đưa vào đúng làn của `write_vector_q` |
+| 8 | Đủ 32 hàng (hoặc hàng cuối) → ghi `u_vectors` |
+
+`overflow_out` chỉ được bật ở tầng 6 này. Các phép kẹp khác (EMBED, RMSNorm, RoPE, cộng dư, SiLU, GMUL, chuẩn hóa attention, logit HEAD) **không** bật cờ. Cờ được xóa khi `launch` hợp lệ ở `G_IDLE`.
+
 ## 5. Các trạng thái đã gỡ bỏ
 
 FSM thao tác dùng mã one-hot: mỗi trạng thái là một bit riêng của `op`, và `OP_COUNT` là số bit đó. Một trạng thái chỉ "đến được" nếu có một chuỗi chuyển trạng thái bắt đầu từ `O_IDLE` dẫn tới nó. Với các trạng thái dùng chung như `O_P_WAIT` hay `SC_SUM`, đích đến được chọn bằng nhãn `return_*` mà trạng thái gọi đã gán trước đó, nên một nhánh chỉ tính là đến được khi nhãn của nó thực sự được gán ở một trạng thái đến được.
@@ -275,7 +294,7 @@ Các thay đổi đi kèm:
 
 - Xóa 10 nhãn trở về chỉ phục vụ các trạng thái trên: `RET_P_L_WEIGHT`, `RET_P_H_WEIGHT`, `RET_M_L_MAC`, `RET_M_H_MAC`, `RET_M_A_DOT`, `RET_K_A_KEY`, `RET_SCALAR_L_ROUND`, `RET_SCALAR_A_SCORE`, `RET_W_L_ROW_START`, `RET_W_A_QUERY`. Hai nhãn cuối chỉ được gán bên trong `L_STORE` và `A_PACK`. `p_return_t` thu từ 4 bit còn 3 bit, `scalar_return_t` từ 2 bit còn 1 bit.
 - Giữ `RET_SCALAR_O_IDLE`. RTL không gán nhãn này, nhưng `tb_operators` dùng nó để chạy riêng bộ nhân scalar (`SC_MULTIPLY` → `SC_PAIR` → `SC_SUM`) rồi quay về `O_IDLE`.
-- Đường đóng gói scalar (`scalar_packet_*`, `scalar_cluster_*`, `scalar_group_q` và làn tương ứng của `write_vector_q`) giờ chỉ được kích bởi các tầng 4–7 của đường ống kết quả linear (`linear_pipe_valid_q[4..7]`). Thanh ghi `scalar_packet_linear_q`, vốn chỉ dùng để chọn giữa `L_SAT` và `A_SAT`, bị xóa.
+- Đường đóng gói scalar (`scalar_packet_*`, `scalar_cluster_*`, `scalar_group_q` và làn tương ứng của `write_vector_q`) giờ chỉ được kích bởi các tầng 4–7 của đường ống kết quả linear (`linear_pipe_valid_q[4..7]`, xem §4.6). Thanh ghi `scalar_packet_linear_q`, vốn chỉ dùng để chọn giữa `L_SAT` và `A_SAT`, bị xóa.
 - Chỉ số one-hot của 87 trạng thái còn lại được đánh lại liên tục từ 0 đến 86 (`OP_COUNT = 87`). Vì vậy khi `ENABLE_DEBUG_INDEX = 1`, mã trạng thái trong `instr_debug[6:0]` khác với bản 112 trạng thái.
 
 Hành vi chức năng không đổi, vì các trạng thái bị xóa không bao giờ được vào.

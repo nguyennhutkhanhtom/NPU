@@ -93,7 +93,7 @@ flowchart LR
         LIN["llm_linear_engine<br/>+ ternary_dot32"]:::mac
         HD["llm_head_engine"]:::mac
         ATT["llm_attention_engine"]:::mac
-        MATH["llm_math<br/>32 × logic_mul"]:::mac
+        MATH["llm_math<br/>32 làn, 128 × logic_mul"]:::mac
     end
     subgraph ACT["Hàm kích hoạt / hậu xử lý"]
         NRM["isqrt_u64 + div<br/>(RMSNorm)"]:::act
@@ -217,7 +217,7 @@ flowchart TB
     SC --> DV
 ```
 
-`npu_pkg` (package) cung cấp hằng số, kiểu descriptor và hàm kiểm tra cho cả nhánh này.
+`npu_pkg` (package) cung cấp hằng số, kiểu descriptor và hàm kiểm tra cho nhánh này. Các hàm làm tròn/bão hòa của nó (`rne_shift64`, `sat_s16`, `sat_s32`) cũng được `llm_soc`, `llm_attention_engine` và `sigmoid` import.
 
 ### 3.3 Trường hợp đặc biệt
 
@@ -233,12 +233,12 @@ flowchart TB
 
 | Nhóm | `llm_soc` | `matmulfree` | Dùng chung |
 |---|---|---|---|
-| Điều khiển | `llm_soc` (FSM) | `matmulfree`, `PC`, `ins_mem`, `descriptor_file`, `rowwise_dispatch`, `norm_dispatch` | `reset_release` (chỉ `llm_soc`) |
-| Bộ nhớ | `llm_parameter_ram`, `llm_bank_ram`, `pipelined_word_ram` | `mem_mapping`, `register`, `sram_256_wrapper`, `banked_word_ram` | `sram_word_tile`, `quartus_word_ram` |
+| Điều khiển | `llm_soc` (FSM), `reset_release` | `matmulfree`, `PC`, `ins_mem`, `descriptor_file`, `rowwise_dispatch`, `norm_dispatch` | |
+| Bộ nhớ | `llm_parameter_ram`, `llm_bank_ram`, `pipelined_word_ram`, `quartus_word_ram` | `mem_mapping`, `register`, `sram_256_wrapper`, `banked_word_ram` | `sram_word_tile` |
 | MAC | `llm_math`, `llm_linear_engine`, `ternary_dot32`, `llm_head_engine`, `llm_attention_engine` | `ternary_mul`, `acc_mul` | `logic_mul` |
 | Kích hoạt / hậu xử lý | `llm_attention_normalize`, `llm_exp_sample`, `llm_gumbel_sample` | `rowwise_op`, `norm`, `scale_compose`, `postscale_finish` | `sigmoid`, `sigmoid_sample`, `div`, `isqrt_u64` |
-| Package | `llm_pkg` | `npu_pkg` | |
-| Tham chiếu (không tổng hợp) | | `mul`, `addsub`, `postscale` | |
+| Package | `llm_pkg` | | `npu_pkg` (kiểu descriptor chỉ legacy dùng; hàm RNE/bão hòa cả hai dùng) |
+| Tham chiếu (không được khởi tạo trong cây RTL) | | `mul`, `addsub`, `postscale` | |
 
 ## 5. Chỉ mục tài liệu module
 
