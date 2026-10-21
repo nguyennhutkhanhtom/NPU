@@ -6,7 +6,7 @@
 | Loại | Wrapper cấu trúc |
 | Nhóm | Bộ nhớ trọng số (Weights) |
 | Con | `sram_256_wrapper #(.ADDR_W(10))` |
-| Được dùng bởi | `matmulfree` (bộ nhớ tham số: trọng số ternary, bias, gain…) |
+| Được dùng bởi | `matmulfree` (bộ nhớ tham số: trọng số ternary và bias; chỉ `ternary_mul` đọc) |
 
 ## 0. Kiến thức cần biết trước
 
@@ -31,7 +31,7 @@ Hằng `npu_pkg::PARAM_AW = 10` và `PARAM_DEPTH = 1024` mô tả đúng kích t
 flowchart LR
     classDef param fill:#f5f5f5,stroke:#666666,color:#333
     classDef infra fill:#e1d5e7,stroke:#9673a6,color:#000
-    C["matmulfree<br/>(ternary_mul, norm, scale_compose)"] -->|"rd/wr 256-bit<br/>addr[9:0]"| MM["mem_mapping"]:::param
+    C["matmulfree<br/>(chỉ ternary_mul)"] -->|"đọc 256-bit<br/>addr[9:0]"| MM["mem_mapping"]:::param
     H["Host 32-bit<br/>addr[12:0]"] --> MM
     MM --> W["sram_256_wrapper<br/>ADDR_W = 10"]:::infra
     W --> B[("8 × banked_word_ram<br/>1024 x 32")]:::infra
@@ -39,7 +39,7 @@ flowchart LR
 
 ## 3. Hoạt động
 
-Mọi tín hiệu được nối thẳng xuống `sram_256_wrapper`. Hành vi chi tiết (ghi có mask làn, đọc 2 cạnh, điều kiện `host_rvalid`) xem [sram_256_wrapper.md](sram_256_wrapper.md).
+Mọi tín hiệu được nối thẳng xuống `sram_256_wrapper`. Trong `matmulfree`, cổng ghi phía compute bị nối cứng `wr_en = 0`: chỉ host ghi được bộ nhớ này, còn lõi chỉ đọc (qua `ternary_mul`). Hành vi chi tiết (ghi có mask làn, đọc 2 cạnh, điều kiện `host_rvalid`) xem [sram_256_wrapper.md](sram_256_wrapper.md).
 
 Bố cục dữ liệu trong RAM do descriptor ma trận quy định (`weight_base`, `bias_base`; xem [npu_pkg.md](npu_pkg.md)):
 

@@ -213,8 +213,9 @@ flowchart LR
     classDef reg fill:#e1d5e7,stroke:#9673a6,color:#000
     Q["q đầu h<br/>(khe 2, hàng 24 + h)"]:::param --> E1["llm_attention_engine<br/>t = 0 … p"]:::ctrl
     KV["K cache<br/>{lớp, t, 0, h}"]:::param --> E1
-    E1 --> M1["llm_math: q · k_t<br/>× 1/√32"]:::mac
-    M1 --> SM["score_memory[t]<br/>+ max"]:::reg
+    E1 --> M1["llm_math: q · k_t"]:::mac
+    M1 --> SCL["u_scale trong engine<br/>× 1/√32, RNE, sat S32"]:::act
+    SCL --> SM["score_memory[t]<br/>+ max"]:::reg
     SM --> EX["exp(s_t − max)<br/>llm_exp_sample + nội suy"]:::act
     EX --> PS["Σ p_t"]:::reg
     EX --> PV["llm_math: Σ p_t · v_t"]:::mac
@@ -272,7 +273,7 @@ Mỗi lượt có thể chiếm một chu kỳ clock, nếu pipeline luôn đầ
 
 | Đại lượng | Định dạng | Ghi chú |
 |---|---|---|
-| Vector (khe, KV cache) | S24 Q16 | Kẹp về [−2²³; 2²³ − 1]; bị kẹp → `overflow` |
+| Vector (khe, KV cache) | S24 Q16 | Kẹp về [−2²³; 2²³ − 1]. Chỉ kết quả nhân ma trận ternary bị kẹp mới bật `overflow` |
 | Tích của `llm_math` | S56 | S24 × S32 |
 | Tổng 32 tích | S61 | Sau cây cộng |
 | Hệ số ma trận, EMB_SCALE | 24 bit | Sau khi nhân: `>> 24` với RNE |
@@ -287,7 +288,7 @@ Mỗi lượt có thể chiếm một chu kỳ clock, nếu pipeline luôn đầ
 |---|---|---|
 | `error` | Launch sai: `prompt_count = 0`, `max_new = 0` hoặc tổng > 128 | Không chạy |
 | `error` | Metadata ma trận sai, mã trọng số `10`, … (`op_fault`) | Dừng ngay, `G_DONE` |
-| `overflow` | Một giá trị bất kỳ bị kẹp khi bão hòa | Vẫn chạy tiếp, chỉ ghi nhận |
+| `overflow` | Một kết quả của Q, K, V, O, GATE, UP hoặc DOWN bị kẹp về S24 (các phép kẹp khác không bật cờ này) | Vẫn chạy tiếp, chỉ ghi nhận |
 
 ## 8. Ví dụ: prompt 3 token, sinh tối đa 5 token
 

@@ -136,7 +136,8 @@ Bộ chọn toán hạng nằm trong `llm_soc` (khối `always_ff` cho `math_a_q
 | `N_SQUARE` | `vector_q` | `vector_q` | `sum` (tổng bình phương) |
 | `N_INPUT` | `vector_q` | `reciprocal_q` (1/rms) | `product` |
 | `NR_CLAMP` | kết quả đã chuẩn hóa | gain (`table_q`) | `product` |
-| `R_INPUT`, `R_COS` | `vector_q` (xoay nửa) | cos / −sin của RoPE | `product` |
+| `R_INPUT` | `vector_q` | cos của RoPE | `product` (x · cos) |
+| `R_COS` | `vector_q` xoay nửa (làn i lấy làn (i + 16) mod 32) | −sin (làn 0–15) / +sin (làn 16–31) | `product`, cộng với x · cos ở `R_SIN` |
 | `A_WEIGHT` | giá trị V (`cache_operand_q`) | xác suất `probability_q` | `product` |
 | `B_INPUT1` (nhân phần tử) | `second_q` | `vector_q` | `product` |
 | `S_MUL` | `vector_q` | σ(x) Q15 | `product` (SiLU) |
