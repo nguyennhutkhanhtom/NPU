@@ -2,7 +2,7 @@
 
 | Mục | Giá trị |
 |---|---|
-| File | `llm_soc.sv` (1321 dòng) |
+| File | `llm_soc.sv` (1323 dòng) |
 | Loại | Top chính: giao tiếp host + FSM đồ thị 24 trạng thái + FSM thao tác one-hot 87 trạng thái |
 | Nhóm | Top / điều khiển — NPU chính |
 | Con | `reset_release`, `llm_parameter_ram` (`u_parameters`), `llm_bank_ram` × 2 (`u_vectors`, `u_cache`), `llm_math` (`u_math`), `llm_linear_engine`, `llm_head_engine`, `llm_attention_engine`, `llm_attention_normalize`, `isqrt_u64` (`u_root`), `div` (`u_div`), `sigmoid` × `SIGMOID_LANES`, `logic_mul` × 5, `llm_exp_sample` × 2, `llm_gumbel_sample` |
@@ -173,10 +173,13 @@ stateDiagram-v2
     G_HEAD --> G_ADVANCE
     G_ADVANCE --> G_EMBED : sinh tiếp (vị trí + 1)
     G_ADVANCE --> G_DONE : đủ max_new / EOS / vị trí 127
-    G_DONE --> G_IDLE
+    G_DONE --> G_IDLE : op đã về O_IDLE
 ```
 
-Bất kỳ pha nào gặp lỗi (`op_fault_q`) → `G_DONE` với `error = 1`.
+Bất kỳ pha nào gặp lỗi (`op_fault_q`) → `G_DONE` với `error = 1`. Lúc đó FSM
+thao tác có thể vẫn đang "drain" (chờ các yêu cầu đọc bộ nhớ và phép tính đã
+phát đi trả về hết). `G_DONE` chỉ về `G_IDLE` khi FSM thao tác đã về `O_IDLE`,
+nên `running` giữ bằng 1 trong lúc drain và host không thể launch lại quá sớm.
 
 ### 3.3 FSM thao tác: chương trình con dùng chung
 

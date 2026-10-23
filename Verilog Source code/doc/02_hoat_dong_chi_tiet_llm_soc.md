@@ -287,7 +287,7 @@ Mỗi lượt có thể chiếm một chu kỳ clock, nếu pipeline luôn đầ
 | Cờ | Bật khi | Hậu quả |
 |---|---|---|
 | `error` | Launch sai: `prompt_count = 0`, `max_new = 0` hoặc tổng > 128 | Không chạy |
-| `error` | Metadata ma trận sai, mã trọng số `10`, … (`op_fault`) | Dừng ngay, `G_DONE` |
+| `error` | Metadata ma trận sai, mã trọng số `10`, … (`op_fault`) | Dừng, vào `G_DONE`; chỉ về idle (`running = 0`) sau khi việc đang dở drain xong |
 | `overflow` | Một kết quả của Q, K, V, O, GATE, UP hoặc DOWN bị kẹp về S24 (các phép kẹp khác không bật cờ này) | Vẫn chạy tiếp, chỉ ghi nhận |
 
 ## 8. Ví dụ: prompt 3 token, sinh tối đa 5 token

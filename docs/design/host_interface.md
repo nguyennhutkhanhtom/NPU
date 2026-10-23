@@ -93,6 +93,8 @@ class X platform;
 Parameters được đọc đồng bộ qua adapter. Write ACK chờ leaf commit; thời gian
 ACK có thể khác nhau giữa memory access và register access. Write trong lúc graph
 đang chạy không sửa parameters/config/prompt. Status vẫn dùng để poll tiến độ.
+Sau một lỗi (fault), status giữ running=1 cho đến khi phần việc engine/memory
+đang dở đã drain xong; START ghi trong lúc đó bị bỏ qua như mọi write khi đang chạy.
 
 Deassert enable trước execution edge sẽ hủy write. Sau khi write được accept,
 deassert enable sẽ hủy response nhưng write vẫn có thể commit. Reset hủy queue
