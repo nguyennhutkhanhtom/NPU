@@ -173,10 +173,13 @@ stateDiagram-v2
     G_HEAD --> G_ADVANCE
     G_ADVANCE --> G_EMBED : sinh tiếp (vị trí + 1)
     G_ADVANCE --> G_DONE : đủ max_new / EOS / vị trí 127
-    G_DONE --> G_IDLE
+    G_DONE --> G_IDLE : op đã về O_IDLE
 ```
 
-Bất kỳ pha nào gặp lỗi (`op_fault_q`) → `G_DONE` với `error = 1`.
+Bất kỳ pha nào gặp lỗi (`op_fault_q`) → `G_DONE` với `error = 1`. Lúc đó FSM
+thao tác có thể vẫn đang "drain" (chờ các yêu cầu đọc bộ nhớ và phép tính đã
+phát đi trả về hết). `G_DONE` chỉ về `G_IDLE` khi FSM thao tác đã về `O_IDLE`,
+nên `running` giữ bằng 1 trong lúc drain và host không thể launch lại quá sớm.
 
 ### 3.3 FSM thao tác: chương trình con dùng chung
 

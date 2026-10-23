@@ -726,7 +726,9 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                         layer_q <= 0; graph <= G_EMBED;
                     end
                 end
-                G_DONE : graph <= G_IDLE;
+                // A faulted operation may still drain engine/memory work. Idle
+                // status waits for it, so a relaunch cannot see its completion.
+                G_DONE : if (op[O_IDLE_IDX]) graph <= G_IDLE;
                 default : ;
             endcase
         end
