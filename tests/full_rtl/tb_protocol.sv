@@ -172,8 +172,31 @@ module tb_llm_protocol;
                 $fatal(1,"Token restart phase=%0d",phase);
             token_checks++;
         end
+        // A faulted operation can still be draining engine/memory work after
+        // the graph reports the fault. Status must stay running until that
+        // drain completes; otherwise a relaunch consumes the stale completion
+        // and advances G_EMBED to G_ANORM without an embedding.
         reset_token_fixture();
-        $display("LLM_PROTOCOL_PASS transactions=%0d cancellations=12 token_pipeline_cases=%0d bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2",checks,token_checks);$finish;
+        transaction(1,32'h00100000,32'h700,result);
+        transaction(1,32'h00400004,1,result);transaction(1,32'h00400008,1,result);
+        @(negedge clk);
+        force dut.linear_busy=1'b1;
+        force dut.graph=dut.G_Q;force dut.op=dut.O_FINISH;force dut.op_fault_q=1'b1;
+        #1;release dut.graph;release dut.op;release dut.op_fault_q;
+        repeat(4) @(negedge clk);
+        transaction(1,32'h0040000c,1,result);
+        release dut.linear_busy;
+        repeat(5) @(negedge clk);
+        if(dut.graph===dut.G_ANORM || dut.token_valid_q)
+            $fatal(1,"Relaunch consumed a stale fault completion graph=%0d",dut.graph);
+        if(running || !ready || !error || dut.graph!==dut.G_IDLE || dut.op!==dut.O_IDLE)
+            $fatal(1,"Faulted drain did not return to idle graph=%0d",dut.graph);
+        transaction(1,32'h0040000c,1,result);
+        if(!running || error || dut.graph!==dut.G_EMBED || dut.token_q!==12'h700)
+            $fatal(1,"Relaunch after faulted drain");
+        token_checks++;
+        reset_token_fixture();
+        $display("LLM_PROTOCOL_PASS transactions=%0d cancellations=12 token_pipeline_cases=%0d bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2 fault_drain_relaunch=checked",checks,token_checks);$finish;
     end
     initial begin #1000000;$fatal(1,"LLM_PROTOCOL_TIMEOUT");end
 endmodule
