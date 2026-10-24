@@ -16,7 +16,7 @@ Host và DUT dùng cùng `clk`. Mọi địa chỉ bên dưới là byte address
 | host_addr, host_wdata | Address và write data, mỗi tín hiệu 32 bit |
 | host_ready, host_rdata | ACK và read data 32 bit |
 | running, ready | Graph đang chạy hoặc idle, xuất qua register |
-| error, overflow_out | Lỗi graph/format/bounds và cờ saturation/overflow |
+| error, overflow_out | Lỗi graph/format/bounds; cờ một kết quả linear bị kẹp S24 |
 | pc_debug, instr_debug | Position 9 bit và phase/debug word 13 bit |
 
 ## Memory map
@@ -35,7 +35,11 @@ Host và DUT dùng cùng `clk`. Mọi địa chỉ bên dưới là byte address
 | Minimum new tokens | 0x00400018 | Mask EOS trước count này; mặc định 64 |
 
 Status dùng bits 0=running, 1=ready, 2=error, 3=overflow và bits 11:4=output
-count. Chỉ đọc các register/window mà RTL hỗ trợ; không giả định config writes
+count. Overflow chỉ bật khi một hàng kết quả linear (Q/K/V/O/Gate/Up/Down)
+bị kẹp về S24, và giữ tới lần START hợp lệ kế tiếp. Các phép kẹp khác
+(embedding, RMSNorm, RoPE, cộng dư, SiLU, GMUL, attention, logit) không bật cờ;
+với checkpoint pretrained hiện có, không phép kẹp activation nào bão hòa
+([census](../../tests/full_rtl/evidence/clamp_census_20261024/results.json)). Chỉ đọc các register/window mà RTL hỗ trợ; không giả định config writes
 có register readback. Graph sở hữu KV và vector workspace.
 
 ## Một transaction

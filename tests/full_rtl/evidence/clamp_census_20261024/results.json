@@ -1,0 +1,513 @@
+{
+  "status": "PASS",
+  "scope": "Saturation census at every clamp site of llm_soc (verification-only bind monitor) on tb_llm_operators, tb_llm_graph and the pretrained-checkpoint application testbench, under two simulators",
+  "verified_utc": "2026-10-24T10:18:22Z",
+  "host": "vlsi.linkclouds.top (user khanhtom), runs under ~/npu_clamp_20261024",
+  "simulators": {
+    "xcelium": "xrun(64) 23.03-s007",
+    "questa": "Questa Sim-64 vsim 2024.1"
+  },
+  "rtl": {
+    "commit": "36d69f8918baead30de592a3287e6f8393a9f99e",
+    "note": "tree identical to main 9304309 (PR #3 merge); every simulated RTL, testbench and export file matched its recorded hash (286/286)"
+  },
+  "source_sha256_lf": {
+    "Verilog Source code/PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+    "Verilog Source code/acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
+    "Verilog Source code/banked_word_ram.sv": "3f62befc5ff4942b92708e1fca7c54e61ae64781839e2efd2e6108ed0cc9a08e",
+    "Verilog Source code/descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+    "Verilog Source code/div.sv": "ddb1191f9879b7d3643d82a544ea14c30e7df999a3af5d913f354259363aa228",
+    "Verilog Source code/ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+    "Verilog Source code/isqrt_u64.sv": "c20371b0abf819e3a6011c63a908c21970bba45fa4846af86584847cfe70c9e2",
+    "Verilog Source code/llm_attention_engine.sv": "4ed88adce8f72631d86adb900cb41ef264904e68e67199238ce517b0f7e2b838",
+    "Verilog Source code/llm_attention_normalize.sv": "cc81efe9e45c34659363aeca2505d915cfc44a021b768318db67def3fa891001",
+    "Verilog Source code/llm_bank_ram.sv": "c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb",
+    "Verilog Source code/llm_head_engine.sv": "54fc2ea9fd0dd045caf6bdaf9e963fd8951180026d9770576f66c25b594fd080",
+    "Verilog Source code/llm_linear_engine.sv": "fc9ff85dc355fb21375e49c55a05a29aeaaabeeafafa38ac2ee07c7367c8d5b9",
+    "Verilog Source code/llm_math.sv": "1280302be8a07422c547c62b470b51f43324e92519cc0d69b55dd58f94c5d0bd",
+    "Verilog Source code/llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
+    "Verilog Source code/llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
+    "Verilog Source code/llm_soc.sv": "a497be2720a32cbe02a3f2552eb73e8dbe27a99f25c2ab766652b38af0871910",
+    "Verilog Source code/logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
+    "Verilog Source code/matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+    "Verilog Source code/matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
+    "Verilog Source code/mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+    "Verilog Source code/mul.sv": "fdca97fe654f877cd33e7eb934d3869a6e754bd9a4d9d128f228d9c17add646e",
+    "Verilog Source code/norm.sv": "83047edfb7ac751c38c19b15e8eed6f725b8e6f40fe63b6bdf3475cde42be8c4",
+    "Verilog Source code/norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+    "Verilog Source code/npu_pkg.sv": "18385ff77706c505eb7c947c5b1f056b5d6230e6971a1cc09a4d823c27a7bcfd",
+    "Verilog Source code/pipelined_word_ram.sv": "691f21844bfe3deae271a26e503b6d667948a70fd742d8b2d9a067039b49162a",
+    "Verilog Source code/postscale.sv": "b9cb61b7014c037c408340a8042b4c0862ed46997754d9b4dee40056835e7160",
+    "Verilog Source code/quartus_word_ram.sv": "c38b8642bfb143f71bf89902b767844086f0894a16db11ebc0abe98131709a0b",
+    "Verilog Source code/regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+    "Verilog Source code/reset_release.sv": "2720ef4c4b21a68bf193c24cdb60f574ee8b272f36862a953c1cf060f14361a2",
+    "Verilog Source code/rowwise_dispatch.sv": "e0f7cb0088af29afe233478a72f4ef9aab0676f2a24d56903b7f35261a6b3543",
+    "Verilog Source code/rowwise_op.sv": "ce49a16c12069b0560986f7b8cf5bd0a187ce1d409f0ce0e69515bff11e1a559",
+    "Verilog Source code/scale_compose.sv": "12c6b58896e3f71367ba1149f6f23784aa0389500aeaf3b66deb2abd198aa55b",
+    "Verilog Source code/sigmoid.sv": "d85cdc54ba8843c4e8aa99d4d14eb8b72edf38966aa6c09d68abd537e329fce2",
+    "Verilog Source code/sram_256_wrapper.sv": "7c17702a2fa1c9a2baed950aff5e687f2981a07206ea3582e05659c6690e968a",
+    "Verilog Source code/sram_word_tile.sv": "fca521ff4a1c9458f1731025684d0db81a6842caf06f1762d84b51a7b1bd176c",
+    "Verilog Source code/ternary_dot32.sv": "1709da1d18868f45058d5c7593b1b67542809a84ae727186ee4d6ef8d77c5821",
+    "Verilog Source code/ternary_mul.sv": "71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f",
+    "tests/full_rtl/application_tb.sv": "e715c79abde2b52e2c19e5c04d72465909b042bef47a46fc0a0736f0f99b759b",
+    "tests/full_rtl/tb_graph.sv": "900615b6405c615c678921a70df0c35f72e8c279ef160e440349dabd69544a88",
+    "tests/full_rtl/tb_operators.sv": "6e33187c83f39b7879b6c13fff18c58274948de0ff44623c1b458cfa367ef77c",
+    "tests/full_rtl/clamp_monitor.sv": "eda8cac0a5777b3d708fdc623f03fb00d92bfecd4e481951568cfed790783914"
+  },
+  "commands": {
+    "xcelium": "xrun -64bit -timescale 1ns/1ps -incdir rtl -incdir tests/full_rtl/build -f sources.f <altera_mf.v> -top <top> -top llm_clamp_binder -access +rw -l run.log",
+    "questa": "vlog -sv -svinputport=var +incdir+rtl +incdir+tests/full_rtl/build -f sources.f; vsim -c -onfinish exit -lib work <top> llm_clamp_binder -do \"run -all; quit -f\"",
+    "sources_f": "rtl/*.sv (packages first), tests/full_rtl/tb_*.sv or tests/full_rtl/application_tb.sv for the application, then tests/full_rtl/clamp_monitor.sv",
+    "runner_sha256": "0f4c88d706a7292e77fcd949f0ba90a9ca76aada644a93f8eb9b9b00ef9d0834"
+  },
+  "export": {
+    "files_sha256": {
+      "parameter.mem": "26411397b2033616aad8955d7541b411d8b52e6b60d9d11b36fff7f338f949b4",
+      "prompt.mem": "6de0f95eb3c88a9da4427ff840bbb862240589a33a1b318a916504fe226f0310",
+      "expected.mem": "0639e061a192a5bd88d534752c5c5adf9da3acbcd9d32a888a43c47b87c1fdf3",
+      "config.svh": "678c9ec81248dca04b722ff7098fba77548581541f8969e5793377ce75accfef",
+      "reference.json": "c6cf839b28a11a9c8363c333fa4e8c6a9d91cf641aad3e353c08862e095819c5"
+    },
+    "checkpoint_sha256": "cfa114a8e411c25e89f8b507cb5886785f89132352743f26cd23a7cbaab863ae",
+    "prompt": "Once upon a time, Lily found a tiny kitten.",
+    "prompt_ids": [
+      433,
+      449,
+      261,
+      398,
+      14,
+      366,
+      597,
+      261,
+      2008,
+      2577,
+      16
+    ],
+    "new_tokens": 96,
+    "temperature": 166,
+    "seed": 7,
+    "min_new": 64,
+    "prepared_utc": "2026-10-07T15:31:17.539456+00:00",
+    "hardware_gate": "SKIPPED",
+    "note": "Exported 2026-10-07 from the bit-exact Python reference; no exporter rerun here"
+  },
+  "application": {
+    "result": "FULL_RTL_APPLICATION_PASS on both simulators: 96/96 tokens equal the reference, clocks=19958382, host_commands=196722, overflow_out=0",
+    "rtl_tokens_sha256": "6538094805737baa623a40bbac36476ae255d066530025a342979f34d7130057",
+    "tokens": [
+      411,
+      284,
+      958,
+      268,
+      640,
+      265,
+      1232,
+      267,
+      1279,
+      268,
+      464,
+      261,
+      591,
+      481,
+      16,
+      410,
+      201,
+      652,
+      446,
+      268,
+      361,
+      344,
+      261,
+      575,
+      418,
+      16,
+      322,
+      773,
+      344,
+      265,
+      571,
+      267,
+      265,
+      1092,
+      16,
+      366,
+      284,
+      352,
+      616,
+      268,
+      1039,
+      311,
+      675,
+      267,
+      477,
+      267,
+      265,
+      571,
+      16,
+      301,
+      636,
+      284,
+      390,
+      406,
+      16,
+      301,
+      531,
+      284,
+      390,
+      406,
+      267,
+      340,
+      446,
+      268,
+      361,
+      344,
+      455,
+      930,
+      16,
+      410,
+      201,
+      345,
+      284,
+      390,
+      406,
+      267,
+      329,
+      14,
+      331,
+      43,
+      464,
+      268,
+      334,
+      850,
+      14,
+      412,
+      337,
+      787,
+      718,
+      14,
+      412,
+      337,
+      1502,
+      334,
+      367,
+      550
+    ],
+    "text": " It was going to find the grass and began to have a good friends. \n\nThey wanted to play with a new friend. They played with the park and the slide. Lily was so excited to give her toys and Ben and the park. The dog was very happy. The boy was very happy and she wanted to play with their family. \n\nLily was very happy and said, \"I have to be careful, but I'm sorry, but I'll be mom,\"",
+    "claim_limit": "Direct testbench run outside run_application.ps1; the gated pretrained-application claim (check_gate.py with a passing timing manifest) is not made here"
+  },
+  "runs": [
+    {
+      "simulator": "xcelium",
+      "top": "tb_llm_operators",
+      "rc": 0,
+      "seconds": 12,
+      "errors": 0,
+      "warnings": 9,
+      "marker": "LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic"
+    },
+    {
+      "simulator": "questa",
+      "top": "tb_llm_operators",
+      "rc": 0,
+      "seconds": 13,
+      "errors": 0,
+      "warnings": 32,
+      "marker": "LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic"
+    },
+    {
+      "simulator": "xcelium",
+      "top": "tb_llm_graph",
+      "rc": 0,
+      "seconds": 81,
+      "errors": 0,
+      "warnings": 9,
+      "marker": "LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=570837 host_commands=196619 fixtures=synthetic"
+    },
+    {
+      "simulator": "questa",
+      "top": "tb_llm_graph",
+      "rc": 0,
+      "seconds": 106,
+      "errors": 0,
+      "warnings": 0,
+      "marker": "LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=570837 host_commands=196619 fixtures=synthetic"
+    },
+    {
+      "simulator": "xcelium",
+      "top": "tb_full_rtl_application",
+      "rc": 0,
+      "seconds": 1125,
+      "errors": 0,
+      "warnings": 8,
+      "marker": "FULL_RTL_APPLICATION_PASS tokens=96 clocks=19958382 host_commands=196722 overflow=0"
+    },
+    {
+      "simulator": "questa",
+      "top": "tb_full_rtl_application",
+      "rc": 0,
+      "seconds": 2350,
+      "errors": 0,
+      "warnings": 0,
+      "marker": "FULL_RTL_APPLICATION_PASS tokens=96 clocks=19958382 host_commands=196722 overflow=0"
+    }
+  ],
+  "census": {
+    "tb_llm_operators": {
+      "sites": {
+        "linear": {
+          "group": "A",
+          "samples": 2601,
+          "saturated": 133
+        },
+        "embed": {
+          "group": "A",
+          "samples": 128,
+          "saturated": 0
+        },
+        "norm_scaled": {
+          "group": "A",
+          "samples": 576,
+          "saturated": 32
+        },
+        "norm_out": {
+          "group": "A",
+          "samples": 512,
+          "saturated": 0
+        },
+        "rope": {
+          "group": "A",
+          "samples": 128,
+          "saturated": 0
+        },
+        "residual": {
+          "group": "A",
+          "samples": 128,
+          "saturated": 128
+        },
+        "silu": {
+          "group": "A",
+          "samples": 384,
+          "saturated": 0
+        },
+        "gmul": {
+          "group": "A",
+          "samples": 480,
+          "saturated": 32
+        },
+        "attention_out": {
+          "group": "A",
+          "samples": 256,
+          "saturated": 0
+        },
+        "sigmoid_input": {
+          "group": "B",
+          "samples": 416,
+          "saturated": 199
+        },
+        "exp_underflow": {
+          "group": "B",
+          "samples": 528,
+          "saturated": 256
+        },
+        "attention_score": {
+          "group": "B",
+          "samples": 528,
+          "saturated": 0
+        },
+        "head_score": {
+          "group": "B",
+          "samples": 12288,
+          "saturated": 0
+        }
+      },
+      "saturated_phases": [
+        {
+          "site": "linear",
+          "graph": 0,
+          "samples": 263,
+          "saturated": 133
+        },
+        {
+          "site": "norm_scaled",
+          "graph": 0,
+          "samples": 64,
+          "saturated": 32
+        },
+        {
+          "site": "residual",
+          "graph": 11,
+          "samples": 128,
+          "saturated": 128
+        },
+        {
+          "site": "gmul",
+          "graph": 0,
+          "samples": 64,
+          "saturated": 32
+        },
+        {
+          "site": "sigmoid_input",
+          "graph": 15,
+          "samples": 416,
+          "saturated": 199
+        },
+        {
+          "site": "exp_underflow",
+          "graph": 9,
+          "samples": 528,
+          "saturated": 256
+        }
+      ]
+    },
+    "tb_llm_graph": {
+      "sites": {
+        "linear": {
+          "group": "A",
+          "samples": 22528,
+          "saturated": 0
+        },
+        "embed": {
+          "group": "A",
+          "samples": 512,
+          "saturated": 0
+        },
+        "norm_scaled": {
+          "group": "A",
+          "samples": 4480,
+          "saturated": 0
+        },
+        "norm_out": {
+          "group": "A",
+          "samples": 4480,
+          "saturated": 0
+        },
+        "rope": {
+          "group": "A",
+          "samples": 4096,
+          "saturated": 0
+        },
+        "residual": {
+          "group": "A",
+          "samples": 4096,
+          "saturated": 0
+        },
+        "silu": {
+          "group": "A",
+          "samples": 6144,
+          "saturated": 0
+        },
+        "gmul": {
+          "group": "A",
+          "samples": 6144,
+          "saturated": 0
+        },
+        "attention_out": {
+          "group": "A",
+          "samples": 2048,
+          "saturated": 0
+        },
+        "sigmoid_input": {
+          "group": "B",
+          "samples": 6144,
+          "saturated": 0
+        },
+        "exp_underflow": {
+          "group": "B",
+          "samples": 160,
+          "saturated": 0
+        },
+        "attention_score": {
+          "group": "B",
+          "samples": 160,
+          "saturated": 0
+        },
+        "head_score": {
+          "group": "B",
+          "samples": 12288,
+          "saturated": 0
+        }
+      },
+      "saturated_phases": []
+    },
+    "tb_full_rtl_application": {
+      "sites": {
+        "linear": {
+          "group": "A",
+          "samples": 596992,
+          "saturated": 0
+        },
+        "embed": {
+          "group": "A",
+          "samples": 13568,
+          "saturated": 0
+        },
+        "norm_scaled": {
+          "group": "A",
+          "samples": 120832,
+          "saturated": 0
+        },
+        "norm_out": {
+          "group": "A",
+          "samples": 120832,
+          "saturated": 0
+        },
+        "rope": {
+          "group": "A",
+          "samples": 108544,
+          "saturated": 0
+        },
+        "residual": {
+          "group": "A",
+          "samples": 108544,
+          "saturated": 0
+        },
+        "silu": {
+          "group": "A",
+          "samples": 162816,
+          "saturated": 0
+        },
+        "gmul": {
+          "group": "A",
+          "samples": 162816,
+          "saturated": 0
+        },
+        "attention_out": {
+          "group": "A",
+          "samples": 54272,
+          "saturated": 0
+        },
+        "sigmoid_input": {
+          "group": "B",
+          "samples": 162816,
+          "saturated": 0
+        },
+        "exp_underflow": {
+          "group": "B",
+          "samples": 90736,
+          "saturated": 557
+        },
+        "attention_score": {
+          "group": "B",
+          "samples": 90736,
+          "saturated": 0
+        },
+        "head_score": {
+          "group": "B",
+          "samples": 393216,
+          "saturated": 0
+        }
+      },
+      "saturated_phases": [
+        {
+          "site": "exp_underflow",
+          "graph": 9,
+          "samples": 90736,
+          "saturated": 557
+        }
+      ]
+    }
+  },
+  "census_note": "Identical on Xcelium and Questa. Group A loses information in stored S24 activations (only linear sets overflow_out); group B clamps are part of the numeric design. Operator counts come from the deliberate saturation fixtures (e.g. residual 128/128 lanes for 0x7ffff0+32) and confirm the monitor.",
+  "warnings": "Xcelium: 8 x *W,NODNTW per run, plus *W,SPDUSD (unused tests/full_rtl/build include directory) in the two non-application runs. Questa: 32 x vopt-2741 force-select warnings from tb_operators fixtures in the operators run, none elsewhere.",
+  "decision": "overflow_out keeps its linear-only scope; host_interface.md documents it. The pretrained run saturates no group A site, so a wider flag would not change any observed result."
+}
