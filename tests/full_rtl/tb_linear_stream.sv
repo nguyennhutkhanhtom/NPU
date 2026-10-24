@@ -16,6 +16,9 @@ module tb_llm_linear_stream;
     integer latency=5, cycle=0, reads=0, issues=0, accepted=0, first_row_cycle=-1, last_row_cycle=-1;
     integer row_intervals=0, interval_total=0, interval_min=100000, interval_max=0;
     integer fault_row=-1, fault_chunk=0, pending_read=0, pending_write=0;
+    // Issue-slot classification while rows remain: missing parameter word
+    // before/after the first capture, or no free result slot.
+    integer parameter_stalls=0, startup_parameter_stalls=0, result_slot_stalls=0;
     integer pending_address[0:2047], pending_due[0:2047];
     bit measuring=0, saw_done=0, saw_fault=0, stall_results=0;
     logic held=0;
@@ -89,6 +92,16 @@ module tb_llm_linear_stream;
                     last_row_cycle=cycle;
                 end
                 if(req && address!==15'(100+reads-1)) $fatal(1,"Parameter request order");
+`ifndef PHASE1A_BASELINE
+                if(dut.state==dut.RUN && !cancel && dut.issue_row_q<dut.rows_q &&
+                   !dut.operand_capture && !(dut.dot_valid && dut.dot_reserved)) begin
+                    if(!dut.row_credit) result_slot_stalls++;
+                    else if(!dut.fifo_valid_q[dut.words_consumed[0]]) begin
+                        if(first_row_cycle<0) startup_parameter_stalls++;
+                        else parameter_stalls++;
+                    end else $fatal(1,"Unclassified issue stall");
+                end
+`endif
                 if((int'(dut.request_q)-int'(dut.words_consumed))>2) $fatal(1,"Word credits");
 `ifndef PHASE1A_BASELINE
                 if(dut.result_count_q>4 || (dut.started_rows_q-dut.consumed_rows_q)>4)
@@ -131,6 +144,7 @@ module tb_llm_linear_stream;
         reads=0; issues=0; accepted=0; first_row_cycle=-1; last_row_cycle=-1;
         row_intervals=0; interval_total=0; interval_min=100000; interval_max=0;
         saw_done=0; saw_fault=0; base=100; result_ready=1;
+        parameter_stalls=0; startup_parameter_stalls=0; result_slot_stalls=0;
         rst_n=1;
     endtask
     task automatic run_matrix(input integer k, m, memory_latency, bad_row, bad_chunk, input bit stalls);
@@ -154,6 +168,10 @@ module tb_llm_linear_stream;
         if(bad_row>=0 && (!saw_fault || !fault || accepted!=bad_row)) $fatal(1,"Missing ordered fault");
         if(bad_row<0 && !stalls) $display("LINEAR_STREAM_METRIC k=%0d rows=%0d latency=%0d cycles=%0d dot_issues=%0d parameter_reads=%0d row_ii_sum=%0d row_ii_count=%0d row_ii_min=%0d row_ii_max=%0d",
             k,m,memory_latency,cycle,issues,reads,interval_total,row_intervals,interval_min,interval_max);
+`ifndef PHASE1A_BASELINE
+        if(bad_row<0) $display("LINEAR_STREAM_STALLS k=%0d rows=%0d latency=%0d result_backpressure=%0d parameter_stalls=%0d startup_parameter_stalls=%0d result_slot_stalls=%0d",
+            k,m,memory_latency,stalls,parameter_stalls,startup_parameter_stalls,result_slot_stalls);
+`endif
         measuring=0;
     endtask
     initial begin
