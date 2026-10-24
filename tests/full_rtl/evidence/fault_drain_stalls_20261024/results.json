@@ -1,0 +1,422 @@
+{
+  "status": "PASS",
+  "scope": "Seven synthetic unit/graph groups plus tb_llm_linear_stream for the candidate under two simulators; negative check of the restored fault-drain regression against main RTL",
+  "verified_utc": "2026-10-24T09:10:46Z",
+  "host": "vlsi.linkclouds.top (user khanhtom), runs under ~/npu_fixes_20261024",
+  "simulators": {
+    "xcelium": "xrun(64) 23.03-s007, module cadence/xcelium/23.03",
+    "questa": "Questa Sim-64 vsim 2024.1, module siemens/questasim/2024.1"
+  },
+  "altera_mf": "/tools/Intel/intelFPGA/22.1std/quartus/eda/sim_lib/altera_mf.v",
+  "commands": {
+    "xcelium": "xrun -64bit -timescale 1ns/1ps -incdir rtl -f sources.f <altera_mf.v> -top <top> -access +rw -l run.log",
+    "questa": "vlib work; vlog -work work <altera_mf.v>; vlog -sv -svinputport=var -work work +incdir+rtl -f sources.f; vsim -c -onfinish exit -lib work -l run.log <top> -do \"run -all; quit -f\"",
+    "sources_f": "rtl/npu_pkg.sv, rtl/llm_pkg.sv, remaining rtl/*.sv, then tests/full_rtl/tb_*.sv (candidate) or only tests/full_rtl/tb_protocol.sv (main_negative)",
+    "run_dir_links": "rtl and \"Verilog Source code\" both link to the variant RTL; tb_operators reads Verilog Source code/sigmoid_257.mem",
+    "runner_sha256": {
+      "run_one.sh": "70f5bf59b009be20a8024113c080ca40388b930de82e260c628690e4fbd4e28f",
+      "run_all.sh": "42279590ce6cc1d10a325cda82aa08b190717bb990de8dc43b1bec6f996c928b"
+    }
+  },
+  "candidate": {
+    "commit": "9e7394427e5dcaf1aba6d41ed3d66a3d989ba935",
+    "description": "claude/remove-dead-op-states: dead op-state removal, restored PR #1 docs fix and PR #2 G_DONE fault-drain fix, parameter-stall counters in tb_linear_stream",
+    "source_sha256_lf": {
+      "Verilog Source code/PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+      "Verilog Source code/acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
+      "Verilog Source code/banked_word_ram.sv": "3f62befc5ff4942b92708e1fca7c54e61ae64781839e2efd2e6108ed0cc9a08e",
+      "Verilog Source code/descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+      "Verilog Source code/div.sv": "ddb1191f9879b7d3643d82a544ea14c30e7df999a3af5d913f354259363aa228",
+      "Verilog Source code/ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+      "Verilog Source code/isqrt_u64.sv": "c20371b0abf819e3a6011c63a908c21970bba45fa4846af86584847cfe70c9e2",
+      "Verilog Source code/llm_attention_engine.sv": "4ed88adce8f72631d86adb900cb41ef264904e68e67199238ce517b0f7e2b838",
+      "Verilog Source code/llm_attention_normalize.sv": "cc81efe9e45c34659363aeca2505d915cfc44a021b768318db67def3fa891001",
+      "Verilog Source code/llm_bank_ram.sv": "c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb",
+      "Verilog Source code/llm_head_engine.sv": "54fc2ea9fd0dd045caf6bdaf9e963fd8951180026d9770576f66c25b594fd080",
+      "Verilog Source code/llm_linear_engine.sv": "fc9ff85dc355fb21375e49c55a05a29aeaaabeeafafa38ac2ee07c7367c8d5b9",
+      "Verilog Source code/llm_math.sv": "1280302be8a07422c547c62b470b51f43324e92519cc0d69b55dd58f94c5d0bd",
+      "Verilog Source code/llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
+      "Verilog Source code/llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
+      "Verilog Source code/llm_soc.sv": "a497be2720a32cbe02a3f2552eb73e8dbe27a99f25c2ab766652b38af0871910",
+      "Verilog Source code/logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
+      "Verilog Source code/matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+      "Verilog Source code/matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
+      "Verilog Source code/mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+      "Verilog Source code/mul.sv": "fdca97fe654f877cd33e7eb934d3869a6e754bd9a4d9d128f228d9c17add646e",
+      "Verilog Source code/norm.sv": "83047edfb7ac751c38c19b15e8eed6f725b8e6f40fe63b6bdf3475cde42be8c4",
+      "Verilog Source code/norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+      "Verilog Source code/npu_pkg.sv": "18385ff77706c505eb7c947c5b1f056b5d6230e6971a1cc09a4d823c27a7bcfd",
+      "Verilog Source code/pipelined_word_ram.sv": "691f21844bfe3deae271a26e503b6d667948a70fd742d8b2d9a067039b49162a",
+      "Verilog Source code/postscale.sv": "b9cb61b7014c037c408340a8042b4c0862ed46997754d9b4dee40056835e7160",
+      "Verilog Source code/quartus_word_ram.sv": "c38b8642bfb143f71bf89902b767844086f0894a16db11ebc0abe98131709a0b",
+      "Verilog Source code/regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+      "Verilog Source code/reset_release.sv": "2720ef4c4b21a68bf193c24cdb60f574ee8b272f36862a953c1cf060f14361a2",
+      "Verilog Source code/rowwise_dispatch.sv": "e0f7cb0088af29afe233478a72f4ef9aab0676f2a24d56903b7f35261a6b3543",
+      "Verilog Source code/rowwise_op.sv": "ce49a16c12069b0560986f7b8cf5bd0a187ce1d409f0ce0e69515bff11e1a559",
+      "Verilog Source code/scale_compose.sv": "12c6b58896e3f71367ba1149f6f23784aa0389500aeaf3b66deb2abd198aa55b",
+      "Verilog Source code/sigmoid.sv": "d85cdc54ba8843c4e8aa99d4d14eb8b72edf38966aa6c09d68abd537e329fce2",
+      "Verilog Source code/sram_256_wrapper.sv": "7c17702a2fa1c9a2baed950aff5e687f2981a07206ea3582e05659c6690e968a",
+      "Verilog Source code/sram_word_tile.sv": "fca521ff4a1c9458f1731025684d0db81a6842caf06f1762d84b51a7b1bd176c",
+      "Verilog Source code/ternary_dot32.sv": "1709da1d18868f45058d5c7593b1b67542809a84ae727186ee4d6ef8d77c5821",
+      "Verilog Source code/ternary_mul.sv": "71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f",
+      "tests/full_rtl/tb_graph.sv": "900615b6405c615c678921a70df0c35f72e8c279ef160e440349dabd69544a88",
+      "tests/full_rtl/tb_linear_stream.sv": "1806bcb31066f597377a499c0c433823c13031f1793210746f080064ceb2a13b",
+      "tests/full_rtl/tb_math.sv": "8d4ca37d579bf2486be2234116bf97ad77026da6788339c70587d4ec24bed43d",
+      "tests/full_rtl/tb_memory_ip.sv": "e34a990c572eee5c2cbdca2c793f580dfedb374efa1e90ff6f040aed9afa6904",
+      "tests/full_rtl/tb_operators.sv": "6e33187c83f39b7879b6c13fff18c58274948de0ff44623c1b458cfa367ef77c",
+      "tests/full_rtl/tb_protocol.sv": "2e4504ea70c42b34b04ac2f366124f48a3d1a305aebf3ba074c9dbf1b38cf480",
+      "tests/full_rtl/tb_ram.sv": "4d40fea39efbf26f67db28c6ad4fde34f194603f57f4ee2f2fda6e0fc93ed0b1",
+      "tests/full_rtl/tb_selection.sv": "e356447b6e92ffebc8b46d74a5e58c4817f2a674aa2188d736bf79f7fe3c06aa"
+    }
+  },
+  "main_negative": {
+    "rtl_commit": "d53cdd92221cf80ff86bfc62cc787be4fe75b9fb",
+    "testbench": "candidate tests/full_rtl/tb_protocol.sv",
+    "source_sha256_lf": {
+      "Verilog Source code/PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+      "Verilog Source code/acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
+      "Verilog Source code/banked_word_ram.sv": "3f62befc5ff4942b92708e1fca7c54e61ae64781839e2efd2e6108ed0cc9a08e",
+      "Verilog Source code/descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+      "Verilog Source code/div.sv": "ddb1191f9879b7d3643d82a544ea14c30e7df999a3af5d913f354259363aa228",
+      "Verilog Source code/ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+      "Verilog Source code/isqrt_u64.sv": "c20371b0abf819e3a6011c63a908c21970bba45fa4846af86584847cfe70c9e2",
+      "Verilog Source code/llm_attention_engine.sv": "4ed88adce8f72631d86adb900cb41ef264904e68e67199238ce517b0f7e2b838",
+      "Verilog Source code/llm_attention_normalize.sv": "cc81efe9e45c34659363aeca2505d915cfc44a021b768318db67def3fa891001",
+      "Verilog Source code/llm_bank_ram.sv": "c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb",
+      "Verilog Source code/llm_head_engine.sv": "54fc2ea9fd0dd045caf6bdaf9e963fd8951180026d9770576f66c25b594fd080",
+      "Verilog Source code/llm_linear_engine.sv": "fc9ff85dc355fb21375e49c55a05a29aeaaabeeafafa38ac2ee07c7367c8d5b9",
+      "Verilog Source code/llm_math.sv": "1280302be8a07422c547c62b470b51f43324e92519cc0d69b55dd58f94c5d0bd",
+      "Verilog Source code/llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
+      "Verilog Source code/llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
+      "Verilog Source code/llm_soc.sv": "50195e37665f8ef30cf2c089aebdb07d773e55ad396c4c5f844b06f24a10b41b",
+      "Verilog Source code/logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
+      "Verilog Source code/matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+      "Verilog Source code/matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
+      "Verilog Source code/mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+      "Verilog Source code/mul.sv": "fdca97fe654f877cd33e7eb934d3869a6e754bd9a4d9d128f228d9c17add646e",
+      "Verilog Source code/norm.sv": "83047edfb7ac751c38c19b15e8eed6f725b8e6f40fe63b6bdf3475cde42be8c4",
+      "Verilog Source code/norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+      "Verilog Source code/npu_pkg.sv": "18385ff77706c505eb7c947c5b1f056b5d6230e6971a1cc09a4d823c27a7bcfd",
+      "Verilog Source code/pipelined_word_ram.sv": "691f21844bfe3deae271a26e503b6d667948a70fd742d8b2d9a067039b49162a",
+      "Verilog Source code/postscale.sv": "b9cb61b7014c037c408340a8042b4c0862ed46997754d9b4dee40056835e7160",
+      "Verilog Source code/quartus_word_ram.sv": "c38b8642bfb143f71bf89902b767844086f0894a16db11ebc0abe98131709a0b",
+      "Verilog Source code/regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+      "Verilog Source code/reset_release.sv": "2720ef4c4b21a68bf193c24cdb60f574ee8b272f36862a953c1cf060f14361a2",
+      "Verilog Source code/rowwise_dispatch.sv": "e0f7cb0088af29afe233478a72f4ef9aab0676f2a24d56903b7f35261a6b3543",
+      "Verilog Source code/rowwise_op.sv": "ce49a16c12069b0560986f7b8cf5bd0a187ce1d409f0ce0e69515bff11e1a559",
+      "Verilog Source code/scale_compose.sv": "12c6b58896e3f71367ba1149f6f23784aa0389500aeaf3b66deb2abd198aa55b",
+      "Verilog Source code/sigmoid.sv": "d85cdc54ba8843c4e8aa99d4d14eb8b72edf38966aa6c09d68abd537e329fce2",
+      "Verilog Source code/sram_256_wrapper.sv": "7c17702a2fa1c9a2baed950aff5e687f2981a07206ea3582e05659c6690e968a",
+      "Verilog Source code/sram_word_tile.sv": "fca521ff4a1c9458f1731025684d0db81a6842caf06f1762d84b51a7b1bd176c",
+      "Verilog Source code/ternary_dot32.sv": "1709da1d18868f45058d5c7593b1b67542809a84ae727186ee4d6ef8d77c5821",
+      "Verilog Source code/ternary_mul.sv": "71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f"
+    },
+    "expected": "FAIL: main lacks the G_DONE hold, so the relaunch consumes the drained fault completion"
+  },
+  "line_endings": "Hashes are of the LF files as stored in git and as simulated; every simulated file matched its git blob",
+  "runs": [
+    {
+      "simulator": "questa",
+      "side": "cand",
+      "top": "tb_llm_graph",
+      "rc": 0,
+      "seconds": 103,
+      "errors": 0,
+      "warnings": 0,
+      "marker": "LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=570837 host_commands=196619 fixtures=synthetic"
+    },
+    {
+      "simulator": "questa",
+      "side": "cand",
+      "top": "tb_llm_linear_stream",
+      "rc": 0,
+      "seconds": 4,
+      "errors": 0,
+      "warnings": 0,
+      "marker": "LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked"
+    },
+    {
+      "simulator": "questa",
+      "side": "cand",
+      "top": "tb_llm_math",
+      "rc": 0,
+      "seconds": 7,
+      "errors": 0,
+      "warnings": 0,
+      "marker": "LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128"
+    },
+    {
+      "simulator": "questa",
+      "side": "cand",
+      "top": "tb_llm_operators",
+      "rc": 0,
+      "seconds": 13,
+      "errors": 0,
+      "warnings": 0,
+      "marker": "LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic"
+    },
+    {
+      "simulator": "questa",
+      "side": "cand",
+      "top": "tb_llm_protocol",
+      "rc": 0,
+      "seconds": 6,
+      "errors": 0,
+      "warnings": 0,
+      "marker": "LLM_PROTOCOL_PASS transactions=180 cancellations=12 token_pipeline_cases=16 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2 fault_drain_relaunch=checked"
+    },
+    {
+      "simulator": "questa",
+      "side": "cand",
+      "top": "tb_llm_ram",
+      "rc": 0,
+      "seconds": 4,
+      "errors": 0,
+      "warnings": 0,
+      "marker": "LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3"
+    },
+    {
+      "simulator": "questa",
+      "side": "cand",
+      "top": "tb_llm_selection",
+      "rc": 0,
+      "seconds": 8,
+      "errors": 0,
+      "warnings": 0,
+      "marker": "SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2"
+    },
+    {
+      "simulator": "questa",
+      "side": "cand",
+      "top": "tb_quartus_memory",
+      "rc": 0,
+      "seconds": 5,
+      "errors": 0,
+      "warnings": 0,
+      "marker": "QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked"
+    },
+    {
+      "simulator": "questa",
+      "side": "mainneg",
+      "top": "tb_llm_protocol",
+      "rc": 0,
+      "seconds": 9,
+      "errors": 1,
+      "warnings": 0,
+      "marker": "NO_PASS_MARKER",
+      "fatal": "Relaunch consumed a stale fault completion graph=2"
+    },
+    {
+      "simulator": "xcelium",
+      "side": "cand",
+      "top": "tb_llm_graph",
+      "rc": 0,
+      "seconds": 84,
+      "errors": 0,
+      "warnings": 8,
+      "marker": "LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=570837 host_commands=196619 fixtures=synthetic"
+    },
+    {
+      "simulator": "xcelium",
+      "side": "cand",
+      "top": "tb_llm_linear_stream",
+      "rc": 0,
+      "seconds": 1,
+      "errors": 0,
+      "warnings": 8,
+      "marker": "LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked"
+    },
+    {
+      "simulator": "xcelium",
+      "side": "cand",
+      "top": "tb_llm_math",
+      "rc": 0,
+      "seconds": 4,
+      "errors": 0,
+      "warnings": 8,
+      "marker": "LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128"
+    },
+    {
+      "simulator": "xcelium",
+      "side": "cand",
+      "top": "tb_llm_operators",
+      "rc": 0,
+      "seconds": 10,
+      "errors": 0,
+      "warnings": 8,
+      "marker": "LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic"
+    },
+    {
+      "simulator": "xcelium",
+      "side": "cand",
+      "top": "tb_llm_protocol",
+      "rc": 0,
+      "seconds": 11,
+      "errors": 0,
+      "warnings": 8,
+      "marker": "LLM_PROTOCOL_PASS transactions=180 cancellations=12 token_pipeline_cases=16 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2 fault_drain_relaunch=checked"
+    },
+    {
+      "simulator": "xcelium",
+      "side": "cand",
+      "top": "tb_llm_ram",
+      "rc": 0,
+      "seconds": 3,
+      "errors": 0,
+      "warnings": 8,
+      "marker": "LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3"
+    },
+    {
+      "simulator": "xcelium",
+      "side": "cand",
+      "top": "tb_llm_selection",
+      "rc": 0,
+      "seconds": 11,
+      "errors": 0,
+      "warnings": 8,
+      "marker": "SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2"
+    },
+    {
+      "simulator": "xcelium",
+      "side": "cand",
+      "top": "tb_quartus_memory",
+      "rc": 0,
+      "seconds": 4,
+      "errors": 0,
+      "warnings": 8,
+      "marker": "QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked"
+    },
+    {
+      "simulator": "xcelium",
+      "side": "mainneg",
+      "top": "tb_llm_protocol",
+      "rc": 2,
+      "seconds": 11,
+      "errors": 1,
+      "warnings": 8,
+      "marker": "NO_PASS_MARKER",
+      "fatal": "Relaunch consumed a stale fault completion graph=2"
+    }
+  ],
+  "fixture_attempts": [
+    {
+      "simulators": [
+        "xcelium",
+        "questa"
+      ],
+      "top": "tb_llm_operators",
+      "side": "cand",
+      "result": "Fatal: Operator lane addr=72 lane=0 expected=0 actual=-352 (Xcelium rc=2, Questa errors=1)",
+      "cause": "first runner lacked the \"Verilog Source code\" link, so $readmemh of sigmoid_257.mem failed and the SiLU reference was zero; RTL output -352 is the correct reference value",
+      "action": "link added to run_one.sh; tb_llm_operators rerun on both simulators with identical sources (results in runs)"
+    }
+  ],
+  "comparison_with_dead_states_20261024_candidate": {
+    "identical": "tb_quartus_memory, tb_llm_math, tb_llm_ram, tb_llm_selection, tb_llm_operators, tb_llm_graph (clocks=570837 host_commands=196619)",
+    "tb_llm_protocol": "transactions 175 -> 180, token_pipeline_cases 15 -> 16, adds fault_drain_relaunch=checked"
+  },
+  "linear_stream_metrics": [
+    {
+      "line": "LINEAR_STREAM_METRIC",
+      "k": 128,
+      "rows": 128,
+      "latency": 5,
+      "cycles": 653,
+      "dot_issues": 512,
+      "parameter_reads": 128,
+      "row_ii_sum": 634,
+      "row_ii_count": 127,
+      "row_ii_min": 4,
+      "row_ii_max": 6
+    },
+    {
+      "line": "LINEAR_STREAM_STALLS",
+      "k": 128,
+      "rows": 128,
+      "latency": 5,
+      "result_backpressure": 0,
+      "parameter_stalls": 126,
+      "startup_parameter_stalls": 6,
+      "result_slot_stalls": 0
+    },
+    {
+      "line": "LINEAR_STREAM_METRIC",
+      "k": 384,
+      "rows": 128,
+      "latency": 5,
+      "cycles": 1933,
+      "dot_issues": 1536,
+      "parameter_reads": 384,
+      "row_ii_sum": 1904,
+      "row_ii_count": 127,
+      "row_ii_min": 14,
+      "row_ii_max": 16
+    },
+    {
+      "line": "LINEAR_STREAM_STALLS",
+      "k": 384,
+      "rows": 128,
+      "latency": 5,
+      "result_backpressure": 0,
+      "parameter_stalls": 382,
+      "startup_parameter_stalls": 6,
+      "result_slot_stalls": 0
+    },
+    {
+      "line": "LINEAR_STREAM_METRIC",
+      "k": 128,
+      "rows": 384,
+      "latency": 5,
+      "cycles": 1933,
+      "dot_issues": 1536,
+      "parameter_reads": 384,
+      "row_ii_sum": 1914,
+      "row_ii_count": 383,
+      "row_ii_min": 4,
+      "row_ii_max": 6
+    },
+    {
+      "line": "LINEAR_STREAM_STALLS",
+      "k": 128,
+      "rows": 384,
+      "latency": 5,
+      "result_backpressure": 0,
+      "parameter_stalls": 382,
+      "startup_parameter_stalls": 6,
+      "result_slot_stalls": 0
+    },
+    {
+      "line": "LINEAR_STREAM_STALLS",
+      "k": 128,
+      "rows": 128,
+      "latency": 1,
+      "result_backpressure": 1,
+      "parameter_stalls": 0,
+      "startup_parameter_stalls": 2,
+      "result_slot_stalls": 225
+    },
+    {
+      "line": "LINEAR_STREAM_STALLS",
+      "k": 384,
+      "rows": 128,
+      "latency": 9,
+      "result_backpressure": 1,
+      "parameter_stalls": 1146,
+      "startup_parameter_stalls": 10,
+      "result_slot_stalls": 0
+    }
+  ],
+  "parameter_stall_summary": {
+    "fixture": "llm_linear_engine with a 5-cycle parameter memory, the same response latency as llm_parameter_ram in llm_soc; results always ready",
+    "q_k_v_o_128x128": "653 cycles = 512 dot issues + 126 parameter stalls + 6 startup stalls + 9 start-handshake and drain cycles; one stall per parameter word after the first two",
+    "down_384x128_and_gate_up_128x384": "1933 cycles = 1536 dot issues + 382 parameter stalls + 6 startup stalls + 9 start-handshake and drain cycles",
+    "stall_share": "19.3% (128x128) and 19.8% (384-word matrices) of linear cycles; result-slot stalls 0",
+    "cause": "two parameter-word credits cover 4 issue cycles per word against a 5-cycle response, so each word after the first two waits one cycle"
+  },
+  "warnings": "Xcelium: 8 x *W,NODNTW per run (same as dead_states_20261024); Questa: 0",
+  "not_run": [
+    "Quartus synthesis/fit/STA for the candidate",
+    "portable elaboration",
+    "pretrained application"
+  ]
+}
