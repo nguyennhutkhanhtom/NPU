@@ -49,6 +49,11 @@ synthetic xác minh behavior; model thật dùng runner application riêng.
 
 Expected IDs không điều khiển DUT. CPU reference tính toán để kiểm chứng;
 DUT nhận checkpoint words, prompt và generation configuration.
+
+`clamp_monitor.sv` là monitor chỉ đọc: thêm file này vào source list và elaborate
+`llm_clamp_binder` như một top phụ để đếm số lần bão hòa ở từng điểm kẹp của
+`llm_soc`. Kết quả in ở cuối mô phỏng (`CLAMP_SITE`, `CLAMP_PHASE`,
+`CLAMP_MONITOR_SUMMARY`).
 [Hướng dẫn NanoFable](../../docs/demos/language.md) có lệnh chạy ngắn, chạy dài,
 archive kết quả và cách xử lý khi gate từ chối.
 

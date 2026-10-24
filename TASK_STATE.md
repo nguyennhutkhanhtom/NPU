@@ -11,7 +11,7 @@
 
 - Removes the 25 unreachable op states (`OP_COUNT` 112→87). It restores two changes lost when `main` was rewritten to d53cdd9 during the Claude co-author cleanup: PR #1 Vietnamese docs fix and the PR #2 fault-drain fix. With the PR #2 fix, `G_DONE` waits for `op == O_IDLE`. `tb_linear_stream` gains parameter-stall counters.
 - Evidence: `tests/full_rtl/evidence/dead_states_20261024/results.json` (28/28 base/candidate) and `tests/full_rtl/evidence/fault_drain_stalls_20261024/results.json`. In the second, 16/16 runs of candidate 9e73944 pass with zero errors: seven groups plus `tb_llm_linear_stream`, under Xcelium 23.03 and Questa 2024.1. Graph `clocks=570837 host_commands=196619`; protocol adds `fault_drain_relaunch=checked`. The same protocol test on `main` RTL stops with `Relaunch consumed a stale fault completion` in both simulators. Xcelium 8 `*W,NODNTW` per run; Questa none.
-- Not run for this RTL: portable elaboration, pretrained application.
+- Not run for this RTL: portable elaboration. PR #3 is merged into `main` (9304309, same tree as 36d69f8).
 
 ## Running job: full-top timing for the PR #3 RTL
 
@@ -22,11 +22,12 @@
 - Completion: `manifest.json` appears in that directory, and the driver prints `TIMING_EVIDENCE_RECORDED` and `TIMING_100MHZ_PASS|FAIL`. Do not edit `.sv/.svh/.mem` or `quartus/llm_soc.{qpf,qsf,sdc}` in that worktree until then.
 - On completion: read `manifest.json` once, confirm its RTL hashes equal the PR #3 sources, and record Fmax/resources in `docs/verification/optimization_status.md`. If timing is met, advance `docs/NPU_V2_EXECUTION.md` past Phase 1A.
 
+## Pretrained checkpoint and `overflow_out`
+
+- `tests/full_rtl/evidence/clamp_census_20261024/results.json`: the 2026-10-07 export (prompt 11 IDs, 96 new tokens, temperature 166, seed 7, checkpoint `cfa114a8…`) passes `application_tb.sv` directly on the merged RTL under Xcelium and Questa. All 96 tokens equal the reference, `clocks=19958382`, `overflow_out=0`. This run is outside `run_application.ps1`; the gated application claim still needs a passing timing manifest.
+- `tests/full_rtl/clamp_monitor.sv` (bind, read-only) counts saturation per clamp site. The pretrained run has zero saturated activation clamps in 1,449,216 samples; only the designed exp underflow fires (557/90,736). Decision: `overflow_out` keeps its linear-only scope, documented in `docs/design/host_interface.md`. Re-run the census for any new checkpoint or scale change.
+- The earlier context-128 export (prompt 4 + continuation 124, `tests/full_rtl/build/full128_20261007_2022/`) still has no completed result.
+
 ## Next action
 
-- Record the timing result above. The `overflow_out` scope (currently linear outputs only, as in every earlier RTL) is still the user's decision.
-
-## Separate pretrained application context
-
-- Earlier context-128 reference export completed (prompt 4 + continuation 124); a matching completed application PASS has not been established. Previous inputs: `Once upon a time`, NewTokens=124, MinNew=124, Temperature=0, Seed=7; hardware gate skipped. Prior wrapper/status path: `tests/full_rtl/build/full128_20261007_2022/`; application log: `tests/full_rtl/build/application.log`.
-- Its continuation/provenance is separate from Phase 1A. Source hashes for any result produced from the pre-change compiled design must identify that baseline; do not promote it to current RTL PASS.
+- Record the timing result above. If it meets 100 MHz, run the gated `run_application.ps1` flow on this RTL and advance `docs/NPU_V2_EXECUTION.md` past Phase 1A.
