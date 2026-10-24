@@ -67,15 +67,15 @@ This is the compact source of truth for staged NPU v2 implementation. Work only 
 
 DONE:
 
-- none
+- Phase 1A — continuous linear-row execution (measurements and 100 MHz timing in `docs/verification/optimization_status.md`)
 
 CURRENT:
 
-- Phase 1A — continuous linear-row execution
+- Phase 1B — LM-head streaming (not started)
 
 NEXT:
 
-- Phase 1B — LM-head streaming
+- Phase 1C — attention value-pass streaming
 
 ## Measurement gates
 

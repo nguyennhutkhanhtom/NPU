@@ -1,0 +1,166 @@
+Statistics: 40 0 3215 0 0 3.358
+
+Heuristic: Chained Adders
+From To Score Heuristic
+
+Heuristic: Combinational Loop
+From To Score Heuristic
+
+Heuristic: Counter Increment Coding Style
+From To Score Heuristic
+
+Heuristic: Cross-partition Paths
+From To Score Heuristic
+
+Heuristic: DSP Register Packing
+From To Score Heuristic
+
+Heuristic: Did Not Appear Critical Early in the Flow
+From To Score Heuristic
+
+Heuristic: Global Routing in Path
+From To Score Heuristic
+
+Heuristic: Inter-path Competition
+From To Score Heuristic
+host_en host_data_q[4] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+host_en host_data_q[9] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+host_en prompt_memory[47][3] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[47][6] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en host_data_q[6] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+host_en prompt_memory[44][1] 0.409831 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0} {prompt_memory[44][11]~109}}}
+host_en prompt_memory[9][4] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[9][3] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[9][2] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[9][6] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[45][1] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0} {prompt_memory[45][11]~110}}}
+host_en prompt_memory[45][11] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0} {prompt_memory[45][11]~110}}}
+host_en prompt_memory[47][8] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[47][10] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+
+Heuristic: Intradomain Skew
+From To Score Heuristic
+
+Heuristic: Long Combinational Path
+From To Score Heuristic
+host_en host_data_q[4] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[9] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][4] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][5] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][2] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][1] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][0] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][11] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][7] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[733] input_cache_q[1][733] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[16]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[17] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[26] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[16] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][11] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][4] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][5] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][2] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][1] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][0] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][7] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[47][3] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[47][6] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[120][3] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[120][11] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[6] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[44][1] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[9][4] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[9][3] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[9][2] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[9][6] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[45][1] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[45][11] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][6] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][9] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][10] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[47][8] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[47][10] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[74][4] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[74][0] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Low Power Tiles in Path
+From To Score Heuristic
+
+Heuristic: Multipliers Implemented in LUTs
+From To Score Heuristic
+
+Heuristic: Non-overlapping Location Constraints
+From To Score Heuristic
+
+Heuristic: RAM-Based Shift Register Implementation
+From To Score Heuristic
+
+Heuristic: Routing Congestion
+From To Score Heuristic
+
+Heuristic: Short Setup Relationship
+From To Score Heuristic
+
+Heuristic: Summary
+From To Score Heuristic
+host_en host_data_q[4] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+host_en host_data_q[4] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[9] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+host_en host_data_q[9] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][4] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][5] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][2] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][1] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][0] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][11] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][7] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+vector_q[733] input_cache_q[1][733] 0.374377 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[16]~DUPLICATE 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[17] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[26] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[16] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][11] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][4] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][5] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][2] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][1] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][0] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[73][7] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[47][3] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[47][3] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[47][6] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[47][6] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[120][3] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[120][11] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en host_data_q[6] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} host_parameter_q~0}
+host_en host_data_q[6] 0.523130 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[44][1] 0.409831 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0} {prompt_memory[44][11]~109}}}
+host_en prompt_memory[44][1] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[9][4] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[9][4] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[9][3] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[9][3] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[9][2] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[9][2] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[9][6] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[9][6] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[45][1] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0} {prompt_memory[45][11]~110}}}
+host_en prompt_memory[45][1] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[45][11] 0.364294 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details} {Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0} {prompt_memory[45][11]~110}}}
+host_en prompt_memory[45][11] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][6] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][9] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[75][10] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[47][8] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[47][8] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[47][10] 0.318758 {Inter-path Competition} {recommendation {{Duplicate the nodes specified in the details}} {Nodes to duplicate} {{prompt_memory[127][11]~0}}}
+host_en prompt_memory[47][10] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[74][4] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+host_en prompt_memory[74][0] 0.597507 {Long Combinational Path} {recommendation {{Reduce the levels of combinational logic}} {Extra levels of combinational logic} 1}
+
+Heuristic: Unbalanced Combinational Logic
+From To Score Heuristic
+
+Heuristic: Uses Sync Control Rather Than Data
+From To Score Heuristic
