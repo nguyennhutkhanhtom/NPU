@@ -1,6 +1,6 @@
 # Current verification and implementation status
 
-> **Category: CURRENT.** Single owner of live checkpoint results. Updated 2026-10-08 (Asia/Saigon); manifests/logs remain primary evidence.
+> **Category: CURRENT.** Single owner of live checkpoint results. Updated 2026-10-24 (Asia/Saigon); manifests/logs remain primary evidence.
 
 ## At a glance
 
@@ -14,9 +14,13 @@ Phase 1A RTL now streams consecutive linear rows with two parameter-word credits
 
 The identical five-cycle-memory engine fixture changes average row initiation from 17 to approximately 5 clocks for 128 inputs, and 27 to approximately 15 for 384 inputs. Dot issue utilization over the scoped Q/Down/Gate operations rises from 23.0/43.1/23.3% to 73.0/75.4/77.5%; parameter request utilization rises from 5.8/10.8/5.9% to 18.4/18.9/19.4%. Startup/drain counts are retained in the profile logs; they are not isolated parameter-stall counts. The two-word credit window still exposes parameter-response gaps. Before/after logs are preserved in the same evidence directory.
 
-Five groups in the [seven-group attempt](../../tests/full_rtl/evidence/phase1a_20261008/seven_groups_attempt.json) pass (memory, math, RAM, protocol, selection). The operator group encounters the same `$deposit` scalar fixture failure as unchanged baseline RTL under ModelSim; graph regression remains pending. Questa is unavailable while another session holds its single-session license. Vendor-free Verilator elaboration of `llm_soc` with behavioral memory completes with zero errors and diagnostic warnings; this is not synthesis or ASIC signoff.
+The [seven-group regression](../../tests/full_rtl/evidence/dead_states_20261024/results.json) (baseline side, `main` d53cdd9) passes all seven groups under Xcelium 23.03 and Questa 2024.1 with zero errors. The synthetic graph takes 570,837 compute clocks (840,053 before Phase 1A) with 196,619 host commands. The earlier ModelSim [attempt](../../tests/full_rtl/evidence/phase1a_20261008/seven_groups_attempt.json) stopped in the operator group on the testbench `$deposit` scalar fixture, not on RTL. Vendor-free Verilator elaboration of `llm_soc` with behavioral memory completes with zero errors and diagnostic warnings; this is not synthesis or ASIC signoff.
 
-Full-top synthesis/fit/STA is running under `phase1a_linear_20261008`; see [continuation state](../../TASK_STATE.md). New Fmax/resource results and the complete regression are pending, so `NPU_V2_EXECUTION.md` remains at CURRENT Phase 1A. The prior 95.61 MHz timing source hashes match the preserved pre-change snapshot, not the modified RTL.
+Full-top timing [phase1a_linear_20261008](timing/phase1a_linear_20261008/manifest.json) completed with verified source and configuration hashes; all 41 RTL files on `main` match it after CRLF normalization. All four corners meet 100 MHz: minimum Fmax 101.28 MHz, worst setup +0.126 ns at slow 85 °C, hold/recovery/removal/pulse nonnegative, zero unconstrained paths. Fitted: 60,124 ALMs, 67,027 registers, 1,187 RAM blocks, 9,516,700 memory bits, zero DSPs. Map 23 warnings, fit 4, STA 0. Isolated parameter-stall counts are still unmeasured, so `NPU_V2_EXECUTION.md` remains at CURRENT Phase 1A; see [continuation state](../../TASK_STATE.md).
+
+## Pending change: dead op-state removal (PR #3)
+
+The candidate removes the 25 unreachable op states from `llm_soc` (`OP_COUNT` 112 → 87). In the same [evidence](../../tests/full_rtl/evidence/dead_states_20261024/results.json), 28/28 runs (seven groups × baseline/candidate × two simulators) finish with `rc=0` and zero errors. Memory, math, RAM, protocol, selection and graph markers are identical to baseline, including graph clocks. Operators pass with 6,611 → 5,843 checks, 516 → 260 clamp cases and 6 → 3 scalar reset cases, because the attention-only variants of the removed `A_*` path are dropped. Xcelium reports 8 `*W,NODNTW` per run on both sides; Questa reports none. Synthesis/fit/STA, portable elaboration and application runs have not been repeated for this RTL, so the 101.28 MHz result does not apply to it.
 
 ## Prior verified checkpoint (before Phase 1A)
 
