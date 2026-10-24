@@ -100,6 +100,6 @@ Trường hợp chia cho 0 hoàn tất **ngay** chu kỳ kế: `quotient = '1` (
 `llm_soc.u_div` được **dùng chung** bởi hai nơi:
 
 - Bước `N_DIV` của RMSNorm (tính `2^32 / root`).
-- Làn 0 của `llm_attention_normalize` khi tham số `ATTN_DIV_LANES` cho phép chia sẻ (`USE_SHARED`).
+- Làn 0 của `llm_attention_normalize`, vì `llm_soc` luôn khởi tạo khối này với `USE_SHARED = 1` (`ATTN_DIV_LANES` chỉ quyết định số làn chia).
 
 Bộ mux đầu vào ưu tiên `attention_div_start`: nếu khối attention đang phát lệnh chia thì dùng numerator/denominator của attention, ngược lại dùng `div_numerator_q`/`div_denominator_q` của bước norm. Hai bước này không bao giờ chạy đồng thời vì thuộc hai phase khác nhau của graph FSM. Bit làm tròn `divide_round_up` được tính từ `2·remainder` so với số chia (RNE: lớn hơn nửa, hoặc đúng nửa và thương lẻ).

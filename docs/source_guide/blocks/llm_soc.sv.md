@@ -168,7 +168,7 @@ class R,G,N,S,B output;
 
 | Group | Purpose |
 |---|---|
-| `graph`, `op` | Phase selection and explicit operator states |
+| `graph`, `op` | Phase selection and explicit operator states; `op` is one-hot over `OP_COUNT` = 87 reachable states |
 | `layer_q`, `position_q`, `generated_q` | Layer, context position and output progress |
 | Input/scale/RoPE tags | Reuse only operands compatible with the next phase |
 | `linear_active_q`, `linear_row_issue_q`, `linear_pipe_valid_q/linear_pipe_row_q` | One matrix stream; ordered engine results feed the existing scalar registers with stage validity and aligned row tags |
@@ -176,7 +176,7 @@ class R,G,N,S,B output;
 
 ## Important contracts
 
-Linear execution launches once in `L_ROW_START` and remains in `L_ROW_WAIT` while the engine issues consecutive rows. Its bounded result FIFO feeds coefficient multiplication, RNE, saturation and lane packing through the existing registers. The final lane is captured before the tagged bank write is accepted; a write may overlap packing the next bank. Fault consumption waits for older scalar packets to finish, then drains accepted memory/dot work. Completion waits for empty row results, scalar validity and bank write queues. Memory acceptance and write commitment are different events; host acknowledgement follows commitment. Shared-resource muxes are owned here, rather than direct engine-to-engine wiring.
+Linear execution launches once in `L_ROW_START` and remains in `L_ROW_WAIT` while the engine issues consecutive rows. Its bounded result FIFO feeds coefficient multiplication, RNE, saturation and lane packing through the existing registers. The final lane is captured before the tagged bank write is accepted; a write may overlap packing the next bank. Fault consumption waits for older scalar packets to finish, then drains accepted memory/dot work. Completion waits for empty row results, scalar validity and bank write queues. Memory acceptance and write commitment are different events; host acknowledgement follows commitment. Shared-resource muxes are owned here, rather than direct engine-to-engine wiring. The scalar packet, cluster, clamp and lane-pack registers are driven only by linear epilogue stages 4–7; head logits reuse the scalar multiplier through `H_COEFF` → `SC_*` → `H_ROUND`. A fault moves `graph` to `G_DONE`, which returns to `G_IDLE` only once `op` is back in `O_IDLE`; running/ready therefore cover the fault drain, and a relaunch cannot consume the drained operation's completion.
 
 Diagram follow-up required: the existing ordered-linear diagram still depicts one-row lookahead and FSM-driven epilogue serialization.
 
@@ -185,6 +185,7 @@ Diagram follow-up required: the existing ordered-linear diagram still depicts on
 - SIMD lanes form one reduction, not independent completed outputs.
 - Zero temperature skips noise/sample states but still advances PRNG once per row, including excluded IDs.
 - Host supplies prompt/configuration, not hidden activations or continuation IDs.
+- With `ENABLE_DEBUG_INDEX`, `instr_debug[6:0]` is the `op` bit index in declaration order. Indices are not stable across RTL revisions; the 25 unreachable legacy states were removed and the rest renumbered.
 - Result slots include queued sums and rows already issued into the dot pipeline. Backpressure retains the oldest sum/fault pair and bounds further row issue.
 
 ## Related docs

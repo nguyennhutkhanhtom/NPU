@@ -83,4 +83,4 @@ sequenceDiagram
 
 Ví dụ: 4 tổng chunk lần lượt 1200, −300, 45, 55 → `accumulator_o = 1000`. `llm_soc` tiếp tục với `H_COEFF` (nhân hệ số), `H_ROUND`, `H_NOISE`, `H_SAMPLE`, `H_SELECT` (xem [llm_gumbel_sample.md](llm_gumbel_sample.md)).
 
-**Vì sao S39 là đủ?** Mỗi tích int8 × S24 ≤ 2³¹; 128 tích ≤ 2³⁸ → vừa S39.
+**Vì sao S39 là đủ?** |int8| ≤ 2⁷ và |S24| ≤ 2²³, nên mỗi tích có độ lớn ≤ 2³⁰. Tổng 128 = 2⁷ tích có độ lớn ≤ 2³⁷, nằm gọn trong S39 (−2³⁸ … 2³⁸ − 1).

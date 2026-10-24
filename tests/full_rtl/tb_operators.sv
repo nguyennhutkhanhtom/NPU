@@ -76,13 +76,13 @@ module tb_llm_operators;
     integer round_cases=0,round_reset_cases=0,scalar_reset_cases=0;
     integer parameter_reads=0,vector_reads=0,vector_writes=0,kv_reads=0;
     integer profile_context=0;
-    integer op_cycles[0:111];
+    integer op_cycles[];
     integer linear_startup,linear_issue,linear_drain,head_startup,head_issue,head_drain;
     bit profile_active=0;
     bit delay_linear_result=0;
     bit linear_extremes=0;
     always @(posedge clk) if(dut.core_rst_n && profile_active) begin
-        for(integer s=0;s<112;s++) if(dut.op[s]) op_cycles[s]++;
+        foreach(op_cycles[s]) if(dut.op[s]) op_cycles[s]++;
         if(dut.linear_busy) begin
             if(dut.u_linear_engine.operand_capture) linear_issue++;
             else if(dut.u_linear_engine.response_q==0) linear_startup++;
@@ -182,65 +182,68 @@ module tb_llm_operators;
         repeat(2) @(negedge clk);
         if(dut.core_rst_n!==1) $fatal(1,"Operator fixture reset did not release");
     endtask
+    // Inject one rounded scalar and its row tag at linear epilogue stage 4.
+    // Stages 4-8 then run the live packet, cluster, clamp, lane-pack and
+    // flush registers. Force/release propagates the injected stage to all
+    // optimized consumers before the edge; a deposit can miss merged copies.
+    // Force sources must be static; automatic task arguments cannot drive force.
+    // The whole tag array is forced because only stage 4 is marked valid.
+    logic signed [63:0] inject_round;
+    logic [9:0] inject_rows [0:8];
+    task automatic inject_linear_scalar(input logic signed [63:0] x,input integer row);
+        inject_round=x;foreach(inject_rows[s]) inject_rows[s]=10'(row);
+        force dut.scalar_round_q=inject_round;force dut.linear_pipe_row_q=inject_rows;force dut.linear_pipe_valid_q=9'h010;
+        #1;release dut.scalar_round_q;release dut.linear_pipe_row_q;release dut.linear_pipe_valid_q;
+    endtask
     task automatic check_scalar_clamp(input logic signed [63:0] x,
-                                      input integer group_id,input bit attention,
+                                      input integer group_id,
                                       input integer lane_offset=0,input bit prior_overflow=0);
         logic signed [23:0] previous_groups[0:7];
         reset_fixture();
         @(negedge clk);rst_n=1;
-        repeat(2) @(negedge clk); // Wait for reset release before depositing the operation.
+        repeat(2) @(negedge clk); // Wait for reset release before injecting the scalar.
         for(integer g=0;g<8;g++) previous_groups[g]=dut.scalar_group_q[g];
         force dut.write_vector_q={32{24'sd1234}};
-        force dut.destination_q=3'd3;force dut.matrix_rows_q=10'd512;force dut.head_q=2'd0;
-        #1;release dut.write_vector_q;release dut.destination_q;release dut.matrix_rows_q;release dut.head_q;
+        force dut.destination_q=3'd3;force dut.matrix_rows_q=10'd512;force dut.linear_active_q=1'b1;
+        #1;release dut.write_vector_q;release dut.destination_q;release dut.matrix_rows_q;release dut.linear_active_q;
         if(prior_overflow) begin force dut.overflow_out=1'b1;#1;release dut.overflow_out;end
-        $deposit(dut.scalar_round_q,x);
-        $deposit(dut.matrix_row_q,10'(group_id*4+lane_offset));$deposit(dut.lane_q,5'(group_id*4+lane_offset));
-        // Force/release propagates the injected phase to all optimized state
-        // consumers before the edge; a deposit can miss merged state copies.
-        if(attention) force dut.op=dut.A_FLAGS;
-        else force dut.op=dut.L_FLAGS;
-        #1;release dut.op;
+        inject_linear_scalar(x,group_id*4+lane_offset);
         @(negedge clk);
-        if(dut.op!==dut.SC_ROUTE || !dut.scalar_packet_valid_q ||
+        if(dut.linear_pipe_valid_q!==9'h020 || !dut.scalar_packet_valid_q ||
            dut.scalar_packet_group_q!==3'(group_id))
-            $fatal(1,"Scalar packet phase/tag op=%h valid=%b group=%b expected=%0d attention=%b",dut.op,dut.scalar_packet_valid_q,dut.scalar_packet_group_q,group_id,attention);
+            $fatal(1,"Scalar packet phase/tag stage=%h valid=%b group=%b expected=%0d",dut.linear_pipe_valid_q,dut.scalar_packet_valid_q,dut.scalar_packet_group_q,group_id);
         @(negedge clk);
-        if(dut.op!==(attention ? dut.A_SAT : dut.L_SAT) ||
+        if(dut.linear_pipe_valid_q!==9'h040 ||
            dut.scalar_cluster_valid_q!== (2'b1 << (group_id/4)) ||
            dut.scalar_cluster_group_q[group_id/4]!==2'(group_id%4))
             $fatal(1,"Scalar route phase/tag");
         @(negedge clk);
-        if(dut.op!==(attention ? dut.A_PACK : dut.L_STORE))
+        if(dut.linear_pipe_valid_q!==9'h080)
             $fatal(1,"Scalar clamp pipeline latency");
         if(dut.scalar_group_q[group_id]!==clamp24(128'(x)))
             $fatal(1,"Scalar clamp group=%0d x=%h expected=%h actual=%h",group_id,x,clamp24(128'(x)),dut.scalar_group_q[group_id]);
         for(integer g=0;g<8;g++)
             if(g!=group_id && dut.scalar_group_q[g]!==previous_groups[g])
                 $fatal(1,"Scalar completion modified untagged group=%0d",g);
-        if(overflow_out!==(prior_overflow || (!attention && (x>8388607 || x< -8388608))))
+        if(overflow_out!==(prior_overflow || x>8388607 || x< -8388608))
             $fatal(1,"Scalar clamp selected-group overflow flag");
         @(negedge clk);
         for(integer i=0;i<32;i++)
             if(dut.write_vector_q[i*24+:24]!==
                (i==group_id*4+lane_offset ? clamp24(128'(x)) : 24'sd1234))
                 $fatal(1,"Scalar write-vector lane=%0d group=%0d offset=%0d",i,group_id,lane_offset);
-        if(!attention) begin
-            if(group_id*4+lane_offset==31) begin
-                if(dut.op!==dut.O_WRITE || dut.write_vector_mask_q!==32'hffffffff ||
-                   dut.write_vector_addr_q!==7'd36) $fatal(1,"Linear packed row flush mask/address");
-            end else if(dut.op!==dut.L_ROW_START) $fatal(1,"Linear partial row issued a premature write");
-        end
+        if(group_id*4+lane_offset==31) begin
+            if(!dut.linear_write || dut.linear_write_address!==7'd36)
+                $fatal(1,"Linear packed row flush mask/address");
+        end else if(dut.linear_write) $fatal(1,"Linear partial row issued a premature write");
         clamp_checks++;checks+=3;
     endtask
-    task automatic check_scalar_cancel(input integer phase,input bit attention);
+    task automatic check_scalar_cancel(input integer phase);
         reset_fixture();
         @(negedge clk);
-        force dut.write_vector_q={32{24'sd1234}};#1;release dut.write_vector_q;
-        $deposit(dut.scalar_round_q,64'sh7fffffffffffffff);
-        $deposit(dut.matrix_row_q,10'd28);$deposit(dut.lane_q,5'd28);
-        if(attention) force dut.op=dut.A_FLAGS;else force dut.op=dut.L_FLAGS;
-        #1;release dut.op;
+        force dut.write_vector_q={32{24'sd1234}};force dut.linear_active_q=1'b1;
+        #1;release dut.write_vector_q;release dut.linear_active_q;
+        inject_linear_scalar(64'sh7fffffffffffffff,28);
         repeat(phase) @(negedge clk);
         rst_n=0;#1;
         if(dut.scalar_packet_valid_q || dut.scalar_cluster_valid_q!==0)
@@ -306,14 +309,19 @@ module tb_llm_operators;
     always @(negedge clk)
         if(dut.core_rst_n && dut.round16_group_q!=={8{dut.op[dut.NR_ROUND_IDX] || dut.op[dut.B_ROUND_IDX]}})
             $fatal(1,"Round command/phase mismatch");
+    // Static force sources; a deposit into op can miss merged state copies.
+    logic signed [38:0] inject_a;
+    logic signed [24:0] inject_b;
     task automatic check_scalar(input logic signed [38:0] x,
                                 input logic signed [24:0] y);
         logic signed [127:0] reference_product;
         reset_fixture();
         @(negedge clk);rst_n=1;
         repeat(2) @(negedge clk);
-        $deposit(dut.scalar_a_q,x);$deposit(dut.scalar_b_q,y);
-        $deposit(dut.return_scalar,dut.RET_SCALAR_O_IDLE);$deposit(dut.op,dut.SC_MULTIPLY);
+        inject_a=x;inject_b=y;
+        force dut.scalar_a_q=inject_a;force dut.scalar_b_q=inject_b;
+        force dut.return_scalar=dut.RET_SCALAR_O_IDLE;force dut.op=dut.SC_MULTIPLY;
+        #1;release dut.scalar_a_q;release dut.scalar_b_q;release dut.return_scalar;release dut.op;
         reference_product=128'(x)*128'(y);
         repeat(3) @(negedge clk);
         if(dut.op!==dut.O_IDLE) $fatal(1,"Scalar pipeline latency");
@@ -333,7 +341,7 @@ module tb_llm_operators;
         rst_n=1;
         repeat(2) @(negedge clk);
         parameter_reads=0;vector_reads=0;vector_writes=0;kv_reads=0;
-        for(integer s=0;s<112;s++) op_cycles[s]=0;
+        foreach(op_cycles[s]) op_cycles[s]=0;
         linear_startup=0;linear_issue=0;linear_drain=0;
         head_startup=0;head_issue=0;head_drain=0;
         profile_active=1;
@@ -370,7 +378,7 @@ module tb_llm_operators;
         profile_active=0;
         if(which==1 || which==9 || which==10 || which==11) begin
             $display("SCHEDULE_PROFILE operator=%0d context=%0d temperature=%0d cycles=%0d linear_startup=%0d linear_issue=%0d linear_drain=%0d head_startup=%0d head_issue=%0d head_drain=%0d",which,dut.position_q+1,dut.temperature_q,clocks,linear_startup,linear_issue,linear_drain,head_startup,head_issue,head_drain);
-            for(integer s=0;s<112;s++) if(op_cycles[s]) $display("SCHEDULE_STATE operator=%0d state=%0d cycles=%0d",which,s,op_cycles[s]);
+            foreach(op_cycles[s]) if(op_cycles[s]) $display("SCHEDULE_STATE operator=%0d state=%0d cycles=%0d",which,s,op_cycles[s]);
         end
         $display("LLM_TRAFFIC operator=%0d clocks=%0d parameter_reads=%0d vector_reads=%0d vector_writes=%0d kv_reads=%0d",which,clocks,parameter_reads,vector_reads,vector_writes,kv_reads);
         if(!dut.op_fault_q) begin
@@ -488,6 +496,7 @@ module tb_llm_operators;
     endtask
     initial begin
         $readmemh("Verilog Source code/sigmoid_257.mem",sigmoid_lut);
+        op_cycles=new[dut.OP_COUNT];
         // A scoped entry point retains the full operator suite below. It runs
         // the actual SRAM/epilogue/write-drain fixtures for Phase 1A alone.
         if($test$plusargs("linear_only")) begin
@@ -519,23 +528,21 @@ module tb_llm_operators;
         // Private group flags remain unreset. Alternate overflow and ordinary
         // values across all groups to detect stale flags or incorrect owners.
         for(integer g=0;g<8;g++)
-            for(integer a=0;a<2;a++)
-                for(integer offset=0;offset<4;offset++) begin
-                    check_scalar_clamp(64'sh7fffffffffffffff,g,1'(a),offset);
-                    check_scalar_clamp(64'sd0,g,1'(a),offset);
-                    check_scalar_clamp(64'sh8000000000000000,g,1'(a),offset);
-                    check_scalar_clamp(-64'sd1,g,1'(a),offset);
-                    check_scalar_clamp(64'sd8388607,g,1'(a),offset);
-                    check_scalar_clamp(64'sd8388608,g,1'(a),offset);
-                    check_scalar_clamp(-64'sd8388608,g,1'(a),offset);
-                    check_scalar_clamp(-64'sd8388609,g,1'(a),offset);
-                end
-        check_scalar_clamp(64'sh0000000100800000,6,0,3);
-        check_scalar_clamp(64'shffffffff007fffff,1,1,2);
-        check_scalar_clamp(64'sd0,7,0,1,1);
-        check_scalar_clamp(64'sd0,0,1,2,1);
-        for(integer phase=1;phase<=3;phase++)
-            for(integer a=0;a<2;a++) check_scalar_cancel(phase,1'(a));
+            for(integer offset=0;offset<4;offset++) begin
+                check_scalar_clamp(64'sh7fffffffffffffff,g,offset);
+                check_scalar_clamp(64'sd0,g,offset);
+                check_scalar_clamp(64'sh8000000000000000,g,offset);
+                check_scalar_clamp(-64'sd1,g,offset);
+                check_scalar_clamp(64'sd8388607,g,offset);
+                check_scalar_clamp(64'sd8388608,g,offset);
+                check_scalar_clamp(-64'sd8388608,g,offset);
+                check_scalar_clamp(-64'sd8388609,g,offset);
+            end
+        check_scalar_clamp(64'sh0000000100800000,6,3);
+        check_scalar_clamp(64'shffffffff007fffff,1,2);
+        check_scalar_clamp(64'sd0,7,1,1);
+        check_scalar_clamp(64'sd0,0,2,1);
+        for(integer phase=1;phase<=3;phase++) check_scalar_cancel(phase);
         check_round16(0);check_round16(1);
         for(integer phase=1;phase<=3;phase++)
             for(integer b=0;b<2;b++) check_round16(1'(b),phase);
