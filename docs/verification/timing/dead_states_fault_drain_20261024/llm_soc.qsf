@@ -1,0 +1,141 @@
+# Full RTL language graph; CPU only loads data and tokenizes.
+set_global_assignment -name FAMILY "Cyclone V"
+set_global_assignment -name DEVICE 5CGXFC9E6F35C7
+set_global_assignment -name TOP_LEVEL_ENTITY llm_soc
+set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
+set_global_assignment -name SEED 1
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name SDC_FILE llm_soc.sdc
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/npu_pkg.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_pkg.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/div.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_bank_ram.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/pipelined_word_ram.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_parameter_ram.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_math.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/reset_release.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_soc.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/sigmoid.sv"
+set_global_assignment -name VERILOG_INCLUDE_FILE "../Verilog Source code/llm_exp_lut.svh"
+set_global_assignment -name VERILOG_INCLUDE_FILE "../Verilog Source code/llm_gumbel_lut.svh"
+set_global_assignment -name VERILOG_INCLUDE_FILE "../Verilog Source code/sigmoid_lut.svh"
+# Group2 ordinary LAB output routes regressed. Request physical I/O packing;
+# the public host response FF now has only an unconditional D input and reset.
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "host_rdata[*]"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "host_ready"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "running"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "ready"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "pc_debug[*]"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "instr_debug[*]"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "error"
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to "overflow_out"
+# Preserve shallow request/payload queues as FFs. Real SRAM leaves remain
+# inferred memories; avoid consuming scarce M10K/MLABs for three-word delays.
+set_global_assignment -name AUTO_SHIFT_REGISTER_RECOGNITION OFF
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/quartus_word_ram.sv"
+# Memory IP is the sole vendor macro. Arithmetic maps into ordinary logic cells.
+set_global_assignment -name AUTO_DSP_RECOGNITION OFF
+set_global_assignment -name DSP_BLOCK_BALANCING "LOGIC ELEMENTS"
+# Ordinary clock input and dedicated reset routing; no clock-generation IP.
+# arch_fulltop1_20261007 moved this reset source and failed recovery to I/O FFs.
+# Restore its verified nanofable_max_20261006 site; keep every reset path timed.
+set_location_assignment FF_X56_Y48_N59 -to "u_reset|core_rst_n"
+# Differential SDR output buffers reduce pad delay. Each output has a physical
+# negative companion; external host must receive a parallel LVDS bus. No
+# ALTLVDS, serializer, SERDES or PLL is used. This is a demo electrical contract,
+# not an assigned board pinout. The existing SDC remains unchanged.
+set_instance_assignment -name IO_STANDARD LVDS -to "host_rdata[*]"
+set_instance_assignment -name IO_STANDARD LVDS -to "host_ready"
+set_instance_assignment -name IO_STANDARD LVDS -to "running"
+set_instance_assignment -name IO_STANDARD LVDS -to "ready"
+set_instance_assignment -name IO_STANDARD LVDS -to "pc_debug[*]"
+set_instance_assignment -name IO_STANDARD LVDS -to "instr_debug[*]"
+set_instance_assignment -name IO_STANDARD LVDS -to "error"
+set_instance_assignment -name IO_STANDARD LVDS -to "overflow_out"
+
+# Portable gate-level bit-product tree, shared by full and legacy arithmetic.
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/logic_mul.sv"
+
+set_location_assignment PIN_AC18 -to clk
+set_location_assignment PIN_V28 -to rst_n
+set_instance_assignment -name IO_STANDARD "2.5 V" -to rst_n
+set_instance_assignment -name IO_STANDARD "2.5 V" -to clk
+
+# Logic5 has a 9.188-ns cache address route (zero combinational levels),
+# and small host-input hold / asynchronous-output removal violations.
+# Duplicate physical FF drivers and optimize high-fanout input delay chains.
+# These change placement/routing only; clock and I/O timing budgets are intact.
+set_global_assignment -name PHYSICAL_SYNTHESIS_REGISTER_DUPLICATION ON
+set_global_assignment -name AUTO_DELAY_CHAINS_FOR_HIGH_FANOUT_INPUT_PINS ON
+
+# Logic6 retained all logic5 slacks/routes despite the automatic options.
+# Explicitly split the cache-address FF fanout (8 group drivers) into pairs.
+# Logic7 mapped the cache fanout limit but the Fitter ignored INPUT_DELAY_CHAIN
+# for all four destinations on this device. Remove those ineffective settings.
+set_instance_assignment -name MAX_FANOUT 2 -to "k_address_q[*]"
+# Logic7 critical setup is op[88] -> lane_round_q[11], 10.141 ns.
+# Bound onehot control fanout during FPGA mapping; ordinary registers/logic only.
+set_instance_assignment -name MAX_FANOUT 16 -to "op[*]"
+
+# Release1: address->SRAM group and scalar->write-payload routes dominate
+# negative setup (97% routing on the worst path). Bound physical FF driver
+# loads without changing portable RTL, latency, SDC or host timing budgets.
+set_instance_assignment -name MAX_FANOUT 2 -to "write_vector_addr_q[*]"
+set_instance_assignment -name MAX_FANOUT 2 -to "v_address_q[*]"
+set_instance_assignment -name MAX_FANOUT 4 -to "u_cache|write_pending_q[0]"
+set_instance_assignment -name MAX_FANOUT 4 -to "scalar_group_q[*][*]"
+
+# Fanout1 remaining setup: cache write-address -> request groups7/6,
+# 9.243 ns routing and zero logic levels. Split ordinary physical drivers.
+set_instance_assignment -name MAX_FANOUT 2 -to "k_write_address_q[*]"
+# Fanout1 input hold: host_wdata -> captured payload; fitted D3_1 setting6.
+# Request the next physical input-delay setting for this demo backend.
+# No RTL IP, timing exception, interface latency or SDC budget change.
+# Fitter delay-chain report must confirm implementation; all corners rechecked.
+set_instance_assignment -name D3_DELAY 7 -to "host_wdata[*]"
+# Fanout2 data-input hold passed; address bits20/11/15 retained D3 setting6
+# and failed by0.093/0.042/0.018ns. Apply the same physical fix to addresses.
+set_instance_assignment -name D3_DELAY 7 -to "host_addr[*]"
+# Cache1 forced-global reset routing failed setup/recovery; its timing
+# recommendations explicitly request removal at core_rst_n~CLKENA0.
+# Keep automatic routing, the verified standard-FF reset and original SDC.
+
+# Deep parameter tiles require separate ordinary address and payload drivers.
+# Keep this backend preservation policy outside the portable memory adapter.
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "*|g_ip_tiled.g_tile*.read_address_q*"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "*|g_ip_tiled.g_tile*.write_address_q*"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "*|g_ip_tiled.write_group_q*"
+
+# Eight ordinary round commands are prepared on the raw-product capture edge.
+# Retain the exact four-lane copies without device attributes in compute RTL.
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[0]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[1]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[2]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[3]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[4]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[5]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[6]"
+set_instance_assignment -name DONT_MERGE_REGISTER ON -to "round16_group_q[7]"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/ternary_dot32.sv"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_head_engine.sv"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_attention_engine.sv"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_attention_normalize.sv"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/llm_linear_engine.sv"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/isqrt_u64.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../Verilog Source code/sram_word_tile.sv"
+
+set_global_assignment -name LAST_QUARTUS_VERSION "25.1std.0 Lite Edition"
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
