@@ -44,7 +44,7 @@ Mũi tên liền là dữ liệu. Mũi tên đứt là tín hiệu điều khi�
 | | `llm_soc` (chính) | `matmulfree` (legacy) |
 |---|---|---|
 | Mục đích | Sinh văn bản bằng mô hình NanoFable (4 lớp transformer) | Chạy các phép mạng nơ-ron không dùng phép nhân ma trận số thực ("MatMul-free") |
-| Điều khiển | FSM đồ thị 24 pha + FSM thao tác 112 trạng thái | Chương trình 13 bit, tối đa 512 lệnh |
+| Điều khiển | FSM đồ thị 24 pha + FSM thao tác 87 trạng thái | Chương trình 13 bit, tối đa 512 lệnh |
 | Dữ liệu | S24 Q16, 32 làn / hàng 768 bit | S16 / int8, 16 hoặc 32 làn / từ 256 bit |
 | Trọng số | Ternary 2 bit (ma trận), int8 (embedding) | Ternary 2 bit |
 | Bộ nhớ tham số | 24 576 × 256 bit = 768 KiB | 1024 × 256 bit = 32 KiB |

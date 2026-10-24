@@ -24,7 +24,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         G_UP, G_SILU, G_GMUL, G_DOWN, G_MADD, G_NEXT, G_FNORM, G_HEAD,
         G_ADVANCE, G_DONE} graph_t;
     graph_t graph;
-    localparam int OP_COUNT = 112;
+    localparam int OP_COUNT = 87;
     localparam int O_IDLE_IDX = 0;
     localparam int O_P_REQ_IDX = 1;
     localparam int O_P_WAIT_IDX = 2;
@@ -41,102 +41,77 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     localparam int E_CALC_IDX = 13;
     localparam int E_PACK_IDX = 14;
     localparam int L_META_IDX = 15;
-    localparam int L_WEIGHT_IDX = 16;
-    localparam int L_INPUT_IDX = 17;
-    localparam int L_MAC_IDX = 18;
-    localparam int L_COEFF_IDX = 19;
-    localparam int L_ROUND_IDX = 20;
-    localparam int L_STORE_IDX = 21;
-    localparam int N_SQUARE_IDX = 22;
-    localparam int N_ACC_IDX = 23;
-    localparam int N_ROOT_IDX = 24;
-    localparam int N_ROOT_WAIT_IDX = 25;
-    localparam int N_DIV_IDX = 26;
-    localparam int N_DIV_WAIT_IDX = 27;
-    localparam int N_GAIN0_IDX = 28;
-    localparam int N_GAIN1_IDX = 29;
-    localparam int N_INPUT_IDX = 30;
-    localparam int N_RECIP_IDX = 31;
-    localparam int N_GAIN_IDX = 32;
-    localparam int N_PACK_IDX = 33;
-    localparam int R_TABLE0_IDX = 34;
-    localparam int R_TABLE1_IDX = 35;
-    localparam int R_INPUT_IDX = 36;
-    localparam int R_COS_IDX = 37;
-    localparam int R_SIN_IDX = 38;
-    localparam int R_PACK_IDX = 39;
-    localparam int C_INPUT_IDX = 40;
-    localparam int C_STORE_IDX = 41;
-    localparam int A_QUERY_IDX = 42;
-    localparam int A_KEY_IDX = 43;
-    localparam int A_DOT_IDX = 44;
-    localparam int A_SCALE_IDX = 45;
-    localparam int A_SCORE_IDX = 46;
-    localparam int A_NEXT_SCORE_IDX = 47;
-    localparam int A_EXP_READ_IDX = 48;
-    localparam int A_EXP_PREP_IDX = 49;
-    localparam int A_EXP_MUL_IDX = 50;
-    localparam int A_EXP_STORE_IDX = 51;
-    localparam int A_VALUE_IDX = 52;
-    localparam int A_WEIGHT_IDX = 53;
-    localparam int A_ACC_IDX = 54;
-    localparam int A_DIV_IDX = 55;
-    localparam int A_DIV_WAIT_IDX = 56;
-    localparam int A_LANE_IDX = 57;
-    localparam int A_PACK_IDX = 58;
-    localparam int B_INPUT0_IDX = 59;
-    localparam int B_INPUT1_IDX = 60;
-    localparam int B_CALC_IDX = 61;
-    localparam int B_PACK_IDX = 62;
-    localparam int S_INPUT_IDX = 63;
-    localparam int S_SIG_IDX = 64;
-    localparam int S_SIG_WAIT_IDX = 65;
-    localparam int S_MUL_IDX = 66;
-    localparam int S_PACK_IDX = 67;
-    localparam int H_SCALE_IDX = 68;
-    localparam int H_WEIGHT_IDX = 69;
-    localparam int H_INPUT_IDX = 70;
-    localparam int H_MAC_IDX = 71;
-    localparam int H_COEFF_IDX = 72;
-    localparam int H_ROUND_IDX = 73;
-    localparam int H_NOISE_IDX = 74;
-    localparam int H_SAMPLE_IDX = 75;
-    localparam int H_SELECT_IDX = 76;
-    localparam int E_ROUND_IDX = 77;
-    localparam int E_CLAMP_IDX = 78;
-    localparam int L_SAT_IDX = 79;
-    localparam int NR_ROUND_IDX = 80;
-    localparam int NR_CLAMP_IDX = 81;
-    localparam int N_ROUND_IDX = 82;
-    localparam int N_CLAMP_IDX = 83;
-    localparam int R_ROUND_IDX = 84;
-    localparam int R_CLAMP_IDX = 85;
-    localparam int A_SAT_IDX = 86;
-    localparam int B_ADD_CLAMP_IDX = 87;
-    localparam int B_ROUND_IDX = 88;
-    localparam int B_CLAMP_IDX = 89;
-    localparam int S_ROUND_IDX = 90;
-    localparam int S_CLAMP_IDX = 91;
-    localparam int SC_MULTIPLY_IDX = 92;
-    localparam int SG_CLAMP_IDX = 93;
-    localparam int SG_GROUP_IDX = 94;
-    localparam int SG_PICK_IDX = 95;
-    localparam int SC_PAIR_IDX = 96;
-    localparam int SC_SUM_IDX = 97;
-    localparam int L_DECODE_IDX = 98;
-    localparam int A_EXP_DELTA_IDX = 99;
-    localparam int L_FLAGS_IDX = 100;
-    localparam int A_FLAGS_IDX = 101;
-    localparam int SC_ROUTE_IDX = 102;
-    localparam int L_PRELOAD_IDX = 103;
-    localparam int H_PRELOAD_IDX = 104;
-    localparam int L_DOT_WAIT_IDX = 105;
-    localparam int H_STREAM_WAIT_IDX = 106;
-    localparam int A_STREAM_WAIT_IDX = 107;
-    localparam int N_DIV_ROUND_IDX = 108;
-    localparam int A_NORM_WAIT_IDX = 109;
-    localparam int L_ROW_START_IDX = 110;
-    localparam int L_ROW_WAIT_IDX = 111;
+    localparam int N_SQUARE_IDX = 16;
+    localparam int N_ACC_IDX = 17;
+    localparam int N_ROOT_IDX = 18;
+    localparam int N_ROOT_WAIT_IDX = 19;
+    localparam int N_DIV_IDX = 20;
+    localparam int N_DIV_WAIT_IDX = 21;
+    localparam int N_GAIN0_IDX = 22;
+    localparam int N_GAIN1_IDX = 23;
+    localparam int N_INPUT_IDX = 24;
+    localparam int N_RECIP_IDX = 25;
+    localparam int N_GAIN_IDX = 26;
+    localparam int N_PACK_IDX = 27;
+    localparam int R_TABLE0_IDX = 28;
+    localparam int R_TABLE1_IDX = 29;
+    localparam int R_INPUT_IDX = 30;
+    localparam int R_COS_IDX = 31;
+    localparam int R_SIN_IDX = 32;
+    localparam int R_PACK_IDX = 33;
+    localparam int C_INPUT_IDX = 34;
+    localparam int C_STORE_IDX = 35;
+    localparam int A_QUERY_IDX = 36;
+    localparam int A_EXP_READ_IDX = 37;
+    localparam int A_EXP_PREP_IDX = 38;
+    localparam int A_EXP_MUL_IDX = 39;
+    localparam int A_EXP_STORE_IDX = 40;
+    localparam int A_WEIGHT_IDX = 41;
+    localparam int A_ACC_IDX = 42;
+    localparam int A_LANE_IDX = 43;
+    localparam int B_INPUT0_IDX = 44;
+    localparam int B_INPUT1_IDX = 45;
+    localparam int B_CALC_IDX = 46;
+    localparam int B_PACK_IDX = 47;
+    localparam int S_INPUT_IDX = 48;
+    localparam int S_SIG_IDX = 49;
+    localparam int S_SIG_WAIT_IDX = 50;
+    localparam int S_MUL_IDX = 51;
+    localparam int S_PACK_IDX = 52;
+    localparam int H_SCALE_IDX = 53;
+    localparam int H_COEFF_IDX = 54;
+    localparam int H_ROUND_IDX = 55;
+    localparam int H_NOISE_IDX = 56;
+    localparam int H_SAMPLE_IDX = 57;
+    localparam int H_SELECT_IDX = 58;
+    localparam int E_ROUND_IDX = 59;
+    localparam int E_CLAMP_IDX = 60;
+    localparam int NR_ROUND_IDX = 61;
+    localparam int NR_CLAMP_IDX = 62;
+    localparam int N_ROUND_IDX = 63;
+    localparam int N_CLAMP_IDX = 64;
+    localparam int R_ROUND_IDX = 65;
+    localparam int R_CLAMP_IDX = 66;
+    localparam int B_ADD_CLAMP_IDX = 67;
+    localparam int B_ROUND_IDX = 68;
+    localparam int B_CLAMP_IDX = 69;
+    localparam int S_ROUND_IDX = 70;
+    localparam int S_CLAMP_IDX = 71;
+    localparam int SC_MULTIPLY_IDX = 72;
+    localparam int SG_CLAMP_IDX = 73;
+    localparam int SG_GROUP_IDX = 74;
+    localparam int SG_PICK_IDX = 75;
+    localparam int SC_PAIR_IDX = 76;
+    localparam int SC_SUM_IDX = 77;
+    localparam int A_EXP_DELTA_IDX = 78;
+    localparam int L_PRELOAD_IDX = 79;
+    localparam int H_PRELOAD_IDX = 80;
+    localparam int H_STREAM_WAIT_IDX = 81;
+    localparam int A_STREAM_WAIT_IDX = 82;
+    localparam int N_DIV_ROUND_IDX = 83;
+    localparam int A_NORM_WAIT_IDX = 84;
+    localparam int L_ROW_START_IDX = 85;
+    localparam int L_ROW_WAIT_IDX = 86;
     typedef enum logic [OP_COUNT - 1:0] {
         O_IDLE = OP_COUNT'(1) << O_IDLE_IDX,
         O_P_REQ = OP_COUNT'(1) << O_P_REQ_IDX,
@@ -154,12 +129,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         E_CALC = OP_COUNT'(1) << E_CALC_IDX,
         E_PACK = OP_COUNT'(1) << E_PACK_IDX,
         L_META = OP_COUNT'(1) << L_META_IDX,
-        L_WEIGHT = OP_COUNT'(1) << L_WEIGHT_IDX,
-        L_INPUT = OP_COUNT'(1) << L_INPUT_IDX,
-        L_MAC = OP_COUNT'(1) << L_MAC_IDX,
-        L_COEFF = OP_COUNT'(1) << L_COEFF_IDX,
-        L_ROUND = OP_COUNT'(1) << L_ROUND_IDX,
-        L_STORE = OP_COUNT'(1) << L_STORE_IDX,
         N_SQUARE = OP_COUNT'(1) << N_SQUARE_IDX,
         N_ACC = OP_COUNT'(1) << N_ACC_IDX,
         N_ROOT = OP_COUNT'(1) << N_ROOT_IDX,
@@ -181,22 +150,13 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         C_INPUT = OP_COUNT'(1) << C_INPUT_IDX,
         C_STORE = OP_COUNT'(1) << C_STORE_IDX,
         A_QUERY = OP_COUNT'(1) << A_QUERY_IDX,
-        A_KEY = OP_COUNT'(1) << A_KEY_IDX,
-        A_DOT = OP_COUNT'(1) << A_DOT_IDX,
-        A_SCALE = OP_COUNT'(1) << A_SCALE_IDX,
-        A_SCORE = OP_COUNT'(1) << A_SCORE_IDX,
-        A_NEXT_SCORE = OP_COUNT'(1) << A_NEXT_SCORE_IDX,
         A_EXP_READ = OP_COUNT'(1) << A_EXP_READ_IDX,
         A_EXP_PREP = OP_COUNT'(1) << A_EXP_PREP_IDX,
         A_EXP_MUL = OP_COUNT'(1) << A_EXP_MUL_IDX,
         A_EXP_STORE = OP_COUNT'(1) << A_EXP_STORE_IDX,
-        A_VALUE = OP_COUNT'(1) << A_VALUE_IDX,
         A_WEIGHT = OP_COUNT'(1) << A_WEIGHT_IDX,
         A_ACC = OP_COUNT'(1) << A_ACC_IDX,
-        A_DIV = OP_COUNT'(1) << A_DIV_IDX,
-        A_DIV_WAIT = OP_COUNT'(1) << A_DIV_WAIT_IDX,
         A_LANE = OP_COUNT'(1) << A_LANE_IDX,
-        A_PACK = OP_COUNT'(1) << A_PACK_IDX,
         B_INPUT0 = OP_COUNT'(1) << B_INPUT0_IDX,
         B_INPUT1 = OP_COUNT'(1) << B_INPUT1_IDX,
         B_CALC = OP_COUNT'(1) << B_CALC_IDX,
@@ -207,9 +167,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         S_MUL = OP_COUNT'(1) << S_MUL_IDX,
         S_PACK = OP_COUNT'(1) << S_PACK_IDX,
         H_SCALE = OP_COUNT'(1) << H_SCALE_IDX,
-        H_WEIGHT = OP_COUNT'(1) << H_WEIGHT_IDX,
-        H_INPUT = OP_COUNT'(1) << H_INPUT_IDX,
-        H_MAC = OP_COUNT'(1) << H_MAC_IDX,
         H_COEFF = OP_COUNT'(1) << H_COEFF_IDX,
         H_ROUND = OP_COUNT'(1) << H_ROUND_IDX,
         H_NOISE = OP_COUNT'(1) << H_NOISE_IDX,
@@ -217,14 +174,12 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         H_SELECT = OP_COUNT'(1) << H_SELECT_IDX,
         E_ROUND = OP_COUNT'(1) << E_ROUND_IDX,
         E_CLAMP = OP_COUNT'(1) << E_CLAMP_IDX,
-        L_SAT = OP_COUNT'(1) << L_SAT_IDX,
         NR_ROUND = OP_COUNT'(1) << NR_ROUND_IDX,
         NR_CLAMP = OP_COUNT'(1) << NR_CLAMP_IDX,
         N_ROUND = OP_COUNT'(1) << N_ROUND_IDX,
         N_CLAMP = OP_COUNT'(1) << N_CLAMP_IDX,
         R_ROUND = OP_COUNT'(1) << R_ROUND_IDX,
         R_CLAMP = OP_COUNT'(1) << R_CLAMP_IDX,
-        A_SAT = OP_COUNT'(1) << A_SAT_IDX,
         B_ADD_CLAMP = OP_COUNT'(1) << B_ADD_CLAMP_IDX,
         B_ROUND = OP_COUNT'(1) << B_ROUND_IDX,
         B_CLAMP = OP_COUNT'(1) << B_CLAMP_IDX,
@@ -236,33 +191,28 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         SG_PICK = OP_COUNT'(1) << SG_PICK_IDX,
         SC_PAIR = OP_COUNT'(1) << SC_PAIR_IDX,
         SC_SUM = OP_COUNT'(1) << SC_SUM_IDX,
-        L_DECODE = OP_COUNT'(1) << L_DECODE_IDX,
         A_EXP_DELTA = OP_COUNT'(1) << A_EXP_DELTA_IDX,
-        L_FLAGS = OP_COUNT'(1) << L_FLAGS_IDX,
-        A_FLAGS = OP_COUNT'(1) << A_FLAGS_IDX,
         L_PRELOAD = OP_COUNT'(1) << L_PRELOAD_IDX,
         H_PRELOAD = OP_COUNT'(1) << H_PRELOAD_IDX,
-        L_DOT_WAIT = OP_COUNT'(1) << L_DOT_WAIT_IDX,
         H_STREAM_WAIT = OP_COUNT'(1) << H_STREAM_WAIT_IDX,
         A_STREAM_WAIT = OP_COUNT'(1) << A_STREAM_WAIT_IDX,
         N_DIV_ROUND = OP_COUNT'(1) << N_DIV_ROUND_IDX,
         A_NORM_WAIT = OP_COUNT'(1) << A_NORM_WAIT_IDX,
         L_ROW_START = OP_COUNT'(1) << L_ROW_START_IDX,
-        L_ROW_WAIT = OP_COUNT'(1) << L_ROW_WAIT_IDX,
-        SC_ROUTE = OP_COUNT'(1) << SC_ROUTE_IDX
+        L_ROW_WAIT = OP_COUNT'(1) << L_ROW_WAIT_IDX
     } op_t;
     op_t op;
-    typedef enum logic [3:0] { RET_P_E_DATA, RET_P_E_SCALE, RET_P_H_SCALE, RET_P_H_WEIGHT, RET_P_L_META, RET_P_L_WEIGHT, RET_P_N_GAIN0, RET_P_N_GAIN1, RET_P_R_TABLE0, RET_P_R_TABLE1 } p_return_t;
+    typedef enum logic [2:0] { RET_P_E_DATA, RET_P_E_SCALE, RET_P_H_SCALE, RET_P_L_META, RET_P_N_GAIN0, RET_P_N_GAIN1, RET_P_R_TABLE0, RET_P_R_TABLE1 } p_return_t;
     p_return_t return_p;
     typedef enum logic [3:0] { RET_V_A_QUERY, RET_V_B_INPUT0, RET_V_B_INPUT1, RET_V_C_INPUT, RET_V_H_PRELOAD, RET_V_L_PRELOAD, RET_V_N_INPUT, RET_V_N_SQUARE, RET_V_R_INPUT, RET_V_S_INPUT } v_return_t;
     v_return_t return_v;
-    typedef enum logic [0:0] { RET_K_A_KEY, RET_K_A_WEIGHT } k_return_t;
+    typedef enum logic [0:0] { RET_K_A_WEIGHT } k_return_t;
     k_return_t return_k;
-    typedef enum logic [3:0] { RET_M_A_ACC, RET_M_A_DOT, RET_M_B_CALC, RET_M_E_CALC, RET_M_H_MAC, RET_M_L_MAC, RET_M_N_ACC, RET_M_N_GAIN, RET_M_N_RECIP, RET_M_R_COS, RET_M_R_SIN, RET_M_S_PACK } m_return_t;
+    typedef enum logic [3:0] { RET_M_A_ACC, RET_M_B_CALC, RET_M_E_CALC, RET_M_N_ACC, RET_M_N_GAIN, RET_M_N_RECIP, RET_M_R_COS, RET_M_R_SIN, RET_M_S_PACK } m_return_t;
     m_return_t return_m;
-    typedef enum logic [2:0] { RET_W_A_QUERY, RET_W_B_PACK, RET_W_E_PACK, RET_W_N_PACK, RET_W_O_FINISH, RET_W_O_V_REQ, RET_W_R_PACK, RET_W_L_ROW_START } w_return_t;
+    typedef enum logic [2:0] { RET_W_B_PACK, RET_W_E_PACK, RET_W_N_PACK, RET_W_O_FINISH, RET_W_O_V_REQ, RET_W_R_PACK } w_return_t;
     w_return_t return_w;
-    typedef enum logic [1:0] { RET_SCALAR_A_SCORE, RET_SCALAR_H_ROUND, RET_SCALAR_L_ROUND, RET_SCALAR_O_IDLE } scalar_return_t;
+    typedef enum logic [0:0] { RET_SCALAR_H_ROUND, RET_SCALAR_O_IDLE } scalar_return_t;
     scalar_return_t return_scalar;
     logic op_done, launch, core_running, op_fault_q;
     logic [1:0] layer_q, head_q;
@@ -318,7 +268,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     logic signed [47:0] linear_scalar_hi_q;
     logic signed [23:0] scalar_group_q [0:7];
     logic signed [23:0] scalar_packet_low_q;
-    logic scalar_packet_high_q, scalar_packet_lower_q, scalar_packet_linear_q;
+    logic scalar_packet_high_q, scalar_packet_lower_q;
     logic [2:0] scalar_packet_group_q;
     logic scalar_packet_valid_q;
     logic signed [23:0] scalar_cluster_low_q [0:1];
@@ -784,15 +734,13 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     // Two registered clusters bound the distribution to four output groups.
     always_ff @(posedge clk or negedge core_rst_n)
         if (!core_rst_n) scalar_packet_valid_q <= 0;
-        else scalar_packet_valid_q <= op[L_FLAGS_IDX] || op[A_FLAGS_IDX] || linear_pipe_valid_q[4];
+        else scalar_packet_valid_q <= linear_pipe_valid_q[4];
     always_ff @(posedge clk)
-        if (core_rst_n && (op[L_FLAGS_IDX] || op[A_FLAGS_IDX] || linear_pipe_valid_q[4])) begin
+        if (core_rst_n && linear_pipe_valid_q[4]) begin
             scalar_packet_low_q <= scalar_round_q[23:0];
             scalar_packet_high_q <= scalar_round_q > 64'sd8388607;
             scalar_packet_lower_q <= scalar_round_q < -64'sd8388608;
-            scalar_packet_group_q <= linear_pipe_valid_q[4] ? linear_pipe_row_q[4][4:2] :
-                op[L_FLAGS_IDX] ? matrix_row_q[4:2] : lane_q[4:2];
-            scalar_packet_linear_q <= op[L_FLAGS_IDX] || linear_pipe_valid_q[4];
+            scalar_packet_group_q <= linear_pipe_row_q[4][4:2];
         end
     genvar lane, scalar_group, scalar_cluster, round_group;
     generate
@@ -804,8 +752,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     end
     for (lane = 0; lane < 32; lane = lane + 1) begin : g_simd
         // Cache payload is held by the RAM response until the next read.
-        // A_KEY/A_WEIGHT follow O_K_WAIT with k_valid, so this plain FF
-        // has captured the accepted response before either consumes it.
+        // A_WEIGHT follows O_K_WAIT with k_valid, so this plain FF
+        // has captured the accepted response before it is consumed.
         // Binary vector operations own second_q independently.
         always_ff @(posedge clk)
             cache_operand_q[lane * 24 +: 24] <= k_data[lane * 24 +: 24];
@@ -819,7 +767,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                     op[S_MUL_IDX] : math_a_q[lane] <= vector_q[lane * 24 +: 24];
                     op[NR_CLAMP_IDX] : math_a_q[lane] <= llm_sat24(lane_round_q[lane]);
                     op[R_COS_IDX] : math_a_q[lane] <= vector_q[((lane + 16) % 32) * 24 +: 24];
-                    op[A_KEY_IDX] : math_a_q[lane] <= query_q[lane * 24 +: 24];
                     op[A_WEIGHT_IDX] : math_a_q[lane] <= cache_operand_q[lane * 24 +: 24];
                     op[B_INPUT1_IDX] : if (graph == G_GMUL) math_a_q[lane] <= second_q[lane * 24 +: 24];
                     default : ;
@@ -839,7 +786,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                     op[R_COS_IDX] : math_b_q[lane] <= lane < 16 ?
                         -$signed(32'($signed(table_q[(lane % 16) * 32 + 16 +: 16]))) :
                         32'($signed(table_q[(lane % 16) * 32 + 16 +: 16]));
-                    op[A_KEY_IDX] : math_b_q[lane] <= 32'($signed(cache_operand_q[lane * 24 +: 24]));
                     op[A_WEIGHT_IDX] : math_b_q[lane] <= {7'h0, probability_q};
                     op[B_INPUT1_IDX] : if (graph == G_GMUL) math_b_q[lane] <= 32'($signed(vector_q[lane * 24 +: 24]));
                     op[S_MUL_IDX] : math_b_q[lane] <= {16'h0, sigmoid_values_q[lane]};
@@ -895,9 +841,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                 else if (op[E_CLAMP_IDX] || op[N_CLAMP_IDX] || op[R_CLAMP_IDX] ||
                     op[B_CLAMP_IDX] || op[S_CLAMP_IDX])
                     write_vector_q[lane * 24 +: 24] <= llm_sat24(lane_round_q[lane]);
-                else if ((linear_pipe_valid_q[7] && !op_fault_q && linear_pipe_row_q[7][4:0] == 5'(lane)) ||
-                         (op[L_STORE_IDX] && matrix_row_q[4:0] == 5'(lane)) ||
-                         (op[A_PACK_IDX] && lane_q == 5'(lane)))
+                else if (linear_pipe_valid_q[7] && !op_fault_q && linear_pipe_row_q[7][4:0] == 5'(lane))
                     write_vector_q[lane * 24 +: 24] <= scalar_group_q[lane / 4];
                 else if (op[B_ADD_CLAMP_IDX])
                     write_vector_q[lane * 24 +: 24] <= llm_sat24(lane_raw_q[lane]);
@@ -907,10 +851,10 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     for (scalar_cluster = 0; scalar_cluster < 2; scalar_cluster = scalar_cluster + 1) begin : g_scalar_cluster
         always_ff @(posedge clk or negedge core_rst_n)
             if (!core_rst_n) scalar_cluster_valid_q[scalar_cluster] <= 0;
-            else scalar_cluster_valid_q[scalar_cluster] <= (op[SC_ROUTE_IDX] || linear_pipe_valid_q[5]) &&
+            else scalar_cluster_valid_q[scalar_cluster] <= linear_pipe_valid_q[5] &&
                 scalar_packet_valid_q && scalar_packet_group_q[2] == 1'(scalar_cluster);
         always_ff @(posedge clk)
-            if (core_rst_n && (op[SC_ROUTE_IDX] || linear_pipe_valid_q[5]) && scalar_packet_valid_q &&
+            if (core_rst_n && linear_pipe_valid_q[5] && scalar_packet_valid_q &&
                 scalar_packet_group_q[2] == 1'(scalar_cluster)) begin
                 scalar_cluster_low_q[scalar_cluster] <= scalar_packet_low_q;
                 scalar_cluster_high_q[scalar_cluster] <= scalar_packet_high_q;
@@ -920,7 +864,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     end
     for (scalar_group = 0; scalar_group < 8; scalar_group = scalar_group + 1) begin : g_scalar_output
         always_ff @(posedge clk)
-            if (core_rst_n && (op[L_SAT_IDX] || op[A_SAT_IDX] || linear_pipe_valid_q[6]) &&
+            if (core_rst_n && linear_pipe_valid_q[6] &&
                 scalar_cluster_valid_q[scalar_group / 4] &&
                 scalar_cluster_group_q[scalar_group / 4] == 2'(scalar_group % 4))
                 scalar_group_q[scalar_group] <= scalar_cluster_high_q[scalar_group / 4] ? 24'sh7fffff :
@@ -939,8 +883,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     always_ff @(posedge clk)
         if (core_rst_n) begin
             unique case (1'b1)
-                op[L_COEFF_IDX] : return_scalar <= RET_SCALAR_L_ROUND;
-                op[A_SCALE_IDX] : return_scalar <= RET_SCALAR_A_SCORE;
                 op[H_COEFF_IDX] : return_scalar <= RET_SCALAR_H_ROUND;
                 default : ;
             endcase
@@ -1047,9 +989,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                             RET_P_E_DATA: op <= E_DATA;
                             RET_P_E_SCALE: op <= E_SCALE;
                             RET_P_H_SCALE: op <= H_SCALE;
-                            RET_P_H_WEIGHT: op <= H_WEIGHT;
                             RET_P_L_META: op <= L_META;
-                            RET_P_L_WEIGHT: op <= L_WEIGHT;
                             RET_P_N_GAIN0: op <= N_GAIN0;
                             RET_P_N_GAIN1: op <= N_GAIN1;
                             RET_P_R_TABLE0: op <= R_TABLE0;
@@ -1076,7 +1016,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                 op[O_K_REQ_IDX] : op <= O_K_WAIT;
                 op[O_K_WAIT_IDX] : if (k_valid) begin
                         case (return_k)
-                            RET_K_A_KEY: op <= A_KEY;
                             RET_K_A_WEIGHT: op <= A_WEIGHT;
                             default: begin op_fault_q <= 1; op <= O_FINISH; end
                         endcase
@@ -1085,11 +1024,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                 op[O_M_WAIT_IDX] : if (math_done) begin
                         case (return_m)
                             RET_M_A_ACC: op <= A_ACC;
-                            RET_M_A_DOT: op <= A_DOT;
                             RET_M_B_CALC: op <= B_CALC;
                             RET_M_E_CALC: op <= E_CALC;
-                            RET_M_H_MAC: op <= H_MAC;
-                            RET_M_L_MAC: op <= L_MAC;
                             RET_M_N_ACC: op <= N_ACC;
                             RET_M_N_GAIN: op <= N_GAIN;
                             RET_M_N_RECIP: op <= N_RECIP;
@@ -1101,14 +1037,12 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                     end
                 op[O_WRITE_IDX] : begin
                         case (return_w)
-                            RET_W_A_QUERY: op <= A_QUERY;
                             RET_W_B_PACK: op <= B_PACK;
                             RET_W_E_PACK: op <= E_PACK;
                             RET_W_N_PACK: op <= N_PACK;
                             RET_W_O_FINISH: op <= O_FINISH;
                             RET_W_O_V_REQ: op <= O_V_REQ;
                             RET_W_R_PACK: op <= R_PACK;
-                            RET_W_L_ROW_START: op <= L_ROW_START;
                             default: begin op_fault_q <= 1; op <= O_FINISH; end
                         endcase
                     end
@@ -1168,10 +1102,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                     end else if (linear_active_q && linear_row_issue_q == matrix_rows_q &&
                         !linear_busy && linear_pipe_valid_q == 0) op <= O_FINISH;
                 end
-                op[L_COEFF_IDX] : begin
-                    scalar_a_q <= linear_acc_q; scalar_b_q <= $signed({1'b0, coefficient_q});
-                    op <= SC_MULTIPLY;
-                end
                 op[SC_MULTIPLY_IDX] : begin
                     scalar_partial_q[0] <= scalar_partial_comb[0];
                     scalar_partial_q[1] <= scalar_partial_comb[1];
@@ -1186,36 +1116,10 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                     scalar_product_q <= 64'(scalar_pair_q) + (64'(scalar_partial_q[2]) <<< 16);
                     begin
                         case (return_scalar)
-                            RET_SCALAR_A_SCORE: op <= A_SCORE;
                             RET_SCALAR_H_ROUND: op <= H_ROUND;
-                            RET_SCALAR_L_ROUND: op <= L_ROUND;
                             RET_SCALAR_O_IDLE: op <= O_IDLE;
                             default: begin op_fault_q <= 1; op <= O_FINISH; end
                         endcase
-                    end
-                end
-                op[L_ROUND_IDX] : begin scalar_round_q <= rne_shift64(scalar_product_q, 6'd24); op <= L_FLAGS; end
-                op[L_FLAGS_IDX] : op <= SC_ROUTE;
-                op[SC_ROUTE_IDX] : if (scalar_packet_valid_q)
-                    op <= scalar_packet_linear_q ? L_SAT : A_SAT;
-                op[L_SAT_IDX] : begin
-                    op <= L_STORE;
-                    if (scalar_cluster_valid_q[scalar_packet_group_q[2]] &&
-                        (scalar_cluster_high_q[scalar_packet_group_q[2]] ||
-                         scalar_cluster_lower_q[scalar_packet_group_q[2]])) overflow_out <= 1;
-                end
-                op[L_STORE_IDX] : begin
-                    // L_STORE captures the final lane; O_WRITE consumes the completed row on the next edge.
-                    if (matrix_row_q[4:0] == 31 || matrix_row_q + 1'b1 >= matrix_rows_q) begin
-                        write_vector_addr_q <= 7'((int'(destination_q) << 3) + (int'(destination_q) << 2) + int'(matrix_row_q[8:5]));
-                        write_vector_mask_q <= 32'hffffffff;
-                        op <= O_WRITE;
-                        return_w <= matrix_row_q + 1'b1 >= matrix_rows_q ? RET_W_O_FINISH : RET_W_L_ROW_START;
-                    end else op <= L_ROW_START;
-                    if (matrix_row_q + 1'b1 < matrix_rows_q) begin
-                        matrix_row_q <= matrix_row_q + 1'b1; chunk_q <= 0; linear_acc_q <= 0;
-                        weight_row_q <= weight_row_q + 15'((matrix_chunks_q + 3) >> 2);
-
                     end
                 end
                 op[N_SQUARE_IDX] : begin
@@ -1318,20 +1222,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                         head_q <= head_q + 1'b1; time_q <= 0;
                         max_score_q <= 32'sh80000000; probability_sum_q <= 0;
                         v_address_q <= 7'(24 + head_q + 1'b1); return_v <= RET_V_A_QUERY; return_w <= RET_W_O_V_REQ;
-                    end
-                end
-                op[A_FLAGS_IDX] : op <= SC_ROUTE;
-                op[A_SAT_IDX] : op <= A_PACK;
-                op[A_PACK_IDX] : begin
-                    if (lane_q == 31) begin write_vector_addr_q <= 7'(((int'($unsigned(3'(5))) << 3) + (int'($unsigned(3'(5))) << 2)) + int'($unsigned(4'({2'b0, head_q})))); write_vector_mask_q <= 32'hffffffff; return_w <= RET_W_A_QUERY; op <= O_WRITE; end
-                    else begin lane_q <= lane_q + 1'b1; op <= A_LANE; end
-                    if (lane_q == 31) begin
-                        if (head_q == 3) return_w <= RET_W_O_FINISH;
-                        else begin
-                            head_q <= head_q + 1'b1; time_q <= 0;
-                            max_score_q <= 32'sh80000000; probability_sum_q <= 0;
-                            v_address_q <= 7'(2 * 12 + head_q + 1); return_v <= RET_V_A_QUERY; return_w <= RET_W_O_V_REQ;
-                        end
                     end
                 end
                 op[B_INPUT0_IDX] : begin

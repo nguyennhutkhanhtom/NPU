@@ -2,8 +2,8 @@
 
 | Mục | Giá trị |
 |---|---|
-| File | `llm_soc.sv` (1431 dòng) |
-| Loại | Top chính: giao tiếp host + FSM đồ thị 24 trạng thái + FSM thao tác one-hot 112 trạng thái |
+| File | `llm_soc.sv` (1321 dòng) |
+| Loại | Top chính: giao tiếp host + FSM đồ thị 24 trạng thái + FSM thao tác one-hot 87 trạng thái |
 | Nhóm | Top / điều khiển — NPU chính |
 | Con | `reset_release`, `llm_parameter_ram` (`u_parameters`), `llm_bank_ram` × 2 (`u_vectors`, `u_cache`), `llm_math` (`u_math`), `llm_linear_engine`, `llm_head_engine`, `llm_attention_engine`, `llm_attention_normalize`, `isqrt_u64` (`u_root`), `div` (`u_div`), `sigmoid` × `SIGMOID_LANES`, `logic_mul` × 5, `llm_exp_sample` × 2, `llm_gumbel_sample` |
 | Được dùng bởi | Top của thiết kế (FPGA: `quartus/llm_soc`) |
@@ -118,7 +118,7 @@ flowchart LR
     HIF --> PRM["llm_parameter_ram<br/>24 576 × 256 bit"]:::param
     OUTM["output_memory 128 × 12"]:::reg --> HIF
     CFG --> GR["FSM đồ thị<br/>24 pha"]:::ctrl
-    GR --> OP["FSM thao tác<br/>112 trạng thái one-hot"]:::ctrl
+    GR --> OP["FSM thao tác<br/>87 trạng thái one-hot"]:::ctrl
     PR --> TOK["Chọn token<br/>prompt / phản hồi"]:::move
     TOK --> OP
     OP --> VEC["u_vectors<br/>96 × 768 bit"]:::param
@@ -257,3 +257,25 @@ Prompt 3 token [17, 250, 9], sinh tối đa 5 token, greedy:
 6. Đọc token tại 0x200000, 0x200004, …
 
 Thứ tự tính toán: vị trí 0 (token 17) qua 4 lớp → vị trí 1 (250) qua 4 lớp → vị trí 2 (9) qua 4 lớp → FNORM, HEAD → token mới ở vị trí 3 → 4 lớp → HEAD → … tối đa 5 lần HEAD.
+
+## 5. Các trạng thái đã gỡ bỏ
+
+FSM thao tác dùng mã one-hot: mỗi trạng thái là một bit riêng của `op`, và `OP_COUNT` là số bit đó. Một trạng thái chỉ "đến được" nếu có một chuỗi chuyển trạng thái bắt đầu từ `O_IDLE` dẫn tới nó. Với các trạng thái dùng chung như `O_P_WAIT` hay `SC_SUM`, đích đến được chọn bằng nhãn `return_*` mà trạng thái gọi đã gán trước đó, nên một nhánh chỉ tính là đến được khi nhãn của nó thực sự được gán ở một trạng thái đến được.
+
+Phiên bản trước khai báo 112 trạng thái. Đi theo quy tắc trên thì chỉ 87 trạng thái đến được. 25 trạng thái còn lại là phần sót lại từ thời trước khi có các engine streaming, và đã bị xóa khỏi RTL:
+
+| Nhóm | Trạng thái đã xóa |
+|---|---|
+| Linear cũ | `L_WEIGHT`, `L_INPUT`, `L_MAC`, `L_COEFF`, `L_ROUND`, `L_FLAGS`, `L_SAT`, `L_STORE`, `L_DECODE`, `L_DOT_WAIT` |
+| Attention cũ | `A_KEY`, `A_DOT`, `A_SCALE`, `A_SCORE`, `A_NEXT_SCORE`, `A_VALUE`, `A_DIV`, `A_DIV_WAIT`, `A_FLAGS`, `A_SAT`, `A_PACK` |
+| Head cũ | `H_WEIGHT`, `H_INPUT`, `H_MAC` |
+| Định tuyến scalar | `SC_ROUTE` |
+
+Các thay đổi đi kèm:
+
+- Xóa 10 nhãn trở về chỉ phục vụ các trạng thái trên: `RET_P_L_WEIGHT`, `RET_P_H_WEIGHT`, `RET_M_L_MAC`, `RET_M_H_MAC`, `RET_M_A_DOT`, `RET_K_A_KEY`, `RET_SCALAR_L_ROUND`, `RET_SCALAR_A_SCORE`, `RET_W_L_ROW_START`, `RET_W_A_QUERY`. Hai nhãn cuối chỉ được gán bên trong `L_STORE` và `A_PACK`. `p_return_t` thu từ 4 bit còn 3 bit, `scalar_return_t` từ 2 bit còn 1 bit.
+- Giữ `RET_SCALAR_O_IDLE`. RTL không gán nhãn này, nhưng `tb_operators` dùng nó để chạy riêng bộ nhân scalar (`SC_MULTIPLY` → `SC_PAIR` → `SC_SUM`) rồi quay về `O_IDLE`.
+- Đường đóng gói scalar (`scalar_packet_*`, `scalar_cluster_*`, `scalar_group_q` và làn tương ứng của `write_vector_q`) giờ chỉ được kích bởi các tầng 4–7 của đường ống kết quả linear (`linear_pipe_valid_q[4..7]`). Thanh ghi `scalar_packet_linear_q`, vốn chỉ dùng để chọn giữa `L_SAT` và `A_SAT`, bị xóa.
+- Chỉ số one-hot của 87 trạng thái còn lại được đánh lại liên tục từ 0 đến 86 (`OP_COUNT = 87`). Vì vậy khi `ENABLE_DEBUG_INDEX = 1`, mã trạng thái trong `instr_debug[6:0]` khác với bản 112 trạng thái.
+
+Hành vi chức năng không đổi, vì các trạng thái bị xóa không bao giờ được vào.

@@ -95,8 +95,8 @@ stateDiagram-v2
     USE --> IDLE
 ```
 
-- **One-hot**: mã hóa trạng thái sao cho mỗi trạng thái là một bit riêng. Ví dụ 112 trạng thái thì dùng 112 bit, và đúng một bit bằng 1. Kiểm tra "đang ở trạng thái X" chỉ cần đọc 1 bit, nên rất nhanh. `llm_soc` dùng one-hot cho FSM `op`.
-- **Trạng thái không reachable**: trạng thái có trong mã nhưng không đường chuyển nào dẫn tới. Tài liệu `llm_soc` đánh dấu chúng riêng.
+- **One-hot**: mã hóa trạng thái sao cho mỗi trạng thái là một bit riêng. Ví dụ 87 trạng thái thì dùng 87 bit, và đúng một bit bằng 1. Kiểm tra "đang ở trạng thái X" chỉ cần đọc 1 bit, nên rất nhanh. `llm_soc` dùng one-hot cho FSM `op`.
+- **Trạng thái không reachable**: trạng thái có trong mã nhưng không đường chuyển nào dẫn tới. [modules/llm_soc.md](modules/llm_soc.md) §5 liệt kê 25 trạng thái như vậy đã được gỡ khỏi `llm_soc`.
 - **Return address**: một số "chương trình con" của FSM (ví dụ "đọc một hàng tham số") được gọi từ nhiều nơi. Trước khi gọi, FSM lưu "trạng thái quay về" vào một thanh ghi `return_*`, giống lệnh `call/ret` trong CPU.
 
 ### 1.8 SIMD và làn (lane)

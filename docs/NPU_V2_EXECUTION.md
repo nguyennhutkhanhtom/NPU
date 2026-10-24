@@ -53,7 +53,7 @@ This is the compact source of truth for staged NPU v2 implementation. Work only 
 
 | File | Module | States/signals/blocks to inspect |
 |---|---|---|
-| `Verilog Source code/llm_soc.sv` | `llm_soc` | graph FSM; `L_ROW_START/L_ROW_WAIT/L_COEFF/L_STORE`; `H_SCALE/H_STREAM_WAIT/H_COEFF/H_SELECT`; `A_EXP_READ`–`A_ACC`; parameter mux; `input_cache_q`; `math_start`; `op_done`; `g_perf` |
+| `Verilog Source code/llm_soc.sv` | `llm_soc` | graph FSM; `L_ROW_START/L_ROW_WAIT`; `H_SCALE/H_STREAM_WAIT/H_COEFF/H_SELECT`; `A_EXP_READ`–`A_ACC`; parameter mux; `input_cache_q`; `math_start`; `op_done`; `g_perf` |
 | `Verilog Source code/llm_linear_engine.sv` | `llm_linear_engine` | `IDLE/RUN/DRAIN`; request/response credits; two-word FIFO; `operand_capture`; accumulator; fault/drain completion |
 | `Verilog Source code/ternary_dot32.sv` | `ternary_dot32` | `valid_i/valid_o`; four-stage pipeline; reserved-code fault |
 | `Verilog Source code/llm_head_engine.sv` | `llm_head_engine` | row request/response/sum counters; `parameter_req_o`; `math_issue_o`; `done_o` |
