@@ -78,6 +78,10 @@ module tb_llm_operators;
     integer profile_context=0;
     integer op_cycles[];
     integer linear_startup,linear_issue,linear_drain,head_startup,head_issue,head_drain;
+    // Phase 1B head stream: port use, rows between first weight request and
+    // selection, and issue gaps while weight words remain to be requested.
+    integer head_weight_reads,head_scale_reads,head_rows_started,head_rows_selected;
+    integer head_inflight_max,head_inflight_sum,head_port_idle,head_credit_stalls,head_epilogue_stalls;
     bit profile_active=0;
     bit delay_linear_result=0;
     bit linear_extremes=0;
@@ -88,10 +92,27 @@ module tb_llm_operators;
             else if(dut.u_linear_engine.response_q==0) linear_startup++;
             else linear_drain++;
         end
-        if(dut.u_head_engine.active_q) begin
+        if(dut.head_busy) begin
             if(dut.head_capture) head_issue++;
-            else if(dut.u_head_engine.response_q==0) head_startup++;
+            else if(head_issue==0) head_startup++;
             else head_drain++;
+            if(dut.head_parameter_req) begin
+                if(dut.u_head_engine.request_scale_q) head_scale_reads++;
+                else begin
+                    head_weight_reads++;
+                    if(dut.u_head_engine.request_chunk_q==0) head_rows_started++;
+                end
+            end else if(dut.u_head_engine.state==2'd1 && !dut.u_head_engine.request_row_q[12]) begin
+                head_port_idle++;
+                if(dut.u_head_engine.reads_pending_q==8) head_credit_stalls++;
+            end
+        end
+        if(dut.head_pipe_valid_q[5]) head_rows_selected++;
+        // The epilogue has no backpressure: a retired row always enters stage 0.
+        if(dut.head_result_valid && (dut.head_pipe_valid_q[0] || dut.linear_feed)) head_epilogue_stalls++;
+        if(dut.op[dut.H_STREAM_WAIT_IDX]) begin
+            head_inflight_sum+=head_rows_started-head_rows_selected;
+            if(head_rows_started-head_rows_selected>head_inflight_max) head_inflight_max=head_rows_started-head_rows_selected;
         end
     end
     logic [31:0] head_reference_random;
@@ -319,12 +340,12 @@ module tb_llm_operators;
         @(negedge clk);rst_n=1;
         repeat(2) @(negedge clk);
         inject_a=x;inject_b=y;
-        force dut.scalar_a_q=inject_a;force dut.scalar_b_q=inject_b;
-        force dut.return_scalar=dut.RET_SCALAR_O_IDLE;force dut.op=dut.SC_MULTIPLY;
-        #1;release dut.scalar_a_q;release dut.scalar_b_q;release dut.return_scalar;release dut.op;
+        // Head stage 0 drives the shared three-stage multiplier alone.
+        force dut.scalar_a_q=inject_a;force dut.scalar_b_q=inject_b;force dut.head_pipe_valid_q=6'h01;
+        #1;release dut.scalar_a_q;release dut.scalar_b_q;release dut.head_pipe_valid_q;
         reference_product=128'(x)*128'(y);
         repeat(3) @(negedge clk);
-        if(dut.op!==dut.O_IDLE) $fatal(1,"Scalar pipeline latency");
+        if(dut.head_pipe_valid_q!==6'h08 || dut.op!==dut.O_IDLE) $fatal(1,"Scalar pipeline latency");
         if(dut.scalar_product_q!==reference_product[63:0])
             $fatal(1,"Scalar product x=%h y=%h expected=%h actual=%h",x,y,reference_product,dut.scalar_product_q);
         scalar_checks++;checks+=2;
@@ -344,6 +365,8 @@ module tb_llm_operators;
         foreach(op_cycles[s]) op_cycles[s]=0;
         linear_startup=0;linear_issue=0;linear_drain=0;
         head_startup=0;head_issue=0;head_drain=0;
+        head_weight_reads=0;head_scale_reads=0;head_rows_started=0;head_rows_selected=0;
+        head_inflight_max=0;head_inflight_sum=0;head_port_idle=0;head_credit_stalls=0;head_epilogue_stalls=0;
         profile_active=1;
         case(which)
             0: begin
@@ -379,6 +402,16 @@ module tb_llm_operators;
         if(which==1 || which==9 || which==10 || which==11) begin
             $display("SCHEDULE_PROFILE operator=%0d context=%0d temperature=%0d cycles=%0d linear_startup=%0d linear_issue=%0d linear_drain=%0d head_startup=%0d head_issue=%0d head_drain=%0d",which,dut.position_q+1,dut.temperature_q,clocks,linear_startup,linear_issue,linear_drain,head_startup,head_issue,head_drain);
             foreach(op_cycles[s]) if(op_cycles[s]) $display("SCHEDULE_STATE operator=%0d state=%0d cycles=%0d",which,s,op_cycles[s]);
+        end
+        if(which==9) begin
+            if(head_rows_started!=4096 || head_rows_selected!=4096 || head_weight_reads!=16384 ||
+               head_scale_reads!=512 || head_issue!=16384 || head_epilogue_stalls!=0)
+                $fatal(1,"Head stream accounting rows=%0d/%0d weights=%0d scales=%0d issues=%0d epilogue_stalls=%0d",
+                    head_rows_started,head_rows_selected,head_weight_reads,head_scale_reads,head_issue,head_epilogue_stalls);
+            $display("HEAD_STREAM_METRIC context=%0d temperature=%0d cycles=%0d stream_cycles=%0d rows=4096 weight_reads=%0d scale_reads=%0d parameter_port_util_pct=%0.2f simd_issues=%0d simd_util_pct=%0.2f rows_in_flight_max=%0d rows_in_flight_avg=%0.2f port_idle=%0d read_credit_stalls=%0d epilogue_stalls=%0d",
+                dut.position_q+1,dut.temperature_q,clocks,op_cycles[dut.H_STREAM_WAIT_IDX],head_weight_reads,head_scale_reads,
+                100.0*(head_weight_reads+head_scale_reads)/clocks,head_issue,100.0*head_issue/clocks,
+                head_inflight_max,real'(head_inflight_sum)/op_cycles[dut.H_STREAM_WAIT_IDX],head_port_idle,head_credit_stalls,head_epilogue_stalls);
         end
         $display("LLM_TRAFFIC operator=%0d clocks=%0d parameter_reads=%0d vector_reads=%0d vector_writes=%0d kv_reads=%0d",which,clocks,parameter_reads,vector_reads,vector_writes,kv_reads);
         if(!dut.op_fault_q) begin

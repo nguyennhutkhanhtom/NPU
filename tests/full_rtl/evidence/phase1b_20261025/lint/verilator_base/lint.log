@@ -1,0 +1,353 @@
+%Warning-DECLFILENAME: rtl/llm_exp_lut.svh:4:8: Filename 'llm_exp_lut' does not match MODULE name: 'llm_exp_sample'
+    4 | module llm_exp_sample(input logic [8:0] index, output logic [24:0] value);
+      |        ^~~~~~~~~~~~~~
+                       rtl/llm_pkg.sv:31:1: ... note: In file included from 'llm_pkg.sv'
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.041
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.
+%Warning-DECLFILENAME: rtl/llm_gumbel_lut.svh:4:8: Filename 'llm_gumbel_lut' does not match MODULE name: 'llm_gumbel_sample'
+    4 | module llm_gumbel_sample(input logic [7:0] index, output logic signed [23:0] value);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/llm_pkg.sv:32:1: ... note: In file included from 'llm_pkg.sv'
+%Warning-PINCONNECTEMPTY: rtl/llm_attention_normalize.sv:66:14: Instance pin connected by name with empty reference: 'div_zero'
+   66 |             .div_zero(), .quotient(quotient[lane]), .remainder(remainder[lane]));
+      |              ^~~~~~~~
+                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.041
+                          ... Use "/* verilator lint_off PINCONNECTEMPTY */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: rtl/llm_bank_ram.sv:72:90: Instance pin connected by name with empty reference: 'wr_valid'
+   72 |             .rd_data(rd_data[lane * WIDTH +: WIDTH]), .rd_valid(lane_read_valid[lane]), .wr_valid());
+      |                                                                                          ^~~~~~~~
+%Warning-DECLFILENAME: rtl/mul.sv:28:8: Filename 'mul' does not match MODULE name: 'addsub'
+   28 | module addsub (
+      |        ^~~~~~
+%Warning-DECLFILENAME: rtl/postscale.sv:28:8: Filename 'postscale' does not match MODULE name: 'postscale_finish'
+   28 | module postscale_finish (
+      |        ^~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/quartus_word_ram.sv:37:10: Instance pin connected by name with empty reference: 'q_a'
+   37 |         .q_a(), .q_b(rd_data), .eccstatus()
+      |          ^~~
+%Warning-PINCONNECTEMPTY: rtl/quartus_word_ram.sv:37:33: Instance pin connected by name with empty reference: 'eccstatus'
+   37 |         .q_a(), .q_b(rd_data), .eccstatus()
+      |                                 ^~~~~~~~~
+%Warning-DECLFILENAME: rtl/regfile.sv:1:8: Filename 'regfile' does not match MODULE name: 'register'
+    1 | module register (
+      |        ^~~~~~~~
+%Warning-DECLFILENAME: rtl/sigmoid_lut.svh:3:8: Filename 'sigmoid_lut' does not match MODULE name: 'sigmoid_sample'
+    3 | module sigmoid_sample(input logic [8:0] index, output logic [15:0] value);
+      |        ^~~~~~~~~~~~~~
+                       rtl/sigmoid.sv:2:1: ... note: In file included from 'sigmoid.sv'
+%Warning-GENUNNAMED: rtl/scale_compose.sv:42:47: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                               : ... Suggest assign a label with 'begin : gen_<label_name>'
+   42 |             assign fit_encoded[fit_shift + 1] = fit_encoded[fit_shift] |
+      |                                               ^
+                     ... For warning description see https://verilator.org/warn/GENUNNAMED?v=5.041
+                     ... Use "/* verilator lint_off GENUNNAMED */" and lint_on around source to disable this message.
+%Warning-GENUNNAMED: rtl/scale_compose.sv:44:37: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                               : ... Suggest assign a label with 'begin : gen_<label_name>'
+   44 |         else assign fit_encoded[48] = fit_encoded[47] | (7'd47 & {7{positive_fit[47]}});
+      |                                     ^
+%Warning-GENUNNAMED: rtl/acc_mul.sv:21:52: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                         : ... Suggest assign a label with 'begin : gen_<label_name>'
+   21 |                 if (n < NUM_INPUTS) assign node[n] = term[n];
+      |                                                    ^
+%Warning-GENUNNAMED: rtl/acc_mul.sv:22:37: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                         : ... Suggest assign a label with 'begin : gen_<label_name>'
+   22 |                 else assign node[n] = '0;
+      |                                     ^
+%Warning-GENUNNAMED: rtl/norm.sv:204:42: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                       : ... Suggest assign a label with 'begin : gen_<label_name>'
+  204 |         if (quant_bit >= 7) assign boost = quant_den > (24'd127 << (quant_bit - 6));
+      |                                          ^
+%Warning-GENUNNAMED: rtl/norm.sv:205:27: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                       : ... Suggest assign a label with 'begin : gen_<label_name>'
+  205 |         else assign boost = 0;
+      |                           ^
+%Warning-GENUNNAMED: rtl/logic_mul.sv:40:37: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                           : ... Suggest assign a label with 'begin : gen_<label_name>'
+   40 |     if (SIGNED_A) assign extended_a = OUT_W'($signed(a));
+      |                                     ^
+%Warning-GENUNNAMED: rtl/logic_mul.sv:41:28: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                           : ... Suggest assign a label with 'begin : gen_<label_name>'
+   41 |     else assign extended_a = OUT_W'(a);
+      |                            ^
+%Warning-GENUNNAMED: rtl/logic_mul.sv:48:40: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                           : ... Suggest assign a label with 'begin : gen_<label_name>'
+   48 |                     assign row[bit_id] = b[bit_id] ? ~(extended_a << bit_id) : '0;
+      |                                        ^
+%Warning-GENUNNAMED: rtl/logic_mul.sv:49:41: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                           : ... Suggest assign a label with 'begin : gen_<label_name>'
+   49 |                 else assign row[bit_id] = (extended_a << bit_id) & {OUT_W{b[bit_id]}};
+      |                                         ^
+%Warning-GENUNNAMED: rtl/logic_mul.sv:52:43: Unnamed generate block 'genblk2' (IEEE 1800-2023 27.6)
+                                           : ... Suggest assign a label with 'begin : gen_<label_name>'
+   52 |             if (SIGNED_B) assign row[B_W] = OUT_W'(b[B_W - 1]);
+      |                                           ^
+%Warning-GENUNNAMED: rtl/logic_mul.sv:71:46: Unnamed generate block 'genblk3' (IEEE 1800-2023 27.6)
+                                           : ... Suggest assign a label with 'begin : gen_<label_name>'
+   71 |     if (rows_at(LEVELS) == 1) assign product = g_level[LEVELS].row[0];
+      |                                              ^
+%Warning-GENUNNAMED: rtl/logic_mul.sv:72:25: Unnamed generate block 'genblk3' (IEEE 1800-2023 27.6)
+                                           : ... Suggest assign a label with 'begin : gen_<label_name>'
+   72 |     else assign product = g_level[LEVELS].row[0] + g_level[LEVELS].row[1];
+      |                         ^
+%Warning-VARHIDDEN: rtl/pipelined_word_ram.sv:147:22: Declaration of signal hides declaration in upper scope: 'member'
+  147 |             for (int member = 0; member < 4; member = member + 1)
+      |                      ^~~~~~
+                    rtl/pipelined_word_ram.sv:31:28: ... Location of original declaration
+   31 |     genvar tile, group_id, member, leaf, node;
+      |                            ^~~~~~
+                    ... For warning description see https://verilator.org/warn/VARHIDDEN?v=5.041
+                    ... Use "/* verilator lint_off VARHIDDEN */" and lint_on around source to disable this message.
+%Warning-VARHIDDEN: rtl/llm_soc.sv:620:64: Declaration of signal hides declaration in upper scope: 'phase'
+  620 |     function automatic logic [14:0] gain_address(input graph_t phase, input logic [1:0] layer_id,
+      |                                                                ^~~~~
+                    rtl/llm_soc.sv:15:34: ... Location of original declaration
+   15 |     genvar input_lane, sig_lane, phase, cache_row;
+      |                                  ^~~~~
+%Warning-WIDTHTRUNC: rtl/sram_word_tile.sv:12:26: Bit extraction of array[95:0] requires 7 bit index, not 10 bits.
+                                                : ... note: In instance 'llm_soc.u_vectors.g_bank[31].u_storage..g_model.g_tile[0].u_tile'
+   12 |         if (wr_en) memory[wr_addr] <= wr_data;
+      |                          ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.041
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/sram_word_tile.sv:13:37: Bit extraction of array[95:0] requires 7 bit index, not 10 bits.
+                                                : ... note: In instance 'llm_soc.u_vectors.g_bank[31].u_storage..g_model.g_tile[0].u_tile'
+   13 |         if (rd_en) rd_data <= memory[rd_addr];
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/npu_pkg.sv:119:45: Operator LTE expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                           : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+  119 |         ws_valid = d.length > 0 && d.length <= K_MAX && d.frac_bits <= 24 &&
+      |                                             ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.041
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/llm_attention_normalize.sv:46:41: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'batch_q' generates 5 bits.
+                                                          : ... note: In instance 'llm_soc.u_attention_normalize'
+   46 |                 NEXT_BATCH: if (batch_q == BATCHES - 1) begin done_o <= 1; state <= IDLE; end
+      |                                         ^~
+%Warning-WIDTHEXPAND: rtl/llm_attention_normalize.sv:57:72: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'batch_q' generates 5 bits.
+                                                          : ... note: In instance 'llm_soc.u_attention_normalize'
+   57 |         wire signed [55:0] next_selected = accumulator_i[(int'(batch_q + 1'b1) << SHIFT) + lane];
+      |                                                                        ^
+%Warning-WIDTHEXPAND: rtl/llm_attention_normalize.sv:74:61: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'batch_q' generates 5 bits.
+                                                          : ... note: In instance 'llm_soc.u_attention_normalize'
+   74 |                 end else if (state == NEXT_BATCH && batch_q != BATCHES - 1) begin
+      |                                                             ^~
+%Warning-WIDTHEXPAND: rtl/llm_attention_normalize.sv:91:65: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'batch_q' generates 5 bits.
+                                                          : ... note: In instance 'llm_soc.u_attention_normalize'
+   91 |             if (rst_n && !cancel_i && state == CLAMP && batch_q == lane / DIV_LANES)
+      |                                                                 ^~
+%Warning-WIDTHEXPAND: rtl/llm_soc.sv:954:105: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'token_q' generates 12 bits.
+                                            : ... note: In instance 'llm_soc'
+  954 |                         G_EMBED : if (token_valid_q) begin p_address_q <= 15'(EMB_SCALE_BASE + (token_q >> 3)); return_p <= RET_P_E_SCALE; op <= O_P_REQ; end
+      |                                                                                                         ^~
+%Warning-WIDTHEXPAND: rtl/llm_soc.sv:1066:101: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'row_q' generates 4 bits.
+                                             : ... note: In instance 'llm_soc'
+ 1066 |                     else begin row_q <= row_q + 1'b1; begin p_address_q <= 15'((int'(token_q) << 2) + row_q + 1); return_p <= RET_P_E_DATA; op <= O_P_REQ; end end
+      |                                                                                                     ^
+%Warning-WIDTHEXPAND: rtl/llm_soc.sv:1096:89: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'preload_chunk_q' generates 4 bits.
+                                            : ... note: In instance 'llm_soc'
+ 1096 |                         v_address_q <= 7'((int'(source_q) << 3) + (int'(source_q) << 2) + preload_chunk_q + 1);
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: rtl/llm_soc.sv:1186:187: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'row_q' generates 4 bits.
+                                             : ... note: In instance 'llm_soc'
+ 1186 |                         begin v_address_q <= 7'(((int'($unsigned(3'(row_q < 3 ? 3'd3 : 3'd4))) << 3) + (int'($unsigned(3'(row_q < 3 ? 3'd3 : 3'd4))) << 2)) + int'($unsigned(4'(4'((row_q + 1) & 3))))); return_v <= RET_V_C_INPUT; op <= O_V_REQ; end
+      |                                                                                                                                                                                           ^
+%Warning-WIDTHEXPAND: rtl/llm_soc.sv:1209:60: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'exp_hi_q' generates 25 bits.
+                                            : ... note: In instance 'llm_soc'
+ 1209 |                     probability_sum_q <= probability_sum_q + exp_hi_q - 32'((exp_interpolation_q + 37'd2048) >> 12);
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/llm_soc.sv:1226:46: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'head_q' generates 2 bits.
+                                            : ... note: In instance 'llm_soc'
+ 1226 |                         v_address_q <= 7'(24 + head_q + 1'b1); return_v <= RET_V_A_QUERY; return_w <= RET_W_O_V_REQ;
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/llm_soc.sv:1265:80: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'row_q' generates 4 bits.
+                                            : ... note: In instance 'llm_soc'
+ 1265 |                     else begin row_q <= row_q + 1'b1; v_address_q <= 7'(6 * 12 + row_q + 1); return_v <= RET_V_S_INPUT; return_w <= RET_W_O_V_REQ; end
+      |                                                                                ^
+%Warning-WIDTHEXPAND: rtl/llm_soc.sv:1272:46: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'preload_chunk_q' generates 4 bits.
+                                            : ... note: In instance 'llm_soc'
+ 1272 |                         v_address_q <= 7'(12 + preload_chunk_q + 1); return_v <= RET_V_H_PRELOAD; op <= O_V_REQ;
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/llm_soc.sv:1315:84: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'vocabulary_row_q' generates 12 bits.
+                                            : ... note: In instance 'llm_soc'
+ 1315 |                             p_address_q <= 15'(EMB_SCALE_BASE + ((vocabulary_row_q + 1) >> 3)); return_p <= RET_P_H_SCALE; op <= O_P_REQ;
+      |                                                                                    ^
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:232:24: Signal is not used: 'chunk_q'
+                                            : ... note: In instance 'llm_soc'
+  232 |     logic [3:0] row_q, chunk_q;
+      |                        ^~~~~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.041
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:235:17: Signal is not used: 'matrix_row_q'
+                                            : ... note: In instance 'llm_soc'
+  235 |     logic [9:0] matrix_row_q, matrix_rows_q;
+      |                 ^~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:304:11: Signal is not driven, nor used: 'divide_negative_q'
+                                            : ... note: In instance 'llm_soc'
+  304 |     logic divide_negative_q;
+      |           ^~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:307:23: Signal is not driven, nor used: 'op_debug_prefix'
+                                            : ... note: In instance 'llm_soc'
+  307 |     wire [OP_COUNT:0] op_debug_prefix [0:6];
+      |                       ^~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:333:60: Signal is not used: 'linear_done'
+                                            : ... note: In instance 'llm_soc'
+  333 |     logic linear_parameter_req, linear_ready, linear_busy, linear_done, linear_fault, linear_dot_issue;
+      |                                                            ^~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:333:73: Signal is not used: 'linear_fault'
+                                            : ... note: In instance 'llm_soc'
+  333 |     logic linear_parameter_req, linear_ready, linear_busy, linear_done, linear_fault, linear_dot_issue;
+      |                                                                         ^~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:333:87: Signal is not used: 'linear_dot_issue'
+                                            : ... note: In instance 'llm_soc'
+  333 |     logic linear_parameter_req, linear_ready, linear_busy, linear_done, linear_fault, linear_dot_issue;
+      |                                                                                       ^~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:455:23: Signal is not used: 'math_busy'
+                                            : ... note: In instance 'llm_soc'
+  455 |     logic math_start, math_busy, math_done, math_in_ready, math_product_valid, math_sum_valid;
+      |                       ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:455:45: Signal is not used: 'math_in_ready'
+                                            : ... note: In instance 'llm_soc'
+  455 |     logic math_start, math_busy, math_done, math_in_ready, math_product_valid, math_sum_valid;
+      |                                             ^~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:455:60: Signal is not used: 'math_product_valid'
+                                            : ... note: In instance 'llm_soc'
+  455 |     logic math_start, math_busy, math_done, math_in_ready, math_product_valid, math_sum_valid;
+      |                                                            ^~~~~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:528:11: Signal is not used: 'root_busy'
+                                            : ... note: In instance 'llm_soc'
+  528 |     logic root_busy, root_done;
+      |           ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:532:31: Signal is not used: 'div_zero'
+                                            : ... note: In instance 'llm_soc'
+  532 |     logic div_busy, div_done, div_zero;
+      |                               ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_soc.sv:560:33: Signal is not used: 'sig_busy'
+                                            : ... note: In instance 'llm_soc'
+  560 |     logic [SIGMOID_LANES - 1:0] sig_busy, sig_done;
+      |                                 ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_head_engine.sv:12:31: Bits of signal are not used: 'sum_i'[60:39]
+                                                   : ... note: In instance 'llm_soc.u_head_engine'
+   12 |     input logic signed [60:0] sum_i,
+      |                               ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_parameter_ram.sv:24:17: Signal is not used: 'lane_read_valid'
+                                                     : ... note: In instance 'llm_soc.u_parameters'
+   24 |     logic [7:0] lane_read_valid, lane_write_valid;
+      |                 ^~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/llm_bank_ram.sv:27:25: Bits of signal are not used: 'lane_read_valid'[31:1]
+                                                : ... note: In instance 'llm_soc.u_vectors'
+   27 |     logic [LANES - 1:0] lane_read_valid;
+      |                         ^~~~~~~~~~~~~~~
+%Warning-UNUSEDPARAM: rtl/llm_pkg.sv:3:20: Parameter is not used: 'CONTEXT'
+                                         : ... note: In instance 'llm_soc.u_attention_normalize'
+    3 |     localparam int CONTEXT = 128;
+      |                    ^~~~~~~
+                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.041
+                      ... Use "/* verilator lint_off UNUSEDPARAM */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: rtl/pipelined_word_ram.sv:21:17: Bits of signal are not used: 'read_valid_q'[3]
+                                                      : ... note: In instance 'llm_soc.u_vectors.g_bank[31].u_storage'
+   21 |     logic [3:0] read_valid_q;
+      |                 ^~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/div.sv:20:23: Bits of signal are not used: 'rem_work'[32]
+                                       : ... note: In instance 'llm_soc.u_attention_normalize.g_divider[3].g_private.u_div'
+   20 |     logic [DEN_W : 0] rem_work;
+      |                       ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/isqrt_u64.sv:12:18: Bits of signal are not used: 'remainder_work'[33:32]
+                                             : ... note: In instance 'llm_soc.u_root'
+   12 |     logic [33:0] remainder_work, remainder_next, remainder_shift, trial;
+      |                  ^~~~~~~~~~~~~~
+%Warning-UNUSEDPARAM: rtl/npu_pkg.sv:2:19: Parameter is not used: 'SRAM_W'
+                                         : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+    2 |     parameter int SRAM_W = 256;
+      |                   ^~~~~~
+%Warning-UNUSEDPARAM: rtl/npu_pkg.sv:5:19: Parameter is not used: 'PARAM_DEPTH'
+                                         : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+    5 |     parameter int PARAM_DEPTH = 1 << PARAM_AW;  
+      |                   ^~~~~~~~~~~
+%Warning-UNUSEDPARAM: rtl/npu_pkg.sv:8:19: Parameter is not used: 'ACT_W'
+                                         : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+    8 |     parameter int ACT_W = 8;
+      |                   ^~~~~
+%Warning-UNUSEDPARAM: rtl/npu_pkg.sv:9:19: Parameter is not used: 'STATE_W'
+                                         : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+    9 |     parameter int STATE_W = 16;
+      |                   ^~~~~~~
+%Warning-UNUSEDPARAM: rtl/npu_pkg.sv:10:19: Parameter is not used: 'WEIGHT_W'
+                                          : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+   10 |     parameter int WEIGHT_W = 2;
+      |                   ^~~~~~~~
+%Warning-UNUSEDPARAM: rtl/npu_pkg.sv:11:19: Parameter is not used: 'DOT_LANES'
+                                          : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+   11 |     parameter int DOT_LANES = 32;
+      |                   ^~~~~~~~~
+%Warning-UNUSEDPARAM: rtl/npu_pkg.sv:12:19: Parameter is not used: 'VEC_LANES'
+                                          : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+   12 |     parameter int VEC_LANES = 2;
+      |                   ^~~~~~~~~
+%Warning-UNUSEDPARAM: rtl/npu_pkg.sv:13:19: Parameter is not used: 'ACC_W'
+                                          : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+   13 |     parameter int ACC_W = 18;
+      |                   ^~~~~
+%Warning-UNUSEDPARAM: rtl/npu_pkg.sv:16:19: Parameter is not used: 'M_W'
+                                          : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+   16 |     parameter int M_W = 24;
+      |                   ^~~
+%Warning-UNUSEDPARAM: rtl/npu_pkg.sv:17:19: Parameter is not used: 'SHIFT_W'
+                                          : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+   17 |     parameter int SHIFT_W = 6;
+      |                   ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/npu_pkg.sv:110:57: Bits of signal are not used: 'd'[31:24,11:0]
+                                            : ... note: In instance 'llm_soc.g_sigmoid[3].u_sig'
+  110 |     function automatic integer ws_words(input ws_desc_t d);
+      |                                                         ^
+%Warning-UNUSEDSIGNAL: rtl/sram_word_tile.sv:6:23: Bits of signal are not used: 'rd_addr'[9:7]
+                                                 : ... note: In instance 'llm_soc.u_vectors.g_bank[31].u_storage..g_model.g_tile[0].u_tile'
+    6 |     input logic [9:0] rd_addr, wr_addr,
+      |                       ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/sram_word_tile.sv:6:32: Bits of signal are not used: 'wr_addr'[9:7]
+                                                 : ... note: In instance 'llm_soc.u_vectors.g_bank[31].u_storage..g_model.g_tile[0].u_tile'
+    6 |     input logic [9:0] rd_addr, wr_addr,
+      |                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/llm_soc.sv:18:11: Signal flopped as both synchronous and async: 'llm_soc.core_rst_n'
+                       rtl/llm_soc.sv:361:14: ... Location of async usage
+  361 |         if (!core_rst_n) begin
+      |              ^~~~~~~~~~
+                       rtl/llm_soc.sv:511:13: ... Location of sync usage
+  511 |         if (core_rst_n && linear_feed) linear_pipe_row_q[0] <= linear_row_issue_q;
+      |             ^~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/SYNCASYNCNET?v=5.041
+                       ... Use "/* verilator lint_off SYNCASYNCNET */" and lint_on around source to disable this message.
+%Warning-SYNCASYNCNET: rtl/pipelined_word_ram.sv:10:22: Signal flopped as both synchronous and async: 'llm_soc.u_parameters.g_ram_lane[0].u_storage.rst_n'
+                                                      : ... note: In instance 'llm_soc.u_parameters.g_ram_lane[0].u_storage'
+                       rtl/pipelined_word_ram.sv:24:14: ... Location of async usage
+   24 |         if (!rst_n) begin read_valid_q <= 0; write_pending_q <= 0; wr_valid <= 0; end
+      |              ^~~~~
+                       rtl/pipelined_word_ram.sv:153:17: ... Location of sync usage
+  153 |             if (rst_n && read_valid_q[1]) group_data_q[group_id] <= selected;
+      |                 ^~~~~
+%Warning-SYNCASYNCNET: rtl/pipelined_word_ram.sv:10:22: Signal flopped as both synchronous and async: 'llm_soc.u_vectors.g_bank[0].u_storage.rst_n'
+                                                      : ... note: In instance 'llm_soc.u_vectors.g_bank[0].u_storage'
+                       rtl/pipelined_word_ram.sv:24:14: ... Location of async usage
+   24 |         if (!rst_n) begin read_valid_q <= 0; write_pending_q <= 0; wr_valid <= 0; end
+      |              ^~~~~
+                       rtl/pipelined_word_ram.sv:153:17: ... Location of sync usage
+  153 |             if (rst_n && read_valid_q[1]) group_data_q[group_id] <= selected;
+      |                 ^~~~~
+%Warning-SYNCASYNCNET: rtl/pipelined_word_ram.sv:10:22: Signal flopped as both synchronous and async: 'llm_soc.u_cache.g_bank[0].u_storage.rst_n'
+                                                      : ... note: In instance 'llm_soc.u_cache.g_bank[0].u_storage'
+                       rtl/pipelined_word_ram.sv:24:14: ... Location of async usage
+   24 |         if (!rst_n) begin read_valid_q <= 0; write_pending_q <= 0; wr_valid <= 0; end
+      |              ^~~~~
+                       rtl/pipelined_word_ram.sv:153:17: ... Location of sync usage
+  153 |             if (rst_n && read_valid_q[1]) group_data_q[group_id] <= selected;
+      |                 ^~~~~
+%Warning-SYNCASYNCNET: rtl/sigmoid.sv:3:22: Signal flopped as both synchronous and async: 'llm_soc.g_sigmoid[0].u_sig.rst_n'
+                                          : ... note: In instance 'llm_soc.g_sigmoid[0].u_sig'
+                       rtl/sigmoid.sv:73:14: ... Location of async usage
+   73 |         if (!rst_n) begin
+      |              ^~~~~
+                       rtl/sigmoid.sv:60:13: ... Location of sync usage
+   60 |         if (rst_n) begin
+      |             ^~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.041 devel rev v5.040-271-g49c51af84
+- Verilator: Built from 5.128 MB sources in 44 modules, into 8.128 MB in 29 C++ files needing 0.000 MB
+- Verilator: Walltime 2.736 s (elab=0.147, cvt=2.332, bld=0.000); cpu 2.692 s on 1 threads; alloced 105.195 MB

@@ -44,7 +44,7 @@ Mũi tên liền là dữ liệu. Mũi tên đứt là tín hiệu điều khi�
 | | `llm_soc` (chính) | `matmulfree` (legacy) |
 |---|---|---|
 | Mục đích | Sinh văn bản bằng mô hình NanoFable (4 lớp transformer) | Chạy các phép mạng nơ-ron không dùng phép nhân ma trận số thực ("MatMul-free") |
-| Điều khiển | FSM đồ thị 24 pha + FSM thao tác 87 trạng thái | Chương trình 13 bit, tối đa 512 lệnh |
+| Điều khiển | FSM đồ thị 24 pha + FSM thao tác 78 trạng thái | Chương trình 13 bit, tối đa 512 lệnh |
 | Dữ liệu | S24 Q16, 32 làn / hàng 768 bit | S16 / int8, 16 hoặc 32 làn / từ 256 bit |
 | Trọng số | Ternary 2 bit (ma trận), int8 (embedding) | Ternary 2 bit |
 | Bộ nhớ tham số | 24 576 × 256 bit = 768 KiB | 1024 × 256 bit = 32 KiB |
@@ -253,7 +253,7 @@ flowchart TB
 | [llm_math](modules/llm_math.md) | Bộ nhân SIMD 32 làn + cây cộng |
 | [llm_linear_engine](modules/llm_linear_engine.md) | Nhân ma trận ternary × vector |
 | [ternary_dot32](modules/ternary_dot32.md) | Tích vô hướng 32 làn với trọng số ternary |
-| [llm_head_engine](modules/llm_head_engine.md) | Tích vô hướng cho một hàng từ điển |
+| [llm_head_engine](modules/llm_head_engine.md) | Stream tích vô hướng cho cả 4096 hàng từ điển |
 | [llm_attention_engine](modules/llm_attention_engine.md) | Điểm attention q·k |
 | [llm_attention_normalize](modules/llm_attention_normalize.md) | Chia cho tổng xác suất softmax |
 | [llm_exp_sample](modules/llm_exp_sample.md) | Bảng e⁻ˣ 257 mẫu |

@@ -258,6 +258,8 @@ flowchart LR
 
 Đây là pha đơn lẻ **nặng nhất**: 4096 token × 4 lượt = 16 384 lượt `llm_math`. Con số này bằng khoảng 60 % khối lượng ma trận của cả 4 lớp cộng lại (26 624 lượt, bảng mục 5).
 
+`llm_head_engine` stream các hàng liên tục, nên một lượt HEAD bị giới hạn bởi số lần đọc bộ nhớ tham số (16 896 = 16 384 từ trọng số + 512 từ scale). Đo trên `tb_llm_operators`, một lượt mất 16 948 chu kỳ thay vì 121 886 khi xử lý từng hàng (T = 166).
+
 ## 5. Khối lượng công việc cho một vị trí token
 
 | Phần | Số lượt 32 làn | Ghi chú |

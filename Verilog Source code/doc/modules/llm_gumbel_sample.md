@@ -54,18 +54,15 @@ flowchart LR
     M --> SH["rne_shift64(·, 8)"]:::act
     L["logit (rne >>24)"] --> ADD["sampled = logit + noise"]:::act
     SH --> ADD
-    ADD --> SEL["H_SELECT: giữ max"]:::ctrl
+    ADD --> SEL["Stage 5: giữ max"]:::ctrl
 ```
 
 ## 4. Hoạt động chi tiết
 
-Với mỗi token (hàng từ điển) trong `llm_soc`:
+Mỗi token (hàng từ điển) đi qua pipeline epilogue của head trong `llm_soc`. Mỗi stage có bit valid riêng trong `head_pipe_valid_q`; các hàng đi đúng thứ tự ID, nhiều hàng có thể nằm ở các stage khác nhau cùng lúc:
 
-1. **`H_ROUND`**: `logit = rne_shift64(scalar_product, 24)` (F16).
-   - Nếu `temperature = 0`: `sampled = logit` (greedy). Bộ ngẫu nhiên vẫn được bước một lần cho mỗi hàng, để chuỗi ngẫu nhiên không phụ thuộc chế độ.
-   - Ngược lại sang `H_NOISE`.
-2. **`H_NOISE`**: `noise_product = g × temperature`, với `g = LUT[random_q[31:24]]`; sau đó bước `random_q` bằng xorshift32.
-3. **`H_SAMPLE`**: `sampled = logit + rne_shift64(noise_product, 8)`. `temperature` là U8 có 8 bit phân số, nên giá trị mặc định 166 nghĩa là T ≈ 0,65.
-4. **`H_SELECT`**: nếu `sampled` lớn hơn giá trị tốt nhất hiện tại (và token được phép chọn), lưu token này.
+1. **Stage 3**: `logit = rne_shift64(scalar_product, 24)` (F16). Cùng chu kỳ đó, `noise_product = g × temperature` với `g = LUT[random_q[31:24]]`, rồi bước `random_q` bằng xorshift32 đúng một lần.
+2. **Stage 4**: `sampled = logit + rne_shift64(noise_product, 8)`. `temperature` là U8 có 8 bit phân số, nên giá trị mặc định 166 nghĩa là T ≈ 0,65. Nếu `temperature = 0` (greedy) thì `noise_product = 0`, nên `sampled = logit`. Bộ ngẫu nhiên vẫn được bước một lần cho mỗi hàng, để chuỗi ngẫu nhiên không phụ thuộc chế độ.
+3. **Stage 5**: nếu `sampled` lớn hơn giá trị tốt nhất hiện tại (và token được phép chọn), lưu token này.
 
 Như vậy toàn bộ việc lấy mẫu nằm trong RTL: không cần exp, không cần chia, không cần host can thiệp.

@@ -53,10 +53,10 @@ This is the compact source of truth for staged NPU v2 implementation. Work only 
 
 | File | Module | States/signals/blocks to inspect |
 |---|---|---|
-| `Verilog Source code/llm_soc.sv` | `llm_soc` | graph FSM; `L_ROW_START/L_ROW_WAIT`; `H_SCALE/H_STREAM_WAIT/H_COEFF/H_SELECT`; `A_EXP_READ`–`A_ACC`; parameter mux; `input_cache_q`; `math_start`; `op_done`; `g_perf` |
+| `Verilog Source code/llm_soc.sv` | `llm_soc` | graph FSM; `L_ROW_START/L_ROW_WAIT`; `H_PRELOAD/H_STREAM_WAIT`; `head_pipe_valid_q` head epilogue; `A_EXP_READ`–`A_ACC`; parameter mux; `input_cache_q`; `math_start`; `op_done`; `g_perf` |
 | `Verilog Source code/llm_linear_engine.sv` | `llm_linear_engine` | `IDLE/RUN/DRAIN`; request/response credits; two-word FIFO; `operand_capture`; accumulator; fault/drain completion |
 | `Verilog Source code/ternary_dot32.sv` | `ternary_dot32` | `valid_i/valid_o`; four-stage pipeline; reserved-code fault |
-| `Verilog Source code/llm_head_engine.sv` | `llm_head_engine` | row request/response/sum counters; `parameter_req_o`; `math_issue_o`; `done_o` |
+| `Verilog Source code/llm_head_engine.sv` | `llm_head_engine` | `IDLE/RUN/DRAIN`; ordered scale/weight read stream; eight read credits; two scale slots; `result_valid_o` |
 | `Verilog Source code/llm_attention_engine.sv` | `llm_attention_engine` | KV request stream; score memory; maximum reduction; score scaling |
 | `Verilog Source code/llm_attention_normalize.sv` | `llm_attention_normalize` | batches; divider lanes; quotient/remainder RNE; sign/clamp |
 | `Verilog Source code/llm_math.sv` | `llm_math` | `in_ready`; `product_valid`; `sum_valid`; `done`; shared ownership |
@@ -68,10 +68,11 @@ This is the compact source of truth for staged NPU v2 implementation. Work only 
 DONE:
 
 - Phase 1A — continuous linear-row execution (measurements and 100 MHz timing in `docs/verification/optimization_status.md`)
+- Phase 1B — LM-head streaming (head cycles, rows in flight, weight/scale bandwidth, SIMD utilization, epilogue stalls and 100 MHz timing in `docs/verification/optimization_status.md`)
 
 CURRENT:
 
-- Phase 1B — LM-head streaming (not started)
+- None; Phase 1C has not started.
 
 NEXT:
 

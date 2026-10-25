@@ -1,0 +1,9 @@
+SCHEDULE_PROFILE operator=9 context=1 temperature=166 cycles=16948 linear_startup=0 linear_issue=0 linear_drain=0 head_startup=6 head_issue=16384 head_drain=522
+HEAD_STREAM_METRIC context=1 temperature=166 cycles=16948 stream_cycles=16918 rows=4096 weight_reads=16384 scale_reads=512 parameter_port_util_pct=99.69 simd_issues=16384 simd_util_pct=96.67 rows_in_flight_max=7 rows_in_flight_avg=6.05 port_idle=0 read_credit_stalls=0 epilogue_stalls=0
+LLM_TRAFFIC operator=9 clocks=16948 parameter_reads=16896 vector_reads=4 vector_writes=0 kv_reads=0
+SCHEDULE_PROFILE operator=9 context=1 temperature=0 cycles=16948 linear_startup=0 linear_issue=0 linear_drain=0 head_startup=6 head_issue=16384 head_drain=522
+HEAD_STREAM_METRIC context=1 temperature=0 cycles=16948 stream_cycles=16918 rows=4096 weight_reads=16384 scale_reads=512 parameter_port_util_pct=99.69 simd_issues=16384 simd_util_pct=96.67 rows_in_flight_max=7 rows_in_flight_avg=6.05 port_idle=0 read_credit_stalls=0 epilogue_stalls=0
+LLM_TRAFFIC operator=9 clocks=16948 parameter_reads=16896 vector_reads=4 vector_writes=0 kv_reads=0
+SCHEDULE_PROFILE operator=9 context=128 temperature=0 cycles=16948 linear_startup=0 linear_issue=0 linear_drain=0 head_startup=6 head_issue=16384 head_drain=522
+HEAD_STREAM_METRIC context=128 temperature=0 cycles=16948 stream_cycles=16918 rows=4096 weight_reads=16384 scale_reads=512 parameter_port_util_pct=99.69 simd_issues=16384 simd_util_pct=96.67 rows_in_flight_max=7 rows_in_flight_avg=6.05 port_idle=0 read_credit_stalls=0 epilogue_stalls=0
+LLM_TRAFFIC operator=9 clocks=16948 parameter_reads=16896 vector_reads=4 vector_writes=0 kv_reads=0

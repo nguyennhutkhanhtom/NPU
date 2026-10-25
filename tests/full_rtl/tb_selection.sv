@@ -13,40 +13,51 @@ module tb_llm_selection;
             $fatal(1,"SELECT_EDGE expected eligible token=%0d actual=%0d score=%0d",expected,dut.best_token_q,dut.best_score_q);
         checks++;
     endtask
+    // The head epilogue is a fixed pipeline: stage 3 rounds the logit and
+    // advances the PRNG, stage 4 adds noise and stage 5 selects. op is held in
+    // H_STREAM_WAIT so only the forced stage validity drives selection.
     task setup(input integer minimum);
         release dut.graph;release dut.op;release dut.vocabulary_row_q;release dut.sampled_score_q;
+        release dut.head_pipe_valid_q;
         @(negedge clk);rst_n=0;repeat(3) @(negedge clk);
         rst_n=1;
         repeat(2) @(negedge clk); // Standard-FF reset boundary releases after two edges.
         dut.min_new_q=8'(minimum);
         force dut.graph=dut.G_HEAD;
         @(negedge clk);
-        force dut.op=dut.H_SELECT;
+        force dut.op=dut.H_STREAM_WAIT;
     endtask
     task step(input integer token_id,input logic signed [63:0] score,input integer expected);
         force dut.vocabulary_row_q=12'(token_id);
         force dut.sampled_score_q=score;
+        force dut.head_pipe_valid_q=6'h20;
         @(negedge clk);
+        release dut.head_pipe_valid_q;
         check_best(expected);
     endtask
     task greedy_step(input integer token_id,input logic signed [63:0] product,
                      input logic signed [63:0] rounded,input integer expected);
         logic [31:0] next_random;
-        release dut.op;release dut.sampled_score_q;
+        release dut.sampled_score_q;
         force dut.temperature_q=8'd0;
         force dut.vocabulary_row_q=12'(token_id);
         force dut.scalar_product_q=product;
-        force dut.op=dut.H_ROUND;
-        #1;release dut.op;
+        force dut.head_pipe_valid_q=6'h08;
+        #1;release dut.head_pipe_valid_q;
         next_random=dut.random_q^(dut.random_q<<13);
         next_random=next_random^(next_random>>17);
         next_random=next_random^(next_random<<5);
         @(negedge clk);
-        if(dut.op!==dut.H_SELECT || dut.sampled_score_q!==rounded || dut.random_q!==next_random)
-            $fatal(1,"Greedy bypass rounding/PRNG/state mismatch token=%0d",token_id);
+        if(dut.head_pipe_valid_q!==6'h10 || dut.scalar_round_q!==rounded ||
+           dut.noise_product_q!==0 || dut.random_q!==next_random)
+            $fatal(1,"Greedy rounding/PRNG/stage mismatch token=%0d",token_id);
+        @(negedge clk);
+        if(dut.head_pipe_valid_q!==6'h20 || dut.sampled_score_q!==rounded || dut.random_q!==next_random)
+            $fatal(1,"Greedy zero-noise score/stage mismatch token=%0d",token_id);
         @(negedge clk);check_best(expected);
+        if(dut.head_pipe_valid_q!==0 || dut.random_q!==next_random)
+            $fatal(1,"Greedy selection advanced PRNG twice or kept stage validity token=%0d",token_id);
         release dut.scalar_product_q;release dut.temperature_q;
-        force dut.op=dut.H_SELECT;
     endtask
     initial begin
         setup(64);check_best(3);
@@ -71,7 +82,7 @@ module tb_llm_selection;
         // Reset after a greedy row retires must discard both control and PRNG.
         release dut.op;release dut.graph;release dut.vocabulary_row_q;
         rst_n=0;repeat(3) @(negedge clk);rst_n=1;repeat(3) @(negedge clk);
-        if(dut.op!==dut.O_IDLE || dut.random_q!==32'd1)
+        if(dut.op!==dut.O_IDLE || dut.random_q!==32'd1 || dut.head_pipe_valid_q!==0 || dut.head_busy)
             $fatal(1,"Greedy reset leaked state");
         $display("SELECT_EDGE_PASS checks=%0d minimum_score_ties=2 excluded=5 stable_ties=2",checks);$finish;
     end
