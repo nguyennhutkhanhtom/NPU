@@ -4,6 +4,8 @@
 
 ## At a glance
 
+The current RTL meets 100 MHz at all four corners (minimum Fmax 100.74 MHz) and passes the [gated pretrained application](#gated-pretrained-application): 96/96 tokens equal the reference.
+
 Phase 1A RTL now streams consecutive linear rows with two parameter-word credits, four reserved row-result slots, and tagged validity through the existing scalar/pack registers. Architectural completion drains results, scalar validity and accepted writes. [Matching scoped evidence](../../tests/full_rtl/evidence/phase1a_20261008/results.json) records exact engine rows, backpressure, fault/drain/cancel/reset, and 1,920 SRAM/scaling/RNE/saturation/packing checks. ModelSim compilation has zero errors and nine checking warnings; the scoped SoC fixture retains the same 32 force-select warnings as the preserved baseline.
 
 | Existing numeric fixture | Before cycles | Phase 1A cycles | Parameter reads / vector writes (unchanged) |
@@ -26,9 +28,22 @@ PR #3 also restores two changes that were merged into `main` on 2026-10-22 and 2
 
 Full-top timing [dead_states_fault_drain_20261024](timing/dead_states_fault_drain_20261024/manifest.json) covers this RTL. All 41 RTL files and the QPF/QSF/SDC match `main` eb4274f. All four corners meet 100 MHz: minimum Fmax 100.74 MHz, worst setup +0.073 ns at slow 85 °C (`vector_q[733]` → `input_cache_q[1][733]`; the Phase 1A fit was limited by a parameter-RAM read into `math_b_q` instead). Hold, recovery, removal and pulse slack are nonnegative at every corner, TNS is zero and no path is unconstrained. Fitted: 59,751 ALMs, 66,775 registers, 1,187 RAM blocks, 9,516,700 memory bits, zero DSPs (Phase 1A: 60,124 ALMs, 67,027 registers). Map 24 warnings, fit 4, STA 0. Portable elaboration has not been run for this RTL.
 
+## Gated pretrained application
+
+The current RTL (`main` cb1ffc4, RTL unchanged since eb4274f) passes the full gated flow on the local Questa Altera Starter 2025.2.
+
+- **Seven groups:** `run_units.ps1 -Questa` passes all seven ([evidence](../../tests/full_rtl/evidence/units_pr3_20261024/results.json)). Compile and simulation logs have zero errors and zero warnings. The markers equal the server runs, including graph `clocks=570837 host_commands=196619`.
+- **Gate:** `check_gate.py` with the [dead_states_fault_drain_20261024](timing/dead_states_fault_drain_20261024/manifest.json) manifest prints `FULL_RTL_APPLICATION_GATE_PASS: Fmax=100.74 MHz`.
+- **Application:** `run_application.ps1` passes ([evidence](../../tests/full_rtl/evidence/application_gated_20261025/application_results.json)).
+  - Settings: prompt "Once upon a time, Lily found a tiny kitten." (11 IDs), 96 new tokens, temperature 166, seed 7, `MinNew` 64.
+  - All 96 RTL tokens equal the integer reference: `FULL_RTL_APPLICATION_PASS tokens=96 clocks=19958382 host_commands=196722 overflow=0`, with `hardware_gate=PASS`. Compile and simulation report zero errors and warnings.
+  - The exported parameter, prompt, expected and config files are byte-identical to the 2026-10-07 export used in the direct runs below.
+  - Simulation took 12 h 38 min of wall time.
+- **Text quality:** still `NOT_ASSESSED` in the result file. The [decoded continuation](../../tests/full_rtl/evidence/application_gated_20261025/generated_text.md) is fluent TinyStories-style English with weak coherence between sentences. Token matching does not measure text quality.
+
 ## Pretrained checkpoint run and saturation census
 
-On the merged RTL, the pretrained NanoFable export of 2026-10-07 (prompt "Once upon a time, Lily found a tiny kitten.", 96 new tokens, temperature 166, seed 7) passes `application_tb.sv` directly under Xcelium and Questa. All 96 tokens equal the reference, in 19,958,382 clocks with `overflow_out=0` ([evidence](../../tests/full_rtl/evidence/clamp_census_20261024/results.json)). This run is outside `run_application.ps1`, so it is not the gated pretrained-application claim. Timing for this RTL now passes; the gate also needs a passing local seven-group `run_units.ps1` result in `tests/full_rtl/unit_results.json`, which has not been run for this RTL.
+On the merged RTL, the pretrained NanoFable export of 2026-10-07 (same prompt and settings) passes `application_tb.sv` directly under Xcelium and Questa. All 96 tokens equal the reference, in 19,958,382 clocks with `overflow_out=0` ([evidence](../../tests/full_rtl/evidence/clamp_census_20261024/results.json)). These direct runs are outside `run_application.ps1`; the gated run above repeats them.
 
 The same runs bind `tests/full_rtl/clamp_monitor.sv`, which counts saturation at every clamp site. None of the 1,449,216 activation clamp samples saturates: linear, embedding, RMSNorm, RoPE, residual, SiLU, GMUL and attention output. Only the designed exp underflow fires (557 of 90,736 attention probabilities set to zero). The monitor reproduces the deliberate saturation fixtures of `tb_llm_operators`, and the synthetic graph saturates nowhere. `overflow_out` therefore keeps its linear-only scope, now documented in `docs/design/host_interface.md`.
 

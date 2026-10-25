@@ -14,14 +14,19 @@
   - Q/Down/Gate cycles 2,227→701, 3,563→2,037 and 6,579→1,981.
   - Parameter stalls are one per word after the first two (19.3%/19.8%), caused by the two-word credit window. Result-slot stalls are zero.
   - Evidence: `tests/full_rtl/evidence/phase1a_20261008/` and `fault_drain_stalls_20261024`.
-- Pretrained run outside the gate: `tests/full_rtl/evidence/clamp_census_20261024/results.json`. 96/96 tokens equal the reference on both simulators, `overflow_out=0`, and no activation clamp saturates. `overflow_out` stays linear-only; this is documented in `docs/design/host_interface.md`.
-- Not run for this RTL: portable elaboration; gated application.
+- Gated pretrained application: PASS on local Questa Altera Starter 2025.2.
+  - Seven groups: `tests/full_rtl/evidence/units_pr3_20261024/` (also `tests/full_rtl/unit_results.json`).
+  - `check_gate.py` prints `FULL_RTL_APPLICATION_GATE_PASS: Fmax=100.74 MHz`.
+  - Application: `tests/full_rtl/evidence/application_gated_20261025/`. 96/96 tokens equal the reference, `clocks=19958382 host_commands=196722 overflow=0`, `hardware_gate=PASS`. Text quality is not assessed.
+- Pretrained runs outside the gate: `tests/full_rtl/evidence/clamp_census_20261024/results.json`. Same tokens under Xcelium and Questa 2024.1, and no activation clamp saturates. `overflow_out` stays linear-only; this is documented in `docs/design/host_interface.md`.
+- Not run for this RTL: portable elaboration.
 
-## Blocker for the gated pretrained-application claim
+## Local tool notes
 
-- `check_gate.py` needs `tests/full_rtl/unit_results.json` to be PASS. It must come from a local `run_units.ps1 -Questa` run (Questa Starter at `C:/altera_lite/25.1std/questa_fse/win64`) on the current RTL. The tracked file is still FAIL from 2026-10-07.
-- The exporter and reference need Python 3.12, because the packages in `tests/language_demo/packages` are cp312. The documented runtime `C:/Users/khanh/.cache/codex-runtimes/.../python.exe` no longer exists, and only Python 3.14 is installed. Checkpoint assets are only in the main checkout (`D:/2151097_Nguyen Nhut Khanh/tests/language_demo/upstream`), not in this worktree.
+- The documented Python runtime `C:/Users/khanh/.cache/codex-runtimes/.../python.exe` no longer exists. The packages in `tests/language_demo/packages` are cp312, so pass `-Python` with the uv Python 3.12 (`uv python find 3.12`).
+- Checkpoint assets live in the main checkout (`D:/2151097_Nguyen Nhut Khanh/tests/language_demo/{upstream,packages}`). Worktrees need a copy of `upstream` and a junction to `packages`.
+- Simulation speed: the seven groups take about 39 min; the 96-token application takes about 12.5 h.
 
 ## Next action
 
-- With a Python 3.12 runtime: run the seven groups through `run_units.ps1` (fresh library/evidence tag). Then run `run_application.ps1` with `-TimingManifest docs/verification/timing/dead_states_fault_drain_20261024/manifest.json` as in `docs/demos/language.md`, and record the result in `docs/verification/optimization_status.md`.
+- Phase 1A has no open item. Phase 1B (LM-head streaming) starts only on an explicit request.
