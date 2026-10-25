@@ -1,0 +1,354 @@
+# ** Note: (vsim-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# vsim -c -onfinish exit -voptargs="-duselectreport=tests/full_rtl/build/application_design_units.json" -L tests/full_rtl/build/application_memory_model/altera_mf_ver -L tests/full_rtl/build/application_work -lib tests/full_rtl/build/application_work -l D:\2151097_Nguyen Nhut Khanh\.claude\worktrees\push-len-giup-236d23\tests\full_rtl\build\application.log tb_full_rtl_application -do "run -all; quit -f" 
+# Start time: 20:29:21 on Oct 24,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Note: (vopt-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# //  Questa Altera Starter FPGA Edition-64
+# //  Version 2025.2 win64 May 31 2025
+# //
+# // Unpublished work. Copyright 2025 Siemens
+# //
+# // This material contains trade secrets or otherwise confidential information
+# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+# // "SISW"), or its licensors. Access to and use of this information is strictly
+# // limited as set forth in the Customer's applicable agreements with SISW.
+# //
+# // This material may not be copied, distributed, or otherwise disclosed outside
+# // of the Customer's facilities without the express written permission of SISW,
+# // and may not be used in any way not expressly authorized by SISW.
+# //
+# Loading sv_std.std
+# Loading work.llm_pkg(fast)
+# Loading work.npu_pkg(fast)
+# Loading work.tb_full_rtl_application(fast)
+# Loading work.quartus_word_ram(fast)
+# Loading work.pipelined_word_ram(fast__1)
+# Loading work.pipelined_word_ram(fast__2)
+# run -all
+# FULL_RTL_LOAD_START rows=24576 time=30000
+# FULL_RTL_LOAD_PROGRESS rows=1024/24576 host_commands=8192 time=819240000
+# FULL_RTL_LOAD_PROGRESS rows=2048/24576 host_commands=16384 time=1638440000
+# FULL_RTL_LOAD_PROGRESS rows=3072/24576 host_commands=24576 time=2457640000
+# FULL_RTL_LOAD_PROGRESS rows=4096/24576 host_commands=32768 time=3276840000
+# FULL_RTL_LOAD_PROGRESS rows=5120/24576 host_commands=40960 time=4096040000
+# FULL_RTL_LOAD_PROGRESS rows=6144/24576 host_commands=49152 time=4915240000
+# FULL_RTL_LOAD_PROGRESS rows=7168/24576 host_commands=57344 time=5734440000
+# FULL_RTL_LOAD_PROGRESS rows=8192/24576 host_commands=65536 time=6553640000
+# FULL_RTL_LOAD_PROGRESS rows=9216/24576 host_commands=73728 time=7372840000
+# FULL_RTL_LOAD_PROGRESS rows=10240/24576 host_commands=81920 time=8192040000
+# FULL_RTL_LOAD_PROGRESS rows=11264/24576 host_commands=90112 time=9011240000
+# FULL_RTL_LOAD_PROGRESS rows=12288/24576 host_commands=98304 time=9830440000
+# FULL_RTL_LOAD_PROGRESS rows=13312/24576 host_commands=106496 time=10649640000
+# FULL_RTL_LOAD_PROGRESS rows=14336/24576 host_commands=114688 time=11468840000
+# FULL_RTL_LOAD_PROGRESS rows=15360/24576 host_commands=122880 time=12288040000
+# FULL_RTL_LOAD_PROGRESS rows=16384/24576 host_commands=131072 time=13107240000
+# FULL_RTL_LOAD_PROGRESS rows=17408/24576 host_commands=139264 time=13926440000
+# FULL_RTL_LOAD_PROGRESS rows=18432/24576 host_commands=147456 time=14745640000
+# FULL_RTL_LOAD_PROGRESS rows=19456/24576 host_commands=155648 time=15564840000
+# FULL_RTL_LOAD_PROGRESS rows=20480/24576 host_commands=163840 time=16384040000
+# FULL_RTL_LOAD_PROGRESS rows=21504/24576 host_commands=172032 time=17203240000
+# FULL_RTL_LOAD_PROGRESS rows=22528/24576 host_commands=180224 time=18022440000
+# FULL_RTL_LOAD_PROGRESS rows=23552/24576 host_commands=188416 time=18841640000
+# FULL_RTL_LOAD_PROGRESS rows=24576/24576 host_commands=196608 time=19660840000
+# FULL_RTL_LOAD_COMPLETE host_commands=196608 time=19660840000
+# FULL_RTL_GRAPH_START prompt=11 new_tokens=96 time=19661860000
+# FULL_RTL_PROGRESS clocks=100000 position=1 generated=0 phase=3
+# FULL_RTL_PROGRESS clocks=200000 position=3 generated=0 phase=2
+# FULL_RTL_PROGRESS clocks=300000 position=5 generated=0 phase=17
+# FULL_RTL_PROGRESS clocks=400000 position=6 generated=0 phase=14
+# FULL_RTL_PROGRESS clocks=500000 position=8 generated=0 phase=10
+# FULL_RTL_PROGRESS clocks=600000 position=10 generated=0 phase=4
+# FULL_RTL_PROGRESS clocks=700000 position=10 generated=0 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=0 token=411
+# FULL_RTL_PROGRESS clocks=800000 position=11 generated=1 phase=9
+# FULL_RTL_PROGRESS clocks=900000 position=11 generated=1 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=1 token=284
+# FULL_RTL_PROGRESS clocks=1000000 position=12 generated=2 phase=9
+# FULL_RTL_PROGRESS clocks=1100000 position=12 generated=2 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=2 token=958
+# FULL_RTL_PROGRESS clocks=1200000 position=13 generated=3 phase=21
+# FULL_RTL_PROGRESS clocks=1300000 position=13 generated=3 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=3 token=268
+# FULL_RTL_PROGRESS clocks=1400000 position=14 generated=4 phase=21
+# FULL_RTL_PROGRESS clocks=1500000 position=14 generated=4 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=4 token=640
+# FULL_RTL_PROGRESS clocks=1600000 position=15 generated=5 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=5 token=265
+# FULL_RTL_PROGRESS clocks=1700000 position=16 generated=6 phase=16
+# FULL_RTL_PROGRESS clocks=1800000 position=16 generated=6 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=6 token=1232
+# FULL_RTL_PROGRESS clocks=1900000 position=17 generated=7 phase=15
+# FULL_RTL_PROGRESS clocks=2000000 position=17 generated=7 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=7 token=267
+# FULL_RTL_PROGRESS clocks=2100000 position=18 generated=8 phase=14
+# FULL_RTL_PROGRESS clocks=2200000 position=18 generated=8 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=8 token=1279
+# FULL_RTL_PROGRESS clocks=2300000 position=19 generated=9 phase=13
+# FULL_RTL_PROGRESS clocks=2400000 position=19 generated=9 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=9 token=268
+# FULL_RTL_PROGRESS clocks=2500000 position=20 generated=10 phase=21
+# FULL_RTL_PROGRESS clocks=2600000 position=20 generated=10 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=10 token=464
+# FULL_RTL_PROGRESS clocks=2700000 position=21 generated=11 phase=21
+# FULL_RTL_PROGRESS clocks=2800000 position=21 generated=11 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=11 token=261
+# FULL_RTL_PROGRESS clocks=2900000 position=22 generated=12 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=12 token=591
+# FULL_RTL_PROGRESS clocks=3000000 position=23 generated=13 phase=12
+# FULL_RTL_PROGRESS clocks=3100000 position=23 generated=13 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=13 token=481
+# FULL_RTL_PROGRESS clocks=3200000 position=24 generated=14 phase=9
+# FULL_RTL_PROGRESS clocks=3300000 position=24 generated=14 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=14 token=16
+# FULL_RTL_PROGRESS clocks=3400000 position=25 generated=15 phase=17
+# FULL_RTL_PROGRESS clocks=3500000 position=25 generated=15 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=15 token=410
+# FULL_RTL_PROGRESS clocks=3600000 position=26 generated=16 phase=13
+# FULL_RTL_PROGRESS clocks=3700000 position=26 generated=16 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=16 token=201
+# FULL_RTL_PROGRESS clocks=3800000 position=27 generated=17 phase=9
+# FULL_RTL_PROGRESS clocks=3900000 position=27 generated=17 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=17 token=652
+# FULL_RTL_PROGRESS clocks=4000000 position=28 generated=18 phase=15
+# FULL_RTL_PROGRESS clocks=4100000 position=28 generated=18 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=18 token=446
+# FULL_RTL_PROGRESS clocks=4200000 position=29 generated=19 phase=21
+# FULL_RTL_PROGRESS clocks=4300000 position=29 generated=19 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=19 token=268
+# FULL_RTL_PROGRESS clocks=4400000 position=30 generated=20 phase=21
+# FULL_RTL_PROGRESS clocks=4500000 position=30 generated=20 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=20 token=361
+# FULL_RTL_PROGRESS clocks=4600000 position=31 generated=21 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=21 token=344
+# FULL_RTL_PROGRESS clocks=4700000 position=32 generated=22 phase=5
+# FULL_RTL_PROGRESS clocks=4800000 position=32 generated=22 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=22 token=261
+# FULL_RTL_PROGRESS clocks=4900000 position=33 generated=23 phase=13
+# FULL_RTL_PROGRESS clocks=5000000 position=33 generated=23 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=23 token=575
+# FULL_RTL_PROGRESS clocks=5100000 position=34 generated=24 phase=3
+# FULL_RTL_PROGRESS clocks=5200000 position=34 generated=24 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=24 token=418
+# FULL_RTL_PROGRESS clocks=5300000 position=35 generated=25 phase=9
+# FULL_RTL_PROGRESS clocks=5400000 position=35 generated=25 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=25 token=16
+# FULL_RTL_PROGRESS clocks=5500000 position=36 generated=26 phase=16
+# FULL_RTL_PROGRESS clocks=5600000 position=36 generated=26 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=26 token=322
+# FULL_RTL_PROGRESS clocks=5700000 position=37 generated=27 phase=9
+# FULL_RTL_PROGRESS clocks=5800000 position=37 generated=27 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=27 token=773
+# FULL_RTL_PROGRESS clocks=5900000 position=38 generated=28 phase=13
+# FULL_RTL_PROGRESS clocks=6000000 position=38 generated=28 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=28 token=344
+# FULL_RTL_PROGRESS clocks=6100000 position=39 generated=29 phase=17
+# FULL_RTL_PROGRESS clocks=6200000 position=39 generated=29 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=29 token=265
+# FULL_RTL_PROGRESS clocks=6300000 position=40 generated=30 phase=9
+# FULL_RTL_PROGRESS clocks=6400000 position=40 generated=30 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=30 token=571
+# FULL_RTL_PROGRESS clocks=6500000 position=41 generated=31 phase=9
+# FULL_RTL_PROGRESS clocks=6600000 position=41 generated=31 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=31 token=267
+# FULL_RTL_PROGRESS clocks=6700000 position=42 generated=32 phase=14
+# FULL_RTL_PROGRESS clocks=6800000 position=42 generated=32 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=32 token=265
+# FULL_RTL_PROGRESS clocks=6900000 position=43 generated=33 phase=17
+# FULL_RTL_PROGRESS clocks=7000000 position=43 generated=33 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=33 token=1092
+# FULL_RTL_PROGRESS clocks=7100000 position=44 generated=34 phase=21
+# FULL_RTL_PROGRESS clocks=7200000 position=44 generated=34 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=34 token=16
+# FULL_RTL_PROGRESS clocks=7300000 position=45 generated=35 phase=21
+# FULL_RTL_PROGRESS clocks=7400000 position=45 generated=35 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=35 token=366
+# FULL_RTL_PROGRESS clocks=7500000 position=46 generated=36 phase=21
+# FULL_RTL_PROGRESS clocks=7600000 position=46 generated=36 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=36 token=284
+# FULL_RTL_PROGRESS clocks=7700000 position=47 generated=37 phase=21
+# FULL_RTL_PROGRESS clocks=7800000 position=47 generated=37 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=37 token=352
+# FULL_RTL_PROGRESS clocks=7900000 position=48 generated=38 phase=21
+# FULL_RTL_PROGRESS clocks=8000000 position=48 generated=38 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=38 token=616
+# FULL_RTL_PROGRESS clocks=8100000 position=49 generated=39 phase=21
+# FULL_RTL_PROGRESS clocks=8200000 position=49 generated=39 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=39 token=268
+# FULL_RTL_PROGRESS clocks=8300000 position=50 generated=40 phase=21
+# FULL_RTL_PROGRESS clocks=8400000 position=50 generated=40 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=40 token=1039
+# FULL_RTL_PROGRESS clocks=8500000 position=51 generated=41 phase=21
+# FULL_RTL_PROGRESS clocks=8600000 position=51 generated=41 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=41 token=311
+# FULL_RTL_PROGRESS clocks=8700000 position=52 generated=42 phase=21
+# FULL_RTL_PROGRESS clocks=8800000 position=52 generated=42 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=42 token=675
+# FULL_RTL_PROGRESS clocks=8900000 position=53 generated=43 phase=21
+# FULL_RTL_PROGRESS clocks=9000000 position=53 generated=43 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=43 token=267
+# FULL_RTL_PROGRESS clocks=9100000 position=54 generated=44 phase=21
+# FULL_RTL_PROGRESS clocks=9200000 position=54 generated=44 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=44 token=477
+# FULL_RTL_PROGRESS clocks=9300000 position=55 generated=45 phase=21
+# FULL_RTL_PROGRESS clocks=9400000 position=55 generated=45 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=45 token=267
+# FULL_RTL_PROGRESS clocks=9500000 position=56 generated=46 phase=21
+# FULL_RTL_PROGRESS clocks=9600000 position=56 generated=46 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=46 token=265
+# FULL_RTL_PROGRESS clocks=9700000 position=57 generated=47 phase=21
+# FULL_RTL_PROGRESS clocks=9800000 position=57 generated=47 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=47 token=571
+# FULL_RTL_PROGRESS clocks=9900000 position=58 generated=48 phase=21
+# FULL_RTL_PROGRESS clocks=10000000 position=58 generated=48 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=48 token=16
+# FULL_RTL_PROGRESS clocks=10100000 position=59 generated=49 phase=21
+# FULL_RTL_PROGRESS clocks=10200000 position=59 generated=49 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=49 token=301
+# FULL_RTL_PROGRESS clocks=10300000 position=60 generated=50 phase=21
+# FULL_RTL_PROGRESS clocks=10400000 position=60 generated=50 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=50 token=636
+# FULL_RTL_PROGRESS clocks=10500000 position=61 generated=51 phase=21
+# FULL_RTL_PROGRESS clocks=10600000 position=61 generated=51 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=51 token=284
+# FULL_RTL_PROGRESS clocks=10700000 position=62 generated=52 phase=17
+# FULL_RTL_PROGRESS clocks=10800000 position=62 generated=52 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=52 token=390
+# FULL_RTL_PROGRESS clocks=10900000 position=63 generated=53 phase=13
+# FULL_RTL_PROGRESS clocks=11000000 position=63 generated=53 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=53 token=406
+# FULL_RTL_PROGRESS clocks=11100000 position=64 generated=54 phase=9
+# FULL_RTL_PROGRESS clocks=11200000 position=64 generated=54 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=54 token=16
+# FULL_RTL_PROGRESS clocks=11300000 position=65 generated=55 phase=9
+# FULL_RTL_PROGRESS clocks=11400000 position=65 generated=55 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=55 token=301
+# FULL_RTL_PROGRESS clocks=11500000 position=66 generated=56 phase=2
+# FULL_RTL_PROGRESS clocks=11600000 position=66 generated=56 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=56 token=531
+# FULL_RTL_PROGRESS clocks=11700000 position=67 generated=57 phase=14
+# FULL_RTL_PROGRESS clocks=11800000 position=67 generated=57 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=57 token=284
+# FULL_RTL_PROGRESS clocks=11900000 position=68 generated=58 phase=9
+# FULL_RTL_PROGRESS clocks=12000000 position=68 generated=58 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=58 token=390
+# FULL_RTL_PROGRESS clocks=12100000 position=69 generated=59 phase=9
+# FULL_RTL_PROGRESS clocks=12200000 position=69 generated=59 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=59 token=406
+# FULL_RTL_PROGRESS clocks=12300000 position=70 generated=60 phase=15
+# FULL_RTL_PROGRESS clocks=12400000 position=70 generated=60 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=60 token=267
+# FULL_RTL_PROGRESS clocks=12500000 position=71 generated=61 phase=9
+# FULL_RTL_PROGRESS clocks=12600000 position=71 generated=61 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=61 token=340
+# FULL_RTL_PROGRESS clocks=12700000 position=72 generated=62 phase=9
+# FULL_RTL_PROGRESS clocks=12800000 position=72 generated=62 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=62 token=446
+# FULL_RTL_PROGRESS clocks=12900000 position=73 generated=63 phase=14
+# FULL_RTL_PROGRESS clocks=13000000 position=73 generated=63 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=63 token=268
+# FULL_RTL_PROGRESS clocks=13100000 position=74 generated=64 phase=9
+# FULL_RTL_PROGRESS clocks=13200000 position=74 generated=64 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=64 token=361
+# FULL_RTL_PROGRESS clocks=13300000 position=75 generated=65 phase=3
+# FULL_RTL_PROGRESS clocks=13400000 position=75 generated=65 phase=21
+# FULL_RTL_PROGRESS clocks=13500000 position=75 generated=65 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=65 token=344
+# FULL_RTL_PROGRESS clocks=13600000 position=76 generated=66 phase=21
+# FULL_RTL_PROGRESS clocks=13700000 position=76 generated=66 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=66 token=455
+# FULL_RTL_PROGRESS clocks=13800000 position=77 generated=67 phase=14
+# FULL_RTL_PROGRESS clocks=13900000 position=77 generated=67 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=67 token=930
+# FULL_RTL_PROGRESS clocks=14000000 position=78 generated=68 phase=9
+# FULL_RTL_PROGRESS clocks=14100000 position=78 generated=68 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=68 token=16
+# FULL_RTL_PROGRESS clocks=14200000 position=79 generated=69 phase=15
+# FULL_RTL_PROGRESS clocks=14300000 position=79 generated=69 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=69 token=410
+# FULL_RTL_PROGRESS clocks=14400000 position=80 generated=70 phase=9
+# FULL_RTL_PROGRESS clocks=14500000 position=80 generated=70 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=70 token=201
+# FULL_RTL_PROGRESS clocks=14600000 position=81 generated=71 phase=16
+# FULL_RTL_PROGRESS clocks=14700000 position=81 generated=71 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=71 token=345
+# FULL_RTL_PROGRESS clocks=14800000 position=82 generated=72 phase=9
+# FULL_RTL_PROGRESS clocks=14900000 position=82 generated=72 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=72 token=284
+# FULL_RTL_PROGRESS clocks=15000000 position=83 generated=73 phase=15
+# FULL_RTL_PROGRESS clocks=15100000 position=83 generated=73 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=73 token=390
+# FULL_RTL_PROGRESS clocks=15200000 position=84 generated=74 phase=9
+# FULL_RTL_PROGRESS clocks=15300000 position=84 generated=74 phase=21
+# FULL_RTL_PROGRESS clocks=15400000 position=84 generated=74 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=74 token=406
+# FULL_RTL_PROGRESS clocks=15500000 position=85 generated=75 phase=21
+# FULL_RTL_PROGRESS clocks=15600000 position=85 generated=75 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=75 token=267
+# FULL_RTL_PROGRESS clocks=15700000 position=86 generated=76 phase=9
+# FULL_RTL_PROGRESS clocks=15800000 position=86 generated=76 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=76 token=329
+# FULL_RTL_PROGRESS clocks=15900000 position=87 generated=77 phase=2
+# FULL_RTL_PROGRESS clocks=16000000 position=87 generated=77 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=77 token=14
+# FULL_RTL_PROGRESS clocks=16100000 position=88 generated=78 phase=9
+# FULL_RTL_PROGRESS clocks=16200000 position=88 generated=78 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=78 token=331
+# FULL_RTL_PROGRESS clocks=16300000 position=89 generated=79 phase=14
+# FULL_RTL_PROGRESS clocks=16400000 position=89 generated=79 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=79 token=43
+# FULL_RTL_PROGRESS clocks=16500000 position=90 generated=80 phase=9
+# FULL_RTL_PROGRESS clocks=16600000 position=90 generated=80 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=80 token=464
+# FULL_RTL_PROGRESS clocks=16700000 position=91 generated=81 phase=9
+# FULL_RTL_PROGRESS clocks=16800000 position=91 generated=81 phase=21
+# FULL_RTL_PROGRESS clocks=16900000 position=91 generated=81 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=81 token=268
+# FULL_RTL_PROGRESS clocks=17000000 position=92 generated=82 phase=21
+# FULL_RTL_PROGRESS clocks=17100000 position=92 generated=82 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=82 token=334
+# FULL_RTL_PROGRESS clocks=17200000 position=93 generated=83 phase=9
+# FULL_RTL_PROGRESS clocks=17300000 position=93 generated=83 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=83 token=850
+# FULL_RTL_PROGRESS clocks=17400000 position=94 generated=84 phase=14
+# FULL_RTL_PROGRESS clocks=17500000 position=94 generated=84 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=84 token=14
+# FULL_RTL_PROGRESS clocks=17600000 position=95 generated=85 phase=4
+# FULL_RTL_PROGRESS clocks=17700000 position=95 generated=85 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=85 token=412
+# FULL_RTL_PROGRESS clocks=17800000 position=96 generated=86 phase=9
+# FULL_RTL_PROGRESS clocks=17900000 position=96 generated=86 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=86 token=337
+# FULL_RTL_PROGRESS clocks=18000000 position=97 generated=87 phase=9
+# FULL_RTL_PROGRESS clocks=18100000 position=97 generated=87 phase=21
+# FULL_RTL_PROGRESS clocks=18200000 position=97 generated=87 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=87 token=787
+# FULL_RTL_PROGRESS clocks=18300000 position=98 generated=88 phase=21
+# FULL_RTL_PROGRESS clocks=18400000 position=98 generated=88 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=88 token=718
+# FULL_RTL_PROGRESS clocks=18500000 position=99 generated=89 phase=9
+# FULL_RTL_PROGRESS clocks=18600000 position=99 generated=89 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=89 token=14
+# FULL_RTL_PROGRESS clocks=18700000 position=100 generated=90 phase=9
+# FULL_RTL_PROGRESS clocks=18800000 position=100 generated=90 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=90 token=412
+# FULL_RTL_PROGRESS clocks=18900000 position=101 generated=91 phase=13
+# FULL_RTL_PROGRESS clocks=19000000 position=101 generated=91 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=91 token=337
+# FULL_RTL_PROGRESS clocks=19100000 position=102 generated=92 phase=17
+# FULL_RTL_PROGRESS clocks=19200000 position=102 generated=92 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=92 token=1502
+# FULL_RTL_PROGRESS clocks=19300000 position=103 generated=93 phase=8
+# FULL_RTL_PROGRESS clocks=19400000 position=103 generated=93 phase=21
+# FULL_RTL_PROGRESS clocks=19500000 position=103 generated=93 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=93 token=334
+# FULL_RTL_PROGRESS clocks=19600000 position=104 generated=94 phase=9
+# FULL_RTL_PROGRESS clocks=19700000 position=104 generated=94 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=94 token=367
+# FULL_RTL_PROGRESS clocks=19800000 position=105 generated=95 phase=9
+# FULL_RTL_PROGRESS clocks=19900000 position=105 generated=95 phase=21
+# FULL_RTL_TOKEN_VERIFIED index=95 token=550
+# FULL_RTL_APPLICATION_PASS tokens=96 clocks=19958382 host_commands=196722 overflow=0
+# ** Note: $finish    : D:/2151097_Nguyen Nhut Khanh/.claude/worktrees/push-len-giup-236d23/tests/full_rtl/application_tb.sv(82)
+#    Time: 219251500 ns  Iteration: 1  Instance: /tb_full_rtl_application
+# End time: 09:06:53 on Oct 25,2026, Elapsed time: 12:37:32
+# Errors: 0, Warnings: 0

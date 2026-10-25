@@ -1,15 +1,79 @@
 {
-  "status": "FAIL",
-  "failure": "Unit simulation failed: tb_llm_operators",
-  "verified_utc": "2026-10-07T19:00:36.8833447Z",
-  "rtl_dir": "D:\\2151097_Nguyen Nhut Khanh\\Verilog Source code",
+  "status": "PASS",
+  "scope": "Synthetic arithmetic/protocol/operators; graph required for application gate",
+  "rtl_dir": "D:\\2151097_Nguyen Nhut Khanh\\.claude\\worktrees\\push-len-giup-236d23\\Verilog Source code",
+  "verified_utc": "2026-10-24T13:28:47.6852926Z",
   "tests": {
     "tb_quartus_memory": "# QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked",
     "tb_llm_math": "# LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128",
     "tb_llm_ram": "# LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3",
-    "tb_llm_protocol": "# LLM_PROTOCOL_PASS transactions=175 cancellations=12 token_pipeline_cases=15 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2",
-    "tb_llm_selection": "# SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2"
+    "tb_llm_protocol": "# LLM_PROTOCOL_PASS transactions=180 cancellations=12 token_pipeline_cases=16 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2 fault_drain_relaunch=checked",
+    "tb_llm_selection": "# SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2",
+    "tb_llm_operators": "# LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic",
+    "tb_llm_graph": "# LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=570837 host_commands=196619 fixtures=synthetic"
   },
+  "evidence": {
+    "tb_quartus_memory": {
+      "log": "tests/full_rtl/build/tb_quartus_memory.log",
+      "sha256": "b8ae5354464ffd2e059557e687f23bebac748c21c726aecdc8a0485c06d98d24",
+      "design_units": {
+        "file": "tests/full_rtl/build/units_pr3_20261024_tb_quartus_memory_design_units.json",
+        "sha256": "c63f464ecc1e3c31cd91fc9a9e4542a2d5e8305cf7f940998936bd7c10c375c4"
+      }
+    },
+    "tb_llm_math": {
+      "log": "tests/full_rtl/build/tb_llm_math.log",
+      "sha256": "14e9749a2c35d483982471bfb75cb3909a0f32bcb75c9326c790caa09ad3c37f",
+      "design_units": {
+        "file": "tests/full_rtl/build/units_pr3_20261024_tb_llm_math_design_units.json",
+        "sha256": "d463aa51b78295462613230970eab1a2b71c4715f851153cc8c280295354c0ed"
+      }
+    },
+    "tb_llm_ram": {
+      "log": "tests/full_rtl/build/tb_llm_ram.log",
+      "sha256": "c00addda1368f646f46a2ab36eb4cc7e204db886a04b500b4e1ed53ac86dd134",
+      "design_units": {
+        "file": "tests/full_rtl/build/units_pr3_20261024_tb_llm_ram_design_units.json",
+        "sha256": "3fca15fd5d42217452d3f45a47db1d3138c754c20140aa494aaf65110d07dbe9"
+      }
+    },
+    "tb_llm_protocol": {
+      "log": "tests/full_rtl/build/tb_llm_protocol.log",
+      "sha256": "8a6153ca069b3dea372d29406c2441e7447e47186265b69e585e872fbd035ec4",
+      "design_units": {
+        "file": "tests/full_rtl/build/units_pr3_20261024_tb_llm_protocol_design_units.json",
+        "sha256": "e144b730192caaea5def495c9fc84656f117a18df9fbd0475d166c9fb61d7bbd"
+      }
+    },
+    "tb_llm_selection": {
+      "log": "tests/full_rtl/build/tb_llm_selection.log",
+      "sha256": "892deb458ae857896fbba6a198a8165467ed83f1f21b172178782f6cd8996c50",
+      "design_units": {
+        "file": "tests/full_rtl/build/units_pr3_20261024_tb_llm_selection_design_units.json",
+        "sha256": "2d09b78f3d84a12686ff231c002d99d4356f3e5a7cf2851e3bff658c2a0cddc0"
+      }
+    },
+    "tb_llm_operators": {
+      "log": "tests/full_rtl/build/tb_llm_operators.log",
+      "sha256": "6c39682a1a9b8ec200f0e0c4bee6412c720fd3aec84276b6f4f930d0d8271dd8",
+      "design_units": {
+        "file": "tests/full_rtl/build/units_pr3_20261024_tb_llm_operators_design_units.json",
+        "sha256": "2fdf79238c0457975dda3068e40fdc4a86d50a8bac6c3a9ce3f381fc32bc24f2"
+      }
+    },
+    "tb_llm_graph": {
+      "log": "tests/full_rtl/build/tb_llm_graph.log",
+      "sha256": "812219bc960465119f224725ef7d0ac5cac7a8b6028f06a33ab01958464d35b3",
+      "design_units": {
+        "file": "tests/full_rtl/build/units_pr3_20261024_tb_llm_graph_design_units.json",
+        "sha256": "2648f6ddd95c6f0c6b8792b47595902e13608aafa1e8d9f049e48a17da39f063"
+      }
+    }
+  },
+  "runner_sources": {
+    "tests/full_rtl/memory_model.py": "2a8fe702364c85fb399b41ad4cb825d7d860cbd3be576e5f8dcb5f55c7d7ab63"
+  },
+  "memory_model_manifest": "tests/full_rtl/build/questa25_model/manifest.json",
   "rtl_sources": {
     "acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
     "banked_word_ram.sv": "3f62befc5ff4942b92708e1fca7c54e61ae64781839e2efd2e6108ed0cc9a08e",
@@ -18,16 +82,16 @@
     "ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
     "isqrt_u64.sv": "c20371b0abf819e3a6011c63a908c21970bba45fa4846af86584847cfe70c9e2",
     "llm_attention_engine.sv": "4ed88adce8f72631d86adb900cb41ef264904e68e67199238ce517b0f7e2b838",
-    "llm_attention_normalize.sv": "45d2264cabef1203bc6261bd10706274fa91d8fc02552301db02ef2d8574f0dd",
+    "llm_attention_normalize.sv": "cc81efe9e45c34659363aeca2505d915cfc44a021b768318db67def3fa891001",
     "llm_bank_ram.sv": "c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb",
     "llm_exp_lut.svh": "7aafb64bcea808bcb74387c174c808784433bb941f2e9e2f815bcbeb9b1a5c6e",
     "llm_gumbel_lut.svh": "870d129c9722a00efb733f0a6fbcad493e069447877de57a123db9d9b4adbec8",
     "llm_head_engine.sv": "54fc2ea9fd0dd045caf6bdaf9e963fd8951180026d9770576f66c25b594fd080",
-    "llm_linear_engine.sv": "fddea184893825d79758564a4f1ec03c7cb42ddd9d5a60fa633363727b2cd533",
+    "llm_linear_engine.sv": "fc9ff85dc355fb21375e49c55a05a29aeaaabeeafafa38ac2ee07c7367c8d5b9",
     "llm_math.sv": "1280302be8a07422c547c62b470b51f43324e92519cc0d69b55dd58f94c5d0bd",
     "llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
     "llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
-    "llm_soc.sv": "ea6d6cea2a3bdb0cacc6fd0f5114198736adfdc2d6ec7dfac9908cf6f5fb062d",
+    "llm_soc.sv": "a497be2720a32cbe02a3f2552eb73e8dbe27a99f25c2ab766652b38af0871910",
     "logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
     "matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
     "matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
@@ -50,17 +114,17 @@
     "sigmoid.sv": "d85cdc54ba8843c4e8aa99d4d14eb8b72edf38966aa6c09d68abd537e329fce2",
     "sram_256_wrapper.sv": "7c17702a2fa1c9a2baed950aff5e687f2981a07206ea3582e05659c6690e968a",
     "sram_word_tile.sv": "fca521ff4a1c9458f1731025684d0db81a6842caf06f1762d84b51a7b1bd176c",
-    "ternary_dot32.sv": "6b0f803c23034b94874ca8a2f450408078deb77a3eaa029917d63b43efdab8d9",
+    "ternary_dot32.sv": "1709da1d18868f45058d5c7593b1b67542809a84ae727186ee4d6ef8d77c5821",
     "ternary_mul.sv": "71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f"
   },
   "test_sources": {
     "run_units.ps1": "f571539ed1bf49a9266e9f95b047a38376e07bab2737e1130ed86b45915ad3f5",
     "tb_graph.sv": "900615b6405c615c678921a70df0c35f72e8c279ef160e440349dabd69544a88",
-    "tb_linear_stream.sv": "55613ca9745d9b23898ac99bada7037444da9ff9f42bbcada6802edbdae82498",
+    "tb_linear_stream.sv": "1806bcb31066f597377a499c0c433823c13031f1793210746f080064ceb2a13b",
     "tb_math.sv": "8d4ca37d579bf2486be2234116bf97ad77026da6788339c70587d4ec24bed43d",
     "tb_memory_ip.sv": "e34a990c572eee5c2cbdca2c793f580dfedb374efa1e90ff6f040aed9afa6904",
-    "tb_operators.sv": "f90db9fa42bf4ac96e687da5d204238670edc673c5abdc80eb7c9a44a26220ec",
-    "tb_protocol.sv": "3c671cb8d7f730a8ee96d5274929eadf4b76d476e7d7398d813f105268549810",
+    "tb_operators.sv": "6e33187c83f39b7879b6c13fff18c58274948de0ff44623c1b458cfa367ef77c",
+    "tb_protocol.sv": "2e4504ea70c42b34b04ac2f366124f48a3d1a305aebf3ba074c9dbf1b38cf480",
     "tb_ram.sv": "4d40fea39efbf26f67db28c6ad4fde34f194603f57f4ee2f2fda6e0fc93ed0b1",
     "tb_selection.sv": "e356447b6e92ffebc8b46d74a5e58c4817f2a674aa2188d736bf79f7fe3c06aa"
   }
