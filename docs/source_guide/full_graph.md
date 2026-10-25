@@ -170,7 +170,7 @@ class N output;
 |---|---|
 | llm_soc | graph, op, layer_q, position_q, generated_q, error, overflow_out và host FSM |
 | llm_linear_engine | Hai-word FIFO, credits, chunk index, operand capture, accumulator, fault và response drain |
-| llm_head_engine | Bốn parameter chunks của một row, request/response counts và S39 accumulator |
+| llm_head_engine | Stream 4.096 vocabulary row: scale word mỗi tám row, bốn weight chunk mỗi row, tối đa tám read outstanding, hai scale slot và S39 accumulator theo thứ tự |
 | llm_attention_engine | position bound, KV request tags, sum_valid, score pipeline và maximum |
 | llm_attention_normalize | Batch/lane progress, shared divider lane zero, rounding metadata và result-valid |
 
@@ -182,8 +182,8 @@ arithmetic transaction trong pipeline của phase đó. Parent chỉ đổi quy�
 tài nguyên sau khi các response của pass đã được drain.
 
 `llm_soc` giữ một operand cache 12 × 768 bit. Q/K/V và Gate/Up chỉ reuse khi
-source, shape và family hợp lệ; head reload input khi vào pass. Parent còn giữ
-scale word cho tám vocabulary row và table RoPE có position tag. Các điều kiện
+source, shape và family hợp lệ; head reload input khi vào pass. Head engine giữ
+scale word của hai nhóm tám vocabulary row; parent giữ table RoPE có position tag. Các điều kiện
 invalidate ở [hợp đồng cache](../design/exact_throughput_optimization.md).
 
 ## Số học chung

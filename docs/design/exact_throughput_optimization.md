@@ -15,7 +15,7 @@ và thứ tự cập nhật PRNG. Số liệu đo nằm trong [review version 3]
 |---|---|---|
 | llm_soc | Graph, metadata, operand cache, scaling, vector writes, probability/V pass và sampling | SRAM, SIMD và các scalar units |
 | llm_linear_engine | Một ternary row, hai-word prefetch credit, reserved-code fault và response drain | Parameter SRAM, immutable operand cache |
-| llm_head_engine | Bốn int8 chunk theo thứ tự và S39 row accumulation | Parameter SRAM, cached final hidden vector và SIMD |
+| llm_head_engine | Stream 4.096 row: scale word mỗi tám row, bốn int8 chunk mỗi row, tối đa tám read outstanding, S39 row accumulation theo thứ tự | Parameter SRAM, cached final hidden vector và SIMD |
 | llm_attention_engine | Q/K causal requests, score scaling, score storage và maximum | KV SRAM, held query và SIMD |
 | llm_attention_normalize | Exact RNE divide, sign restoration và S24 clamp theo batch | Lane 0 dùng chung divider RMSNorm; ba divider riêng bổ sung |
 | ternary_dot32 | S25 terms và balanced S30 reduction pipeline | Logic add/subtract riêng |
@@ -32,8 +32,10 @@ geometry và family khớp. Producer writes, reset, launch, faults hoặc head e
 làm mất hiệu lực linear cache. Head nạp lại bốn row của final-normalized vector
 ở mỗi pass; không thêm cache riêng cho head.
 
-Head giữ một word scale 256 bit cho tám vocabulary row. Mỗi coefficient có
-24 bit trong slot 32 bit. Vocabulary order và PRNG updates giữ nguyên. RoPE K
+Head engine giữ hai scale slot, mỗi slot là tám coefficient U24 của một nhóm
+tám vocabulary row; bit [31:24] của mỗi slot 32 bit bị bỏ qua. Scale word của
+nhóm G chỉ ghi đè slot của nhóm G-2 sau 32 weight response của nhóm G-1, khi
+nhóm G-2 đã retire. Vocabulary order và PRNG updates giữ nguyên. RoPE K
 reuse bảng của Q khi position tag còn hợp lệ, đồng thời vẫn đọc K vector riêng.
 Nạp norm gains vào table storage dùng chung làm mất validity của RoPE tag.
 

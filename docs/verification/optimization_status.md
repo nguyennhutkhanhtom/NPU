@@ -1,10 +1,43 @@
 # Current verification and implementation status
 
-> **Category: CURRENT.** Single owner of live checkpoint results. Updated 2026-10-24 (Asia/Saigon); manifests/logs remain primary evidence.
+> **Category: CURRENT.** Single owner of live checkpoint results. Updated 2026-10-25 (Asia/Saigon); manifests/logs remain primary evidence.
 
 ## At a glance
 
-The current RTL meets 100 MHz at all four corners (minimum Fmax 100.74 MHz) and passes the [gated pretrained application](#gated-pretrained-application): 96/96 tokens equal the reference.
+The current RTL is the [Phase 1B](#phase-1b-lm-head-row-streaming) LM-head stream. It passes the seven groups, both stream fixtures and SpyGlass lint with zero errors under two simulators. Run directly on the server, outside the gated flow, the pretrained application matches all 96 tokens under Xcelium in 9,884,334 clocks (19,958,382 before). Questa gives the same result. Full-top timing meets 100 MHz at all four corners (minimum Fmax 101.53 MHz). The gated `run_application.ps1` flow and portable elaboration have not been run for this RTL.
+
+The previous RTL (`main` eb4274f) meets 100 MHz at all four corners (minimum Fmax 100.74 MHz) and passes the [gated pretrained application](#gated-pretrained-application): 96/96 tokens equal the reference.
+
+## Phase 1B: LM-head row streaming
+
+`llm_head_engine` now streams all 4,096 vocabulary rows from one start. It sends one ordered read stream: each eight-row group's packed scale word, then four int8 weight words per row. At most eight reads are outstanding, and two scale slots alternate by group. Retired rows carry their S39 sum and U24 scale into a six-stage epilogue in `llm_soc`. Stages 0–3 reuse the linear scalar multiplier and RNE24. Stage 3 also forms the Gumbel noise product and advances the PRNG once per row. Stage 4 adds the RNE8 noise, and stage 5 saturates, applies eligibility and keeps stable lowest-ID ties. Zero temperature gives a zero noise product, so the old greedy bypass is no longer needed. Nine per-row states are removed (`OP_COUNT` 87 → 78). Numeric behavior, PRNG order and host protocol are unchanged.
+
+Measured on the `tb_llm_operators` head fixture (4,096 rows, real parameter SRAM with its five-edge response). [Evidence](../../tests/full_rtl/evidence/phase1b_20261025/results.json):
+
+| Head pass | Before (eb4274f) | Phase 1B |
+|---|---:|---:|
+| Cycles, temperature 166 | 121,886 | 16,948 (7.19×) |
+| Cycles, temperature 0 | 113,694 | 16,948 (6.71×) |
+| Parameter reads (16,384 weight + 512 scale) | 16,896 | 16,896 |
+| Parameter-port use | 13.9% / 14.9% | 99.7% |
+| SIMD issue use (16,384 issues) | 13.4% / 14.4% | 96.7% |
+| Rows in flight, first weight request to selection | 1 | max 7, mean 6.05 |
+| Parameter-port idle cycles during the stream | — | 0 |
+| Epilogue stalls | — | 0 |
+
+The head is now bound by the single parameter read port: 16,896 reads take 16,896 of 16,948 cycles. Each row needs 4.125 words (1,056 bits), 528 KiB per token. At one 256-bit word per clock this is 3.2 GB/s at 100 MHz. The new engine fixture `tb_llm_head_stream` checks every row's S39 sum and U24 scale against a wide-integer reference through the real streaming `llm_math`. At latency 5 it takes 16,913 cycles with at most five rows in the engine. At latency 1 it takes 16,909. At latency 40 the eight read credits bound the stream (86,611 cycles, 69,663 credit stalls) and every row is still exact. It also covers cancel at six phases with full drain, and reset at four phases, each followed by an exact pass.
+
+The synthetic graph takes 280,599 clocks (570,837 before, −50.8%) with the same 196,619 host commands. Its three greedy head passes save exactly 3 × 96,746 cycles.
+
+In the [regression](../../tests/full_rtl/evidence/phase1b_20261025/results.json), the seven groups, `tb_llm_linear_stream` and `tb_llm_head_stream` pass under Xcelium 23.03 and Questa 2024.1 with zero errors. The same seven groups and linear fixture also pass on the baseline in the same session. Xcelium reports 8 `*W,NODNTW` per run on both sides; Questa reports none. `tb_llm_selection` and the operator scalar check now drive the epilogue stage validity instead of the removed states, and they keep the same checks.
+
+SpyGlass X-2025.06 `lint/lint_rtl` on portable `llm_soc` (`USE_QUARTUS_MEMORY=0`, `mthresh` 65536 so no module is black-boxed) reports 0 errors. Warnings drop from 106 to 86, and no message is new against the baseline. The removed 20 are double-assignment warnings of the deleted per-row states. Verilator 5.041 `--lint-only -Wall` reports 0 errors and 79 warnings on both sides. Its single new warning flags the unused scale-slot bits [31:24], by design.
+
+The pretrained NanoFable export of 2026-10-07 (same prompt and settings as below, byte-identical files) passes `application_tb.sv` under Xcelium with the clamp census bound ([evidence](../../tests/full_rtl/evidence/phase1b_20261025/results.json)). All 96 tokens equal the reference: `FULL_RTL_APPLICATION_PASS tokens=96 clocks=9884334 host_commands=196722 overflow=0`. This is 50.5% fewer clocks, and the saving equals 96 × (121,886 − 16,948). The census sees 393,216 head scores (96 × 4,096), none saturated, and the activation and exp-underflow counts are unchanged. Questa 2024.1 gives the same line with zero warnings. These runs are outside `run_application.ps1`; that gated flow has not been run for this RTL.
+
+Full-top timing [phase1b_head_stream_20261025](timing/phase1b_head_stream_20261025/manifest.json) covers this RTL. All 41 RTL files and the QPF/QSF/SDC match the candidate tree after CRLF normalization. All four corners meet 100 MHz: minimum Fmax 101.53 MHz, worst setup +0.151 ns at slow 0 °C (`pc_debug[2]~reg0` → `pc_debug[2]`); slow 85 °C is +0.158 ns on `vector_q[378]` → `input_cache_q[11][378]`. Hold, recovery, removal and pulse slack are nonnegative at every corner, TNS is zero and no path is unconstrained. Fitted: 59,900 ALMs, 67,270 registers, 1,187 RAM blocks, 9,516,700 memory bits, zero DSPs (previous RTL: 59,751 ALMs, 66,775 registers). Map 24 warnings, fit 4, STA 0. Every Phase 1B measurement gate now has evidence, so `NPU_V2_EXECUTION.md` records Phase 1B as DONE.
+
+Diagram follow-up required: the draw.io RTL hierarchy and `docs/diagrams/hierarchy_manifest.json` still show the old head engine ports (`vocabulary_i`, `done_o`, start from `H_SCALE`).
 
 Phase 1A RTL now streams consecutive linear rows with two parameter-word credits, four reserved row-result slots, and tagged validity through the existing scalar/pack registers. Architectural completion drains results, scalar validity and accepted writes. [Matching scoped evidence](../../tests/full_rtl/evidence/phase1a_20261008/results.json) records exact engine rows, backpressure, fault/drain/cancel/reset, and 1,920 SRAM/scaling/RNE/saturation/packing checks. ModelSim compilation has zero errors and nine checking warnings; the scoped SoC fixture retains the same 32 force-select warnings as the preserved baseline.
 

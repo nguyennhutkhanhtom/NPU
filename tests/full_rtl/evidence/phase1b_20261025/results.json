@@ -1,0 +1,504 @@
+{
+  "status": "PASS",
+  "scope": "Phase 1B LM-head row streaming: seven synthetic groups plus tb_llm_linear_stream and the new tb_llm_head_stream under two simulators (baseline seven groups and linear fixture in the same session), head measurement gates, SpyGlass and Verilator lint of portable llm_soc, and the pretrained 96-token application run directly outside run_application.ps1. Timing in the referenced manifest; not the gated application flow, not portable elaboration.",
+  "verified_utc": "2026-10-25T03:30:00Z",
+  "host": "vlsi.linkclouds.top (user khanhtom), runs under ~/npu_phase1b_20261025",
+  "simulators": {
+    "xcelium": "xrun(64) 23.03-s007, module cadence/xcelium/23.03",
+    "questa": "Questa Sim-64 vsim 2024.1, module siemens/questasim/2024.1"
+  },
+  "altera_mf": "/tools/Intel/intelFPGA/22.1std/quartus/eda/sim_lib/altera_mf.v",
+  "runners_sha256": {
+    "export.sha256": "13fdb7962c589c543cc29ffd6e6626715e459ac8c9cefd8217de1663ce11a53f",
+    "lint_one.sh": "d6e5e4df3778d5c82cbf8721fe31961641505e05733151e3457642f495d5f8fd",
+    "run_all.sh": "906ad3efa671ad3f6db2db10eb4bdd4a1ae79e6220e43f8c2a59f7cb88153b1a",
+    "run_app.sh": "cd0dfceb2650ea20ebbb827d1073ee65757d6e0a017225f2e976012b38cf1365",
+    "run_one.sh": "1bf5d5554bb3db445b343b465a205c3a9e5fcacc1c9ab8226f43976f077aa628"
+  },
+  "baseline": {
+    "commit": "38c7bcc (RTL identical to main eb4274f)",
+    "note": "git archive of HEAD: RTL plus the unchanged seven-group and linear testbenches"
+  },
+  "candidate": {
+    "base_commit": "38c7bcc",
+    "state": "uncommitted worktree changes on claude/gated-application",
+    "changed_rtl": [
+      "Verilog Source code/llm_head_engine.sv",
+      "Verilog Source code/llm_soc.sv"
+    ],
+    "changed_tests": [
+      "tests/full_rtl/tb_head_stream.sv (new)",
+      "tests/full_rtl/tb_operators.sv",
+      "tests/full_rtl/tb_selection.sv",
+      "tests/full_rtl/clamp_monitor.sv",
+      "tests/full_rtl/run_units.ps1"
+    ],
+    "source_sha256": {
+      "Verilog Source code/PC.sv": "b387df21642a26a7ebdbe9c405a2d6db201ef042692f94fe125504784f4d33dd",
+      "Verilog Source code/acc_mul.sv": "a7d47855e1ba2d0cfd74df2f6dd0610d8bea76e684f6049ad052a48b0841b108",
+      "Verilog Source code/banked_word_ram.sv": "3f62befc5ff4942b92708e1fca7c54e61ae64781839e2efd2e6108ed0cc9a08e",
+      "Verilog Source code/descriptor_file.sv": "7b30587206cd4f7d3896f2e7ea7beb871aa854875de64d6bc19947a8b990d618",
+      "Verilog Source code/div.sv": "ddb1191f9879b7d3643d82a544ea14c30e7df999a3af5d913f354259363aa228",
+      "Verilog Source code/ins_mem.sv": "d33ef061d5517a0a21e75e13be3b68cde82b7214f9964b81711e9f7d53751123",
+      "Verilog Source code/isqrt_u64.sv": "c20371b0abf819e3a6011c63a908c21970bba45fa4846af86584847cfe70c9e2",
+      "Verilog Source code/llm_attention_engine.sv": "4ed88adce8f72631d86adb900cb41ef264904e68e67199238ce517b0f7e2b838",
+      "Verilog Source code/llm_attention_normalize.sv": "cc81efe9e45c34659363aeca2505d915cfc44a021b768318db67def3fa891001",
+      "Verilog Source code/llm_bank_ram.sv": "c1150fd9a6997edb1953829dfc92a74df4d64edf45e0261d41c5bfd22c2a29fb",
+      "Verilog Source code/llm_exp_lut.svh": "7aafb64bcea808bcb74387c174c808784433bb941f2e9e2f815bcbeb9b1a5c6e",
+      "Verilog Source code/llm_gumbel_lut.svh": "870d129c9722a00efb733f0a6fbcad493e069447877de57a123db9d9b4adbec8",
+      "Verilog Source code/llm_head_engine.sv": "ff37f3ec8c5f8808d322d75c966d008c3e4106a3a4f6ed12956c8cbac504a0e4",
+      "Verilog Source code/llm_linear_engine.sv": "fc9ff85dc355fb21375e49c55a05a29aeaaabeeafafa38ac2ee07c7367c8d5b9",
+      "Verilog Source code/llm_math.sv": "1280302be8a07422c547c62b470b51f43324e92519cc0d69b55dd58f94c5d0bd",
+      "Verilog Source code/llm_parameter_ram.sv": "7a5b15da366d2dfaf54906f8d5af014811c51500881f323c57d5e02124434d1e",
+      "Verilog Source code/llm_pkg.sv": "8e694c3142e499df0dc11df293919aaee4fdf446fa0a25bae2da12e31f22bb21",
+      "Verilog Source code/llm_soc.sv": "faeef1c1531655ca12d54177bea7f40df4b20dda444fe3c3509bff356cc439d3",
+      "Verilog Source code/logic_mul.sv": "ccb16e9588697a4abcd79bafb88fe59f5bc22278ed4bccb61dd579c787223eb0",
+      "Verilog Source code/matmul_wrap.sv": "989501df6c30b7b8ac91d1ffde814b7b62b149a01c69c2a5f723c419d48a7e16",
+      "Verilog Source code/matmulfree.sv": "0f761bc1d91809443a1f5af7eb08b572b58cd81da052a5c28a4a0b4db212f475",
+      "Verilog Source code/mem_mapping.sv": "d9f275ec9c51f32d23b1e4c9312285b2282586308d17a7b5a4a7493300be1492",
+      "Verilog Source code/mul.sv": "fdca97fe654f877cd33e7eb934d3869a6e754bd9a4d9d128f228d9c17add646e",
+      "Verilog Source code/norm.sv": "83047edfb7ac751c38c19b15e8eed6f725b8e6f40fe63b6bdf3475cde42be8c4",
+      "Verilog Source code/norm_dispatch.sv": "22f4016cfeedad90c67e0538b6708fb5206fa5ce8e1372a6ad1afd998f7bc8a8",
+      "Verilog Source code/npu_pkg.sv": "18385ff77706c505eb7c947c5b1f056b5d6230e6971a1cc09a4d823c27a7bcfd",
+      "Verilog Source code/pipelined_word_ram.sv": "691f21844bfe3deae271a26e503b6d667948a70fd742d8b2d9a067039b49162a",
+      "Verilog Source code/postscale.sv": "b9cb61b7014c037c408340a8042b4c0862ed46997754d9b4dee40056835e7160",
+      "Verilog Source code/quartus_word_ram.sv": "c38b8642bfb143f71bf89902b767844086f0894a16db11ebc0abe98131709a0b",
+      "Verilog Source code/regfile.sv": "8e27d7f11e1b78d712116908f6e8d82e89c0fd6f46cfa4f1efd232dbffa023ef",
+      "Verilog Source code/reset_release.sv": "2720ef4c4b21a68bf193c24cdb60f574ee8b272f36862a953c1cf060f14361a2",
+      "Verilog Source code/rowwise_dispatch.sv": "e0f7cb0088af29afe233478a72f4ef9aab0676f2a24d56903b7f35261a6b3543",
+      "Verilog Source code/rowwise_op.sv": "ce49a16c12069b0560986f7b8cf5bd0a187ce1d409f0ce0e69515bff11e1a559",
+      "Verilog Source code/scale_compose.sv": "12c6b58896e3f71367ba1149f6f23784aa0389500aeaf3b66deb2abd198aa55b",
+      "Verilog Source code/sigmoid.sv": "d85cdc54ba8843c4e8aa99d4d14eb8b72edf38966aa6c09d68abd537e329fce2",
+      "Verilog Source code/sigmoid_257.mem": "1eca6eb5b61d1d99f44de7c05e548ba96dda22d6b7a2ff95a364912e115e3635",
+      "Verilog Source code/sigmoid_lut.svh": "c72383f3cd3c3dadf7e8579d7d12edca2cc2d6555735dd1e9d4def6f561b73ef",
+      "Verilog Source code/sram_256_wrapper.sv": "7c17702a2fa1c9a2baed950aff5e687f2981a07206ea3582e05659c6690e968a",
+      "Verilog Source code/sram_word_tile.sv": "fca521ff4a1c9458f1731025684d0db81a6842caf06f1762d84b51a7b1bd176c",
+      "Verilog Source code/ternary_dot32.sv": "1709da1d18868f45058d5c7593b1b67542809a84ae727186ee4d6ef8d77c5821",
+      "Verilog Source code/ternary_mul.sv": "71530ea76bd7058b2e458c9d29ef0e0d1d59f122b411c989460cb00d0307d83f"
+    },
+    "test_sha256": {
+      "tests/full_rtl/tb_graph.sv": "900615b6405c615c678921a70df0c35f72e8c279ef160e440349dabd69544a88",
+      "tests/full_rtl/tb_head_stream.sv": "a6da34a57c67cb18831fc9f0c7a448a20e62ffa8695e483f56134381402a6eb6",
+      "tests/full_rtl/tb_linear_stream.sv": "1806bcb31066f597377a499c0c433823c13031f1793210746f080064ceb2a13b",
+      "tests/full_rtl/tb_math.sv": "8d4ca37d579bf2486be2234116bf97ad77026da6788339c70587d4ec24bed43d",
+      "tests/full_rtl/tb_memory_ip.sv": "e34a990c572eee5c2cbdca2c793f580dfedb374efa1e90ff6f040aed9afa6904",
+      "tests/full_rtl/tb_operators.sv": "225d0cdde59d87f1a8b78e2d627d25d11d1535293d8db08fb133e65073fe3eca",
+      "tests/full_rtl/tb_protocol.sv": "2e4504ea70c42b34b04ac2f366124f48a3d1a305aebf3ba074c9dbf1b38cf480",
+      "tests/full_rtl/tb_ram.sv": "4d40fea39efbf26f67db28c6ad4fde34f194603f57f4ee2f2fda6e0fc93ed0b1",
+      "tests/full_rtl/tb_selection.sv": "102bc373ddee1aca939d158422f8349b03fd85eb9f238c63a9e345e9e53ce8ac",
+      "tests/full_rtl/clamp_monitor.sv": "243404b7bd0355c9a3089c6b552f2091c545782e1a53aeacc4dbe6ee316e591a",
+      "tests/full_rtl/application_tb.sv": "e715c79abde2b52e2c19e5c04d72465909b042bef47a46fc0a0736f0f99b759b",
+      "tests/full_rtl/run_units.ps1": "671903d6c5be7903bc640f86c046b8947806dd0c3b9d9336b04ad4cc7e2a8502"
+    },
+    "server_hash_check": "all 46 simulated RTL/testbench files of the candidate runs equal the local tree"
+  },
+  "regression": {
+    "candidate": {
+      "xcelium/tb_quartus_memory": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked"
+      },
+      "xcelium/tb_llm_ram": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3"
+      },
+      "xcelium/tb_llm_linear_stream": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked"
+      },
+      "xcelium/tb_llm_math": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128"
+      },
+      "questa/tb_llm_ram": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3"
+      },
+      "questa/tb_quartus_memory": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked"
+      },
+      "questa/tb_llm_linear_stream": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked"
+      },
+      "questa/tb_llm_math": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128"
+      },
+      "xcelium/tb_llm_operators": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic"
+      },
+      "xcelium/tb_llm_selection": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2"
+      },
+      "questa/tb_llm_selection": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2"
+      },
+      "questa/tb_llm_protocol": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_PROTOCOL_PASS transactions=180 cancellations=12 token_pipeline_cases=16 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2 fault_drain_relaunch=checked"
+      },
+      "xcelium/tb_llm_protocol": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_PROTOCOL_PASS transactions=180 cancellations=12 token_pipeline_cases=16 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2 fault_drain_relaunch=checked"
+      },
+      "questa/tb_llm_operators": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic"
+      },
+      "xcelium/tb_llm_head_stream": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_HEAD_STREAM_PASS exact_rows=4096 latency=1_5_40 read_credit=checked cancel_drain=6 reset=4"
+      },
+      "xcelium/tb_llm_graph": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=280599 host_commands=196619 fixtures=synthetic"
+      },
+      "questa/tb_llm_graph": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=280599 host_commands=196619 fixtures=synthetic"
+      },
+      "questa/tb_llm_head_stream": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_HEAD_STREAM_PASS exact_rows=4096 latency=1_5_40 read_credit=checked cancel_drain=6 reset=4"
+      }
+    },
+    "baseline": {
+      "xcelium/tb_quartus_memory": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked"
+      },
+      "xcelium/tb_llm_ram": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3"
+      },
+      "xcelium/tb_llm_linear_stream": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked"
+      },
+      "xcelium/tb_llm_math": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128"
+      },
+      "questa/tb_llm_ram": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3"
+      },
+      "questa/tb_quartus_memory": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked"
+      },
+      "xcelium/tb_llm_selection": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2"
+      },
+      "xcelium/tb_llm_protocol": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_PROTOCOL_PASS transactions=180 cancellations=12 token_pipeline_cases=16 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2 fault_drain_relaunch=checked"
+      },
+      "xcelium/tb_llm_operators": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic"
+      },
+      "questa/tb_llm_math": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128"
+      },
+      "questa/tb_llm_linear_stream": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked"
+      },
+      "questa/tb_llm_protocol": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_PROTOCOL_PASS transactions=180 cancellations=12 token_pipeline_cases=16 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2 fault_drain_relaunch=checked"
+      },
+      "questa/tb_llm_selection": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2"
+      },
+      "questa/tb_llm_operators": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic"
+      },
+      "xcelium/tb_llm_graph": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 8,
+        "marker": "LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=570837 host_commands=196619 fixtures=synthetic"
+      },
+      "questa/tb_llm_graph": {
+        "rc": 0,
+        "errors": 0,
+        "warnings": 0,
+        "marker": "LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=570837 host_commands=196619 fixtures=synthetic"
+      }
+    },
+    "note": "Xcelium reports 8 *W,NODNTW (postscale.sv implicit nets) per run on both sides; Questa reports none. summary_baseline_and_prerename.txt also holds an identical-result candidate run made before a genvar rename in llm_head_engine.sv; only summary_candidate.txt is the final candidate."
+  },
+  "measurement_gates": {
+    "fixture": "tb_llm_operators head operator: 4096 rows, llm_parameter_ram five-edge response, real llm_math",
+    "before": {
+      "cycles_temperature_166": 121886,
+      "cycles_temperature_0": 113694,
+      "parameter_reads": 16896,
+      "simd_issues": 16384,
+      "rows_in_flight": 1
+    },
+    "after": [
+      {
+        "context": 1,
+        "temperature": 166,
+        "cycles": 16948,
+        "stream_cycles": 16918,
+        "rows": 4096,
+        "weight_reads": 16384,
+        "scale_reads": 512,
+        "parameter_port_util_pct": 99.69,
+        "simd_issues": 16384,
+        "simd_util_pct": 96.67,
+        "rows_in_flight_max": 7,
+        "rows_in_flight_avg": 6.05,
+        "port_idle": 0,
+        "read_credit_stalls": 0,
+        "epilogue_stalls": 0
+      },
+      {
+        "context": 1,
+        "temperature": 0,
+        "cycles": 16948,
+        "stream_cycles": 16918,
+        "rows": 4096,
+        "weight_reads": 16384,
+        "scale_reads": 512,
+        "parameter_port_util_pct": 99.69,
+        "simd_issues": 16384,
+        "simd_util_pct": 96.67,
+        "rows_in_flight_max": 7,
+        "rows_in_flight_avg": 6.05,
+        "port_idle": 0,
+        "read_credit_stalls": 0,
+        "epilogue_stalls": 0
+      },
+      {
+        "context": 128,
+        "temperature": 0,
+        "cycles": 16948,
+        "stream_cycles": 16918,
+        "rows": 4096,
+        "weight_reads": 16384,
+        "scale_reads": 512,
+        "parameter_port_util_pct": 99.69,
+        "simd_issues": 16384,
+        "simd_util_pct": 96.67,
+        "rows_in_flight_max": 7,
+        "rows_in_flight_avg": 6.05,
+        "port_idle": 0,
+        "read_credit_stalls": 0,
+        "epilogue_stalls": 0
+      }
+    ],
+    "speedup": {
+      "temperature_166": 7.192,
+      "temperature_0": 6.708
+    },
+    "bandwidth": "4.125 parameter words (1,056 bits) per row; 16,896 words = 528 KiB per head pass; one 256-bit word per clock = 3.2 GB/s at 100 MHz",
+    "definitions": {
+      "rows_in_flight": "rows whose first weight word was requested and not yet selected at epilogue stage 5, sampled every H_STREAM_WAIT cycle; engine fixture counts to retirement",
+      "port_idle": "RUN cycles with rows left to request and no request",
+      "read_credit_stalls": "port_idle cycles with eight reads outstanding",
+      "epilogue_stalls": "a retired row arriving while epilogue stage 0 or a linear feed is busy"
+    },
+    "engine_fixture": [
+      {
+        "latency": 5,
+        "rows": 4096,
+        "cycles": 16913,
+        "weight_reads": 16384,
+        "scale_reads": 512,
+        "port_util_pct": 99.9,
+        "simd_issues": 16384,
+        "simd_util_pct": 96.87,
+        "rows_in_flight_max": 5,
+        "rows_in_flight_avg": 4.84,
+        "port_idle": 0,
+        "read_credit_stalls": 0
+      },
+      {
+        "latency": 1,
+        "rows": 4096,
+        "cycles": 16909,
+        "weight_reads": 16384,
+        "scale_reads": 512,
+        "port_util_pct": 99.92,
+        "simd_issues": 16384,
+        "simd_util_pct": 96.9,
+        "rows_in_flight_max": 4,
+        "rows_in_flight_avg": 3.88,
+        "port_idle": 0,
+        "read_credit_stalls": 0
+      },
+      {
+        "latency": 40,
+        "rows": 4096,
+        "cycles": 86611,
+        "weight_reads": 16384,
+        "scale_reads": 512,
+        "port_util_pct": 19.51,
+        "simd_issues": 16384,
+        "simd_util_pct": 18.92,
+        "rows_in_flight_max": 5,
+        "rows_in_flight_avg": 3.19,
+        "port_idle": 69663,
+        "read_credit_stalls": 69663
+      }
+    ],
+    "graph": {
+      "before_clocks": 570837,
+      "after_clocks": 280599,
+      "host_commands": 196619,
+      "note": "three greedy head passes save 3 x (113,694 - 16,948) = 290,238 clocks"
+    }
+  },
+  "lint": {
+    "spyglass": {
+      "version": "SpyGlass X-2025.06 (module synopsys/spyglass/T-2022.06), GuideWare latest block/rtl_handoff lint/lint_rtl",
+      "config": "top llm_soc, USE_QUARTUS_MEMORY=0, enableSV12, mthresh 65536 (the default 4096 black-boxes llm_soc, llm_math and sram_word_tile)",
+      "baseline": {
+        "fatals": 0,
+        "errors": 0,
+        "warnings": 106,
+        "infos": 4
+      },
+      "candidate": {
+        "fatals": 0,
+        "errors": 0,
+        "warnings": 86,
+        "infos": 4
+      },
+      "new_messages": 0,
+      "removed_messages": 20,
+      "removed_note": "W415a / STARC05-2.2.3.3 double assignments of the deleted per-row head and SC_* states and of the old head engine math_issue_o",
+      "compare": "messages normalized by dropping ids and line/column numbers"
+    },
+    "verilator": {
+      "version": "Verilator 5.041 devel rev v5.040-271-g49c51af84",
+      "command": "verilator --lint-only -Wall -Wno-fatal --top-module llm_soc -GUSE_QUARTUS_MEMORY=0 -Irtl <rtl/*.sv>",
+      "baseline": {
+        "errors": 0,
+        "warnings": 79
+      },
+      "candidate": {
+        "errors": 0,
+        "warnings": 79
+      },
+      "new": [
+        "UNUSEDSIGNAL llm_head_engine parameter_data_i bits [31:24] of each 32-bit scale slot (U24 scale, by design)"
+      ],
+      "removed": [
+        "WIDTHEXPAND llm_soc vocabulary_row_q in the removed per-row scale address"
+      ]
+    }
+  },
+  "application": {
+    "scope": "application_tb.sv run directly with the 2026-10-07 export and the verification-only clamp census bind; outside run_application.ps1 and its timing gate",
+    "export_sha256": {
+      "parameter.mem": "26411397b2033616aad8955d7541b411d8b52e6b60d9d11b36fff7f338f949b4",
+      "prompt.mem": "6de0f95eb3c88a9da4427ff840bbb862240589a33a1b318a916504fe226f0310",
+      "expected.mem": "0639e061a192a5bd88d534752c5c5adf9da3acbcd9d32a888a43c47b87c1fdf3",
+      "config.svh": "678c9ec81248dca04b722ff7098fba77548581541f8969e5793377ce75accfef",
+      "reference.json": "c6cf839b28a11a9c8363c333fa4e8c6a9d91cf641aad3e353c08862e095819c5"
+    },
+    "xcelium": {
+      "result": "xcelium tb_full_rtl_application rc=0 secs=881 errors=0 warnings=8 :: FULL_RTL_APPLICATION_PASS tokens=96 clocks=9884334 host_commands=196722 overflow=0",
+      "tokens_verified": 96,
+      "clocks": 9884334,
+      "clocks_before": 19958382,
+      "host_commands": 196722,
+      "overflow": 0,
+      "clamp": "head_score 393,216 samples (96 x 4096), 0 saturated; group A 0 saturated; exp_underflow 557 of 90,736, unchanged"
+    },
+    "questa": {
+      "result": "questa tb_full_rtl_application rc=0 secs=2055 errors=0 warnings=0 :: FULL_RTL_APPLICATION_PASS tokens=96 clocks=9884334 host_commands=196722 overflow=0",
+      "tokens_verified": 96,
+      "clocks": 9884334
+    }
+  },
+  "not_run": [
+    "gated run_application.ps1",
+    "portable elaboration"
+  ],
+  "timing": {
+    "manifest": "docs/verification/timing/phase1b_head_stream_20261025/manifest.json",
+    "status": "PASS",
+    "min_fmax_mhz": 101.53,
+    "worst_setup_ns": 0.151
+  }
+}

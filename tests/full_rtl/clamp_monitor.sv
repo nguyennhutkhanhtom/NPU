@@ -99,7 +99,7 @@ bind llm_soc llm_clamp_monitor #(.NORM_LANES(ATTN_DIV_LANES)) u_clamp_monitor (
     .b_clamp(op[B_CLAMP_IDX]), .lane_round(lane_round_q), .lane_raw(lane_raw_q),
     .norm_clamp(!op_fault_q && u_attention_normalize.state == u_attention_normalize.CLAMP),
     .norm_signed(u_attention_normalize.signed_q),
-    .sg_clamp(op[SG_CLAMP_IDX]), .a_exp_prep(op[A_EXP_PREP_IDX]), .h_select(op[H_SELECT_IDX]),
+    .sg_clamp(op[SG_CLAMP_IDX]), .a_exp_prep(op[A_EXP_PREP_IDX]), .h_select(head_pipe_valid_q[5]),
     .score_stage1(u_attention_engine.active_q && u_attention_engine.score_valid_q[1]),
     .exp_difference(exp_difference_q), .sampled_score(sampled_score_q),
     .scaled_dot(u_attention_engine.scaled_dot_q));

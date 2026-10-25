@@ -1,0 +1,1 @@
+xcelium tb_full_rtl_application rc=0 secs=881 errors=0 warnings=8 :: FULL_RTL_APPLICATION_PASS tokens=96 clocks=9884334 host_commands=196722 overflow=0

@@ -1,0 +1,3 @@
+HEAD_STREAM_METRIC latency=5 rows=4096 cycles=16913 weight_reads=16384 scale_reads=512 port_util_pct=99.90 simd_issues=16384 simd_util_pct=96.87 rows_in_flight_max=5 rows_in_flight_avg=4.84 port_idle=0 read_credit_stalls=0
+HEAD_STREAM_METRIC latency=1 rows=4096 cycles=16909 weight_reads=16384 scale_reads=512 port_util_pct=99.92 simd_issues=16384 simd_util_pct=96.90 rows_in_flight_max=4 rows_in_flight_avg=3.88 port_idle=0 read_credit_stalls=0
+HEAD_STREAM_METRIC latency=40 rows=4096 cycles=86611 weight_reads=16384 scale_reads=512 port_util_pct=19.51 simd_issues=16384 simd_util_pct=18.92 rows_in_flight_max=5 rows_in_flight_avg=3.19 port_idle=69663 read_credit_stalls=69663

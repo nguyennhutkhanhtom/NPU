@@ -1,0 +1,35 @@
+xcelium base tb_quartus_memory rc=0 secs=4 errors=0 warnings=8 :: QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked
+xcelium cand tb_llm_ram rc=0 secs=4 errors=0 warnings=8 :: LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3
+xcelium base tb_llm_ram rc=0 secs=4 errors=0 warnings=8 :: LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3
+xcelium base tb_llm_linear_stream rc=0 secs=5 errors=0 warnings=8 :: LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked
+xcelium cand tb_quartus_memory rc=0 secs=5 errors=0 warnings=8 :: QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked
+xcelium base tb_llm_math rc=0 secs=5 errors=0 warnings=8 :: LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128
+xcelium cand tb_llm_math rc=0 secs=5 errors=0 warnings=8 :: LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128
+xcelium cand tb_llm_linear_stream rc=0 secs=1 errors=0 warnings=8 :: LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked
+questa base tb_llm_ram rc=0 secs=4 errors=0 warnings=0 :: # LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3
+questa base tb_quartus_memory rc=0 secs=6 errors=0 warnings=0 :: # QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked
+xcelium base tb_llm_selection rc=0 secs=13 errors=0 warnings=8 :: SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2
+xcelium cand tb_llm_protocol rc=0 secs=13 errors=0 warnings=8 :: LLM_PROTOCOL_PASS transactions=180 cancellations=12 token_pipeline_cases=16 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2 fault_drain_relaunch=checked
+xcelium base tb_llm_protocol rc=0 secs=13 errors=0 warnings=8 :: LLM_PROTOCOL_PASS transactions=180 cancellations=12 token_pipeline_cases=16 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2 fault_drain_relaunch=checked
+xcelium base tb_llm_operators rc=0 secs=13 errors=0 warnings=8 :: LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic
+questa base tb_llm_math rc=0 secs=9 errors=0 warnings=0 :: # LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128
+xcelium cand tb_llm_operators rc=0 secs=10 errors=0 warnings=8 :: LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic
+xcelium cand tb_llm_selection rc=0 secs=12 errors=0 warnings=8 :: SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2
+questa base tb_llm_linear_stream rc=0 secs=5 errors=0 warnings=0 :: # LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked
+questa cand tb_quartus_memory rc=0 secs=5 errors=0 warnings=0 :: # QUARTUS_MEMORY_PASS banks=5 checks=464 collision=OLD_DATA read=3/4 write=2 reset=cancels_queue storage=retained tile_boundaries=all sustained_read_write=checked partial_tile_group=checked
+questa cand tb_llm_ram rc=0 secs=4 errors=0 warnings=0 :: # LLM_RAM_PASS checks=28 tile_boundaries=4 collision=old_data adapter_latency=5 parameter_latency=4 mask=checked back_to_back=2 write_drain=checked reset_phases=3
+questa base tb_llm_protocol rc=0 secs=9 errors=0 warnings=0 :: # LLM_PROTOCOL_PASS transactions=180 cancellations=12 token_pipeline_cases=16 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2 fault_drain_relaunch=checked
+questa base tb_llm_selection rc=0 secs=9 errors=0 warnings=0 :: # SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2
+questa cand tb_llm_protocol rc=0 secs=7 errors=0 warnings=0 :: # LLM_PROTOCOL_PASS transactions=180 cancellations=12 token_pipeline_cases=16 bounds=768KiB parameter_read_pipeline=5 reset_release_edges=2 fault_drain_relaunch=checked
+questa cand tb_llm_math rc=0 secs=10 errors=0 warnings=0 :: # LLM_MATH_PASS transactions=503 reset_phases=9 table_checks=513 bit_checks=1536 reference=S128
+questa cand tb_llm_linear_stream rc=0 secs=4 errors=0 warnings=0 :: # LLM_LINEAR_STREAM_PASS exact_rows=128_384 fifo_backpressure=checked fault_order=checked drain_reset_cancel=checked
+questa base tb_llm_operators rc=0 secs=14 errors=0 warnings=0 :: # LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic
+questa cand tb_llm_selection rc=0 secs=9 errors=0 warnings=0 :: # SELECT_EDGE_PASS checks=24 minimum_score_ties=2 excluded=5 stable_ties=2
+questa cand tb_llm_operators rc=0 secs=12 errors=0 warnings=0 :: # LLM_OPERATORS_PASS operators=29 checks=5843 scalar_cases=128 clamp_cases=260 scalar_reset_cases=3 round_cases=2 round_reset_cases=6 reference=S128 fixtures=synthetic
+xcelium cand tb_llm_head_stream rc=0 secs=45 errors=0 warnings=8 :: LLM_HEAD_STREAM_PASS exact_rows=4096 latency=1_5_40 read_credit=checked cancel_drain=6 reset=4
+xcelium cand tb_llm_graph rc=0 secs=77 errors=0 warnings=8 :: LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=280599 host_commands=196619 fixtures=synthetic
+xcelium base tb_llm_graph rc=0 secs=88 errors=0 warnings=8 :: LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=570837 host_commands=196619 fixtures=synthetic
+questa cand tb_llm_graph rc=0 secs=95 errors=0 warnings=0 :: # LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=280599 host_commands=196619 fixtures=synthetic
+questa base tb_llm_graph rc=0 secs=107 errors=0 warnings=0 :: # LLM_GRAPH_PASS prompt=2 tokens=3 layers=16 causal=checked clocks=570837 host_commands=196619 fixtures=synthetic
+questa cand tb_llm_head_stream rc=0 secs=151 errors=0 warnings=0 :: # LLM_HEAD_STREAM_PASS exact_rows=4096 latency=1_5_40 read_credit=checked cancel_drain=6 reset=4
+ALL_DONE

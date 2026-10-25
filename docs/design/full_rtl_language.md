@@ -171,9 +171,10 @@ raw integer / 2^16. `U` là unsigned. RNE là làm tròn nearest, ties to even.
 Một số phép làm tròn có quy tắc riêng như exp interpolation ở trên; không thay
 chúng bằng cùng một rounding mode. ID 0 và 2 bị loại khỏi sampling; EOS ID 1 bị
 loại đến `min_new`. Khi score bằng nhau, ID hợp lệ nhỏ nhất thắng, kể cả S32_MIN.
-Khi temperature bằng 0, selection bỏ qua các state noise/sample nhưng vẫn advance
-PRNG một lần cho mỗi vocabulary row, kể cả các ID bị loại. Vì vậy, khi chuyển lại
-sang sampling, random stream vẫn được bảo toàn.
+Khi temperature bằng 0, noise product bằng 0 nên score chính là logit, nhưng PRNG
+vẫn advance một lần cho mỗi vocabulary row, kể cả các ID bị loại. Vì vậy, khi chuyển
+lại sang sampling, random stream vẫn được bảo toàn. Head xử lý các row theo pipeline
+nhưng score, PRNG và selection vẫn đi đúng thứ tự ID.
 
 Exporter giữ ternary weights đã train và lượng tử hóa embedding/head; token
 matching được đối chiếu với reference integer của layout này.

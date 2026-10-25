@@ -1,0 +1,8 @@
+LINEAR_STREAM_METRIC k=128 rows=128 latency=5 cycles=653 dot_issues=512 parameter_reads=128 row_ii_sum=634 row_ii_count=127 row_ii_min=4 row_ii_max=6
+LINEAR_STREAM_STALLS k=128 rows=128 latency=5 result_backpressure=0 parameter_stalls=126 startup_parameter_stalls=6 result_slot_stalls=0
+LINEAR_STREAM_METRIC k=384 rows=128 latency=5 cycles=1933 dot_issues=1536 parameter_reads=384 row_ii_sum=1904 row_ii_count=127 row_ii_min=14 row_ii_max=16
+LINEAR_STREAM_STALLS k=384 rows=128 latency=5 result_backpressure=0 parameter_stalls=382 startup_parameter_stalls=6 result_slot_stalls=0
+LINEAR_STREAM_METRIC k=128 rows=384 latency=5 cycles=1933 dot_issues=1536 parameter_reads=384 row_ii_sum=1914 row_ii_count=383 row_ii_min=4 row_ii_max=6
+LINEAR_STREAM_STALLS k=128 rows=384 latency=5 result_backpressure=0 parameter_stalls=382 startup_parameter_stalls=6 result_slot_stalls=0
+LINEAR_STREAM_STALLS k=128 rows=128 latency=1 result_backpressure=1 parameter_stalls=0 startup_parameter_stalls=2 result_slot_stalls=225
+LINEAR_STREAM_STALLS k=384 rows=128 latency=9 result_backpressure=1 parameter_stalls=1146 startup_parameter_stalls=10 result_slot_stalls=0

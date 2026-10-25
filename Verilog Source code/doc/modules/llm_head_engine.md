@@ -1,9 +1,9 @@
-# `llm_head_engine` — Engine tích vô hướng cho một hàng từ điển (output head)
+# `llm_head_engine` — Engine stream toàn bộ 4096 hàng từ điển (output head)
 
 | Mục | Giá trị |
 |---|---|
 | File | `llm_head_engine.sv` |
-| Loại | Tuần tự, bộ đếm yêu cầu / phản hồi / tổng |
+| Loại | Tuần tự: FSM `IDLE/RUN/DRAIN`, bộ đếm yêu cầu / phản hồi / tổng, hai khe scale |
 | Nhóm | Head — tính logit |
 | Con | — (dùng `llm_math` chung qua cổng) |
 | Được dùng bởi | `llm_soc` (instance `u_head_engine`) |
@@ -16,32 +16,38 @@
 
 **Bố trí bộ nhớ.** Một hàng 128 int8 = 1024 bit = **4 từ** 256 bit. Mỗi từ chứa 32 trọng số, đúng 32 làn của `llm_math`. Địa chỉ: `{0, vocab[11:0], chunk[1:0]}` → hàng v nằm ở `4v … 4v+3`.
 
+**Bố trí hệ số tỉ lệ.** Hệ số của hàng v là số U24 nằm ở bit [23:0] của khe 32 bit thứ `v mod 8` trong từ 256 bit tại `EMB_SCALE_BASE + v/8`. Một từ scale phục vụ một **nhóm** 8 hàng; bit [31:24] của mỗi khe không dùng.
+
+**Stream nhiều hàng.** Bộ nhớ tham số nhận một yêu cầu mỗi chu kỳ và trả dữ liệu sau 5 chu kỳ, `llm_math` cũng nhận một phép mỗi chu kỳ và trả tổng sau 9 chu kỳ. Nếu chờ xong một hàng mới bắt đầu hàng sau, phần lớn thời gian là chờ. Engine này phát yêu cầu liên tục, nên tại một thời điểm có vài hàng đang "bay" (in flight): hàng này đang đọc bộ nhớ, hàng trước đang ở `llm_math`, hàng trước nữa đang ở pipeline epilogue của `llm_soc`. Thứ tự vẫn giữ nguyên vì bộ nhớ và `llm_math` đều trả kết quả đúng thứ tự phát.
+
 Xem thêm [../00_kien_thuc_nen.md](../00_kien_thuc_nen.md) (mục 5 LLM, 5.6 sampling) và [llm_math.md](llm_math.md).
 
 ## 1. Tổng quan
 
-Mỗi lần `start_i`, engine tính `Σ_{chunk=0..3} Σ_{lane} w_int8 · x` cho **một** hàng từ điển:
+Một xung `start_i` chạy trọn một lượt head: engine tính `Σ_{chunk=0..3} Σ_{lane} w_int8 · x` cho **cả 4096** hàng, theo thứ tự ID:
 
-1. Phát 4 yêu cầu đọc liên tiếp (chunk 0..3) tới `llm_parameter_ram`.
-2. Khi mỗi từ về, báo `operand_capture_o`; `llm_soc` chốt 32 int8 + chunk x tương ứng vào `llm_math`, một chu kỳ sau là `math_issue_o`.
-3. Cộng 4 giá trị `sum` của `llm_math` (lấy 39 bit thấp) → `accumulator_o`, rồi `done_o`.
+1. Phát một dòng yêu cầu đọc liên tục tới `llm_parameter_ram`: với mỗi nhóm 8 hàng, trước tiên là từ scale của nhóm, sau đó 4 từ trọng số (chunk 0..3) cho từng hàng. Tổng cộng 512 + 16.384 = 16.896 lần đọc, tối đa 8 lần đọc đang chờ phản hồi (read credit).
+2. Từ scale về thì được tách thành 8 hệ số U24 và ghi vào một trong hai khe scale. Từ trọng số về thì báo `operand_capture_o`; `llm_soc` chốt 32 int8 + chunk x tương ứng vào `llm_math`, một chu kỳ sau là `math_issue_o`.
+3. Cộng 4 giá trị `sum` của `llm_math` (lấy 39 bit thấp) của một hàng → xung `result_valid_o` kèm `accumulator_o` và `coefficient_o` (hệ số của chính hàng đó).
 
-Việc nhân hệ số, làm tròn, cộng nhiễu Gumbel và chọn token do `llm_soc` đảm nhiệm.
+Nhân hệ số, làm tròn, cộng nhiễu Gumbel, bước PRNG và chọn token do pipeline epilogue của `llm_soc` đảm nhiệm. Đo trên `tb_llm_operators` (bộ nhớ thật, trễ 5): một lượt head mất 16.948 chu kỳ thay vì 121.886 (T = 166) hay 113.694 (T = 0) của thiết kế cũ xử lý từng hàng.
 
 ## 2. Cổng
 
 | Cổng | Hướng | Rộng | Ý nghĩa |
 |---|---|---|---|
-| `start_i`, `cancel_i` | in | 1 | Bắt đầu một hàng / hủy |
-| `vocabulary_i` | in | 12 | Chỉ số token (hàng) 0…4095 |
-| `parameter_req_o`, `parameter_address_o` | out | 1, 15 | Yêu cầu đọc trọng số |
-| `parameter_valid_i` | in | 1 | Từ trọng số đã về |
-| `operand_capture_o` | out | 1 | Cha chốt toán hạng cho `llm_math` |
+| `SCALE_BASE` | tham số | int | Địa chỉ từ scale đầu tiên (`EMB_SCALE_BASE`) |
+| `start_i`, `cancel_i` | in | 1 | Bắt đầu một lượt 4096 hàng / hủy |
+| `busy_o` | out | 1 | Engine chưa về `IDLE` (kể cả lúc drain) |
+| `parameter_req_o`, `parameter_address_o` | out | 1, 15 | Yêu cầu đọc từ scale hoặc từ trọng số |
+| `parameter_valid_i`, `parameter_data_i` | in | 1, 256 | Phản hồi của bộ nhớ tham số, đúng thứ tự |
+| `operand_capture_o` | out | 1 | Cha chốt toán hạng cho `llm_math` (chỉ với từ trọng số) |
 | `math_issue_o` | out | 1 | `start` cho `llm_math` (trễ 1 chu kỳ) |
-| `input_chunk_o` | out | 2 | Chunk x cần dùng (= số phản hồi đã nhận) |
+| `input_chunk_o` | out | 2 | Chunk x khớp với từ trọng số vừa về |
 | `sum_valid_i`, `sum_i` | in | 1, S61 | Kết quả từ `llm_math` |
-| `done_o` | out | 1 | Xung xong |
+| `result_valid_o` | out | 1 | Xung: một hàng đã xong |
 | `accumulator_o` | out | S39 | Tổng của hàng |
+| `coefficient_o` | out | U24 | Hệ số tỉ lệ của hàng |
 
 ## 3. Sơ đồ khối
 
@@ -51,12 +57,13 @@ flowchart LR
     classDef mac fill:#b1ddf0,stroke:#10739e,color:#000
     classDef param fill:#f5f5f5,stroke:#666666,color:#333
     classDef reg fill:#e1d5e7,stroke:#9673a6,color:#000
-    ENG["request_q / response_q / sum_q<br/>(đếm 0…4)"]:::ctrl -->|"{0, vocab, chunk}"| PR["llm_parameter_ram"]:::param
-    PR -->|"p_data: 32 × int8"| CAP["math_a_q ← input_cache_q[chunk]<br/>math_b_q ← int8"]:::reg
-    ENG -->|"operand_capture_o<br/>input_chunk_o"| CAP
+    ENG["FSM + bộ đếm<br/>yêu cầu / phản hồi / tổng"]:::ctrl -->|"scale, rồi 4 chunk/hàng"| PR["llm_parameter_ram"]:::param
+    PR -->|"từ scale"| SC["Hai khe scale<br/>8 × U24 mỗi nhóm"]:::reg
+    PR -->|"từ trọng số"| CAP["math_a_q ← input_cache_q[chunk]<br/>math_b_q ← int8"]:::reg
     CAP -->|"math_issue_o"| M["llm_math<br/>Σ 32 tích"]:::mac
-    M -->|"sum (sum_valid)"| ACC["accumulator_o += sum[38:0]<br/>4 lần → done_o"]:::mac
-    ACC --> SOC["llm_soc: × hệ số, RNE,<br/>Gumbel, chọn max"]
+    M -->|"sum (sum_valid)"| ACC["Cộng 4 tổng<br/>→ result_valid_o"]:::mac
+    SC --> ACC
+    ACC --> SOC["llm_soc: pipeline<br/>× hệ số, Gumbel, chọn max"]
 ```
 
 ```mermaid
@@ -64,23 +71,25 @@ sequenceDiagram
     participant H as head_engine
     participant P as parameter_ram
     participant M as llm_math
-    H->>P: req chunk 0, 1, 2, 3 (4 chu kỳ liên tiếp)
-    P-->>H: valid (chunk 0) → operand_capture
-    H->>M: math_issue (chunk 0)
-    P-->>H: valid (chunk 1..3) → capture, issue
-    M-->>H: sum_valid × 4 → accumulator += sum
-    H->>H: sum_q == 3 → done_o
+    H->>P: req scale nhóm 0, rồi chunk 0..3 của hàng 0, 1, … (mỗi chu kỳ một yêu cầu)
+    P-->>H: scale nhóm 0 → khe 0
+    P-->>H: chunk của hàng 0 → operand_capture
+    H->>M: math_issue (mỗi chunk một lần)
+    M-->>H: sum_valid × 4 → result_valid_o (hàng 0)
+    Note over H,M: cùng lúc đó các hàng 1, 2, … đang đọc bộ nhớ hoặc ở llm_math
 ```
 
 ## 4. Hoạt động chi tiết
 
-- **Bắt đầu** (`start_i` khi không bận): `active_q = 1`, xóa các bộ đếm và `accumulator_o`, chốt `vocabulary_q`.
-- **Yêu cầu**: `parameter_req_o = active && request_q < 4`. Vì bộ nhớ tham số có pipeline, 4 yêu cầu đi liên tiếp mà không chờ.
-- **Phản hồi**: `operand_capture_o = active && parameter_valid_i && response_q < 4`. `input_chunk_o = response_q[1:0]` cho biết chunk x nào khớp với từ vừa về — đảm bảo trọng số chunk k nhân với x chunk k.
+- **Bắt đầu** (`start_i` ở `IDLE`, không có `cancel_i`): sang `RUN`, xóa bộ đếm; yêu cầu đầu tiên là từ scale của nhóm 0.
+- **Yêu cầu**: `parameter_req_o = RUN && !cancel_i && còn hàng && reads_pending_q < 8`. `request_scale_q` cho biết yêu cầu tới là từ scale (địa chỉ `SCALE_BASE + hàng/8`) hay từ trọng số (`{0, hàng, chunk}`). Sau chunk 3 của hàng 8k+7, yêu cầu kế tiếp lại là từ scale.
+- **Phản hồi**: bên phản hồi đi đúng chuỗi đó (`response_scale_q`, `response_row_q`, `response_chunk_q`). Từ scale ghi vào khe `hàng[3]`; từ trọng số bật `operand_capture_o` với `input_chunk_o = response_chunk_q`, bảo đảm trọng số chunk k nhân với x chunk k.
 - **Phát**: `math_issue_o` là bản trễ 1 chu kỳ của `operand_capture_o`, đúng lúc `math_a_q/math_b_q` vừa được chốt.
-- **Cộng**: mỗi `sum_valid_i`: `accumulator_o += sum_i[38:0]`, `sum_q++`. Khi `sum_q == 3` (tổng thứ 4) → `done_o = 1`, `active_q = 0`.
-- **Hủy**: `cancel_i` tắt `active_q` và `math_issue_o`.
+- **Cộng và trả hàng**: mỗi `sum_valid_i` cộng `sum_i[38:0]` vào bộ tích lũy. Tổng thứ 4 của một hàng tạo `result_valid_o` cùng `accumulator_o` và `coefficient_o = khe[hàng[3]][hàng[2:0]]`. Mỗi hàng cần 4 tổng, nên hai hàng liên tiếp cách nhau ít nhất 4 chu kỳ; epilogue của `llm_soc` không bao giờ phải chặn engine.
+- **Vì sao hai khe scale là đủ**: từ scale của nhóm G về sau 32 từ trọng số của nhóm G-1 (bộ nhớ trả đúng thứ tự). Hàng cuối của nhóm G-2 đã nhận từ trọng số cuối của nó trước đó ít nhất 33 chu kỳ và xong 10 chu kỳ sau từ đó (chốt, phát, 9 chu kỳ `llm_math`). Vì vậy khe bị ghi đè không còn ai đọc.
+- **Kết thúc**: hàng 4095 xong → `DRAIN`; khi không còn lần đọc hay tổng nào đang chờ → `IDLE`.
+- **Hủy**: `cancel_i` dừng yêu cầu, chốt toán hạng và trả hàng ngay, chuyển sang `DRAIN`. Engine vẫn đếm các phản hồi bộ nhớ và các tổng của `llm_math` còn đang bay, rồi mới về `IDLE`. Nhờ vậy một lượt mới không bao giờ nhận nhầm dữ liệu cũ.
 
-Ví dụ: 4 tổng chunk lần lượt 1200, −300, 45, 55 → `accumulator_o = 1000`. `llm_soc` tiếp tục với `H_COEFF` (nhân hệ số), `H_ROUND`, `H_NOISE`, `H_SAMPLE`, `H_SELECT` (xem [llm_gumbel_sample.md](llm_gumbel_sample.md)).
+Ví dụ: 4 tổng chunk của một hàng lần lượt 1200, −300, 45, 55 → `accumulator_o = 1000`. Pipeline epilogue của `llm_soc` nhân với `coefficient_o`, làm tròn, cộng nhiễu và chọn token (xem [llm_soc.md](llm_soc.md) và [llm_gumbel_sample.md](llm_gumbel_sample.md)).
 
 **Vì sao S39 là đủ?** |int8| ≤ 2⁷ và |S24| ≤ 2²³, nên mỗi tích có độ lớn ≤ 2³⁰. Tổng 128 = 2⁷ tích có độ lớn ≤ 2³⁷, nằm gọn trong S39 (−2³⁸ … 2³⁸ − 1).

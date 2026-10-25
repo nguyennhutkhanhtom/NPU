@@ -1,0 +1,15 @@
+CLAMP_SITE group=A site=linear samples=596992 saturated=0
+CLAMP_SITE group=A site=embed samples=13568 saturated=0
+CLAMP_SITE group=A site=norm_scaled samples=120832 saturated=0
+CLAMP_SITE group=A site=norm_out samples=120832 saturated=0
+CLAMP_SITE group=A site=rope samples=108544 saturated=0
+CLAMP_SITE group=A site=residual samples=108544 saturated=0
+CLAMP_SITE group=A site=silu samples=162816 saturated=0
+CLAMP_SITE group=A site=gmul samples=162816 saturated=0
+CLAMP_SITE group=A site=attention_out samples=54272 saturated=0
+CLAMP_SITE group=B site=sigmoid_input samples=162816 saturated=0
+CLAMP_PHASE site=exp_underflow graph=9 samples=90736 saturated=557
+CLAMP_SITE group=B site=exp_underflow samples=90736 saturated=557
+CLAMP_SITE group=B site=attention_score samples=90736 saturated=0
+CLAMP_SITE group=B site=head_score samples=393216 saturated=0
+CLAMP_MONITOR_SUMMARY group_a_saturated=0 group_b_saturated=557

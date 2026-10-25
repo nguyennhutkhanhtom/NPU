@@ -1,0 +1,6 @@
+SCHEDULE_PROFILE operator=9 context=1 temperature=166 cycles=121886 linear_startup=0 linear_issue=0 linear_drain=0 head_startup=20480 head_issue=16384 head_drain=40960
+LLM_TRAFFIC operator=9 clocks=121886 parameter_reads=16896 vector_reads=4 vector_writes=0 kv_reads=0
+SCHEDULE_PROFILE operator=9 context=1 temperature=0 cycles=113694 linear_startup=0 linear_issue=0 linear_drain=0 head_startup=20480 head_issue=16384 head_drain=40960
+LLM_TRAFFIC operator=9 clocks=113694 parameter_reads=16896 vector_reads=4 vector_writes=0 kv_reads=0
+SCHEDULE_PROFILE operator=9 context=128 temperature=0 cycles=113694 linear_startup=0 linear_issue=0 linear_drain=0 head_startup=20480 head_issue=16384 head_drain=40960
+LLM_TRAFFIC operator=9 clocks=113694 parameter_reads=16896 vector_reads=4 vector_writes=0 kv_reads=0

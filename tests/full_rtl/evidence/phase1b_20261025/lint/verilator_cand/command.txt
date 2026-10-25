@@ -1,0 +1,1 @@
+verilator --lint-only -Wall -Wno-fatal --top-module llm_soc -GUSE_QUARTUS_MEMORY=0 -Irtl <rtl/*.sv>

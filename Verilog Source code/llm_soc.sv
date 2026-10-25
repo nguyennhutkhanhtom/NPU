@@ -24,7 +24,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         G_UP, G_SILU, G_GMUL, G_DOWN, G_MADD, G_NEXT, G_FNORM, G_HEAD,
         G_ADVANCE, G_DONE} graph_t;
     graph_t graph;
-    localparam int OP_COUNT = 87;
+    localparam int OP_COUNT = 78;
     localparam int O_IDLE_IDX = 0;
     localparam int O_P_REQ_IDX = 1;
     localparam int O_P_WAIT_IDX = 2;
@@ -78,40 +78,31 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     localparam int S_SIG_WAIT_IDX = 50;
     localparam int S_MUL_IDX = 51;
     localparam int S_PACK_IDX = 52;
-    localparam int H_SCALE_IDX = 53;
-    localparam int H_COEFF_IDX = 54;
-    localparam int H_ROUND_IDX = 55;
-    localparam int H_NOISE_IDX = 56;
-    localparam int H_SAMPLE_IDX = 57;
-    localparam int H_SELECT_IDX = 58;
-    localparam int E_ROUND_IDX = 59;
-    localparam int E_CLAMP_IDX = 60;
-    localparam int NR_ROUND_IDX = 61;
-    localparam int NR_CLAMP_IDX = 62;
-    localparam int N_ROUND_IDX = 63;
-    localparam int N_CLAMP_IDX = 64;
-    localparam int R_ROUND_IDX = 65;
-    localparam int R_CLAMP_IDX = 66;
-    localparam int B_ADD_CLAMP_IDX = 67;
-    localparam int B_ROUND_IDX = 68;
-    localparam int B_CLAMP_IDX = 69;
-    localparam int S_ROUND_IDX = 70;
-    localparam int S_CLAMP_IDX = 71;
-    localparam int SC_MULTIPLY_IDX = 72;
-    localparam int SG_CLAMP_IDX = 73;
-    localparam int SG_GROUP_IDX = 74;
-    localparam int SG_PICK_IDX = 75;
-    localparam int SC_PAIR_IDX = 76;
-    localparam int SC_SUM_IDX = 77;
-    localparam int A_EXP_DELTA_IDX = 78;
-    localparam int L_PRELOAD_IDX = 79;
-    localparam int H_PRELOAD_IDX = 80;
-    localparam int H_STREAM_WAIT_IDX = 81;
-    localparam int A_STREAM_WAIT_IDX = 82;
-    localparam int N_DIV_ROUND_IDX = 83;
-    localparam int A_NORM_WAIT_IDX = 84;
-    localparam int L_ROW_START_IDX = 85;
-    localparam int L_ROW_WAIT_IDX = 86;
+    localparam int E_ROUND_IDX = 53;
+    localparam int E_CLAMP_IDX = 54;
+    localparam int NR_ROUND_IDX = 55;
+    localparam int NR_CLAMP_IDX = 56;
+    localparam int N_ROUND_IDX = 57;
+    localparam int N_CLAMP_IDX = 58;
+    localparam int R_ROUND_IDX = 59;
+    localparam int R_CLAMP_IDX = 60;
+    localparam int B_ADD_CLAMP_IDX = 61;
+    localparam int B_ROUND_IDX = 62;
+    localparam int B_CLAMP_IDX = 63;
+    localparam int S_ROUND_IDX = 64;
+    localparam int S_CLAMP_IDX = 65;
+    localparam int SG_CLAMP_IDX = 66;
+    localparam int SG_GROUP_IDX = 67;
+    localparam int SG_PICK_IDX = 68;
+    localparam int A_EXP_DELTA_IDX = 69;
+    localparam int L_PRELOAD_IDX = 70;
+    localparam int H_PRELOAD_IDX = 71;
+    localparam int H_STREAM_WAIT_IDX = 72;
+    localparam int A_STREAM_WAIT_IDX = 73;
+    localparam int N_DIV_ROUND_IDX = 74;
+    localparam int A_NORM_WAIT_IDX = 75;
+    localparam int L_ROW_START_IDX = 76;
+    localparam int L_ROW_WAIT_IDX = 77;
     typedef enum logic [OP_COUNT - 1:0] {
         O_IDLE = OP_COUNT'(1) << O_IDLE_IDX,
         O_P_REQ = OP_COUNT'(1) << O_P_REQ_IDX,
@@ -166,12 +157,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         S_SIG_WAIT = OP_COUNT'(1) << S_SIG_WAIT_IDX,
         S_MUL = OP_COUNT'(1) << S_MUL_IDX,
         S_PACK = OP_COUNT'(1) << S_PACK_IDX,
-        H_SCALE = OP_COUNT'(1) << H_SCALE_IDX,
-        H_COEFF = OP_COUNT'(1) << H_COEFF_IDX,
-        H_ROUND = OP_COUNT'(1) << H_ROUND_IDX,
-        H_NOISE = OP_COUNT'(1) << H_NOISE_IDX,
-        H_SAMPLE = OP_COUNT'(1) << H_SAMPLE_IDX,
-        H_SELECT = OP_COUNT'(1) << H_SELECT_IDX,
         E_ROUND = OP_COUNT'(1) << E_ROUND_IDX,
         E_CLAMP = OP_COUNT'(1) << E_CLAMP_IDX,
         NR_ROUND = OP_COUNT'(1) << NR_ROUND_IDX,
@@ -185,12 +170,9 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         B_CLAMP = OP_COUNT'(1) << B_CLAMP_IDX,
         S_ROUND = OP_COUNT'(1) << S_ROUND_IDX,
         S_CLAMP = OP_COUNT'(1) << S_CLAMP_IDX,
-        SC_MULTIPLY = OP_COUNT'(1) << SC_MULTIPLY_IDX,
         SG_CLAMP = OP_COUNT'(1) << SG_CLAMP_IDX,
         SG_GROUP = OP_COUNT'(1) << SG_GROUP_IDX,
         SG_PICK = OP_COUNT'(1) << SG_PICK_IDX,
-        SC_PAIR = OP_COUNT'(1) << SC_PAIR_IDX,
-        SC_SUM = OP_COUNT'(1) << SC_SUM_IDX,
         A_EXP_DELTA = OP_COUNT'(1) << A_EXP_DELTA_IDX,
         L_PRELOAD = OP_COUNT'(1) << L_PRELOAD_IDX,
         H_PRELOAD = OP_COUNT'(1) << H_PRELOAD_IDX,
@@ -202,7 +184,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         L_ROW_WAIT = OP_COUNT'(1) << L_ROW_WAIT_IDX
     } op_t;
     op_t op;
-    typedef enum logic [2:0] { RET_P_E_DATA, RET_P_E_SCALE, RET_P_H_SCALE, RET_P_L_META, RET_P_N_GAIN0, RET_P_N_GAIN1, RET_P_R_TABLE0, RET_P_R_TABLE1 } p_return_t;
+    typedef enum logic [2:0] { RET_P_E_DATA, RET_P_E_SCALE, RET_P_L_META, RET_P_N_GAIN0, RET_P_N_GAIN1, RET_P_R_TABLE0, RET_P_R_TABLE1 } p_return_t;
     p_return_t return_p;
     typedef enum logic [3:0] { RET_V_A_QUERY, RET_V_B_INPUT0, RET_V_B_INPUT1, RET_V_C_INPUT, RET_V_H_PRELOAD, RET_V_L_PRELOAD, RET_V_N_INPUT, RET_V_N_SQUARE, RET_V_R_INPUT, RET_V_S_INPUT } v_return_t;
     v_return_t return_v;
@@ -212,8 +194,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     m_return_t return_m;
     typedef enum logic [2:0] { RET_W_B_PACK, RET_W_E_PACK, RET_W_N_PACK, RET_W_O_FINISH, RET_W_O_V_REQ, RET_W_R_PACK } w_return_t;
     w_return_t return_w;
-    typedef enum logic [0:0] { RET_SCALAR_H_ROUND, RET_SCALAR_O_IDLE } scalar_return_t;
-    scalar_return_t return_scalar;
     logic op_done, launch, core_running, op_fault_q;
     logic [1:0] layer_q, head_q;
     logic [6:0] position_q, time_q;
@@ -245,12 +225,10 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     logic [3:0] preload_chunk_q;
     logic rope_table_valid_q;
     logic [6:0] rope_table_position_q;
-    logic [255:0] head_scale_word_q;
     logic [511:0] table_q;
     logic [767:0] vector_q, second_q, cache_operand_q, write_vector_q, query_q;
     logic [6:0] write_vector_addr_q;
     logic [31:0] write_vector_mask_q;
-    logic signed [38:0] linear_acc_q;
     logic signed [63:0] scalar_product_q, scalar_round_q;
     logic signed [38:0] scalar_a_q;
     logic signed [24:0] scalar_b_q;
@@ -335,10 +313,11 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
     logic [3:0] linear_input_chunk;
     logic signed [38:0] linear_dot_acc;
     wire signed [23:0] linear_operand [0:31];
-    logic head_parameter_req, head_capture, head_math_issue, head_dot_done;
+    logic head_parameter_req, head_capture, head_math_issue, head_busy, head_result_valid;
     logic [14:0] head_parameter_address;
     logic [1:0] head_input_chunk;
     logic signed [38:0] head_dot_acc;
+    logic [23:0] head_coefficient;
     logic attention_k_req, attention_capture, attention_math_issue, attention_scores_done;
     logic [11:0] attention_k_address;
     logic signed [31:0] attention_score, attention_max;
@@ -462,12 +441,24 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         .product(math_product), .sum(math_sum), .in_ready(math_in_ready),
         .product_valid(math_product_valid), .sum_valid(math_sum_valid));
     assign math_start = op[O_M_START_IDX] || head_math_issue || attention_math_issue;
-    llm_head_engine u_head_engine(.clk(clk), .rst_n(core_rst_n), .start_i(op[H_SCALE_IDX]),
-        .cancel_i(op_fault_q), .vocabulary_i(vocabulary_row_q),
-        .parameter_req_o(head_parameter_req), .parameter_address_o(head_parameter_address),
-        .parameter_valid_i(p_valid), .operand_capture_o(head_capture), .math_issue_o(head_math_issue),
+    // One head pass owns the parameter stream from the last input-cache load
+    // until every accepted read and SIMD sum has drained.
+    llm_head_engine #(.SCALE_BASE(EMB_SCALE_BASE)) u_head_engine(.clk(clk), .rst_n(core_rst_n),
+        .start_i(op[H_PRELOAD_IDX] && preload_chunk_q == 3 && !op_fault_q), .cancel_i(op_fault_q),
+        .busy_o(head_busy), .parameter_req_o(head_parameter_req), .parameter_address_o(head_parameter_address),
+        .parameter_valid_i(p_valid), .parameter_data_i(p_data),
+        .operand_capture_o(head_capture), .math_issue_o(head_math_issue),
         .input_chunk_o(head_input_chunk), .sum_valid_i(math_sum_valid), .sum_i(math_sum),
-        .done_o(head_dot_done), .accumulator_o(head_dot_acc));
+        .result_valid_o(head_result_valid), .accumulator_o(head_dot_acc), .coefficient_o(head_coefficient));
+    // Head rows reuse the linear scalar multiplier stages 0-3, then add noise,
+    // saturate and select in row order. Rows retire at most once per four
+    // clocks, so this fixed pipeline never stalls the engine.
+    logic [5:0] head_pipe_valid_q;
+    always_ff @(posedge clk or negedge core_rst_n) begin
+        if (!core_rst_n) head_pipe_valid_q <= 0;
+        else if (op_fault_q || launch) head_pipe_valid_q <= 0;
+        else head_pipe_valid_q <= {head_pipe_valid_q[4:0], head_result_valid};
+    end
     llm_attention_engine u_attention_engine(.clk(clk), .rst_n(core_rst_n), .start_i(op[A_QUERY_IDX]),
         .cancel_i(op_fault_q), .layer_i(layer_q), .head_i(head_q), .position_i(position_q),
         .kv_req_o(attention_k_req), .kv_address_o(attention_k_address), .kv_valid_i(k_valid),
@@ -517,6 +508,8 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                 linear_pipe_row_q[linear_stage] <= linear_pipe_row_q[linear_stage - 1];
     end
     endgenerate
+    // Linear and head phases are exclusive users of scalar stages 0-3.
+    wire [3:0] scalar_stage_valid = linear_pipe_valid_q[3:0] | head_pipe_valid_q[3:0];
     llm_linear_engine u_linear_engine(.clk(clk), .rst_n(core_rst_n), .start_i(linear_start),
         .cancel_i(op_fault_q), .weight_base_i(weight_row_q), .chunks_i(matrix_chunks_q),
         .rows_i(matrix_rows_q), .result_ready_i(linear_result_ready),
@@ -881,15 +874,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         end
     end
 
-    // Only scalar-product launch states own this held continuation register.
-    always_ff @(posedge clk)
-        if (core_rst_n) begin
-            unique case (1'b1)
-                op[H_COEFF_IDX] : return_scalar <= RET_SCALAR_H_ROUND;
-                default : ;
-            endcase
-        end
-
     generate
     for (cache_row = 0; cache_row < 12; cache_row = cache_row + 1) begin : g_input_cache
         always_ff @(posedge clk)
@@ -919,6 +903,24 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
         if (core_rst_n && op[R_TABLE1_IDX]) rope_table_position_q <= position_q;
     end
 
+    // Selection state is owned by the head epilogue. The pass start resets it;
+    // stage 5 then consumes one vocabulary row per valid entry, in ID order.
+    always_ff @(posedge clk)
+        if (core_rst_n) begin
+            if (op[O_IDLE_IDX] && core_running && !op_done && graph == G_HEAD) begin
+                vocabulary_row_q <= 0; best_score_q <= 32'sh80000000;
+                // Lowest eligible fallback also handles all-S32_MIN ties.
+                best_token_q <= generated_q >= min_new_q ? 12'd1 : 12'd3;
+            end else if (head_pipe_valid_q[5]) begin
+                if (vocabulary_row_q != 0 && vocabulary_row_q != 2 &&
+                    (vocabulary_row_q != 1 || generated_q >= min_new_q) &&
+                    sat_s32(sampled_score_q) > best_score_q) begin
+                    best_score_q <= sat_s32(sampled_score_q); best_token_q <= vocabulary_row_q;
+                end
+                vocabulary_row_q <= vocabulary_row_q + 1'b1;
+            end
+        end
+
     // Payloads are assigned before their operation consumes them. Reset only
     // cancels the operation pipeline and clears architectural status.
     always_ff @(posedge clk) begin
@@ -926,19 +928,30 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
             op_done <= 0;
             if (linear_feed) begin
                 scalar_a_q <= linear_dot_acc; scalar_b_q <= $signed({1'b0, coefficient_q});
+            end else if (head_result_valid) begin
+                scalar_a_q <= head_dot_acc; scalar_b_q <= $signed({1'b0, head_coefficient});
             end
-            if (linear_pipe_valid_q[0]) begin
+            if (scalar_stage_valid[0]) begin
                 scalar_partial_q[0] <= scalar_partial_comb[0];
                 scalar_partial_q[1] <= scalar_partial_comb[1];
                 scalar_partial_q[2] <= scalar_partial_comb[2];
             end
-            if (linear_pipe_valid_q[1]) begin
+            if (scalar_stage_valid[1]) begin
                 scalar_pair_q <= 56'(scalar_partial_q[0]) + (56'(scalar_partial_q[1]) <<< 8);
                 linear_scalar_hi_q <= scalar_partial_q[2];
             end
-            if (linear_pipe_valid_q[2])
+            if (scalar_stage_valid[2])
                 scalar_product_q <= 64'(scalar_pair_q) + (64'(linear_scalar_hi_q) <<< 16);
-            if (linear_pipe_valid_q[3]) scalar_round_q <= rne_shift64(scalar_product_q, 6'd24);
+            if (scalar_stage_valid[3]) scalar_round_q <= rne_shift64(scalar_product_q, 6'd24);
+            // Gumbel-max selection is entirely on RTL. Each row reads the PRNG
+            // state, then advances it once, including excluded IDs. Temperature
+            // zero makes the noise product zero, so greedy keeps the same stream
+            // and selects the largest logit with stable lowest-ID ties.
+            if (head_pipe_valid_q[3]) begin
+                noise_product_q <= noise_product_comb; random_q <= llm_random_next(random_q);
+            end
+            if (head_pipe_valid_q[4])
+                sampled_score_q <= scalar_round_q + rne_shift64(64'(noise_product_q), 6'd8);
             if (linear_pipe_valid_q[6] && !op_fault_q &&
                 scalar_cluster_valid_q[linear_pipe_row_q[6][4]] &&
                 (scalar_cluster_high_q[linear_pipe_row_q[6][4]] ||
@@ -949,7 +962,7 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
             unique case (1'b1)
                 op[O_IDLE_IDX] : if (core_running && !op_done) begin
                     row_q <= 0; chunk_q <= 0; head_q <= 0; time_q <= 0; lane_q <= 0;
-                    source_q <= 1; destination_q <= 1; linear_acc_q <= 0;
+                    source_q <= 1; destination_q <= 1;
                     case (graph)
                         G_EMBED : if (token_valid_q) begin p_address_q <= 15'(EMB_SCALE_BASE + (token_q >> 3)); return_p <= RET_P_E_SCALE; op <= O_P_REQ; end
                         G_ANORM, G_MNORM, G_FNORM : begin
@@ -977,9 +990,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                         G_GMUL : begin source_q <= 6; begin v_address_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(0)))); return_v <= RET_V_B_INPUT0; op <= O_V_REQ; end end
                         G_SILU : begin v_address_q <= 7'(((int'($unsigned(3'(6))) << 3) + (int'($unsigned(3'(6))) << 2)) + int'($unsigned(4'(0)))); return_v <= RET_V_S_INPUT; op <= O_V_REQ; end
                         G_HEAD : begin
-                            vocabulary_row_q <= 0; best_score_q <= 32'sh80000000;
-                            // Lowest eligible fallback also handles all-S32_MIN ties.
-                            best_token_q <= generated_q >= min_new_q ? 12'd1 : 12'd3;
                             preload_chunk_q <= 0; v_address_q <= 7'd12; return_v <= RET_V_H_PRELOAD; op <= O_V_REQ;
                         end
                         default : ;
@@ -990,7 +1000,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                         case (return_p)
                             RET_P_E_DATA: op <= E_DATA;
                             RET_P_E_SCALE: op <= E_SCALE;
-                            RET_P_H_SCALE: op <= H_SCALE;
                             RET_P_L_META: op <= L_META;
                             RET_P_N_GAIN0: op <= N_GAIN0;
                             RET_P_N_GAIN1: op <= N_GAIN1;
@@ -1049,7 +1058,9 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                         endcase
                     end
                 op[O_FINISH_IDX] : if (!v_write_busy && !k_write_busy && !linear_busy &&
-                    linear_pipe_valid_q == 0) begin op_done <= 1; op <= O_IDLE; end
+                    linear_pipe_valid_q == 0 && !head_busy && head_pipe_valid_q == 0) begin
+                    op_done <= 1; op <= O_IDLE;
+                end
                 op[E_SCALE_IDX] : begin
                     coefficient_q <= parameter_word_q[(int'(token_q[2:0]) << 5) +: 24];
                     begin p_address_q <= {1'b0, token_q, 2'b00}; return_p <= RET_P_E_DATA; op <= O_P_REQ; end
@@ -1103,26 +1114,6 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                         matrix_row_q <= linear_row_issue_q; op_fault_q <= 1; op <= O_FINISH;
                     end else if (linear_active_q && linear_row_issue_q == matrix_rows_q &&
                         !linear_busy && linear_pipe_valid_q == 0) op <= O_FINISH;
-                end
-                op[SC_MULTIPLY_IDX] : begin
-                    scalar_partial_q[0] <= scalar_partial_comb[0];
-                    scalar_partial_q[1] <= scalar_partial_comb[1];
-                    scalar_partial_q[2] <= scalar_partial_comb[2];
-                    op <= SC_PAIR;
-                end
-                op[SC_PAIR_IDX] : begin
-                    scalar_pair_q <= 56'(scalar_partial_q[0]) + (56'(scalar_partial_q[1]) <<< 8);
-                    op <= SC_SUM;
-                end
-                op[SC_SUM_IDX] : begin
-                    scalar_product_q <= 64'(scalar_pair_q) + (64'(scalar_partial_q[2]) <<< 16);
-                    begin
-                        case (return_scalar)
-                            RET_SCALAR_H_ROUND: op <= H_ROUND;
-                            RET_SCALAR_O_IDLE: op <= O_IDLE;
-                            default: begin op_fault_q <= 1; op <= O_FINISH; end
-                        endcase
-                    end
                 end
                 op[N_SQUARE_IDX] : begin
                     begin return_m <= RET_M_N_ACC; op <= O_M_START; end
@@ -1265,57 +1256,15 @@ module llm_soc #(parameter bit USE_QUARTUS_MEMORY = 1,
                     else begin row_q <= row_q + 1'b1; v_address_q <= 7'(6 * 12 + row_q + 1); return_v <= RET_V_S_INPUT; return_w <= RET_W_O_V_REQ; end
                 end
                 op[H_PRELOAD_IDX] : begin
-                    if (preload_chunk_q == 3) begin
-                        p_address_q <= 15'(EMB_SCALE_BASE); return_p <= RET_P_H_SCALE; op <= O_P_REQ;
-                    end else begin
+                    if (preload_chunk_q == 3) op <= H_STREAM_WAIT;
+                    else begin
                         preload_chunk_q <= preload_chunk_q + 1'b1;
                         v_address_q <= 7'(12 + preload_chunk_q + 1); return_v <= RET_V_H_PRELOAD; op <= O_V_REQ;
                     end
                 end
-                op[H_SCALE_IDX] : begin
-                    if (vocabulary_row_q[2:0] == 0) head_scale_word_q <= parameter_word_q;
-                    coefficient_q <= vocabulary_row_q[2:0] == 0 ? parameter_word_q[23:0] :
-                        head_scale_word_q[(int'(vocabulary_row_q[2:0]) << 5) +: 24];
-                    op <= H_STREAM_WAIT;
-                end
-                op[H_STREAM_WAIT_IDX] : if (head_dot_done) begin linear_acc_q <= head_dot_acc; op <= H_COEFF; end
-                op[H_COEFF_IDX] : begin
-                    scalar_a_q <= linear_acc_q; scalar_b_q <= $signed({1'b0, coefficient_q});
-                    op <= SC_MULTIPLY;
-                end
-                op[H_ROUND_IDX] : begin
-                    scalar_round_q <= rne_shift64(scalar_product_q, 6'd24);
-                    if (temperature_q == 0) begin
-                        sampled_score_q <= rne_shift64(scalar_product_q, 6'd24);
-                        // Greedy still advances once per row, including excluded
-                        // tokens, so later sampled passes retain the same stream.
-                        random_q <= llm_random_next(random_q);
-                        op <= H_SELECT;
-                    end else op <= H_NOISE;
-                end
-                op[H_NOISE_IDX] : begin
-                    // Gumbel-max selection is entirely on RTL. Temperature=0
-                    // selects the largest logit, preserving stable lowest-ID ties.
-                    noise_product_q <= noise_product_comb;
-                    random_q <= llm_random_next(random_q); op <= H_SAMPLE;
-                end
-                op[H_SAMPLE_IDX] : begin
-                    sampled_score_q <= scalar_round_q + rne_shift64(64'(noise_product_q), 6'd8); op <= H_SELECT;
-                end
-                op[H_SELECT_IDX] : begin
-                    if (vocabulary_row_q != 0 && vocabulary_row_q != 2 &&
-                        (vocabulary_row_q != 1 || generated_q >= min_new_q) &&
-                        sat_s32(sampled_score_q) > best_score_q) begin
-                        best_score_q <= sat_s32(sampled_score_q); best_token_q <= vocabulary_row_q;
-                    end
-                    if (vocabulary_row_q == 4095) op <= O_FINISH;
-                    else begin
-                        vocabulary_row_q <= vocabulary_row_q + 1'b1; chunk_q <= 0; linear_acc_q <= 0;
-                        if (vocabulary_row_q[2:0] == 7) begin
-                            p_address_q <= 15'(EMB_SCALE_BASE + ((vocabulary_row_q + 1) >> 3)); return_p <= RET_P_H_SCALE; op <= O_P_REQ;
-                        end else op <= H_SCALE;
-                    end
-                end
+                // The final row selects here. A fault takes the ordered drain in O_FINISH.
+                op[H_STREAM_WAIT_IDX] : if (op_fault_q || (head_pipe_valid_q[5] && vocabulary_row_q == 4095))
+                    op <= O_FINISH;
                 default : ;
             endcase
         end else begin op <= O_IDLE; op_done <= 0; overflow_out <= 0; random_q <= 1; op_fault_q <= 0; end

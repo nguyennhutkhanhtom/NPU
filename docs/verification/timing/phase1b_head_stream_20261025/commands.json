@@ -1,0 +1,49 @@
+[
+  {
+    "arguments": [
+      "--read_settings_files=on",
+      "--write_settings_files=off",
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ],
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_map.exe",
+    "started_at_utc": "2026-10-25T03:02:19.5345587Z",
+    "stage": "map"
+  },
+  {
+    "arguments": [
+      "--read_settings_files=on",
+      "--write_settings_files=off",
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ],
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_fit.exe",
+    "started_at_utc": "2026-10-25T03:11:41.9101573Z",
+    "stage": "fit"
+  },
+  {
+    "arguments": [
+      "llm_soc",
+      "-c",
+      "llm_soc"
+    ],
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_sta.exe",
+    "started_at_utc": "2026-10-25T04:27:46.2716163Z",
+    "stage": "sta"
+  },
+  {
+    "arguments": [
+      "-t",
+      "D:\\2151097_Nguyen Nhut Khanh\\.claude\\worktrees\\push-len-giup-236d23\\tools\\timing\\extract.tcl",
+      "D:\\2151097_Nguyen Nhut Khanh\\.claude\\worktrees\\push-len-giup-236d23\\docs\\verification\\timing\\phase1b_head_stream_20261025",
+      "sdc",
+      "D:\\2151097_Nguyen Nhut Khanh\\.claude\\worktrees\\push-len-giup-236d23\\quartus\\llm_soc",
+      "40"
+    ],
+    "executable": "C:\\altera_lite\\25.1std\\quartus\\bin64\\quartus_sta.exe",
+    "started_at_utc": "2026-10-25T04:29:34.0823406Z",
+    "stage": "extract"
+  }
+]
