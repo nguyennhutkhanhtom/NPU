@@ -10,7 +10,8 @@
 | How RTL is divided into blocks | [Full RTL graph](source_guide/full_graph.md) |
 | How each RTL module works (main per-module docs) | [RTL module docs](source_guide/README.md) |
 | Current verification/status | [Verification status](verification/optimization_status.md) |
-| How to verify the design | [Verification guide](verification/README.md) |
+| How to verify the design | [Verification guide](verification/README.md) · [Full RTL tests](verification/full_rtl_tests.md) · [Timing tools](verification/timing_tools.md) |
+| NPU v2 plan | [Execution contract](NPU_V2_EXECUTION.md) · [Architecture proposal](NPU_V2_PROPOSAL.md) |
 | How to run the language demo | [NanoFable guide](demos/language.md) |
 | RTL coding policy | [RTL style](design/rtl_style.md) |
 | Historical work | [History](history/README.md) |

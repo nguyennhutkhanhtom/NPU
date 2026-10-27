@@ -108,9 +108,15 @@ Evidence phải khớp raw source hashes, test hashes và log/binding report has
 Không nới constraints, numeric expectations hoặc timing exceptions để biến
 một kết quả FAIL thành PASS.
 
+## Tài liệu chi tiết
+
+- [Full RTL tests](full_rtl_tests.md): bảy nhóm testbench, cách application chạy, clamp monitor, library và evidence.
+- [Timing tools](timing_tools.md): runner Quartus, ghi evidence và trích report.
+- [Hệ thống tests và regression legacy](legacy_regression.md): `tests/run.ps1` và reference của `matmulfree`.
+
 ## Legacy và lịch sử
 
-[Core matmulfree](../../tests/README.md#regression-legacy) có runner `tests/run.ps1`
+[Core matmulfree](legacy_regression.md#regression-legacy) có runner `tests/run.ps1`
 và 10 nhóm regression riêng. Các demo MNIST/hybrid thuộc
 [demo legacy](../demos/legacy/README.md).
 [Lịch sử timing](../history/timing_development.md) và
