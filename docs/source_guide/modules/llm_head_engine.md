@@ -89,6 +89,7 @@ sequenceDiagram
 - **Vì sao hai khe scale là đủ**: từ scale của nhóm G về sau 32 từ trọng số của nhóm G-1 (bộ nhớ trả đúng thứ tự). Hàng cuối của nhóm G-2 đã nhận từ trọng số cuối của nó trước đó ít nhất 33 chu kỳ và xong 10 chu kỳ sau từ đó (chốt, phát, 9 chu kỳ `llm_math`). Vì vậy khe bị ghi đè không còn ai đọc.
 - **Kết thúc**: hàng 4095 xong → `DRAIN`; khi không còn lần đọc hay tổng nào đang chờ → `IDLE`.
 - **Hủy**: `cancel_i` dừng yêu cầu, chốt toán hạng và trả hàng ngay, chuyển sang `DRAIN`. Engine vẫn đếm các phản hồi bộ nhớ và các tổng của `llm_math` còn đang bay, rồi mới về `IDLE`. Nhờ vậy một lượt mới không bao giờ nhận nhầm dữ liệu cũ.
+- **Reset**: xóa FSM, `math_issue_o`, `result_valid_o` và mọi bộ đếm yêu cầu / phản hồi / tổng. Hai khe scale và bộ tích lũy là payload, không reset.
 
 Ví dụ: 4 tổng chunk của một hàng lần lượt 1200, −300, 45, 55 → `accumulator_o = 1000`. Pipeline epilogue của `llm_soc` nhân với `coefficient_o`, làm tròn, cộng nhiễu và chọn token (xem [llm_soc.md](llm_soc.md) và [llm_gumbel_sample.md](llm_gumbel_sample.md)).
 

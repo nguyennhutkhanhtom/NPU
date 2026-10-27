@@ -10,7 +10,7 @@
 |---|---|---|
 | llm_soc.sv | Graph LLM cố định: host, prefill, transformer, head và decode | [Kiến trúc hiện tại](../docs/design/full_rtl_language.md) |
 | matmulfree.sv | Core instruction-driven legacy: NORM, TMATMUL và vector ops | [Kiến trúc legacy](<../docs/design/legacy/architecture.md>) |
-| matmul_wrap.sv | Wrapper legacy khi chọn board top | [Chú giải snapshot](../docs/source_guide/blocks/matmul_wrap.sv.md) |
+| matmul_wrap.sv | Wrapper legacy khi chọn board top | [Tài liệu module](../docs/source_guide/modules/matmul_wrap.md) |
 
 ## Nhóm file
 
@@ -24,8 +24,8 @@
 | Core legacy | matmulfree, instruction/descriptor, norm, ternary_mul, rowwise và memory wrappers |
 
 [Source overview](../docs/source_guide/full_graph.md) giải thích trách nhiệm,
-handshake và pipeline. [Danh mục 41 assets](../docs/source_guide/blocks/README.md)
-liên kết từng file, kèm trạng thái của code-excerpt snapshot.
+handshake và pipeline. [Tài liệu RTL chính](../docs/source_guide/README.md) là tài liệu chuẩn cho
+từng module: danh mục 41 file, kiến thức nền, cổng, sơ đồ và hoạt động chi tiết.
 
 ## Build và ranh giới công nghệ
 

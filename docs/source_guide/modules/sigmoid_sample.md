@@ -48,5 +48,5 @@ flowchart LR
 
 - Khối `always_comb` chứa 257 nhánh `case` và một nhánh `default`.
 - File được bảo vệ bằng `` `ifndef SIGMOID_SAMPLE_SVH `` để không bị định nghĩa hai lần khi nhiều file cùng `include`.
-- `sigmoid_257.mem` chứa đúng 257 giá trị này dưới dạng hex, một dòng mỗi mẫu, sinh cùng lúc với bảng.
+- `sigmoid_257.mem` chứa đúng 257 giá trị này dưới dạng hex, một dòng mỗi mẫu, sinh cùng lúc với bảng. RTL **không** nạp file này (không có `$readmemh`); nó là bản đối chiếu. `tests/reference.py` sinh lại cả hai file từ công thức RNE và báo lỗi nếu `sigmoid_257.mem` hoặc `sigmoid_lut.svh` lệch.
 - Hai mẫu kề nhau chênh nhau tối đa 512 (độ dốc lớn nhất ở quanh x = 0). `sigmoid` dựa vào giới hạn này để chỉ dùng 10 bit cho hiệu `y1 − y0`.

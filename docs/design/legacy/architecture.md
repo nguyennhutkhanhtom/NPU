@@ -279,7 +279,7 @@ Weight của mỗi phần tử đầu ra bắt đầu tại ranh giới word SRA
 
 Vị trí của nhóm trong buffer weight là 0, 64, 128 hoặc 192 bit. Activation được lấy từ vùng `q` theo chỉ số cột. Hàng ngắn có thể lãng phí nhiều bit đệm, nên bảng dung lượng demo đã tính phần này. Đóng gói xuyên qua ranh giới hàng có thể tiết kiệm SRAM nhưng làm mạch điều khiển phức tạp hơn.
 
-Nếu mô hình vừa parameter SRAM, host hoặc flash chỉ cần nạp một lần rồi có thể chạy nhiều mẫu. Mô hình lớn hơn phải nạp từng tầng, chấp nhận tăng latency và vẫn phải đáp ứng các phép toán, K_MAX và độ rộng bit mà core hỗ trợ. Dung lượng 32+8 KiB là **dung lượng logic đã triển khai trong RTL**. Mỗi SRAM có tám bank 32 bit, write-enable riêng theo lane và một cổng đọc synchronous chung cho host/compute. Backend adapter trả read-valid sau hai cạnh lên; frontend top chốt request/response nên host SRAM giữ enable/read/address qua bốn cạnh lên đến ready. Descriptor dùng 1.024 bit thanh ghi. Xem [sơ đồ và hợp đồng SRAM](<../../source_guide/blocks/sram_256_wrapper.sv.md>). Wrapper là adapter để bind SRAM macro, không chứa primitive hoặc thuộc tính memory của Quartus. Chưa có thư viện SRAM hoặc PDK để xác nhận macro đơn khối 1024×256 và 256×256. Nếu thư viện chỉ có macro rộng 64 bit, có thể ghép bốn macro cùng độ sâu thành một word 256 bit, sau đó kiểm tra cổng truy cập, latency và timing. Không thể suy ra diện tích hay công suất từ dung lượng logic này.
+Nếu mô hình vừa parameter SRAM, host hoặc flash chỉ cần nạp một lần rồi có thể chạy nhiều mẫu. Mô hình lớn hơn phải nạp từng tầng, chấp nhận tăng latency và vẫn phải đáp ứng các phép toán, K_MAX và độ rộng bit mà core hỗ trợ. Dung lượng 32+8 KiB là **dung lượng logic đã triển khai trong RTL**. Mỗi SRAM có tám bank 32 bit, write-enable riêng theo lane và một cổng đọc synchronous chung cho host/compute. Backend adapter trả read-valid sau hai cạnh lên; frontend top chốt request/response nên host SRAM giữ enable/read/address qua bốn cạnh lên đến ready. Descriptor dùng 1.024 bit thanh ghi. Xem [sơ đồ và hợp đồng SRAM](../../source_guide/modules/sram_256_wrapper.md). Wrapper là adapter để bind SRAM macro, không chứa primitive hoặc thuộc tính memory của Quartus. Chưa có thư viện SRAM hoặc PDK để xác nhận macro đơn khối 1024×256 và 256×256. Nếu thư viện chỉ có macro rộng 64 bit, có thể ghép bốn macro cùng độ sâu thành một word 256 bit, sau đó kiểm tra cổng truy cập, latency và timing. Không thể suy ra diện tích hay công suất từ dung lượng logic này.
 
 ## Mô hình demo phù hợp
 
@@ -353,7 +353,7 @@ Trong RTL v1, `ternary_mul` buộc độ rộng bus vào `DATA_WIDTH*LANES`. Khi
 This table records the historical v1 migration proposal. The unused pipeline,
 `ctrl_unit`, `hazard_detect` and `mem_burst` modules have since been removed;
 the current schedulers directly own state and handshakes. Current code is in
-the [source guide](<../../source_guide/blocks/README.md>).
+the [tài liệu module](../../source_guide/README.md).
 
 | File / module v1 (lịch sử) | RTL v1 trước chuyển đổi | Cấu hình đề xuất | Format và ý nghĩa |
 |---|---|---|---|
@@ -371,7 +371,7 @@ the [source guide](<../../source_guide/blocks/README.md>).
 | `matmulfree.sv` — `matmulfree` | Nối payload512, ALU32×16, debug memory512; instruction13/PC9 | **Payload/debug memory256; ALU2×16; ternary input32×8; instruction13/PC9** | Top-level phải tách bus SRAM, lane compute và format từng khối; bổ sung kết nối descriptor, postscale và handshake |
 | `matmul_wrap.sv` — `matmul_wrap` | FPGA clock/reset và3 LED trạng thái | **Không có numeric datapath cần đổi width** | Giữ wrapper cho FPGA; ASIC cần wrapper host32, reset/clock và SRAM macro interface riêng |
 
-Bảng lịch sử trên ghi các bước chuyển từ v1. Source hiện hành đã có bus256, descriptor, scheduler single-issue, scale động, NORM + QUANT và handshake; các pipeline register legacy không được instantiate trong top. Xem [mục lục source hiện hành](<../../source_guide/blocks/README.md>). Giữ instruction13/PC9 là **phương án triển khai tối thiểu được đề xuất ở bảng này**, không phải kết luận rằng ISA hiện tại đã biểu diễn đủ model. Descriptor chứa base address, K/length, format và scale; các trường này có thể nằm trong nhiều word32. Nếu số slot hoặc chiều dài chương trình không đủ, mới mở rộng ISA/PC cùng compiler. SRAM address là unsigned index, không gán format INT8/INT16 của dữ liệu cho nó.
+Bảng lịch sử trên ghi các bước chuyển từ v1. Source hiện hành đã có bus256, descriptor, scheduler single-issue, scale động, NORM + QUANT và handshake; các pipeline register legacy không được instantiate trong top. Xem [mục lục source hiện hành](../../source_guide/README.md). Giữ instruction13/PC9 là **phương án triển khai tối thiểu được đề xuất ở bảng này**, không phải kết luận rằng ISA hiện tại đã biểu diễn đủ model. Descriptor chứa base address, K/length, format và scale; các trường này có thể nằm trong nhiều word32. Nếu số slot hoặc chiều dài chương trình không đủ, mới mở rộng ISA/PC cùng compiler. SRAM address là unsigned index, không gán format INT8/INT16 của dữ liệu cho nó.
 
 ### Các chức năng cần bổ sung hoặc ghép vào module hiện có
 

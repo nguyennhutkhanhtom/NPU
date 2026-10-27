@@ -1,6 +1,6 @@
 # 02: `llm_soc` hoạt động chi tiết, theo chân một token
 
-Tài liệu này đi theo **một token** từ lúc host ghi prompt cho đến lúc token mới xuất hiện trong bộ nhớ kết quả. Ở mỗi bước, nó chỉ rõ dữ liệu nằm ở đâu, module nào làm việc và kết quả được ghi vào đâu. Phần chi tiết từng cổng và từng trạng thái nằm ở [modules/llm_soc.md](modules/llm_soc.md). Bản vẽ draw.io của FSM đồ thị, FSM thao tác và bản đồ bộ nhớ nằm ở các trang 03–05 của [diagrams/npu_architecture.drawio](diagrams/npu_architecture.drawio).
+Tài liệu này đi theo **một token** từ lúc host ghi prompt cho đến lúc token mới xuất hiện trong bộ nhớ kết quả. Ở mỗi bước, nó chỉ rõ dữ liệu nằm ở đâu, module nào làm việc và kết quả được ghi vào đâu. Phần chi tiết từng cổng và từng trạng thái nằm ở [modules/llm_soc.md](modules/llm_soc.md). Bản vẽ draw.io của FSM đồ thị, FSM thao tác và bản đồ bộ nhớ nằm ở các trang 03–05 của [diagrams/npu_architecture.drawio](../diagrams/npu_architecture.drawio).
 
 ## 0. Kiến thức cần biết trước
 

@@ -9,7 +9,7 @@ Bộ tài liệu này không giả định bạn đã quen với thiết kế ph
 3. [02_hoat_dong_chi_tiet_llm_soc.md](02_hoat_dong_chi_tiet_llm_soc.md): `llm_soc` chạy một mô hình ngôn ngữ từng bước như thế nào.
 4. [03_npu_legacy_matmulfree.md](03_npu_legacy_matmulfree.md): NPU thế hệ trước, chạy theo lệnh.
 5. Thư mục `modules/`: mỗi module một file, đọc khi cần đi sâu.
-6. `diagrams/npu_architecture.drawio`: sơ đồ trực quan, mở bằng draw.io / diagrams.net.
+6. `docs/diagrams/npu_architecture.drawio`: sơ đồ trực quan, mở bằng draw.io / diagrams.net.
 
 ---
 

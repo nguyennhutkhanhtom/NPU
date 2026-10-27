@@ -26,7 +26,7 @@ parameter/config/prompt contract của top hiện tại `llm_soc` nằm tại
 
 </details>
 
-RTL và tài liệu cập nhật 01/10/2026. Source chính dùng một implementation cho mô phỏng và synthesis; không chọn datapath theo `SYNTHESIS`, `QUARTUS_SYNTHESIS` hoặc thuộc tính memory riêng của Quartus. Quartus dùng để demo Analysis & Synthesis và timing FPGA. RTL dùng số nguyên cho inference; chưa xác nhận timing/PPA hoặc binding SRAM của ASIC. Xem [báo cáo rà soát và kiểm chứng](<../../history/reviews/design_review.md>), [critical path/Fmax](<../../verification/timing/README.md>), [tổng quan và sơ đồ khối](<../../source_guide/legacy/README.md>) và [chú giải từng file](<../../source_guide/blocks/README.md>).
+RTL và tài liệu cập nhật 01/10/2026. Source chính dùng một implementation cho mô phỏng và synthesis; không chọn datapath theo `SYNTHESIS`, `QUARTUS_SYNTHESIS` hoặc thuộc tính memory riêng của Quartus. Quartus dùng để demo Analysis & Synthesis và timing FPGA. RTL dùng số nguyên cho inference; chưa xác nhận timing/PPA hoặc binding SRAM của ASIC. Xem [báo cáo rà soát và kiểm chứng](<../../history/reviews/design_review.md>), [critical path/Fmax](<../../verification/timing/README.md>), [tổng quan và sơ đồ khối](<../../source_guide/legacy/README.md>) và [tài liệu từng module](../../source_guide/README.md).
 
 `Verilog Source code` là nguồn đang được phát triển. Bản sao `npu_asic_v2` đã được loại bỏ khi dọn workspace; các test cần thiết đã gộp vào `tests`.
 

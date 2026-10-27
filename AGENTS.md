@@ -31,6 +31,7 @@ Optimize for low context/token use.
 | Need | Start here |
 |---|---|
 | RTL graph / ownership | `docs/source_guide/full_graph.md` |
+| RTL docs index / per-module docs | `docs/source_guide/README.md`, `docs/source_guide/modules/<module>.md` |
 | Architecture / numeric contracts | `docs/design/full_rtl_language.md` |
 | Verification / timing status | `docs/verification/optimization_status.md` |
 | Verification workflow | `docs/verification/README.md` |
@@ -46,7 +47,7 @@ Optimize for low context/token use.
 
 Documentation synchronization is part of done for RTL changes.
 
-- When synthesizable RTL changes, update its existing `docs/source_guide/blocks/<module>.sv.md` in the same task.
+- When synthesizable RTL changes, update its existing `docs/source_guide/modules/<module>.md` in the same task (index: `docs/source_guide/README.md`).
 - Keep documentation changes minimal and relevant; RTL remains canonical.
 - Do not paste large RTL excerpts or add filler.
 

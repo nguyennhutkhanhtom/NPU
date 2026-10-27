@@ -218,8 +218,6 @@ bảo toàn khi thay technology leaf.
 
 ## Chú giải và sơ đồ đã lưu
 
-[Mục lục từng file](blocks/README.md) có hai đường đọc: source hiện tại và trang
-chú giải snapshot. Cột trạng thái hash cho biết code trong snapshot có khớp với
-file đang compile hay không. Những trang có hash cũ cần được đọc cùng RTL hiện tại;
-sơ đồ/code excerpt sẽ được refresh trong đợt riêng. [Hierarchy legacy](<legacy/README.md>)
+Mỗi module có một tài liệu trong [modules/](README.md#danh-mục-file-rtl);
+[mục lục source guide](README.md) liệt kê đủ 41 file RTL/LUT. [Hierarchy legacy](<legacy/README.md>)
 lưu sơ đồ matmulfree.
