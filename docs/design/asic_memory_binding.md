@@ -76,7 +76,7 @@ semantics trong source; đây không phải một datapath IP instance riêng.
 ## EDA input khi có foundry target
 
 Sử dụng cùng source compute/control, package và combinational LUT include của
-`llm_soc` trong [tài liệu module](<../../Verilog Source code/doc/README.md>). Thay source của
+`llm_soc` trong [tài liệu module](../source_guide/README.md). Thay source của
 memory technology leaf và cung cấp các view behavioral/Liberty/LEF của SRAM đã
 chọn cùng standard-cell library. Giữ nguyên contract numeric/reset/handshake và
 chạy lại các test unit, collision, cancellation và autonomous graph với leaf đó.

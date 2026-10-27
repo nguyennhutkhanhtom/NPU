@@ -1,6 +1,6 @@
 # 03: NPU legacy `matmulfree`, một NPU chạy chương trình
 
-`matmulfree` là NPU thế hệ trước trong repo. Khác với `llm_soc`, trình tự tính toán của nó **không** được đúc cứng vào phần cứng. Host viết một chương trình ngắn bằng lệnh 13 bit, và NPU chạy chương trình đó. Thiết kế này vẫn được tổng hợp được, với top FPGA là `matmul_wrap`, nhưng nó không còn là đích chính. Chi tiết từng cổng và từng trạng thái nằm ở [modules/matmulfree.md](modules/matmulfree.md). Bản vẽ draw.io (sơ đồ khối + bộ lập lịch) là trang 06 của [diagrams/npu_architecture.drawio](diagrams/npu_architecture.drawio).
+`matmulfree` là NPU thế hệ trước trong repo. Khác với `llm_soc`, trình tự tính toán của nó **không** được đúc cứng vào phần cứng. Host viết một chương trình ngắn bằng lệnh 13 bit, và NPU chạy chương trình đó. Thiết kế này vẫn được tổng hợp được, với top FPGA là `matmul_wrap`, nhưng nó không còn là đích chính. Chi tiết từng cổng và từng trạng thái nằm ở [modules/matmulfree.md](modules/matmulfree.md). Bản vẽ draw.io (sơ đồ khối + bộ lập lịch) là trang 06 của [diagrams/npu_architecture.drawio](../diagrams/npu_architecture.drawio).
 
 ## 0. Kiến thức cần biết trước
 

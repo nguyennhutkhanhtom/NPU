@@ -13,7 +13,7 @@
 - [history/full_rtl_development.md](history/full_rtl_development.md)
 - [history/reviews/rtl_change_review.md](history/reviews/rtl_change_review.md)
 - [history/reviews/rtl_change_review_v2.md](history/reviews/rtl_change_review_v2.md)
-- [../Verilog Source code/doc/README.md](<../Verilog Source code/doc/README.md>): sơ đồ từng module RTL (`modules/*.md`)
+- [source_guide/README.md](source_guide/README.md): sơ đồ trong `source_guide/modules/*.md` và các tài liệu 00–03
 - [source_guide/legacy/README.md](source_guide/legacy/README.md)
 
 ## Preserved ASCII snapshots

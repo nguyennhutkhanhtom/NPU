@@ -10,7 +10,7 @@ Tài liệu này là điểm bắt đầu. Nó giải thích repo chứa gì, c�
 | [02_hoat_dong_chi_tiet_llm_soc.md](02_hoat_dong_chi_tiet_llm_soc.md) | NPU chính `llm_soc` hoạt động từng bước |
 | [03_npu_legacy_matmulfree.md](03_npu_legacy_matmulfree.md) | NPU cũ `matmulfree` chạy chương trình lệnh |
 | [modules/](modules/) | 42 tài liệu, mỗi module một file |
-| [diagrams/npu_architecture.drawio](diagrams/npu_architecture.drawio) | Sơ đồ draw.io nhiều trang (mở bằng draw.io / diagrams.net) |
+| [diagrams/npu_architecture.drawio](../diagrams/npu_architecture.drawio) | Sơ đồ draw.io nhiều trang (mở bằng draw.io / diagrams.net) |
 
 ## 0. Kiến thức cần biết trước
 

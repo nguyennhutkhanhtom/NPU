@@ -218,7 +218,6 @@ bảo toàn khi thay technology leaf.
 
 ## Chú giải và sơ đồ đã lưu
 
-Tài liệu chính cho từng module nằm cạnh source:
-[Verilog Source code/doc](<../../Verilog Source code/doc/README.md>). Bộ chú giải
-snapshot cũ `blocks/*.sv.md` đã được gỡ. [Hierarchy legacy](<legacy/README.md>)
+Mỗi module có một tài liệu trong [modules/](README.md#danh-mục-file-rtl);
+[mục lục source guide](README.md) liệt kê đủ 41 file RTL/LUT. [Hierarchy legacy](<legacy/README.md>)
 lưu sơ đồ matmulfree.
