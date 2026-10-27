@@ -18,7 +18,7 @@ overview giải thích các FSM, mux, register và luồng xử lý nằm trong 
 | Prefill, bốn layer, token selection và decode | [Luồng inference](../design/full_rtl_language.md#luồng-inference) |
 | Request/ACK, cancellation và parameter commit | [Host transaction](../design/host_interface.md#một-transaction) |
 | Cache reuse và invalidate | [Cache reuse and ownership](../design/exact_throughput_optimization.md#cache-reuse-and-ownership) |
-| Sơ đồ từng module, numeric stages và code hiện tại | [Danh mục 41 RTL/LUT assets](../source_guide/blocks/README.md) |
+| Sơ đồ từng module, numeric stages và code hiện tại | [Tài liệu 41 RTL/LUT assets](<../../Verilog Source code/doc/README.md>) |
 | Core dùng instruction/descriptor | [Hierarchy matmulfree](<../source_guide/legacy/README.md>) |
 
 ## Các tab hierarchy

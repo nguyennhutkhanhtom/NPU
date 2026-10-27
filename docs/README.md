@@ -8,6 +8,7 @@
 |---|---|
 | How the current NPU works | [Current architecture](design/full_rtl_language.md) |
 | How RTL is divided into blocks | [Full RTL graph](source_guide/full_graph.md) |
+| How each RTL module works (main per-module docs) | [RTL module docs](<../Verilog Source code/doc/README.md>) |
 | Current verification/status | [Verification status](verification/optimization_status.md) |
 | How to verify the design | [Verification guide](verification/README.md) |
 | How to run the language demo | [NanoFable guide](demos/language.md) |

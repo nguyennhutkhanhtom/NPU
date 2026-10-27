@@ -2,7 +2,7 @@
 
 > **Category: POLICY.**
 
-[Tài liệu](../README.md) · [Toàn RTL graph](full_rtl_language.md) · [Source số học](../source_guide/blocks/logic_mul.sv.md) · [Memory boundary](../source_guide/blocks/quartus_word_ram.sv.md)
+[Tài liệu](../README.md) · [Toàn RTL graph](full_rtl_language.md) · [Source số học](<../../Verilog Source code/doc/modules/logic_mul.md>) · [Memory boundary](<../../Verilog Source code/doc/modules/quartus_word_ram.md>)
 
 [Hướng dẫn liên kết SRAM cho ASIC](asic_memory_binding.md) ghi lại contract
 leaf/client, toàn bộ các mảng nhỏ được infer và evidence full-top elaboration

@@ -38,6 +38,12 @@ Toàn bộ tham số của mô hình nằm ở đây: embedding int8, ma trận 
 | `host_wdata` | in | 32 | Dữ liệu ghi |
 | `host_rdata`, `host_rvalid` | out | 32, 1 | Phản hồi host |
 
+| Tham số | Mặc định | `llm_soc` | Ý nghĩa |
+|---|---|---|---|
+| `ADDR_W` | 15 | 15 | Số bit địa chỉ hàng |
+| `DEPTH` | 24576 | `PARAM_ROWS` = 24576 | Số hàng 256 bit |
+| `USE_QUARTUS_MEMORY` | 0 | tham số top (mặc định 1) | 1: lá `quartus_word_ram` (FPGA); 0: lá mô hình `sram_word_tile` (ASIC/mô phỏng portable) |
+
 ## 3. Sơ đồ khối
 
 ```mermaid
@@ -87,6 +93,10 @@ Cuối pipeline, `host_rdata = read_row[addr[2:0]*32 +: 32]` và `host_rvalid` c
 
 `write_enable_q` của làn `lane` bật khi `host_write_req && host_addr[2:0] == lane`, với hàng `host_addr[17:3]`. Xác nhận ghi (`host_rvalid` khi `host_we`) đến **sau khi lá đã commit** (`wr_valid` của làn).
 
-### 4.5 Bản đồ hàng tham số
+### 4.5 Reset
+
+Reset hủy mọi yêu cầu đang chờ và các bit valid/tag (compute lẫn host). Nội dung SRAM và payload đọc không bị reset, nên tham số đã nạp vẫn còn sau reset.
+
+### 4.6 Bản đồ hàng tham số
 
 Các base address nằm trong `llm_pkg` (xem [llm_pkg.md](llm_pkg.md) và [../02_hoat_dong_chi_tiet_llm_soc.md](../02_hoat_dong_chi_tiet_llm_soc.md)).

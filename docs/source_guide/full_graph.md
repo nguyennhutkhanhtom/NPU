@@ -218,8 +218,7 @@ bảo toàn khi thay technology leaf.
 
 ## Chú giải và sơ đồ đã lưu
 
-[Mục lục từng file](blocks/README.md) có hai đường đọc: source hiện tại và trang
-chú giải snapshot. Cột trạng thái hash cho biết code trong snapshot có khớp với
-file đang compile hay không. Những trang có hash cũ cần được đọc cùng RTL hiện tại;
-sơ đồ/code excerpt sẽ được refresh trong đợt riêng. [Hierarchy legacy](<legacy/README.md>)
+Tài liệu chính cho từng module nằm cạnh source:
+[Verilog Source code/doc](<../../Verilog Source code/doc/README.md>). Bộ chú giải
+snapshot cũ `blocks/*.sv.md` đã được gỡ. [Hierarchy legacy](<legacy/README.md>)
 lưu sơ đồ matmulfree.

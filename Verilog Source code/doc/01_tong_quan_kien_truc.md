@@ -4,6 +4,7 @@ Tài liệu này là điểm bắt đầu. Nó giải thích repo chứa gì, c�
 
 | Tài liệu | Nội dung |
 |---|---|
+| [README.md](README.md) | Mục lục chính: danh mục 41 file RTL → tài liệu module, trạng thái hiện tại, quy tắc cập nhật |
 | [00_kien_thuc_nen.md](00_kien_thuc_nen.md) | Kiến thức nền: clock, FSM, SRAM, fixed-point, transformer |
 | **01_tong_quan_kien_truc.md** (file này) | Bức tranh tổng thể, cây module, chỉ mục |
 | [02_hoat_dong_chi_tiet_llm_soc.md](02_hoat_dong_chi_tiet_llm_soc.md) | NPU chính `llm_soc` hoạt động từng bước |

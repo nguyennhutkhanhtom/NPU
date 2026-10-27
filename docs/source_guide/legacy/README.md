@@ -25,7 +25,7 @@
 Trang này mô tả **hierarchy legacy matmulfree** và có các sơ đồ/chú giải khớp source ngày 06/10/2026.
 Thiết kế full graph hiện tại được mô tả tại [full graph overview](<../full_graph.md>)
 và [kiến trúc llm_soc](<../../design/full_rtl_language.md>). Danh mục hiện tại có
-[41 source/LUT assets](<../blocks/README.md>), với trạng thái hash của từng snapshot.
+[41 source/LUT assets](<../../../Verilog Source code/doc/README.md>).
 
 Các code excerpts, số dòng và source hashes bên dưới thuộc snapshot ghi trong
 [source_manifest.json](<../source_manifest.json>). Sơ đồ và code excerpts đã được đối chiếu lại với source hiện tại. Đọc [trạng thái kiểm chứng](<../../verification/optimization_status.md>) cho
@@ -36,7 +36,7 @@ PASS/fail của source/config hiện tại.
 1. Đọc phần 1–4 để hiểu kiến trúc, format số và luồng thực thi.
 2. Đọc phần 5–7 để hiểu NORM + QUANT, ternary core và rowwise unit.
 3. Đọc phần 8 để so sánh với thesis.
-4. Mở [mục lục giải thích RTL](<../blocks/README.md>) khi cần đọc từng file. Mỗi trang có tổng quan, sơ đồ kiến trúc phần cứng và các đoạn source được gom theo **nhóm logic**. Mỗi nhóm giữ nguyên phạm vi dòng để đối chiếu, rồi giải thích mục đích, cách dữ liệu đi qua code và các tín hiệu chính. Các nhóm logic phức tạp có thêm sơ đồ khối phần cứng ngay cạnh phần giải thích.
+4. Mở [tài liệu module](<../../../Verilog Source code/doc/README.md>) khi cần đọc từng file. Mỗi trang có kiến thức nền, tổng quan, bảng cổng, sơ đồ khối và phần hoạt động chi tiết (độ trễ, reset, lý do thiết kế).
 
 Phần chú giải là bản chụp tại thời điểm viết. [Manifest nguồn](<../source_manifest.json>) lưu SHA-256 và số dòng để nhận biết khi RTL thay đổi. Chú giải không được chèn vào source đang tổng hợp.
 
@@ -118,7 +118,7 @@ Các con số trên là số bit dữ liệu logic; không bao gồm control reg
 
 `sram_256_wrapper` dùng tám bank 32 bit và một cổng đọc đồng bộ chung cho host/compute. RAM và register dữ liệu đọc không asynchronous reset; reset chỉ xóa control/tag. Simulation và synthesis dùng cùng implementation, không có define hoặc thuộc tính của hãng FPGA. Binding SRAM ASIC cần adapter PDK giữ hợp đồng đọc/valid và mask ghi; cấu trúc bank logic không quy định macro vật lý.
 
-**Hợp đồng đọc host.** Top chốt request + response có tag: control/descriptor cần hai cạnh lên, SRAM/imem cần bốn cạnh lên từ lần sample request đầu. Giữ enable/read/address đến ready và chỉ lấy data khi ready. Held request giữ response đầu; poll status mới cùng địa chỉ cần idle qua một cạnh clock. Đổi address/drop enable/write hủy read cũ; write vẫn trực tiếp. Backend [SRAM adapter](<../blocks/sram_256_wrapper.sv.md>) và [instruction memory](<../blocks/ins_mem.sv.md>) vẫn read/tag/valid hai cạnh lên; latency tăng nằm tại frontend top. [Interface host](<../../design/legacy/interfaces.md#host-32-bit>) ghi quy tắc đầy đủ.
+**Hợp đồng đọc host.** Top chốt request + response có tag: control/descriptor cần hai cạnh lên, SRAM/imem cần bốn cạnh lên từ lần sample request đầu. Giữ enable/read/address đến ready và chỉ lấy data khi ready. Held request giữ response đầu; poll status mới cùng địa chỉ cần idle qua một cạnh clock. Đổi address/drop enable/write hủy read cũ; write vẫn trực tiếp. Backend [SRAM adapter](<../../../Verilog Source code/doc/modules/sram_256_wrapper.md>) và [instruction memory](<../../../Verilog Source code/doc/modules/ins_mem.md>) vẫn read/tag/valid hai cạnh lên; latency tăng nằm tại frontend top. [Interface host](<../../design/legacy/interfaces.md#host-32-bit>) ghi quy tắc đầy đủ.
 
 ## 3. Format số và ý nghĩa từng độ rộng
 
@@ -402,4 +402,4 @@ RTL và verification dùng cùng hành vi bộ nhớ/ROM. [Demo checkpoint Binar
 
 ---
 
-[Đọc tiếp: từng module RTL](<../blocks/README.md>) · [Verification](<../../verification/README.md>) · [Về mục lục tài liệu](<../../README.md>)
+[Đọc tiếp: từng module RTL](<../../../Verilog Source code/doc/README.md>) · [Verification](<../../verification/README.md>) · [Về mục lục tài liệu](<../../README.md>)

@@ -15,7 +15,7 @@
 | 5 | [SRAM binding](asic_memory_binding.md) | Hợp đồng cần giữ khi thay SRAM leaf |
 | 6 | [Quy tắc viết RTL](rtl_style.md) | Cấu trúc phần cứng rõ ràng, register ownership và coding policy |
 
-Sau khi hiểu kiến trúc, mở [danh mục module](../source_guide/blocks/README.md)
+Sau khi hiểu kiến trúc, mở [danh mục module](<../../Verilog Source code/doc/README.md>)
 hoặc [hướng dẫn chạy NanoFable](../demos/language.md).
 
 ## Thiết kế legacy

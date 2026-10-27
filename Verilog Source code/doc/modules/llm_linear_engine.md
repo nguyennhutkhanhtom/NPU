@@ -118,6 +118,7 @@ Ví dụ hàng 4 chunk với tổng chunk 100, −40, 7, 3 → kết quả 70.
 - Mã trọng số `10` → `ternary_dot32` bật `reserved_o`. Engine đẩy một kết quả có `result_fault = 1`, đặt `fault_o`, và sang `DRAIN`. Trong lúc đó không phát thêm phép nào (`!(dot_valid && dot_reserved)`).
 - `cancel_i` ở `RUN` → `DRAIN` với `fault_o = 1`, FIFO kết quả bị xóa.
 - `DRAIN → IDLE` khi `response_q == request_q` (mọi từ đã yêu cầu đã về), `retired_q == issue_q` (mọi phép đã ra khỏi `ternary_dot32`) và `launch_q = 0`. Như vậy không còn dữ liệu "lạc" nào khi phép kế tiếp bắt đầu.
+- **Reset** xóa FSM, các bộ đếm, `launch_q`, FIFO tham số và hàng đợi kết quả (`result_count_q`), nên mọi việc đang dở bị bỏ. Payload (`accumulator_q`, `result_q`, `fifo_q`, `x_q`, `w_q`) không reset; chúng chỉ có nghĩa khi cờ valid/bộ đếm tương ứng nói vậy.
 
 ### 4.6 Cách `llm_soc` dùng
 
