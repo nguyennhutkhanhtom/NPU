@@ -17,7 +17,7 @@ for name,expected in before['rtl'].items():
 for name,expected in manifest['source_hashes'].items():
     if sha256((ROOT/'Verilog Source code'/name).read_bytes()).hexdigest()!=expected:
         errors.append('Stale hierarchy source: '+name)
-for config,file in [('quartus',ROOT/'rtl_hierarchy.drawio'),('portable',OUT/'rtl_hierarchy_portable.drawio')]:
+for config,file in [('quartus',OUT/'rtl_hierarchy.drawio'),('portable',OUT/'rtl_hierarchy_portable.drawio')]:
     data=manifest['configurations'][config];records={r['path']:r for r in data['instances']}
     tree=ET.parse(file);pages=tree.findall('diagram');expected_names=[p['name'] for p in data['pages']]
     if [p.get('name') for p in pages]!=expected_names:errors.append('Page order: '+config)

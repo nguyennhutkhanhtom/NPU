@@ -331,7 +331,7 @@ def emit(records,path,config):
 if __name__=='__main__':
     OUT.mkdir(parents=True,exist_ok=True)
     vendor=hierarchy(1);portable=hierarchy(0)
-    vp=emit(vendor,ROOT/'rtl_hierarchy.drawio','Quartus memory binding')
+    vp=emit(vendor,OUT/'rtl_hierarchy.drawio','Quartus memory binding')
     pp=emit(portable,OUT/'rtl_hierarchy_portable.drawio','portable SRAM behavior')
     manifest={'date':'2026-10-06','top':'llm_soc','rtl_root':str(RTL),'scope':'Reviewed structural expansion of current source; not synthesis or functional verification.',
       'source_hashes':{p.name:sha256(p.read_bytes()).hexdigest() for p in RTL.iterdir() if p.suffix in {'.sv','.v','.svh','.mem'}},

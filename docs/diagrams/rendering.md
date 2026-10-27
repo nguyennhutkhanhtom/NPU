@@ -9,7 +9,7 @@ Markdown under `docs/` and the root `README.md`, checks syntax, saves PNG/SVG
 previews under the ignored `output/` folder, and records source hashes in
 `docs/source_guide/diagram_validation.json`.
 
-Editable module hierarchy is stored in [rtl_hierarchy.drawio](../../rtl_hierarchy.drawio)
+Editable module hierarchy is stored in [rtl_hierarchy.drawio](rtl_hierarchy.drawio)
 and [the portable variant](rtl_hierarchy_portable.drawio).
 Their source expansion and port maps are recorded in
 [hierarchy_manifest.json](hierarchy_manifest.json).

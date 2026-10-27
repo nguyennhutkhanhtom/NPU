@@ -12,10 +12,11 @@ overview giải thích các FSM, mux, register và luồng xử lý nằm trong 
 
 | Muốn xem | Tài liệu hoặc file |
 |---|---|
-| Instance, module con và generate scope | [rtl_hierarchy.drawio](../../rtl_hierarchy.drawio) |
+| Instance, module con và generate scope | [rtl_hierarchy.drawio](rtl_hierarchy.drawio) |
 | Hierarchy khi USE_QUARTUS_MEMORY=0 | [rtl_hierarchy_portable.drawio](rtl_hierarchy_portable.drawio) |
 | Sơ đồ nhiều trang đi kèm tài liệu tiếng Việt | [npu_architecture.drawio](npu_architecture.drawio) |
 | Render và kiểm tra sơ đồ | [Diagram rendering](rendering.md) |
+| Sơ đồ tham khảo bên ngoài (Arm Ethos-U85, rút gọn) | [Ethos_U85_mini.drawio](reference/Ethos_U85_mini.drawio) |
 | Engine, tài nguyên dùng chung và mux ở top | [Full graph overview](../source_guide/full_graph.md#sơ-đồ-tài-nguyên-và-đường-dữ-liệu) |
 | Prefill, bốn layer, token selection và decode | [Luồng inference](../design/full_rtl_language.md#luồng-inference) |
 | Request/ACK, cancellation và parameter commit | [Host transaction](../design/host_interface.md#một-transaction) |
