@@ -37,7 +37,7 @@ try {
         @{executable="$simBin/vlib.exe";arguments=@($library);log='vlib.log'},
         @{executable="$simBin/vlog.exe";arguments=@('-sv','-svinputport=var','-work',$library,
             ('+incdir+'+$rtlRoot),'-f',$sourceList,'-l',(Join-Path $output 'compile.log'));log='compile.console'},
-        @{executable="$simBin/vsim.exe";arguments=@('-c','-onfinish','exit',('-voptargs=-duselectreport='+$duReport),
+        @{executable="$simBin/vsim.exe";arguments=@('-c','-onfinish','exit',('-voptargs=-duselectreport='+$duReport),'-gUSE_QUARTUS_MEMORY=1',
             '-L','tests/full_rtl/build/questa25_model/altera_mf_ver','-L',$relativeLibrary,'-lib',$relativeLibrary,
             '-l',(Join-Path $output 'probe.log'),'tb_host_cancel_contract','-do','run -all; quit -f');log='probe.console'}
     )

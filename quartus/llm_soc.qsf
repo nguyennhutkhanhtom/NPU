@@ -2,6 +2,8 @@
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CGXFC9E6F35C7
 set_global_assignment -name TOP_LEVEL_ENTITY llm_soc
+# FPGA backend: RTL default is the portable memory model; Quartus binds altsyncram.
+set_parameter -name USE_QUARTUS_MEMORY 1
 set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name OPTIMIZATION_TECHNIQUE SPEED

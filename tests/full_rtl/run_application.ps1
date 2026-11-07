@@ -58,7 +58,7 @@ try {
         $memoryUri=[Uri]::new([IO.Path]::GetFullPath($memoryLibrary))
         $simulationMemory=[Uri]::UnescapeDataString($repoUri.MakeRelativeUri($memoryUri).ToString())
     }
-    if ($Questa) {$simArguments+='-voptargs=-duselectreport='+$bindingReport}
+    if ($Questa) {$simArguments+=@('-voptargs=-duselectreport='+$bindingReport,'-gUSE_QUARTUS_MEMORY=1')}
     $simArguments+=@('-L',$simulationMemory,'-L',$simulationLibrary,'-lib',$simulationLibrary,'-l',$log,'tb_full_rtl_application','-do','run -all; quit -f')
     & "$SimBin/vsim.exe" @simArguments *> "$log.console"
     if($LASTEXITCODE -ne 0 -or !(Select-String -LiteralPath $log -SimpleMatch 'FULL_RTL_APPLICATION_PASS' -Quiet) -or (Select-String -LiteralPath $log -Pattern '^# \*\* (Fatal|Error)' -Quiet)) {

@@ -70,6 +70,8 @@ foreach($top in $tops) {
     }
     $duReport='tests/full_rtl/build/'+$EvidenceTag+'_'+$top+'_design_units.json'
     if ($Questa) {$arguments+='-voptargs=-duselectreport='+$duReport}
+    # llm_soc defaults to the portable RAM model; FPGA-binding tops mirror the QSF.
+    if ($Questa -and $top -in @('tb_llm_protocol','tb_llm_selection','tb_llm_graph')) {$arguments+='-gUSE_QUARTUS_MEMORY=1'}
     $arguments+=@('-L',$simulationMemory,'-L',$simulationLibrary,'-lib',$simulationLibrary,'-l',$log,$top,'-do','run -all; quit -f')
     & "$SimBin/vsim.exe" @arguments *> "$log.console"
     if($LASTEXITCODE -ne 0 -or !(Select-String -LiteralPath $log -Pattern '_PASS' -Quiet) -or (Select-String -LiteralPath $log -Pattern '^# \*\* (Fatal|Error|Warning)|UI-Msg \(Error\)' -Quiet)) {
