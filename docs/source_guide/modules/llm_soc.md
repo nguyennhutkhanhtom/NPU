@@ -86,7 +86,7 @@ Mỗi "khe" gồm 12 hàng; hàng = 32 làn × S24. Vector 128 kênh dùng 4 hà
 
 | Tham số | Mặc định | Ý nghĩa |
 |---|---|---|
-| `USE_QUARTUS_MEMORY` | 1 | Dùng `quartus_word_ram` cho các bộ nhớ lớn (0 = mảng thanh ghi di động) |
+| `USE_QUARTUS_MEMORY` | 0 | 0 = mô hình RAM thật (`sram_word_tile`, mảng nhớ hành vi); 1 = `quartus_word_ram` (chỉ build FPGA, QSF đặt 1) |
 | `PERF_COUNTERS` | 0 | Thêm bộ đếm hiệu năng (chu kỳ mỗi pha, số lần đọc/ghi) |
 | `ENABLE_DEBUG_INDEX` | 0 | Mã hóa trạng thái one-hot thành số 7 bit cho `instr_debug` |
 | `ATTN_DIV_LANES` | 4 | Số phép chia song song khi chuẩn hóa attention |
